@@ -1,11 +1,8 @@
 [#_Constraint_Isa]
 === Constraint.Isa
 
-[source,java]
-----
-class
-----
-
+[caption=""]
+.class
 *Package*: `com.typedb.driver.api.analyze`
 
 *Superinterfaces:*

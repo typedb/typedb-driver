@@ -1,11 +1,8 @@
 [#_InstantiableType]
 === InstantiableType
 
-[source,typescript]
-----
-class
-----
-
+[caption=""]
+.class
 [source,typescript]
 ----
 InstantiableType: EntityType | RelationType | AttributeType

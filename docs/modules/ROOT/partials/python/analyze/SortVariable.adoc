@@ -1,11 +1,8 @@
 [#_SortVariable]
 === SortVariable
 
-[source,python]
-----
-class
-----
-
+[caption=""]
+.class
 *Package*: `typedb.api.analyze.pipeline_stage.SortStage`
 
 A variable and its sort order.

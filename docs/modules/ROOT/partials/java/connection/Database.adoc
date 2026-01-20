@@ -1,11 +1,8 @@
 [#_Database]
 === Database
 
-[source,java]
-----
-class
-----
-
+[caption=""]
+.class
 *Package*: `com.typedb.driver.api.database`
 
 // tag::methods[]

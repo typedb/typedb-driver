@@ -1,11 +1,8 @@
 [#_Function_ReturnOperation_Check]
 === Function.ReturnOperation.Check
 
-[source,java]
-----
-class
-----
-
+[caption=""]
+.class
 *Package*: `com.typedb.driver.api.analyze`
 
 *Superinterfaces:*

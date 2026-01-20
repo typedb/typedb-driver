@@ -4,11 +4,8 @@
 [#_Struct_Fetch]
 ==== Struct Fetch
 
-[source,cpp]
-----
-class
-----
-
+[caption=""]
+.class
 
 
 A representation of the 'fetch' stage of a query

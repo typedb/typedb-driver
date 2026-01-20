@@ -1,11 +1,8 @@
 [#_struct_ConstraintSpan]
 === ConstraintSpan
 
-[source,rust]
-----
-struct
-----
-
+[caption=""]
+.struct
 *Implements traits:*
 
 * `Clone`

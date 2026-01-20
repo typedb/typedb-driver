@@ -4,11 +4,8 @@
 [#_Struct_SortVariable]
 ==== Struct SortVariable
 
-[source,cpp]
-----
-class
-----
-
+[caption=""]
+.class
 
 
 The variable being sorted on and the ordering of the sort, as used in a ``PipelineStage::Sort``, e.g. ``sort $v desc``

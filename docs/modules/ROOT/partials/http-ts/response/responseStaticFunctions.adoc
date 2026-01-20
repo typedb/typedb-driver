@@ -1,11 +1,8 @@
 [#_responseStaticFunctions]
 === Static Functions
 
-[source,typescript]
-----
-class
-----
-
+[caption=""]
+.class
 // tag::methods[]
 [#_isApiError_isApiError_err_any]
 ==== isApiError

@@ -1,11 +1,8 @@
 [#_Fetch_FetchLeaf]
 === Fetch.FetchLeaf
 
-[source,java]
-----
-class
-----
-
+[caption=""]
+.class
 *Package*: `com.typedb.driver.api.analyze`
 
 The leaf of a Fetch object. Holds information on the value it can hold.

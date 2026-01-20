@@ -1,11 +1,8 @@
 [#_analyzeStaticFunctions]
 === Static Functions
 
-[source,typescript]
-----
-class
-----
-
+[caption=""]
+.class
 // tag::methods[]
 [#_getVariableName_getVariableName_structure_AnalyzedPipeline_variable_ConstraintVertexVariable]
 ==== getVariableName

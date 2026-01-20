@@ -1,11 +1,8 @@
 [#_Value]
 === Value
 
-[source,java]
-----
-class
-----
-
+[caption=""]
+.class
 *Package*: `com.typedb.driver.api.concept.value`
 
 *Superinterfaces:*

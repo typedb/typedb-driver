@@ -1,11 +1,8 @@
 [#_AnalyzeOptions]
 === AnalyzeOptions
 
-[source,typescript]
-----
-class
-----
-
+[caption=""]
+.class
 [caption=""]
 .Fields
 // tag::properties[]

@@ -4,11 +4,8 @@
 [#_Struct_ConstraintExactness]
 ==== Struct ConstraintExactness
 
-[source,cpp]
-----
-class
-----
-
+[caption=""]
+.class
 
 
 Tells apart exact variants of constraints from the ones allowing subtype-polymorphism. e.g. ``isa!`` would be represented as an ``Constraint::Isa`` with its exactness field ``ConstraintExactness::Exact``.
@@ -16,11 +13,8 @@ Tells apart exact variants of constraints from the ones allowing subtype-polymor
 [#_Enum_ConstraintExactness]
 ==== Enum ConstraintExactness
 
-[source,cpp]
-----
-class
-----
-
+[caption=""]
+.class
 
 
 Tells apart exact variants of constraints from the ones allowing subtype-polymorphism. e.g. ``isa!`` would be represented as an ``Constraint::Isa`` with its exactness field ``ConstraintExactness::Exact``.

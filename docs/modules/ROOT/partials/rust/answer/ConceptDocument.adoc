@@ -1,11 +1,8 @@
 [#_struct_ConceptDocument]
 === ConceptDocument
 
-[source,rust]
-----
-struct
-----
-
+[caption=""]
+.struct
 *Implements traits:*
 
 * `Clone`

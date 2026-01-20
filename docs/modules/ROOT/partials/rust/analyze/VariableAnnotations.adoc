@@ -1,11 +1,8 @@
 [#_struct_VariableAnnotations]
 === VariableAnnotations
 
-[source,rust]
-----
-struct
-----
-
+[caption=""]
+.struct
 *Implements traits:*
 
 * `Clone`

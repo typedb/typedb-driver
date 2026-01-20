@@ -4,11 +4,8 @@
 [#_Struct_Conjunction]
 ==== Struct Conjunction
 
-[source,cpp]
-----
-class
-----
-
+[caption=""]
+.class
 
 
 A representation of the constraints involved in the query, and types inferred for each variable.

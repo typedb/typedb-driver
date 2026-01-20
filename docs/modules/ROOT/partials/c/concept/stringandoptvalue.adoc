@@ -4,11 +4,8 @@
 [#_Struct_StringAndOptValue]
 ==== Struct StringAndOptValue
 
-[source,cpp]
-----
-class
-----
-
+[caption=""]
+.class
 
 
 A ``StringAndOptValue`` used to represent the pair of variables involved in an ownership. ``_0`` and ``_1`` are the owner and attribute variables respectively.

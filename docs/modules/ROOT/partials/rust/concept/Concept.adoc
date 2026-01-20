@@ -1,11 +1,8 @@
 [#_enum_Concept]
 === Concept
 
-[source,rust]
-----
-enum
-----
-
+[caption=""]
+.enum
 The fundamental TypeQL object.
 
 [caption=""]

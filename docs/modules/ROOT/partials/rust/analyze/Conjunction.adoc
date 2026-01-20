@@ -1,11 +1,8 @@
 [#_struct_Conjunction]
 === Conjunction
 
-[source,rust]
-----
-struct
-----
-
+[caption=""]
+.struct
 *Implements traits:*
 
 * `Clone`

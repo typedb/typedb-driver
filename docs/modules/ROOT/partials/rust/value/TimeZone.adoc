@@ -1,11 +1,8 @@
 [#_enum_TimeZone]
 === TimeZone
 
-[source,rust]
-----
-enum
-----
-
+[caption=""]
+.enum
 TimeZone for datetime-tz. Can be represented as an IANA Tz or as a FixedOffset.
 
 [caption=""]

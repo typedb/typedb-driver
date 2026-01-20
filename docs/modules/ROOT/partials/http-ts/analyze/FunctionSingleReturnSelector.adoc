@@ -1,11 +1,8 @@
 [#_FunctionSingleReturnSelector]
 === FunctionSingleReturnSelector
 
-[source,typescript]
-----
-class
-----
-
+[caption=""]
+.class
 [source,typescript]
 ----
 FunctionSingleReturnSelector: "first" | "last"

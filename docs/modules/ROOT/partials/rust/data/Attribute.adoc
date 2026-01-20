@@ -1,11 +1,8 @@
 [#_struct_Attribute]
 === Attribute
 
-[source,rust]
-----
-struct
-----
-
+[caption=""]
+.struct
 *Implements traits:*
 
 * `Clone`

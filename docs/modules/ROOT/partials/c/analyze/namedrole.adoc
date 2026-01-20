@@ -4,11 +4,8 @@
 [#_Struct_NamedRole]
 ==== Struct NamedRole
 
-[source,cpp]
-----
-class
-----
-
+[caption=""]
+.class
 
 
 A ``NamedRole`` vertex is used in links &amp; relates constraints, as multiple relations may have roles with the same name.

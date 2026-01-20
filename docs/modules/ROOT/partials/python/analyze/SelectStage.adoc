@@ -1,11 +1,8 @@
 [#_SelectStage]
 === SelectStage
 
-[source,python]
-----
-class
-----
-
+[caption=""]
+.class
 *Package*: `typedb.api.analyze.pipeline_stage`
 
 *Supertypes:*

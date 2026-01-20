@@ -1,11 +1,8 @@
 [#_QueryOptions]
 === QueryOptions
 
-[source,java]
-----
-class
-----
-
+[caption=""]
+.class
 *Package*: `com.typedb.driver.api`
 
 TypeDB transaction options. ``QueryOptions`` object can be used to override the default server behaviour for executed queries.

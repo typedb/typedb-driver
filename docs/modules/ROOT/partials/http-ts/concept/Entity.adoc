@@ -1,11 +1,8 @@
 [#_Entity]
 === Entity
 
-[source,typescript]
-----
-class
-----
-
+[caption=""]
+.class
 [caption=""]
 .Fields
 // tag::properties[]

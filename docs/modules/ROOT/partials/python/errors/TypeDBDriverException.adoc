@@ -1,11 +1,8 @@
 [#_TypeDBDriverException]
 === TypeDBDriverException
 
-[source,python]
-----
-class
-----
-
+[caption=""]
+.class
 *Package*: `typedb.common.exception`
 
 *Supertypes:*

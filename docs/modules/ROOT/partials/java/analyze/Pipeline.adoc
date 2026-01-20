@@ -1,11 +1,8 @@
 [#_Pipeline]
 === Pipeline
 
-[source,java]
-----
-class
-----
-
+[caption=""]
+.class
 *Package*: `com.typedb.driver.api.analyze`
 
 A representation of a query pipeline.

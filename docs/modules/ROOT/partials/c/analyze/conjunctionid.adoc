@@ -4,11 +4,8 @@
 [#_Struct_ConjunctionID]
 ==== Struct ConjunctionID
 
-[source,cpp]
-----
-class
-----
-
+[caption=""]
+.class
 
 
 Holds the index of the conjunction in a ``Pipeline``'s ``conjunctions`` field. Used as indirection in the representation of a pipeline.

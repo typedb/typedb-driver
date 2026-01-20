@@ -1,11 +1,8 @@
 [#_ConstraintAny]
 ==== ConstraintAny
 
-[source,typescript]
-----
-class
-----
-
+[caption=""]
+.class
 [source,typescript]
 ----
 ConstraintAny:

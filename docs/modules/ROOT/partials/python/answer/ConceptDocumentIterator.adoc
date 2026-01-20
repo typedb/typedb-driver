@@ -1,11 +1,8 @@
 [#_ConceptDocumentIterator]
 === ConceptDocumentIterator
 
-[source,python]
-----
-class
-----
-
+[caption=""]
+.class
 *Package*: `typedb.api.answer.concept_document_iterator`
 
 *Supertypes:*

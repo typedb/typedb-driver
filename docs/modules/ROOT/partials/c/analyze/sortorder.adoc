@@ -4,11 +4,8 @@
 [#_Struct_SortOrder]
 ==== Struct SortOrder
 
-[source,cpp]
-----
-class
-----
-
+[caption=""]
+.class
 
 
 The order of a variable being sorted on in a ``PipelineStage::Sort``
@@ -16,11 +13,8 @@ The order of a variable being sorted on in a ``PipelineStage::Sort``
 [#_Enum_SortOrder]
 ==== Enum SortOrder
 
-[source,cpp]
-----
-class
-----
-
+[caption=""]
+.class
 
 
 The order of a variable being sorted on in a ``PipelineStage::Sort``

@@ -1,11 +1,8 @@
 [#_PipelineStage_DistinctStage]
 === PipelineStage.DistinctStage
 
-[source,java]
-----
-class
-----
-
+[caption=""]
+.class
 *Package*: `com.typedb.driver.api.analyze`
 
 *Superinterfaces:*

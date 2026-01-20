@@ -1,11 +1,8 @@
 [#_enum_ConceptError]
 === ConceptError
 
-[source,rust]
-----
-enum
-----
-
+[caption=""]
+.enum
 [caption=""]
 .Enum variants
 // tag::enum_constants[]

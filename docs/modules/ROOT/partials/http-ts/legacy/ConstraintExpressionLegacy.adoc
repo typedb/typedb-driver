@@ -1,11 +1,8 @@
 [#_ConstraintExpressionLegacy]
 ==== ConstraintExpressionLegacy
 
-[source,typescript]
-----
-class
-----
-
+[caption=""]
+.class
 [caption=""]
 .Fields
 // tag::properties[]

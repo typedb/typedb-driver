@@ -1,11 +1,8 @@
 [#_TransactionType]
 === TransactionType
 
-[source,python]
-----
-class
-----
-
+[caption=""]
+.class
 *Package*: `typedb.api.connection.transaction`
 
 This class is used to specify the type of transaction.

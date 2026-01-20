@@ -1,11 +1,8 @@
 [#_ConceptRow]
 === ConceptRow
 
-[source,python]
-----
-class
-----
-
+[caption=""]
+.class
 *Package*: `typedb.api.answer.concept_row`
 
 Contains a row of concepts with a header.

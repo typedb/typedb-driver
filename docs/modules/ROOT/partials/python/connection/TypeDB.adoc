@@ -1,11 +1,8 @@
 [#_TypeDB]
 === TypeDB
 
-[source,python]
-----
-class
-----
-
+[caption=""]
+.class
 *Package*: `typedb.driver`
 
 // tag::methods[]

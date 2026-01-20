@@ -1,11 +1,8 @@
 [#_Concept]
 === Concept
 
-[source,typescript]
-----
-class
-----
-
+[caption=""]
+.class
 [source,typescript]
 ----
 Concept: Type | Entity | Relation | Attribute | Value

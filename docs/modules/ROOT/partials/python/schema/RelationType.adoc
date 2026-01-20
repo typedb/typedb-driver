@@ -1,11 +1,8 @@
 [#_RelationType]
 === RelationType
 
-[source,python]
-----
-class
-----
-
+[caption=""]
+.class
 *Package*: `typedb.api.concept.type.relation_type`
 
 *Supertypes:*

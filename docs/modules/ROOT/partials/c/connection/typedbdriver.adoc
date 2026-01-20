@@ -4,11 +4,8 @@
 [#_Struct_TypeDBDriver]
 ==== Struct TypeDBDriver
 
-[source,cpp]
-----
-class
-----
-
+[caption=""]
+.class
 
 
 A connection to a TypeDB server which serves as the starting point for all interaction.

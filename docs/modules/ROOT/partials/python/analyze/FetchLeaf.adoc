@@ -1,11 +1,8 @@
 [#_FetchLeaf]
 === FetchLeaf
 
-[source,python]
-----
-class
-----
-
+[caption=""]
+.class
 *Package*: `typedb.api.analyze.fetch`
 
 *Supertypes:*

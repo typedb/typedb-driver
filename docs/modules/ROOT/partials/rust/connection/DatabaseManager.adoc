@@ -1,11 +1,8 @@
 [#_struct_DatabaseManager]
 === DatabaseManager
 
-[source,rust]
-----
-struct
-----
-
+[caption=""]
+.struct
 *Implements traits:*
 
 * `Debug`

@@ -1,11 +1,8 @@
 [#_Reducer]
 === Reducer
 
-[source,java]
-----
-class
-----
-
+[caption=""]
+.class
 *Package*: `com.typedb.driver.api.analyze`
 
 Representation of a reducer used either in a ``PipelineStage::Reduce`` or in a function's ``ReturnOperation``.

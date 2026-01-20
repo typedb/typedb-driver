@@ -1,11 +1,8 @@
 [#_ConstraintVertexNamedRole]
 ==== ConstraintVertexNamedRole
 
-[source,typescript]
-----
-class
-----
-
+[caption=""]
+.class
 [caption=""]
 .Fields
 // tag::properties[]

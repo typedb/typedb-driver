@@ -4,11 +4,8 @@
 [#_Struct_UserIterator]
 ==== Struct UserIterator
 
-[source,cpp]
-----
-class
-----
-
+[caption=""]
+.class
 
 
 Iterator over a set of ``User``s

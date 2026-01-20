@@ -1,11 +1,8 @@
 [#_ConstraintVertexAny]
 ==== ConstraintVertexAny
 
-[source,typescript]
-----
-class
-----
-
+[caption=""]
+.class
 [source,typescript]
 ----
 ConstraintVertexAny:

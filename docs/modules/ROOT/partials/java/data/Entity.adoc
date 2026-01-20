@@ -1,11 +1,8 @@
 [#_Entity]
 === Entity
 
-[source,java]
-----
-class
-----
-
+[caption=""]
+.class
 *Package*: `com.typedb.driver.api.concept.instance`
 
 *Superinterfaces:*

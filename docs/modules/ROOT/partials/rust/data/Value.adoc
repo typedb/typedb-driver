@@ -1,11 +1,8 @@
 [#_enum_Value]
 === Value
 
-[source,rust]
-----
-enum
-----
-
+[caption=""]
+.enum
 [caption=""]
 .Enum variants
 // tag::enum_constants[]

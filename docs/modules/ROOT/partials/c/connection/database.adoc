@@ -4,11 +4,8 @@
 [#_Struct_Database]
 ==== Struct Database
 
-[source,cpp]
-----
-class
-----
-
+[caption=""]
+.class
 
 
 A TypeDB database

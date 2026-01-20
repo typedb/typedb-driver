@@ -1,11 +1,8 @@
 [#_FetchObject]
 === FetchObject
 
-[source,python]
-----
-class
-----
-
+[caption=""]
+.class
 *Package*: `typedb.api.analyze.fetch`
 
 *Supertypes:*

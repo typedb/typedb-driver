@@ -1,11 +1,8 @@
 [#_enum_Comparator]
 === Comparator
 
-[source,rust]
-----
-enum
-----
-
+[caption=""]
+.enum
 A representation of the comparator used in a comparison constraint.
 
 [caption=""]

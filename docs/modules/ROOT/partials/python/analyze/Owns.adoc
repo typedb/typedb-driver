@@ -1,11 +1,8 @@
 [#_Owns]
 === Owns
 
-[source,python]
-----
-class
-----
-
+[caption=""]
+.class
 *Package*: `typedb.api.analyze.constraint`
 
 *Supertypes:*

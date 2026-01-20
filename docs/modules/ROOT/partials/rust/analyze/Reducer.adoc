@@ -1,11 +1,8 @@
 [#_struct_Reducer]
 === Reducer
 
-[source,rust]
-----
-struct
-----
-
+[caption=""]
+.struct
 *Implements traits:*
 
 * `Clone`

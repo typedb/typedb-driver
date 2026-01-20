@@ -1,11 +1,8 @@
 [#_FunctionReturnStructure]
 === FunctionReturnStructure
 
-[source,typescript]
-----
-class
-----
-
+[caption=""]
+.class
 [source,typescript]
 ----
 FunctionReturnStructure:

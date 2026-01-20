@@ -1,11 +1,8 @@
 [#_VariableId]
 === VariableId
 
-[source,typescript]
-----
-class
-----
-
+[caption=""]
+.class
 [source,typescript]
 ----
 VariableId: string

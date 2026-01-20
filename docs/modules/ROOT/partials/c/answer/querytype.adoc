@@ -4,11 +4,8 @@
 [#_Struct_QueryType]
 ==== Struct QueryType
 
-[source,cpp]
-----
-class
-----
-
+[caption=""]
+.class
 
 
 This enum is used to specify the type of the query resulted in this answer.
@@ -17,11 +14,8 @@ This enum is used to specify the type of the query resulted in this answer.
 [#_Enum_QueryType]
 ==== Enum QueryType
 
-[source,cpp]
-----
-class
-----
-
+[caption=""]
+.class
 
 
 This enum is used to specify the type of the query resulted in this answer.

@@ -1,11 +1,8 @@
 [#_ApiResponse_OK_RES]
 === ApiResponse<OK_RES>
 
-[source,typescript]
-----
-class
-----
-
+[caption=""]
+.class
 [source,typescript]
 ----
 ApiResponse: ApiOkResponse<OK_RES> | ApiErrorResponse

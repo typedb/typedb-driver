@@ -4,11 +4,8 @@
 [#_Struct_ReduceAssignment]
 ==== Struct ReduceAssignment
 
-[source,cpp]
-----
-class
-----
-
+[caption=""]
+.class
 
 
 Representation of an assignment from a reduction in a ``PipelineStage::Reduce``, such as ``reduce $c = sum($x);``

@@ -4,11 +4,8 @@
 [#_Struct_ConceptIterator]
 ==== Struct ConceptIterator
 
-[source,cpp]
-----
-class
-----
-
+[caption=""]
+.class
 
 
 Iterator over the ``Concepts``s returned by an API method or query.

@@ -1,11 +1,8 @@
 [#_TypeDBHttpDriver]
 === TypeDBHttpDriver
 
-[source,typescript]
-----
-class
-----
-
+[caption=""]
+.class
 // tag::methods[]
 [#_TypeDBHttpDriver_TypeDBHttpDriver_params_DriverParams]
 ==== TypeDBHttpDriver

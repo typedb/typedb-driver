@@ -1,11 +1,8 @@
 [#_Type]
 === Type
 
-[source,java]
-----
-class
-----
-
+[caption=""]
+.class
 *Package*: `com.typedb.driver.api.concept.type`
 
 *Superinterfaces:*

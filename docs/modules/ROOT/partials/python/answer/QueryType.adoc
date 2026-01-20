@@ -1,11 +1,8 @@
 [#_QueryType]
 === QueryType
 
-[source,python]
-----
-class
-----
-
+[caption=""]
+.class
 *Package*: `typedb.api.answer.query_type`
 
 Used to specify the type of the executed query.

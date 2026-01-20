@@ -1,11 +1,8 @@
 [#_ConceptRow]
 === ConceptRow
 
-[source,java]
-----
-class
-----
-
+[caption=""]
+.class
 *Package*: `com.typedb.driver.api.answer`
 
 Contains a row of concepts with a header.

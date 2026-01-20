@@ -1,11 +1,8 @@
 [#_EdgeKind]
 === EdgeKind
 
-[source,typescript]
-----
-class
-----
-
+[caption=""]
+.class
 [source,typescript]
 ----
 EdgeKind:

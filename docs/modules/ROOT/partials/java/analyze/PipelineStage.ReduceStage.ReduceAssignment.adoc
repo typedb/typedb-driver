@@ -1,11 +1,8 @@
 [#_PipelineStage_ReduceStage_ReduceAssignment]
 === PipelineStage.ReduceStage.ReduceAssignment
 
-[source,java]
-----
-class
-----
-
+[caption=""]
+.class
 *Package*: `com.typedb.driver.api.analyze`
 
 An assignment of a reducer to a variable

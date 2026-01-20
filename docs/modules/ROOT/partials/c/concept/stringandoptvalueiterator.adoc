@@ -4,11 +4,8 @@
 [#_Struct_StringAndOptValueIterator]
 ==== Struct StringAndOptValueIterator
 
-[source,cpp]
-----
-class
-----
-
+[caption=""]
+.class
 
 
 Iterator over the ``StringAndOptValue``s representing struct value {field_name: value?} info.

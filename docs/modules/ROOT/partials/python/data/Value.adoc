@@ -1,11 +1,8 @@
 [#_Value]
 === Value
 
-[source,python]
-----
-class
-----
-
+[caption=""]
+.class
 *Package*: `typedb.api.concept.value.value`
 
 *Supertypes:*

@@ -4,11 +4,8 @@
 [#_Struct_Concept]
 ==== Struct Concept
 
-[source,cpp]
-----
-class
-----
-
+[caption=""]
+.class
 
 
 The fundamental TypeQL object.

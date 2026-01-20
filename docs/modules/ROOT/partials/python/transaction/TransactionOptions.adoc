@@ -1,11 +1,8 @@
 [#_TransactionOptions]
 === TransactionOptions
 
-[source,python]
-----
-class
-----
-
+[caption=""]
+.class
 *Package*: `typedb.api.connection.transaction_options`
 
 TypeDB transaction options. ``TransactionOptions`` object can be used to override the default server behaviour for opened transactions.

@@ -1,11 +1,8 @@
 [#_Function_ReturnOperation_Reduce]
 === Function.ReturnOperation.Reduce
 
-[source,java]
-----
-class
-----
-
+[caption=""]
+.class
 *Package*: `com.typedb.driver.api.analyze`
 
 *Superinterfaces:*

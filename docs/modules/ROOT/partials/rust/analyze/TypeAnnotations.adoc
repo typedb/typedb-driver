@@ -1,11 +1,8 @@
 [#_enum_TypeAnnotations]
 === TypeAnnotations
 
-[source,rust]
-----
-enum
-----
-
+[caption=""]
+.enum
 The category of a variable, and the possible types determined by type-inference.
 
 [caption=""]

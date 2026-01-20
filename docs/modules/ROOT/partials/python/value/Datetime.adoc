@@ -1,11 +1,8 @@
 [#_Datetime]
 === Datetime
 
-[source,python]
-----
-class
-----
-
+[caption=""]
+.class
 *Package*: `typedb.common.datetime`
 
 An extension class for ``datetime.datetime`` class to store additional information about nanoseconds. It is split to a timestamp (time zoned or not) based on the number of full seconds and a nanoseconds part.

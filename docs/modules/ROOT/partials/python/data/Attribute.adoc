@@ -1,11 +1,8 @@
 [#_Attribute]
 === Attribute
 
-[source,python]
-----
-class
-----
-
+[caption=""]
+.class
 *Package*: `typedb.api.concept.instance.attribute`
 
 *Supertypes:*

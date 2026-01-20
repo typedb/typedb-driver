@@ -1,11 +1,8 @@
 [#_UserManager]
 === UserManager
 
-[source,python]
-----
-class
-----
-
+[caption=""]
+.class
 *Package*: `typedb.api.user.user`
 
 Provides access to all user management methods.

@@ -1,11 +1,8 @@
 [#_FetchAnnotationFieldEntry]
 === FetchAnnotationFieldEntry
 
-[source,typescript]
-----
-class
-----
-
+[caption=""]
+.class
 [source,typescript]
 ----
 FetchAnnotationFieldEntry: AnalyzedFetch & { key: string }

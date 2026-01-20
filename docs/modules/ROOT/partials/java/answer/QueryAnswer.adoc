@@ -1,11 +1,8 @@
 [#_QueryAnswer]
 === QueryAnswer
 
-[source,java]
-----
-class
-----
-
+[caption=""]
+.class
 *Package*: `com.typedb.driver.api.answer`
 
 General answer on a query returned by a server. Can be a simple Ok response or a collection of concepts.

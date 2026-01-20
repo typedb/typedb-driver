@@ -1,11 +1,8 @@
 [#_EntityType]
 === EntityType
 
-[source,python]
-----
-class
-----
-
+[caption=""]
+.class
 *Package*: `typedb.api.concept.type.entity_type`
 
 *Supertypes:*

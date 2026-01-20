@@ -1,11 +1,8 @@
 [#_struct_ReduceAssignment]
 === ReduceAssignment
 
-[source,rust]
-----
-struct
-----
-
+[caption=""]
+.struct
 *Implements traits:*
 
 * `Clone`

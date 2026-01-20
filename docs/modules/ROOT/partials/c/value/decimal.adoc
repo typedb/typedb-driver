@@ -4,11 +4,8 @@
 [#_Struct_Decimal]
 ==== Struct Decimal
 
-[source,cpp]
-----
-class
-----
-
+[caption=""]
+.class
 
 
 A fixed-point decimal number. Holds exactly 19 digits after the decimal point and a 64-bit value before the decimal point.

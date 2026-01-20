@@ -1,11 +1,8 @@
 [#_Pipeline]
 === Pipeline
 
-[source,python]
-----
-class
-----
-
+[caption=""]
+.class
 *Package*: `typedb.api.analyze.pipeline`
 
 A representation of a query pipeline.

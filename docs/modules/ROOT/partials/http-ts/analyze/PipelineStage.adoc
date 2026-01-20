@@ -1,11 +1,8 @@
 [#_PipelineStage]
 === PipelineStage
 
-[source,typescript]
-----
-class
-----
-
+[caption=""]
+.class
 [source,typescript]
 ----
 PipelineStage:

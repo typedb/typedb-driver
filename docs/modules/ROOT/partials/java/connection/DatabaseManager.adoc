@@ -1,11 +1,8 @@
 [#_DatabaseManager]
 === DatabaseManager
 
-[source,java]
-----
-class
-----
-
+[caption=""]
+.class
 *Package*: `com.typedb.driver.api.database`
 
 Provides access to all database management methods.

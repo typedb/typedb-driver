@@ -1,11 +1,8 @@
 [#_ConstraintExactness]
 === ConstraintExactness
 
-[source,python]
-----
-class
-----
-
+[caption=""]
+.class
 *Package*: `typedb.common.enums`
 
 An enumeration.

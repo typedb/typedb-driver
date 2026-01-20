@@ -1,11 +1,8 @@
 [#_enum_Error]
 === Error
 
-[source,rust]
-----
-enum
-----
-
+[caption=""]
+.enum
 Represents errors encountered during operation.
 
 [caption=""]

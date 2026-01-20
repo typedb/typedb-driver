@@ -4,11 +4,8 @@
 [#_Struct_Transaction]
 ==== Struct Transaction
 
-[source,cpp]
-----
-class
-----
-
+[caption=""]
+.class
 
 
 A transaction with a TypeDB database.

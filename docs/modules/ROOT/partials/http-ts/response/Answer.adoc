@@ -1,11 +1,8 @@
 [#_Answer]
 === Answer
 
-[source,typescript]
-----
-class
-----
-
+[caption=""]
+.class
 [source,typescript]
 ----
 Answer: ConceptRowAnswer | ConceptDocument

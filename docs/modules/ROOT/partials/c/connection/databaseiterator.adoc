@@ -4,11 +4,8 @@
 [#_Struct_DatabaseIterator]
 ==== Struct DatabaseIterator
 
-[source,cpp]
-----
-class
-----
-
+[caption=""]
+.class
 
 
 An ``Iterator`` over databases present on the TypeDB server.

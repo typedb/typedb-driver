@@ -1,11 +1,8 @@
 [#_enum_Offset]
 === Offset
 
-[source,rust]
-----
-enum
-----
-
+[caption=""]
+.enum
 Offset for datetime-tz. Can be retrieved from an IANA Tz or a FixedOffset.
 
 [caption=""]

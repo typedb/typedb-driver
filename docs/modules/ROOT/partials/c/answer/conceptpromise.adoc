@@ -4,11 +4,8 @@
 [#_Struct_ConceptPromise]
 ==== Struct ConceptPromise
 
-[source,cpp]
-----
-class
-----
-
+[caption=""]
+.class
 
 
 Promise object representing the result of an asynchronous operation. Use concept_promise_resolve(ConceptPromise*) to wait for and retrieve the resulting boolean value.

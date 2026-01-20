@@ -4,11 +4,8 @@
 [#_Struct_Variable]
 ==== Struct Variable
 
-[source,cpp]
-----
-class
-----
-
+[caption=""]
+.class
 
 
 Uniquely identifies a variable in a ``Pipeline``pipeline. Its name (if any) can be retrieved from the ``variable_names`` field in ``Pipeline``

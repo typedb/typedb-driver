@@ -1,11 +1,8 @@
 [#_Duration]
 === Duration
 
-[source,python]
-----
-class
-----
-
+[caption=""]
+.class
 *Package*: `typedb.common.duration`
 
 A relative duration, which contains months, days, and nanoseconds. Can be used for calendar-relative durations (eg 7 days forward), or for absolute durations using the nanosecond component. Not convertible to datetime.timedelta due to the lack of months and nanos alternatives.

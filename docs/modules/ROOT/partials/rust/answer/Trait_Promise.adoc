@@ -1,11 +1,8 @@
 [#_trait_Promise]
 === Trait Promise
 
-[source,rust]
-----
-struct
-----
-
+[caption=""]
+.struct
 [tabs]
 ====
 async::

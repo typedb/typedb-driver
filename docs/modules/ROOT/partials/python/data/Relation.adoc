@@ -1,11 +1,8 @@
 [#_Relation]
 === Relation
 
-[source,python]
-----
-class
-----
-
+[caption=""]
+.class
 *Package*: `typedb.api.concept.instance.relation`
 
 *Supertypes:*

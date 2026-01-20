@@ -1,11 +1,8 @@
 [#_enum_TransactionType]
 === TransactionType
 
-[source,rust]
-----
-enum
-----
-
+[caption=""]
+.enum
 This enum is used to specify the type of transaction.
 
 [caption=""]

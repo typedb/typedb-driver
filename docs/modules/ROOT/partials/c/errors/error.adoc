@@ -4,11 +4,8 @@
 [#_Struct_Error]
 ==== Struct Error
 
-[source,cpp]
-----
-class
-----
-
+[caption=""]
+.class
 
 
 Represents errors encountered during operation.

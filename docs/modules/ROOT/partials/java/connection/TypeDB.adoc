@@ -1,11 +1,8 @@
 [#_TypeDB]
 === TypeDB
 
-[source,java]
-----
-class
-----
-
+[caption=""]
+.class
 *Package*: `com.typedb.driver`
 
 [caption=""]

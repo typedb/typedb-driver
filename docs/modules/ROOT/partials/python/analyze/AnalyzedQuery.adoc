@@ -1,11 +1,8 @@
 [#_AnalyzedQuery]
 === AnalyzedQuery
 
-[source,python]
-----
-class
-----
-
+[caption=""]
+.class
 *Package*: `typedb.api.analyze.analyzed_query`
 
 An AnalyzedQuery contains the server’s representation of the query and preamble functions; as well as the result of types inferred for each variable by type-inference.

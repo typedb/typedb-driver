@@ -1,11 +1,8 @@
 [#_SortOrder]
 === SortOrder
 
-[source,python]
-----
-class
-----
-
+[caption=""]
+.class
 *Package*: `typedb.common.enums`
 
 An enumeration.

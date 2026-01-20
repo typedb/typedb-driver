@@ -1,11 +1,8 @@
 [#_enum_ConstraintVertex]
 === ConstraintVertex
 
-[source,rust]
-----
-enum
-----
-
+[caption=""]
+.enum
 The answer to a TypeDB query is a set of concepts which satisfy the <code>Constraints</code> in the query. A <code>ConstraintVertex</code> is either a variable, or some identifier of the concept.
 
 [caption=""]

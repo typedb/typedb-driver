@@ -4,11 +4,8 @@
 [#_Struct_Reducer]
 ==== Struct Reducer
 
-[source,cpp]
-----
-class
-----
-
+[caption=""]
+.class
 
 
 Representation of a reducer used either in a ``PipelineStage::Reduce`` or in a function's ``ReturnOperation``.

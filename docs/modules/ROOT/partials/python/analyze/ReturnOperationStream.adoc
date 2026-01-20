@@ -1,11 +1,8 @@
 [#_ReturnOperationStream]
 === ReturnOperationStream
 
-[source,python]
-----
-class
-----
-
+[caption=""]
+.class
 *Package*: `typedb.api.analyze.function`
 
 *Supertypes:*

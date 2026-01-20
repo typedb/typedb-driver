@@ -1,11 +1,8 @@
 [#_struct_Duration]
 === Duration
 
-[source,rust]
-----
-struct
-----
-
+[caption=""]
+.struct
 *Implements traits:*
 
 * `Clone`

@@ -1,11 +1,8 @@
 [#_VariableAnnotations]
 === VariableAnnotations
 
-[source,java]
-----
-class
-----
-
+[caption=""]
+.class
 *Package*: `com.typedb.driver.api.analyze`
 
 // tag::methods[]

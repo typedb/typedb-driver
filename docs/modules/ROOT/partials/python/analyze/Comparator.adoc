@@ -1,11 +1,8 @@
 [#_Comparator]
 === Comparator
 
-[source,python]
-----
-class
-----
-
+[caption=""]
+.class
 *Package*: `typedb.common.enums`
 
 An enumeration.

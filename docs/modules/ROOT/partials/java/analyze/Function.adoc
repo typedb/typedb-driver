@@ -1,11 +1,8 @@
 [#_Function]
 === Function
 
-[source,java]
-----
-class
-----
-
+[caption=""]
+.class
 *Package*: `com.typedb.driver.api.analyze`
 
 Holds a representation of a function, and the result of type-inference for each variable.

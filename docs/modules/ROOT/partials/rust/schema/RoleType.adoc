@@ -1,11 +1,8 @@
 [#_struct_RoleType]
 === RoleType
 
-[source,rust]
-----
-struct
-----
-
+[caption=""]
+.struct
 *Implements traits:*
 
 * `Clone`

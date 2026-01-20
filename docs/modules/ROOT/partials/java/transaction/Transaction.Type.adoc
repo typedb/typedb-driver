@@ -1,11 +1,8 @@
 [#_Transaction_Type]
 === Transaction.Type
 
-[source,java]
-----
-class
-----
-
+[caption=""]
+.class
 *Package*: `com.typedb.driver.api`
 
 Used to specify the type of transaction. 

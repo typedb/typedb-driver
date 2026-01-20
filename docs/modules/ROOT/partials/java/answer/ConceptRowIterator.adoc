@@ -1,11 +1,8 @@
 [#_ConceptRowIterator]
 === ConceptRowIterator
 
-[source,java]
-----
-class
-----
-
+[caption=""]
+.class
 *Package*: `com.typedb.driver.api.answer`
 
 *Superinterfaces:*

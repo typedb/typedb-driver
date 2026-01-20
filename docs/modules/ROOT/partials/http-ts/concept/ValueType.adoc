@@ -1,11 +1,8 @@
 [#_ValueType]
 === ValueType
 
-[source,typescript]
-----
-class
-----
-
+[caption=""]
+.class
 [source,typescript]
 ----
 ValueType:

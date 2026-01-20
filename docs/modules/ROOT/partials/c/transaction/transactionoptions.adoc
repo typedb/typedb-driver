@@ -4,11 +4,8 @@
 [#_Struct_TransactionOptions]
 ==== Struct TransactionOptions
 
-[source,cpp]
-----
-class
-----
-
+[caption=""]
+.class
 
 
 TypeDB transaction options. ``TransactionOptions`` object can be used to override the default server behaviour for opened transactions.

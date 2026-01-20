@@ -1,11 +1,8 @@
 [#_AnswerType]
 === AnswerType
 
-[source,typescript]
-----
-class
-----
-
+[caption=""]
+.class
 [source,typescript]
 ----
 AnswerType: "ok" | "conceptRows" | "conceptDocuments"

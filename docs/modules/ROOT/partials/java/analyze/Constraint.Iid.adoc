@@ -1,11 +1,8 @@
 [#_Constraint_Iid]
 === Constraint.Iid
 
-[source,java]
-----
-class
-----
-
+[caption=""]
+.class
 *Package*: `com.typedb.driver.api.analyze`
 
 *Superinterfaces:*

@@ -1,11 +1,8 @@
 [#_struct_NamedRole]
 === NamedRole
 
-[source,rust]
-----
-struct
-----
-
+[caption=""]
+.struct
 *Implements traits:*
 
 * `Clone`
