@@ -28,8 +28,18 @@ cargo add typedb-driver
 ```rust
 use typedb_driver::TypeDBDriver;
 
-let driver = TypeDBDriver::new_core(TypeDBDriver::DEFAULT_ADDRESS).await.unwrap();
+// Open a driver connection. Specify your parameters if needed
+let driver = TypeDBDriver::new(
+   TypeDBDriver::DEFAULT_ADDRESS,
+   Credentials::new("admin", "password"),
+   DriverOptions::new(false, None).unwrap(),
+)
+.await
+.unwrap();
 ```
+
+
+_Note: `typedb-driver` ships as `async` by default, but you can also use the `sync` feature to use a blocking/threaded implementation._
 
 ## Build from Source
 
@@ -327,48 +337,4 @@ fn typedb_example() {
 
 The TypeDB Rust driver includes comprehensive logging functionality using the `tracing` crate. This allows you to monitor driver operations, debug issues, and understand the driver's behavior.
 
-### Logging Configuration
-
-The logging level can be controlled through environment variables with the following priority:
-
-1. **TYPEDB_DRIVER_LOG** - Driver-specific log level (highest priority)
-2. **RUST_LOG** - General Rust logging level (fallback)
-3. **Default level: INFO** - If no environment variables are set
-
-The logging is scoped to the `typedb_driver` package only, so it won't affect other loggers like Tonic or other dependencies. This means you can control TypeDB driver logging independently from your application's other logging.
-
-If you want to track the memory exchanges between Rust and the C layer, you can set `TYPEDB_DRIVER_CLIB_LOG` to TRACE.
-
-### Supported Log Levels
-
-- `error` - Only error messages
-- `warn` - Warning and error messages  
-- `info` - Informational, warning, and error messages (default)
-- `debug` - Detailed debugging information
-- `trace` - Very detailed tracing information
-
-### Examples
-
-```bash
-# Set driver-specific log level
-TYPEDB_DRIVER_LOG=debug cargo run
-
-# Use RUST_LOG as fallback
-RUST_LOG=info cargo run
-
-# Default level (INFO) if no environment variable is set
-cargo run
-```
-
-### Manual Initialization
-
-If you need to initialize logging before creating a driver (for example, to see connection logs), you can call the initialization function directly:
-
-```rust
-use typedb_driver::TypeDBDriver;
-
-TypeDBDriver::init_logging();
-// Logging is now initialized
-```
-
-For more detailed logging configuration and integration with application logging, see the [Logging Documentation](LOGGING.md).
+It can be configured using your Rust application's `tracing` subscriber levels, or if not configured, using the typical `RUST_LOG` environment variable conventions.

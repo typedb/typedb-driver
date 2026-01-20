@@ -346,3 +346,21 @@ if (check_error()) { /* handle */ }
 **Note**: Server-side errors will only be available when the promise is resolved 
 or the first element in the iterator is requested (by calling`_next`). You must do this to 
 know whether an operation succeeded, regardless of your interest in the result. 
+
+## Logging
+
+You can configure the driver's logging behaviour using environment variables. This is designed to support FFI-based embedded libraries calling the C/Rust driver - in other words, systems that can't configure a Rust application themselves, but still need to configure the driver's logging (for example, for debugging).
+
+To configure logging, call `init_logging`, which reads the following environment variables:
+
+- `TYPEDB_DRIVER_LOG`: Fine-grained control using the same syntax as `RUST_LOG`.
+  Example: `TYPEDB_DRIVER_LOG=typedb_driver=debug,typedb_driver_clib=trace`
+
+- `TYPEDB_DRIVER_LOG_LEVEL`: Simple log level that applies to both `typedb_driver`
+  and `typedb_driver_clib` crates. Overrides any settings from `TYPEDB_DRIVER_LOG`.
+  Example: `TYPEDB_DRIVER_LOG_LEVEL=debug`
+
+If neither is set, the default level is INFO for driver crates.
+
+The logging is initialized only once to prevent multiple initializations
+in applications that create multiple drivers.
