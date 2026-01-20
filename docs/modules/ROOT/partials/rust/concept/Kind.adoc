@@ -1,8 +1,8 @@
 [#_enum_Kind]
 === Kind
 
-[caption=""]
-.enum
+`Class(name=Kind, anchor=enum_Kind, enumConstants=[EnumConstant(name=Entity = 0, type=null, value=null), EnumConstant(name=Attribute = 1, type=null, value=null), EnumConstant(name=Relation = 2, type=null, value=null), EnumConstant(name=Role = 3, type=null, value=null)], description=[Kind represents the base of a defined type to describe its capabilities. For example, “define entity person;” defines a type “person” of a kind “entity”.], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=async).nameDescriptor(language)`
+
 Kind represents the base of a defined type to describe its capabilities. For example, “define entity person;” defines a type “person” of a kind “entity”.
 
 [caption=""]

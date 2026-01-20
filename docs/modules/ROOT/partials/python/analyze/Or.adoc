@@ -1,8 +1,8 @@
 [#_Or]
 === Or
 
-[caption=""]
-.class
+`Class(name=Or, anchor=Or, enumConstants=[], description=[Represents an ‘or’ constraint: { &lt;branches[0]&gt; } or { &lt;branches[1]&gt; } [or …]], examples=[], fields=[], methods=[Method(name=branches, signature=branches() -> Iterator['ConjunctionID'], anchor=Or_branches_, args=[], description=[Index into Pipeline.conjunctions], examples=[], mode=null, returnDescription=, returnType=Iterator['ConjunctionID'])], packagePath=typedb.api.analyze.constraint, superClasses=[Constraint], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 *Package*: `typedb.api.analyze.constraint`
 
 *Supertypes:*

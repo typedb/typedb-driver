@@ -1,8 +1,8 @@
 [#_OffsetStage]
 === OffsetStage
 
-[caption=""]
-.class
+`Class(name=OffsetStage, anchor=OffsetStage, enumConstants=[], description=[Represents an ‘offset’ stage: offset &lt;offset&gt;], examples=[], fields=[], methods=[Method(name=offset, signature=offset() -> int, anchor=OffsetStage_offset_, args=[], description=[], examples=[], mode=null, returnDescription=, returnType=int)], packagePath=typedb.api.analyze.pipeline_stage, superClasses=[PipelineStage], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 *Package*: `typedb.api.analyze.pipeline_stage`
 
 *Supertypes:*

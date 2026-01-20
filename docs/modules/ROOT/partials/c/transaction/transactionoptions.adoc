@@ -4,8 +4,9 @@
 [#_Struct_TransactionOptions]
 ==== Struct TransactionOptions
 
-[caption=""]
-.class
+`Class(name=Struct TransactionOptions, anchor=Struct_TransactionOptions, enumConstants=[], description=[, TypeDB transaction options. ``TransactionOptions`` object can be used to override the default server behaviour for opened transactions.
+], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 
 
 TypeDB transaction options. ``TransactionOptions`` object can be used to override the default server behaviour for opened transactions.

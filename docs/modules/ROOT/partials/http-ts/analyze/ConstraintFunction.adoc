@@ -1,8 +1,8 @@
 [#_ConstraintFunction]
 ==== ConstraintFunction
 
-[caption=""]
-.class
+`Class(name=ConstraintFunction, anchor=ConstraintFunction, enumConstants=[], description=[], examples=[], fields=[Variable(name=arguments, anchor=null, defaultValue=null, description=null, type=ConstraintVertexVariable), Variable(name=assigned, anchor=null, defaultValue=null, description=null, type=ConstraintVertexVariable), Variable(name=name, anchor=null, defaultValue=null, description=null, type=string), Variable(name=tag, anchor=null, defaultValue=null, description=null, type="functionCall"), Variable(name=textSpan, anchor=null, defaultValue=null, description=null, type=ConstraintSpan)], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 [caption=""]
 .Fields
 // tag::properties[]

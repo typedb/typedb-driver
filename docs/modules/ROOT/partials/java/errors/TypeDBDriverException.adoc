@@ -1,8 +1,9 @@
 [#_TypeDBDriverException]
 === TypeDBDriverException
 
-[caption=""]
-.class
+`Class(name=TypeDBDriverException, anchor=TypeDBDriverException, enumConstants=[], description=[Exceptions raised by the driver.], examples=[], fields=[], methods=[Method(name=getName, signature=public java.lang.String getName(), anchor=TypeDBDriverException_getName_, args=[], description=[], examples=[], mode=null, returnDescription=null, returnType=public java.lang.String), Method(name=getErrorMessage, signature=@Nullable
+public com.typedb.driver.common.exception.ErrorMessage getErrorMessage(), anchor=TypeDBDriverException_getErrorMessage_, args=[], description=[], examples=[], mode=null, returnDescription=null, returnType=public com.typedb.driver.common.exception.ErrorMessage)], packagePath=com.typedb.driver.common.exception, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 *Package*: `com.typedb.driver.common.exception`
 
 Exceptions raised by the driver.

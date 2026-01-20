@@ -1,8 +1,8 @@
 [#_TransactionOptions]
 === TransactionOptions
 
-[caption=""]
-.class
+`Class(name=TransactionOptions, anchor=TransactionOptions, enumConstants=[], description=[], examples=[], fields=[Variable(name=schemaLockAcquireTimeoutMillis, anchor=null, defaultValue=null, description=null, type=number), Variable(name=transactionTimeoutMillis, anchor=null, defaultValue=null, description=null, type=number)], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 [caption=""]
 .Fields
 // tag::properties[]

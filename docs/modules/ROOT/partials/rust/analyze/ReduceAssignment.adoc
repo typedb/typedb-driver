@@ -1,8 +1,8 @@
 [#_struct_ReduceAssignment]
 === ReduceAssignment
 
-[caption=""]
-.struct
+`Class(name=ReduceAssignment, anchor=struct_ReduceAssignment, enumConstants=[], description=[Representation of an assignment from a reduction in a ``PipelineStage::Reduce``, such as ``reduce $c = sum($x);``], examples=[], fields=[Variable(name=assigned, anchor=struct_ReduceAssignment_assigned, defaultValue=null, description=null, type=Variable), Variable(name=reducer, anchor=struct_ReduceAssignment_reducer, defaultValue=null, description=null, type=Reducer)], methods=[], packagePath=null, superClasses=[Clone, Debug], traitImplementors=[], mode=async).nameDescriptor(language)`
+
 *Implements traits:*
 
 * `Clone`

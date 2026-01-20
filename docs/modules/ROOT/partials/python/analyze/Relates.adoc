@@ -1,8 +1,8 @@
 [#_Relates]
 === Relates
 
-[caption=""]
-.class
+`Class(name=Relates, anchor=Relates, enumConstants=[], description=[Represents a ‘relates’ constraint: &lt;relation&gt; relates &lt;role&gt;], examples=[], fields=[], methods=[Method(name=exactness, signature=exactness() -> ConstraintExactness, anchor=Relates_exactness_, args=[], description=[], examples=[], mode=null, returnDescription=, returnType=ConstraintExactness), Method(name=relation, signature=relation() -> ConstraintVertex, anchor=Relates_relation_, args=[], description=[], examples=[], mode=null, returnDescription=, returnType=ConstraintVertex), Method(name=role, signature=role() -> ConstraintVertex, anchor=Relates_role_, args=[], description=[], examples=[], mode=null, returnDescription=, returnType=ConstraintVertex)], packagePath=typedb.api.analyze.constraint, superClasses=[Constraint], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 *Package*: `typedb.api.analyze.constraint`
 
 *Supertypes:*

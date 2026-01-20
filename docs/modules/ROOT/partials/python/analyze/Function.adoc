@@ -1,8 +1,8 @@
 [#_Function]
 === Function
 
-[caption=""]
-.class
+`Class(name=Function, anchor=Function, enumConstants=[], description=[Holds a representation of a function, and the result of type-inference for each variable.], examples=[], fields=[], methods=[Method(name=argument_annotations, signature=argument_annotations() -> Iterator['VariableAnnotations'], anchor=Function_argument_annotations_, args=[], description=[Gets the type annotations for each argument of the function.], examples=[], mode=null, returnDescription=, returnType=Iterator['VariableAnnotations']), Method(name=argument_variables, signature=argument_variables() -> Iterator['Variable'], anchor=Function_argument_variables_, args=[], description=[Gets the variables which are the arguments of the function.], examples=[], mode=null, returnDescription=, returnType=Iterator['Variable']), Method(name=body, signature=body() -> Pipeline, anchor=Function_body_, args=[], description=[Gets the pipeline which forms the body of the function.], examples=[], mode=null, returnDescription=, returnType=Pipeline), Method(name=return_annotations, signature=return_annotations() -> Iterator['VariableAnnotations'], anchor=Function_return_annotations_, args=[], description=[Gets the type annotations for each concept returned by the function.], examples=[], mode=null, returnDescription=, returnType=Iterator['VariableAnnotations']), Method(name=return_operation, signature=return_operation() -> ReturnOperation, anchor=Function_return_operation_, args=[], description=[Gets the return operation of the function.], examples=[], mode=null, returnDescription=, returnType=ReturnOperation)], packagePath=typedb.api.analyze.function, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 *Package*: `typedb.api.analyze.function`
 
 Holds a representation of a function, and the result of type-inference for each variable.

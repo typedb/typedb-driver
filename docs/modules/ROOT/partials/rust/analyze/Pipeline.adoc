@@ -1,8 +1,8 @@
 [#_struct_Pipeline]
 === Pipeline
 
-[caption=""]
-.struct
+`Class(name=Pipeline, anchor=struct_Pipeline, enumConstants=[], description=[A representation of a query pipeline.], examples=[], fields=[Variable(name=conjunctions, anchor=struct_Pipeline_conjunctions, defaultValue=null, description=A flattened list of conjunctions in the pipeline. The actual logical structure can be reconstructed from the ``Constraint``s within the conjunction., type=Vec<Conjunction>), Variable(name=stages, anchor=struct_Pipeline_stages, defaultValue=null, description=The stages making up the pipeline, type=Vec<PipelineStage>), Variable(name=variable_info, anchor=struct_Pipeline_variable_info, defaultValue=null, description=General information about a variable, such as its name., type=HashMap<Variable, VariableInfo>), Variable(name=outputs, anchor=struct_Pipeline_outputs, defaultValue=null, description=The variables available at the end of a pipeline, type=Vec<Variable>)], methods=[Method(name=variable_name, signature=pub fn variable_name(&self, variable: &Variable) -> Option<&str>, anchor=struct_Pipeline_variable_name_, args=[], description=[Retrieves the name of a variable, if it has one.], examples=[], mode=async, returnDescription=null, returnType=Option<&str>)], packagePath=null, superClasses=[Clone, Debug], traitImplementors=[], mode=async).nameDescriptor(language)`
+
 *Implements traits:*
 
 * `Clone`

@@ -1,8 +1,8 @@
 [#_ConstraintIid]
 ==== ConstraintIid
 
-[caption=""]
-.class
+`Class(name=ConstraintIid, anchor=ConstraintIid, enumConstants=[], description=[], examples=[], fields=[Variable(name=concept, anchor=null, defaultValue=null, description=null, type=ConstraintVertexVariable), Variable(name=iid, anchor=null, defaultValue=null, description=null, type=string), Variable(name=tag, anchor=null, defaultValue=null, description=null, type="iid"), Variable(name=textSpan, anchor=null, defaultValue=null, description=null, type=ConstraintSpan)], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 [caption=""]
 .Fields
 // tag::properties[]

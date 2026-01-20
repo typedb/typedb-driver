@@ -1,8 +1,8 @@
 [#_DriverParamsTranslated]
 ==== DriverParamsTranslated
 
-[caption=""]
-.class
+`Class(name=DriverParamsTranslated, anchor=DriverParamsTranslated, enumConstants=[], description=[], examples=[], fields=[Variable(name=password, anchor=null, defaultValue=null, description=null, type=string), Variable(name=translatedAddresses, anchor=null, defaultValue=null, description=null, type=TranslatedAddress), Variable(name=username, anchor=null, defaultValue=null, description=null, type=string)], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 [caption=""]
 .Fields
 // tag::properties[]

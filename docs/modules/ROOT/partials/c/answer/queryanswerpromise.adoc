@@ -4,8 +4,8 @@
 [#_Struct_QueryAnswerPromise]
 ==== Struct QueryAnswerPromise
 
-[caption=""]
-.class
+`Class(name=Struct QueryAnswerPromise, anchor=Struct_QueryAnswerPromise, enumConstants=[], description=[, Promise object representing the result of an asynchronous operation. Use query_answer_promise_resolve(QueryAnswerPromise*) to wait for and retrieve the resulting boolean value.], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 
 
 Promise object representing the result of an asynchronous operation. Use query_answer_promise_resolve(QueryAnswerPromise*) to wait for and retrieve the resulting boolean value.

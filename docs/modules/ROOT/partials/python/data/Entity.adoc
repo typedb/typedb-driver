@@ -1,8 +1,8 @@
 [#_Entity]
 === Entity
 
-[caption=""]
-.class
+`Class(name=Entity, anchor=Entity, enumConstants=[], description=[Instance of data of an entity type, representing a standalone object that exists in the data model independently., Entity does not have a value. It is usually addressed by its ownership over attribute instances and/or roles played in relation instances.], examples=[], fields=[], methods=[Method(name=as_entity, signature=as_entity() -> Entity, anchor=Entity_as_entity_, args=[], description=[Casts the concept to ``Entity``.], examples=[entity.as_entity()], mode=null, returnDescription=, returnType=Entity), Method(name=get_iid, signature=get_iid() -> str, anchor=Entity_get_iid_, args=[], description=[Retrieves the unique id of the ``Entity``.], examples=[entity.get_iid()], mode=null, returnDescription=, returnType=str), Method(name=get_type, signature=get_type() -> EntityType, anchor=Entity_get_type_, args=[], description=[Retrieves the type which this ``Entity`` belongs to.], examples=[entity.get_type()], mode=null, returnDescription=, returnType=EntityType), Method(name=is_entity, signature=is_entity() -> bool, anchor=Entity_is_entity_, args=[], description=[Checks if the concept is an ``Entity``.], examples=[entity.is_entity()], mode=null, returnDescription=, returnType=bool)], packagePath=typedb.api.concept.instance.entity, superClasses=[Instance], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 *Package*: `typedb.api.concept.instance.entity`
 
 *Supertypes:*

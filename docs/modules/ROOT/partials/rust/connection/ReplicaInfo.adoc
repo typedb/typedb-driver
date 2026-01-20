@@ -1,8 +1,8 @@
 [#_struct_ReplicaInfo]
 === ReplicaInfo
 
-[caption=""]
-.struct
+`Class(name=ReplicaInfo, anchor=struct_ReplicaInfo, enumConstants=[], description=[The metadata and state of an individual raft replica of a database.], examples=[], fields=[Variable(name=server, anchor=struct_ReplicaInfo_server, defaultValue=null, description=The server hosting this replica, type=Address), Variable(name=is_primary, anchor=struct_ReplicaInfo_is_primary, defaultValue=null, description=Whether this is the primary replica of the raft cluster., type=bool), Variable(name=is_preferred, anchor=struct_ReplicaInfo_is_preferred, defaultValue=null, description=Whether this is the preferred replica of the raft cluster. If true, Operations which can be run on any replica will prefer to use this replica., type=bool), Variable(name=term, anchor=struct_ReplicaInfo_term, defaultValue=null, description=The raft protocol ‘term’ of this replica., type=i64)], methods=[], packagePath=null, superClasses=[Debug], traitImplementors=[], mode=async).nameDescriptor(language)`
+
 *Implements traits:*
 
 * `Debug`

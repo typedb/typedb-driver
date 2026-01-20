@@ -1,8 +1,8 @@
 [#_AnalyzeResponse]
 === AnalyzeResponse
 
-[caption=""]
-.class
+`Class(name=AnalyzeResponse, anchor=AnalyzeResponse, enumConstants=[], description=[], examples=[], fields=[Variable(name=fetch, anchor=null, defaultValue=null, description=null, type=AnalyzedFetch), Variable(name=preamble, anchor=null, defaultValue=null, description=null, type=AnalyzedFunction), Variable(name=query, anchor=null, defaultValue=null, description=null, type=AnalyzedPipeline), Variable(name=source, anchor=null, defaultValue=null, description=null, type=string)], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 [caption=""]
 .Fields
 // tag::properties[]

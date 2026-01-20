@@ -1,8 +1,8 @@
 [#_AttributeType]
 === AttributeType
 
-[caption=""]
-.class
+`Class(name=AttributeType, anchor=AttributeType, enumConstants=[], description=[], examples=[], fields=[Variable(name=kind, anchor=null, defaultValue=null, description=null, type="attributeType"), Variable(name=label, anchor=null, defaultValue=null, description=null, type=string), Variable(name=valueType, anchor=null, defaultValue=null, description=null, type=ValueType)], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 [caption=""]
 .Fields
 // tag::properties[]

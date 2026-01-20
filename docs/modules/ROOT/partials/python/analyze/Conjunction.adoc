@@ -1,8 +1,8 @@
 [#_Conjunction]
 === Conjunction
 
-[caption=""]
-.class
+`Class(name=Conjunction, anchor=Conjunction, enumConstants=[], description=[A representation of the constraints involved in the query, and types inferred for each variable.], examples=[], fields=[], methods=[Method(name=annotated_variables, signature=annotated_variables() -> Iterator['Variable'], anchor=Conjunction_annotated_variables_, args=[], description=[The variables that have annotations in this conjunction.], examples=[], mode=null, returnDescription=an iterator over annotated variables, returnType=Iterator['Variable']), Method(name=constraints, signature=constraints() -> Iterator['Constraint'], anchor=Conjunction_constraints_, args=[], description=[The Constraint(s) in the conjunction.], examples=[], mode=null, returnDescription=an iterator over constraints, returnType=Iterator['Constraint']), Method(name=variable_annotations, signature=variable_annotations(variable: Variable) -> 'VariableAnnotations' | None, anchor=Conjunction_variable_annotations_variable_Variable, args=[Variable(name=variable, anchor=null, defaultValue=null, description=the variable to get annotations for, type=Variable)], description=[Gets the annotations for a specific variable in this conjunction.], examples=[], mode=null, returnDescription=the variable’s annotations, returnType='VariableAnnotations' | None)], packagePath=typedb.api.analyze.conjunction, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 *Package*: `typedb.api.analyze.conjunction`
 
 A representation of the constraints involved in the query, and types inferred for each variable.

@@ -1,8 +1,8 @@
 [#_struct_Duration]
 === Duration
 
-[caption=""]
-.struct
+`Class(name=Duration, anchor=struct_Duration, enumConstants=[], description=[A relative duration, which contains months, days, and nanoseconds. Can be used for calendar-relative durations (eg 7 days forward), or for absolute durations using the nanosecond component When used as an absolute duration, convertible to chrono::Duration], examples=[], fields=[Variable(name=months, anchor=struct_Duration_months, defaultValue=null, description=null, type=u32), Variable(name=days, anchor=struct_Duration_days, defaultValue=null, description=null, type=u32), Variable(name=nanos, anchor=struct_Duration_nanos, defaultValue=null, description=null, type=u64)], methods=[], packagePath=null, superClasses=[Clone, Copy, Debug, Display, Eq, FromStr, Hash, PartialEq, StructuralPartialEq, TryFrom<Duration>], traitImplementors=[], mode=async).nameDescriptor(language)`
+
 *Implements traits:*
 
 * `Clone`

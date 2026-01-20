@@ -1,8 +1,8 @@
 [#_Is]
 === Is
 
-[caption=""]
-.class
+`Class(name=Is, anchor=Is, enumConstants=[], description=[Represents an ‘is’ constraint: &lt;lhs&gt; is &lt;rhs&gt;], examples=[], fields=[], methods=[Method(name=lhs, signature=lhs() -> ConstraintVertex, anchor=Is_lhs_, args=[], description=[], examples=[], mode=null, returnDescription=, returnType=ConstraintVertex), Method(name=rhs, signature=rhs() -> ConstraintVertex, anchor=Is_rhs_, args=[], description=[], examples=[], mode=null, returnDescription=, returnType=ConstraintVertex)], packagePath=typedb.api.analyze.constraint, superClasses=[Constraint], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 *Package*: `typedb.api.analyze.constraint`
 
 *Supertypes:*

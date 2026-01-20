@@ -1,8 +1,10 @@
 [#_User]
 === User
 
-[caption=""]
-.class
+`Class(name=User, anchor=User, enumConstants=[], description=[TypeDB user information], examples=[], fields=[], methods=[Method(name=name, signature=@CheckReturnValue
+java.lang.String name(), anchor=User_name_, args=[], description=[Returns the name of this user.], examples=[], mode=null, returnDescription=null, returnType=java.lang.String), Method(name=updatePassword, signature=void updatePassword​(java.lang.String password), anchor=User_updatePassword_java_lang_String, args=[Variable(name=passwordOld, anchor=null, defaultValue=null, description=The current password of this user, type=null), Variable(name=passwordNew, anchor=null, defaultValue=null, description=The new password, type=null)], description=[Updates the password for this user.], examples=[], mode=null, returnDescription=null, returnType=void), Method(name=delete, signature=void delete(), anchor=User_delete_, args=[], description=[Deletes a user with the given name. 
+], examples=[driver.users().delete(username);], mode=null, returnDescription=null, returnType=void)], packagePath=com.typedb.driver.api.user, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 *Package*: `com.typedb.driver.api.user`
 
 TypeDB user information

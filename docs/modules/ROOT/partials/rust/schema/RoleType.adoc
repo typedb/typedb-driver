@@ -1,8 +1,8 @@
 [#_struct_RoleType]
 === RoleType
 
-[caption=""]
-.struct
+`Class(name=RoleType, anchor=struct_RoleType, enumConstants=[], description=[Roles are special internal types used by relations. We can not create an instance of a role in a database. But we can set an instance of another type (role player) to play a role in a particular instance of a relation type., Roles allow a schema to enforce logical constraints on types of role players.], examples=[], fields=[Variable(name=label, anchor=struct_RoleType_label, defaultValue=null, description=null, type=String)], methods=[Method(name=label, signature=pub fn label(&self) -> &str, anchor=struct_RoleType_label_, args=[], description=[Retrieves the unique label of the ``RoleType``.], examples=[role_type.label()], mode=async, returnDescription=null, returnType=&str)], packagePath=null, superClasses=[Clone, Debug, Display, Eq, PartialEq, StructuralPartialEq], traitImplementors=[], mode=async).nameDescriptor(language)`
+
 *Implements traits:*
 
 * `Clone`

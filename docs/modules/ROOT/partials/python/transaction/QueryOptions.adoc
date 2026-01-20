@@ -1,8 +1,9 @@
 [#_QueryOptions]
 === QueryOptions
 
-[caption=""]
-.class
+`Class(name=QueryOptions, anchor=QueryOptions, enumConstants=[], description=[TypeDB transaction options. ``QueryOptions`` object can be used to override the default server behaviour for executed queries., Options could be specified either as constructor arguments or using properties assignment.], examples=[query_options = QueryOptions(include_instance_types=True)
+query_options.prefetch_size = 10], fields=[Variable(name=include_instance_types, anchor=null, defaultValue=null, description=If set, specifies if types should be included in instance structs returned in ConceptRow answers. This option allows reducing the amount of unnecessary data transmitted., type=bool | None), Variable(name=include_query_structure, anchor=null, defaultValue=null, description=If set, specifies if types should be included in instance structs returned in ConceptRow answers., type=bool | None), Variable(name=prefetch_size, anchor=null, defaultValue=null, description=If set, specifies the number of extra query responses sent before the client side has to re-request more responses. Increasing this may increase performance for queries with a huge number of answers, as it can reduce the number of network round-trips at the cost of more resources on the server side. Minimal value: 1., type=int | None)], methods=[], packagePath=typedb.api.connection.query_options, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 *Package*: `typedb.api.connection.query_options`
 
 TypeDB transaction options. ``QueryOptions`` object can be used to override the default server behaviour for executed queries.

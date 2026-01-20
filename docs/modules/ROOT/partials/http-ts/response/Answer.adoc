@@ -1,8 +1,12 @@
 [#_Answer]
 === Answer
 
-[caption=""]
-.class
+`Class(name=Answer, anchor=Answer, enumConstants=[], description=[[source,typescript]
+----
+Answer: ConceptRowAnswer | ConceptDocument
+----
+], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 [source,typescript]
 ----
 Answer: ConceptRowAnswer | ConceptDocument

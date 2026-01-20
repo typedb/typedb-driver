@@ -1,8 +1,15 @@
 [#_AnalyzedFetch]
 === AnalyzedFetch
 
-[caption=""]
-.class
+`Class(name=AnalyzedFetch, anchor=AnalyzedFetch, enumConstants=[], description=[[source,typescript]
+----
+AnalyzedFetch:
+ | { elements: AnalyzedFetch; tag: "list" }
+ | { possibleFields: FetchAnnotationFieldEntry[]; tag: "object" }
+ | { tag: "value"; valueTypes: ValueType[] }
+----
+], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 [source,typescript]
 ----
 AnalyzedFetch:

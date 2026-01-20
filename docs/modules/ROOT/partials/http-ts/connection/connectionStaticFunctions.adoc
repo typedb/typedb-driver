@@ -1,8 +1,8 @@
 [#_connectionStaticFunctions]
 === Static Functions
 
-[caption=""]
-.class
+`Class(name=Static Functions, anchor=connectionStaticFunctions, enumConstants=[], description=[], examples=[], fields=[], methods=[Method(name=remoteOrigin, signature=remoteOrigin(params: DriverParams): string, anchor=remoteOrigin_remoteOrigin_params_DriverParams, args=[Variable(name=params, anchor=null, defaultValue=null, description=null, type=DriverParams)], description=[], examples=[], mode=null, returnDescription=null, returnType=string), Method(name=isTranslatedParams, signature=isTranslatedParams(params: DriverParams): params is DriverParamsTranslated, anchor=isTranslatedParams_isTranslatedParams_params_DriverParams, args=[Variable(name=params, anchor=null, defaultValue=null, description=null, type=DriverParams)], description=[], examples=[], mode=null, returnDescription=null, returnType=params is DriverParamsTranslated), Method(name=isBasicParams, signature=isBasicParams(params: DriverParams): params is DriverParamsBasic, anchor=isBasicParams_isBasicParams_params_DriverParams, args=[Variable(name=params, anchor=null, defaultValue=null, description=null, type=DriverParams)], description=[], examples=[], mode=null, returnDescription=null, returnType=params is DriverParamsBasic)], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 // tag::methods[]
 [#_isBasicParams_isBasicParams_params_DriverParams]
 ==== isBasicParams

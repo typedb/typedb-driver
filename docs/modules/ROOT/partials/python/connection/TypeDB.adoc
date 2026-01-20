@@ -1,8 +1,8 @@
 [#_TypeDB]
 === TypeDB
 
-[caption=""]
-.class
+`Class(name=TypeDB, anchor=TypeDB, enumConstants=[], description=[], examples=[], fields=[], methods=[Method(name=driver, signature=static driver(address: str, credentials: Credentials, driver_options: DriverOptions) -> Driver, anchor=TypeDB_driver_address_str_credentials_Credentials_driver_options_DriverOptions, args=[Variable(name=address, anchor=null, defaultValue=null, description=Address of the TypeDB server., type=str), Variable(name=credentials, anchor=null, defaultValue=null, description=The credentials to connect with., type=Credentials), Variable(name=driver_options, anchor=null, defaultValue=null, description=The connection settings to connect with., type=DriverOptions)], description=[Creates a connection to TypeDB.], examples=[], mode=null, returnDescription=, returnType=Driver)], packagePath=typedb.driver, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 *Package*: `typedb.driver`
 
 // tag::methods[]

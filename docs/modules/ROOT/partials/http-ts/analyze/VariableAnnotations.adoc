@@ -1,8 +1,16 @@
 [#_VariableAnnotations]
 === VariableAnnotations
 
-[caption=""]
-.class
+`Class(name=VariableAnnotations, anchor=VariableAnnotations, enumConstants=[], description=[[source,typescript]
+----
+VariableAnnotations: { isOptional: boolean } & (
+ | { annotations: Type[]; tag: "instance" }
+ | { annotations: Type[]; tag: "type" }
+ | { tag: "value"; valueTypes: ValueType[] }
+ )
+----
+], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 [source,typescript]
 ----
 VariableAnnotations: { isOptional: boolean } & (

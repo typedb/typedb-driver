@@ -1,8 +1,8 @@
 [#_EntityType]
 === EntityType
 
-[caption=""]
-.class
+`Class(name=EntityType, anchor=EntityType, enumConstants=[], description=[Entity types represent the classification of independent objects in the data model of the business domain.], examples=[], fields=[], methods=[Method(name=as_entity_type, signature=as_entity_type() -> EntityType, anchor=EntityType_as_entity_type_, args=[], description=[Casts the concept to ``EntityType``.], examples=[entity_type.as_entity_type()], mode=null, returnDescription=, returnType=EntityType), Method(name=is_entity_type, signature=is_entity_type() -> bool, anchor=EntityType_is_entity_type_, args=[], description=[Checks if the concept is an ``EntityType``.], examples=[entity_type.is_entity_type()], mode=null, returnDescription=, returnType=bool)], packagePath=typedb.api.concept.type.entity_type, superClasses=[Type], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 *Package*: `typedb.api.concept.type.entity_type`
 
 *Supertypes:*

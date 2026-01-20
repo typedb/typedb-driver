@@ -4,8 +4,8 @@
 [#_Struct_Comparator]
 ==== Struct Comparator
 
-[caption=""]
-.class
+`Class(name=Struct Comparator, anchor=Struct_Comparator, enumConstants=[], description=[, A representation of the comparator used in a comparison constraint.], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 
 
 A representation of the comparator used in a comparison constraint.
@@ -13,8 +13,8 @@ A representation of the comparator used in a comparison constraint.
 [#_Enum_Comparator]
 ==== Enum Comparator
 
-[caption=""]
-.class
+`Class(name=Enum Comparator, anchor=Enum_Comparator, enumConstants=[EnumConstant(name=Equal, type=null, value=null), EnumConstant(name=NotEqual, type=null, value=null), EnumConstant(name=LessThan, type=null, value=null), EnumConstant(name=LessOrEqual, type=null, value=null), EnumConstant(name=Greater, type=null, value=null), EnumConstant(name=GreaterOrEqual, type=null, value=null), EnumConstant(name=Like, type=null, value=null), EnumConstant(name=Contains, type=null, value=null)], description=[, A representation of the comparator used in a comparison constraint.], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 
 
 A representation of the comparator used in a comparison constraint.

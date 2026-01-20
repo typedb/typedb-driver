@@ -1,8 +1,8 @@
 [#_Pipeline]
 === Pipeline
 
-[caption=""]
-.class
+`Class(name=Pipeline, anchor=Pipeline, enumConstants=[], description=[A representation of a query pipeline.], examples=[], fields=[], methods=[Method(name=conjunction, signature=conjunction(conjunction_id: ConjunctionID) -> 'Conjunction' | None, anchor=Pipeline_conjunction_conjunction_id_ConjunctionID, args=[Variable(name=conjunction_id, anchor=null, defaultValue=null, description=the ConjunctionID of the conjunction to retrieve, type=ConjunctionID)], description=[Gets the Conjunction corresponding to the ConjunctionID.], examples=[], mode=null, returnDescription=the corresponding Conjunction, if present, returnType='Conjunction' | None), Method(name=get_variable_name, signature=get_variable_name(variable: Variable) -> str | None, anchor=Pipeline_get_variable_name_variable_Variable, args=[Variable(name=variable, anchor=null, defaultValue=null, description=the variable from this pipeline, type=Variable)], description=[Gets the name of the specified variable, if it has one.], examples=[], mode=null, returnDescription=the name, if any, returnType=str | None), Method(name=stages, signature=stages() -> Iterator['PipelineStage'], anchor=Pipeline_stages_, args=[], description=[A stream/iterator of the stages making up the pipeline.], examples=[], mode=null, returnDescription=, returnType=Iterator['PipelineStage'])], packagePath=typedb.api.analyze.pipeline, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 *Package*: `typedb.api.analyze.pipeline`
 
 A representation of a query pipeline.

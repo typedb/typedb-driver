@@ -1,8 +1,8 @@
 [#_Span]
 === Span
 
-[caption=""]
-.class
+`Class(name=Span, anchor=Span, enumConstants=[], description=[The span of a constraint in the source query.], examples=[], fields=[], methods=[Method(name=begin, signature=begin() -> int, anchor=Span_begin_, args=[], description=[The offset of the first character.], examples=[], mode=null, returnDescription=, returnType=int), Method(name=end, signature=end() -> int, anchor=Span_end_, args=[], description=[The offset after the last character.], examples=[], mode=null, returnDescription=, returnType=int)], packagePath=typedb.api.analyze.constraint, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 *Package*: `typedb.api.analyze.constraint`
 
 The span of a constraint in the source query.

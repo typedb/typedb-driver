@@ -1,8 +1,8 @@
 [#_ConstraintOr]
 ==== ConstraintOr
 
-[caption=""]
-.class
+`Class(name=ConstraintOr, anchor=ConstraintOr, enumConstants=[], description=[], examples=[], fields=[Variable(name=branches, anchor=null, defaultValue=null, description=null, type=number), Variable(name=tag, anchor=null, defaultValue=null, description=null, type="or")], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 [caption=""]
 .Fields
 // tag::properties[]

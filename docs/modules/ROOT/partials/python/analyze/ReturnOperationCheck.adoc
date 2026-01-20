@@ -1,8 +1,8 @@
 [#_ReturnOperationCheck]
 === ReturnOperationCheck
 
-[caption=""]
-.class
+`Class(name=ReturnOperationCheck, anchor=ReturnOperationCheck, enumConstants=[], description=[], examples=[], fields=[], methods=[], packagePath=typedb.api.analyze.function, superClasses=[ReturnOperation], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 *Package*: `typedb.api.analyze.function`
 
 *Supertypes:*

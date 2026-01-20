@@ -4,8 +4,8 @@
 [#_Struct_SortOrder]
 ==== Struct SortOrder
 
-[caption=""]
-.class
+`Class(name=Struct SortOrder, anchor=Struct_SortOrder, enumConstants=[], description=[, The order of a variable being sorted on in a ``PipelineStage::Sort``], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 
 
 The order of a variable being sorted on in a ``PipelineStage::Sort``
@@ -13,8 +13,8 @@ The order of a variable being sorted on in a ``PipelineStage::Sort``
 [#_Enum_SortOrder]
 ==== Enum SortOrder
 
-[caption=""]
-.class
+`Class(name=Enum SortOrder, anchor=Enum_SortOrder, enumConstants=[EnumConstant(name=Ascending, type=null, value=null), EnumConstant(name=Descending, type=null, value=null)], description=[, The order of a variable being sorted on in a ``PipelineStage::Sort``], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 
 
 The order of a variable being sorted on in a ``PipelineStage::Sort``

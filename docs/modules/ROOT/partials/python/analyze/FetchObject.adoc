@@ -1,8 +1,8 @@
 [#_FetchObject]
 === FetchObject
 
-[caption=""]
-.class
+`Class(name=FetchObject, anchor=FetchObject, enumConstants=[], description=[A mapping of string keys to Fetch documents.], examples=[], fields=[], methods=[Method(name=get, signature=get(key: str) -> Fetch, anchor=FetchObject_get_, args=[], description=[The Fetch object for the given key.], examples=[], mode=null, returnDescription=, returnType=Fetch), Method(name=keys, signature=keys() -> Iterator[str], anchor=FetchObject_keys_, args=[], description=[The available keys of this Fetch document.], examples=[], mode=null, returnDescription=, returnType=Iterator[str])], packagePath=typedb.api.analyze.fetch, superClasses=[Fetch], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 *Package*: `typedb.api.analyze.fetch`
 
 *Supertypes:*

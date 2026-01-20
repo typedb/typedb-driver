@@ -4,8 +4,8 @@
 [#_Struct_Conjunction]
 ==== Struct Conjunction
 
-[caption=""]
-.class
+`Class(name=Struct Conjunction, anchor=Struct_Conjunction, enumConstants=[], description=[, A representation of the constraints involved in the query, and types inferred for each variable.], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 
 
 A representation of the constraints involved in the query, and types inferred for each variable.

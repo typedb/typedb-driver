@@ -1,8 +1,8 @@
 [#_ApiErrorResponse]
 === ApiErrorResponse
 
-[caption=""]
-.class
+`Class(name=ApiErrorResponse, anchor=ApiErrorResponse, enumConstants=[], description=[], examples=[], fields=[Variable(name=err, anchor=null, defaultValue=null, description=null, type=ApiError), Variable(name=status, anchor=null, defaultValue=null, description=null, type=number)], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 [caption=""]
 .Fields
 // tag::properties[]

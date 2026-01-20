@@ -1,8 +1,8 @@
 [#_Relation]
 === Relation
 
-[caption=""]
-.class
+`Class(name=Relation, anchor=Relation, enumConstants=[], description=[], examples=[], fields=[Variable(name=iid, anchor=null, defaultValue=null, description=null, type=string), Variable(name=kind, anchor=null, defaultValue=null, description=null, type="relation"), Variable(name=type, anchor=null, defaultValue=null, description=null, type=RelationType)], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 [caption=""]
 .Fields
 // tag::properties[]

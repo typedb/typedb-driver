@@ -4,8 +4,8 @@
 [#_Struct_Database]
 ==== Struct Database
 
-[caption=""]
-.class
+`Class(name=Struct Database, anchor=Struct_Database, enumConstants=[], description=[, A TypeDB database], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 
 
 A TypeDB database

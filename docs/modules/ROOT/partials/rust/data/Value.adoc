@@ -1,8 +1,8 @@
 [#_enum_Value]
 === Value
 
-[caption=""]
-.enum
+`Class(name=Value, anchor=enum_Value, enumConstants=[EnumConstant(name=Boolean(bool), type=null, value=null), EnumConstant(name=Integer(i64), type=null, value=null), EnumConstant(name=Double(f64), type=null, value=null), EnumConstant(name=Decimal(Decimal), type=null, value=null), EnumConstant(name=String(String), type=null, value=null), EnumConstant(name=Date(NaiveDate), type=null, value=null), EnumConstant(name=Datetime(NaiveDateTime), type=null, value=null), EnumConstant(name=DatetimeTZ(DateTime<TimeZone>), type=null, value=null), EnumConstant(name=Duration(Duration), type=null, value=null), EnumConstant(name=Struct(Struct, String), type=null, value=null)], description=[], examples=[], fields=[], methods=[Method(name=get_type, signature=pub fn get_type(&self) -> ValueType, anchor=enum_Value_get_type_, args=[], description=[Retrieves the ``ValueType`` of this value concept.], examples=[value.get_type();], mode=async, returnDescription=null, returnType=ValueType), Method(name=get_type_name, signature=pub fn get_type_name(&self) -> &str, anchor=enum_Value_get_type_name_, args=[], description=[Retrieves the name of the ``ValueType`` of this value concept.], examples=[value.get_type_name();], mode=async, returnDescription=null, returnType=&str)], packagePath=null, superClasses=[], traitImplementors=[], mode=async).nameDescriptor(language)`
+
 [caption=""]
 .Enum variants
 // tag::enum_constants[]

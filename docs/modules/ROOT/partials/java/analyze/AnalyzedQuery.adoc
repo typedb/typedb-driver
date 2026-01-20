@@ -1,8 +1,8 @@
 [#_AnalyzedQuery]
 === AnalyzedQuery
 
-[caption=""]
-.class
+`Class(name=AnalyzedQuery, anchor=AnalyzedQuery, enumConstants=[], description=[], examples=[], fields=[], methods=[Method(name=pipeline, signature=Pipeline pipeline(), anchor=AnalyzedQuery_pipeline_, args=[], description=[A representation of the query as a ``Pipeline``], examples=[], mode=null, returnDescription=null, returnType=Pipeline), Method(name=preamble, signature=java.util.stream.Stream<? extends Function> preamble(), anchor=AnalyzedQuery_preamble_, args=[], description=[A representation of the ``Function``s in the preamble of the query], examples=[], mode=null, returnDescription=null, returnType=java.util.stream.Stream<? extends Function>), Method(name=fetch, signature=java.util.Optional<? extends Fetch> fetch(), anchor=AnalyzedQuery_fetch_, args=[], description=[A representation of the ``Fetch`` stage of the query, if it has one], examples=[], mode=null, returnDescription=null, returnType=java.util.Optional<? extends Fetch>)], packagePath=com.typedb.driver.api.analyze, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 *Package*: `com.typedb.driver.api.analyze`
 
 // tag::methods[]

@@ -1,8 +1,8 @@
 [#_enum_QueryType]
 === QueryType
 
-[caption=""]
-.enum
+`Class(name=QueryType, anchor=enum_QueryType, enumConstants=[EnumConstant(name=ReadQuery = 0, type=null, value=null), EnumConstant(name=WriteQuery = 1, type=null, value=null), EnumConstant(name=SchemaQuery = 2, type=null, value=null)], description=[This enum is used to specify the type of the query resulted in this answer.], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=async).nameDescriptor(language)`
+
 This enum is used to specify the type of the query resulted in this answer.
 
 [caption=""]

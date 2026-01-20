@@ -1,8 +1,20 @@
 [#_FunctionReturnStructure]
 === FunctionReturnStructure
 
-[caption=""]
-.class
+`Class(name=FunctionReturnStructure, anchor=FunctionReturnStructure, enumConstants=[], description=[[source,typescript]
+----
+FunctionReturnStructure:
+ | {
+ selector: FunctionSingleReturnSelector;
+ tag: "single";
+ variables: VariableId[];
+ }
+ | { tag: "stream"; variables: VariableId[] }
+ | { tag: "check" }
+ | { reducers: Reducer[]; tag: "reduce" }
+----
+], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 [source,typescript]
 ----
 FunctionReturnStructure:

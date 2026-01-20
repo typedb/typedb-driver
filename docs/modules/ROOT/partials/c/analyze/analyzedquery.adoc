@@ -4,8 +4,8 @@
 [#_Struct_AnalyzedQuery]
 ==== Struct AnalyzedQuery
 
-[caption=""]
-.class
+`Class(name=Struct AnalyzedQuery, anchor=Struct_AnalyzedQuery, enumConstants=[], description=[, An ``AnalyzedQuery`` contains the server's representation of the query and preamble functions; as well as the result of types inferred for each variable by type-inference.], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 
 
 An ``AnalyzedQuery`` contains the server's representation of the query and preamble functions; as well as the result of types inferred for each variable by type-inference.

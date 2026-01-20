@@ -4,8 +4,8 @@
 [#_Struct_DriverOptions]
 ==== Struct DriverOptions
 
-[caption=""]
-.class
+`Class(name=Struct DriverOptions, anchor=Struct_DriverOptions, enumConstants=[], description=[, User connection settings for connecting to TypeDB.], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 
 
 User connection settings for connecting to TypeDB.

@@ -1,8 +1,8 @@
 [#_ConceptDocumentsQueryResponse]
 === ConceptDocumentsQueryResponse
 
-[caption=""]
-.class
+`Class(name=ConceptDocumentsQueryResponse, anchor=ConceptDocumentsQueryResponse, enumConstants=[], description=[], examples=[], fields=[Variable(name=answers, anchor=null, defaultValue=null, description=null, type=Object), Variable(name=answerType, anchor=null, defaultValue=null, description=null, type="conceptDocuments"), Variable(name=comment, anchor=null, defaultValue=null, description=null, type=string), Variable(name=query, anchor=null, defaultValue=null, description=null, type=AnalyzedPipeline), Variable(name=queryType, anchor=null, defaultValue=null, description=null, type=QueryType)], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 [caption=""]
 .Fields
 // tag::properties[]

@@ -1,8 +1,8 @@
 [#_InsertStage]
 === InsertStage
 
-[caption=""]
-.class
+`Class(name=InsertStage, anchor=InsertStage, enumConstants=[], description=[Represents an ‘insert’ stage: insert &lt;block&gt;], examples=[], fields=[], methods=[Method(name=block, signature=block() -> ConjunctionID, anchor=InsertStage_block_, args=[], description=[], examples=[], mode=null, returnDescription=, returnType=ConjunctionID)], packagePath=typedb.api.analyze.pipeline_stage, superClasses=[PipelineStage], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 *Package*: `typedb.api.analyze.pipeline_stage`
 
 *Supertypes:*

@@ -4,8 +4,8 @@
 [#_Struct_SortVariable]
 ==== Struct SortVariable
 
-[caption=""]
-.class
+`Class(name=Struct SortVariable, anchor=Struct_SortVariable, enumConstants=[], description=[, The variable being sorted on and the ordering of the sort, as used in a ``PipelineStage::Sort``, e.g. ``sort $v desc``], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 
 
 The variable being sorted on and the ordering of the sort, as used in a ``PipelineStage::Sort``, e.g. ``sort $v desc``

@@ -1,8 +1,8 @@
 [#_QueryStructureLegacy]
 === QueryStructureLegacy
 
-[caption=""]
-.class
+`Class(name=QueryStructureLegacy, anchor=QueryStructureLegacy, enumConstants=[], description=[], examples=[], fields=[Variable(name=blocks, anchor=null, defaultValue=null, description=null, type=QueryConjunctionLegacy), Variable(name=outputs, anchor=null, defaultValue=null, description=null, type=string), Variable(name=variables, anchor=null, defaultValue=null, description=null, type=string)], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 [caption=""]
 .Fields
 // tag::properties[]

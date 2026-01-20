@@ -1,8 +1,17 @@
 [#_QueryType]
 === QueryType
 
-[caption=""]
-.class
+`Class(name=QueryType, anchor=QueryType, enumConstants=[EnumConstant(name=READ, type=null, value=null), EnumConstant(name=SCHEMA, type=null, value=null), EnumConstant(name=WRITE, type=null, value=null)], description=[Used to specify the type of the executed query. 
+], examples=[conceptRow.queryType();], fields=[Variable(name=nativeObject, anchor=null, defaultValue=null, description=, type=com.typedb.driver.jni.QueryType)], methods=[Method(name=values, signature=public static QueryType[] values(), anchor=QueryType_values_, args=[], description=[Returns an array containing the constants of this enum type, in the order they are declared. This method may be used to iterate over the constants as follows: 
+[source,java]
+----
+for (QueryType c : QueryType.values())
+    System.out.println(c);
+
+----
+], examples=[for (QueryType c : QueryType.values())
+    System.out.println(c);], mode=null, returnDescription=null, returnType=public static QueryType[]), Method(name=valueOf, signature=public static QueryType valueOf​(java.lang.String name), anchor=QueryType_valueOf_java_lang_String, args=[Variable(name=name, anchor=null, defaultValue=null, description=the name of the enum constant to be returned., type=java.lang.String)], description=[Returns the enum constant of this type with the specified name. The string must match exactly an identifier used to declare an enum constant in this type. (Extraneous whitespace characters are not permitted.)], examples=[], mode=null, returnDescription=null, returnType=public static QueryType), Method(name=of, signature=public static QueryType of​(com.typedb.driver.jni.QueryType nativeType), anchor=QueryType_of_com_typedb_driver_jni_QueryType, args=[], description=[], examples=[], mode=null, returnDescription=null, returnType=public static QueryType), Method(name=id, signature=public int id(), anchor=QueryType_id_, args=[], description=[], examples=[], mode=null, returnDescription=null, returnType=public int), Method(name=isRead, signature=public boolean isRead(), anchor=QueryType_isRead_, args=[], description=[], examples=[], mode=null, returnDescription=null, returnType=public boolean), Method(name=isWrite, signature=public boolean isWrite(), anchor=QueryType_isWrite_, args=[], description=[], examples=[], mode=null, returnDescription=null, returnType=public boolean), Method(name=isSchema, signature=public boolean isSchema(), anchor=QueryType_isSchema_, args=[], description=[], examples=[], mode=null, returnDescription=null, returnType=public boolean)], packagePath=com.typedb.driver.api, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 *Package*: `com.typedb.driver.api`
 
 Used to specify the type of the executed query. 

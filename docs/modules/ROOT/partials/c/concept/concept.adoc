@@ -4,8 +4,8 @@
 [#_Struct_Concept]
 ==== Struct Concept
 
-[caption=""]
-.class
+`Class(name=Struct Concept, anchor=Struct_Concept, enumConstants=[], description=[, The fundamental TypeQL object.], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 
 
 The fundamental TypeQL object.

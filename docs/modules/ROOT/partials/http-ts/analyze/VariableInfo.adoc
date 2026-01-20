@@ -1,8 +1,8 @@
 [#_VariableInfo]
 === VariableInfo
 
-[caption=""]
-.class
+`Class(name=VariableInfo, anchor=VariableInfo, enumConstants=[], description=[], examples=[], fields=[Variable(name=name, anchor=null, defaultValue=null, description=null, type=string)], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 [caption=""]
 .Fields
 // tag::properties[]

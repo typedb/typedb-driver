@@ -1,8 +1,8 @@
 [#_Function]
 === Function
 
-[caption=""]
-.class
+`Class(name=Function, anchor=Function, enumConstants=[], description=[Holds a representation of a function, and the result of type-inference for each variable.], examples=[], fields=[], methods=[Method(name=body, signature=Pipeline body(), anchor=Function_body_, args=[], description=[Gets the pipeline which forms the body of the function.], examples=[], mode=null, returnDescription=null, returnType=Pipeline), Method(name=argument_variables, signature=java.util.stream.Stream<? extends Variable> argument_variables(), anchor=Function_argument_variables_, args=[], description=[Gets the variables which are the arguments of the function.], examples=[], mode=null, returnDescription=null, returnType=java.util.stream.Stream<? extends Variable>), Method(name=return_operation, signature=Function.ReturnOperation return_operation(), anchor=Function_return_operation_, args=[], description=[Gets the return operation of the function.], examples=[], mode=null, returnDescription=null, returnType=Function.ReturnOperation), Method(name=argument_annotations, signature=java.util.stream.Stream<? extends VariableAnnotations> argument_annotations(), anchor=Function_argument_annotations_, args=[], description=[Gets the type annotations for each argument of the function.], examples=[], mode=null, returnDescription=null, returnType=java.util.stream.Stream<? extends VariableAnnotations>), Method(name=return_annotations, signature=java.util.stream.Stream<? extends VariableAnnotations> return_annotations(), anchor=Function_return_annotations_, args=[], description=[Gets the type annotations for each concept returned by the function.], examples=[], mode=null, returnDescription=null, returnType=java.util.stream.Stream<? extends VariableAnnotations>)], packagePath=com.typedb.driver.api.analyze, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 *Package*: `com.typedb.driver.api.analyze`
 
 Holds a representation of a function, and the result of type-inference for each variable.

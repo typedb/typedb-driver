@@ -1,8 +1,8 @@
 [#_UpdateStage]
 === UpdateStage
 
-[caption=""]
-.class
+`Class(name=UpdateStage, anchor=UpdateStage, enumConstants=[], description=[Represents an ‘update’ stage: update &lt;block&gt;], examples=[], fields=[], methods=[Method(name=block, signature=block() -> ConjunctionID, anchor=UpdateStage_block_, args=[], description=[], examples=[], mode=null, returnDescription=, returnType=ConjunctionID)], packagePath=typedb.api.analyze.pipeline_stage, superClasses=[PipelineStage], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 *Package*: `typedb.api.analyze.pipeline_stage`
 
 *Supertypes:*

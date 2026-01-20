@@ -1,8 +1,8 @@
 [#_RelationType]
 === RelationType
 
-[caption=""]
-.class
+`Class(name=RelationType, anchor=RelationType, enumConstants=[], description=[Relation types (or subtypes of the relation root type) represent relationships between types. Relation types have roles., Other types can play roles in relations if it’s mentioned in their definition., A relation type must specify at least one role.], examples=[], fields=[], methods=[Method(name=as_relation_type, signature=as_relation_type() -> RelationType, anchor=RelationType_as_relation_type_, args=[], description=[Casts the concept to ``RelationType``.], examples=[relation_type.as_relation_type()], mode=null, returnDescription=, returnType=RelationType), Method(name=is_relation_type, signature=is_relation_type() -> bool, anchor=RelationType_is_relation_type_, args=[], description=[Checks if the concept is a ``RelationType``.], examples=[relation_type.is_relation_type()], mode=null, returnDescription=, returnType=bool)], packagePath=typedb.api.concept.type.relation_type, superClasses=[Type], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 *Package*: `typedb.api.concept.type.relation_type`
 
 *Supertypes:*

@@ -1,8 +1,8 @@
 [#_ReduceStage]
 === ReduceStage
 
-[caption=""]
-.class
+`Class(name=ReduceStage, anchor=ReduceStage, enumConstants=[], description=[Represents a ‘reduce’ stage: reduce &lt;reducers&gt; groupby &lt;groupby&gt;], examples=[], fields=[], methods=[Method(name=group_by, signature=group_by() -> Iterator['Variable'], anchor=ReduceStage_group_by_, args=[], description=[The variables to group by.], examples=[], mode=null, returnDescription=, returnType=Iterator['Variable']), Method(name=reduce_assignments, signature=reduce_assignments() -> Iterator[ReduceAssignment], anchor=ReduceStage_reduce_assignments_, args=[], description=[The reducer assignments.], examples=[], mode=null, returnDescription=, returnType=Iterator[ReduceAssignment])], packagePath=typedb.api.analyze.pipeline_stage, superClasses=[PipelineStage], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 *Package*: `typedb.api.analyze.pipeline_stage`
 
 *Supertypes:*

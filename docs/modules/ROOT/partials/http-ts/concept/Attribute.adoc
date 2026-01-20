@@ -1,8 +1,8 @@
 [#_Attribute]
 === Attribute
 
-[caption=""]
-.class
+`Class(name=Attribute, anchor=Attribute, enumConstants=[], description=[], examples=[], fields=[Variable(name=iid, anchor=null, defaultValue=null, description=null, type=string), Variable(name=kind, anchor=null, defaultValue=null, description=null, type="attribute"), Variable(name=type, anchor=null, defaultValue=null, description=null, type=AttributeType), Variable(name=value, anchor=null, defaultValue=null, description=null, type=any), Variable(name=valueType, anchor=null, defaultValue=null, description=null, type=ValueType)], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 [caption=""]
 .Fields
 // tag::properties[]

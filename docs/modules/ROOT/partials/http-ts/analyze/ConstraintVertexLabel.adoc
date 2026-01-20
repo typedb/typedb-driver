@@ -1,8 +1,8 @@
 [#_ConstraintVertexLabel]
 ==== ConstraintVertexLabel
 
-[caption=""]
-.class
+`Class(name=ConstraintVertexLabel, anchor=ConstraintVertexLabel, enumConstants=[], description=[], examples=[], fields=[Variable(name=tag, anchor=null, defaultValue=null, description=null, type="label"), Variable(name=type, anchor=null, defaultValue=null, description=null, type=Type)], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 [caption=""]
 .Fields
 // tag::properties[]

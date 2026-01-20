@@ -4,8 +4,8 @@
 [#_Struct_StringIterator]
 ==== Struct StringIterator
 
-[caption=""]
-.class
+`Class(name=Struct StringIterator, anchor=Struct_StringIterator, enumConstants=[], description=[, Iterator over the strings in the result of a request or a TypeQL Fetch query.], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 
 
 Iterator over the strings in the result of a request or a TypeQL Fetch query.

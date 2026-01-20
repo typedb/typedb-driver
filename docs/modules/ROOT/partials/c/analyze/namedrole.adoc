@@ -4,8 +4,8 @@
 [#_Struct_NamedRole]
 ==== Struct NamedRole
 
-[caption=""]
-.class
+`Class(name=Struct NamedRole, anchor=Struct_NamedRole, enumConstants=[], description=[, A ``NamedRole`` vertex is used in links &amp; relates constraints, as multiple relations may have roles with the same name.], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 
 
 A ``NamedRole`` vertex is used in links &amp; relates constraints, as multiple relations may have roles with the same name.

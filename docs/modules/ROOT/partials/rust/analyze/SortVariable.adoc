@@ -1,8 +1,8 @@
 [#_struct_SortVariable]
 === SortVariable
 
-[caption=""]
-.struct
+`Class(name=SortVariable, anchor=struct_SortVariable, enumConstants=[], description=[The variable being sorted on and the ordering of the sort, as used in a ``PipelineStage::Sort``, e.g. ``sort $v desc``], examples=[], fields=[Variable(name=variable, anchor=struct_SortVariable_variable, defaultValue=null, description=null, type=Variable), Variable(name=order, anchor=struct_SortVariable_order, defaultValue=null, description=null, type=SortOrder)], methods=[], packagePath=null, superClasses=[Clone, Debug], traitImplementors=[], mode=async).nameDescriptor(language)`
+
 *Implements traits:*
 
 * `Clone`

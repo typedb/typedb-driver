@@ -1,8 +1,26 @@
 [#_struct_TypeDBDriver]
 === TypeDBDriver
 
-[caption=""]
-.struct
+`Class(name=TypeDBDriver, anchor=struct_TypeDBDriver, enumConstants=[], description=[A connection to a TypeDB server which serves as the starting point for all interaction.], examples=[], fields=[], methods=[Method(name=new, signature=pub async fn new(
+    address: impl AsRef<str>,
+    credentials: Credentials,
+    driver_options: DriverOptions,
+) -> Result<Self>, anchor=struct_TypeDBDriver_new_address_impl_AsRef_str_credentials_Credentials_driver_options_DriverOptions, args=[Variable(name=address, anchor=null, defaultValue=null, description= — The address (host:port) on which the TypeDB Server is running, type=impl AsRef<str>), Variable(name=credentials, anchor=null, defaultValue=null, description= — The Credentials to connect with, type=Credentials), Variable(name=driver_options, anchor=null, defaultValue=null, description= — The DriverOptions to connect with, type=DriverOptions)], description=[Creates a new TypeDB Server connection.], examples=[TypeDBDriver::new("127.0.0.1:1729", Credentials::new("username", "password"), DriverOptions::new(true, None)).await], mode=async, returnDescription=null, returnType=Result<Self>), Method(name=new_with_description, signature=pub async fn new_with_description(
+    address: impl AsRef<str>,
+    credentials: Credentials,
+    driver_options: DriverOptions,
+    driver_lang: impl AsRef<str>,
+) -> Result<Self>, anchor=struct_TypeDBDriver_new_with_description_address_impl_AsRef_str_credentials_Credentials_driver_options_DriverOptions_driver_lang_impl_AsRef_str_, args=[Variable(name=address, anchor=null, defaultValue=null, description= — The address (host:port) on which the TypeDB Server is running, type=impl AsRef<str>), Variable(name=credentials, anchor=null, defaultValue=null, description= — The Credentials to connect with, type=Credentials), Variable(name=driver_options, anchor=null, defaultValue=null, description= — The DriverOptions to connect with, type=DriverOptions), Variable(name=driver_lang, anchor=null, defaultValue=null, description= — The language of the driver connecting to the server, type=impl AsRef<str>)], description=[Creates a new TypeDB Server connection with a description. This method is generally used by TypeDB drivers built on top of the Rust driver. In other cases, use <<#_struct_TypeDBDriver_method_new,`Self::new`>> instead.], examples=[TypeDBDriver::new_with_description("127.0.0.1:1729", Credentials::new("username", "password"), DriverOptions::new(true, None), "rust").await], mode=async, returnDescription=null, returnType=Result<Self>), Method(name=is_open, signature=pub fn is_open(&self) -> bool, anchor=struct_TypeDBDriver_is_open_, args=[], description=[Checks it this connection is opened.], examples=[driver.is_open()], mode=async, returnDescription=null, returnType=bool), Method(name=transaction, signature=pub async fn transaction(
+    &self,
+    database_name: impl AsRef<str>,
+    transaction_type: TransactionType,
+) -> Result<Transaction>, anchor=struct_TypeDBDriver_transaction_, args=[], description=[Opens a transaction with default options. See <<#_struct_TypeDBDriver_method_transaction_with_options,`TypeDBDriver::transaction_with_options`>>], examples=[], mode=async, returnDescription=null, returnType=Result<Transaction>), Method(name=transaction_with_options, signature=pub async fn transaction_with_options(
+    &self,
+    database_name: impl AsRef<str>,
+    transaction_type: TransactionType,
+    options: TransactionOptions,
+) -> Result<Transaction>, anchor=struct_TypeDBDriver_transaction_with_options_database_name_impl_AsRef_str_transaction_type_TransactionType_options_TransactionOptions, args=[Variable(name=database_name, anchor=null, defaultValue=null, description= — The name of the database to connect to, type=impl AsRef<str>), Variable(name=transaction_type, anchor=null, defaultValue=null, description= — The TransactionType to open the transaction with, type=TransactionType), Variable(name=options, anchor=null, defaultValue=null, description= — The TransactionOptions to open the transaction with, type=TransactionOptions)], description=[Performs a TypeQL query in this transaction.], examples=[transaction.transaction_with_options(database_name, transaction_type, options)], mode=async, returnDescription=null, returnType=Result<Transaction>), Method(name=force_close, signature=pub fn force_close(&self) -> Result, anchor=struct_TypeDBDriver_force_close_, args=[], description=[Closes this connection if it is open.], examples=[driver.force_close()], mode=async, returnDescription=null, returnType=Result)], packagePath=null, superClasses=[Debug], traitImplementors=[], mode=async).nameDescriptor(language)`
+
 *Implements traits:*
 
 * `Debug`

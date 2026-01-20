@@ -1,8 +1,8 @@
 [#_Value]
 === Value
 
-[caption=""]
-.class
+`Class(name=Value, anchor=Value, enumConstants=[], description=[], examples=[], fields=[Variable(name=kind, anchor=null, defaultValue=null, description=null, type="value"), Variable(name=value, anchor=null, defaultValue=null, description=null, type=any), Variable(name=valueType, anchor=null, defaultValue=null, description=null, type=ValueType)], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 [caption=""]
 .Fields
 // tag::properties[]

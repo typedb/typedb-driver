@@ -4,8 +4,8 @@
 [#_Struct_ConjunctionID]
 ==== Struct ConjunctionID
 
-[caption=""]
-.class
+`Class(name=Struct ConjunctionID, anchor=Struct_ConjunctionID, enumConstants=[], description=[, Holds the index of the conjunction in a ``Pipeline``'s ``conjunctions`` field. Used as indirection in the representation of a pipeline.], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 
 
 Holds the index of the conjunction in a ``Pipeline``'s ``conjunctions`` field. Used as indirection in the representation of a pipeline.

@@ -1,8 +1,8 @@
 [#_Comparison]
 === Comparison
 
-[caption=""]
-.class
+`Class(name=Comparison, anchor=Comparison, enumConstants=[], description=[Represents a comparison: &lt;lhs&gt; &lt;comparator&gt; &lt;rhs&gt;], examples=[], fields=[], methods=[Method(name=comparator, signature=comparator() -> Comparator, anchor=Comparison_comparator_, args=[], description=[], examples=[], mode=null, returnDescription=, returnType=Comparator), Method(name=lhs, signature=lhs() -> ConstraintVertex, anchor=Comparison_lhs_, args=[], description=[], examples=[], mode=null, returnDescription=, returnType=ConstraintVertex), Method(name=rhs, signature=rhs() -> ConstraintVertex, anchor=Comparison_rhs_, args=[], description=[], examples=[], mode=null, returnDescription=, returnType=ConstraintVertex)], packagePath=typedb.api.analyze.constraint, superClasses=[Constraint], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 *Package*: `typedb.api.analyze.constraint`
 
 *Supertypes:*

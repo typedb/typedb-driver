@@ -1,8 +1,12 @@
 [#_ConceptDocument]
 === ConceptDocument
 
-[caption=""]
-.class
+`Class(name=ConceptDocument, anchor=ConceptDocument, enumConstants=[], description=[[source,typescript]
+----
+ConceptDocument: Object
+----
+], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 [source,typescript]
 ----
 ConceptDocument: Object

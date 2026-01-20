@@ -1,8 +1,8 @@
 [#_AnalyzedPipeline]
 === AnalyzedPipeline
 
-[caption=""]
-.class
+`Class(name=AnalyzedPipeline, anchor=AnalyzedPipeline, enumConstants=[], description=[], examples=[], fields=[Variable(name=conjunctions, anchor=null, defaultValue=null, description=null, type=AnalyzedConjunction), Variable(name=outputs, anchor=null, defaultValue=null, description=null, type=string), Variable(name=stages, anchor=null, defaultValue=null, description=null, type=PipelineStage), Variable(name=variables, anchor=null, defaultValue=null, description=null, type=string)], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 [caption=""]
 .Fields
 // tag::properties[]

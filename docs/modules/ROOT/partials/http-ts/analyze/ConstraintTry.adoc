@@ -1,8 +1,8 @@
 [#_ConstraintTry]
 ==== ConstraintTry
 
-[caption=""]
-.class
+`Class(name=ConstraintTry, anchor=ConstraintTry, enumConstants=[], description=[], examples=[], fields=[Variable(name=conjunction, anchor=null, defaultValue=null, description=null, type=number), Variable(name=tag, anchor=null, defaultValue=null, description=null, type="try")], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 [caption=""]
 .Fields
 // tag::properties[]

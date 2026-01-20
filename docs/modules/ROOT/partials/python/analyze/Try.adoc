@@ -1,8 +1,8 @@
 [#_Try]
 === Try
 
-[caption=""]
-.class
+`Class(name=Try, anchor=Try, enumConstants=[], description=[Represents a ‘try’ constraint: try { &lt;conjunction&gt; }], examples=[], fields=[], methods=[Method(name=conjunction, signature=conjunction() -> ConjunctionID, anchor=Try_conjunction_, args=[], description=[Index into Pipeline.conjunctions], examples=[], mode=null, returnDescription=, returnType=ConjunctionID)], packagePath=typedb.api.analyze.constraint, superClasses=[Constraint], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 *Package*: `typedb.api.analyze.constraint`
 
 *Supertypes:*

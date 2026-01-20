@@ -1,8 +1,22 @@
 [#_ValueType]
 === ValueType
 
-[caption=""]
-.class
+`Class(name=ValueType, anchor=ValueType, enumConstants=[], description=[[source,typescript]
+----
+ValueType:
+ | "boolean"
+ | "integer"
+ | "double"
+ | "decimal"
+ | "date"
+ | "datetime"
+ | "datetime-tz"
+ | "duration"
+ | "string"
+ | "struct"
+----
+], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 [source,typescript]
 ----
 ValueType:

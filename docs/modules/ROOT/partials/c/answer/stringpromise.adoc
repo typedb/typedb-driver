@@ -4,8 +4,8 @@
 [#_Struct_StringPromise]
 ==== Struct StringPromise
 
-[caption=""]
-.class
+`Class(name=Struct StringPromise, anchor=Struct_StringPromise, enumConstants=[], description=[, Promise object representing the result of an asynchronous operation. Use string_promise_resolve(StringPromise*) to wait for and retrieve the resulting string.], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 
 
 Promise object representing the result of an asynchronous operation. Use string_promise_resolve(StringPromise*) to wait for and retrieve the resulting string.

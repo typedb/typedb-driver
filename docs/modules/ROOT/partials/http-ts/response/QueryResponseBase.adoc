@@ -1,8 +1,8 @@
 [#_QueryResponseBase]
 === QueryResponseBase
 
-[caption=""]
-.class
+`Class(name=QueryResponseBase, anchor=QueryResponseBase, enumConstants=[], description=[], examples=[], fields=[Variable(name=answerType, anchor=null, defaultValue=null, description=null, type=AnswerType), Variable(name=comment, anchor=null, defaultValue=null, description=null, type=string), Variable(name=query, anchor=null, defaultValue=null, description=null, type=AnalyzedPipeline), Variable(name=queryType, anchor=null, defaultValue=null, description=null, type=QueryType)], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 [caption=""]
 .Fields
 // tag::properties[]

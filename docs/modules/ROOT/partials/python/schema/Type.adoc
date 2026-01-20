@@ -1,8 +1,8 @@
 [#_Type]
 === Type
 
-[caption=""]
-.class
+`Class(name=Type, anchor=Type, enumConstants=[], description=[], examples=[], fields=[], methods=[Method(name=is_type, signature=is_type() -> bool, anchor=Type_is_type_, args=[], description=[Checks if the concept is a ``Type``.], examples=[type_.is_type()], mode=null, returnDescription=, returnType=bool)], packagePath=typedb.api.concept.type.type, superClasses=[Concept], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 *Package*: `typedb.api.concept.type.type`
 
 *Supertypes:*

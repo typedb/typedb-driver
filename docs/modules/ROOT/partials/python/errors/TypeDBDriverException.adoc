@@ -1,8 +1,11 @@
 [#_TypeDBDriverException]
 === TypeDBDriverException
 
-[caption=""]
-.class
+`Class(name=TypeDBDriverException, anchor=TypeDBDriverException, enumConstants=[], description=[Exceptions raised by the driver.], examples=[try:
+    transaction.commit()
+except TypeDBDriverException as err:
+    print("Error:", err)], fields=[], methods=[], packagePath=typedb.common.exception, superClasses=[RuntimeError], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 *Package*: `typedb.common.exception`
 
 *Supertypes:*

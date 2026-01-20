@@ -1,8 +1,12 @@
 [#_TransactionType]
 === TransactionType
 
-[caption=""]
-.class
+`Class(name=TransactionType, anchor=TransactionType, enumConstants=[], description=[[source,typescript]
+----
+TransactionType: "read" | "write" | "schema"
+----
+], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 [source,typescript]
 ----
 TransactionType: "read" | "write" | "schema"

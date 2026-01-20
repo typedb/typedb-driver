@@ -1,8 +1,8 @@
 [#_Label]
 === Label
 
-[caption=""]
-.class
+`Class(name=Label, anchor=Label, enumConstants=[], description=[Represents a label constraint: &lt;type&gt; label &lt;label&gt;], examples=[], fields=[], methods=[Method(name=label, signature=label() -> str, anchor=Label_label_, args=[], description=[], examples=[], mode=null, returnDescription=, returnType=str), Method(name=variable, signature=variable() -> ConstraintVertex, anchor=Label_variable_, args=[], description=[], examples=[], mode=null, returnDescription=, returnType=ConstraintVertex)], packagePath=typedb.api.analyze.constraint, superClasses=[Constraint], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 *Package*: `typedb.api.analyze.constraint`
 
 *Supertypes:*

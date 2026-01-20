@@ -1,8 +1,8 @@
 [#_Owns]
 === Owns
 
-[caption=""]
-.class
+`Class(name=Owns, anchor=Owns, enumConstants=[], description=[Represents an ‘owns’ constraint: &lt;owner&gt; owns &lt;attribute&gt;], examples=[], fields=[], methods=[Method(name=attribute, signature=attribute() -> ConstraintVertex, anchor=Owns_attribute_, args=[], description=[], examples=[], mode=null, returnDescription=, returnType=ConstraintVertex), Method(name=exactness, signature=exactness() -> ConstraintExactness, anchor=Owns_exactness_, args=[], description=[], examples=[], mode=null, returnDescription=, returnType=ConstraintExactness), Method(name=owner, signature=owner() -> ConstraintVertex, anchor=Owns_owner_, args=[], description=[], examples=[], mode=null, returnDescription=, returnType=ConstraintVertex)], packagePath=typedb.api.analyze.constraint, superClasses=[Constraint], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 *Package*: `typedb.api.analyze.constraint`
 
 *Supertypes:*

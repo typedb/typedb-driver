@@ -1,8 +1,80 @@
 [#_Relation]
 === Relation
 
-[caption=""]
-.class
+`Class(name=Relation, anchor=Relation, enumConstants=[], description=[Relation is an instance of a relation type and can be uniquely addressed by a combination of its type, owned attributes and role players.], examples=[], fields=[], methods=[Method(name=isRelation, signature=@CheckReturnValue
+default boolean isRelation(), anchor=Relation_isRelation_, args=[], description=[Checks if the concept is a ``Relation``. 
+], examples=[relation.isRelation();], mode=null, returnDescription=null, returnType=boolean), Method(name=asRelation, signature=@CheckReturnValue
+default Relation asRelation(), anchor=Relation_asRelation_, args=[], description=[Casts the concept to ``Relation``. 
+], examples=[relation.asRelation();], mode=null, returnDescription=null, returnType=Relation), Method(name=getType, signature=@CheckReturnValue
+RelationType getType(), anchor=Relation_getType_, args=[], description=[Retrieves the type which this ``Relation`` belongs to. 
+], examples=[relation.getType();], mode=null, returnDescription=null, returnType=RelationType), Method(name=getIID, signature=@CheckReturnValue
+java.lang.String getIID(), anchor=Relation_getIID_, args=[], description=[Retrieves the unique id of the ``Relation``. 
+], examples=[relation.getIID();], mode=null, returnDescription=null, returnType=java.lang.String), Method(name=asAttribute, signature=default Attribute asAttribute(), anchor=Relation_asAttribute_, args=[], description=[Casts the concept to ``Attribute``. 
+], examples=[concept.asAttribute();], mode=null, returnDescription=null, returnType=Attribute), Method(name=asAttributeType, signature=default AttributeType asAttributeType(), anchor=Relation_asAttributeType_, args=[], description=[Casts the concept to ``AttributeType``. 
+], examples=[concept.asAttributeType();], mode=null, returnDescription=null, returnType=AttributeType), Method(name=asEntity, signature=default Entity asEntity(), anchor=Relation_asEntity_, args=[], description=[Casts the concept to ``Entity``. 
+], examples=[concept.asEntity();], mode=null, returnDescription=null, returnType=Entity), Method(name=asEntityType, signature=default EntityType asEntityType(), anchor=Relation_asEntityType_, args=[], description=[Casts the concept to ``EntityType``. 
+], examples=[concept.asEntityType();], mode=null, returnDescription=null, returnType=EntityType), Method(name=asRelationType, signature=default RelationType asRelationType(), anchor=Relation_asRelationType_, args=[], description=[Casts the concept to ``RelationType``. 
+], examples=[concept.asRelationType();], mode=null, returnDescription=null, returnType=RelationType), Method(name=asRoleType, signature=default RoleType asRoleType(), anchor=Relation_asRoleType_, args=[], description=[Casts the concept to ``RoleType``. 
+], examples=[concept.asRoleType();], mode=null, returnDescription=null, returnType=RoleType), Method(name=asType, signature=default Type asType(), anchor=Relation_asType_, args=[], description=[Casts the concept to ``Type``. 
+], examples=[concept.asType();], mode=null, returnDescription=null, returnType=Type), Method(name=asValue, signature=default Value asValue(), anchor=Relation_asValue_, args=[], description=[Casts the concept to ``Value``. 
+], examples=[concept.asValue();], mode=null, returnDescription=null, returnType=Value), Method(name=getLabel, signature=@CheckReturnValue
+java.lang.String getLabel(), anchor=Relation_getLabel_, args=[], description=[Retrieves the unique label of the concept. If this is an ``Instance``, return the label of the type of this instance ("unknown" if type fetching is disabled). If this is a ``Value``, return the label of the value type of the value. If this is a ``Type``, return the label of the type. 
+], examples=[concept.getLabel();], mode=null, returnDescription=null, returnType=java.lang.String), Method(name=isAttribute, signature=@CheckReturnValue
+default boolean isAttribute(), anchor=Relation_isAttribute_, args=[], description=[Checks if the concept is an ``Attribute``. 
+], examples=[concept.isAttribute();], mode=null, returnDescription=null, returnType=boolean), Method(name=isAttributeType, signature=@CheckReturnValue
+default boolean isAttributeType(), anchor=Relation_isAttributeType_, args=[], description=[Checks if the concept is an ``AttributeType``. 
+], examples=[concept.isAttributeType();], mode=null, returnDescription=null, returnType=boolean), Method(name=isBoolean, signature=@CheckReturnValue
+boolean isBoolean(), anchor=Relation_isBoolean_, args=[], description=[Returns ``true`` if the value which this ``Concept`` holds is of type ``boolean`` or if this ``Concept`` is an ``AttributeType`` of type ``boolean``. Otherwise, returns ``false``. 
+], examples=[concept.isBoolean()], mode=null, returnDescription=null, returnType=boolean), Method(name=isDate, signature=@CheckReturnValue
+boolean isDate(), anchor=Relation_isDate_, args=[], description=[Returns ``true`` if the value which this ``Concept`` holds is of type ``date`` or if this ``Concept`` is an ``AttributeType`` of type ``date``. Otherwise, returns ``false``. 
+], examples=[concept.isDate();], mode=null, returnDescription=null, returnType=boolean), Method(name=isDatetime, signature=@CheckReturnValue
+boolean isDatetime(), anchor=Relation_isDatetime_, args=[], description=[Returns ``true`` if the value which this ``Concept`` holds is of type ``datetime`` or if this ``Concept`` is an ``AttributeType`` of type ``datetime``. Otherwise, returns ``false``. 
+], examples=[concept.isDatetime();], mode=null, returnDescription=null, returnType=boolean), Method(name=isDatetimeTZ, signature=@CheckReturnValue
+boolean isDatetimeTZ(), anchor=Relation_isDatetimeTZ_, args=[], description=[Returns ``true`` if the value which this ``Concept`` holds is of type ``datetime-tz`` or if this ``Concept`` is an ``AttributeType`` of type ``datetime-tz``. Otherwise, returns ``false``. 
+], examples=[concept.isDatetimeTZ();], mode=null, returnDescription=null, returnType=boolean), Method(name=isDecimal, signature=@CheckReturnValue
+boolean isDecimal(), anchor=Relation_isDecimal_, args=[], description=[Returns ``true`` if the value which this ``Concept`` holds is of type ``decimal`` or if this ``Concept`` is an ``AttributeType`` of type ``decimal``. Otherwise, returns ``false``. 
+], examples=[concept.isDecimal();], mode=null, returnDescription=null, returnType=boolean), Method(name=isDouble, signature=@CheckReturnValue
+boolean isDouble(), anchor=Relation_isDouble_, args=[], description=[Returns ``true`` if the value which this ``Concept`` holds is of type ``double`` or if this ``Concept`` is an ``AttributeType`` of type ``double``. Otherwise, returns ``false``. 
+], examples=[concept.isDouble();], mode=null, returnDescription=null, returnType=boolean), Method(name=isDuration, signature=@CheckReturnValue
+boolean isDuration(), anchor=Relation_isDuration_, args=[], description=[Returns ``true`` if the value which this ``Concept`` holds is of type ``duration`` or if this ``Concept`` is an ``AttributeType`` of type ``duration``. Otherwise, returns ``false``. 
+], examples=[concept.isDuration();], mode=null, returnDescription=null, returnType=boolean), Method(name=isEntity, signature=@CheckReturnValue
+default boolean isEntity(), anchor=Relation_isEntity_, args=[], description=[Checks if the concept is an ``Entity``. 
+], examples=[concept.isEntity();], mode=null, returnDescription=null, returnType=boolean), Method(name=isEntityType, signature=@CheckReturnValue
+default boolean isEntityType(), anchor=Relation_isEntityType_, args=[], description=[Checks if the concept is an ``EntityType``. 
+], examples=[concept.isEntityType();], mode=null, returnDescription=null, returnType=boolean), Method(name=isInteger, signature=@CheckReturnValue
+boolean isInteger(), anchor=Relation_isInteger_, args=[], description=[Returns ``true`` if the value which this ``Concept`` holds is of type ``integer`` or if this ``Concept`` is an ``AttributeType`` of type ``integer``. Otherwise, returns ``false``. 
+], examples=[concept.isInteger();], mode=null, returnDescription=null, returnType=boolean), Method(name=isRelationType, signature=@CheckReturnValue
+default boolean isRelationType(), anchor=Relation_isRelationType_, args=[], description=[Checks if the concept is a ``RelationType``. 
+], examples=[concept.isRelationType();], mode=null, returnDescription=null, returnType=boolean), Method(name=isRoleType, signature=@CheckReturnValue
+default boolean isRoleType(), anchor=Relation_isRoleType_, args=[], description=[Checks if the concept is a ``RoleType``. 
+], examples=[concept.isRoleType();], mode=null, returnDescription=null, returnType=boolean), Method(name=isString, signature=@CheckReturnValue
+boolean isString(), anchor=Relation_isString_, args=[], description=[Returns ``true`` if the value which this ``Concept`` holds is of type ``string`` or if this ``Concept`` is an ``AttributeType`` of type ``string``. Otherwise, returns ``false``. 
+], examples=[concept.isString();], mode=null, returnDescription=null, returnType=boolean), Method(name=isStruct, signature=@CheckReturnValue
+boolean isStruct(), anchor=Relation_isStruct_, args=[], description=[Returns ``true`` if the value which this ``Concept`` holds is of type ``struct`` or if this ``Concept`` is an ``AttributeType`` of type ``struct``. Otherwise, returns ``false``. 
+], examples=[concept.isStruct();], mode=null, returnDescription=null, returnType=boolean), Method(name=isType, signature=@CheckReturnValue
+default boolean isType(), anchor=Relation_isType_, args=[], description=[Checks if the concept is a ``Type``. 
+], examples=[concept.isType();], mode=null, returnDescription=null, returnType=boolean), Method(name=isValue, signature=@CheckReturnValue
+default boolean isValue(), anchor=Relation_isValue_, args=[], description=[Checks if the concept is a ``Value``. 
+], examples=[concept.isValue();], mode=null, returnDescription=null, returnType=boolean), Method(name=tryGetBoolean, signature=java.util.Optional<java.lang.Boolean> tryGetBoolean(), anchor=Relation_tryGetBoolean_, args=[], description=[Returns the value of this ``Concept`` as an ``Optional&lt;Boolean&gt;``. If it's not a ``Value`` or it has another type, returns ``null``. 
+], examples=[concept.tryGetBoolean();], mode=null, returnDescription=null, returnType=java.util.Optional<java.lang.Boolean>), Method(name=tryGetDate, signature=java.util.Optional<java.time.LocalDate> tryGetDate(), anchor=Relation_tryGetDate_, args=[], description=[Returns the value of this ``Concept`` as an ``Optional&lt;LocalDate&gt;``. If it's not a ``Value`` or it has another type, returns ``null``. 
+], examples=[concept.tryGetDate();], mode=null, returnDescription=null, returnType=java.util.Optional<java.time.LocalDate>), Method(name=tryGetDatetime, signature=java.util.Optional<java.time.LocalDateTime> tryGetDatetime(), anchor=Relation_tryGetDatetime_, args=[], description=[Returns the value of this ``Concept`` as an ``Optional&lt;LocalDateTime&gt;``. If it's not a ``Value`` or it has another type, returns ``null``. 
+], examples=[concept.tryGetDatetime();], mode=null, returnDescription=null, returnType=java.util.Optional<java.time.LocalDateTime>), Method(name=tryGetDatetimeTZ, signature=java.util.Optional<java.time.ZonedDateTime> tryGetDatetimeTZ(), anchor=Relation_tryGetDatetimeTZ_, args=[], description=[Returns the value of this ``Concept`` as an ``Optional&lt;ZonedDateTime&gt;``. If it's not a ``Value`` or it has another type, returns ``null``. 
+], examples=[concept.tryGetDatetimeTZ();], mode=null, returnDescription=null, returnType=java.util.Optional<java.time.ZonedDateTime>), Method(name=tryGetDecimal, signature=java.util.Optional<java.math.BigDecimal> tryGetDecimal(), anchor=Relation_tryGetDecimal_, args=[], description=[Returns the value of this ``Concept`` as an ``Optional&lt;BigDecimal&gt;``. If it's not a ``Value`` or it has another type, returns ``null``. 
+], examples=[concept.tryGetDecimal();], mode=null, returnDescription=null, returnType=java.util.Optional<java.math.BigDecimal>), Method(name=tryGetDouble, signature=java.util.Optional<java.lang.Double> tryGetDouble(), anchor=Relation_tryGetDouble_, args=[], description=[Returns the value of this ``Concept`` as an ``Optional&lt;Double&gt;``. If it's not a ``Value`` or it has another type, returns ``null``. 
+], examples=[concept.tryGetDouble();], mode=null, returnDescription=null, returnType=java.util.Optional<java.lang.Double>), Method(name=tryGetDuration, signature=java.util.Optional<Duration> tryGetDuration(), anchor=Relation_tryGetDuration_, args=[], description=[Returns the value of this ``Concept`` as an ``Optional&lt;Duration&gt;``. If it's not a ``Value`` or it has another type, returns ``null``. 
+], examples=[concept.tryGetDuration();], mode=null, returnDescription=null, returnType=java.util.Optional<Duration>), Method(name=tryGetIID, signature=@CheckReturnValue
+java.util.Optional<java.lang.String> tryGetIID(), anchor=Relation_tryGetIID_, args=[], description=[Retrieves the unique id of the ``Concept``. Returns ``null`` if absent. 
+], examples=[concept.tryGetIID();], mode=null, returnDescription=null, returnType=java.util.Optional<java.lang.String>), Method(name=tryGetInteger, signature=java.util.Optional<java.lang.Long> tryGetInteger(), anchor=Relation_tryGetInteger_, args=[], description=[Returns the value of this ``Concept`` as an ``Optional&lt;Long&gt;``. If it's not a ``Value`` or it has another type, returns ``null``. 
+], examples=[concept.tryGetInteger();], mode=null, returnDescription=null, returnType=java.util.Optional<java.lang.Long>), Method(name=tryGetLabel, signature=@CheckReturnValue
+java.util.Optional<java.lang.String> tryGetLabel(), anchor=Relation_tryGetLabel_, args=[], description=[Retrieves the unique label of the concept. If this is an ``Instance``, return the label of the type of this instance (``null`` if type fetching is disabled). Returns ``null`` if type fetching is disabled. If this is a ``Value``, return the label of the value type of the value. If this is a ``Type``, return the label of the type. 
+], examples=[concept.tryGetLabel();], mode=null, returnDescription=null, returnType=java.util.Optional<java.lang.String>), Method(name=tryGetString, signature=java.util.Optional<java.lang.String> tryGetString(), anchor=Relation_tryGetString_, args=[], description=[Returns the value of this ``Concept`` as an ``Optional&lt;String&gt;``. If it's not a ``Value`` or it has another type, returns ``null``. 
+], examples=[concept.tryGetString();], mode=null, returnDescription=null, returnType=java.util.Optional<java.lang.String>), Method(name=tryGetStruct, signature=java.util.Optional<java.util.Map<java.lang.String,​java.util.Optional<Value>>> tryGetStruct(), anchor=Relation_tryGetStruct_, args=[], description=[Returns the value of this ``Concept`` as an ``Optional&lt;Map&lt;String, Optional&lt;Value&gt;&gt;&gt;``. If it's not a ``Value`` or it has another type, returns ``null``. 
+], examples=[concept.tryGetStruct();], mode=null, returnDescription=null, returnType=java.util.Optional<java.util.Map<java.lang.String,​java.util.Optional<Value>>>), Method(name=tryGetValue, signature=@CheckReturnValue
+java.util.Optional<Value> tryGetValue(), anchor=Relation_tryGetValue_, args=[], description=[Retrieves the value which this ``Concept`` holds. Returns ``null`` if this ``Concept`` does not hold any value. 
+], examples=[concept.tryGetValue();], mode=null, returnDescription=null, returnType=java.util.Optional<Value>), Method(name=tryGetValueType, signature=@CheckReturnValue
+java.util.Optional<java.lang.String> tryGetValueType(), anchor=Relation_tryGetValueType_, args=[], description=[Retrieves the ``String`` describing the value type of this ``Concept``. Returns ``null`` if not absent. 
+], examples=[concept.tryGetValueType();], mode=null, returnDescription=null, returnType=java.util.Optional<java.lang.String>)], packagePath=com.typedb.driver.api.concept.instance, superClasses=[Concept, Instance], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 *Package*: `com.typedb.driver.api.concept.instance`
 
 *Superinterfaces:*

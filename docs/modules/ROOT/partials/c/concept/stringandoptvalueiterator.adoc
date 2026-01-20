@@ -4,8 +4,8 @@
 [#_Struct_StringAndOptValueIterator]
 ==== Struct StringAndOptValueIterator
 
-[caption=""]
-.class
+`Class(name=Struct StringAndOptValueIterator, anchor=Struct_StringAndOptValueIterator, enumConstants=[], description=[, Iterator over the ``StringAndOptValue``s representing struct value {field_name: value?} info.], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 
 
 Iterator over the ``StringAndOptValue``s representing struct value {field_name: value?} info.

@@ -1,8 +1,8 @@
 [#_Links]
 === Links
 
-[caption=""]
-.class
+`Class(name=Links, anchor=Links, enumConstants=[], description=[Represents a ‘links’ constraint: &lt;relation&gt; links (&lt;role&gt;: &lt;player&gt;)], examples=[], fields=[], methods=[Method(name=exactness, signature=exactness() -> ConstraintExactness, anchor=Links_exactness_, args=[], description=[], examples=[], mode=null, returnDescription=, returnType=ConstraintExactness), Method(name=player, signature=player() -> ConstraintVertex, anchor=Links_player_, args=[], description=[], examples=[], mode=null, returnDescription=, returnType=ConstraintVertex), Method(name=relation, signature=relation() -> ConstraintVertex, anchor=Links_relation_, args=[], description=[], examples=[], mode=null, returnDescription=, returnType=ConstraintVertex), Method(name=role, signature=role() -> ConstraintVertex, anchor=Links_role_, args=[], description=[], examples=[], mode=null, returnDescription=, returnType=ConstraintVertex)], packagePath=typedb.api.analyze.constraint, superClasses=[Constraint], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 *Package*: `typedb.api.analyze.constraint`
 
 *Supertypes:*

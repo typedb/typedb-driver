@@ -1,8 +1,22 @@
 [#_Driver]
 === Driver
 
-[caption=""]
-.class
+`Class(name=Driver, anchor=Driver, enumConstants=[], description=[], examples=[], fields=[Variable(name=LANGUAGE, anchor=null, defaultValue=null, description=, type=static java.lang.String)], methods=[Method(name=isOpen, signature=@CheckReturnValue
+boolean isOpen(), anchor=Driver_isOpen_, args=[], description=[Checks whether this connection is presently open. 
+], examples=[driver.isOpen();], mode=null, returnDescription=null, returnType=boolean), Method(name=databases, signature=@CheckReturnValue
+DatabaseManager databases(), anchor=Driver_databases_, args=[], description=[The ``DatabaseManager`` for this connection, providing access to database management methods.], examples=[], mode=null, returnDescription=null, returnType=DatabaseManager), Method(name=transaction, signature=@CheckReturnValue
+Transaction transaction​(java.lang.String database,
+                        Transaction.Type type)
+                 throws TypeDBDriverException, anchor=Driver_transaction_java_lang_String_Transaction_Type, args=[Variable(name=database, anchor=null, defaultValue=null, description=The name of the database with which the transaction connects, type=java.lang.String), Variable(name=type, anchor=null, defaultValue=null, description=The type of transaction to be created (READ, WRITE, or SCHEMA), type=Transaction.Type)], description=[Opens a communication tunnel (transaction) to the given database on the running TypeDB server. 
+], examples=[driver.transaction(database, sessionType);], mode=null, returnDescription=null, returnType=Transaction), Method(name=transaction, signature=@CheckReturnValue
+Transaction transaction​(java.lang.String database,
+                        Transaction.Type type,
+                        TransactionOptions options), anchor=Driver_transaction_java_lang_String_Transaction_Type_TransactionOptions, args=[Variable(name=database, anchor=null, defaultValue=null, description=The name of the database with which the transaction connects, type=java.lang.String), Variable(name=type, anchor=null, defaultValue=null, description=The type of transaction to be created (READ, WRITE, or SCHEMA), type=Transaction.Type), Variable(name=options, anchor=null, defaultValue=null, description=``TransactionOptions`` to configure the opened transaction, type=TransactionOptions)], description=[Opens a communication tunnel (transaction) to the given database on the running TypeDB server. 
+], examples=[driver.transaction(database, sessionType);], mode=null, returnDescription=null, returnType=Transaction), Method(name=close, signature=void close(), anchor=Driver_close_, args=[], description=[Closes the driver. Before instantiating a new driver, the driver that’s currently open should first be closed. 
+], examples=[driver.close()], mode=null, returnDescription=null, returnType=void), Method(name=users, signature=@CheckReturnValue
+UserManager users(), anchor=Driver_users_, args=[], description=[The ``UserManager`` instance for this connection, providing access to user management methods. 
+], examples=[driver.users();], mode=null, returnDescription=null, returnType=UserManager)], packagePath=com.typedb.driver.api, superClasses=[java.lang.AutoCloseable], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 *Package*: `com.typedb.driver.api`
 
 *Superinterfaces:*

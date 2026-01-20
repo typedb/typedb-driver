@@ -1,8 +1,8 @@
 [#_TranslatedAddress]
 === TranslatedAddress
 
-[caption=""]
-.class
+`Class(name=TranslatedAddress, anchor=TranslatedAddress, enumConstants=[], description=[], examples=[], fields=[Variable(name=external, anchor=null, defaultValue=null, description=null, type=string), Variable(name=internal, anchor=null, defaultValue=null, description=null, type=string)], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 [caption=""]
 .Fields
 // tag::properties[]

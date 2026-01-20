@@ -1,8 +1,8 @@
 [#_enum_ConceptError]
 === ConceptError
 
-[caption=""]
-.enum
+`Class(name=ConceptError, anchor=enum_ConceptError, enumConstants=[EnumConstant(name=UnavailableRowVariable, type=null, value=null), EnumConstant(name=UnavailableRowIndex, type=null, value=null)], description=[], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=async).nameDescriptor(language)`
+
 [caption=""]
 .Enum variants
 // tag::enum_constants[]

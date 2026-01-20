@@ -1,8 +1,12 @@
 [#_Concept]
 === Concept
 
-[caption=""]
-.class
+`Class(name=Concept, anchor=Concept, enumConstants=[], description=[[source,typescript]
+----
+Concept: Type | Entity | Relation | Attribute | Value
+----
+], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 [source,typescript]
 ----
 Concept: Type | Entity | Relation | Attribute | Value

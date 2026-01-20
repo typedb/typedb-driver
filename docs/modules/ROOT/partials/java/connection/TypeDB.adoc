@@ -1,8 +1,12 @@
 [#_TypeDB]
 === TypeDB
 
-[caption=""]
-.class
+`Class(name=TypeDB, anchor=TypeDB, enumConstants=[], description=[], examples=[], fields=[Variable(name=DEFAULT_ADDRESS, anchor=null, defaultValue=null, description=, type=static java.lang.String)], methods=[Method(name=TypeDB, signature=public TypeDB(), anchor=TypeDB_TypeDB_, args=[], description=[], examples=[], mode=null, returnDescription=null, returnType=public), Method(name=driver, signature=public static Driver driver​(java.lang.String address,
+                            Credentials credentials,
+                            DriverOptions driverOptions)
+                     throws TypeDBDriverException, anchor=TypeDB_driver_java_lang_String_Credentials_DriverOptions, args=[Variable(name=address, anchor=null, defaultValue=null, description=The address of the TypeDB server, type=java.lang.String), Variable(name=credentials, anchor=null, defaultValue=null, description=The credentials to connect with, type=Credentials), Variable(name=driverOptions, anchor=null, defaultValue=null, description=The connection settings to connect with, type=DriverOptions)], description=[Open a TypeDB Driver to a TypeDB server available at the provided address. 
+], examples=[TypeDB.driver(address);], mode=null, returnDescription=null, returnType=public static Driver)], packagePath=com.typedb.driver, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 *Package*: `com.typedb.driver`
 
 [caption=""]

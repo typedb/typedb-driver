@@ -1,8 +1,30 @@
 [#_Transaction]
 === Transaction
 
-[caption=""]
-.class
+`Class(name=Transaction, anchor=Transaction, enumConstants=[], description=[], examples=[], fields=[], methods=[Method(name=isOpen, signature=@CheckReturnValue
+boolean isOpen(), anchor=Transaction_isOpen_, args=[], description=[Checks whether this transaction is open. 
+], examples=[transaction.isOpen();], mode=null, returnDescription=null, returnType=boolean), Method(name=getType, signature=@CheckReturnValue
+Transaction.Type getType(), anchor=Transaction_getType_, args=[], description=[The transaction’s type (READ, WRITE, or SCHEMA) 
+], examples=[transaction.getType();], mode=null, returnDescription=null, returnType=Transaction.Type), Method(name=options, signature=@CheckReturnValue
+TransactionOptions options(), anchor=Transaction_options_, args=[], description=[The options for the transaction], examples=[], mode=null, returnDescription=null, returnType=TransactionOptions), Method(name=query, signature=@CheckReturnValue
+Promise<? extends QueryAnswer> query​(java.lang.String query)
+                              throws TypeDBDriverException, anchor=Transaction_query_java_lang_String, args=[Variable(name=query, anchor=null, defaultValue=null, description=The query to execute., type=java.lang.String)], description=[Execute a TypeQL query in this transaction. 
+], examples=[transaction.query("define entity person;");], mode=null, returnDescription=null, returnType=Promise<? extends QueryAnswer>), Method(name=query, signature=@CheckReturnValue
+Promise<? extends QueryAnswer> query​(java.lang.String query,
+                                     QueryOptions options)
+                              throws TypeDBDriverException, anchor=Transaction_query_java_lang_String_QueryOptions, args=[Variable(name=query, anchor=null, defaultValue=null, description=The query to execute., type=java.lang.String), Variable(name=options, anchor=null, defaultValue=null, description=The ``QueryOptions`` to execute the query with., type=QueryOptions)], description=[Execute a TypeQL query in this transaction. 
+], examples=[transaction.query("define entity person;");], mode=null, returnDescription=null, returnType=Promise<? extends QueryAnswer>), Method(name=analyze, signature=@CheckReturnValue
+Promise<? extends AnalyzedQuery> analyze​(java.lang.String query)
+                                  throws TypeDBDriverException, anchor=Transaction_analyze_java_lang_String, args=[Variable(name=query, anchor=null, defaultValue=null, description=The query to analyze., type=java.lang.String)], description=[Analayze a TypeQL query in this transaction. 
+], examples=[transaction.analyze("match $x isa person;");], mode=null, returnDescription=null, returnType=Promise<? extends AnalyzedQuery>), Method(name=onClose, signature=void onClose​(java.util.function.Consumer<java.lang.Throwable> function), anchor=Transaction_onClose_java_util_function_Consumer_java_lang_Throwable_, args=[Variable(name=function, anchor=null, defaultValue=null, description=The callback function., type=java.util.function.Consumer<java.lang.Throwable>)], description=[Registers a callback function which will be executed when this transaction is closed. 
+], examples=[transaction.onClose(function);], mode=null, returnDescription=null, returnType=void), Method(name=commit, signature=void commit()
+     throws TypeDBDriverException, anchor=Transaction_commit_, args=[], description=[Commits the changes made via this transaction to the TypeDB database. Whether or not the transaction is commited successfully, it gets closed after the commit call. 
+], examples=[transaction.commit()], mode=null, returnDescription=null, returnType=void), Method(name=rollback, signature=void rollback()
+       throws TypeDBDriverException, anchor=Transaction_rollback_, args=[], description=[Rolls back the uncommitted changes made via this transaction. 
+], examples=[transaction.rollback()], mode=null, returnDescription=null, returnType=void), Method(name=close, signature=void close()
+    throws TypeDBDriverException, anchor=Transaction_close_, args=[], description=[Closes the transaction. 
+], examples=[transaction.close()], mode=null, returnDescription=null, returnType=void)], packagePath=com.typedb.driver.api, superClasses=[java.lang.AutoCloseable], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 *Package*: `com.typedb.driver.api`
 
 *Superinterfaces:*

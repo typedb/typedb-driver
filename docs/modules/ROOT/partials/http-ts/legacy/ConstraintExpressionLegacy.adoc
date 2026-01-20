@@ -1,8 +1,8 @@
 [#_ConstraintExpressionLegacy]
 ==== ConstraintExpressionLegacy
 
-[caption=""]
-.class
+`Class(name=ConstraintExpressionLegacy, anchor=ConstraintExpressionLegacy, enumConstants=[], description=[], examples=[], fields=[Variable(name=arguments, anchor=null, defaultValue=null, description=null, type=ConstraintVertexVariable), Variable(name=assigned, anchor=null, defaultValue=null, description=null, type=ConstraintVertexVariable), Variable(name=tag, anchor=null, defaultValue=null, description=null, type="expression"), Variable(name=text, anchor=null, defaultValue=null, description=null, type=string), Variable(name=textSpan, anchor=null, defaultValue=null, description=null, type=ConstraintSpan)], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 [caption=""]
 .Fields
 // tag::properties[]

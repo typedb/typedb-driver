@@ -1,8 +1,8 @@
 [#_responseStaticFunctions]
 === Static Functions
 
-[caption=""]
-.class
+`Class(name=Static Functions, anchor=responseStaticFunctions, enumConstants=[], description=[], examples=[], fields=[], methods=[Method(name=isApiErrorResponse, signature=isApiErrorResponse(res: ApiResponse): res is ApiErrorResponse, anchor=isApiErrorResponse_isApiErrorResponse_res_ApiResponse, args=[Variable(name=res, anchor=null, defaultValue=null, description=null, type=ApiResponse)], description=[], examples=[], mode=null, returnDescription=null, returnType=res is ApiErrorResponse), Method(name=isOkResponse, signature=isOkResponse<OK_RES>(res: ApiResponse<OK_RES>): res is ApiOkResponse<OK_RES>, anchor=isOkResponse_isOkResponse_res_ApiResponse, args=[Variable(name=res, anchor=null, defaultValue=null, description=null, type=ApiResponse)], description=[], examples=[], mode=null, returnDescription=null, returnType=res is ApiOkResponse<OK_RES>), Method(name=isApiError, signature=isApiError(err: any): err is ApiError, anchor=isApiError_isApiError_err_any, args=[Variable(name=err, anchor=null, defaultValue=null, description=null, type=any)], description=[], examples=[], mode=null, returnDescription=null, returnType=err is ApiError)], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 // tag::methods[]
 [#_isApiError_isApiError_err_any]
 ==== isApiError

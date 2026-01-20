@@ -4,8 +4,8 @@
 [#_Struct_VoidPromise]
 ==== Struct VoidPromise
 
-[caption=""]
-.class
+`Class(name=Struct VoidPromise, anchor=Struct_VoidPromise, enumConstants=[], description=[, Promise object representing the result of an asynchronous operation. A VoidPromise does not return a value, but must be resolved using void_promise_resolve(VoidPromise*) to ensure the operation has completed, or for a failed operation to set the error.], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 
 
 Promise object representing the result of an asynchronous operation. A VoidPromise does not return a value, but must be resolved using void_promise_resolve(VoidPromise*) to ensure the operation has completed, or for a failed operation to set the error.

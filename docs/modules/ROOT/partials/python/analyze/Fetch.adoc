@@ -1,8 +1,8 @@
 [#_Fetch]
 === Fetch
 
-[caption=""]
-.class
+`Class(name=Fetch, anchor=Fetch, enumConstants=[], description=[A representation of the ‘fetch’ stage of a query.], examples=[], fields=[], methods=[Method(name=as_leaf, signature=as_leaf() -> FetchLeaf, anchor=Fetch_as_leaf_, args=[], description=[Down-casts this Fetch as a FetchLeaf variant.], examples=[], mode=null, returnDescription=, returnType=FetchLeaf), Method(name=as_list, signature=as_list() -> FetchList, anchor=Fetch_as_list_, args=[], description=[Down-casts this Fetch as a FetchList variant.], examples=[], mode=null, returnDescription=, returnType=FetchList), Method(name=as_object, signature=as_object() -> FetchObject, anchor=Fetch_as_object_, args=[], description=[Down-casts this Fetch as a FetchObject variant.], examples=[], mode=null, returnDescription=, returnType=FetchObject), Method(name=is_leaf, signature=is_leaf() -> bool, anchor=Fetch_is_leaf_, args=[], description=[], examples=[], mode=null, returnDescription=, returnType=bool), Method(name=is_list, signature=is_list() -> bool, anchor=Fetch_is_list_, args=[], description=[], examples=[], mode=null, returnDescription=, returnType=bool), Method(name=is_object, signature=is_object() -> bool, anchor=Fetch_is_object_, args=[], description=[], examples=[], mode=null, returnDescription=, returnType=bool)], packagePath=typedb.api.analyze.fetch, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 *Package*: `typedb.api.analyze.fetch`
 
 A representation of the ‘fetch’ stage of a query.

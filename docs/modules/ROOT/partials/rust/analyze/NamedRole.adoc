@@ -1,8 +1,8 @@
 [#_struct_NamedRole]
 === NamedRole
 
-[caption=""]
-.struct
+`Class(name=NamedRole, anchor=struct_NamedRole, enumConstants=[], description=[A ``NamedRole`` vertex is used in links &amp; relates constraints, as multiple relations may have roles with the same name.], examples=[], fields=[Variable(name=variable, anchor=struct_NamedRole_variable, defaultValue=null, description=null, type=Variable), Variable(name=name, anchor=struct_NamedRole_name, defaultValue=null, description=null, type=String)], methods=[], packagePath=null, superClasses=[Clone, Debug, PartialEq], traitImplementors=[], mode=async).nameDescriptor(language)`
+
 *Implements traits:*
 
 * `Clone`

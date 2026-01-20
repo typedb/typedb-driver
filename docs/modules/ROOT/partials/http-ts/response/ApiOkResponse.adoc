@@ -1,8 +1,8 @@
 [#_ApiOkResponse_OK_RES]
 === ApiOkResponse<OK_RES>
 
-[caption=""]
-.class
+`Class(name=ApiOkResponse<OK_RES>, anchor=ApiOkResponse_OK_RES, enumConstants=[], description=[], examples=[], fields=[Variable(name=ok, anchor=null, defaultValue=null, description=null, type=OK_RES)], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 [caption=""]
 .Fields
 // tag::properties[]

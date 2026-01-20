@@ -1,8 +1,12 @@
 [#_ApiResponse_OK_RES]
 === ApiResponse<OK_RES>
 
-[caption=""]
-.class
+`Class(name=ApiResponse<OK_RES>, anchor=ApiResponse_OK_RES, enumConstants=[], description=[[source,typescript]
+----
+ApiResponse: ApiOkResponse<OK_RES> | ApiErrorResponse
+----
+], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 [source,typescript]
 ----
 ApiResponse: ApiOkResponse<OK_RES> | ApiErrorResponse

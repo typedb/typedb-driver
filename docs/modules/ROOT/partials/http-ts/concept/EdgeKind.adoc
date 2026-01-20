@@ -1,8 +1,23 @@
 [#_EdgeKind]
 === EdgeKind
 
-[caption=""]
-.class
+`Class(name=EdgeKind, anchor=EdgeKind, enumConstants=[], description=[[source,typescript]
+----
+EdgeKind:
+ | "isa"
+ | "has"
+ | "links"
+ | "sub"
+ | "owns"
+ | "relates"
+ | "plays"
+ | "isaExact"
+ | "subExact"
+ | "assigned"
+ | "argument"
+----
+], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 [source,typescript]
 ----
 EdgeKind:

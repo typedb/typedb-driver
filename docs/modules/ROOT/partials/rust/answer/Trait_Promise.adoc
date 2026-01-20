@@ -1,8 +1,8 @@
 [#_trait_Promise]
 === Trait Promise
 
-[caption=""]
-.struct
+`Class(name=Trait Promise, anchor=trait_Promise, enumConstants=[], description=[Async promise, an alias for Rust’s built-in Future. A ``BoxPromise`` is an alias for Rust’s built-in BoxFuture.], examples=[promise.await], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=async).nameDescriptor(language)`
+
 [tabs]
 ====
 async::

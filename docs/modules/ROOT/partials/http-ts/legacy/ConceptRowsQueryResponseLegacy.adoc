@@ -1,8 +1,8 @@
 [#_ConceptRowsQueryResponseLegacy]
 === ConceptRowsQueryResponseLegacy
 
-[caption=""]
-.class
+`Class(name=ConceptRowsQueryResponseLegacy, anchor=ConceptRowsQueryResponseLegacy, enumConstants=[], description=[], examples=[], fields=[Variable(name=answers, anchor=null, defaultValue=null, description=null, type=ConceptRowAnswer), Variable(name=answerType, anchor=null, defaultValue=null, description=null, type="conceptRows"), Variable(name=comment, anchor=null, defaultValue=null, description=null, type=string), Variable(name=query, anchor=null, defaultValue=null, description=null, type=QueryStructureLegacy), Variable(name=queryType, anchor=null, defaultValue=null, description=null, type=QueryType)], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 [caption=""]
 .Fields
 // tag::properties[]

@@ -1,8 +1,20 @@
 [#_Database]
 === Database
 
-[caption=""]
-.class
+`Class(name=Database, anchor=Database, enumConstants=[], description=[], examples=[], fields=[], methods=[Method(name=name, signature=@CheckReturnValue
+java.lang.String name(), anchor=Database_name_, args=[], description=[The database name as a string.], examples=[], mode=null, returnDescription=null, returnType=java.lang.String), Method(name=schema, signature=@CheckReturnValue
+java.lang.String schema()
+                 throws TypeDBDriverException, anchor=Database_schema_, args=[], description=[A full schema text as a valid TypeQL define query string. 
+], examples=[database.schema()], mode=null, returnDescription=null, returnType=java.lang.String), Method(name=typeSchema, signature=@CheckReturnValue
+java.lang.String typeSchema()
+                     throws TypeDBDriverException, anchor=Database_typeSchema_, args=[], description=[The types in the schema as a valid TypeQL define query string. 
+], examples=[database.typeSchema()], mode=null, returnDescription=null, returnType=java.lang.String), Method(name=exportToFile, signature=void exportToFile​(java.lang.String schemaFilePath,
+                  java.lang.String dataFilePath)
+           throws TypeDBDriverException, anchor=Database_exportToFile_java_lang_String_java_lang_String, args=[Variable(name=schemaFilePath, anchor=null, defaultValue=null, description=The path to the schema definition file to be created, type=java.lang.String), Variable(name=dataFilePath, anchor=null, defaultValue=null, description=The path to the data file to be created, type=java.lang.String)], description=[Export a database into a schema definition and a data files saved to the disk. This is a blocking operation and may take a significant amount of time depending on the database size. 
+], examples=[database.exportToFile("schema.typeql", "data.typedb")], mode=null, returnDescription=null, returnType=void), Method(name=delete, signature=void delete()
+     throws TypeDBDriverException, anchor=Database_delete_, args=[], description=[Deletes this database. 
+], examples=[database.delete()], mode=null, returnDescription=null, returnType=void)], packagePath=com.typedb.driver.api.database, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 *Package*: `com.typedb.driver.api.database`
 
 // tag::methods[]

@@ -1,8 +1,8 @@
 [#_AnalyzedConjunction]
 === AnalyzedConjunction
 
-[caption=""]
-.class
+`Class(name=AnalyzedConjunction, anchor=AnalyzedConjunction, enumConstants=[], description=[], examples=[], fields=[Variable(name=annotations, anchor=null, defaultValue=null, description=null, type=ConjunctionAnnotations), Variable(name=constraints, anchor=null, defaultValue=null, description=null, type=ConstraintAny)], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 [caption=""]
 .Fields
 // tag::properties[]

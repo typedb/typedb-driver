@@ -1,8 +1,8 @@
 [#_enum_TransactionType]
 === TransactionType
 
-[caption=""]
-.enum
+`Class(name=TransactionType, anchor=enum_TransactionType, enumConstants=[EnumConstant(name=Read = 0, type=null, value=null), EnumConstant(name=Write = 1, type=null, value=null), EnumConstant(name=Schema = 2, type=null, value=null)], description=[This enum is used to specify the type of transaction.], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=async).nameDescriptor(language)`
+
 This enum is used to specify the type of transaction.
 
 [caption=""]

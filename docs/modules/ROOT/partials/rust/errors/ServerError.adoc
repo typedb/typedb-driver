@@ -1,8 +1,8 @@
 [#_struct_ServerError]
 === ServerError
 
-[caption=""]
-.struct
+`Class(name=ServerError, anchor=struct_ServerError, enumConstants=[], description=[], examples=[], fields=[], methods=[], packagePath=null, superClasses=[Clone, Debug, Display, Eq, From<ServerError>, PartialEq, StructuralPartialEq], traitImplementors=[], mode=async).nameDescriptor(language)`
+
 *Implements traits:*
 
 * `Clone`

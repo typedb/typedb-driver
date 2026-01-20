@@ -1,8 +1,8 @@
 [#_enum_Offset]
 === Offset
 
-[caption=""]
-.enum
+`Class(name=Offset, anchor=enum_Offset, enumConstants=[EnumConstant(name=IANA(<Tz as TimeZone>::Offset), type=null, value=null), EnumConstant(name=Fixed(FixedOffset), type=null, value=null)], description=[Offset for datetime-tz. Can be retrieved from an IANA Tz or a FixedOffset.], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=async).nameDescriptor(language)`
+
 Offset for datetime-tz. Can be retrieved from an IANA Tz or a FixedOffset.
 
 [caption=""]

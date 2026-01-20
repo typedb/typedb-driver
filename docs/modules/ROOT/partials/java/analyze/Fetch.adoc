@@ -1,8 +1,8 @@
 [#_Fetch]
 === Fetch
 
-[caption=""]
-.class
+`Class(name=Fetch, anchor=Fetch, enumConstants=[], description=[A representation of the 'fetch' stage of a query], examples=[], fields=[], methods=[Method(name=variant, signature=com.typedb.driver.jni.FetchVariant variant(), anchor=Fetch_variant_, args=[], description=[], examples=[], mode=null, returnDescription=null, returnType=com.typedb.driver.jni.FetchVariant), Method(name=isLeaf, signature=boolean isLeaf(), anchor=Fetch_isLeaf_, args=[], description=[], examples=[], mode=null, returnDescription=null, returnType=boolean), Method(name=isList, signature=boolean isList(), anchor=Fetch_isList_, args=[], description=[], examples=[], mode=null, returnDescription=null, returnType=boolean), Method(name=isObject, signature=boolean isObject(), anchor=Fetch_isObject_, args=[], description=[], examples=[], mode=null, returnDescription=null, returnType=boolean), Method(name=asLeaf, signature=Fetch.FetchLeaf asLeaf(), anchor=Fetch_asLeaf_, args=[], description=[Down-casts this ``Fetch`` as a ``FetchLeaf`` variant], examples=[], mode=null, returnDescription=null, returnType=Fetch.FetchLeaf), Method(name=asList, signature=Fetch.FetchList asList(), anchor=Fetch_asList_, args=[], description=[Down-casts this ``Fetch`` as a ``FetchList`` variant], examples=[], mode=null, returnDescription=null, returnType=Fetch.FetchList), Method(name=asObject, signature=Fetch.FetchObject asObject(), anchor=Fetch_asObject_, args=[], description=[Down-casts this ``Fetch`` as a ``FetchObject`` variant], examples=[], mode=null, returnDescription=null, returnType=Fetch.FetchObject)], packagePath=com.typedb.driver.api.analyze, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 *Package*: `com.typedb.driver.api.analyze`
 
 A representation of the 'fetch' stage of a query

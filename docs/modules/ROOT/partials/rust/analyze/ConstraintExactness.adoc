@@ -1,8 +1,8 @@
 [#_enum_ConstraintExactness]
 === ConstraintExactness
 
-[caption=""]
-.enum
+`Class(name=ConstraintExactness, anchor=enum_ConstraintExactness, enumConstants=[EnumConstant(name=Exact = 0, type=null, value=null), EnumConstant(name=Subtypes = 1, type=null, value=null)], description=[Tells apart exact variants of constraints from the ones allowing subtype-polymorphism. e.g. <code>isa!</code> would be represented as an <code>Constraint::Isa</code> with its exactness field <code>ConstraintExactness::Exact</code>.], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=async).nameDescriptor(language)`
+
 Tells apart exact variants of constraints from the ones allowing subtype-polymorphism. e.g. <code>isa!</code> would be represented as an <code>Constraint::Isa</code> with its exactness field <code>ConstraintExactness::Exact</code>.
 
 [caption=""]

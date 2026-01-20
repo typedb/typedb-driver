@@ -4,8 +4,8 @@
 [#_Struct_Pipeline]
 ==== Struct Pipeline
 
-[caption=""]
-.class
+`Class(name=Struct Pipeline, anchor=Struct_Pipeline, enumConstants=[], description=[, A representation of a query pipeline.], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 
 
 A representation of a query pipeline.

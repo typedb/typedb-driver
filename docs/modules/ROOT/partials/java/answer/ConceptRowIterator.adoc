@@ -1,8 +1,13 @@
 [#_ConceptRowIterator]
 === ConceptRowIterator
 
-[caption=""]
-.class
+`Class(name=ConceptRowIterator, anchor=ConceptRowIterator, enumConstants=[], description=[Represents an iterator over ``ConceptRow``s returned as a server answer.], examples=[], fields=[], methods=[Method(name=isConceptRows, signature=default boolean isConceptRows(), anchor=ConceptRowIterator_isConceptRows_, args=[], description=[Checks if the query answer is a ``ConceptRowIterator``. 
+], examples=[concept.isConceptRows();], mode=null, returnDescription=null, returnType=boolean), Method(name=asConceptRows, signature=@CheckReturnValue
+default ConceptRowIterator asConceptRows(), anchor=ConceptRowIterator_asConceptRows_, args=[], description=[Casts the query answer to ``ConceptRowIterator``. 
+], examples=[concept.asConceptRows();], mode=null, returnDescription=null, returnType=ConceptRowIterator), Method(name=stream, signature=@CheckReturnValue
+java.util.stream.Stream<ConceptRow> stream(), anchor=ConceptRowIterator_stream_, args=[], description=[Creates a stream over ``ConceptRow``s based on this iterator. 
+], examples=[answer.asConceptRows().stream();], mode=null, returnDescription=null, returnType=java.util.stream.Stream<ConceptRow>)], packagePath=com.typedb.driver.api.answer, superClasses=[java.util.Iterator<ConceptRow>, QueryAnswer], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 *Package*: `com.typedb.driver.api.answer`
 
 *Superinterfaces:*

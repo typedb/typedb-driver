@@ -1,8 +1,10 @@
 [#_struct_User]
 === User
 
-[caption=""]
-.struct
+`Class(name=User, anchor=struct_User, enumConstants=[], description=[], examples=[], fields=[Variable(name=name, anchor=struct_User_name, defaultValue=null, description=null, type=String), Variable(name=password, anchor=struct_User_password, defaultValue=null, description=null, type=Option<String>), Variable(name=server_connections, anchor=struct_User_server_connections, defaultValue=null, description=null, type=HashMap<Address, ServerConnection>)], methods=[Method(name=update_password, signature=pub async fn update_password(&self, password: impl Into<String>) -> Result<()>, anchor=struct_User_update_password_username_password_impl_Into_String_-_Result_, args=[Variable(name=username, anchor=null, defaultValue=null, description= — The name of the user, type=null), Variable(name=password, anchor=null, defaultValue=null, description= — The new password, type=impl Into<String>) -> Result<()], description=[Update the user’s password.], examples=[user.update_password(username, password).await;
+user.update_password(username, password).await;], mode=async, returnDescription=null, returnType=Result<()>), Method(name=delete, signature=pub async fn delete(self) -> Result, anchor=struct_User_delete_username, args=[Variable(name=username, anchor=null, defaultValue=null, description= — The name of the user to be deleted, type=null)], description=[Deletes this user], examples=[user.delete().await;
+user.delete(username).await;], mode=async, returnDescription=null, returnType=Result)], packagePath=null, superClasses=[Clone, Debug], traitImplementors=[], mode=async).nameDescriptor(language)`
+
 *Implements traits:*
 
 * `Clone`

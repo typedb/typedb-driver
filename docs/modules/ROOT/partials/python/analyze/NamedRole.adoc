@@ -1,8 +1,8 @@
 [#_NamedRole]
 === NamedRole
 
-[caption=""]
-.class
+`Class(name=NamedRole, anchor=NamedRole, enumConstants=[], description=[‘links’ &amp; ‘relates’ constraints accept unscoped role names. Since an unscoped role-name does not uniquely identify a role-type, (Different role-types belonging to different relation types may share the same name) an internal variable is introduced to handle the ambiguity], examples=[], fields=[], methods=[Method(name=name, signature=name() -> str, anchor=NamedRole_name_, args=[], description=[The unscoped role name specified in the query.], examples=[], mode=null, returnDescription=, returnType=str), Method(name=variable, signature=variable() -> Variable, anchor=NamedRole_variable_, args=[], description=[The internal variable injected to handle ambiguity in unscoped role names.], examples=[], mode=null, returnDescription=, returnType=Variable)], packagePath=typedb.api.analyze.named_role, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 *Package*: `typedb.api.analyze.named_role`
 
 ‘links’ &amp; ‘relates’ constraints accept unscoped role names. Since an unscoped role-name does not uniquely identify a role-type, (Different role-types belonging to different relation types may share the same name) an internal variable is introduced to handle the ambiguity

@@ -1,8 +1,12 @@
 [#_InstantiableType]
 === InstantiableType
 
-[caption=""]
-.class
+`Class(name=InstantiableType, anchor=InstantiableType, enumConstants=[], description=[[source,typescript]
+----
+InstantiableType: EntityType | RelationType | AttributeType
+----
+], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 [source,typescript]
 ----
 InstantiableType: EntityType | RelationType | AttributeType

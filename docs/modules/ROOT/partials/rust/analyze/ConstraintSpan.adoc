@@ -1,8 +1,8 @@
 [#_struct_ConstraintSpan]
 === ConstraintSpan
 
-[caption=""]
-.struct
+`Class(name=ConstraintSpan, anchor=struct_ConstraintSpan, enumConstants=[], description=[The span of a constraint in the ``source`` of the ``AnalyzedQuery``.], examples=[], fields=[Variable(name=begin, anchor=struct_ConstraintSpan_begin, defaultValue=null, description=The offset of the first character in the span, type=usize), Variable(name=end, anchor=struct_ConstraintSpan_end, defaultValue=null, description=The offset after the last character in the span, type=usize)], methods=[], packagePath=null, superClasses=[Clone, Debug], traitImplementors=[], mode=async).nameDescriptor(language)`
+
 *Implements traits:*
 
 * `Clone`

@@ -4,8 +4,8 @@
 [#_Struct_DatetimeInNanos]
 ==== Struct DatetimeInNanos
 
-[caption=""]
-.class
+`Class(name=Struct DatetimeInNanos, anchor=Struct_DatetimeInNanos, enumConstants=[], description=[, A ``DatetimeInNanos`` used to represent datetime as a pair of seconds part and a number of nanoseconds since the last seconds boundary.], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 
 
 A ``DatetimeInNanos`` used to represent datetime as a pair of seconds part and a number of nanoseconds since the last seconds boundary.

@@ -1,8 +1,8 @@
 [#_enum_Node]
 === Node
 
-[caption=""]
-.enum
+`Class(name=Node, anchor=enum_Node, enumConstants=[EnumConstant(name=Map(HashMap<String, Node>), type=null, value=null), EnumConstant(name=List(Vec<Node>), type=null, value=null), EnumConstant(name=Leaf(Option<Leaf>), type=null, value=null)], description=[], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=async).nameDescriptor(language)`
+
 [caption=""]
 .Enum variants
 // tag::enum_constants[]

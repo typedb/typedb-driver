@@ -1,8 +1,32 @@
 [#_ConstraintAny]
 ==== ConstraintAny
 
-[caption=""]
-.class
+`Class(name=ConstraintAny, anchor=ConstraintAny, enumConstants=[], description=[[source,typescript]
+----
+ConstraintAny:
+ | ConstraintIsa
+ | ConstraintIsaExact
+ | ConstraintHas
+ | ConstraintLinks
+ | ConstraintSub
+ | ConstraintSubExact
+ | ConstraintOwns
+ | ConstraintRelates
+ | ConstraintPlays
+ | ConstraintExpression
+ | ConstraintFunction
+ | ConstraintComparison
+ | ConstraintIs
+ | ConstraintIid
+ | ConstraintKind
+ | ConstraintValue
+ | ConstraintLabel
+ | ConstraintOr
+ | ConstraintNot
+ | ConstraintTry
+----
+], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 [source,typescript]
 ----
 ConstraintAny:

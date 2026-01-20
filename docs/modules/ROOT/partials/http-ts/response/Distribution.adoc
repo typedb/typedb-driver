@@ -1,8 +1,12 @@
 [#_Distribution]
 === Distribution
 
-[caption=""]
-.class
+`Class(name=Distribution, anchor=Distribution, enumConstants=[], description=[[source,typescript]
+----
+Distribution: "TypeDB Cluster" | "TypeDB CE"
+----
+], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 [source,typescript]
 ----
 Distribution: "TypeDB Cluster" | "TypeDB CE"

@@ -4,8 +4,8 @@
 [#_Struct_ReturnOperation]
 ==== Struct ReturnOperation
 
-[caption=""]
-.class
+`Class(name=Struct ReturnOperation, anchor=Struct_ReturnOperation, enumConstants=[], description=[, A representation of the return operation of the function], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 
 
 A representation of the return operation of the function

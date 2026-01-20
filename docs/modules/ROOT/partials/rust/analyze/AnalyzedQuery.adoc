@@ -1,8 +1,8 @@
 [#_struct_AnalyzedQuery]
 === AnalyzedQuery
 
-[caption=""]
-.struct
+`Class(name=AnalyzedQuery, anchor=struct_AnalyzedQuery, enumConstants=[], description=[An ``AnalyzedQuery`` contains the server’s representation of the query and preamble functions; as well as the result of types inferred for each variable by type-inference.], examples=[], fields=[Variable(name=source, anchor=struct_AnalyzedQuery_source, defaultValue=null, description=The original TypeQL query string, type=String), Variable(name=query, anchor=struct_AnalyzedQuery_query, defaultValue=null, description=A representation of the query as a ``Pipeline``, type=Pipeline), Variable(name=preamble, anchor=struct_AnalyzedQuery_preamble, defaultValue=null, description=A representation of the ``Function``s in the preamble of the query, type=Vec<Function>), Variable(name=fetch, anchor=struct_AnalyzedQuery_fetch, defaultValue=null, description=A representation of the ``Fetch`` stage of the query, if it has one, type=Option<Fetch>)], methods=[], packagePath=null, superClasses=[Clone, Debug], traitImplementors=[], mode=async).nameDescriptor(language)`
+
 *Implements traits:*
 
 * `Clone`

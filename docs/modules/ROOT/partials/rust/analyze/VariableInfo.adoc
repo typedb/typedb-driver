@@ -1,8 +1,8 @@
 [#_struct_VariableInfo]
 === VariableInfo
 
-[caption=""]
-.struct
+`Class(name=VariableInfo, anchor=struct_VariableInfo, enumConstants=[], description=[Holds information about variables in a ``Pipeline``.], examples=[], fields=[Variable(name=name, anchor=struct_VariableInfo_name, defaultValue=null, description=The name of the variable, if any., type=String)], methods=[], packagePath=null, superClasses=[Clone, Debug], traitImplementors=[], mode=async).nameDescriptor(language)`
+
 *Implements traits:*
 
 * `Clone`

@@ -1,8 +1,8 @@
 [#_OkQueryAnswer]
 === OkQueryAnswer
 
-[caption=""]
-.class
+`Class(name=OkQueryAnswer, anchor=OkQueryAnswer, enumConstants=[], description=[Represents a simple Ok message as a server answer. Doesn’t contain concepts.], examples=[], fields=[], methods=[Method(name=as_ok, signature=as_ok() -> OkQueryAnswer, anchor=OkQueryAnswer_as_ok_, args=[], description=[Casts the query answer to ``OkQueryAnswer``.], examples=[query_answer.as_ok()], mode=null, returnDescription=, returnType=OkQueryAnswer), Method(name=is_ok, signature=is_ok() -> bool, anchor=OkQueryAnswer_is_ok_, args=[], description=[Checks if the query answer is an ``Ok``.], examples=[query_answer.is_ok()], mode=null, returnDescription=, returnType=bool)], packagePath=typedb.api.answer.ok_query_answer, superClasses=[QueryAnswer], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 *Package*: `typedb.api.answer.ok_query_answer`
 
 *Supertypes:*

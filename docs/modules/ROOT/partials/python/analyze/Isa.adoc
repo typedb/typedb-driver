@@ -1,8 +1,8 @@
 [#_Isa]
 === Isa
 
-[caption=""]
-.class
+`Class(name=Isa, anchor=Isa, enumConstants=[], description=[Represents an ‘isa’ constraint: &lt;instance&gt; isa(!) &lt;type&gt;], examples=[], fields=[], methods=[Method(name=exactness, signature=exactness() -> ConstraintExactness, anchor=Isa_exactness_, args=[], description=[], examples=[], mode=null, returnDescription=, returnType=ConstraintExactness), Method(name=instance, signature=instance() -> ConstraintVertex, anchor=Isa_instance_, args=[], description=[], examples=[], mode=null, returnDescription=, returnType=ConstraintVertex), Method(name=type, signature=type() -> ConstraintVertex, anchor=Isa_type_, args=[], description=[], examples=[], mode=null, returnDescription=, returnType=ConstraintVertex)], packagePath=typedb.api.analyze.constraint, superClasses=[Constraint], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 *Package*: `typedb.api.analyze.constraint`
 
 *Supertypes:*

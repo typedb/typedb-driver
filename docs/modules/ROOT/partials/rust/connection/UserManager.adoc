@@ -1,8 +1,12 @@
 [#_struct_UserManager]
 === UserManager
 
-[caption=""]
-.struct
+`Class(name=UserManager, anchor=struct_UserManager, enumConstants=[], description=[Provides access to all user management methods.], examples=[], fields=[], methods=[Method(name=contains, signature=pub async fn contains(&self, username: impl Into<String>) -> Result<bool>, anchor=struct_UserManager_contains_username_impl_Into_String_, args=[Variable(name=username, anchor=null, defaultValue=null, description= — The user name to be checked, type=impl Into<String>)], description=[Checks if a user with the given name exists.], examples=[driver.users.contains(username).await;], mode=async, returnDescription=null, returnType=Result<bool>), Method(name=get, signature=pub async fn get(&self, username: impl Into<String>) -> Result<Option<User>>, anchor=struct_UserManager_get_username_impl_Into_String_, args=[Variable(name=username, anchor=null, defaultValue=null, description= — The name of the user to retrieve, type=impl Into<String>)], description=[Retrieve a user with the given name.], examples=[driver.users.get(username).await;], mode=async, returnDescription=null, returnType=Result<Option<User>>), Method(name=all, signature=pub async fn all(&self) -> Result<Vec<User>>, anchor=struct_UserManager_all_, args=[], description=[Retrieves all users which exist on the TypeDB server.], examples=[driver.users.all().await;], mode=async, returnDescription=null, returnType=Result<Vec<User>>), Method(name=create, signature=pub async fn create(
+    &self,
+    username: impl Into<String>,
+    password: impl Into<String>,
+) -> Result, anchor=struct_UserManager_create_username_impl_Into_String_password_impl_Into_String_, args=[Variable(name=username, anchor=null, defaultValue=null, description= — The name of the user to be created, type=impl Into<String>), Variable(name=password, anchor=null, defaultValue=null, description= — The password of the user to be created, type=impl Into<String>)], description=[Create a user with the given name &amp; password.], examples=[driver.users.create(username, password).await;], mode=async, returnDescription=null, returnType=Result)], packagePath=null, superClasses=[Debug], traitImplementors=[], mode=async).nameDescriptor(language)`
+
 *Implements traits:*
 
 * `Debug`

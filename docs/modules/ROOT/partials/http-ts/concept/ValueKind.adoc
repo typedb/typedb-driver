@@ -1,8 +1,12 @@
 [#_ValueKind]
 === ValueKind
 
-[caption=""]
-.class
+`Class(name=ValueKind, anchor=ValueKind, enumConstants=[], description=[[source,typescript]
+----
+ValueKind: "value"
+----
+], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 [source,typescript]
 ----
 ValueKind: "value"

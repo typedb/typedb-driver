@@ -1,8 +1,21 @@
 [#_ConceptRow]
 === ConceptRow
 
-[caption=""]
-.class
+`Class(name=ConceptRow, anchor=ConceptRow, enumConstants=[], description=[Contains a row of concepts with a header.], examples=[], fields=[], methods=[Method(name=columnNames, signature=@CheckReturnValue
+java.util.stream.Stream<java.lang.String> columnNames(), anchor=ConceptRow_columnNames_, args=[], description=[Produces a stream over all column names (variables) in the header of this ``ConceptRow``. Shared between all the rows in a QueryAnswer. 
+], examples=[conceptRow.columnNames();], mode=null, returnDescription=null, returnType=java.util.stream.Stream<java.lang.String>), Method(name=getQueryType, signature=@CheckReturnValue
+QueryType getQueryType(), anchor=ConceptRow_getQueryType_, args=[], description=[Retrieves the executed query's type of this ``ConceptRow``. Shared between all the rows in a QueryAnswer. 
+], examples=[conceptRow.getQueryType();], mode=null, returnDescription=null, returnType=QueryType), Method(name=getQueryStructure, signature=java.util.Optional<Pipeline> getQueryStructure(), anchor=ConceptRow_getQueryStructure_, args=[], description=[Retrieve the executed query's structure from the ``ConceptRow``'s header, if set. It must be requested via "include query structure" in ``QueryOptions`` Shared between all the rows in a QueryAnswer. 
+], examples=[conceptRow.getQueryStructure();], mode=null, returnDescription=null, returnType=java.util.Optional<Pipeline>), Method(name=get, signature=@CheckReturnValue
+java.util.Optional<Concept> get​(java.lang.String columnName)
+                         throws TypeDBDriverException, anchor=ConceptRow_get_java_lang_String, args=[Variable(name=columnName, anchor=null, defaultValue=null, description=the variable (column name from ``column_names``), type=java.lang.String)], description=[Retrieves a concept for a given column name (variable). Returns an empty ``Optional`` if the variable has an empty answer. Throws an exception if the variable is not present. 
+], examples=[conceptRow.get(columnName);], mode=null, returnDescription=null, returnType=java.util.Optional<Concept>), Method(name=getIndex, signature=@CheckReturnValue
+java.util.Optional<Concept> getIndex​(long columnIndex)
+                              throws TypeDBDriverException, anchor=ConceptRow_getIndex_long, args=[Variable(name=columnIndex, anchor=null, defaultValue=null, description=the column index, type=long)], description=[Retrieves a concept for a given index of the header (``columnNames``). Returns an empty ``Optional`` if the index points to an empty answer. Throws an exception if the index is not in the row's range. 
+], examples=[conceptRow.getIndex(columnIndex);], mode=null, returnDescription=null, returnType=java.util.Optional<Concept>), Method(name=involvedConjunctions, signature=java.util.Optional<java.util.stream.Stream<? extends ConjunctionID>> involvedConjunctions(), anchor=ConceptRow_involvedConjunctions_, args=[], description=[Retrieve the ``ConjunctionID``s of ``Conjunction``s that answered this row.], examples=[], mode=null, returnDescription=null, returnType=java.util.Optional<java.util.stream.Stream<? extends ConjunctionID>>), Method(name=concepts, signature=@CheckReturnValue
+java.util.stream.Stream<? extends Concept> concepts(), anchor=ConceptRow_concepts_, args=[], description=[Produces a stream over all concepts in this `ConceptRow`, skipping empty results. 
+], examples=[conceptRow.concepts();], mode=null, returnDescription=null, returnType=java.util.stream.Stream<? extends Concept>)], packagePath=com.typedb.driver.api.answer, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 *Package*: `com.typedb.driver.api.answer`
 
 Contains a row of concepts with a header.

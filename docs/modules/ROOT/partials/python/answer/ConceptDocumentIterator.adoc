@@ -1,8 +1,8 @@
 [#_ConceptDocumentIterator]
 === ConceptDocumentIterator
 
-[caption=""]
-.class
+`Class(name=ConceptDocumentIterator, anchor=ConceptDocumentIterator, enumConstants=[], description=[Represents an iterator over ``ConceptRow``s returned as a server answer.], examples=[], fields=[], methods=[Method(name=as_concept_documents, signature=as_concept_documents() -> ConceptDocumentIterator, anchor=ConceptDocumentIterator_as_concept_documents_, args=[], description=[Casts the query answer to ``ConceptDocumentIterator``.], examples=[query_answer.as_concept_documents()], mode=null, returnDescription=, returnType=ConceptDocumentIterator), Method(name=is_concept_documents, signature=is_concept_documents() -> bool, anchor=ConceptDocumentIterator_is_concept_documents_, args=[], description=[Checks if the query answer is a ``ConceptDocumentIterator``.], examples=[query_answer.is_concept_documents()], mode=null, returnDescription=, returnType=bool)], packagePath=typedb.api.answer.concept_document_iterator, superClasses=[QueryAnswer], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 *Package*: `typedb.api.answer.concept_document_iterator`
 
 *Supertypes:*

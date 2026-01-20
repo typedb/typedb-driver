@@ -1,8 +1,8 @@
 [#_Not]
 === Not
 
-[caption=""]
-.class
+`Class(name=Not, anchor=Not, enumConstants=[], description=[Represents a ‘not’ constraint: not { &lt;conjunction&gt; }], examples=[], fields=[], methods=[Method(name=conjunction, signature=conjunction() -> ConjunctionID, anchor=Not_conjunction_, args=[], description=[Index into Pipeline.conjunctions], examples=[], mode=null, returnDescription=, returnType=ConjunctionID)], packagePath=typedb.api.analyze.constraint, superClasses=[Constraint], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 *Package*: `typedb.api.analyze.constraint`
 
 *Supertypes:*

@@ -1,8 +1,8 @@
 [#_SelectStage]
 === SelectStage
 
-[caption=""]
-.class
+`Class(name=SelectStage, anchor=SelectStage, enumConstants=[], description=[Represents a ‘select’ stage: select &lt;variables&gt;], examples=[], fields=[], methods=[Method(name=variables, signature=variables() -> Iterator['Variable'], anchor=SelectStage_variables_, args=[], description=[], examples=[], mode=null, returnDescription=, returnType=Iterator['Variable'])], packagePath=typedb.api.analyze.pipeline_stage, superClasses=[PipelineStage], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 *Package*: `typedb.api.analyze.pipeline_stage`
 
 *Supertypes:*

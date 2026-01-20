@@ -1,8 +1,8 @@
 [#_enum_MigrationError]
 === MigrationError
 
-[caption=""]
-.enum
+`Class(name=MigrationError, anchor=enum_MigrationError, enumConstants=[EnumConstant(name=CannotOpenImportFile, type=null, value=null), EnumConstant(name=CannotCreateExportFile, type=null, value=null), EnumConstant(name=CannotExportToTheSameFile, type=null, value=null), EnumConstant(name=CannotDecodeImportedConcept, type=null, value=null), EnumConstant(name=CannotDecodeImportedConceptLength, type=null, value=null), EnumConstant(name=CannotEncodeExportedConcept, type=null, value=null)], description=[], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=async).nameDescriptor(language)`
+
 [caption=""]
 .Enum variants
 // tag::enum_constants[]

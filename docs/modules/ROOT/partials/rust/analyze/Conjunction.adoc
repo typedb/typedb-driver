@@ -1,8 +1,8 @@
 [#_struct_Conjunction]
 === Conjunction
 
-[caption=""]
-.struct
+`Class(name=Conjunction, anchor=struct_Conjunction, enumConstants=[], description=[A representation of the constraints involved in the query, and types inferred for each variable.], examples=[], fields=[Variable(name=constraints, anchor=struct_Conjunction_constraints, defaultValue=null, description=The ``Constraint``s in the conjunction., type=Vec<ConstraintWithSpan>), Variable(name=variable_annotations, anchor=struct_Conjunction_variable_annotations, defaultValue=null, description=The annotations of each variable in the conjunction., type=HashMap<Variable, VariableAnnotations>)], methods=[], packagePath=null, superClasses=[Clone, Debug], traitImplementors=[], mode=async).nameDescriptor(language)`
+
 *Implements traits:*
 
 * `Clone`

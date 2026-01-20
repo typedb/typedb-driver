@@ -1,8 +1,8 @@
 [#_enum_TypeAnnotations]
 === TypeAnnotations
 
-[caption=""]
-.enum
+`Class(name=TypeAnnotations, anchor=enum_TypeAnnotations, enumConstants=[EnumConstant(name=Instance(Vec<Type>), type=null, value=null), EnumConstant(name=Type(Vec<Type>), type=null, value=null), EnumConstant(name=Value(ValueType), type=null, value=null)], description=[The category of a variable, and the possible types determined by type-inference.], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=async).nameDescriptor(language)`
+
 The category of a variable, and the possible types determined by type-inference.
 
 [caption=""]

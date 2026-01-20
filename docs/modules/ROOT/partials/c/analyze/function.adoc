@@ -4,8 +4,8 @@
 [#_Struct_Function]
 ==== Struct Function
 
-[caption=""]
-.class
+`Class(name=Struct Function, anchor=Struct_Function, enumConstants=[], description=[, Holds a representation of the function, and the result of type-inference for each variable.], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 
 
 Holds a representation of the function, and the result of type-inference for each variable.

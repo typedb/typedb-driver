@@ -1,8 +1,8 @@
 [#_SortStage]
 === SortStage
 
-[caption=""]
-.class
+`Class(name=SortStage, anchor=SortStage, enumConstants=[], description=[Represents a ‘sort’ stage: sort &lt;variables-and-order&gt;], examples=[], fields=[], methods=[Method(name=variables, signature=variables() -> Iterator[SortVariable], anchor=SortStage_variables_, args=[], description=[], examples=[], mode=null, returnDescription=, returnType=Iterator[SortVariable])], packagePath=typedb.api.analyze.pipeline_stage, superClasses=[PipelineStage], traitImplementors=[], mode=null).nameDescriptor(language)`
+
 *Package*: `typedb.api.analyze.pipeline_stage`
 
 *Supertypes:*
