@@ -1,11 +1,7 @@
 [#_VariableId]
 === VariableId
 
-`Class(name=VariableId, anchor=VariableId, enumConstants=[], description=[[source,typescript]
-----
-VariableId: string
-----
-], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 [source,typescript]
 ----

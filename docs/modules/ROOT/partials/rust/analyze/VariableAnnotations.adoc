@@ -1,7 +1,7 @@
 [#_struct_VariableAnnotations]
 === VariableAnnotations
 
-`Class(name=VariableAnnotations, anchor=struct_VariableAnnotations, enumConstants=[], description=[], examples=[], fields=[Variable(name=types, anchor=struct_VariableAnnotations_types, defaultValue=null, description=The ``TypeAnnotations`` of this variable., type=TypeAnnotations)], methods=[], packagePath=null, superClasses=[Clone, Debug], traitImplementors=[], mode=async).nameDescriptor(language)`
+`class`
 
 *Implements traits:*
 

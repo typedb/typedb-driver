@@ -1,7 +1,7 @@
 [#_struct_EntityType]
 === EntityType
 
-`Class(name=EntityType, anchor=struct_EntityType, enumConstants=[], description=[Entity types represent the classification of independent objects in the data model of the business domain.], examples=[], fields=[Variable(name=label, anchor=struct_EntityType_label, defaultValue=null, description=null, type=String)], methods=[Method(name=label, signature=pub fn label(&self) -> &str, anchor=struct_EntityType_label_, args=[], description=[Retrieves the unique label of the ``EntityType``.], examples=[entity_type.label()], mode=async, returnDescription=null, returnType=&str)], packagePath=null, superClasses=[Clone, Debug, Display, Eq, PartialEq, StructuralPartialEq], traitImplementors=[], mode=async).nameDescriptor(language)`
+`class`
 
 *Implements traits:*
 

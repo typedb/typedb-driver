@@ -1,7 +1,7 @@
 [#_enum_InternalError]
 === InternalError
 
-`Class(name=InternalError, anchor=enum_InternalError, enumConstants=[EnumConstant(name=RecvError, type=null, value=null), EnumConstant(name=SendError, type=null, value=null), EnumConstant(name=UnexpectedRequestType, type=null, value=null), EnumConstant(name=UnexpectedResponseType, type=null, value=null), EnumConstant(name=UnknownServer, type=null, value=null), EnumConstant(name=EnumOutOfBounds, type=null, value=null)], description=[], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=async).nameDescriptor(language)`
+`class`
 
 [caption=""]
 .Enum variants

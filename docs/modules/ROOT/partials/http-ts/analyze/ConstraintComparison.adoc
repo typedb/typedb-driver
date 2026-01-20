@@ -1,7 +1,7 @@
 [#_ConstraintComparison]
 ==== ConstraintComparison
 
-`Class(name=ConstraintComparison, anchor=ConstraintComparison, enumConstants=[], description=[], examples=[], fields=[Variable(name=comparator, anchor=null, defaultValue=null, description=null, type=string), Variable(name=lhs, anchor=null, defaultValue=null, description=null, type=ConstraintVertexVariable), Variable(name=rhs, anchor=null, defaultValue=null, description=null, type=ConstraintVertexVariable), Variable(name=tag, anchor=null, defaultValue=null, description=null, type="comparison"), Variable(name=textSpan, anchor=null, defaultValue=null, description=null, type=ConstraintSpan)], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 [caption=""]
 .Fields

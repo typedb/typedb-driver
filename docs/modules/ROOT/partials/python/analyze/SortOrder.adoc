@@ -1,7 +1,7 @@
 [#_SortOrder]
 === SortOrder
 
-`Class(name=SortOrder, anchor=SortOrder, enumConstants=[EnumConstant(name=Ascending, type=null, value=0), EnumConstant(name=Descending, type=null, value=1)], description=[An enumeration.], examples=[], fields=[], methods=[], packagePath=typedb.common.enums, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 *Package*: `typedb.common.enums`
 

@@ -1,7 +1,7 @@
 [#_enum_TimeZone]
 === TimeZone
 
-`Class(name=TimeZone, anchor=enum_TimeZone, enumConstants=[EnumConstant(name=IANA(Tz), type=null, value=null), EnumConstant(name=Fixed(FixedOffset), type=null, value=null)], description=[TimeZone for datetime-tz. Can be represented as an IANA Tz or as a FixedOffset.], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=async).nameDescriptor(language)`
+`class`
 
 TimeZone for datetime-tz. Can be represented as an IANA Tz or as a FixedOffset.
 

@@ -1,11 +1,7 @@
 [#_FetchAnnotationFieldEntry]
 === FetchAnnotationFieldEntry
 
-`Class(name=FetchAnnotationFieldEntry, anchor=FetchAnnotationFieldEntry, enumConstants=[], description=[[source,typescript]
-----
-FetchAnnotationFieldEntry: AnalyzedFetch & { key: string }
-----
-], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 [source,typescript]
 ----

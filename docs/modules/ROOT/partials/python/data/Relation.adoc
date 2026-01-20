@@ -1,7 +1,7 @@
 [#_Relation]
 === Relation
 
-`Class(name=Relation, anchor=Relation, enumConstants=[], description=[Relation is an instance of a relation type and can be uniquely addressed by a combination of its type, owned attributes and role players.], examples=[], fields=[], methods=[Method(name=as_relation, signature=as_relation() -> Relation, anchor=Relation_as_relation_, args=[], description=[Casts the concept to ``Relation``.], examples=[relation.as_relation()], mode=null, returnDescription=, returnType=Relation), Method(name=get_iid, signature=get_iid() -> str, anchor=Relation_get_iid_, args=[], description=[Retrieves the unique id of the ``Relation``.], examples=[relation.get_iid()], mode=null, returnDescription=, returnType=str), Method(name=get_type, signature=get_type() -> RelationType, anchor=Relation_get_type_, args=[], description=[Retrieves the type which this ``Relation`` belongs to.], examples=[relation.get_type()], mode=null, returnDescription=, returnType=RelationType), Method(name=is_relation, signature=is_relation() -> bool, anchor=Relation_is_relation_, args=[], description=[Checks if the concept is a ``Relation``.], examples=[relation.is_relation()], mode=null, returnDescription=, returnType=bool)], packagePath=typedb.api.concept.instance.relation, superClasses=[Instance], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 *Package*: `typedb.api.concept.instance.relation`
 

@@ -1,7 +1,7 @@
 [#_enum_Error]
 === Error
 
-`Class(name=Error, anchor=enum_Error, enumConstants=[EnumConstant(name=Analyze(AnalyzeError), type=null, value=null), EnumConstant(name=Connection(ConnectionError), type=null, value=null), EnumConstant(name=Concept(ConceptError), type=null, value=null), EnumConstant(name=Migration(MigrationError), type=null, value=null), EnumConstant(name=Internal(InternalError), type=null, value=null), EnumConstant(name=Server(ServerError), type=null, value=null), EnumConstant(name=Other(String), type=null, value=null)], description=[Represents errors encountered during operation.], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=async).nameDescriptor(language)`
+`class`
 
 Represents errors encountered during operation.
 

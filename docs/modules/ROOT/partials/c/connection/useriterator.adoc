@@ -4,7 +4,7 @@
 [#_Struct_UserIterator]
 ==== Struct UserIterator
 
-`Class(name=Struct UserIterator, anchor=Struct_UserIterator, enumConstants=[], description=[, Iterator over a set of ``User``s], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 
 

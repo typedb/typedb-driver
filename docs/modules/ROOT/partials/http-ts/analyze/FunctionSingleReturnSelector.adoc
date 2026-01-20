@@ -1,11 +1,7 @@
 [#_FunctionSingleReturnSelector]
 === FunctionSingleReturnSelector
 
-`Class(name=FunctionSingleReturnSelector, anchor=FunctionSingleReturnSelector, enumConstants=[], description=[[source,typescript]
-----
-FunctionSingleReturnSelector: "first" | "last"
-----
-], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 [source,typescript]
 ----

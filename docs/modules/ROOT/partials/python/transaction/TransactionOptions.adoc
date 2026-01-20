@@ -1,8 +1,7 @@
 [#_TransactionOptions]
 === TransactionOptions
 
-`Class(name=TransactionOptions, anchor=TransactionOptions, enumConstants=[], description=[TypeDB transaction options. ``TransactionOptions`` object can be used to override the default server behaviour for opened transactions., Options could be specified either as constructor arguments or using properties assignment.], examples=[transaction_options = TransactionOptions(transaction_timeout_millis=20_000)
-transaction_options.schema_lock_acquire_timeout_millis = 50_000], fields=[Variable(name=schema_lock_acquire_timeout_millis, anchor=null, defaultValue=null, description=If set, specifies how long the driver should wait if opening a transaction is blocked by a schema write lock., type=int | None), Variable(name=transaction_timeout_millis, anchor=null, defaultValue=null, description=If set, specifies a timeout for killing transactions automatically, preventing memory leaks in unclosed transactions., type=int | None)], methods=[], packagePath=typedb.api.connection.transaction_options, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 *Package*: `typedb.api.connection.transaction_options`
 

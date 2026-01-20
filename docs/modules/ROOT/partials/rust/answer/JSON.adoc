@@ -1,7 +1,7 @@
 [#_enum_JSON]
 === JSON
 
-`Class(name=JSON, anchor=enum_JSON, enumConstants=[EnumConstant(name=Object(HashMap<Cow<'static, str>, JSON>), type=null, value=null), EnumConstant(name=Array(Vec<JSON>), type=null, value=null), EnumConstant(name=String(Cow<'static, str>), type=null, value=null), EnumConstant(name=Number(f64), type=null, value=null), EnumConstant(name=Boolean(bool), type=null, value=null), EnumConstant(name=Null, type=null, value=null)], description=[], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=async).nameDescriptor(language)`
+`class`
 
 [caption=""]
 .Enum variants

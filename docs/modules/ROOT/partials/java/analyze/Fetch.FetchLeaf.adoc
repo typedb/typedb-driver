@@ -1,7 +1,7 @@
 [#_Fetch_FetchLeaf]
 === Fetch.FetchLeaf
 
-`Class(name=Fetch.FetchLeaf, anchor=Fetch_FetchLeaf, enumConstants=[], description=[The leaf of a Fetch object. Holds information on the value it can hold.], examples=[], fields=[], methods=[Method(name=annotations, signature=java.util.stream.Stream<java.lang.String> annotations(), anchor=Fetch_FetchLeaf_annotations_, args=[], description=[], examples=[], mode=null, returnDescription=null, returnType=java.util.stream.Stream<java.lang.String>)], packagePath=com.typedb.driver.api.analyze, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 *Package*: `com.typedb.driver.api.analyze`
 

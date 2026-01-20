@@ -1,7 +1,7 @@
 [#_ReturnOperationStream]
 === ReturnOperationStream
 
-`Class(name=ReturnOperationStream, anchor=ReturnOperationStream, enumConstants=[], description=[], examples=[], fields=[], methods=[Method(name=variables, signature=variables() -> Iterator['Variable'], anchor=ReturnOperationStream_variables_, args=[], description=[Gets the variables in the returned row.], examples=[], mode=null, returnDescription=, returnType=Iterator['Variable'])], packagePath=typedb.api.analyze.function, superClasses=[ReturnOperation], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 *Package*: `typedb.api.analyze.function`
 

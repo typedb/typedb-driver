@@ -1,7 +1,7 @@
 [#_ConstraintVertexNamedRole]
 ==== ConstraintVertexNamedRole
 
-`Class(name=ConstraintVertexNamedRole, anchor=ConstraintVertexNamedRole, enumConstants=[], description=[], examples=[], fields=[Variable(name=name, anchor=null, defaultValue=null, description=null, type=string), Variable(name=tag, anchor=null, defaultValue=null, description=null, type="namedRole"), Variable(name=variable, anchor=null, defaultValue=null, description=null, type=string)], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 [caption=""]
 .Fields

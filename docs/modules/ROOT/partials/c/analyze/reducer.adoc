@@ -4,7 +4,7 @@
 [#_Struct_Reducer]
 ==== Struct Reducer
 
-`Class(name=Struct Reducer, anchor=Struct_Reducer, enumConstants=[], description=[, Representation of a reducer used either in a ``PipelineStage::Reduce`` or in a function's ``ReturnOperation``.], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 
 

@@ -1,7 +1,7 @@
 [#_ConstraintValue]
 ==== ConstraintValue
 
-`Class(name=ConstraintValue, anchor=ConstraintValue, enumConstants=[], description=[], examples=[], fields=[Variable(name=attributeType, anchor=null, defaultValue=null, description=null, type=ConstraintVertexVariable), Variable(name=tag, anchor=null, defaultValue=null, description=null, type="value"), Variable(name=textSpan, anchor=null, defaultValue=null, description=null, type=ConstraintSpan), Variable(name=valueType, anchor=null, defaultValue=null, description=null, type=string)], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 [caption=""]
 .Fields

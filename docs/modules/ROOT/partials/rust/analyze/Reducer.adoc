@@ -1,7 +1,7 @@
 [#_struct_Reducer]
 === Reducer
 
-`Class(name=Reducer, anchor=struct_Reducer, enumConstants=[], description=[Representation of a reducer used either in a ``PipelineStage::Reduce`` or in a function’s ``ReturnOperation``.], examples=[], fields=[Variable(name=arguments, anchor=struct_Reducer_arguments, defaultValue=null, description=The arguments to the reducer., type=Vec<Variable>), Variable(name=reducer, anchor=struct_Reducer_reducer, defaultValue=null, description=The reduce operation applied, type=String)], methods=[], packagePath=null, superClasses=[Clone, Debug], traitImplementors=[], mode=async).nameDescriptor(language)`
+`class`
 
 *Implements traits:*
 

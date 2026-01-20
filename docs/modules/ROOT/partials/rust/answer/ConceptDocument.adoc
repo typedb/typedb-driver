@@ -1,7 +1,7 @@
 [#_struct_ConceptDocument]
 === ConceptDocument
 
-`Class(name=ConceptDocument, anchor=struct_ConceptDocument, enumConstants=[], description=[A single document of concepts representing substitutions for variables in the query. Contains a Header (query type), and the document of concepts.], examples=[], fields=[Variable(name=root, anchor=struct_ConceptDocument_root, defaultValue=null, description=null, type=Option<Node>)], methods=[Method(name=get_query_type, signature=pub fn get_query_type(&self) -> QueryType, anchor=struct_ConceptDocument_get_query_type_, args=[], description=[Retrieve the executed query’s type (shared by all elements in this stream).], examples=[concept_document.get_query_type()], mode=async, returnDescription=null, returnType=QueryType)], packagePath=null, superClasses=[Clone, Debug, PartialEq, StructuralPartialEq], traitImplementors=[], mode=async).nameDescriptor(language)`
+`class`
 
 *Implements traits:*
 

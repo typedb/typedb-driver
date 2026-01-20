@@ -4,7 +4,7 @@
 [#_Struct_Kind]
 ==== Struct Kind
 
-`Class(name=Struct Kind, anchor=Struct_Kind, enumConstants=[], description=[, Kind represents the base of a defined type to describe its capabilities. For example, "define entity person;" defines a type "person" of a kind "entity".], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 
 
@@ -13,7 +13,7 @@ Kind represents the base of a defined type to describe its capabilities. For exa
 [#_Enum_Kind]
 ==== Enum Kind
 
-`Class(name=Enum Kind, anchor=Enum_Kind, enumConstants=[EnumConstant(name=Entity, type=null, value=null), EnumConstant(name=Attribute, type=null, value=null), EnumConstant(name=Relation, type=null, value=null), EnumConstant(name=Role, type=null, value=null)], description=[, Kind represents the base of a defined type to describe its capabilities. For example, "define entity person;" defines a type "person" of a kind "entity".], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 
 

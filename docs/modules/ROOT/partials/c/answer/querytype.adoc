@@ -4,8 +4,7 @@
 [#_Struct_QueryType]
 ==== Struct QueryType
 
-`Class(name=Struct QueryType, anchor=Struct_QueryType, enumConstants=[], description=[, This enum is used to specify the type of the query resulted in this answer.
-], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 
 
@@ -15,8 +14,7 @@ This enum is used to specify the type of the query resulted in this answer.
 [#_Enum_QueryType]
 ==== Enum QueryType
 
-`Class(name=Enum QueryType, anchor=Enum_QueryType, enumConstants=[EnumConstant(name=ReadQuery, type=null, value=null), EnumConstant(name=WriteQuery, type=null, value=null), EnumConstant(name=SchemaQuery, type=null, value=null)], description=[, This enum is used to specify the type of the query resulted in this answer.
-], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 
 

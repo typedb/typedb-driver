@@ -1,7 +1,7 @@
 [#_struct_DurationParseError]
 === DurationParseError
 
-`Class(name=DurationParseError, anchor=struct_DurationParseError, enumConstants=[], description=[], examples=[], fields=[], methods=[], packagePath=null, superClasses=[Debug], traitImplementors=[], mode=async).nameDescriptor(language)`
+`class`
 
 *Implements traits:*
 

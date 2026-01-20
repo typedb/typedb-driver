@@ -4,7 +4,7 @@
 [#_Struct_Transaction]
 ==== Struct Transaction
 
-`Class(name=Struct Transaction, anchor=Struct_Transaction, enumConstants=[], description=[, A transaction with a TypeDB database.], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 
 

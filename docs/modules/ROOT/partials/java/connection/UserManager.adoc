@@ -1,21 +1,7 @@
 [#_UserManager]
 === UserManager
 
-`Class(name=UserManager, anchor=UserManager, enumConstants=[], description=[Provides access to all user management methods.], examples=[], fields=[], methods=[Method(name=contains, signature=@CheckReturnValue
-boolean contains​(java.lang.String username)
-          throws TypeDBDriverException, anchor=UserManager_contains_java_lang_String, args=[Variable(name=username, anchor=null, defaultValue=null, description=The user name to be checked, type=java.lang.String)], description=[Checks if a user with the given name exists. 
-], examples=[driver.users().contains(username);], mode=null, returnDescription=null, returnType=boolean), Method(name=get, signature=@CheckReturnValue
-User get​(java.lang.String username)
-  throws TypeDBDriverException, anchor=UserManager_get_java_lang_String, args=[Variable(name=username, anchor=null, defaultValue=null, description=The name of the user to retrieve, type=java.lang.String)], description=[Retrieves a user with the given name. 
-], examples=[driver.users().get(username);], mode=null, returnDescription=null, returnType=User), Method(name=getCurrentUser, signature=@CheckReturnValue
-User getCurrentUser()
-             throws TypeDBDriverException, anchor=UserManager_getCurrentUser_, args=[], description=[Retrieves the name of the user who opened the current connection. 
-], examples=[driver.users().getCurrentUsername();], mode=null, returnDescription=null, returnType=User), Method(name=all, signature=java.util.Set<User> all()
-                 throws TypeDBDriverException, anchor=UserManager_all_, args=[], description=[Retrieves all users which exist on the TypeDB server. 
-], examples=[driver.users().all();], mode=null, returnDescription=null, returnType=java.util.Set<User>), Method(name=create, signature=void create​(java.lang.String username,
-            java.lang.String password)
-     throws TypeDBDriverException, anchor=UserManager_create_java_lang_String_java_lang_String, args=[Variable(name=username, anchor=null, defaultValue=null, description=The name of the user to be created, type=java.lang.String), Variable(name=password, anchor=null, defaultValue=null, description=The password of the user to be created, type=java.lang.String)], description=[Creates a user with the given name &amp; password. 
-], examples=[driver.users().create(username, password);], mode=null, returnDescription=null, returnType=void)], packagePath=com.typedb.driver.api.user, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 *Package*: `com.typedb.driver.api.user`
 

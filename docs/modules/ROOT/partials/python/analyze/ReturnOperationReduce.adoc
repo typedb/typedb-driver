@@ -1,7 +1,7 @@
 [#_ReturnOperationReduce]
 === ReturnOperationReduce
 
-`Class(name=ReturnOperationReduce, anchor=ReturnOperationReduce, enumConstants=[], description=[], examples=[], fields=[], methods=[Method(name=reducers, signature=reducers() -> Iterator['Reducer'], anchor=ReturnOperationReduce_reducers_, args=[], description=[Gets the reducers used to compute the aggregations.], examples=[], mode=null, returnDescription=, returnType=Iterator['Reducer'])], packagePath=typedb.api.analyze.function, superClasses=[ReturnOperation], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 *Package*: `typedb.api.analyze.function`
 

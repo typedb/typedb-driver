@@ -1,7 +1,7 @@
 [#_Conjunction]
 === Conjunction
 
-`Class(name=Conjunction, anchor=Conjunction, enumConstants=[], description=[A representation of the constraints involved in the query, and types inferred for each variable.], examples=[], fields=[], methods=[Method(name=constraints, signature=java.util.stream.Stream<? extends Constraint> constraints(), anchor=Conjunction_constraints_, args=[], description=[The ``Constraint``s in the conjunction.], examples=[], mode=null, returnDescription=null, returnType=java.util.stream.Stream<? extends Constraint>), Method(name=annotated_variables, signature=java.util.stream.Stream<? extends Variable> annotated_variables(), anchor=Conjunction_annotated_variables_, args=[], description=[The variables that have annotations in this conjunction.], examples=[], mode=null, returnDescription=null, returnType=java.util.stream.Stream<? extends Variable>), Method(name=variable_annotations, signature=VariableAnnotations variable_annotations​(Variable variable), anchor=Conjunction_variable_annotations_Variable, args=[Variable(name=variable, anchor=null, defaultValue=null, description=the variable to get annotations for, type=Variable)], description=[Gets the annotations for a specific variable in this conjunction.], examples=[], mode=null, returnDescription=null, returnType=VariableAnnotations)], packagePath=com.typedb.driver.api.analyze, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 *Package*: `com.typedb.driver.api.analyze`
 

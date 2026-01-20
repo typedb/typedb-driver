@@ -1,7 +1,7 @@
 [#_QueryConjunctionLegacy]
 === QueryConjunctionLegacy
 
-`Class(name=QueryConjunctionLegacy, anchor=QueryConjunctionLegacy, enumConstants=[], description=[], examples=[], fields=[Variable(name=constraints, anchor=null, defaultValue=null, description=null, type=ConstraintAny)], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 [caption=""]
 .Fields

@@ -1,7 +1,7 @@
 [#_DeleteStage]
 === DeleteStage
 
-`Class(name=DeleteStage, anchor=DeleteStage, enumConstants=[], description=[Represents a ‘delete’ stage.], examples=[], fields=[], methods=[Method(name=block, signature=block() -> ConjunctionID, anchor=DeleteStage_block_, args=[], description=[], examples=[], mode=null, returnDescription=, returnType=ConjunctionID), Method(name=deleted_variables, signature=deleted_variables() -> Iterator['Variable'], anchor=DeleteStage_deleted_variables_, args=[], description=[The variables for which the unified concepts are to be deleted.], examples=[], mode=null, returnDescription=, returnType=Iterator['Variable'])], packagePath=typedb.api.analyze.pipeline_stage, superClasses=[PipelineStage], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 *Package*: `typedb.api.analyze.pipeline_stage`
 

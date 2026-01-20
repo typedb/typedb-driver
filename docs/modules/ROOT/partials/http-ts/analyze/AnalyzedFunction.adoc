@@ -1,7 +1,7 @@
 [#_AnalyzedFunction]
 === AnalyzedFunction
 
-`Class(name=AnalyzedFunction, anchor=AnalyzedFunction, enumConstants=[], description=[], examples=[], fields=[Variable(name=argumentAnnotations, anchor=null, defaultValue=null, description=null, type=VariableAnnotations), Variable(name=arguments, anchor=null, defaultValue=null, description=null, type=string), Variable(name=body, anchor=null, defaultValue=null, description=null, type=AnalyzedPipeline), Variable(name=returnAnnotations, anchor=null, defaultValue=null, description=null, type=VariableAnnotations), Variable(name=returns, anchor=null, defaultValue=null, description=null, type=FunctionReturnStructure)], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 [caption=""]
 .Fields

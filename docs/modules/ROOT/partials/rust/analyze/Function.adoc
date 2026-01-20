@@ -1,7 +1,7 @@
 [#_struct_Function]
 === Function
 
-`Class(name=Function, anchor=struct_Function, enumConstants=[], description=[Holds a representation of the function, and the result of type-inference for each variable.], examples=[], fields=[Variable(name=argument_variables, anchor=struct_Function_argument_variables, defaultValue=null, description=The ``Variable``s which are the arguments of the function., type=Vec<Variable>), Variable(name=return_operation, anchor=struct_Function_return_operation, defaultValue=null, description=A representation of the ``ReturnOperation`` of the function., type=ReturnOperation), Variable(name=body, anchor=struct_Function_body, defaultValue=null, description=A representation of the ``Pipeline`` which forms the body of the function., type=Pipeline), Variable(name=argument_annotations, anchor=struct_Function_argument_annotations, defaultValue=null, description=The inferred type for each argument of the function., type=Vec<VariableAnnotations>), Variable(name=return_annotations, anchor=struct_Function_return_annotations, defaultValue=null, description=The inferred type for each concept returned by the function., type=Vec<VariableAnnotations>)], methods=[], packagePath=null, superClasses=[Clone, Debug], traitImplementors=[], mode=async).nameDescriptor(language)`
+`class`
 
 *Implements traits:*
 

@@ -1,9 +1,7 @@
 [#_DriverOptions]
 === DriverOptions
 
-`Class(name=DriverOptions, anchor=DriverOptions, enumConstants=[], description=[User connection settings (TLS encryption, etc.) for connecting to TypeDB Server. 
-], examples=[DriverOptions driverOptions = new DriverOptions(true, Path.of("path/to/ca-certificate.pem"));], fields=[], methods=[Method(name=DriverOptions, signature=public DriverOptions​(boolean isTlsEnabled,
-                     java.lang.String tlsRootCAPath), anchor=DriverOptions_DriverOptions_boolean_java_lang_String, args=[Variable(name=isTlsEnabled, anchor=null, defaultValue=null, description=Specify whether the connection to TypeDB Server must be done over TLS., type=boolean), Variable(name=tlsRootCAPath, anchor=null, defaultValue=null, description=Path to the CA certificate to use for authenticating server certificates., type=java.lang.String)], description=[], examples=[], mode=null, returnDescription=null, returnType=public)], packagePath=com.typedb.driver.api, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 *Package*: `com.typedb.driver.api`
 

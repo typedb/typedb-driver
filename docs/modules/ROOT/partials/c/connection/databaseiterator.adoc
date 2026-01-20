@@ -4,7 +4,7 @@
 [#_Struct_DatabaseIterator]
 ==== Struct DatabaseIterator
 
-`Class(name=Struct DatabaseIterator, anchor=Struct_DatabaseIterator, enumConstants=[], description=[, An ``Iterator`` over databases present on the TypeDB server.], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 
 

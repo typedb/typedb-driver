@@ -4,7 +4,7 @@
 [#_Struct_StringAndOptValue]
 ==== Struct StringAndOptValue
 
-`Class(name=Struct StringAndOptValue, anchor=Struct_StringAndOptValue, enumConstants=[], description=[, A ``StringAndOptValue`` used to represent the pair of variables involved in an ownership. ``_0`` and ``_1`` are the owner and attribute variables respectively.], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 
 

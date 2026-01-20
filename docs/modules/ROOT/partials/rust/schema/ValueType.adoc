@@ -1,7 +1,7 @@
 [#_enum_ValueType]
 === ValueType
 
-`Class(name=ValueType, anchor=enum_ValueType, enumConstants=[EnumConstant(name=Boolean, type=null, value=null), EnumConstant(name=Integer, type=null, value=null), EnumConstant(name=Double, type=null, value=null), EnumConstant(name=Decimal, type=null, value=null), EnumConstant(name=String, type=null, value=null), EnumConstant(name=Date, type=null, value=null), EnumConstant(name=Datetime, type=null, value=null), EnumConstant(name=DatetimeTZ, type=null, value=null), EnumConstant(name=Duration, type=null, value=null), EnumConstant(name=Struct(String), type=null, value=null)], description=[Represents the type of primitive value is held by a Value or Attribute.], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=async).nameDescriptor(language)`
+`class`
 
 Represents the type of primitive value is held by a Value or Attribute.
 

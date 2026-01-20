@@ -1,11 +1,7 @@
 [#_DriverParams]
 ==== DriverParams
 
-`Class(name=DriverParams, anchor=DriverParams, enumConstants=[], description=[[source,typescript]
-----
-DriverParams: DriverParamsBasic | DriverParamsTranslated
-----
-], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 [source,typescript]
 ----

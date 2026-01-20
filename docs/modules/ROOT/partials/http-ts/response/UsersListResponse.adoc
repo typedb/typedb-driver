@@ -1,7 +1,7 @@
 [#_UsersListResponse]
 === UsersListResponse
 
-`Class(name=UsersListResponse, anchor=UsersListResponse, enumConstants=[], description=[], examples=[], fields=[Variable(name=users, anchor=null, defaultValue=null, description=null, type=User)], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 [caption=""]
 .Fields

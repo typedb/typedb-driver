@@ -1,7 +1,7 @@
 [#_Expression]
 === Expression
 
-`Class(name=Expression, anchor=Expression, enumConstants=[], description=[Represents an expression: let &lt;assigned&gt; = &lt;expression&gt;], examples=[], fields=[], methods=[Method(name=arguments, signature=arguments() -> Iterator['ConstraintVertex'], anchor=Expression_arguments_, args=[], description=[], examples=[], mode=null, returnDescription=, returnType=Iterator['ConstraintVertex']), Method(name=assigned, signature=assigned() -> ConstraintVertex, anchor=Expression_assigned_, args=[], description=[], examples=[], mode=null, returnDescription=, returnType=ConstraintVertex), Method(name=text, signature=text() -> str, anchor=Expression_text_, args=[], description=[], examples=[], mode=null, returnDescription=, returnType=str)], packagePath=typedb.api.analyze.constraint, superClasses=[Constraint], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 *Package*: `typedb.api.analyze.constraint`
 

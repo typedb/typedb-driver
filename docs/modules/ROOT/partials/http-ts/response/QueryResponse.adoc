@@ -1,15 +1,7 @@
 [#_QueryResponse]
 === QueryResponse
 
-`Class(name=QueryResponse, anchor=QueryResponse, enumConstants=[], description=[[source,typescript]
-----
-QueryResponse:
- | OkQueryResponse
- | ConceptRowsQueryResponse
- | ConceptDocumentsQueryResponse
- | ConceptRowsQueryResponseLegacy
-----
-], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 [source,typescript]
 ----

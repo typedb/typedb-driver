@@ -1,7 +1,7 @@
 [#_ApiError]
 === ApiError
 
-`Class(name=ApiError, anchor=ApiError, enumConstants=[], description=[], examples=[], fields=[Variable(name=code, anchor=null, defaultValue=null, description=null, type=string), Variable(name=message, anchor=null, defaultValue=null, description=null, type=string)], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 [caption=""]
 .Fields

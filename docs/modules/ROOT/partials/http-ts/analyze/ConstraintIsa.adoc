@@ -1,7 +1,7 @@
 [#_ConstraintIsa]
 ==== ConstraintIsa
 
-`Class(name=ConstraintIsa, anchor=ConstraintIsa, enumConstants=[], description=[], examples=[], fields=[Variable(name=instance, anchor=null, defaultValue=null, description=null, type=ConstraintVertexVariable), Variable(name=tag, anchor=null, defaultValue=null, description=null, type="isa"), Variable(name=textSpan, anchor=null, defaultValue=null, description=null, type=ConstraintSpan), Variable(name=type, anchor=null, defaultValue=null, description=null, type=ConstraintVertexVariable)], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 [caption=""]
 .Fields

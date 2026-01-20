@@ -4,7 +4,7 @@
 [#_Struct_PipelineStage]
 ==== Struct PipelineStage
 
-`Class(name=Struct PipelineStage, anchor=Struct_PipelineStage, enumConstants=[], description=[, Representation of a stage in a ``Pipeline``.], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 
 

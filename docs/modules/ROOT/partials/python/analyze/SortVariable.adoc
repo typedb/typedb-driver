@@ -1,7 +1,7 @@
 [#_SortVariable]
 === SortVariable
 
-`Class(name=SortVariable, anchor=SortVariable, enumConstants=[], description=[A variable and its sort order.], examples=[], fields=[], methods=[Method(name=order, signature=order() -> SortOrder, anchor=SortVariable_order_, args=[], description=[], examples=[], mode=null, returnDescription=, returnType=SortOrder), Method(name=variable, signature=variable() -> Variable, anchor=SortVariable_variable_, args=[], description=[], examples=[], mode=null, returnDescription=, returnType=Variable)], packagePath=typedb.api.analyze.pipeline_stage.SortStage, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 *Package*: `typedb.api.analyze.pipeline_stage.SortStage`
 

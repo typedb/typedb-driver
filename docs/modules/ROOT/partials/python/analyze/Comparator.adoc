@@ -1,7 +1,7 @@
 [#_Comparator]
 === Comparator
 
-`Class(name=Comparator, anchor=Comparator, enumConstants=[EnumConstant(name=Contains, type=null, value=7), EnumConstant(name=Equal, type=null, value=0), EnumConstant(name=Greater, type=null, value=4), EnumConstant(name=GreaterOrEqual, type=null, value=5), EnumConstant(name=LessOrEqual, type=null, value=3), EnumConstant(name=LessThan, type=null, value=2), EnumConstant(name=Like, type=null, value=6), EnumConstant(name=NotEqual, type=null, value=1)], description=[An enumeration.], examples=[], fields=[], methods=[Method(name=symbol, signature=symbol(), anchor=Comparator_symbol_, args=[], description=[], examples=[], mode=null, returnDescription=, returnType=)], packagePath=typedb.common.enums, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 *Package*: `typedb.common.enums`
 

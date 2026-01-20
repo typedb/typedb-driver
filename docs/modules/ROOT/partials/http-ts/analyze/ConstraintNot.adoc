@@ -1,7 +1,7 @@
 [#_ConstraintNot]
 ==== ConstraintNot
 
-`Class(name=ConstraintNot, anchor=ConstraintNot, enumConstants=[], description=[], examples=[], fields=[Variable(name=conjunction, anchor=null, defaultValue=null, description=null, type=number), Variable(name=tag, anchor=null, defaultValue=null, description=null, type="not")], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 [caption=""]
 .Fields

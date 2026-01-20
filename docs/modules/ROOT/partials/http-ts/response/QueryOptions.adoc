@@ -1,7 +1,7 @@
 [#_QueryOptions]
 === QueryOptions
 
-`Class(name=QueryOptions, anchor=QueryOptions, enumConstants=[], description=[], examples=[], fields=[Variable(name=answerCountLimit, anchor=null, defaultValue=null, description=null, type=number), Variable(name=includeInstanceTypes, anchor=null, defaultValue=null, description=null, type=boolean), Variable(name=includeQueryStructure, anchor=null, defaultValue=null, description=null, type=boolean)], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 [caption=""]
 .Fields

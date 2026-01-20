@@ -1,7 +1,7 @@
 [#_ConstraintSub]
 ==== ConstraintSub
 
-`Class(name=ConstraintSub, anchor=ConstraintSub, enumConstants=[], description=[], examples=[], fields=[Variable(name=subtype, anchor=null, defaultValue=null, description=null, type=ConstraintVertexVariable), Variable(name=supertype, anchor=null, defaultValue=null, description=null, type=ConstraintVertexVariable), Variable(name=tag, anchor=null, defaultValue=null, description=null, type="sub"), Variable(name=textSpan, anchor=null, defaultValue=null, description=null, type=ConstraintSpan)], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 [caption=""]
 .Fields

@@ -4,8 +4,7 @@
 [#_Struct_QueryOptions]
 ==== Struct QueryOptions
 
-`Class(name=Struct QueryOptions, anchor=Struct_QueryOptions, enumConstants=[], description=[, TypeDB query options. ``QueryOptions`` object can be used to override the default server behaviour for executed queries.
-], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 
 

@@ -1,7 +1,7 @@
 [#_ConstraintExactness]
 === ConstraintExactness
 
-`Class(name=ConstraintExactness, anchor=ConstraintExactness, enumConstants=[EnumConstant(name=Exact, type=null, value=0), EnumConstant(name=Subtypes, type=null, value=1)], description=[An enumeration.], examples=[], fields=[], methods=[], packagePath=typedb.common.enums, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 *Package*: `typedb.common.enums`
 

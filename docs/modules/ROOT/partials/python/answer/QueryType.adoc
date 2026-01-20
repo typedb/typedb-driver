@@ -1,7 +1,7 @@
 [#_QueryType]
 === QueryType
 
-`Class(name=QueryType, anchor=QueryType, enumConstants=[EnumConstant(name=READ, type=null, value=0), EnumConstant(name=SCHEMA, type=null, value=2), EnumConstant(name=WRITE, type=null, value=1)], description=[Used to specify the type of the executed query.], examples=[concept_row.query_type], fields=[], methods=[Method(name=is_read, signature=is_read() -> bool, anchor=QueryType_is_read_, args=[], description=[], examples=[], mode=null, returnDescription=, returnType=bool), Method(name=is_schema, signature=is_schema() -> bool, anchor=QueryType_is_schema_, args=[], description=[], examples=[], mode=null, returnDescription=, returnType=bool), Method(name=is_write, signature=is_write() -> bool, anchor=QueryType_is_write_, args=[], description=[], examples=[], mode=null, returnDescription=, returnType=bool)], packagePath=typedb.api.answer.query_type, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 *Package*: `typedb.api.answer.query_type`
 

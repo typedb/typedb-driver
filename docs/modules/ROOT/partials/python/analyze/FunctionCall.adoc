@@ -1,7 +1,7 @@
 [#_FunctionCall]
 === FunctionCall
 
-`Class(name=FunctionCall, anchor=FunctionCall, enumConstants=[], description=[Represents a function call: let &lt;assigned&gt; = name(&lt;arguments&gt;)], examples=[], fields=[], methods=[Method(name=arguments, signature=arguments() -> Iterator['ConstraintVertex'], anchor=FunctionCall_arguments_, args=[], description=[], examples=[], mode=null, returnDescription=, returnType=Iterator['ConstraintVertex']), Method(name=assigned, signature=assigned() -> Iterator['ConstraintVertex'], anchor=FunctionCall_assigned_, args=[], description=[], examples=[], mode=null, returnDescription=, returnType=Iterator['ConstraintVertex']), Method(name=name, signature=name() -> str, anchor=FunctionCall_name_, args=[], description=[], examples=[], mode=null, returnDescription=, returnType=str)], packagePath=typedb.api.analyze.constraint, superClasses=[Constraint], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 *Package*: `typedb.api.analyze.constraint`
 

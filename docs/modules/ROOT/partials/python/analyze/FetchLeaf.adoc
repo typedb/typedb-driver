@@ -1,7 +1,7 @@
 [#_FetchLeaf]
 === FetchLeaf
 
-`Class(name=FetchLeaf, anchor=FetchLeaf, enumConstants=[], description=[The leaf of a Fetch object. Holds information on the value it can hold.], examples=[], fields=[], methods=[Method(name=annotations, signature=annotations() -> Iterator[str], anchor=FetchLeaf_annotations_, args=[], description=[The possible ValueType(s) as strings.], examples=[], mode=null, returnDescription=, returnType=Iterator[str])], packagePath=typedb.api.analyze.fetch, superClasses=[Fetch], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 *Package*: `typedb.api.analyze.fetch`
 

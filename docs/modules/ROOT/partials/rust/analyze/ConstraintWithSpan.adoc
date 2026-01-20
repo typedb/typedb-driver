@@ -1,7 +1,7 @@
 [#_struct_ConstraintWithSpan]
 === ConstraintWithSpan
 
-`Class(name=ConstraintWithSpan, anchor=struct_ConstraintWithSpan, enumConstants=[], description=[], examples=[], fields=[Variable(name=constraint, anchor=struct_ConstraintWithSpan_constraint, defaultValue=null, description=null, type=Constraint), Variable(name=span, anchor=struct_ConstraintWithSpan_span, defaultValue=null, description=null, type=Option<ConstraintSpan>)], methods=[], packagePath=null, superClasses=[Clone, Debug], traitImplementors=[], mode=async).nameDescriptor(language)`
+`class`
 
 *Implements traits:*
 

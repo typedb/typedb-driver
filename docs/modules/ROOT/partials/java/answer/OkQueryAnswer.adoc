@@ -1,18 +1,7 @@
 [#_OkQueryAnswer]
 === OkQueryAnswer
 
-`Class(name=OkQueryAnswer, anchor=OkQueryAnswer, enumConstants=[], description=[Represents a simple Ok message as a server answer. Doesn't contain concepts.], examples=[], fields=[], methods=[Method(name=isOk, signature=default boolean isOk(), anchor=OkQueryAnswer_isOk_, args=[], description=[Checks if the query answer is an ``Ok``. 
-], examples=[concept.isOk();], mode=null, returnDescription=null, returnType=boolean), Method(name=asOk, signature=@CheckReturnValue
-default OkQueryAnswer asOk(), anchor=OkQueryAnswer_asOk_, args=[], description=[Casts the query answer to ``OkQueryAnswer``. 
-], examples=[concept.asOk();], mode=null, returnDescription=null, returnType=OkQueryAnswer), Method(name=asConceptDocuments, signature=default ConceptDocumentIterator asConceptDocuments(), anchor=OkQueryAnswer_asConceptDocuments_, args=[], description=[Casts the query answer to ``ConceptDocumentIterator``. 
-], examples=[concept.asConceptDocuments();], mode=null, returnDescription=null, returnType=ConceptDocumentIterator), Method(name=asConceptRows, signature=default ConceptRowIterator asConceptRows(), anchor=OkQueryAnswer_asConceptRows_, args=[], description=[Casts the query answer to ``ConceptRowIterator``. 
-], examples=[concept.asConceptRows();], mode=null, returnDescription=null, returnType=ConceptRowIterator), Method(name=getQueryType, signature=@CheckReturnValue
-QueryType getQueryType(), anchor=OkQueryAnswer_getQueryType_, args=[], description=[Retrieves the executed query's type of this ``QueryAnswer``. 
-], examples=[queryAnswer.getQueryType();], mode=null, returnDescription=null, returnType=QueryType), Method(name=isConceptDocuments, signature=@CheckReturnValue
-default boolean isConceptDocuments(), anchor=OkQueryAnswer_isConceptDocuments_, args=[], description=[Checks if the query answer is a ``ConceptDocumentIterator``. 
-], examples=[concept.isConceptDocuments();], mode=null, returnDescription=null, returnType=boolean), Method(name=isConceptRows, signature=@CheckReturnValue
-default boolean isConceptRows(), anchor=OkQueryAnswer_isConceptRows_, args=[], description=[Checks if the query answer is a ``ConceptRowIterator``. 
-], examples=[concept.isConceptRows();], mode=null, returnDescription=null, returnType=boolean)], packagePath=com.typedb.driver.api.answer, superClasses=[QueryAnswer], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 *Package*: `com.typedb.driver.api.answer`
 

@@ -4,7 +4,7 @@
 [#_Struct_ConceptPromise]
 ==== Struct ConceptPromise
 
-`Class(name=Struct ConceptPromise, anchor=Struct_ConceptPromise, enumConstants=[], description=[, Promise object representing the result of an asynchronous operation. Use concept_promise_resolve(ConceptPromise*) to wait for and retrieve the resulting boolean value.], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 
 

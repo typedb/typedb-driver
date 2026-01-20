@@ -1,11 +1,7 @@
 [#_Promise_T]
 === Promise<T>
 
-`Class(name=Promise<T>, anchor=Promise_T, enumConstants=[], description=[A ``Promise`` represents an asynchronous network operation., The request it represents is performed immediately. The response is only retrieved once the ``Promise`` is ``resolve``d.], examples=[], fields=[], methods=[Method(name=Promise, signature=public Promise​(java.util.function.Supplier<T> inner), anchor=Promise_T_Promise_java_util_function_Supplier_T_, args=[Variable(name=inner, anchor=null, defaultValue=null, description=The supplier to function to wrap into the promise, type=java.util.function.Supplier<T>)], description=[Promise constructor 
-], examples=[new Promise(supplier)], mode=null, returnDescription=null, returnType=public), Method(name=map, signature=public static <T,​U> Promise<U> map​(java.util.function.Supplier<T> promise,
-                                         java.util.function.Function<T,​U> fn), anchor=Promise_T_map_java_util_function_Supplier_T_java_util_function_Function_T_​U_, args=[Variable(name=promise, anchor=null, defaultValue=null, description=The supplier function to wrap into the promise, type=java.util.function.Supplier<T>), Variable(name=fn, anchor=null, defaultValue=null, description=The mapping function, type=java.util.function.Function<T,​U>)], description=[Helper function to map promises. 
-], examples=[Promise.map(supplier, mapper);], mode=null, returnDescription=null, returnType=public static <T,​U> Promise<U>), Method(name=resolve, signature=public T resolve(), anchor=Promise_T_resolve_, args=[], description=[Retrieves the result of the Promise. 
-], examples=[promise.resolve()], mode=null, returnDescription=null, returnType=public T)], packagePath=com.typedb.driver.common, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 *Package*: `com.typedb.driver.common`
 

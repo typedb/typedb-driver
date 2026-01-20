@@ -1,7 +1,7 @@
 [#_MatchStage]
 === MatchStage
 
-`Class(name=MatchStage, anchor=MatchStage, enumConstants=[], description=[Represents a ‘match’ stage: match &lt;block&gt;], examples=[], fields=[], methods=[Method(name=block, signature=block() -> ConjunctionID, anchor=MatchStage_block_, args=[], description=[The index into Pipeline.conjunctions.], examples=[], mode=null, returnDescription=, returnType=ConjunctionID)], packagePath=typedb.api.analyze.pipeline_stage, superClasses=[PipelineStage], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 *Package*: `typedb.api.analyze.pipeline_stage`
 

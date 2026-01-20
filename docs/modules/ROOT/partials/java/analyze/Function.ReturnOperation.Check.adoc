@@ -1,7 +1,7 @@
 [#_Function_ReturnOperation_Check]
 === Function.ReturnOperation.Check
 
-`Class(name=Function.ReturnOperation.Check, anchor=Function_ReturnOperation_Check, enumConstants=[], description=[Indicates the function returns a boolean - true if the body had answers, false otherwise. e.g. ``return check;``], examples=[], fields=[], methods=[], packagePath=com.typedb.driver.api.analyze, superClasses=[Function.ReturnOperation], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 *Package*: `com.typedb.driver.api.analyze`
 

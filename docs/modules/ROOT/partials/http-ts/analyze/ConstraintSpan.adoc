@@ -1,7 +1,7 @@
 [#_ConstraintSpan]
 ==== ConstraintSpan
 
-`Class(name=ConstraintSpan, anchor=ConstraintSpan, enumConstants=[], description=[], examples=[], fields=[Variable(name=begin, anchor=null, defaultValue=null, description=null, type=number), Variable(name=end, anchor=null, defaultValue=null, description=null, type=number)], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 [caption=""]
 .Fields

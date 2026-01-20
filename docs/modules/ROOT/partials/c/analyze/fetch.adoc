@@ -4,7 +4,7 @@
 [#_Struct_Fetch]
 ==== Struct Fetch
 
-`Class(name=Struct Fetch, anchor=Struct_Fetch, enumConstants=[], description=[, A representation of the 'fetch' stage of a query], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 
 

@@ -1,7 +1,7 @@
 [#_RelationType]
 === RelationType
 
-`Class(name=RelationType, anchor=RelationType, enumConstants=[], description=[], examples=[], fields=[Variable(name=kind, anchor=null, defaultValue=null, description=null, type="relationType"), Variable(name=label, anchor=null, defaultValue=null, description=null, type=string)], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 [caption=""]
 .Fields

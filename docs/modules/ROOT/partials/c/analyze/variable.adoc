@@ -4,7 +4,7 @@
 [#_Struct_Variable]
 ==== Struct Variable
 
-`Class(name=Struct Variable, anchor=Struct_Variable, enumConstants=[], description=[, Uniquely identifies a variable in a ``Pipeline``pipeline. Its name (if any) can be retrieved from the ``variable_names`` field in ``Pipeline``], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 
 

@@ -1,7 +1,7 @@
 [#_AnalyzeOptions]
 === AnalyzeOptions
 
-`Class(name=AnalyzeOptions, anchor=AnalyzeOptions, enumConstants=[], description=[], examples=[], fields=[Variable(name=include_plan, anchor=null, defaultValue=null, description=null, type=boolean)], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 [caption=""]
 .Fields

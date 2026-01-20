@@ -1,15 +1,7 @@
 [#_ConstraintVertexAny]
 ==== ConstraintVertexAny
 
-`Class(name=ConstraintVertexAny, anchor=ConstraintVertexAny, enumConstants=[], description=[[source,typescript]
-----
-ConstraintVertexAny:
- | ConstraintVertexVariable
- | ConstraintVertexLabel
- | ConstraintVertexValue
- | ConstraintVertexNamedRole
-----
-], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 [source,typescript]
 ----

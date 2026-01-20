@@ -1,7 +1,7 @@
 [#_AttributeType]
 === AttributeType
 
-`Class(name=AttributeType, anchor=AttributeType, enumConstants=[], description=[Attribute types represent properties that other types can own., Attribute types have a value type. This value type is fixed and unique for every given instance of the attribute type., Other types can own an attribute type. That means that instances of these other types can own an instance of this attribute type. This usually means that an object in our domain has a property with the matching value., Multiple types can own the same attribute type, and different instances of the same type or different types can share ownership of the same attribute instance.], examples=[], fields=[], methods=[Method(name=as_attribute_type, signature=as_attribute_type() -> AttributeType, anchor=AttributeType_as_attribute_type_, args=[], description=[Casts the concept to ``AttributeType``.], examples=[attribute.as_attribute_type()], mode=null, returnDescription=, returnType=AttributeType), Method(name=is_attribute_type, signature=is_attribute_type() -> bool, anchor=AttributeType_is_attribute_type_, args=[], description=[Checks if the concept is an ``AttributeType``.], examples=[attribute.is_attribute_type()], mode=null, returnDescription=, returnType=bool)], packagePath=typedb.api.concept.type.attribute_type, superClasses=[Type], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 *Package*: `typedb.api.concept.type.attribute_type`
 

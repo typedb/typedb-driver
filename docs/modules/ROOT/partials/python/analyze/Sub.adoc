@@ -1,7 +1,7 @@
 [#_Sub]
 === Sub
 
-`Class(name=Sub, anchor=Sub, enumConstants=[], description=[Represents a ‘sub’ constraint: &lt;subtype&gt; sub(!) &lt;supertype&gt;], examples=[], fields=[], methods=[Method(name=exactness, signature=exactness() -> ConstraintExactness, anchor=Sub_exactness_, args=[], description=[], examples=[], mode=null, returnDescription=, returnType=ConstraintExactness), Method(name=subtype, signature=subtype() -> ConstraintVertex, anchor=Sub_subtype_, args=[], description=[], examples=[], mode=null, returnDescription=, returnType=ConstraintVertex), Method(name=supertype, signature=supertype() -> ConstraintVertex, anchor=Sub_supertype_, args=[], description=[], examples=[], mode=null, returnDescription=, returnType=ConstraintVertex)], packagePath=typedb.api.analyze.constraint, superClasses=[Constraint], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 *Package*: `typedb.api.analyze.constraint`
 

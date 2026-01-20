@@ -1,7 +1,7 @@
 [#_enum_ReturnOperation]
 === ReturnOperation
 
-`Class(name=ReturnOperation, anchor=enum_ReturnOperation, enumConstants=[EnumConstant(name=Stream, type=null, value=null), EnumConstant(name=Single, type=null, value=null), EnumConstant(name=Check, type=null, value=null), EnumConstant(name=Reduce, type=null, value=null)], description=[A representation of the return operation of the function], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=async).nameDescriptor(language)`
+`class`
 
 A representation of the return operation of the function
 

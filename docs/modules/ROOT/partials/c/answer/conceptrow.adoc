@@ -4,7 +4,7 @@
 [#_Struct_ConceptRow]
 ==== Struct ConceptRow
 
-`Class(name=Struct ConceptRow, anchor=Struct_ConceptRow, enumConstants=[], description=[, A single row of concepts representing substitutions for variables in the query. Contains a Header (column names and query type), and the row of optional concepts. An empty concept in a column means the variable does not have a substitution in this answer.], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 
 

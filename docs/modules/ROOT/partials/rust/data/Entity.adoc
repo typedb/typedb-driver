@@ -1,7 +1,7 @@
 [#_struct_Entity]
 === Entity
 
-`Class(name=Entity, anchor=struct_Entity, enumConstants=[], description=[Instance of data of an entity type, representing a standalone object that exists in the data model independently. Entity does not have a value. It is usually addressed by its ownership over attribute instances and/or roles played in relation instances.], examples=[], fields=[Variable(name=iid, anchor=struct_Entity_iid, defaultValue=null, description=The unique id of this Entity, type=IID), Variable(name=type_, anchor=struct_Entity_type, defaultValue=null, description=The type which this Entity belongs to, type=Option<EntityType>)], methods=[Method(name=iid, signature=pub fn iid(&self) -> &IID, anchor=struct_Entity_iid_, args=[], description=[Retrieves the unique id of the ``Entity``.], examples=[entity.iid();], mode=async, returnDescription=null, returnType=&IID)], packagePath=null, superClasses=[Clone, Debug, Eq, PartialEq, StructuralPartialEq], traitImplementors=[], mode=async).nameDescriptor(language)`
+`class`
 
 *Implements traits:*
 

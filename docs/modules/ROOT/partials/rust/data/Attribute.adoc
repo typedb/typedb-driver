@@ -1,7 +1,7 @@
 [#_struct_Attribute]
 === Attribute
 
-`Class(name=Attribute, anchor=struct_Attribute, enumConstants=[], description=[Attribute is an instance of the attribute type and has a value. This value is fixed and unique for every given instance of the attribute type. Attributes can be uniquely addressed by their type and value.], examples=[], fields=[Variable(name=iid, anchor=struct_Attribute_iid, defaultValue=null, description=The unique id of this Attribute (internal use only), type=IID), Variable(name=value, anchor=struct_Attribute_value, defaultValue=null, description=The (dataful) value of this attribute, type=Value), Variable(name=type_, anchor=struct_Attribute_type, defaultValue=null, description=The type which this Attribute belongs to, type=Option<AttributeType>)], methods=[], packagePath=null, superClasses=[Clone, Debug, PartialEq, StructuralPartialEq], traitImplementors=[], mode=async).nameDescriptor(language)`
+`class`
 
 *Implements traits:*
 

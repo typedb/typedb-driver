@@ -1,7 +1,7 @@
 [#_AnalyzedQuery]
 === AnalyzedQuery
 
-`Class(name=AnalyzedQuery, anchor=AnalyzedQuery, enumConstants=[], description=[An AnalyzedQuery contains the server’s representation of the query and preamble functions; as well as the result of types inferred for each variable by type-inference.], examples=[], fields=[], methods=[Method(name=fetch, signature=fetch() -> 'Fetch' | None, anchor=AnalyzedQuery_fetch_, args=[], description=[A representation of the Fetch stage of the query, if it has one.], examples=[], mode=null, returnDescription=an Optional containing the fetch stage if present, otherwise None, returnType='Fetch' | None), Method(name=pipeline, signature=pipeline() -> Pipeline, anchor=AnalyzedQuery_pipeline_, args=[], description=[A representation of the query as a Pipeline.], examples=[], mode=null, returnDescription=the Pipeline representing the query., returnType=Pipeline), Method(name=preamble, signature=preamble() -> Iterator['Function'], anchor=AnalyzedQuery_preamble_, args=[], description=[A representation of the Functions in the preamble of the query.], examples=[], mode=null, returnDescription=an iterator over the analyzed functions in the preamble., returnType=Iterator['Function'])], packagePath=typedb.api.analyze.analyzed_query, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 *Package*: `typedb.api.analyze.analyzed_query`
 

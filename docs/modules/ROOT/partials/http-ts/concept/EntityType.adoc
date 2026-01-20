@@ -1,7 +1,7 @@
 [#_EntityType]
 === EntityType
 
-`Class(name=EntityType, anchor=EntityType, enumConstants=[], description=[], examples=[], fields=[Variable(name=kind, anchor=null, defaultValue=null, description=null, type="entityType"), Variable(name=label, anchor=null, defaultValue=null, description=null, type=string)], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 [caption=""]
 .Fields

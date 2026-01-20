@@ -1,7 +1,7 @@
 [#_analyzeStaticFunctions]
 === Static Functions
 
-`Class(name=Static Functions, anchor=analyzeStaticFunctions, enumConstants=[], description=[], examples=[], fields=[], methods=[Method(name=getVariableName, signature=getVariableName( structure: AnalyzedPipeline | QueryStructureLegacy, variable: ConstraintVertexVariable, ): string, anchor=getVariableName_getVariableName_structure_AnalyzedPipeline_variable_ConstraintVertexVariable, args=[Variable(name=structure, anchor=null, defaultValue=null, description=null, type=AnalyzedPipeline), Variable(name=variable, anchor=null, defaultValue=null, description=null, type=ConstraintVertexVariable)], description=[], examples=[], mode=null, returnDescription=null, returnType=string)], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 // tag::methods[]
 [#_getVariableName_getVariableName_structure_AnalyzedPipeline_variable_ConstraintVertexVariable]

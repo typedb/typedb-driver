@@ -1,7 +1,7 @@
 [#_PutStage]
 === PutStage
 
-`Class(name=PutStage, anchor=PutStage, enumConstants=[], description=[Represents a ‘put’ stage: put &lt;block&gt;], examples=[], fields=[], methods=[Method(name=block, signature=block() -> ConjunctionID, anchor=PutStage_block_, args=[], description=[], examples=[], mode=null, returnDescription=, returnType=ConjunctionID)], packagePath=typedb.api.analyze.pipeline_stage, superClasses=[PipelineStage], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 *Package*: `typedb.api.analyze.pipeline_stage`
 

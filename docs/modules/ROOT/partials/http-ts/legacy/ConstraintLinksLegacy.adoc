@@ -1,7 +1,7 @@
 [#_ConstraintLinksLegacy]
 ==== ConstraintLinksLegacy
 
-`Class(name=ConstraintLinksLegacy, anchor=ConstraintLinksLegacy, enumConstants=[], description=[], examples=[], fields=[Variable(name=player, anchor=null, defaultValue=null, description=null, type=ConstraintVertexVariable), Variable(name=relation, anchor=null, defaultValue=null, description=null, type=ConstraintVertexVariable), Variable(name=role, anchor=null, defaultValue=null, description=null, type=ConstraintVertexVariable), Variable(name=tag, anchor=null, defaultValue=null, description=null, type="links"), Variable(name=textSpan, anchor=null, defaultValue=null, description=null, type=ConstraintSpan)], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 [caption=""]
 .Fields

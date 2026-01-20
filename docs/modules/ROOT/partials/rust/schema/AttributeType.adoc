@@ -1,7 +1,7 @@
 [#_struct_AttributeType]
 === AttributeType
 
-`Class(name=AttributeType, anchor=struct_AttributeType, enumConstants=[], description=[Attribute types represent properties that other types can own., Attribute types have a value type. This value type is fixed and unique for every given instance of the attribute type., Other types can own an attribute type. That means that instances of these other types can own an instance of this attribute type. This usually means that an object in our domain has a property with the matching value., Multiple types can own the same attribute type, and different instances of the same type or different types can share ownership of the same attribute instance.], examples=[], fields=[Variable(name=label, anchor=struct_AttributeType_label, defaultValue=null, description=null, type=String), Variable(name=value_type, anchor=struct_AttributeType_value_type, defaultValue=null, description=null, type=Option<ValueType>)], methods=[Method(name=label, signature=pub fn label(&self) -> &str, anchor=struct_AttributeType_label_, args=[], description=[Retrieves the unique label of the ``AttributeType``.], examples=[attribute_type.label()], mode=async, returnDescription=null, returnType=&str), Method(name=value_type, signature=pub fn value_type(&self) -> Option<&ValueType>, anchor=struct_AttributeType_value_type_, args=[], description=[Retrieves the ``ValueType`` of the ``AttributeType``.], examples=[attribute_type.value_type()], mode=async, returnDescription=null, returnType=Option<&ValueType>)], packagePath=null, superClasses=[Clone, Debug, Display, PartialEq, StructuralPartialEq], traitImplementors=[], mode=async).nameDescriptor(language)`
+`class`
 
 *Implements traits:*
 

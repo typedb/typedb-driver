@@ -4,7 +4,7 @@
 [#_Struct_Decimal]
 ==== Struct Decimal
 
-`Class(name=Struct Decimal, anchor=Struct_Decimal, enumConstants=[], description=[, A fixed-point decimal number. Holds exactly 19 digits after the decimal point and a 64-bit value before the decimal point.], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 
 

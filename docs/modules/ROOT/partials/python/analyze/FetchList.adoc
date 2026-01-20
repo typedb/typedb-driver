@@ -1,7 +1,7 @@
 [#_FetchList]
 === FetchList
 
-`Class(name=FetchList, anchor=FetchList, enumConstants=[], description=[A list of Fetch documents.], examples=[], fields=[], methods=[Method(name=element, signature=element() -> Fetch, anchor=FetchList_element_, args=[], description=[The element type of the list.], examples=[], mode=null, returnDescription=, returnType=Fetch)], packagePath=typedb.api.analyze.fetch, superClasses=[Fetch], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 *Package*: `typedb.api.analyze.fetch`
 

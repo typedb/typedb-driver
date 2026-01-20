@@ -1,7 +1,7 @@
 [#_enum_Type]
 === Type
 
-`Class(name=Type, anchor=enum_Type, enumConstants=[EnumConstant(name=EntityType(EntityType), type=null, value=null), EnumConstant(name=RelationType(RelationType), type=null, value=null), EnumConstant(name=AttributeType(AttributeType), type=null, value=null), EnumConstant(name=RoleType(RoleType), type=null, value=null)], description=[], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=async).nameDescriptor(language)`
+`class`
 
 [caption=""]
 .Enum variants

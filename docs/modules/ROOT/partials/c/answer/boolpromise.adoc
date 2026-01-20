@@ -4,7 +4,7 @@
 [#_Struct_BoolPromise]
 ==== Struct BoolPromise
 
-`Class(name=Struct BoolPromise, anchor=Struct_BoolPromise, enumConstants=[], description=[, Promise object representing the result of an asynchronous operation. Use bool_promise_resolve(BoolPromise*) to wait for and retrieve the resulting boolean value.], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 
 

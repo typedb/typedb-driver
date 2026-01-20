@@ -1,7 +1,7 @@
 [#_TransactionType]
 === TransactionType
 
-`Class(name=TransactionType, anchor=TransactionType, enumConstants=[EnumConstant(name=READ, type=null, value=0), EnumConstant(name=SCHEMA, type=null, value=2), EnumConstant(name=WRITE, type=null, value=1)], description=[This class is used to specify the type of transaction.], examples=[driver.transaction(database, TransactionType.READ)], fields=[], methods=[Method(name=is_read, signature=is_read() -> bool, anchor=TransactionType_is_read_, args=[], description=[], examples=[], mode=null, returnDescription=, returnType=bool), Method(name=is_schema, signature=is_schema() -> bool, anchor=TransactionType_is_schema_, args=[], description=[], examples=[], mode=null, returnDescription=, returnType=bool), Method(name=is_write, signature=is_write() -> bool, anchor=TransactionType_is_write_, args=[], description=[], examples=[], mode=null, returnDescription=, returnType=bool)], packagePath=typedb.api.connection.transaction, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 *Package*: `typedb.api.connection.transaction`
 

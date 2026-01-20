@@ -1,7 +1,7 @@
 [#_PipelineStage_DistinctStage]
 === PipelineStage.DistinctStage
 
-`Class(name=PipelineStage.DistinctStage, anchor=PipelineStage_DistinctStage, enumConstants=[], description=[Represents a "distinct" stage], examples=[], fields=[], methods=[], packagePath=com.typedb.driver.api.analyze, superClasses=[PipelineStage], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 *Package*: `com.typedb.driver.api.analyze`
 

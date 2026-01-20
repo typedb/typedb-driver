@@ -1,11 +1,7 @@
 [#_TypeKind]
 === TypeKind
 
-`Class(name=TypeKind, anchor=TypeKind, enumConstants=[], description=[[source,typescript]
-----
-TypeKind: "entityType" | "relationType" | "attributeType" | "roleType"
-----
-], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 [source,typescript]
 ----

@@ -1,8 +1,7 @@
 [#_Duration]
 === Duration
 
-`Class(name=Duration, anchor=Duration, enumConstants=[], description=[A relative duration, which contains months, days, and nanoseconds. Can be used for calendar-relative durations (eg 7 days forward), or for absolute durations using the nanosecond component. Not convertible to datetime.timedelta due to the lack of months and nanos alternatives.], examples=[], fields=[Variable(name=days, anchor=null, defaultValue=null, description=The days part of the duration, type=int), Variable(name=months, anchor=null, defaultValue=null, description=The months part of the duration, type=int), Variable(name=nanos, anchor=null, defaultValue=null, description=The nanoseconds part of the duration, type=int)], methods=[Method(name=fromstring, signature=classmethod fromstring(duration_str: str) -> Duration, anchor=Duration_fromstring_duration_str_str, args=[Variable(name=duration_str, anchor=null, defaultValue=null, description=A string representation of the duration. Expected format: PnYnMnDTnHnMnS / PnW, type=str)], description=[Parses a Duration object from a string in ISO 8601 format.], examples=[Duration.fromstring("P1Y10M7DT15H44M5.00394892S")
-Duration.fromstring("P55W")], mode=null, returnDescription=A Duration object., returnType=Duration)], packagePath=typedb.common.duration, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 *Package*: `typedb.common.duration`
 

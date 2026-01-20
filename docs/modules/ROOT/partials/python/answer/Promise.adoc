@@ -1,7 +1,7 @@
 [#_Promise]
 === Promise
 
-`Class(name=Promise, anchor=Promise, enumConstants=[], description=[A ``Promise`` represents an asynchronous network operation., The request it represents is performed immediately. The response is only retrieved once the ``Promise`` is ``resolve``d.], examples=[], fields=[], methods=[Method(name=map, signature=classmethod map(ctor: Callable[[U], T], raw: Callable[[], U]) -> Promise[T], anchor=Promise_map_, args=[], description=[], examples=[], mode=null, returnDescription=, returnType=Promise[T]), Method(name=resolve, signature=resolve() -> T, anchor=Promise_resolve_, args=[], description=[Retrieves the result of the Promise.], examples=[promise.resolve()], mode=null, returnDescription=, returnType=T)], packagePath=typedb.common.promise, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 *Package*: `typedb.common.promise`
 

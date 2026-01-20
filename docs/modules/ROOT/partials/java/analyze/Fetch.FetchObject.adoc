@@ -1,7 +1,7 @@
 [#_Fetch_FetchObject]
 === Fetch.FetchObject
 
-`Class(name=Fetch.FetchObject, anchor=Fetch_FetchObject, enumConstants=[], description=[A mapping of string keys to ``Fetch`` documents.], examples=[], fields=[], methods=[Method(name=keys, signature=java.util.stream.Stream<java.lang.String> keys(), anchor=Fetch_FetchObject_keys_, args=[], description=[], examples=[], mode=null, returnDescription=null, returnType=java.util.stream.Stream<java.lang.String>), Method(name=get, signature=Fetch get​(java.lang.String key), anchor=Fetch_FetchObject_get_java_lang_String, args=[], description=[], examples=[], mode=null, returnDescription=null, returnType=Fetch)], packagePath=com.typedb.driver.api.analyze, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 *Package*: `com.typedb.driver.api.analyze`
 

@@ -1,7 +1,7 @@
 [#_legacyStaticFunctions]
 === Static Functions
 
-`Class(name=Static Functions, anchor=legacyStaticFunctions, enumConstants=[], description=[], examples=[], fields=[], methods=[Method(name=isQueryResponseLegacy, signature=isQueryResponseLegacy( res: ConceptRowsQueryResponse | ConceptRowsQueryResponseLegacy, ): boolean, anchor=isQueryResponseLegacy_isQueryResponseLegacy_res_ConceptRowsQueryResponse, args=[Variable(name=res, anchor=null, defaultValue=null, description=null, type=ConceptRowsQueryResponse)], description=[], examples=[], mode=null, returnDescription=null, returnType=boolean)], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 // tag::methods[]
 [#_isQueryResponseLegacy_isQueryResponseLegacy_res_ConceptRowsQueryResponse]

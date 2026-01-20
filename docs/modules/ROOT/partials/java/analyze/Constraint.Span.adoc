@@ -1,7 +1,7 @@
 [#_Constraint_Span]
 === Constraint.Span
 
-`Class(name=Constraint.Span, anchor=Constraint_Span, enumConstants=[], description=[The span of a constraint in the source query], examples=[], fields=[], methods=[Method(name=begin, signature=long begin(), anchor=Constraint_Span_begin_, args=[], description=[], examples=[], mode=null, returnDescription=null, returnType=long), Method(name=end, signature=long end(), anchor=Constraint_Span_end_, args=[], description=[], examples=[], mode=null, returnDescription=null, returnType=long)], packagePath=com.typedb.driver.api.analyze, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 *Package*: `com.typedb.driver.api.analyze`
 

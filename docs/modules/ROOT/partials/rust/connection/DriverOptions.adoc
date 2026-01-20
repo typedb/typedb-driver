@@ -1,7 +1,7 @@
 [#_struct_DriverOptions]
 === DriverOptions
 
-`Class(name=DriverOptions, anchor=struct_DriverOptions, enumConstants=[], description=[User connection settings for connecting to TypeDB.], examples=[], fields=[], methods=[Method(name=new, signature=pub fn new(is_tls_enabled: bool, tls_root_ca: Option<&Path>) -> Result<Self>, anchor=struct_DriverOptions_new_is_tls_enabled_bool_tls_root_ca_Option_Path_, args=[Variable(name=is_tls_enabled, anchor=null, defaultValue=null, description= — Specify whether the connection to TypeDB Server must be done over TLS., type=bool), Variable(name=tls_root_ca, anchor=null, defaultValue=null, description= — Path to the CA certificate to use for authenticating server certificates., type=Option<&Path>)], description=[Creates a credentials with username and password. Specifies the connection must use TLS], examples=[DriverOptions::new(true, Some(&path_to_ca));], mode=async, returnDescription=null, returnType=Result<Self>), Method(name=is_tls_enabled, signature=pub fn is_tls_enabled(&self) -> bool, anchor=struct_DriverOptions_is_tls_enabled_, args=[], description=[Retrieves whether TLS is enabled for the connection.], examples=[], mode=async, returnDescription=null, returnType=bool)], packagePath=null, superClasses=[Clone, Debug], traitImplementors=[], mode=async).nameDescriptor(language)`
+`class`
 
 *Implements traits:*
 

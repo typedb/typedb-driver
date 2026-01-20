@@ -1,7 +1,7 @@
 [#_Fetch_FetchList]
 === Fetch.FetchList
 
-`Class(name=Fetch.FetchList, anchor=Fetch_FetchList, enumConstants=[], description=[A ``List`` of ``Fetch`` documents.], examples=[], fields=[], methods=[Method(name=element, signature=Fetch element(), anchor=Fetch_FetchList_element_, args=[], description=[], examples=[], mode=null, returnDescription=null, returnType=Fetch)], packagePath=com.typedb.driver.api.analyze, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 *Package*: `com.typedb.driver.api.analyze`
 

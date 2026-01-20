@@ -1,7 +1,7 @@
 [#_struct_Struct]
 === Struct
 
-`Class(name=Struct, anchor=struct_Struct, enumConstants=[], description=[], examples=[], fields=[], methods=[], packagePath=null, superClasses=[Clone, Debug, Display, PartialEq, StructuralPartialEq], traitImplementors=[], mode=async).nameDescriptor(language)`
+`class`
 
 *Implements traits:*
 

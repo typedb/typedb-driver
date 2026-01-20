@@ -4,7 +4,7 @@
 [#_Struct_ConstraintExactness]
 ==== Struct ConstraintExactness
 
-`Class(name=Struct ConstraintExactness, anchor=Struct_ConstraintExactness, enumConstants=[], description=[, Tells apart exact variants of constraints from the ones allowing subtype-polymorphism. e.g. ``isa!`` would be represented as an ``Constraint::Isa`` with its exactness field ``ConstraintExactness::Exact``.], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 
 
@@ -13,22 +13,7 @@ Tells apart exact variants of constraints from the ones allowing subtype-polymor
 [#_Enum_ConstraintExactness]
 ==== Enum ConstraintExactness
 
-`Class(name=Enum ConstraintExactness, anchor=Enum_ConstraintExactness, enumConstants=[EnumConstant(name=Exact, type=null, value=null), EnumConstant(name=Subtypes, type=null, value=null)], description=[, Tells apart exact variants of constraints from the ones allowing subtype-polymorphism. e.g. ``isa!`` would be represented as an ``Constraint::Isa`` with its exactness field ``ConstraintExactness::Exact``.
-
- 
-  
-   Enumerator
-  
-  
-   Exact&nbsp;
-   , Indicates the constraint matches exactly the specified type - e.g. ``isa!`` or ``sub!``
-  
-  
-   Subtypes&nbsp;
-   , Indicates the constraint matches the specified type and its subtypes - e.g. ``isa!`` or ``sub!``
-  
- 
-], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 
 

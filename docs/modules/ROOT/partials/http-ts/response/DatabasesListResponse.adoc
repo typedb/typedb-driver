@@ -1,7 +1,7 @@
 [#_DatabasesListResponse]
 === DatabasesListResponse
 
-`Class(name=DatabasesListResponse, anchor=DatabasesListResponse, enumConstants=[], description=[], examples=[], fields=[Variable(name=databases, anchor=null, defaultValue=null, description=null, type=Database)], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 [caption=""]
 .Fields

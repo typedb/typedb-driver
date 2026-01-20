@@ -1,7 +1,7 @@
 [#_enum_AnalyzeError]
 === AnalyzeError
 
-`Class(name=AnalyzeError, anchor=enum_AnalyzeError, enumConstants=[EnumConstant(name=MissingResponseField, type=null, value=null), EnumConstant(name=UnknownEnumValue, type=null, value=null)], description=[], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=async).nameDescriptor(language)`
+`class`
 
 [caption=""]
 .Enum variants

@@ -1,7 +1,7 @@
 [#_enum_Constraint]
 === Constraint
 
-`Class(name=Constraint, anchor=enum_Constraint, enumConstants=[EnumConstant(name=Isa, type=null, value=null), EnumConstant(name=Has, type=null, value=null), EnumConstant(name=Links, type=null, value=null), EnumConstant(name=Sub, type=null, value=null), EnumConstant(name=Owns, type=null, value=null), EnumConstant(name=Relates, type=null, value=null), EnumConstant(name=Plays, type=null, value=null), EnumConstant(name=FunctionCall, type=null, value=null), EnumConstant(name=Expression, type=null, value=null), EnumConstant(name=Is, type=null, value=null), EnumConstant(name=Iid, type=null, value=null), EnumConstant(name=Comparison, type=null, value=null), EnumConstant(name=Kind, type=null, value=null), EnumConstant(name=Label, type=null, value=null), EnumConstant(name=Value, type=null, value=null), EnumConstant(name=Or, type=null, value=null), EnumConstant(name=Not, type=null, value=null), EnumConstant(name=Try, type=null, value=null)], description=[A representation of a TypeQL constraint.], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=async).nameDescriptor(language)`
+`class`
 
 A representation of a TypeQL constraint.
 

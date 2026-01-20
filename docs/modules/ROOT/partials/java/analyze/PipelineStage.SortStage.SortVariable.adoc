@@ -1,7 +1,7 @@
 [#_PipelineStage_SortStage_SortVariable]
 === PipelineStage.SortStage.SortVariable
 
-`Class(name=PipelineStage.SortStage.SortVariable, anchor=PipelineStage_SortStage_SortVariable, enumConstants=[], description=[A variable and its sort order], examples=[], fields=[], methods=[Method(name=variable, signature=Variable variable(), anchor=PipelineStage_SortStage_SortVariable_variable_, args=[], description=[The variable to sort by], examples=[], mode=null, returnDescription=null, returnType=Variable), Method(name=order, signature=com.typedb.driver.jni.SortOrder order(), anchor=PipelineStage_SortStage_SortVariable_order_, args=[], description=[The sort order (ascending or descending)], examples=[], mode=null, returnDescription=null, returnType=com.typedb.driver.jni.SortOrder)], packagePath=com.typedb.driver.api.analyze, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 *Package*: `com.typedb.driver.api.analyze`
 

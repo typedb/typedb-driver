@@ -1,7 +1,7 @@
 [#_Instance]
 === Instance
 
-`Class(name=Instance, anchor=Instance, enumConstants=[], description=[], examples=[], fields=[], methods=[Method(name=as_instance, signature=as_instance() -> Instance, anchor=Instance_as_instance_, args=[], description=[Casts the concept to ``Instance``.], examples=[instance.as_instance()], mode=null, returnDescription=, returnType=Instance), Method(name=get_type, signature=get_type() -> Type, anchor=Instance_get_type_, args=[], description=[Retrieves the type which this ``Instance`` belongs to.], examples=[instance.get_type()], mode=null, returnDescription=, returnType=Type), Method(name=is_instance, signature=is_instance() -> bool, anchor=Instance_is_instance_, args=[], description=[Checks if the concept is a ``Instance``.], examples=[instance.is_instance()], mode=null, returnDescription=, returnType=bool)], packagePath=typedb.api.concept.instance.instance, superClasses=[Concept], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 *Package*: `typedb.api.concept.instance.instance`
 

@@ -1,22 +1,7 @@
 [#_DatabaseManager]
 === DatabaseManager
 
-`Class(name=DatabaseManager, anchor=DatabaseManager, enumConstants=[], description=[Provides access to all database management methods.], examples=[], fields=[], methods=[Method(name=get, signature=@CheckReturnValue
-Database get​(java.lang.String name)
-      throws TypeDBDriverException, anchor=DatabaseManager_get_java_lang_String, args=[Variable(name=name, anchor=null, defaultValue=null, description=The name of the database to retrieve, type=java.lang.String)], description=[Retrieve the database with the given name. 
-], examples=[driver.databases().get(name)], mode=null, returnDescription=null, returnType=Database), Method(name=contains, signature=@CheckReturnValue
-boolean contains​(java.lang.String name)
-          throws TypeDBDriverException, anchor=DatabaseManager_contains_java_lang_String, args=[Variable(name=name, anchor=null, defaultValue=null, description=The database name to be checked, type=java.lang.String)], description=[Checks if a database with the given name exists. 
-], examples=[driver.databases().contains(name)], mode=null, returnDescription=null, returnType=boolean), Method(name=create, signature=void create​(java.lang.String name)
-     throws TypeDBDriverException, anchor=DatabaseManager_create_java_lang_String, args=[Variable(name=name, anchor=null, defaultValue=null, description=The name of the database to be created, type=java.lang.String)], description=[Create a database with the given name. 
-], examples=[driver.databases().create(name)], mode=null, returnDescription=null, returnType=void), Method(name=importFromFile, signature=void importFromFile​(java.lang.String name,
-                    java.lang.String schema,
-                    java.lang.String dataFilePath)
-             throws TypeDBDriverException, anchor=DatabaseManager_importFromFile_java_lang_String_java_lang_String_java_lang_String, args=[Variable(name=name, anchor=null, defaultValue=null, description=The name of the database to be created, type=java.lang.String), Variable(name=schema, anchor=null, defaultValue=null, description=The schema definition query string for the database, type=java.lang.String), Variable(name=dataFilePath, anchor=null, defaultValue=null, description=The exported database file path to import the data from, type=java.lang.String)], description=[Create a database with the given name based on previously exported another database's data loaded from a file. This is a blocking operation and may take a significant amount of time depending on the database size. 
-], examples=[driver.databases().importFromFile(name, schema, "data.typedb")], mode=null, returnDescription=null, returnType=void), Method(name=all, signature=@CheckReturnValue
-java.util.List<Database> all()
-                      throws TypeDBDriverException, anchor=DatabaseManager_all_, args=[], description=[Retrieves all databases present on the TypeDB server. 
-], examples=[driver.databases().all()], mode=null, returnDescription=null, returnType=java.util.List<Database>)], packagePath=com.typedb.driver.api.database, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 *Package*: `com.typedb.driver.api.database`
 

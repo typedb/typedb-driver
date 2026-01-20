@@ -1,7 +1,7 @@
 [#_Kind]
 === Kind
 
-`Class(name=Kind, anchor=Kind, enumConstants=[], description=[Represents a kind constraint: &lt;kind&gt; &lt;type&gt;], examples=[], fields=[], methods=[Method(name=kind, signature=kind() -> typedb.common.enums.Kind, anchor=Kind_kind_, args=[], description=[], examples=[], mode=null, returnDescription=, returnType=typedb.common.enums.Kind), Method(name=type, signature=type() -> ConstraintVertex, anchor=Kind_type_, args=[], description=[], examples=[], mode=null, returnDescription=, returnType=ConstraintVertex)], packagePath=typedb.api.analyze.constraint, superClasses=[Constraint], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 *Package*: `typedb.api.analyze.constraint`
 

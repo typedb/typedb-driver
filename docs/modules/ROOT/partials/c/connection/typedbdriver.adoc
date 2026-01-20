@@ -4,7 +4,7 @@
 [#_Struct_TypeDBDriver]
 ==== Struct TypeDBDriver
 
-`Class(name=Struct TypeDBDriver, anchor=Struct_TypeDBDriver, enumConstants=[], description=[, A connection to a TypeDB server which serves as the starting point for all interaction.], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 
 

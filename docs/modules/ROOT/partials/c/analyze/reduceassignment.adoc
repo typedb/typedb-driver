@@ -4,7 +4,7 @@
 [#_Struct_ReduceAssignment]
 ==== Struct ReduceAssignment
 
-`Class(name=Struct ReduceAssignment, anchor=Struct_ReduceAssignment, enumConstants=[], description=[, Representation of an assignment from a reduction in a ``PipelineStage::Reduce``, such as ``reduce $c = sum($x);``], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 
 

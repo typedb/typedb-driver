@@ -1,7 +1,7 @@
 [#_SignInResponse]
 === SignInResponse
 
-`Class(name=SignInResponse, anchor=SignInResponse, enumConstants=[], description=[], examples=[], fields=[Variable(name=token, anchor=null, defaultValue=null, description=null, type=string)], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 [caption=""]
 .Fields

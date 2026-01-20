@@ -1,7 +1,7 @@
 [#_ConstraintPlays]
 ==== ConstraintPlays
 
-`Class(name=ConstraintPlays, anchor=ConstraintPlays, enumConstants=[], description=[], examples=[], fields=[Variable(name=player, anchor=null, defaultValue=null, description=null, type=ConstraintVertexVariable), Variable(name=role, anchor=null, defaultValue=null, description=null, type=ConstraintVertexVariable), Variable(name=tag, anchor=null, defaultValue=null, description=null, type="plays"), Variable(name=textSpan, anchor=null, defaultValue=null, description=null, type=ConstraintSpan)], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 [caption=""]
 .Fields

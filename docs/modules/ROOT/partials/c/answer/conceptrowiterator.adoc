@@ -4,7 +4,7 @@
 [#_Struct_ConceptRowIterator]
 ==== Struct ConceptRowIterator
 
-`Class(name=Struct ConceptRowIterator, anchor=Struct_ConceptRowIterator, enumConstants=[], description=[, Iterator over the ``ConceptRow``s returned by an API method or query.], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 
 

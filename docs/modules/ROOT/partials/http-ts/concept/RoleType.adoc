@@ -1,7 +1,7 @@
 [#_RoleType]
 === RoleType
 
-`Class(name=RoleType, anchor=RoleType, enumConstants=[], description=[], examples=[], fields=[Variable(name=kind, anchor=null, defaultValue=null, description=null, type="roleType"), Variable(name=label, anchor=null, defaultValue=null, description=null, type=string)], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 [caption=""]
 .Fields

@@ -1,7 +1,7 @@
 [#_Reducer]
 === Reducer
 
-`Class(name=Reducer, anchor=Reducer, enumConstants=[], description=[Representation of a reducer used either in a PipelineStage::Reduce or in a function’s ReturnOperation.], examples=[], fields=[], methods=[Method(name=arguments, signature=arguments() -> Iterator['Variable'], anchor=Reducer_arguments_, args=[], description=[The arguments to the reducer.], examples=[], mode=null, returnDescription=, returnType=Iterator['Variable']), Method(name=name, signature=name() -> str, anchor=Reducer_name_, args=[], description=[The reduce operation applied (e.g. ‘sum’, ‘count’).], examples=[], mode=null, returnDescription=, returnType=str)], packagePath=typedb.api.analyze.reducer, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 *Package*: `typedb.api.analyze.reducer`
 

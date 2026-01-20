@@ -1,7 +1,7 @@
 [#_Reducer]
 === Reducer
 
-`Class(name=Reducer, anchor=Reducer, enumConstants=[], description=[Representation of a reducer used either in a ``PipelineStage::Reduce`` or in a function's ``ReturnOperation``.], examples=[], fields=[], methods=[Method(name=name, signature=java.lang.String name(), anchor=Reducer_name_, args=[], description=[], examples=[], mode=null, returnDescription=null, returnType=java.lang.String), Method(name=arguments, signature=java.util.stream.Stream<? extends Variable> arguments(), anchor=Reducer_arguments_, args=[], description=[], examples=[], mode=null, returnDescription=null, returnType=java.util.stream.Stream<? extends Variable>)], packagePath=com.typedb.driver.api.analyze, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 *Package*: `com.typedb.driver.api.analyze`
 

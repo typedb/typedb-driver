@@ -1,11 +1,7 @@
 [#_Type]
 === Type
 
-`Class(name=Type, anchor=Type, enumConstants=[], description=[[source,typescript]
-----
-Type: InstantiableType | RoleType
-----
-], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 [source,typescript]
 ----

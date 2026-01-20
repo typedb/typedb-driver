@@ -1,11 +1,7 @@
 [#_ConceptDocumentIterator]
 === ConceptDocumentIterator
 
-`Class(name=ConceptDocumentIterator, anchor=ConceptDocumentIterator, enumConstants=[], description=[Represents an iterator over concept documents (represented as ``JSON``s) returned as a server answer.], examples=[], fields=[], methods=[Method(name=isConceptDocuments, signature=default boolean isConceptDocuments(), anchor=ConceptDocumentIterator_isConceptDocuments_, args=[], description=[Checks if the query answer is a ``ConceptDocumentIterator``. 
-], examples=[concept.isConceptDocuments();], mode=null, returnDescription=null, returnType=boolean), Method(name=asConceptDocuments, signature=@CheckReturnValue
-default ConceptDocumentIterator asConceptDocuments(), anchor=ConceptDocumentIterator_asConceptDocuments_, args=[], description=[Casts the query answer to ``ConceptDocumentIterator``. 
-], examples=[concept.asConceptDocuments();], mode=null, returnDescription=null, returnType=ConceptDocumentIterator), Method(name=stream, signature=@CheckReturnValue
-java.util.stream.Stream<JSON> stream(), anchor=ConceptDocumentIterator_stream_, args=[], description=[], examples=[], mode=null, returnDescription=null, returnType=java.util.stream.Stream<JSON>)], packagePath=com.typedb.driver.api.answer, superClasses=[java.util.Iterator<JSON>, QueryAnswer], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 *Package*: `com.typedb.driver.api.answer`
 

@@ -1,7 +1,7 @@
 [#_struct_FetchLeaf]
 === FetchLeaf
 
-`Class(name=FetchLeaf, anchor=struct_FetchLeaf, enumConstants=[], description=[Holds typing information about a leaf value in a ``Fetch`` document.], examples=[], fields=[Variable(name=annotations, anchor=struct_FetchLeaf_annotations, defaultValue=null, description=The ``ValueType`` this value can be., type=Vec<ValueType>)], methods=[], packagePath=null, superClasses=[Clone, Debug], traitImplementors=[], mode=async).nameDescriptor(language)`
+`class`
 
 *Implements traits:*
 

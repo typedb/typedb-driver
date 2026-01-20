@@ -1,7 +1,7 @@
 [#_LimitStage]
 === LimitStage
 
-`Class(name=LimitStage, anchor=LimitStage, enumConstants=[], description=[Represents a ‘limit’ stage: limit &lt;limit&gt;], examples=[], fields=[], methods=[Method(name=limit, signature=limit() -> int, anchor=LimitStage_limit_, args=[], description=[], examples=[], mode=null, returnDescription=, returnType=int)], packagePath=typedb.api.analyze.pipeline_stage, superClasses=[PipelineStage], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 *Package*: `typedb.api.analyze.pipeline_stage`
 

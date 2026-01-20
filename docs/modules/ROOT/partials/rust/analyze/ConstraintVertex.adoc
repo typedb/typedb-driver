@@ -1,7 +1,7 @@
 [#_enum_ConstraintVertex]
 === ConstraintVertex
 
-`Class(name=ConstraintVertex, anchor=enum_ConstraintVertex, enumConstants=[EnumConstant(name=Variable(Variable), type=null, value=null), EnumConstant(name=Label(Type), type=null, value=null), EnumConstant(name=Value(Value), type=null, value=null), EnumConstant(name=NamedRole(NamedRole), type=null, value=null)], description=[The answer to a TypeDB query is a set of concepts which satisfy the <code>Constraints</code> in the query. A <code>ConstraintVertex</code> is either a variable, or some identifier of the concept.], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=async).nameDescriptor(language)`
+`class`
 
 The answer to a TypeDB query is a set of concepts which satisfy the <code>Constraints</code> in the query. A <code>ConstraintVertex</code> is either a variable, or some identifier of the concept.
 

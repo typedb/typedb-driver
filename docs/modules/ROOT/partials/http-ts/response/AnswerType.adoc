@@ -1,11 +1,7 @@
 [#_AnswerType]
 === AnswerType
 
-`Class(name=AnswerType, anchor=AnswerType, enumConstants=[], description=[[source,typescript]
-----
-AnswerType: "ok" | "conceptRows" | "conceptDocuments"
-----
-], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 [source,typescript]
 ----

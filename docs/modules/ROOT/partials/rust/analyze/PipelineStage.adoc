@@ -1,7 +1,7 @@
 [#_enum_PipelineStage]
 === PipelineStage
 
-`Class(name=PipelineStage, anchor=enum_PipelineStage, enumConstants=[EnumConstant(name=Match, type=null, value=null), EnumConstant(name=Insert, type=null, value=null), EnumConstant(name=Put, type=null, value=null), EnumConstant(name=Update, type=null, value=null), EnumConstant(name=Delete, type=null, value=null), EnumConstant(name=Select, type=null, value=null), EnumConstant(name=Sort, type=null, value=null), EnumConstant(name=Require, type=null, value=null), EnumConstant(name=Offset, type=null, value=null), EnumConstant(name=Limit, type=null, value=null), EnumConstant(name=Distinct, type=null, value=null), EnumConstant(name=Reduce, type=null, value=null)], description=[Representation of a stage in a <code>Pipeline</code>.], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=async).nameDescriptor(language)`
+`class`
 
 Representation of a stage in a <code>Pipeline</code>.
 

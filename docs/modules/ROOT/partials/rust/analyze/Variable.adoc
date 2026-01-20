@@ -1,7 +1,7 @@
 [#_struct_Variable]
 === Variable
 
-`Class(name=Variable, anchor=struct_Variable, enumConstants=[], description=[Uniquely identifies a variable in a ``Pipeline``pipeline. Its name (if any) can be retrieved from the ``variable_names`` field in ``Pipeline``], examples=[], fields=[Variable(name=0, anchor=struct_Variable_0, defaultValue=null, description=null, type=u32)], methods=[], packagePath=null, superClasses=[Clone, Debug, Eq, Hash, PartialEq, StructuralPartialEq], traitImplementors=[], mode=async).nameDescriptor(language)`
+`class`
 
 *Implements traits:*
 

@@ -1,7 +1,7 @@
 [#_RequireStage]
 === RequireStage
 
-`Class(name=RequireStage, anchor=RequireStage, enumConstants=[], description=[Represents a ‘require’ stage: require &lt;variables&gt;], examples=[], fields=[], methods=[Method(name=variables, signature=variables() -> Iterator['Variable'], anchor=RequireStage_variables_, args=[], description=[], examples=[], mode=null, returnDescription=, returnType=Iterator['Variable'])], packagePath=typedb.api.analyze.pipeline_stage, superClasses=[PipelineStage], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 *Package*: `typedb.api.analyze.pipeline_stage`
 

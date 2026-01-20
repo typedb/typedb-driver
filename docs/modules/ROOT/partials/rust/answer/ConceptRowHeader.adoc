@@ -1,7 +1,7 @@
 [#_struct_ConceptRowHeader]
 === ConceptRowHeader
 
-`Class(name=ConceptRowHeader, anchor=struct_ConceptRowHeader, enumConstants=[], description=[], examples=[], fields=[Variable(name=column_names, anchor=struct_ConceptRowHeader_column_names, defaultValue=null, description=null, type=Vec<String>), Variable(name=query_type, anchor=struct_ConceptRowHeader_query_type, defaultValue=null, description=null, type=QueryType), Variable(name=query_structure, anchor=struct_ConceptRowHeader_query_structure, defaultValue=null, description=null, type=Option<Pipeline>)], methods=[], packagePath=null, superClasses=[Debug], traitImplementors=[], mode=async).nameDescriptor(language)`
+`class`
 
 *Implements traits:*
 

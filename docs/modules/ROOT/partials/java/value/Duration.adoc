@@ -1,17 +1,7 @@
 [#_Duration]
 === Duration
 
-`Class(name=Duration, anchor=Duration, enumConstants=[], description=[], examples=[], fields=[], methods=[Method(name=parse, signature=public static Duration parse​(java.lang.String durationString), anchor=Duration_parse_java_lang_String, args=[Variable(name=durationString, anchor=null, defaultValue=null, description=A string representation of the duration. Expected format: PnYnMnDTnHnMnS or PnW., type=java.lang.String)], description=[Parses a ``Duration`` object from a string in ISO 8601 format. Throws java.time exceptions 
-], examples=[Duration.parse("P1Y10M7DT15H44M5.00394892S");
-     Duration.parse("P55W");], mode=null, returnDescription=null, returnType=public static Duration), Method(name=getDatePart, signature=public java.time.Period getDatePart(), anchor=Duration_getDatePart_, args=[], description=[Returns the date part of this duration. 
-], examples=[duration.getDatePart();], mode=null, returnDescription=null, returnType=public java.time.Period), Method(name=getTimePart, signature=public java.time.Duration getTimePart(), anchor=Duration_getTimePart_, args=[], description=[Returns the time part of this duration. 
-], examples=[duration.getTimePart();], mode=null, returnDescription=null, returnType=public java.time.Duration), Method(name=getMonths, signature=public int getMonths(), anchor=Duration_getMonths_, args=[], description=[Returns the amount of months of this ``Duration`` from the date part. 
-], examples=[duration.getMonths();], mode=null, returnDescription=null, returnType=public int), Method(name=getDays, signature=public int getDays(), anchor=Duration_getDays_, args=[], description=[Returns the amount of days of this ``Duration`` from the date part. 
-], examples=[duration.getMonths();], mode=null, returnDescription=null, returnType=public int), Method(name=getSeconds, signature=public long getSeconds(), anchor=Duration_getSeconds_, args=[], description=[Returns the amount of seconds of this ``Duration`` from the time part. 
-], examples=[duration.getSeconds();], mode=null, returnDescription=null, returnType=public long), Method(name=getNano, signature=public long getNano(), anchor=Duration_getNano_, args=[], description=[Returns the number of nanoseconds within the second in this ``Duration`` from the time part. 
-], examples=[duration.getNano();], mode=null, returnDescription=null, returnType=public long), Method(name=toString, signature=public java.lang.String toString(), anchor=Duration_toString_, args=[], description=[Returns the string representation of the duration. 
-], examples=[duration.toString();], mode=null, returnDescription=null, returnType=public java.lang.String), Method(name=equals, signature=public boolean equals​(java.lang.Object obj), anchor=Duration_equals_java_lang_Object, args=[Variable(name=obj, anchor=null, defaultValue=null, description=Object to compare with, type=java.lang.Object)], description=[Checks if this Duration is equal to another object. 
-], examples=[label.equals(obj);], mode=null, returnDescription=null, returnType=public boolean)], packagePath=com.typedb.driver.common, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 *Package*: `com.typedb.driver.common`
 

@@ -1,7 +1,7 @@
 [#_ConjunctionAnnotations]
 === ConjunctionAnnotations
 
-`Class(name=ConjunctionAnnotations, anchor=ConjunctionAnnotations, enumConstants=[], description=[], examples=[], fields=[Variable(name=variableAnnotations, anchor=null, defaultValue=null, description=null, type=string)], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 [caption=""]
 .Fields

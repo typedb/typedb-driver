@@ -1,11 +1,7 @@
 [#_QueryType]
 === QueryType
 
-`Class(name=QueryType, anchor=QueryType, enumConstants=[], description=[[source,typescript]
-----
-QueryType: "read" | "write" | "schema"
-----
-], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 [source,typescript]
 ----

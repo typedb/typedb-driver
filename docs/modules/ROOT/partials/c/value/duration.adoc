@@ -4,7 +4,7 @@
 [#_Struct_Duration]
 ==== Struct Duration
 
-`Class(name=Struct Duration, anchor=Struct_Duration, enumConstants=[], description=[, A relative duration, which contains months, days, and nanoseconds. Can be used for calendar-relative durations (eg 7 days forward), or for absolute durations using the nanosecond component When used as an absolute duration, convertible to chrono::Duration], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 
 

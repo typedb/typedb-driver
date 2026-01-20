@@ -1,7 +1,7 @@
 [#_ConceptRowAnswer]
 === ConceptRowAnswer
 
-`Class(name=ConceptRowAnswer, anchor=ConceptRowAnswer, enumConstants=[], description=[], examples=[], fields=[Variable(name=data, anchor=null, defaultValue=null, description=null, type=ConceptRow), Variable(name=involvedBlocks, anchor=null, defaultValue=null, description=null, type=number)], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 [caption=""]
 .Fields

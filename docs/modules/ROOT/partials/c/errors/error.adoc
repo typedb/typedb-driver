@@ -4,7 +4,7 @@
 [#_Struct_Error]
 ==== Struct Error
 
-`Class(name=Struct Error, anchor=Struct_Error, enumConstants=[], description=[, Represents errors encountered during operation.], examples=[], fields=[], methods=[], packagePath=null, superClasses=[], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 
 

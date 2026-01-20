@@ -1,7 +1,7 @@
 [#_Has]
 === Has
 
-`Class(name=Has, anchor=Has, enumConstants=[], description=[Represents a ‘has’ constraint: &lt;owner&gt; has &lt;attribute&gt;], examples=[], fields=[], methods=[Method(name=attribute, signature=attribute() -> ConstraintVertex, anchor=Has_attribute_, args=[], description=[], examples=[], mode=null, returnDescription=, returnType=ConstraintVertex), Method(name=exactness, signature=exactness() -> ConstraintExactness, anchor=Has_exactness_, args=[], description=[], examples=[], mode=null, returnDescription=, returnType=ConstraintExactness), Method(name=owner, signature=owner() -> ConstraintVertex, anchor=Has_owner_, args=[], description=[], examples=[], mode=null, returnDescription=, returnType=ConstraintVertex)], packagePath=typedb.api.analyze.constraint, superClasses=[Constraint], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 *Package*: `typedb.api.analyze.constraint`
 

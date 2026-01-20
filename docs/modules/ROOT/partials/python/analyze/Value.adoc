@@ -1,7 +1,7 @@
 [#_Value]
 === Value
 
-`Class(name=Value, anchor=Value, enumConstants=[], description=[Represents a value constraint: &lt;attribute_type&gt; value &lt;value_type&gt;], examples=[], fields=[], methods=[Method(name=attribute_type, signature=attribute_type() -> ConstraintVertex, anchor=Value_attribute_type_, args=[], description=[], examples=[], mode=null, returnDescription=, returnType=ConstraintVertex), Method(name=value_type, signature=value_type() -> str, anchor=Value_value_type_, args=[], description=[], examples=[], mode=null, returnDescription=, returnType=str)], packagePath=typedb.api.analyze.constraint, superClasses=[Constraint], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 *Package*: `typedb.api.analyze.constraint`
 

@@ -79,7 +79,8 @@ data class Class(
         var result = ""
         result += builder.anchor(this.anchor ?: replaceSymbolsForAnchor(this.name))
         result += builder.header(headerLevel,  this.name)
-        result += "`$this.nameDescriptor(language)`\n\n"
+        var nameDescriptor = nameDescriptor(this.name)
+        result += "`$nameDescriptor`\n\n"
 
         this.packagePath?.let { result += "*Package*: `$it`\n\n" }
 

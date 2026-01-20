@@ -1,7 +1,7 @@
 [#_RoleType]
 === RoleType
 
-`Class(name=RoleType, anchor=RoleType, enumConstants=[], description=[Roles are special internal types used by relations. We can not create an instance of a role in a database. But we can set an instance of another type (role player) to play a role in a particular instance of a relation type., Roles allow a schema to enforce logical constraints on types of role players.], examples=[], fields=[], methods=[Method(name=as_role_type, signature=as_role_type() -> RoleType, anchor=RoleType_as_role_type_, args=[], description=[Casts the concept to ``RoleType``.], examples=[role_type.as_role_type()], mode=null, returnDescription=, returnType=RoleType), Method(name=is_role_type, signature=is_role_type() -> bool, anchor=RoleType_is_role_type_, args=[], description=[Checks if the concept is a ``RoleType``.], examples=[role_type.is_role_type()], mode=null, returnDescription=, returnType=bool)], packagePath=typedb.api.concept.type.role_type, superClasses=[Type], traitImplementors=[], mode=null).nameDescriptor(language)`
+`class`
 
 *Package*: `typedb.api.concept.type.role_type`
 
