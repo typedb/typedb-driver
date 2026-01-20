@@ -1,5 +1,10 @@
 [#_enum_Concept]
-=== struct Concept
+=== Concept
+
+[source,rust]
+----
+enum
+----
 
 The fundamental TypeQL object.
 

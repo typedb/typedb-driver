@@ -1,5 +1,10 @@
 [#_Transaction_Type]
-=== class Transaction.Type
+=== Transaction.Type
+
+[source,java]
+----
+class
+----
 
 *Package*: `com.typedb.driver.api`
 

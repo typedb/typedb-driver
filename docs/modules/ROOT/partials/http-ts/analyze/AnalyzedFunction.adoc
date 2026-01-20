@@ -1,5 +1,10 @@
 [#_AnalyzedFunction]
-=== class AnalyzedFunction
+=== AnalyzedFunction
+
+[source,typescript]
+----
+class
+----
 
 [caption=""]
 .Fields

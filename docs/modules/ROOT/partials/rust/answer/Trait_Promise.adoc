@@ -1,5 +1,10 @@
 [#_trait_Promise]
-=== enum Trait Promise
+=== Trait Promise
+
+[source,rust]
+----
+struct
+----
 
 [tabs]
 ====

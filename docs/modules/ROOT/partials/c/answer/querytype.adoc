@@ -2,7 +2,12 @@
 === querytype
 
 [#_Struct_QueryType]
-==== class Struct QueryType
+==== Struct QueryType
+
+[source,cpp]
+----
+class
+----
 
 
 
@@ -10,7 +15,12 @@ This enum is used to specify the type of the query resulted in this answer.
 
 
 [#_Enum_QueryType]
-==== class Enum QueryType
+==== Enum QueryType
+
+[source,cpp]
+----
+class
+----
 
 
 

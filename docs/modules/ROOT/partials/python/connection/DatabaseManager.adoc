@@ -1,5 +1,10 @@
 [#_DatabaseManager]
-=== class DatabaseManager
+=== DatabaseManager
+
+[source,python]
+----
+class
+----
 
 *Package*: `typedb.api.connection.database`
 

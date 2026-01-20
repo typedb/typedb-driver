@@ -1,5 +1,10 @@
 [#_VariableId]
-=== class VariableId
+=== VariableId
+
+[source,typescript]
+----
+class
+----
 
 [source,typescript]
 ----

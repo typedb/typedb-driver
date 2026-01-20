@@ -1,5 +1,10 @@
 [#_Kind]
-=== class Kind
+=== Kind
+
+[source,python]
+----
+class
+----
 
 *Package*: `typedb.api.analyze.constraint`
 

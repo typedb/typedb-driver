@@ -2,7 +2,12 @@
 === transaction
 
 [#_Struct_Transaction]
-==== class Struct Transaction
+==== Struct Transaction
+
+[source,cpp]
+----
+class
+----
 
 
 

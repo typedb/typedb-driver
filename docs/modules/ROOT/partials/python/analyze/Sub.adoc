@@ -1,5 +1,10 @@
 [#_Sub]
-=== class Sub
+=== Sub
+
+[source,python]
+----
+class
+----
 
 *Package*: `typedb.api.analyze.constraint`
 

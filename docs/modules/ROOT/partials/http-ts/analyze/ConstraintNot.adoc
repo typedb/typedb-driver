@@ -1,5 +1,10 @@
 [#_ConstraintNot]
-==== class ConstraintNot
+==== ConstraintNot
+
+[source,typescript]
+----
+class
+----
 
 [caption=""]
 .Fields

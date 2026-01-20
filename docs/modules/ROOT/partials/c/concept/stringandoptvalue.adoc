@@ -2,7 +2,12 @@
 === stringandoptvalue
 
 [#_Struct_StringAndOptValue]
-==== class Struct StringAndOptValue
+==== Struct StringAndOptValue
+
+[source,cpp]
+----
+class
+----
 
 
 

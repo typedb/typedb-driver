@@ -1,5 +1,10 @@
 [#_enum_ConceptError]
-=== struct ConceptError
+=== ConceptError
+
+[source,rust]
+----
+enum
+----
 
 [caption=""]
 .Enum variants

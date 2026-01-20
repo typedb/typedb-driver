@@ -2,7 +2,12 @@
 === pipelinestage
 
 [#_Struct_PipelineStage]
-==== class Struct PipelineStage
+==== Struct PipelineStage
+
+[source,cpp]
+----
+class
+----
 
 
 

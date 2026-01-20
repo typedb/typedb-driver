@@ -1,5 +1,10 @@
 [#_Datetime]
-=== class Datetime
+=== Datetime
+
+[source,python]
+----
+class
+----
 
 *Package*: `typedb.common.datetime`
 

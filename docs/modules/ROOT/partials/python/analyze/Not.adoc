@@ -1,5 +1,10 @@
 [#_Not]
-=== class Not
+=== Not
+
+[source,python]
+----
+class
+----
 
 *Package*: `typedb.api.analyze.constraint`
 

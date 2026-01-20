@@ -1,5 +1,10 @@
 [#_enum_Leaf]
-=== struct Leaf
+=== Leaf
+
+[source,rust]
+----
+enum
+----
 
 [caption=""]
 .Enum variants

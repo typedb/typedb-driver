@@ -1,5 +1,10 @@
 [#_NamedRole]
-=== class NamedRole
+=== NamedRole
+
+[source,java]
+----
+class
+----
 
 *Package*: `com.typedb.driver.api.analyze`
 

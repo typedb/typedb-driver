@@ -1,5 +1,10 @@
 [#_FetchLeaf]
-=== class FetchLeaf
+=== FetchLeaf
+
+[source,python]
+----
+class
+----
 
 *Package*: `typedb.api.analyze.fetch`
 

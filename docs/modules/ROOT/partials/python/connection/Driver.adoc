@@ -1,5 +1,10 @@
 [#_Driver]
-=== class Driver
+=== Driver
+
+[source,python]
+----
+class
+----
 
 *Package*: `typedb.api.connection.driver`
 

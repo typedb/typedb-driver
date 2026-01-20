@@ -1,5 +1,10 @@
 [#_Isa]
-=== class Isa
+=== Isa
+
+[source,python]
+----
+class
+----
 
 *Package*: `typedb.api.analyze.constraint`
 

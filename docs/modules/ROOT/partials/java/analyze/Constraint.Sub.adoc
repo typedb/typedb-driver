@@ -1,5 +1,10 @@
 [#_Constraint_Sub]
-=== class Constraint.Sub
+=== Constraint.Sub
+
+[source,java]
+----
+class
+----
 
 *Package*: `com.typedb.driver.api.analyze`
 

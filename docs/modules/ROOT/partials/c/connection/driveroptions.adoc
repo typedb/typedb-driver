@@ -2,7 +2,12 @@
 === driveroptions
 
 [#_Struct_DriverOptions]
-==== class Struct DriverOptions
+==== Struct DriverOptions
+
+[source,cpp]
+----
+class
+----
 
 
 

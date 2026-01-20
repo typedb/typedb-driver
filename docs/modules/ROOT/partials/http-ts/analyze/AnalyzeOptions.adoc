@@ -1,5 +1,10 @@
 [#_AnalyzeOptions]
-=== class AnalyzeOptions
+=== AnalyzeOptions
+
+[source,typescript]
+----
+class
+----
 
 [caption=""]
 .Fields

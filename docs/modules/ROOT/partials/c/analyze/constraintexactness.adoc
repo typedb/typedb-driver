@@ -2,14 +2,24 @@
 === constraintexactness
 
 [#_Struct_ConstraintExactness]
-==== class Struct ConstraintExactness
+==== Struct ConstraintExactness
+
+[source,cpp]
+----
+class
+----
 
 
 
 Tells apart exact variants of constraints from the ones allowing subtype-polymorphism. e.g. ``isa!`` would be represented as an ``Constraint::Isa`` with its exactness field ``ConstraintExactness::Exact``.
 
 [#_Enum_ConstraintExactness]
-==== class Enum ConstraintExactness
+==== Enum ConstraintExactness
+
+[source,cpp]
+----
+class
+----
 
 
 

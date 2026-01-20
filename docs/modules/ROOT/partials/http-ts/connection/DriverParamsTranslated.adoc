@@ -1,5 +1,10 @@
 [#_DriverParamsTranslated]
-==== class DriverParamsTranslated
+==== DriverParamsTranslated
+
+[source,typescript]
+----
+class
+----
 
 [caption=""]
 .Fields

@@ -1,5 +1,10 @@
 [#_Fetch_FetchList]
-=== class Fetch.FetchList
+=== Fetch.FetchList
+
+[source,java]
+----
+class
+----
 
 *Package*: `com.typedb.driver.api.analyze`
 

@@ -1,5 +1,10 @@
 [#_PipelineStage_ReduceStage_ReduceAssignment]
-=== class PipelineStage.ReduceStage.ReduceAssignment
+=== PipelineStage.ReduceStage.ReduceAssignment
+
+[source,java]
+----
+class
+----
 
 *Package*: `com.typedb.driver.api.analyze`
 

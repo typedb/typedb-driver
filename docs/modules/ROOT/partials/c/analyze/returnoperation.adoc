@@ -2,7 +2,12 @@
 === returnoperation
 
 [#_Struct_ReturnOperation]
-==== class Struct ReturnOperation
+==== Struct ReturnOperation
+
+[source,cpp]
+----
+class
+----
 
 
 

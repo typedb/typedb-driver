@@ -1,5 +1,10 @@
 [#_AttributeType]
-=== class AttributeType
+=== AttributeType
+
+[source,python]
+----
+class
+----
 
 *Package*: `typedb.api.concept.type.attribute_type`
 

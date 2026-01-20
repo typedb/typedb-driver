@@ -2,7 +2,12 @@
 === database
 
 [#_Struct_Database]
-==== class Struct Database
+==== Struct Database
+
+[source,cpp]
+----
+class
+----
 
 
 

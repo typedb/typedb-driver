@@ -1,5 +1,10 @@
 [#_struct_ConceptDocumentHeader]
-=== enum ConceptDocumentHeader
+=== ConceptDocumentHeader
+
+[source,rust]
+----
+struct
+----
 
 *Implements traits:*
 

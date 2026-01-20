@@ -2,7 +2,12 @@
 === duration
 
 [#_Struct_Duration]
-==== class Struct Duration
+==== Struct Duration
+
+[source,cpp]
+----
+class
+----
 
 
 

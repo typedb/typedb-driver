@@ -1,5 +1,10 @@
 [#_enum_QueryType]
-=== struct QueryType
+=== QueryType
+
+[source,rust]
+----
+enum
+----
 
 This enum is used to specify the type of the query resulted in this answer.
 

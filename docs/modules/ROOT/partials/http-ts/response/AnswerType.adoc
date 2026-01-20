@@ -1,5 +1,10 @@
 [#_AnswerType]
-=== class AnswerType
+=== AnswerType
+
+[source,typescript]
+----
+class
+----
 
 [source,typescript]
 ----

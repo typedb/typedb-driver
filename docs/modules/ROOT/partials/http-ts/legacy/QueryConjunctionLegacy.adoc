@@ -1,5 +1,10 @@
 [#_QueryConjunctionLegacy]
-=== class QueryConjunctionLegacy
+=== QueryConjunctionLegacy
+
+[source,typescript]
+----
+class
+----
 
 [caption=""]
 .Fields

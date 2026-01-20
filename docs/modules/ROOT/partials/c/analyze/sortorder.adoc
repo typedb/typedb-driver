@@ -2,14 +2,24 @@
 === sortorder
 
 [#_Struct_SortOrder]
-==== class Struct SortOrder
+==== Struct SortOrder
+
+[source,cpp]
+----
+class
+----
 
 
 
 The order of a variable being sorted on in a ``PipelineStage::Sort``
 
 [#_Enum_SortOrder]
-==== class Enum SortOrder
+==== Enum SortOrder
+
+[source,cpp]
+----
+class
+----
 
 
 

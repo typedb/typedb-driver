@@ -1,5 +1,10 @@
 [#_Instance]
-=== class Instance
+=== Instance
+
+[source,python]
+----
+class
+----
 
 *Package*: `typedb.api.concept.instance.instance`
 

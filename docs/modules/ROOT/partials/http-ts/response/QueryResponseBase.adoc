@@ -1,5 +1,10 @@
 [#_QueryResponseBase]
-=== class QueryResponseBase
+=== QueryResponseBase
+
+[source,typescript]
+----
+class
+----
 
 [caption=""]
 .Fields

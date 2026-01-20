@@ -1,5 +1,10 @@
 [#_Constraint_Or]
-=== class Constraint.Or
+=== Constraint.Or
+
+[source,java]
+----
+class
+----
 
 *Package*: `com.typedb.driver.api.analyze`
 

@@ -1,5 +1,10 @@
 [#_enum_QueryAnswer]
-=== struct QueryAnswer
+=== QueryAnswer
+
+[source,rust]
+----
+enum
+----
 
 [caption=""]
 .Enum variants

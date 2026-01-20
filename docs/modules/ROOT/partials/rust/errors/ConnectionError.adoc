@@ -1,5 +1,10 @@
 [#_enum_ConnectionError]
-=== struct ConnectionError
+=== ConnectionError
+
+[source,rust]
+----
+enum
+----
 
 [caption=""]
 .Enum variants

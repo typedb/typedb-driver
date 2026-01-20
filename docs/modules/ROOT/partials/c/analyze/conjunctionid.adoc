@@ -2,7 +2,12 @@
 === conjunctionid
 
 [#_Struct_ConjunctionID]
-==== class Struct ConjunctionID
+==== Struct ConjunctionID
+
+[source,cpp]
+----
+class
+----
 
 
 

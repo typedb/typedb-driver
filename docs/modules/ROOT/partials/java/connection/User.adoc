@@ -1,5 +1,10 @@
 [#_User]
-=== class User
+=== User
+
+[source,java]
+----
+class
+----
 
 *Package*: `com.typedb.driver.api.user`
 

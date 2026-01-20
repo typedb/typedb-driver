@@ -2,7 +2,12 @@
 === sortvariable
 
 [#_Struct_SortVariable]
-==== class Struct SortVariable
+==== Struct SortVariable
+
+[source,cpp]
+----
+class
+----
 
 
 

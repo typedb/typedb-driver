@@ -2,7 +2,12 @@
 === useriterator
 
 [#_Struct_UserIterator]
-==== class Struct UserIterator
+==== Struct UserIterator
+
+[source,cpp]
+----
+class
+----
 
 
 

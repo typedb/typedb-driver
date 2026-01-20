@@ -1,5 +1,10 @@
 [#_Expression]
-=== class Expression
+=== Expression
+
+[source,python]
+----
+class
+----
 
 *Package*: `typedb.api.analyze.constraint`
 

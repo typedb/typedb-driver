@@ -1,5 +1,10 @@
 [#_VariableAnnotations]
-=== class VariableAnnotations
+=== VariableAnnotations
+
+[source,java]
+----
+class
+----
 
 *Package*: `com.typedb.driver.api.analyze`
 

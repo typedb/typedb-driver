@@ -1,5 +1,10 @@
 [#_Entity]
-=== class Entity
+=== Entity
+
+[source,python]
+----
+class
+----
 
 *Package*: `typedb.api.concept.instance.entity`
 

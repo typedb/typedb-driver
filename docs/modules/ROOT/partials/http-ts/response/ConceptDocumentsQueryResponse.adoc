@@ -1,5 +1,10 @@
 [#_ConceptDocumentsQueryResponse]
-=== class ConceptDocumentsQueryResponse
+=== ConceptDocumentsQueryResponse
+
+[source,typescript]
+----
+class
+----
 
 [caption=""]
 .Fields

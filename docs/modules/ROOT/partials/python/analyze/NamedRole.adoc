@@ -1,5 +1,10 @@
 [#_NamedRole]
-=== class NamedRole
+=== NamedRole
+
+[source,python]
+----
+class
+----
 
 *Package*: `typedb.api.analyze.named_role`
 

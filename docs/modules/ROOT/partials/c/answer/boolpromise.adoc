@@ -2,7 +2,12 @@
 === boolpromise
 
 [#_Struct_BoolPromise]
-==== class Struct BoolPromise
+==== Struct BoolPromise
+
+[source,cpp]
+----
+class
+----
 
 
 

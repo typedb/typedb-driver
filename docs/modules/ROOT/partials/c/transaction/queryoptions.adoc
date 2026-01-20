@@ -2,7 +2,12 @@
 === queryoptions
 
 [#_Struct_QueryOptions]
-==== class Struct QueryOptions
+==== Struct QueryOptions
+
+[source,cpp]
+----
+class
+----
 
 
 

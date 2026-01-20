@@ -2,7 +2,12 @@
 === concept
 
 [#_Struct_Concept]
-==== class Struct Concept
+==== Struct Concept
+
+[source,cpp]
+----
+class
+----
 
 
 

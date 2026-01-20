@@ -1,5 +1,10 @@
 [#_PipelineStage_OffsetStage]
-=== class PipelineStage.OffsetStage
+=== PipelineStage.OffsetStage
+
+[source,java]
+----
+class
+----
 
 *Package*: `com.typedb.driver.api.analyze`
 

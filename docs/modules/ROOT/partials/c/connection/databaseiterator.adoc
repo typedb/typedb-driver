@@ -2,7 +2,12 @@
 === databaseiterator
 
 [#_Struct_DatabaseIterator]
-==== class Struct DatabaseIterator
+==== Struct DatabaseIterator
+
+[source,cpp]
+----
+class
+----
 
 
 

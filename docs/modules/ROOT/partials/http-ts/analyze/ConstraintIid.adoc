@@ -1,5 +1,10 @@
 [#_ConstraintIid]
-==== class ConstraintIid
+==== ConstraintIid
+
+[source,typescript]
+----
+class
+----
 
 [caption=""]
 .Fields

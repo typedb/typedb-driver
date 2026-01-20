@@ -1,5 +1,10 @@
 [#_enum_SortOrder]
-=== struct SortOrder
+=== SortOrder
+
+[source,rust]
+----
+enum
+----
 
 The order of a variable being sorted on in a <code>PipelineStage::Sort</code>
 

@@ -1,5 +1,10 @@
 [#_TransactionOptions]
-=== class TransactionOptions
+=== TransactionOptions
+
+[source,typescript]
+----
+class
+----
 
 [caption=""]
 .Fields

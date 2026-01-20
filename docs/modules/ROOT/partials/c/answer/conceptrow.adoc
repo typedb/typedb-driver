@@ -2,7 +2,12 @@
 === conceptrow
 
 [#_Struct_ConceptRow]
-==== class Struct ConceptRow
+==== Struct ConceptRow
+
+[source,cpp]
+----
+class
+----
 
 
 

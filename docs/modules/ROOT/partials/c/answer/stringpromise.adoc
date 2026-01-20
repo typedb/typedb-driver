@@ -2,7 +2,12 @@
 === stringpromise
 
 [#_Struct_StringPromise]
-==== class Struct StringPromise
+==== Struct StringPromise
+
+[source,cpp]
+----
+class
+----
 
 
 

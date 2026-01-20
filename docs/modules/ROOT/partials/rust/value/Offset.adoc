@@ -1,5 +1,10 @@
 [#_enum_Offset]
-=== struct Offset
+=== Offset
+
+[source,rust]
+----
+enum
+----
 
 Offset for datetime-tz. Can be retrieved from an IANA Tz or a FixedOffset.
 

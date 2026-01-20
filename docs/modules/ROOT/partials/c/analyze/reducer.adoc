@@ -2,7 +2,12 @@
 === reducer
 
 [#_Struct_Reducer]
-==== class Struct Reducer
+==== Struct Reducer
+
+[source,cpp]
+----
+class
+----
 
 
 

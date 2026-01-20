@@ -1,5 +1,10 @@
 [#_ReturnOperation]
-=== class ReturnOperation
+=== ReturnOperation
+
+[source,python]
+----
+class
+----
 
 *Package*: `typedb.api.analyze.function`
 

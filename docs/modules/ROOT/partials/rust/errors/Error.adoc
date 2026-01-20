@@ -1,5 +1,10 @@
 [#_enum_Error]
-=== struct Error
+=== Error
+
+[source,rust]
+----
+enum
+----
 
 Represents errors encountered during operation.
 

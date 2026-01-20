@@ -1,5 +1,10 @@
 [#_ConstraintRelates]
-==== class ConstraintRelates
+==== ConstraintRelates
+
+[source,typescript]
+----
+class
+----
 
 [caption=""]
 .Fields

@@ -1,5 +1,10 @@
 [#_Promise]
-=== class Promise
+=== Promise
+
+[source,python]
+----
+class
+----
 
 *Package*: `typedb.common.promise`
 

@@ -1,5 +1,10 @@
 [#_QueryOptions]
-=== class QueryOptions
+=== QueryOptions
+
+[source,typescript]
+----
+class
+----
 
 [caption=""]
 .Fields

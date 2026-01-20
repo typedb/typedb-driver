@@ -1,5 +1,10 @@
 [#_enum_ConceptCategory]
-=== struct ConceptCategory
+=== ConceptCategory
+
+[source,rust]
+----
+enum
+----
 
 [caption=""]
 .Enum variants

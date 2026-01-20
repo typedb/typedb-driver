@@ -1,5 +1,10 @@
 [#_TransactionOpenResponse]
-=== class TransactionOpenResponse
+=== TransactionOpenResponse
+
+[source,typescript]
+----
+class
+----
 
 [caption=""]
 .Fields

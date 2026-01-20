@@ -1,5 +1,10 @@
 [#_DeleteStage]
-=== class DeleteStage
+=== DeleteStage
+
+[source,python]
+----
+class
+----
 
 *Package*: `typedb.api.analyze.pipeline_stage`
 

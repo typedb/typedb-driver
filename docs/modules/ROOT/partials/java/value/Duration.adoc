@@ -1,5 +1,10 @@
 [#_Duration]
-=== class Duration
+=== Duration
+
+[source,java]
+----
+class
+----
 
 *Package*: `com.typedb.driver.common`
 

@@ -1,5 +1,10 @@
 [#_ConstraintPlays]
-==== class ConstraintPlays
+==== ConstraintPlays
+
+[source,typescript]
+----
+class
+----
 
 [caption=""]
 .Fields

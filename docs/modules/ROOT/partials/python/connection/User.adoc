@@ -1,5 +1,10 @@
 [#_User]
-=== class User
+=== User
+
+[source,python]
+----
+class
+----
 
 *Package*: `typedb.api.user.user`
 

@@ -1,5 +1,10 @@
 [#_OkQueryAnswer]
-=== class OkQueryAnswer
+=== OkQueryAnswer
+
+[source,python]
+----
+class
+----
 
 *Package*: `typedb.api.answer.ok_query_answer`
 

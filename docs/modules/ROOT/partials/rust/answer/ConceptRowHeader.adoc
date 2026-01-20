@@ -1,5 +1,10 @@
 [#_struct_ConceptRowHeader]
-=== enum ConceptRowHeader
+=== ConceptRowHeader
+
+[source,rust]
+----
+struct
+----
 
 *Implements traits:*
 

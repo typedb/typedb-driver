@@ -1,5 +1,10 @@
 [#_FunctionReturnStructure]
-=== class FunctionReturnStructure
+=== FunctionReturnStructure
+
+[source,typescript]
+----
+class
+----
 
 [source,typescript]
 ----

@@ -1,5 +1,10 @@
 [#_struct_ConstraintSpan]
-=== enum ConstraintSpan
+=== ConstraintSpan
+
+[source,rust]
+----
+struct
+----
 
 *Implements traits:*
 

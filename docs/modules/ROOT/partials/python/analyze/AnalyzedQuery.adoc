@@ -1,5 +1,10 @@
 [#_AnalyzedQuery]
-=== class AnalyzedQuery
+=== AnalyzedQuery
+
+[source,python]
+----
+class
+----
 
 *Package*: `typedb.api.analyze.analyzed_query`
 

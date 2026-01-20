@@ -2,7 +2,12 @@
 === queryanswerpromise
 
 [#_Struct_QueryAnswerPromise]
-==== class Struct QueryAnswerPromise
+==== Struct QueryAnswerPromise
+
+[source,cpp]
+----
+class
+----
 
 
 

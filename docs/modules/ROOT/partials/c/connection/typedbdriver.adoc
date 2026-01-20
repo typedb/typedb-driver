@@ -2,7 +2,12 @@
 === typedbdriver
 
 [#_Struct_TypeDBDriver]
-==== class Struct TypeDBDriver
+==== Struct TypeDBDriver
+
+[source,cpp]
+----
+class
+----
 
 
 

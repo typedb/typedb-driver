@@ -1,5 +1,10 @@
 [#_enum_Kind]
-=== struct Kind
+=== Kind
+
+[source,rust]
+----
+enum
+----
 
 Kind represents the base of a defined type to describe its capabilities. For example, “define entity person;” defines a type “person” of a kind “entity”.
 

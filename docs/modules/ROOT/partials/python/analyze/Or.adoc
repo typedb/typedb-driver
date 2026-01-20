@@ -1,5 +1,10 @@
 [#_Or]
-=== class Or
+=== Or
+
+[source,python]
+----
+class
+----
 
 *Package*: `typedb.api.analyze.constraint`
 

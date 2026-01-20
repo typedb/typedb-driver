@@ -1,5 +1,10 @@
 [#_struct_RoleType]
-=== enum RoleType
+=== RoleType
+
+[source,rust]
+----
+struct
+----
 
 *Implements traits:*
 

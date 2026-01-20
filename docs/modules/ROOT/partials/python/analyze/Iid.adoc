@@ -1,5 +1,10 @@
 [#_Iid]
-=== class Iid
+=== Iid
+
+[source,python]
+----
+class
+----
 
 *Package*: `typedb.api.analyze.constraint`
 

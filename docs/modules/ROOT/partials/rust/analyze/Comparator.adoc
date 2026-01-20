@@ -1,5 +1,10 @@
 [#_enum_Comparator]
-=== struct Comparator
+=== Comparator
+
+[source,rust]
+----
+enum
+----
 
 A representation of the comparator used in a comparison constraint.
 

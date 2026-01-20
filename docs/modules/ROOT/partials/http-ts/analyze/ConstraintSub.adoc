@@ -1,5 +1,10 @@
 [#_ConstraintSub]
-==== class ConstraintSub
+==== ConstraintSub
+
+[source,typescript]
+----
+class
+----
 
 [caption=""]
 .Fields

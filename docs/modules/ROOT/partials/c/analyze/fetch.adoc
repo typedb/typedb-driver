@@ -2,7 +2,12 @@
 === fetch
 
 [#_Struct_Fetch]
-==== class Struct Fetch
+==== Struct Fetch
+
+[source,cpp]
+----
+class
+----
 
 
 

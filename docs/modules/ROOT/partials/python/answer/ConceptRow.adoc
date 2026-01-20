@@ -1,5 +1,10 @@
 [#_ConceptRow]
-=== class ConceptRow
+=== ConceptRow
+
+[source,python]
+----
+class
+----
 
 *Package*: `typedb.api.answer.concept_row`
 

@@ -1,5 +1,10 @@
 [#_struct_UserManager]
-=== enum UserManager
+=== UserManager
+
+[source,rust]
+----
+struct
+----
 
 *Implements traits:*
 

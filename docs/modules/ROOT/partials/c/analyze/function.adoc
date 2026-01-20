@@ -2,7 +2,12 @@
 === function
 
 [#_Struct_Function]
-==== class Struct Function
+==== Struct Function
+
+[source,cpp]
+----
+class
+----
 
 
 

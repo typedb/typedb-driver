@@ -1,5 +1,10 @@
 [#_enum_PipelineStage]
-=== struct PipelineStage
+=== PipelineStage
+
+[source,rust]
+----
+enum
+----
 
 Representation of a stage in a <code>Pipeline</code>.
 

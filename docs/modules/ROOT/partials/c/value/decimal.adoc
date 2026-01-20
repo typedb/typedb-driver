@@ -2,7 +2,12 @@
 === decimal
 
 [#_Struct_Decimal]
-==== class Struct Decimal
+==== Struct Decimal
+
+[source,cpp]
+----
+class
+----
 
 
 

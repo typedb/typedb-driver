@@ -2,7 +2,12 @@
 === variable
 
 [#_Struct_Variable]
-==== class Struct Variable
+==== Struct Variable
+
+[source,cpp]
+----
+class
+----
 
 
 

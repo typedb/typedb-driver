@@ -1,5 +1,10 @@
 [#_TransactionType]
-=== class TransactionType
+=== TransactionType
+
+[source,python]
+----
+class
+----
 
 *Package*: `typedb.api.connection.transaction`
 

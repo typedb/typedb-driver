@@ -1,5 +1,10 @@
 [#_ApiResponse_OK_RES]
-=== class ApiResponse<OK_RES>
+=== ApiResponse<OK_RES>
+
+[source,typescript]
+----
+class
+----
 
 [source,typescript]
 ----

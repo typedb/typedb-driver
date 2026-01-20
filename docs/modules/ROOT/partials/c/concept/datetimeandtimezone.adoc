@@ -2,7 +2,12 @@
 === datetimeandtimezone
 
 [#_Struct_DatetimeAndTimeZone]
-==== class Struct DatetimeAndTimeZone
+==== Struct DatetimeAndTimeZone
+
+[source,cpp]
+----
+class
+----
 
 
 

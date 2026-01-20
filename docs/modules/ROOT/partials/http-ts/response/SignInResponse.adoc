@@ -1,5 +1,10 @@
 [#_SignInResponse]
-=== class SignInResponse
+=== SignInResponse
+
+[source,typescript]
+----
+class
+----
 
 [caption=""]
 .Fields

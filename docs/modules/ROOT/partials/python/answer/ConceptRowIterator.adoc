@@ -1,5 +1,10 @@
 [#_ConceptRowIterator]
-=== class ConceptRowIterator
+=== ConceptRowIterator
+
+[source,python]
+----
+class
+----
 
 *Package*: `typedb.api.answer.concept_row_iterator`
 

@@ -1,5 +1,10 @@
 [#_ConstraintExpressionLegacy]
-==== class ConstraintExpressionLegacy
+==== ConstraintExpressionLegacy
+
+[source,typescript]
+----
+class
+----
 
 [caption=""]
 .Fields

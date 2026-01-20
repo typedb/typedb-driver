@@ -1,5 +1,10 @@
 [#_Concept]
-=== class Concept
+=== Concept
+
+[source,python]
+----
+class
+----
 
 *Package*: `typedb.api.concept.concept`
 

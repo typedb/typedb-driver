@@ -1,5 +1,10 @@
 [#_struct_AnalyzedQuery]
-=== enum AnalyzedQuery
+=== AnalyzedQuery
+
+[source,rust]
+----
+struct
+----
 
 *Implements traits:*
 

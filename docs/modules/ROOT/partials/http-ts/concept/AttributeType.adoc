@@ -1,5 +1,10 @@
 [#_AttributeType]
-=== class AttributeType
+=== AttributeType
+
+[source,typescript]
+----
+class
+----
 
 [caption=""]
 .Fields

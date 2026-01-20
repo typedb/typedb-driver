@@ -1,5 +1,10 @@
 [#_ConstraintIsa]
-==== class ConstraintIsa
+==== ConstraintIsa
+
+[source,typescript]
+----
+class
+----
 
 [caption=""]
 .Fields

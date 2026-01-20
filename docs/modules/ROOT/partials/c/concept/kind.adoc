@@ -2,14 +2,24 @@
 === kind
 
 [#_Struct_Kind]
-==== class Struct Kind
+==== Struct Kind
+
+[source,cpp]
+----
+class
+----
 
 
 
 Kind represents the base of a defined type to describe its capabilities. For example, "define entity person;" defines a type "person" of a kind "entity".
 
 [#_Enum_Kind]
-==== class Enum Kind
+==== Enum Kind
+
+[source,cpp]
+----
+class
+----
 
 
 

@@ -1,5 +1,10 @@
 [#_ConstraintVertex]
-=== class ConstraintVertex
+=== ConstraintVertex
+
+[source,python]
+----
+class
+----
 
 *Package*: `typedb.api.analyze.constraint_vertex`
 

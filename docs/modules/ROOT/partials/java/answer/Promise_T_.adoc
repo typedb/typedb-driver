@@ -1,5 +1,10 @@
 [#_Promise_T]
-=== class Promise<T>
+=== Promise<T>
+
+[source,java]
+----
+class
+----
 
 *Package*: `com.typedb.driver.common`
 

@@ -1,5 +1,10 @@
 [#_struct_DurationParseError]
-=== enum DurationParseError
+=== DurationParseError
+
+[source,rust]
+----
+struct
+----
 
 *Implements traits:*
 

@@ -1,5 +1,10 @@
 [#_UpdateStage]
-=== class UpdateStage
+=== UpdateStage
+
+[source,python]
+----
+class
+----
 
 *Package*: `typedb.api.analyze.pipeline_stage`
 

@@ -1,5 +1,10 @@
 [#_ConstraintTry]
-==== class ConstraintTry
+==== ConstraintTry
+
+[source,typescript]
+----
+class
+----
 
 [caption=""]
 .Fields

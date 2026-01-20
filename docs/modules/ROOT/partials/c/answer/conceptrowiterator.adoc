@@ -2,7 +2,12 @@
 === conceptrowiterator
 
 [#_Struct_ConceptRowIterator]
-==== class Struct ConceptRowIterator
+==== Struct ConceptRowIterator
+
+[source,cpp]
+----
+class
+----
 
 
 

@@ -1,5 +1,10 @@
 [#_legacyStaticFunctions]
-=== class Static Functions
+=== Static Functions
+
+[source,typescript]
+----
+class
+----
 
 // tag::methods[]
 [#_isQueryResponseLegacy_isQueryResponseLegacy_res_ConceptRowsQueryResponse]

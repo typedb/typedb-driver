@@ -1,5 +1,10 @@
 [#_SortVariable]
-=== class SortVariable
+=== SortVariable
+
+[source,python]
+----
+class
+----
 
 *Package*: `typedb.api.analyze.pipeline_stage.SortStage`
 

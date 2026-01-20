@@ -65,9 +65,9 @@ data class Class(
         return when (language) {
             "rust" -> {
                 if (this.enumConstants.isNotEmpty()) {
-                    "struct"
-                } else {
                     "enum"
+                } else {
+                    "struct"
                 }
             }
             else -> "class"
@@ -78,7 +78,8 @@ data class Class(
         val builder = AsciiDocBuilder()
         var result = ""
         result += builder.anchor(this.anchor ?: replaceSymbolsForAnchor(this.name))
-        result += builder.header(headerLevel, this.nameDescriptor(language) + " " + this.name)
+        result += builder.header(headerLevel,  this.name)
+        result += builder.codeBlock(this.nameDescriptor(language), language)
 
         this.packagePath?.let { result += "*Package*: `$it`\n\n" }
 

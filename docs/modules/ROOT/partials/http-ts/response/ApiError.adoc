@@ -1,5 +1,10 @@
 [#_ApiError]
-=== class ApiError
+=== ApiError
+
+[source,typescript]
+----
+class
+----
 
 [caption=""]
 .Fields

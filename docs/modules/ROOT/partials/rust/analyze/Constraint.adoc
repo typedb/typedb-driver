@@ -1,5 +1,10 @@
 [#_enum_Constraint]
-=== struct Constraint
+=== Constraint
+
+[source,rust]
+----
+enum
+----
 
 A representation of a TypeQL constraint.
 

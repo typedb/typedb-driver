@@ -2,7 +2,12 @@
 === datetimeinnanos
 
 [#_Struct_DatetimeInNanos]
-==== class Struct DatetimeInNanos
+==== Struct DatetimeInNanos
+
+[source,cpp]
+----
+class
+----
 
 
 

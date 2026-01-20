@@ -1,5 +1,10 @@
 [#_ValueType]
-=== class ValueType
+=== ValueType
+
+[source,typescript]
+----
+class
+----
 
 [source,typescript]
 ----

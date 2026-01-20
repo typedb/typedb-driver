@@ -1,5 +1,10 @@
 [#_Relation]
-=== class Relation
+=== Relation
+
+[source,typescript]
+----
+class
+----
 
 [caption=""]
 .Fields

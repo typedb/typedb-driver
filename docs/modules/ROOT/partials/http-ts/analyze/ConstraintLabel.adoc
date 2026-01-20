@@ -1,5 +1,10 @@
 [#_ConstraintLabel]
-==== class ConstraintLabel
+==== ConstraintLabel
+
+[source,typescript]
+----
+class
+----
 
 [caption=""]
 .Fields

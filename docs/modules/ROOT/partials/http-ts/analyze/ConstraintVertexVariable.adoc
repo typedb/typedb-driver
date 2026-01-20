@@ -1,5 +1,10 @@
 [#_ConstraintVertexVariable]
-==== class ConstraintVertexVariable
+==== ConstraintVertexVariable
+
+[source,typescript]
+----
+class
+----
 
 [caption=""]
 .Fields

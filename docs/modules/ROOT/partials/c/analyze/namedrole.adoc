@@ -2,7 +2,12 @@
 === namedrole
 
 [#_Struct_NamedRole]
-==== class Struct NamedRole
+==== Struct NamedRole
+
+[source,cpp]
+----
+class
+----
 
 
 

@@ -1,5 +1,10 @@
 [#_ConceptRow]
-=== class ConceptRow
+=== ConceptRow
+
+[source,typescript]
+----
+class
+----
 
 [caption=""]
 .Fields

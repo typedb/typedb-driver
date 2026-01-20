@@ -1,5 +1,10 @@
 [#_AnalyzeResponse]
-=== class AnalyzeResponse
+=== AnalyzeResponse
+
+[source,typescript]
+----
+class
+----
 
 [caption=""]
 .Fields

@@ -1,5 +1,10 @@
 [#_struct_User]
-=== enum User
+=== User
+
+[source,rust]
+----
+struct
+----
 
 *Implements traits:*
 

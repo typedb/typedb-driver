@@ -1,5 +1,10 @@
 [#_struct_ServerError]
-=== enum ServerError
+=== ServerError
+
+[source,rust]
+----
+struct
+----
 
 *Implements traits:*
 

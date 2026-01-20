@@ -2,7 +2,12 @@
 === stringiterator
 
 [#_Struct_StringIterator]
-==== class Struct StringIterator
+==== Struct StringIterator
+
+[source,cpp]
+----
+class
+----
 
 
 

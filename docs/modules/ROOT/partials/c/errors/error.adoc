@@ -2,7 +2,12 @@
 === error
 
 [#_Struct_Error]
-==== class Struct Error
+==== Struct Error
+
+[source,cpp]
+----
+class
+----
 
 
 

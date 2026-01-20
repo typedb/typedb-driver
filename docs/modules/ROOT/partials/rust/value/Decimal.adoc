@@ -1,5 +1,10 @@
 [#_struct_Decimal]
-=== enum Decimal
+=== Decimal
+
+[source,rust]
+----
+struct
+----
 
 *Implements traits:*
 

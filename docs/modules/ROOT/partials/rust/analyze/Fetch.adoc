@@ -1,5 +1,10 @@
 [#_enum_Fetch]
-=== struct Fetch
+=== Fetch
+
+[source,rust]
+----
+enum
+----
 
 A representation of the ‘fetch’ stage of a query
 

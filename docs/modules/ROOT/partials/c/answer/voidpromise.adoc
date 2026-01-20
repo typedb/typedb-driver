@@ -2,7 +2,12 @@
 === voidpromise
 
 [#_Struct_VoidPromise]
-==== class Struct VoidPromise
+==== Struct VoidPromise
+
+[source,cpp]
+----
+class
+----
 
 
 

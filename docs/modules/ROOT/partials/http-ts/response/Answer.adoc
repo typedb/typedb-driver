@@ -1,5 +1,10 @@
 [#_Answer]
-=== class Answer
+=== Answer
+
+[source,typescript]
+----
+class
+----
 
 [source,typescript]
 ----

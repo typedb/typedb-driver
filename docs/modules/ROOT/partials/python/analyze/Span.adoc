@@ -1,5 +1,10 @@
 [#_Span]
-=== class Span
+=== Span
+
+[source,python]
+----
+class
+----
 
 *Package*: `typedb.api.analyze.constraint`
 

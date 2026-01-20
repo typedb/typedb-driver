@@ -1,5 +1,10 @@
 [#_struct_Attribute]
-=== enum Attribute
+=== Attribute
+
+[source,rust]
+----
+struct
+----
 
 *Implements traits:*
 

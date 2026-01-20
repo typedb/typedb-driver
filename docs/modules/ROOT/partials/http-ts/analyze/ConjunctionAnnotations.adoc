@@ -1,5 +1,10 @@
 [#_ConjunctionAnnotations]
-=== class ConjunctionAnnotations
+=== ConjunctionAnnotations
+
+[source,typescript]
+----
+class
+----
 
 [caption=""]
 .Fields

@@ -1,5 +1,10 @@
 [#_TypeKind]
-=== class TypeKind
+=== TypeKind
+
+[source,typescript]
+----
+class
+----
 
 [source,typescript]
 ----

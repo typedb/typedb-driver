@@ -1,5 +1,10 @@
 [#_struct_RelationType]
-=== enum RelationType
+=== RelationType
+
+[source,rust]
+----
+struct
+----
 
 *Implements traits:*
 

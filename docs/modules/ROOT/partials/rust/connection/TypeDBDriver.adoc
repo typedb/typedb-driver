@@ -1,5 +1,10 @@
 [#_struct_TypeDBDriver]
-=== enum TypeDBDriver
+=== TypeDBDriver
+
+[source,rust]
+----
+struct
+----
 
 *Implements traits:*
 

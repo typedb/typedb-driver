@@ -1,5 +1,10 @@
 [#_ConstraintAny]
-==== class ConstraintAny
+==== ConstraintAny
+
+[source,typescript]
+----
+class
+----
 
 [source,typescript]
 ----

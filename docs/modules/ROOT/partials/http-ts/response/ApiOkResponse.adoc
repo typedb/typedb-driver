@@ -1,5 +1,10 @@
 [#_ApiOkResponse_OK_RES]
-=== class ApiOkResponse<OK_RES>
+=== ApiOkResponse<OK_RES>
+
+[source,typescript]
+----
+class
+----
 
 [caption=""]
 .Fields

@@ -2,7 +2,12 @@
 === analyzedquery
 
 [#_Struct_AnalyzedQuery]
-==== class Struct AnalyzedQuery
+==== Struct AnalyzedQuery
+
+[source,cpp]
+----
+class
+----
 
 
 

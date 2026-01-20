@@ -1,5 +1,10 @@
 [#_RelationType]
-=== class RelationType
+=== RelationType
+
+[source,python]
+----
+class
+----
 
 *Package*: `typedb.api.concept.type.relation_type`
 
