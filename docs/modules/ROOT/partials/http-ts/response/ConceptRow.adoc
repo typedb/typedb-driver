@@ -1,6 +1,8 @@
 [#_ConceptRow]
 === ConceptRow
 
+`class`
+
 [caption=""]
 .Fields
 // tag::properties[]

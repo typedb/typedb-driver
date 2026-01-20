@@ -1,6 +1,8 @@
 [#_struct_AnalyzedQuery]
 === AnalyzedQuery
 
+`struct`
+
 *Implements traits:*
 
 * `Clone`

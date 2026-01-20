@@ -1,6 +1,8 @@
 [#_EntityType]
 === EntityType
 
+`class`
+
 [caption=""]
 .Fields
 // tag::properties[]

@@ -1,6 +1,8 @@
 [#_ConstraintLinksLegacy]
 ==== ConstraintLinksLegacy
 
+`class`
+
 [caption=""]
 .Fields
 // tag::properties[]

@@ -22,7 +22,7 @@ def sphinx_to_adoc(name, data, docs_dirs):
     args = ["$(location %s)" % target for target in data] + [
         "--output",
         "docs/modules/ROOT/partials/python",
-    ] + ["--dir=%s=%s" % (filename, docs_dirs[filename]) for filename in docs_dirs]
+    ] + ["--dir=%s=\"%s\"" % (filename, docs_dirs[filename]) for filename in docs_dirs]
     kt_jvm_binary(
         name = name,
         srcs = [

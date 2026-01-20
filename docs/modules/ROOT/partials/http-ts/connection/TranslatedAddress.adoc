@@ -1,6 +1,8 @@
 [#_TranslatedAddress]
 === TranslatedAddress
 
+`class`
+
 [caption=""]
 .Fields
 // tag::properties[]

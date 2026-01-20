@@ -1,6 +1,8 @@
 [#_JSON]
 === JSON
 
+`class`
+
 *Package*: `com.typedb.driver.api.answer`
 
 // tag::methods[]

@@ -4,6 +4,8 @@
 [#_Struct_StringIterator]
 ==== Struct StringIterator
 
+`class`
+
 
 
 Iterator over the strings in the result of a request or a TypeQL Fetch query.

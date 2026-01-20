@@ -1,6 +1,8 @@
 [#_AnswerType]
 === AnswerType
 
+`class`
+
 [source,typescript]
 ----
 AnswerType: "ok" | "conceptRows" | "conceptDocuments"

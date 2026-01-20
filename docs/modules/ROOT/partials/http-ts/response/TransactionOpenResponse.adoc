@@ -1,6 +1,8 @@
 [#_TransactionOpenResponse]
 === TransactionOpenResponse
 
+`class`
+
 [caption=""]
 .Fields
 // tag::properties[]

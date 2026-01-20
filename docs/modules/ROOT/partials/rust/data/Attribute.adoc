@@ -1,6 +1,8 @@
 [#_struct_Attribute]
 === Attribute
 
+`struct`
+
 *Implements traits:*
 
 * `Clone`

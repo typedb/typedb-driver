@@ -4,6 +4,8 @@
 [#_Struct_TransactionType]
 ==== Struct TransactionType
 
+`class`
+
 
 
 This enum is used to specify the type of transaction.
@@ -11,6 +13,8 @@ This enum is used to specify the type of transaction.
 
 [#_Enum_TransactionType]
 ==== Enum TransactionType
+
+`class`
 
 
 

@@ -4,6 +4,8 @@
 [#_Struct_Fetch]
 ==== Struct Fetch
 
+`class`
+
 
 
 A representation of the 'fetch' stage of a query

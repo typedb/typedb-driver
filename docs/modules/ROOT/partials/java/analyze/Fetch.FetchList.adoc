@@ -1,6 +1,8 @@
 [#_Fetch_FetchList]
 === Fetch.FetchList
 
+`class`
+
 *Package*: `com.typedb.driver.api.analyze`
 
 A ``List`` of ``Fetch`` documents.

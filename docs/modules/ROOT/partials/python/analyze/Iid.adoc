@@ -1,6 +1,8 @@
 [#_Iid]
 === Iid
 
+`class`
+
 *Package*: `typedb.api.analyze.constraint`
 
 *Supertypes:*

@@ -4,12 +4,16 @@
 [#_Struct_Kind]
 ==== Struct Kind
 
+`class`
+
 
 
 Kind represents the base of a defined type to describe its capabilities. For example, "define entity person;" defines a type "person" of a kind "entity".
 
 [#_Enum_Kind]
 ==== Enum Kind
+
+`class`
 
 
 

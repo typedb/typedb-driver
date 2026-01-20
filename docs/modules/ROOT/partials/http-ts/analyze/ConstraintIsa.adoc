@@ -1,6 +1,8 @@
 [#_ConstraintIsa]
 ==== ConstraintIsa
 
+`class`
+
 [caption=""]
 .Fields
 // tag::properties[]

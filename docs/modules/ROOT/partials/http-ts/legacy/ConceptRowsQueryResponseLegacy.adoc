@@ -1,6 +1,8 @@
 [#_ConceptRowsQueryResponseLegacy]
 === ConceptRowsQueryResponseLegacy
 
+`class`
+
 [caption=""]
 .Fields
 // tag::properties[]

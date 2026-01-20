@@ -1,6 +1,8 @@
 [#_enum_PipelineStage]
 === PipelineStage
 
+`enum`
+
 Representation of a stage in a <code>Pipeline</code>.
 
 [caption=""]

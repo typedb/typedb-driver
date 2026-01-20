@@ -1,6 +1,8 @@
 [#_Fetch_FetchObject]
 === Fetch.FetchObject
 
+`class`
+
 *Package*: `com.typedb.driver.api.analyze`
 
 A mapping of string keys to ``Fetch`` documents.

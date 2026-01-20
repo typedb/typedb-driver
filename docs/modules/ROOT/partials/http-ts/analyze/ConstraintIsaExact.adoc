@@ -1,6 +1,8 @@
 [#_ConstraintIsaExact]
 ==== ConstraintIsaExact
 
+`class`
+
 [caption=""]
 .Fields
 // tag::properties[]

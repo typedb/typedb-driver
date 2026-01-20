@@ -1,6 +1,8 @@
 [#_ConstraintAny]
 ==== ConstraintAny
 
+`class`
+
 [source,typescript]
 ----
 ConstraintAny:

@@ -1,6 +1,8 @@
 [#_UpdateStage]
 === UpdateStage
 
+`class`
+
 *Package*: `typedb.api.analyze.pipeline_stage`
 
 *Supertypes:*

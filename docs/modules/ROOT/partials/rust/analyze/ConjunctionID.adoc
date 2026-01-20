@@ -1,6 +1,8 @@
 [#_struct_ConjunctionID]
 === ConjunctionID
 
+`struct`
+
 *Implements traits:*
 
 * `Clone`

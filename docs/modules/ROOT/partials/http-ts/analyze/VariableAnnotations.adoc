@@ -1,6 +1,8 @@
 [#_VariableAnnotations]
 === VariableAnnotations
 
+`class`
+
 [source,typescript]
 ----
 VariableAnnotations: { isOptional: boolean } & (

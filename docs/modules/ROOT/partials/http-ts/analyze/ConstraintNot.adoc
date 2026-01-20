@@ -1,6 +1,8 @@
 [#_ConstraintNot]
 ==== ConstraintNot
 
+`class`
+
 [caption=""]
 .Fields
 // tag::properties[]

@@ -4,12 +4,16 @@
 [#_Struct_Comparator]
 ==== Struct Comparator
 
+`class`
+
 
 
 A representation of the comparator used in a comparison constraint.
 
 [#_Enum_Comparator]
 ==== Enum Comparator
+
+`class`
 
 
 

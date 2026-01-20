@@ -1,6 +1,8 @@
 [#_Constraint_Has]
 === Constraint.Has
 
+`class`
+
 *Package*: `com.typedb.driver.api.analyze`
 
 *Superinterfaces:*

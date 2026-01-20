@@ -1,6 +1,8 @@
 [#_Value]
 === Value
 
+`class`
+
 [caption=""]
 .Fields
 // tag::properties[]

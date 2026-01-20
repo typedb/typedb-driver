@@ -1,6 +1,8 @@
 [#_struct_UserManager]
 === UserManager
 
+`struct`
+
 *Implements traits:*
 
 * `Debug`

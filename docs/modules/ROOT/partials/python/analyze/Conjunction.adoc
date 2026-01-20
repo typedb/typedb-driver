@@ -1,6 +1,8 @@
 [#_Conjunction]
 === Conjunction
 
+`class`
+
 *Package*: `typedb.api.analyze.conjunction`
 
 A representation of the constraints involved in the query, and types inferred for each variable.

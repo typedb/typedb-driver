@@ -1,6 +1,8 @@
 [#_AnalyzedQuery]
 === AnalyzedQuery
 
+`class`
+
 *Package*: `com.typedb.driver.api.analyze`
 
 // tag::methods[]

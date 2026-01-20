@@ -1,6 +1,8 @@
 [#_struct_Transaction]
 === Transaction
 
+`struct`
+
 *Implements traits:*
 
 * `Debug`

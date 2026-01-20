@@ -1,6 +1,8 @@
 [#_QueryConjunctionLegacy]
 === QueryConjunctionLegacy
 
+`class`
+
 [caption=""]
 .Fields
 // tag::properties[]

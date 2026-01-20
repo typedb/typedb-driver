@@ -1,6 +1,8 @@
 [#_enum_Concept]
 === Concept
 
+`enum`
+
 The fundamental TypeQL object.
 
 [caption=""]

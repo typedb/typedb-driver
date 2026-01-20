@@ -1,6 +1,8 @@
 [#_QueryStructureLegacy]
 === QueryStructureLegacy
 
+`class`
+
 [caption=""]
 .Fields
 // tag::properties[]

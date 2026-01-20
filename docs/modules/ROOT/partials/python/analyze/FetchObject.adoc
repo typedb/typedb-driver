@@ -1,6 +1,8 @@
 [#_FetchObject]
 === FetchObject
 
+`class`
+
 *Package*: `typedb.api.analyze.fetch`
 
 *Supertypes:*

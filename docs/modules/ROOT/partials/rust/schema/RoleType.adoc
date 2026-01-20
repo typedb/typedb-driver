@@ -1,6 +1,8 @@
 [#_struct_RoleType]
 === RoleType
 
+`struct`
+
 *Implements traits:*
 
 * `Clone`

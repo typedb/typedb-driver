@@ -4,6 +4,8 @@
 [#_Struct_BoolPromise]
 ==== Struct BoolPromise
 
+`class`
+
 
 
 Promise object representing the result of an asynchronous operation. Use bool_promise_resolve(BoolPromise*) to wait for and retrieve the resulting boolean value.

@@ -1,6 +1,8 @@
 [#_Isa]
 === Isa
 
+`class`
+
 *Package*: `typedb.api.analyze.constraint`
 
 *Supertypes:*

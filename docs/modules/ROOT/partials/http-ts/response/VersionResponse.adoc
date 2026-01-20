@@ -1,6 +1,8 @@
 [#_VersionResponse]
 === VersionResponse
 
+`class`
+
 [caption=""]
 .Fields
 // tag::properties[]

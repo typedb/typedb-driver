@@ -1,6 +1,8 @@
 [#_struct_Decimal]
 === Decimal
 
+`struct`
+
 *Implements traits:*
 
 * `Add`

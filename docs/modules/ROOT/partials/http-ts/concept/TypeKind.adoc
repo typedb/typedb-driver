@@ -1,6 +1,8 @@
 [#_TypeKind]
 === TypeKind
 
+`class`
+
 [source,typescript]
 ----
 TypeKind: "entityType" | "relationType" | "attributeType" | "roleType"

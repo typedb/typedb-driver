@@ -1,6 +1,8 @@
 [#_enum_ValueType]
 === ValueType
 
+`enum`
+
 Represents the type of primitive value is held by a Value or Attribute.
 
 [caption=""]

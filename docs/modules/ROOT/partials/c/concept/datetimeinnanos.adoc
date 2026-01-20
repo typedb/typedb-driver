@@ -4,6 +4,8 @@
 [#_Struct_DatetimeInNanos]
 ==== Struct DatetimeInNanos
 
+`class`
+
 
 
 A ``DatetimeInNanos`` used to represent datetime as a pair of seconds part and a number of nanoseconds since the last seconds boundary.

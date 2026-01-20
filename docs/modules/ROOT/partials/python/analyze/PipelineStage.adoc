@@ -1,6 +1,8 @@
 [#_PipelineStage]
 === PipelineStage
 
+`class`
+
 *Package*: `typedb.api.analyze.pipeline_stage`
 
 Representation of a stage in a Pipeline.

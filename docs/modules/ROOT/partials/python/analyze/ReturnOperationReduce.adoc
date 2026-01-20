@@ -1,6 +1,8 @@
 [#_ReturnOperationReduce]
 === ReturnOperationReduce
 
+`class`
+
 *Package*: `typedb.api.analyze.function`
 
 *Supertypes:*

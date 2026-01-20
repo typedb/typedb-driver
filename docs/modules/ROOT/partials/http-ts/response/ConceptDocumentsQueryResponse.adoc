@@ -1,6 +1,8 @@
 [#_ConceptDocumentsQueryResponse]
 === ConceptDocumentsQueryResponse
 
+`class`
+
 [caption=""]
 .Fields
 // tag::properties[]

@@ -1,6 +1,8 @@
 [#_RelationType]
 === RelationType
 
+`class`
+
 [caption=""]
 .Fields
 // tag::properties[]

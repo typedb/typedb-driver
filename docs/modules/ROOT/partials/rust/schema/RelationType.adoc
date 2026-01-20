@@ -1,6 +1,8 @@
 [#_struct_RelationType]
 === RelationType
 
+`struct`
+
 *Implements traits:*
 
 * `Clone`

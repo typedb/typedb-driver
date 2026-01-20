@@ -1,6 +1,8 @@
 [#_VariableId]
 === VariableId
 
+`class`
+
 [source,typescript]
 ----
 VariableId: string

@@ -1,6 +1,8 @@
 [#_ConstraintExactness]
 === ConstraintExactness
 
+`class`
+
 *Package*: `typedb.common.enums`
 
 An enumeration.

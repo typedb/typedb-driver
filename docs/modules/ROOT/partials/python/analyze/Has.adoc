@@ -1,6 +1,8 @@
 [#_Has]
 === Has
 
+`class`
+
 *Package*: `typedb.api.analyze.constraint`
 
 *Supertypes:*

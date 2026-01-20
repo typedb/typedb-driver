@@ -1,6 +1,8 @@
 [#_enum_InternalError]
 === InternalError
 
+`enum`
+
 [caption=""]
 .Enum variants
 // tag::enum_constants[]

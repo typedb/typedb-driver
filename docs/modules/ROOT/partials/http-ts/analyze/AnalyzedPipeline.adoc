@@ -1,6 +1,8 @@
 [#_AnalyzedPipeline]
 === AnalyzedPipeline
 
+`class`
+
 [caption=""]
 .Fields
 // tag::properties[]

@@ -1,6 +1,8 @@
 [#_VariableAnnotations]
 === VariableAnnotations
 
+`class`
+
 *Package*: `com.typedb.driver.api.analyze`
 
 // tag::methods[]

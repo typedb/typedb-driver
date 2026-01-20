@@ -1,6 +1,8 @@
 [#_AttributeType]
 === AttributeType
 
+`class`
+
 [caption=""]
 .Fields
 // tag::properties[]

@@ -4,6 +4,8 @@
 [#_Struct_Function]
 ==== Struct Function
 
+`class`
+
 
 
 Holds a representation of the function, and the result of type-inference for each variable.

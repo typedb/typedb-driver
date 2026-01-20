@@ -4,6 +4,8 @@
 [#_Struct_UserIterator]
 ==== Struct UserIterator
 
+`class`
+
 
 
 Iterator over a set of ``User``s

@@ -1,6 +1,8 @@
 [#_Instance]
 === Instance
 
+`class`
+
 *Package*: `typedb.api.concept.instance.instance`
 
 *Supertypes:*

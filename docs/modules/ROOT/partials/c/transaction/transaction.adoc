@@ -4,6 +4,8 @@
 [#_Struct_Transaction]
 ==== Struct Transaction
 
+`class`
+
 
 
 A transaction with a TypeDB database.

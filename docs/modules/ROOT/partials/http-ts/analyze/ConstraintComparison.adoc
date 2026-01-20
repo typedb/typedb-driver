@@ -1,6 +1,8 @@
 [#_ConstraintComparison]
 ==== ConstraintComparison
 
+`class`
+
 [caption=""]
 .Fields
 // tag::properties[]

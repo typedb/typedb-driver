@@ -1,6 +1,8 @@
 [#_ConstraintSub]
 ==== ConstraintSub
 
+`class`
+
 [caption=""]
 .Fields
 // tag::properties[]

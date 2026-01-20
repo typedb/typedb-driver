@@ -1,6 +1,8 @@
 [#_FunctionReturnStructure]
 === FunctionReturnStructure
 
+`class`
+
 [source,typescript]
 ----
 FunctionReturnStructure:

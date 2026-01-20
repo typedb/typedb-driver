@@ -1,6 +1,8 @@
 [#_Try]
 === Try
 
+`class`
+
 *Package*: `typedb.api.analyze.constraint`
 
 *Supertypes:*

@@ -1,6 +1,8 @@
 [#_struct_EntityType]
 === EntityType
 
+`struct`
+
 *Implements traits:*
 
 * `Clone`

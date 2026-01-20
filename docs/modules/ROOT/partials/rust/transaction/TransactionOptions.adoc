@@ -1,6 +1,8 @@
 [#_struct_TransactionOptions]
 === TransactionOptions
 
+`struct`
+
 *Implements traits:*
 
 * `Clone`

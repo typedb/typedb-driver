@@ -1,6 +1,8 @@
 [#_TypeDB]
 === TypeDB
 
+`class`
+
 *Package*: `typedb.driver`
 
 // tag::methods[]

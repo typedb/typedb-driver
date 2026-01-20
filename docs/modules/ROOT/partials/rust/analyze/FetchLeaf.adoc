@@ -1,6 +1,8 @@
 [#_struct_FetchLeaf]
 === FetchLeaf
 
+`struct`
+
 *Implements traits:*
 
 * `Clone`

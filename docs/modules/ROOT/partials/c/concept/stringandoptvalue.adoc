@@ -4,6 +4,8 @@
 [#_Struct_StringAndOptValue]
 ==== Struct StringAndOptValue
 
+`class`
+
 
 
 A ``StringAndOptValue`` used to represent the pair of variables involved in an ownership. ``_0`` and ``_1`` are the owner and attribute variables respectively.

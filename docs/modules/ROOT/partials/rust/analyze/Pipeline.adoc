@@ -1,6 +1,8 @@
 [#_struct_Pipeline]
 === Pipeline
 
+`struct`
+
 *Implements traits:*
 
 * `Clone`

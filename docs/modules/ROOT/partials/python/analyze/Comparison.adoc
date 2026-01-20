@@ -1,6 +1,8 @@
 [#_Comparison]
 === Comparison
 
+`class`
+
 *Package*: `typedb.api.analyze.constraint`
 
 *Supertypes:*

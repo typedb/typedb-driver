@@ -1,6 +1,8 @@
 [#_Function_ReturnOperation]
 === Function.ReturnOperation
 
+`class`
+
 *Package*: `com.typedb.driver.api.analyze`
 
 A representation of the return operation of a function.

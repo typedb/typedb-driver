@@ -1,6 +1,8 @@
 [#_NamedRole]
 === NamedRole
 
+`class`
+
 *Package*: `com.typedb.driver.api.analyze`
 
 'links' &amp; 'relates' constraints accept unscoped role names. Since an unscoped role-name does not uniquely identify a role-type, (Different role-types belonging to different relation types may share the same name) an internal variable is introduced to handle the ambiguity

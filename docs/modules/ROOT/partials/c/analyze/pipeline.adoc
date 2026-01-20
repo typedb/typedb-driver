@@ -4,6 +4,8 @@
 [#_Struct_Pipeline]
 ==== Struct Pipeline
 
+`class`
+
 
 
 A representation of a query pipeline.

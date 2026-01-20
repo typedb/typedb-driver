@@ -1,6 +1,8 @@
 [#_QueryType]
 === QueryType
 
+`class`
+
 [source,typescript]
 ----
 QueryType: "read" | "write" | "schema"

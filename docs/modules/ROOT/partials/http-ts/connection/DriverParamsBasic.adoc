@@ -1,6 +1,8 @@
 [#_DriverParamsBasic]
 ==== DriverParamsBasic
 
+`class`
+
 [caption=""]
 .Fields
 // tag::properties[]

@@ -1,6 +1,8 @@
 [#_ThingKind]
 === ThingKind
 
+`class`
+
 [source,typescript]
 ----
 ThingKind: "entity" | "relation" | "attribute"

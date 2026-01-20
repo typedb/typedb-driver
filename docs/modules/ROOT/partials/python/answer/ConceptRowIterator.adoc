@@ -1,6 +1,8 @@
 [#_ConceptRowIterator]
 === ConceptRowIterator
 
+`class`
+
 *Package*: `typedb.api.answer.concept_row_iterator`
 
 *Supertypes:*

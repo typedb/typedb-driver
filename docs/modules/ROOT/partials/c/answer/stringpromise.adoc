@@ -4,6 +4,8 @@
 [#_Struct_StringPromise]
 ==== Struct StringPromise
 
+`class`
+
 
 
 Promise object representing the result of an asynchronous operation. Use string_promise_resolve(StringPromise*) to wait for and retrieve the resulting string.

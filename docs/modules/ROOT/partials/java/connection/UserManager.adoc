@@ -1,6 +1,8 @@
 [#_UserManager]
 === UserManager
 
+`class`
+
 *Package*: `com.typedb.driver.api.user`
 
 Provides access to all user management methods.

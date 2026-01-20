@@ -1,6 +1,8 @@
 [#_Span]
 === Span
 
+`class`
+
 *Package*: `typedb.api.analyze.constraint`
 
 The span of a constraint in the source query.

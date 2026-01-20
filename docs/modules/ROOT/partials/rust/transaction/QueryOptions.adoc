@@ -1,6 +1,8 @@
 [#_struct_QueryOptions]
 === QueryOptions
 
+`struct`
+
 *Implements traits:*
 
 * `Clone`

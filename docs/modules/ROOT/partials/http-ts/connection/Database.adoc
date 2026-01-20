@@ -1,6 +1,8 @@
 [#_Database]
 === Database
 
+`class`
+
 [caption=""]
 .Fields
 // tag::properties[]

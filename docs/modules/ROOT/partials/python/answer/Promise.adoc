@@ -1,6 +1,8 @@
 [#_Promise]
 === Promise
 
+`class`
+
 *Package*: `typedb.common.promise`
 
 A ``Promise`` represents an asynchronous network operation.

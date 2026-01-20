@@ -1,6 +1,8 @@
 [#_enum_Error]
 === Error
 
+`enum`
+
 Represents errors encountered during operation.
 
 [caption=""]

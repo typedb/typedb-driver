@@ -1,6 +1,8 @@
 [#_TransactionType]
 === TransactionType
 
+`class`
+
 [source,typescript]
 ----
 TransactionType: "read" | "write" | "schema"

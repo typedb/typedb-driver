@@ -1,6 +1,8 @@
 [#_enum_SortOrder]
 === SortOrder
 
+`enum`
+
 The order of a variable being sorted on in a <code>PipelineStage::Sort</code>
 
 [caption=""]

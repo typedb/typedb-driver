@@ -1,6 +1,8 @@
 [#_Entity]
 === Entity
 
+`class`
+
 *Package*: `typedb.api.concept.instance.entity`
 
 *Supertypes:*

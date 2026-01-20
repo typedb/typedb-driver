@@ -4,6 +4,8 @@
 [#_Struct_QueryOptions]
 ==== Struct QueryOptions
 
+`class`
+
 
 
 TypeDB query options. ``QueryOptions`` object can be used to override the default server behaviour for executed queries.

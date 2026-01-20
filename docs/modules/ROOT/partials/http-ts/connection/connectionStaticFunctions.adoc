@@ -1,6 +1,8 @@
 [#_connectionStaticFunctions]
 === Static Functions
 
+`class`
+
 // tag::methods[]
 [#_isBasicParams_isBasicParams_params_DriverParams]
 ==== isBasicParams

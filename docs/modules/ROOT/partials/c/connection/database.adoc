@@ -4,6 +4,8 @@
 [#_Struct_Database]
 ==== Struct Database
 
+`class`
+
 
 
 A TypeDB database

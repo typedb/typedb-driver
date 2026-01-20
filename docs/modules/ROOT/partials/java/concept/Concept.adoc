@@ -1,6 +1,8 @@
 [#_Concept]
 === Concept
 
+`class`
+
 *Package*: `com.typedb.driver.api.concept`
 
 [caption=""]

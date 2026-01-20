@@ -1,6 +1,8 @@
 [#_ConceptDocument]
 === ConceptDocument
 
+`class`
+
 [source,typescript]
 ----
 ConceptDocument: Object

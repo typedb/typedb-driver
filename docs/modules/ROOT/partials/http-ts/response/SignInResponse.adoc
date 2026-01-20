@@ -1,6 +1,8 @@
 [#_SignInResponse]
 === SignInResponse
 
+`class`
+
 [caption=""]
 .Fields
 // tag::properties[]

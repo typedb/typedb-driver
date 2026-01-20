@@ -1,6 +1,8 @@
 [#_ApiErrorResponse]
 === ApiErrorResponse
 
+`class`
+
 [caption=""]
 .Fields
 // tag::properties[]

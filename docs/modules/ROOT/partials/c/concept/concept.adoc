@@ -4,6 +4,8 @@
 [#_Struct_Concept]
 ==== Struct Concept
 
+`class`
+
 
 
 The fundamental TypeQL object.

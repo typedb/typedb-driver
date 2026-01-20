@@ -1,6 +1,8 @@
 [#_PipelineStage]
 === PipelineStage
 
+`class`
+
 *Package*: `com.typedb.driver.api.analyze`
 
 Representation of a stage in a ``Pipeline``.

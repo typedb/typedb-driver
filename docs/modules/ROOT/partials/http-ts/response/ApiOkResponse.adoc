@@ -1,6 +1,8 @@
 [#_ApiOkResponse_OK_RES]
 === ApiOkResponse<OK_RES>
 
+`class`
+
 [caption=""]
 .Fields
 // tag::properties[]

@@ -1,6 +1,8 @@
 [#_Distribution]
 === Distribution
 
+`class`
+
 [source,typescript]
 ----
 Distribution: "TypeDB Cluster" | "TypeDB CE"

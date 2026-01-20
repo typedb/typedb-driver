@@ -4,6 +4,8 @@
 [#_Struct_DatabaseIterator]
 ==== Struct DatabaseIterator
 
+`class`
+
 
 
 An ``Iterator`` over databases present on the TypeDB server.

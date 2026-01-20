@@ -1,6 +1,8 @@
 [#_Fetch]
 === Fetch
 
+`class`
+
 *Package*: `typedb.api.analyze.fetch`
 
 A representation of the ‘fetch’ stage of a query.

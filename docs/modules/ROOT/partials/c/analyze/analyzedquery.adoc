@@ -4,6 +4,8 @@
 [#_Struct_AnalyzedQuery]
 ==== Struct AnalyzedQuery
 
+`class`
+
 
 
 An ``AnalyzedQuery`` contains the server's representation of the query and preamble functions; as well as the result of types inferred for each variable by type-inference.

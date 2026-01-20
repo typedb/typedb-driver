@@ -1,6 +1,8 @@
 [#_struct_DurationParseError]
 === DurationParseError
 
+`struct`
+
 *Implements traits:*
 
 * `Debug`

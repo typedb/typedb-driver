@@ -4,6 +4,8 @@
 [#_Struct_ConceptRowIterator]
 ==== Struct ConceptRowIterator
 
+`class`
+
 
 
 Iterator over the ``ConceptRow``s returned by an API method or query.

@@ -1,6 +1,8 @@
 [#_User]
 === User
 
+`class`
+
 [caption=""]
 .Fields
 // tag::properties[]

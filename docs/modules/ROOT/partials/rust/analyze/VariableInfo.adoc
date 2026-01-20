@@ -1,6 +1,8 @@
 [#_struct_VariableInfo]
 === VariableInfo
 
+`struct`
+
 *Implements traits:*
 
 * `Clone`

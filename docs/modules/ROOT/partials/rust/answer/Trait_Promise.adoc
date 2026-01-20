@@ -1,6 +1,8 @@
 [#_trait_Promise]
 === Trait Promise
 
+`struct`
+
 [tabs]
 ====
 async::

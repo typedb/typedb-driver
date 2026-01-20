@@ -1,6 +1,8 @@
 [#_OkQueryAnswer]
 === OkQueryAnswer
 
+`class`
+
 *Package*: `com.typedb.driver.api.answer`
 
 *Superinterfaces:*

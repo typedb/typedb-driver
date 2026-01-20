@@ -4,6 +4,8 @@
 [#_Struct_StringAndOptValueIterator]
 ==== Struct StringAndOptValueIterator
 
+`class`
+
 
 
 Iterator over the ``StringAndOptValue``s representing struct value {field_name: value?} info.

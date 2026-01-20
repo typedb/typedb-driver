@@ -1,6 +1,8 @@
 [#_Answer]
 === Answer
 
+`class`
+
 [source,typescript]
 ----
 Answer: ConceptRowAnswer | ConceptDocument

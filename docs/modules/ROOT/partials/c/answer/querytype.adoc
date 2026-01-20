@@ -4,6 +4,8 @@
 [#_Struct_QueryType]
 ==== Struct QueryType
 
+`class`
+
 
 
 This enum is used to specify the type of the query resulted in this answer.
@@ -11,6 +13,8 @@ This enum is used to specify the type of the query resulted in this answer.
 
 [#_Enum_QueryType]
 ==== Enum QueryType
+
+`class`
 
 
 

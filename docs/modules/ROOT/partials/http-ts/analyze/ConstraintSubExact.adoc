@@ -1,6 +1,8 @@
 [#_ConstraintSubExact]
 ==== ConstraintSubExact
 
+`class`
+
 [caption=""]
 .Fields
 // tag::properties[]

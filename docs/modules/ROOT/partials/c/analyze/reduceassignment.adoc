@@ -4,6 +4,8 @@
 [#_Struct_ReduceAssignment]
 ==== Struct ReduceAssignment
 
+`class`
+
 
 
 Representation of an assignment from a reduction in a ``PipelineStage::Reduce``, such as ``reduce $c = sum($x);``

@@ -4,12 +4,16 @@
 [#_Struct_SortOrder]
 ==== Struct SortOrder
 
+`class`
+
 
 
 The order of a variable being sorted on in a ``PipelineStage::Sort``
 
 [#_Enum_SortOrder]
 ==== Enum SortOrder
+
+`class`
 
 
 

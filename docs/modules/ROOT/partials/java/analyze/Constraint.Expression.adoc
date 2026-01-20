@@ -1,6 +1,8 @@
 [#_Constraint_Expression]
 === Constraint.Expression
 
+`class`
+
 *Package*: `com.typedb.driver.api.analyze`
 
 *Superinterfaces:*

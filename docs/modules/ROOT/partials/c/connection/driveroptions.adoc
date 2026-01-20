@@ -4,6 +4,8 @@
 [#_Struct_DriverOptions]
 ==== Struct DriverOptions
 
+`class`
+
 
 
 User connection settings for connecting to TypeDB.

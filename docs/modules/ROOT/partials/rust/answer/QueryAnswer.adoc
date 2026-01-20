@@ -1,6 +1,8 @@
 [#_enum_QueryAnswer]
 === QueryAnswer
 
+`enum`
+
 [caption=""]
 .Enum variants
 // tag::enum_constants[]

@@ -1,6 +1,8 @@
 [#_struct_TypeDBDriver]
 === TypeDBDriver
 
+`struct`
+
 *Implements traits:*
 
 * `Debug`

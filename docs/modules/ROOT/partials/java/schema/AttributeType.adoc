@@ -1,6 +1,8 @@
 [#_AttributeType]
 === AttributeType
 
+`class`
+
 *Package*: `com.typedb.driver.api.concept.type`
 
 *Superinterfaces:*

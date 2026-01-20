@@ -1,6 +1,8 @@
 [#_ConstraintSpan]
 ==== ConstraintSpan
 
+`class`
+
 [caption=""]
 .Fields
 // tag::properties[]

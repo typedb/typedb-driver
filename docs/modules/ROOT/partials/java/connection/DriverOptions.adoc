@@ -1,6 +1,8 @@
 [#_DriverOptions]
 === DriverOptions
 
+`class`
+
 *Package*: `com.typedb.driver.api`
 
 User connection settings (TLS encryption, etc.) for connecting to TypeDB Server. 

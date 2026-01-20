@@ -4,6 +4,8 @@
 [#_Struct_ConstraintVertex]
 ==== Struct ConstraintVertex
 
+`class`
+
 
 
 The answer to a TypeDB query is a set of concepts which satisfy the ``Constraints`` in the query. A ``ConstraintVertex`` is either a variable, or some identifier of the concept.

@@ -1,6 +1,8 @@
 [#_ReduceAssignment]
 === ReduceAssignment
 
+`class`
+
 *Package*: `typedb.api.analyze.pipeline_stage.ReduceStage`
 
 An assignment of a reducer to a variable.

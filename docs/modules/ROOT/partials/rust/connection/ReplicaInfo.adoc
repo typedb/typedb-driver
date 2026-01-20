@@ -1,6 +1,8 @@
 [#_struct_ReplicaInfo]
 === ReplicaInfo
 
+`struct`
+
 *Implements traits:*
 
 * `Debug`

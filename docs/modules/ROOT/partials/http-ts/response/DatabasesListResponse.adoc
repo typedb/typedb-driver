@@ -1,6 +1,8 @@
 [#_DatabasesListResponse]
 === DatabasesListResponse
 
+`class`
+
 [caption=""]
 .Fields
 // tag::properties[]

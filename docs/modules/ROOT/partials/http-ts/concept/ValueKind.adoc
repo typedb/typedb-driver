@@ -1,6 +1,8 @@
 [#_ValueKind]
 === ValueKind
 
+`class`
+
 [source,typescript]
 ----
 ValueKind: "value"

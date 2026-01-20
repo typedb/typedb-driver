@@ -1,6 +1,8 @@
 [#_Function_ReturnOperation_Reduce]
 === Function.ReturnOperation.Reduce
 
+`class`
+
 *Package*: `com.typedb.driver.api.analyze`
 
 *Superinterfaces:*

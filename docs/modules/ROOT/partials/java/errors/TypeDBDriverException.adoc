@@ -1,6 +1,8 @@
 [#_TypeDBDriverException]
 === TypeDBDriverException
 
+`class`
+
 *Package*: `com.typedb.driver.common.exception`
 
 Exceptions raised by the driver.

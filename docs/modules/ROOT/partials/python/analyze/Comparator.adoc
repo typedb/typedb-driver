@@ -1,6 +1,8 @@
 [#_Comparator]
 === Comparator
 
+`class`
+
 *Package*: `typedb.common.enums`
 
 An enumeration.

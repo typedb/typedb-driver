@@ -4,6 +4,8 @@
 [#_Struct_NamedRole]
 ==== Struct NamedRole
 
+`class`
+
 
 
 A ``NamedRole`` vertex is used in links &amp; relates constraints, as multiple relations may have roles with the same name.

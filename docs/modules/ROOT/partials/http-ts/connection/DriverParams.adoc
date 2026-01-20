@@ -1,6 +1,8 @@
 [#_DriverParams]
 ==== DriverParams
 
+`class`
+
 [source,typescript]
 ----
 DriverParams: DriverParamsBasic | DriverParamsTranslated

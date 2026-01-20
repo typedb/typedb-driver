@@ -1,6 +1,8 @@
 [#_Links]
 === Links
 
+`class`
+
 *Package*: `typedb.api.analyze.constraint`
 
 *Supertypes:*

@@ -1,6 +1,8 @@
 [#_struct_Database]
 === Database
 
+`struct`
+
 *Implements traits:*
 
 * `Debug`

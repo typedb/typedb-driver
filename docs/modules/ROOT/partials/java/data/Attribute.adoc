@@ -1,6 +1,8 @@
 [#_Attribute]
 === Attribute
 
+`class`
+
 *Package*: `com.typedb.driver.api.concept.instance`
 
 *Superinterfaces:*

@@ -1,6 +1,8 @@
 [#_DatabaseManager]
 === DatabaseManager
 
+`class`
+
 *Package*: `typedb.api.connection.database`
 
 Provides access to all database management methods.

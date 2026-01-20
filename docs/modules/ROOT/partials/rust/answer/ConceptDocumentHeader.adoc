@@ -1,6 +1,8 @@
 [#_struct_ConceptDocumentHeader]
 === ConceptDocumentHeader
 
+`struct`
+
 *Implements traits:*
 
 * `Debug`

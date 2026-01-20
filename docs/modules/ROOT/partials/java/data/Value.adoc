@@ -1,6 +1,8 @@
 [#_Value]
 === Value
 
+`class`
+
 *Package*: `com.typedb.driver.api.concept.value`
 
 *Superinterfaces:*

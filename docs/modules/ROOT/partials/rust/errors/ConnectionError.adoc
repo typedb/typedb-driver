@@ -1,6 +1,8 @@
 [#_enum_ConnectionError]
 === ConnectionError
 
+`enum`
+
 [caption=""]
 .Enum variants
 // tag::enum_constants[]

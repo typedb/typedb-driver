@@ -1,6 +1,8 @@
 [#_Function_ReturnOperation_Stream]
 === Function.ReturnOperation.Stream
 
+`class`
+
 *Package*: `com.typedb.driver.api.analyze`
 
 *Superinterfaces:*

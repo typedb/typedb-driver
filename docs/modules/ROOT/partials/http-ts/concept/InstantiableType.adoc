@@ -1,6 +1,8 @@
 [#_InstantiableType]
 === InstantiableType
 
+`class`
+
 [source,typescript]
 ----
 InstantiableType: EntityType | RelationType | AttributeType

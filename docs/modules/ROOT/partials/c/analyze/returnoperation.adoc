@@ -4,6 +4,8 @@
 [#_Struct_ReturnOperation]
 ==== Struct ReturnOperation
 
+`class`
+
 
 
 A representation of the return operation of the function

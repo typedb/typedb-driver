@@ -1,6 +1,8 @@
 [#_MatchStage]
 === MatchStage
 
+`class`
+
 *Package*: `typedb.api.analyze.pipeline_stage`
 
 *Supertypes:*

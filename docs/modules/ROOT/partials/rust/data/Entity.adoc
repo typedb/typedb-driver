@@ -1,6 +1,8 @@
 [#_struct_Entity]
 === Entity
 
+`struct`
+
 *Implements traits:*
 
 * `Clone`

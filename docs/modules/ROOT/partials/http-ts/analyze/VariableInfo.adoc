@@ -1,6 +1,8 @@
 [#_VariableInfo]
 === VariableInfo
 
+`class`
+
 [caption=""]
 .Fields
 // tag::properties[]

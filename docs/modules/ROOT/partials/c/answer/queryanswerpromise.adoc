@@ -4,6 +4,8 @@
 [#_Struct_QueryAnswerPromise]
 ==== Struct QueryAnswerPromise
 
+`class`
+
 
 
 Promise object representing the result of an asynchronous operation. Use query_answer_promise_resolve(QueryAnswerPromise*) to wait for and retrieve the resulting boolean value.

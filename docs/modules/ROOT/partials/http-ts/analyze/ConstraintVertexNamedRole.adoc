@@ -1,6 +1,8 @@
 [#_ConstraintVertexNamedRole]
 ==== ConstraintVertexNamedRole
 
+`class`
+
 [caption=""]
 .Fields
 // tag::properties[]

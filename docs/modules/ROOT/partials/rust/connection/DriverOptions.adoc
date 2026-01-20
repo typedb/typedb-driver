@@ -1,6 +1,8 @@
 [#_struct_DriverOptions]
 === DriverOptions
 
+`struct`
+
 *Implements traits:*
 
 * `Clone`

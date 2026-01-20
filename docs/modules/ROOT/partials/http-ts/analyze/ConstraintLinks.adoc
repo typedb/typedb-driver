@@ -1,6 +1,8 @@
 [#_ConstraintLinks]
 ==== ConstraintLinks
 
+`class`
+
 [caption=""]
 .Fields
 // tag::properties[]

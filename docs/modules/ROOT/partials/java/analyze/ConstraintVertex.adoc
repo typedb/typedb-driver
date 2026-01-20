@@ -1,6 +1,8 @@
 [#_ConstraintVertex]
 === ConstraintVertex
 
+`class`
+
 *Package*: `com.typedb.driver.api.analyze`
 
 The answer to a TypeDB query is a set of concepts which satisfy the constraints in the query. A ConstraintVertex is either a variable, or some identifier of the concept. A ``Variable`` is a vertex the query must match and return. A ``Label`` uniquely identifies a type A ``Value`` represents a primitive value literal in TypeDB. A ``NamedRole`` vertex is used in links &amp; relates constraints, as multiple relations may have roles with the same name.

@@ -1,6 +1,8 @@
 [#_OkQueryResponse]
 === OkQueryResponse
 
+`class`
+
 [caption=""]
 .Fields
 // tag::properties[]

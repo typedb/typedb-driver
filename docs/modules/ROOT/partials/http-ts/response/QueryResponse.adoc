@@ -1,6 +1,8 @@
 [#_QueryResponse]
 === QueryResponse
 
+`class`
+
 [source,typescript]
 ----
 QueryResponse:
