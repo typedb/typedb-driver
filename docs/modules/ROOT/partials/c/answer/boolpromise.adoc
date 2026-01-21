@@ -2,6 +2,7 @@
 === boolpromise
 
 [#_Struct_BoolPromise]
+[.doc-api-reference-driver]
 ==== Struct BoolPromise
 
 `class`

@@ -1,4 +1,5 @@
 [#_Constraint_Relates]
+[.doc-api-reference-driver]
 === Constraint.Relates
 
 `class`

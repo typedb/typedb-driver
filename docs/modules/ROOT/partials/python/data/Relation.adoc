@@ -1,4 +1,5 @@
 [#_Relation]
+[.doc-api-reference-driver]
 === Relation
 
 `class`

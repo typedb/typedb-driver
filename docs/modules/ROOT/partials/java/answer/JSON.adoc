@@ -1,4 +1,5 @@
 [#_JSON]
+[.doc-api-reference-driver]
 === JSON
 
 `class`

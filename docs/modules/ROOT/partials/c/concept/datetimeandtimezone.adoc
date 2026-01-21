@@ -2,6 +2,7 @@
 === datetimeandtimezone
 
 [#_Struct_DatetimeAndTimeZone]
+[.doc-api-reference-driver]
 ==== Struct DatetimeAndTimeZone
 
 `class`

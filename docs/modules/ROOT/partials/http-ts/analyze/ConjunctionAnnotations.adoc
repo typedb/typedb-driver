@@ -1,4 +1,5 @@
 [#_ConjunctionAnnotations]
+[.doc-api-reference-driver]
 === ConjunctionAnnotations
 
 `class`

@@ -1,4 +1,5 @@
 [#_Try]
+[.doc-api-reference-driver]
 === Try
 
 `class`

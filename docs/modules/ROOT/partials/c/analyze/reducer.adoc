@@ -2,6 +2,7 @@
 === reducer
 
 [#_Struct_Reducer]
+[.doc-api-reference-driver]
 ==== Struct Reducer
 
 `class`

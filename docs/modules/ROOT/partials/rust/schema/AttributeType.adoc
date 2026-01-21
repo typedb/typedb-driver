@@ -1,4 +1,5 @@
 [#_struct_AttributeType]
+[.doc-api-reference-driver]
 === AttributeType
 
 `struct`

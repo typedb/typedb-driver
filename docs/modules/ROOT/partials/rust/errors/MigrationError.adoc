@@ -1,4 +1,5 @@
 [#_enum_MigrationError]
+[.doc-api-reference-driver]
 === MigrationError
 
 `enum`

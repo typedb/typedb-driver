@@ -1,4 +1,5 @@
 [#_Constraint_Try]
+[.doc-api-reference-driver]
 === Constraint.Try
 
 `class`

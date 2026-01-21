@@ -2,6 +2,7 @@
 === function
 
 [#_Struct_Function]
+[.doc-api-reference-driver]
 ==== Struct Function
 
 `class`

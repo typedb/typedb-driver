@@ -1,4 +1,5 @@
 [#_AnalyzedFetch]
+[.doc-api-reference-driver]
 === AnalyzedFetch
 
 `class`

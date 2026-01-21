@@ -2,6 +2,7 @@
 === duration
 
 [#_Struct_Duration]
+[.doc-api-reference-driver]
 ==== Struct Duration
 
 `class`

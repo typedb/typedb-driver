@@ -1,4 +1,5 @@
 [#_ThingKind]
+[.doc-api-reference-driver]
 === ThingKind
 
 `class`

@@ -1,4 +1,5 @@
 [#_enum_TypeAnnotations]
+[.doc-api-reference-driver]
 === TypeAnnotations
 
 `enum`

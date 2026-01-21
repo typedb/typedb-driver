@@ -2,6 +2,7 @@
 === stringpromise
 
 [#_Struct_StringPromise]
+[.doc-api-reference-driver]
 ==== Struct StringPromise
 
 `class`

@@ -2,6 +2,7 @@
 === constraintexactness
 
 [#_Struct_ConstraintExactness]
+[.doc-api-reference-driver]
 ==== Struct ConstraintExactness
 
 `class`
@@ -11,6 +12,7 @@
 Tells apart exact variants of constraints from the ones allowing subtype-polymorphism. e.g. ``isa!`` would be represented as an ``Constraint::Isa`` with its exactness field ``ConstraintExactness::Exact``.
 
 [#_Enum_ConstraintExactness]
+[.doc-api-reference-driver]
 ==== Enum ConstraintExactness
 
 `class`

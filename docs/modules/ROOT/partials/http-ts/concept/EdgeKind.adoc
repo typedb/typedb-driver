@@ -1,4 +1,5 @@
 [#_EdgeKind]
+[.doc-api-reference-driver]
 === EdgeKind
 
 `class`

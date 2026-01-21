@@ -1,4 +1,5 @@
 [#_TypeDB]
+[.doc-api-reference-driver]
 === TypeDB
 
 `class`

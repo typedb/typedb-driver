@@ -2,6 +2,7 @@
 === fetch
 
 [#_Struct_Fetch]
+[.doc-api-reference-driver]
 ==== Struct Fetch
 
 `class`

@@ -2,6 +2,7 @@
 === stringandoptvalue
 
 [#_Struct_StringAndOptValue]
+[.doc-api-reference-driver]
 ==== Struct StringAndOptValue
 
 `class`

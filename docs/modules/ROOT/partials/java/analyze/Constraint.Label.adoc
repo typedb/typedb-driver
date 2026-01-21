@@ -1,4 +1,5 @@
 [#_Constraint_Label]
+[.doc-api-reference-driver]
 === Constraint.Label
 
 `class`

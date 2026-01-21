@@ -1,4 +1,5 @@
 [#_Sub]
+[.doc-api-reference-driver]
 === Sub
 
 `class`

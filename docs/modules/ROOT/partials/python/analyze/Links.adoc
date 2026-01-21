@@ -1,4 +1,5 @@
 [#_Links]
+[.doc-api-reference-driver]
 === Links
 
 `class`

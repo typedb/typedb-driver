@@ -1,4 +1,5 @@
 [#_Function_ReturnOperation_Single]
+[.doc-api-reference-driver]
 === Function.ReturnOperation.Single
 
 `class`

@@ -2,6 +2,7 @@
 === variable
 
 [#_Struct_Variable]
+[.doc-api-reference-driver]
 ==== Struct Variable
 
 `class`

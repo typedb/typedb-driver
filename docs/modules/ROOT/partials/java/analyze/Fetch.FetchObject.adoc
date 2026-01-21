@@ -1,4 +1,5 @@
 [#_Fetch_FetchObject]
+[.doc-api-reference-driver]
 === Fetch.FetchObject
 
 `class`

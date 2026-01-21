@@ -2,6 +2,7 @@
 === analyzedquery
 
 [#_Struct_AnalyzedQuery]
+[.doc-api-reference-driver]
 ==== Struct AnalyzedQuery
 
 `class`

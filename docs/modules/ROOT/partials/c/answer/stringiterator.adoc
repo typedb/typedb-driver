@@ -2,6 +2,7 @@
 === stringiterator
 
 [#_Struct_StringIterator]
+[.doc-api-reference-driver]
 ==== Struct StringIterator
 
 `class`

@@ -1,4 +1,5 @@
 [#_struct_Decimal]
+[.doc-api-reference-driver]
 === Decimal
 
 `struct`

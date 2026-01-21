@@ -1,4 +1,5 @@
 [#_DriverParamsBasic]
+[.doc-api-reference-driver]
 ==== DriverParamsBasic
 
 `class`

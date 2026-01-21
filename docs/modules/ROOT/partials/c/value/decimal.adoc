@@ -2,6 +2,7 @@
 === decimal
 
 [#_Struct_Decimal]
+[.doc-api-reference-driver]
 ==== Struct Decimal
 
 `class`

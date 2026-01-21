@@ -2,6 +2,7 @@
 === namedrole
 
 [#_Struct_NamedRole]
+[.doc-api-reference-driver]
 ==== Struct NamedRole
 
 `class`

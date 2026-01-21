@@ -1,4 +1,5 @@
 [#_PutStage]
+[.doc-api-reference-driver]
 === PutStage
 
 `class`

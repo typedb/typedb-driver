@@ -1,4 +1,5 @@
 [#_enum_Error]
+[.doc-api-reference-driver]
 === Error
 
 `enum`

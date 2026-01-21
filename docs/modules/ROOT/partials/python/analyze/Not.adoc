@@ -1,4 +1,5 @@
 [#_Not]
+[.doc-api-reference-driver]
 === Not
 
 `class`

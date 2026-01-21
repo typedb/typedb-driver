@@ -1,4 +1,5 @@
 [#_AnswerType]
+[.doc-api-reference-driver]
 === AnswerType
 
 `class`

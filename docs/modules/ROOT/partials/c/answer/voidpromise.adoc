@@ -2,6 +2,7 @@
 === voidpromise
 
 [#_Struct_VoidPromise]
+[.doc-api-reference-driver]
 ==== Struct VoidPromise
 
 `class`

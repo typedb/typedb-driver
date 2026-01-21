@@ -1,4 +1,5 @@
 [#_OffsetStage]
+[.doc-api-reference-driver]
 === OffsetStage
 
 `class`

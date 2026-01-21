@@ -1,4 +1,5 @@
 [#_ConstraintExpressionLegacy]
+[.doc-api-reference-driver]
 ==== ConstraintExpressionLegacy
 
 `class`

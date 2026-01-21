@@ -1,4 +1,5 @@
 [#_TypeDBDriverException]
+[.doc-api-reference-driver]
 === TypeDBDriverException
 
 `class`

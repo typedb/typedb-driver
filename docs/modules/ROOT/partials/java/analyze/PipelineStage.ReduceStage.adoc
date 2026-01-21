@@ -1,4 +1,5 @@
 [#_PipelineStage_ReduceStage]
+[.doc-api-reference-driver]
 === PipelineStage.ReduceStage
 
 `class`

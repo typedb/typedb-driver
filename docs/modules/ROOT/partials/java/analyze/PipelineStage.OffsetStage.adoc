@@ -1,4 +1,5 @@
 [#_PipelineStage_OffsetStage]
+[.doc-api-reference-driver]
 === PipelineStage.OffsetStage
 
 `class`

@@ -1,4 +1,5 @@
 [#_Reducer]
+[.doc-api-reference-driver]
 === Reducer
 
 `class`

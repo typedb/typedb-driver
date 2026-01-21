@@ -1,4 +1,5 @@
 [#_enum_TimeZone]
+[.doc-api-reference-driver]
 === TimeZone
 
 `enum`

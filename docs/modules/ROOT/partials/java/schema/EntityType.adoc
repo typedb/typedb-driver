@@ -1,4 +1,5 @@
 [#_EntityType]
+[.doc-api-reference-driver]
 === EntityType
 
 `class`

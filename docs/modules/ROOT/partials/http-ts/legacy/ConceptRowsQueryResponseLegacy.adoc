@@ -1,4 +1,5 @@
 [#_ConceptRowsQueryResponseLegacy]
+[.doc-api-reference-driver]
 === ConceptRowsQueryResponseLegacy
 
 `class`

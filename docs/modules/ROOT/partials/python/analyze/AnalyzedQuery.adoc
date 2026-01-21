@@ -1,4 +1,5 @@
 [#_AnalyzedQuery]
+[.doc-api-reference-driver]
 === AnalyzedQuery
 
 `class`

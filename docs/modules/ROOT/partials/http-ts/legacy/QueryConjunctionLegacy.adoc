@@ -1,4 +1,5 @@
 [#_QueryConjunctionLegacy]
+[.doc-api-reference-driver]
 === QueryConjunctionLegacy
 
 `class`

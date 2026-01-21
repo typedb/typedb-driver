@@ -2,6 +2,7 @@
 === driveroptions
 
 [#_Struct_DriverOptions]
+[.doc-api-reference-driver]
 ==== Struct DriverOptions
 
 `class`

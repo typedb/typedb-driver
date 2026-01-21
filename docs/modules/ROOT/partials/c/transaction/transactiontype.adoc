@@ -2,6 +2,7 @@
 === transactiontype
 
 [#_Struct_TransactionType]
+[.doc-api-reference-driver]
 ==== Struct TransactionType
 
 `class`
@@ -12,6 +13,7 @@ This enum is used to specify the type of transaction.
 
 
 [#_Enum_TransactionType]
+[.doc-api-reference-driver]
 ==== Enum TransactionType
 
 `class`

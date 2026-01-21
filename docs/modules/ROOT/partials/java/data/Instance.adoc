@@ -1,4 +1,5 @@
 [#_Instance]
+[.doc-api-reference-driver]
 === Instance
 
 `class`

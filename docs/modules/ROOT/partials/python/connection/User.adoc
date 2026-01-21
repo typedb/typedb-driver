@@ -1,4 +1,5 @@
 [#_User]
+[.doc-api-reference-driver]
 === User
 
 `class`

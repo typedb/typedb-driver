@@ -1,4 +1,5 @@
 [#_PipelineStage]
+[.doc-api-reference-driver]
 === PipelineStage
 
 `class`

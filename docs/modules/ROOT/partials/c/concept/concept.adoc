@@ -2,6 +2,7 @@
 === concept
 
 [#_Struct_Concept]
+[.doc-api-reference-driver]
 ==== Struct Concept
 
 `class`

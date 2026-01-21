@@ -1,4 +1,5 @@
 [#_ReturnOperationSingle]
+[.doc-api-reference-driver]
 === ReturnOperationSingle
 
 `class`

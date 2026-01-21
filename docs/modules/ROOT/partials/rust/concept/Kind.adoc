@@ -1,4 +1,5 @@
 [#_enum_Kind]
+[.doc-api-reference-driver]
 === Kind
 
 `enum`

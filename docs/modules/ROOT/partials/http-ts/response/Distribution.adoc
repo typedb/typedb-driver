@@ -1,4 +1,5 @@
 [#_Distribution]
+[.doc-api-reference-driver]
 === Distribution
 
 `class`

@@ -1,4 +1,5 @@
 [#_enum_TransactionType]
+[.doc-api-reference-driver]
 === TransactionType
 
 `enum`

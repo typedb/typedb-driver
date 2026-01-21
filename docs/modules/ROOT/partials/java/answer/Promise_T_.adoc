@@ -1,4 +1,5 @@
 [#_Promise_T]
+[.doc-api-reference-driver]
 === Promise<T>
 
 `class`

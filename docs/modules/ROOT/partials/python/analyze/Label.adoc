@@ -1,4 +1,5 @@
 [#_Label]
+[.doc-api-reference-driver]
 === Label
 
 `class`

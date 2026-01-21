@@ -1,4 +1,5 @@
 [#_enum_InternalError]
+[.doc-api-reference-driver]
 === InternalError
 
 `enum`

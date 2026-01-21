@@ -1,4 +1,5 @@
 [#_QueryOptions]
+[.doc-api-reference-driver]
 === QueryOptions
 
 `class`

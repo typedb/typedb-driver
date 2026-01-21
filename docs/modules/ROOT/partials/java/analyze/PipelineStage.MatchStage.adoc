@@ -1,4 +1,5 @@
 [#_PipelineStage_MatchStage]
+[.doc-api-reference-driver]
 === PipelineStage.MatchStage
 
 `class`

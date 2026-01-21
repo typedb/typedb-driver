@@ -1,4 +1,5 @@
 [#_DriverOptions]
+[.doc-api-reference-driver]
 === DriverOptions
 
 `class`

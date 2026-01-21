@@ -1,4 +1,5 @@
 [#_LimitStage]
+[.doc-api-reference-driver]
 === LimitStage
 
 `class`

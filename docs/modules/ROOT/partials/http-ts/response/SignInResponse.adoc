@@ -1,4 +1,5 @@
 [#_SignInResponse]
+[.doc-api-reference-driver]
 === SignInResponse
 
 `class`

@@ -1,4 +1,5 @@
 [#_VariableInfo]
+[.doc-api-reference-driver]
 === VariableInfo
 
 `class`

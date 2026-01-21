@@ -1,4 +1,5 @@
 [#_SortVariable]
+[.doc-api-reference-driver]
 === SortVariable
 
 `class`

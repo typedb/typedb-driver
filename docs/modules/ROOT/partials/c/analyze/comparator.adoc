@@ -2,6 +2,7 @@
 === comparator
 
 [#_Struct_Comparator]
+[.doc-api-reference-driver]
 ==== Struct Comparator
 
 `class`
@@ -11,6 +12,7 @@
 A representation of the comparator used in a comparison constraint.
 
 [#_Enum_Comparator]
+[.doc-api-reference-driver]
 ==== Enum Comparator
 
 `class`

@@ -2,6 +2,7 @@
 === kind
 
 [#_Struct_Kind]
+[.doc-api-reference-driver]
 ==== Struct Kind
 
 `class`
@@ -11,6 +12,7 @@
 Kind represents the base of a defined type to describe its capabilities. For example, "define entity person;" defines a type "person" of a kind "entity".
 
 [#_Enum_Kind]
+[.doc-api-reference-driver]
 ==== Enum Kind
 
 `class`

@@ -1,4 +1,5 @@
 [#_Datetime]
+[.doc-api-reference-driver]
 === Datetime
 
 `class`

@@ -2,6 +2,7 @@
 === stringandoptvalueiterator
 
 [#_Struct_StringAndOptValueIterator]
+[.doc-api-reference-driver]
 ==== Struct StringAndOptValueIterator
 
 `class`

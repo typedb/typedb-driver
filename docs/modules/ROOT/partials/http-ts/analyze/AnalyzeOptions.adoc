@@ -1,4 +1,5 @@
 [#_AnalyzeOptions]
+[.doc-api-reference-driver]
 === AnalyzeOptions
 
 `class`

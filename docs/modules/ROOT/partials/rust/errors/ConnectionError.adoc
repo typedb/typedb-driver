@@ -1,4 +1,5 @@
 [#_enum_ConnectionError]
+[.doc-api-reference-driver]
 === ConnectionError
 
 `enum`

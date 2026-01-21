@@ -1,4 +1,5 @@
 [#_TranslatedAddress]
+[.doc-api-reference-driver]
 === TranslatedAddress
 
 `class`

@@ -2,6 +2,7 @@
 === conceptpromise
 
 [#_Struct_ConceptPromise]
+[.doc-api-reference-driver]
 ==== Struct ConceptPromise
 
 `class`

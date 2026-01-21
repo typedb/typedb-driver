@@ -1,4 +1,5 @@
 [#_enum_Offset]
+[.doc-api-reference-driver]
 === Offset
 
 `enum`

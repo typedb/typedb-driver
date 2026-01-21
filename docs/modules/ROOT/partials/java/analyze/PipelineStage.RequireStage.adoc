@@ -1,4 +1,5 @@
 [#_PipelineStage_RequireStage]
+[.doc-api-reference-driver]
 === PipelineStage.RequireStage
 
 `class`

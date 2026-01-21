@@ -2,6 +2,7 @@
 === conceptrowiterator
 
 [#_Struct_ConceptRowIterator]
+[.doc-api-reference-driver]
 ==== Struct ConceptRowIterator
 
 `class`

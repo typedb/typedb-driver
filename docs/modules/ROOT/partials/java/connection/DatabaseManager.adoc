@@ -1,4 +1,5 @@
 [#_DatabaseManager]
+[.doc-api-reference-driver]
 === DatabaseManager
 
 `class`

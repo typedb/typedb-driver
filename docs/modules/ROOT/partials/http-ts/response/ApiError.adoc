@@ -1,4 +1,5 @@
 [#_ApiError]
+[.doc-api-reference-driver]
 === ApiError
 
 `class`

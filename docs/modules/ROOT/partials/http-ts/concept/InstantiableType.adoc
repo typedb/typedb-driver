@@ -1,4 +1,5 @@
 [#_InstantiableType]
+[.doc-api-reference-driver]
 === InstantiableType
 
 `class`

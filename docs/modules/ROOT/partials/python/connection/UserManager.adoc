@@ -1,4 +1,5 @@
 [#_UserManager]
+[.doc-api-reference-driver]
 === UserManager
 
 `class`

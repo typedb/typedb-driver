@@ -1,4 +1,5 @@
 [#_UsersListResponse]
+[.doc-api-reference-driver]
 === UsersListResponse
 
 `class`

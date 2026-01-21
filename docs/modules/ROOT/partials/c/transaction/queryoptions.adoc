@@ -2,6 +2,7 @@
 === queryoptions
 
 [#_Struct_QueryOptions]
+[.doc-api-reference-driver]
 ==== Struct QueryOptions
 
 `class`

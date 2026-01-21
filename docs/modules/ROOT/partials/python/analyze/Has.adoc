@@ -1,4 +1,5 @@
 [#_Has]
+[.doc-api-reference-driver]
 === Has
 
 `class`

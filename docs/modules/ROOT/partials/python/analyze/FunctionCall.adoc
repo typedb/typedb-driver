@@ -1,4 +1,5 @@
 [#_FunctionCall]
+[.doc-api-reference-driver]
 === FunctionCall
 
 `class`

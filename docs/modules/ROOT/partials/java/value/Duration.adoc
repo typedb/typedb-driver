@@ -1,4 +1,5 @@
 [#_Duration]
+[.doc-api-reference-driver]
 === Duration
 
 `class`

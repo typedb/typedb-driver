@@ -1,4 +1,5 @@
 [#_PipelineStage_SortStage]
+[.doc-api-reference-driver]
 === PipelineStage.SortStage
 
 `class`

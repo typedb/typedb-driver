@@ -1,4 +1,5 @@
 [#_ReduceStage]
+[.doc-api-reference-driver]
 === ReduceStage
 
 `class`

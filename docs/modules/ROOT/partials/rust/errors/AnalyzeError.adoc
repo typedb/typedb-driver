@@ -1,4 +1,5 @@
 [#_enum_AnalyzeError]
+[.doc-api-reference-driver]
 === AnalyzeError
 
 `enum`

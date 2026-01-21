@@ -1,4 +1,5 @@
 [#_Relates]
+[.doc-api-reference-driver]
 === Relates
 
 `class`

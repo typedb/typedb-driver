@@ -1,4 +1,5 @@
 [#_PipelineStage_InsertStage]
+[.doc-api-reference-driver]
 === PipelineStage.InsertStage
 
 `class`

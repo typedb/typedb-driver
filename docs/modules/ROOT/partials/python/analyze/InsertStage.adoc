@@ -1,4 +1,5 @@
 [#_InsertStage]
+[.doc-api-reference-driver]
 === InsertStage
 
 `class`

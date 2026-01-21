@@ -1,4 +1,5 @@
 [#_enum_Fetch]
+[.doc-api-reference-driver]
 === Fetch
 
 `enum`

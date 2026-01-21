@@ -1,4 +1,5 @@
 [#_VariableAnnotations]
+[.doc-api-reference-driver]
 === VariableAnnotations
 
 `class`

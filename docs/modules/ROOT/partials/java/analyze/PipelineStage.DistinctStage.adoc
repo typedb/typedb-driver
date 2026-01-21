@@ -1,4 +1,5 @@
 [#_PipelineStage_DistinctStage]
+[.doc-api-reference-driver]
 === PipelineStage.DistinctStage
 
 `class`

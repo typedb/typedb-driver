@@ -2,6 +2,7 @@
 === error
 
 [#_Struct_Error]
+[.doc-api-reference-driver]
 ==== Struct Error
 
 `class`

@@ -1,4 +1,5 @@
 [#_FunctionSingleReturnSelector]
+[.doc-api-reference-driver]
 === FunctionSingleReturnSelector
 
 `class`

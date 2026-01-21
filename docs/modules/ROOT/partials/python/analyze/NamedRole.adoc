@@ -1,4 +1,5 @@
 [#_NamedRole]
+[.doc-api-reference-driver]
 === NamedRole
 
 `class`

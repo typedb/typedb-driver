@@ -2,6 +2,7 @@
 === queryanswerpromise
 
 [#_Struct_QueryAnswerPromise]
+[.doc-api-reference-driver]
 ==== Struct QueryAnswerPromise
 
 `class`

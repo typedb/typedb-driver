@@ -1,4 +1,5 @@
 [#_Span]
+[.doc-api-reference-driver]
 === Span
 
 `class`

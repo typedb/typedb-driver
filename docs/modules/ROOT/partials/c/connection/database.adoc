@@ -2,6 +2,7 @@
 === database
 
 [#_Struct_Database]
+[.doc-api-reference-driver]
 ==== Struct Database
 
 `class`

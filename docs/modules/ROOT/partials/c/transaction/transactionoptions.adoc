@@ -2,6 +2,7 @@
 === transactionoptions
 
 [#_Struct_TransactionOptions]
+[.doc-api-reference-driver]
 ==== Struct TransactionOptions
 
 `class`

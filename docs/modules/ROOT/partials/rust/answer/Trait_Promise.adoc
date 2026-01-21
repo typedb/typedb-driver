@@ -1,4 +1,5 @@
 [#_trait_Promise]
+[.doc-api-reference-driver]
 === Trait Promise
 
 `struct`

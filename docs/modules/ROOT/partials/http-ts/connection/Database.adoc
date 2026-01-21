@@ -1,4 +1,5 @@
 [#_Database]
+[.doc-api-reference-driver]
 === Database
 
 `class`

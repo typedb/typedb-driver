@@ -1,4 +1,5 @@
 [#_ReturnOperationStream]
+[.doc-api-reference-driver]
 === ReturnOperationStream
 
 `class`

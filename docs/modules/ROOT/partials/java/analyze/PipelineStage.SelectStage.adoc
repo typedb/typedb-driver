@@ -1,4 +1,5 @@
 [#_PipelineStage_SelectStage]
+[.doc-api-reference-driver]
 === PipelineStage.SelectStage
 
 `class`

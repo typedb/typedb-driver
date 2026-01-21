@@ -1,4 +1,5 @@
 [#_enum_Comparator]
+[.doc-api-reference-driver]
 === Comparator
 
 `enum`

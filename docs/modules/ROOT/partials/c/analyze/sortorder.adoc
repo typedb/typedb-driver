@@ -2,6 +2,7 @@
 === sortorder
 
 [#_Struct_SortOrder]
+[.doc-api-reference-driver]
 ==== Struct SortOrder
 
 `class`
@@ -11,6 +12,7 @@
 The order of a variable being sorted on in a ``PipelineStage::Sort``
 
 [#_Enum_SortOrder]
+[.doc-api-reference-driver]
 ==== Enum SortOrder
 
 `class`

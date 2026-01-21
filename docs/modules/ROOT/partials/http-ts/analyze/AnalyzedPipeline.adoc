@@ -1,4 +1,5 @@
 [#_AnalyzedPipeline]
+[.doc-api-reference-driver]
 === AnalyzedPipeline
 
 `class`

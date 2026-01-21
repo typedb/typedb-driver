@@ -1,4 +1,5 @@
 [#_QueryResponse]
+[.doc-api-reference-driver]
 === QueryResponse
 
 `class`

@@ -1,4 +1,5 @@
 [#_DriverParamsTranslated]
+[.doc-api-reference-driver]
 ==== DriverParamsTranslated
 
 `class`

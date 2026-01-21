@@ -2,6 +2,7 @@
 === typedbdriver
 
 [#_Struct_TypeDBDriver]
+[.doc-api-reference-driver]
 ==== Struct TypeDBDriver
 
 `class`

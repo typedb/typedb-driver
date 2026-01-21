@@ -1,4 +1,5 @@
 [#_enum_Type]
+[.doc-api-reference-driver]
 === Type
 
 `enum`

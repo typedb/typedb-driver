@@ -1,4 +1,5 @@
 [#_SelectStage]
+[.doc-api-reference-driver]
 === SelectStage
 
 `class`

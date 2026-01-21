@@ -1,4 +1,5 @@
 [#_analyzeStaticFunctions]
+[.doc-api-reference-driver]
 === Static Functions
 
 `class`

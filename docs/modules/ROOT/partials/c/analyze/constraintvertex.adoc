@@ -2,6 +2,7 @@
 === constraintvertex
 
 [#_Struct_ConstraintVertex]
+[.doc-api-reference-driver]
 ==== Struct ConstraintVertex
 
 `class`

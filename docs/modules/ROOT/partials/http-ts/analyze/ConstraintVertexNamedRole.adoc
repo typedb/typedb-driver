@@ -1,4 +1,5 @@
 [#_ConstraintVertexNamedRole]
+[.doc-api-reference-driver]
 ==== ConstraintVertexNamedRole
 
 `class`

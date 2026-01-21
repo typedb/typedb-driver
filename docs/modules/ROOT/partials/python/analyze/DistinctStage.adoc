@@ -1,4 +1,5 @@
 [#_DistinctStage]
+[.doc-api-reference-driver]
 === DistinctStage
 
 `class`

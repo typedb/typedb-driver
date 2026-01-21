@@ -2,6 +2,7 @@
 === databaseiterator
 
 [#_Struct_DatabaseIterator]
+[.doc-api-reference-driver]
 ==== Struct DatabaseIterator
 
 `class`

@@ -1,4 +1,5 @@
 [#_SortStage]
+[.doc-api-reference-driver]
 === SortStage
 
 `class`

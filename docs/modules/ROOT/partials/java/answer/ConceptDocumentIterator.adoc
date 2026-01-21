@@ -1,4 +1,5 @@
 [#_ConceptDocumentIterator]
+[.doc-api-reference-driver]
 === ConceptDocumentIterator
 
 `class`

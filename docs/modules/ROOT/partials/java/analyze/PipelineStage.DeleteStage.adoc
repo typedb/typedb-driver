@@ -1,4 +1,5 @@
 [#_PipelineStage_DeleteStage]
+[.doc-api-reference-driver]
 === PipelineStage.DeleteStage
 
 `class`

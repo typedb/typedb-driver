@@ -2,6 +2,7 @@
 === querytype
 
 [#_Struct_QueryType]
+[.doc-api-reference-driver]
 ==== Struct QueryType
 
 `class`
@@ -12,6 +13,7 @@ This enum is used to specify the type of the query resulted in this answer.
 
 
 [#_Enum_QueryType]
+[.doc-api-reference-driver]
 ==== Enum QueryType
 
 `class`

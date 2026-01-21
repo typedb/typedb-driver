@@ -2,6 +2,7 @@
 === useriterator
 
 [#_Struct_UserIterator]
+[.doc-api-reference-driver]
 ==== Struct UserIterator
 
 `class`

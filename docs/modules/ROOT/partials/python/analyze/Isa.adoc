@@ -1,4 +1,5 @@
 [#_Isa]
+[.doc-api-reference-driver]
 === Isa
 
 `class`

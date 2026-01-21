@@ -2,6 +2,7 @@
 === pipeline
 
 [#_Struct_Pipeline]
+[.doc-api-reference-driver]
 ==== Struct Pipeline
 
 `class`

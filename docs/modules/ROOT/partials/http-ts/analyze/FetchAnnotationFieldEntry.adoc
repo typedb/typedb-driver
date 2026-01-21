@@ -1,4 +1,5 @@
 [#_FetchAnnotationFieldEntry]
+[.doc-api-reference-driver]
 === FetchAnnotationFieldEntry
 
 `class`

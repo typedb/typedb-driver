@@ -1,4 +1,5 @@
 [#_SortOrder]
+[.doc-api-reference-driver]
 === SortOrder
 
 `class`

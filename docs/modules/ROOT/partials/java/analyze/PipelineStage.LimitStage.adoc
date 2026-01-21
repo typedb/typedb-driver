@@ -1,4 +1,5 @@
 [#_PipelineStage_LimitStage]
+[.doc-api-reference-driver]
 === PipelineStage.LimitStage
 
 `class`

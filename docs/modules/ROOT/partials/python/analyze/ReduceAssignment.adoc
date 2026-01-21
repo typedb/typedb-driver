@@ -1,4 +1,5 @@
 [#_ReduceAssignment]
+[.doc-api-reference-driver]
 === ReduceAssignment
 
 `class`

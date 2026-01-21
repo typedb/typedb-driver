@@ -1,4 +1,5 @@
 [#_PipelineStage_PutStage]
+[.doc-api-reference-driver]
 === PipelineStage.PutStage
 
 `class`

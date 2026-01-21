@@ -1,4 +1,5 @@
 [#_RoleType]
+[.doc-api-reference-driver]
 === RoleType
 
 `class`

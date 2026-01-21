@@ -1,4 +1,5 @@
 [#_Attribute]
+[.doc-api-reference-driver]
 === Attribute
 
 `class`

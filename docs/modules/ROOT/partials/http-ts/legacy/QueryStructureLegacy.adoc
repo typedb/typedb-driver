@@ -1,4 +1,5 @@
 [#_QueryStructureLegacy]
+[.doc-api-reference-driver]
 === QueryStructureLegacy
 
 `class`

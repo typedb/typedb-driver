@@ -1,4 +1,5 @@
 [#_Transaction_Type]
+[.doc-api-reference-driver]
 === Transaction.Type
 
 `class`

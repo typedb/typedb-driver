@@ -1,4 +1,5 @@
 [#_enum_ConstraintVertex]
+[.doc-api-reference-driver]
 === ConstraintVertex
 
 `enum`

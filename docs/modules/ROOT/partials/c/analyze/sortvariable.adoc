@@ -2,6 +2,7 @@
 === sortvariable
 
 [#_Struct_SortVariable]
+[.doc-api-reference-driver]
 ==== Struct SortVariable
 
 `class`
