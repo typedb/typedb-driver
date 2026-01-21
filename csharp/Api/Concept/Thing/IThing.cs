@@ -31,6 +31,12 @@ namespace TypeDB.Driver.Api
         IThingType Type { get; }
 
         /// <inheritdoc/>
+        bool IConcept.IsInstance()
+        {
+            return true;
+        }
+
+        /// <inheritdoc/>
         bool IConcept.IsThing()
         {
             return true;

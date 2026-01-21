@@ -30,7 +30,7 @@ csharp_library(
 )
 exports_files(
     ["TestRunner.cs"],
-    visibility = ["//csharp/Test/Behaviour:__subpackages__"],
+    visibility = ["//csharp/Test:__subpackages__"],
 )
 filegroup(
     name = "steps",

@@ -299,6 +299,7 @@ build:
         bazel run @typedb_dependencies//distribution/artifact:create-netrc
 
         tool/test/start-community-server.sh &&
+          bazel test //csharp/Test/Integration:test-example --test_output=streamed &&
           .factory/test-community.sh //csharp/Test/Behaviour/... --test_output=streamed --jobs=1 &&
           export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-community-server.sh
