@@ -33,8 +33,8 @@ use typedb_driver::{
     DriverOptions, DriverTlsConfig, Error, Replica, ServerReplica, TransactionOptions, TransactionType, TypeDBDriver,
 };
 // DO NOT commit changes to this test. Use it as playground for dev.
-
 const ADDRESSES: [&'static str; 3] = ["0.0.0.0:11729", "0.0.0.0:21729", "0.0.0.0:31729"];
+const ADDRESS: &'static str = "127.0.0.1:11729";
 const CLUSTERING_ADDRESSES: [&'static str; 3] = ["0.0.0.0:11730", "0.0.0.0:21730", "0.0.0.0:31730"];
 const USERNAME: &'static str = "admin";
 const PASSWORD: &'static str = "password";
@@ -43,59 +43,64 @@ const PASSWORD: &'static str = "password";
 #[serial]
 fn playground_test() {
     async_std::task::block_on(async {
-        println!("Building the main driver");
-        let driver: TypeDBDriver = TypeDBDriver::new(
-            Addresses::try_from_address_str(ADDRESSES[0]).unwrap(),
+        let driver = TypeDBDriver::new(
+            // Try automatic replicas retrieval by connecting to only a single server!
+            // Use Addresses::try_from_addresses_str() to provide multiple addresses instead.
+            Addresses::try_from_address_str(ADDRESS).unwrap(),
             Credentials::new(USERNAME, PASSWORD),
-            DriverOptions::new(DriverTlsConfig::disabled()),
+            DriverOptions::new(DriverTlsConfig::enabled_with_native_root_ca()).use_replication(true),
         )
         .await
-        .unwrap();
+        .expect("Error while setting up the driver");
 
-        for (i, address) in CLUSTERING_ADDRESSES[1..].iter().enumerate() {
-            driver.register_replica((i + 2) as u64, address.to_string()).await.unwrap();
+        // setup_cluster(&driver).await;
+
+        let replicas = driver.replicas().await.unwrap();
+        let addresses = replicas.iter().map(|replica| replica.address().unwrap()).collect::<Vec<_>>();
+        println!("Replicas known to the driver: {addresses:?}");
+
+        const DATABASE_NAME: &str = "clustered-test";
+
+        if !driver.databases().contains(DATABASE_NAME).await.expect("Expected database check") {
+            driver
+                .databases()
+                .create_with_consistency(DATABASE_NAME, ConsistencyLevel::Strong)
+                .await
+                .expect("Expected database creation");
         }
 
-        println!("Test\n");
-        //
-        let replicas = driver.replicas().await.unwrap();
-        println!("Replicas: {replicas:?}\n");
-        //
-        // println!("Primary replica: {:?}\n", driver.primary_replica().await);
-        //
-        // let replicas: HashSet<ServerReplica> = driver.replicas_with_consistency(ConsistencyLevel::Eventual).await.unwrap();
-        // println!("Replicas EVENTUAL: {replicas:?}\n");
+        let database = driver.databases().get(DATABASE_NAME).await.expect("Expected database retrieval");
+        println!("Database exists: {}", database.name());
 
-        // let third_replica = replicas.iter().find(|replica| replica.address().unwrap().to_string() == "0.0.0.0:31729").unwrap().clone();
-        // println!("thid replica: {third_replica:?}");
+        let transaction_options = TransactionOptions::new()
+            .transaction_timeout(Duration::from_secs(100))
+            .read_consistency_level(ConsistencyLevel::Eventual);
 
-        let consistency_level3 =
-            ConsistencyLevel::ReplicaDependent { address: Address::from_str("0.0.0.0:31729").unwrap() };
-        let transaction3 = driver
-            .transaction_with_options(
-                "a",
-                TransactionType::Schema,
-                TransactionOptions::new().read_consistency_level(consistency_level3),
-            )
+        // Schema transactions are always strongly consistent
+        let transaction = driver
+            .transaction_with_options(DATABASE_NAME, TransactionType::Schema, transaction_options.clone())
             .await
-            .unwrap();
-        // let transaction1 = driver.transaction("a", TransactionType::Schema).await.unwrap();
+            .expect("Expected schema transaction");
 
-        // for i in 0..10000 {
-        //     let consistency_level = ConsistencyLevel::ReplicaDependent {address: Address::from_str("0.0.0.0:31729").unwrap() };
-        //     // let replicas = driver.replicas_with_consistency(consistency_level.clone()).await.unwrap();
-        //     // println!("Replicas TARGET ON {replica:?}: {replicas:?}\n");
-        //     // let dbs = driver.databases().all_with_consistency(consistency_level.clone()).await.unwrap();
-        //     // println!("Databases TARGET ON {replica:?}: {dbs:?}");
-        //     sleep(Duration::from_secs(2)).await;
-        //     let name = format!("kek-{}", i);
-        //     println!("Name: {name}");
-        //     driver.databases().create_with_consistency(name, consistency_level).await.unwrap();
-        // }
+        transaction.query("define entity person;").await.expect("Expected schema query");
+        transaction.query("insert $p1 isa person; $p2 isa person;").await.expect("Expected data query");
+        transaction.commit().await.expect("Expected schema tx commit");
 
-        // let dbs = driver.databases().all().await.unwrap();
-        // println!("Databases: {dbs:?}");
+        // Read transaction will be opened using the consistency level from the options
+        let transaction = driver
+            .transaction_with_options(DATABASE_NAME, TransactionType::Read, transaction_options)
+            .await
+            .expect("Expected schema transaction");
+        let answer = transaction.query("match $p isa person;").await.expect("Expected read query");
+        let rows: Vec<ConceptRow> = answer.into_rows().try_collect().await.unwrap();
+        println!("Persons found: {}", rows.len());
 
         println!("Done!");
     });
+}
+
+async fn setup_cluster(driver: &TypeDBDriver) {
+    for (i, address) in CLUSTERING_ADDRESSES[1..].iter().enumerate() {
+        driver.register_replica((i + 2) as u64, address.to_string()).await.unwrap();
+    }
 }
