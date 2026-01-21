@@ -10,7 +10,7 @@
 
 // tag::methods[]
 [#_NamedRole_name_]
-==== name
+==== method <code>name</code>
 
 [source,python]
 ----
@@ -24,7 +24,7 @@ The unscoped role name specified in the query.
 `str`
 
 [#_NamedRole_variable_]
-==== variable
+==== method <code>variable</code>
 
 [source,python]
 ----

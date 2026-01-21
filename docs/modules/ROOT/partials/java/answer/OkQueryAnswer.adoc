@@ -14,7 +14,7 @@ Represents a simple Ok message as a server answer. Doesn't contain concepts.
 
 // tag::methods[]
 [#_OkQueryAnswer_asConceptDocuments_]
-==== asConceptDocuments
+==== method <code>asConceptDocuments</code>
 
 [source,java]
 ----
@@ -36,7 +36,7 @@ concept.asConceptDocuments();
 ----
 
 [#_OkQueryAnswer_asConceptRows_]
-==== asConceptRows
+==== method <code>asConceptRows</code>
 
 [source,java]
 ----
@@ -58,7 +58,7 @@ concept.asConceptRows();
 ----
 
 [#_OkQueryAnswer_asOk_]
-==== asOk
+==== method <code>asOk</code>
 
 [source,java]
 ----
@@ -81,7 +81,7 @@ concept.asOk();
 ----
 
 [#_OkQueryAnswer_getQueryType_]
-==== getQueryType
+==== method <code>getQueryType</code>
 
 [source,java]
 ----
@@ -104,7 +104,7 @@ queryAnswer.getQueryType();
 ----
 
 [#_OkQueryAnswer_isConceptDocuments_]
-==== isConceptDocuments
+==== method <code>isConceptDocuments</code>
 
 [source,java]
 ----
@@ -127,7 +127,7 @@ concept.isConceptDocuments();
 ----
 
 [#_OkQueryAnswer_isConceptRows_]
-==== isConceptRows
+==== method <code>isConceptRows</code>
 
 [source,java]
 ----
@@ -150,7 +150,7 @@ concept.isConceptRows();
 ----
 
 [#_OkQueryAnswer_isOk_]
-==== isOk
+==== method <code>isOk</code>
 
 [source,java]
 ----

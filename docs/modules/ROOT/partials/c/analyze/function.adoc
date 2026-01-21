@@ -5,16 +5,16 @@
 [.doc-api-reference-driver]
 ==== Struct Function
 
-`class`
+`rust struct (pointer)`
 
 
 
 Holds a representation of the function, and the result of type-inference for each variable.
 
 [#_function_argument_annotations]
-==== function_argument_annotations
+==== function <code>function_argument_annotations</code>
 
-[source,cpp]
+[source,c]
 ----
 struct VariableAnnotationsIterator* function_argument_annotations(const struct Function* function)
 ----
@@ -28,9 +28,9 @@ Returns the inferred type for each argument of the function.
 `struct VariableAnnotationsIterator*`
 
 [#_function_argument_variables]
-==== function_argument_variables
+==== function <code>function_argument_variables</code>
 
-[source,cpp]
+[source,c]
 ----
 struct VariableIterator* function_argument_variables(const struct Function* function)
 ----
@@ -44,9 +44,9 @@ Returns the ``Variable``s which are the arguments of the function.
 `struct VariableIterator*`
 
 [#_function_body]
-==== function_body
+==== function <code>function_body</code>
 
-[source,cpp]
+[source,c]
 ----
 struct Pipeline* function_body(const struct Function* function)
 ----
@@ -60,9 +60,9 @@ A representation of the ``Pipeline`` which forms the body of the function.
 `struct Pipeline*`
 
 [#_function_drop]
-==== function_drop
+==== function <code>function_drop</code>
 
-[source,cpp]
+[source,c]
 ----
 void function_drop(struct Function* obj)
 ----
@@ -76,9 +76,9 @@ Frees the native rust ``Function`` object.
 `void`
 
 [#_function_return_annotations]
-==== function_return_annotations
+==== function <code>function_return_annotations</code>
 
-[source,cpp]
+[source,c]
 ----
 struct VariableAnnotationsIterator* function_return_annotations(const struct Function* function)
 ----
@@ -92,9 +92,9 @@ Returns the inferred type for each concept returned by the function.
 `struct VariableAnnotationsIterator*`
 
 [#_function_return_operation]
-==== function_return_operation
+==== function <code>function_return_operation</code>
 
-[source,cpp]
+[source,c]
 ----
 struct ReturnOperation* function_return_operation(const struct Function* function)
 ----

@@ -2,9 +2,9 @@
 === pipelinestageiterator
 
 [#_pipeline_stage_iterator_drop]
-==== pipeline_stage_iterator_drop
+==== function <code>pipeline_stage_iterator_drop</code>
 
-[source,cpp]
+[source,c]
 ----
 void pipeline_stage_iterator_drop(struct PipelineStageIterator* it)
 ----
@@ -18,9 +18,9 @@ Frees the native rust ``PipelineStageIterator`` object.
 `void`
 
 [#_pipeline_stage_iterator_next]
-==== pipeline_stage_iterator_next
+==== function <code>pipeline_stage_iterator_next</code>
 
-[source,cpp]
+[source,c]
 ----
 struct PipelineStage* pipeline_stage_iterator_next(struct PipelineStageIterator* it)
 ----

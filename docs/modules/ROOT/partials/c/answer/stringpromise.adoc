@@ -5,16 +5,16 @@
 [.doc-api-reference-driver]
 ==== Struct StringPromise
 
-`class`
+`rust struct (pointer)`
 
 
 
 Promise object representing the result of an asynchronous operation. Use string_promise_resolve(StringPromise*) to wait for and retrieve the resulting string.
 
 [#_string_promise_drop]
-==== string_promise_drop
+==== function <code>string_promise_drop</code>
 
-[source,cpp]
+[source,c]
 ----
 void string_promise_drop(struct StringPromise* promise)
 ----
@@ -28,9 +28,9 @@ Frees the native rust ``StringPromise`` object.
 `void`
 
 [#_string_promise_resolve]
-==== string_promise_resolve
+==== function <code>string_promise_resolve</code>
 
-[source,cpp]
+[source,c]
 ----
 char* string_promise_resolve(struct StringPromise* promise)
 ----

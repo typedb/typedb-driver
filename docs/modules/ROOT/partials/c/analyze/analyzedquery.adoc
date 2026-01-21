@@ -5,16 +5,16 @@
 [.doc-api-reference-driver]
 ==== Struct AnalyzedQuery
 
-`class`
+`rust struct (pointer)`
 
 
 
 An ``AnalyzedQuery`` contains the server's representation of the query and preamble functions; as well as the result of types inferred for each variable by type-inference.
 
 [#_analyzed_query_drop]
-==== analyzed_query_drop
+==== function <code>analyzed_query_drop</code>
 
-[source,cpp]
+[source,c]
 ----
 void analyzed_query_drop(struct AnalyzedQuery* obj)
 ----
@@ -28,9 +28,9 @@ Frees the native rust ``AnalyzedQuery`` object.
 `void`
 
 [#_analyzed_query_pipeline]
-==== analyzed_query_pipeline
+==== function <code>analyzed_query_pipeline</code>
 
-[source,cpp]
+[source,c]
 ----
 struct Pipeline* analyzed_query_pipeline(const struct AnalyzedQuery* analyzed_query)
 ----

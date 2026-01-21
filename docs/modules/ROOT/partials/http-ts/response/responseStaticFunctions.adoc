@@ -6,7 +6,7 @@
 
 // tag::methods[]
 [#_isApiError_isApiError_err_any]
-==== isApiError
+==== method <code>isApiError</code>
 
 [source,typescript]
 ----
@@ -29,7 +29,7 @@ a| `err` a|  a| `any`
 `err is ApiError`
 
 [#_isApiErrorResponse_isApiErrorResponse_res_ApiResponse]
-==== isApiErrorResponse
+==== method <code>isApiErrorResponse</code>
 
 [source,typescript]
 ----
@@ -52,7 +52,7 @@ a| `res` a|  a| `ApiResponse`
 `res is ApiErrorResponse`
 
 [#_isOkResponse_isOkResponse_res_ApiResponse]
-==== isOkResponse
+==== method <code>isOkResponse</code>
 
 [source,typescript]
 ----

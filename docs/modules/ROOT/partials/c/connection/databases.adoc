@@ -2,9 +2,9 @@
 === databases
 
 [#_database_schema]
-==== database_schema
+==== function <code>database_schema</code>
 
-[source,cpp]
+[source,c]
 ----
 char* database_schema(const struct Database* database)
 ----
@@ -18,9 +18,9 @@ A full schema text as a valid TypeQL define query string.
 `char*`
 
 [#_databases_all]
-==== databases_all
+==== function <code>databases_all</code>
 
-[source,cpp]
+[source,c]
 ----
 struct DatabaseIterator* databases_all(struct TypeDBDriver* driver)
 ----
@@ -34,9 +34,9 @@ Returns a ``DatabaseIterator`` over all databases present on the TypeDB server.
 `struct DatabaseIterator*`
 
 [#_databases_contains]
-==== databases_contains
+==== function <code>databases_contains</code>
 
-[source,cpp]
+[source,c]
 ----
 bool databases_contains(struct TypeDBDriver* driver, const char* name)
 ----
@@ -50,9 +50,9 @@ Checks if a database with the given name exists.
 `bool`
 
 [#_databases_create]
-==== databases_create
+==== function <code>databases_create</code>
 
-[source,cpp]
+[source,c]
 ----
 void databases_create(struct TypeDBDriver* driver, const char* name)
 ----
@@ -66,9 +66,9 @@ Create a database with the given name.
 `void`
 
 [#_databases_get]
-==== databases_get
+==== function <code>databases_get</code>
 
-[source,cpp]
+[source,c]
 ----
 const struct Database* databases_get(struct TypeDBDriver* driver, const char* name)
 ----
@@ -82,9 +82,9 @@ Retrieve the database with the given name.
 `const struct Database*`
 
 [#_databases_import_from_file]
-==== databases_import_from_file
+==== function <code>databases_import_from_file</code>
 
-[source,cpp]
+[source,c]
 ----
 void databases_import_from_file(struct TypeDBDriver* driver, const char* name, const char* schema, const char* data_file)
 ----

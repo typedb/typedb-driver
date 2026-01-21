@@ -5,16 +5,16 @@
 [.doc-api-reference-driver]
 ==== Struct Concept
 
-`class`
+`rust struct (pointer)`
 
 
 
 The fundamental TypeQL object.
 
 [#_concept_drop]
-==== concept_drop
+==== function <code>concept_drop</code>
 
-[source,cpp]
+[source,c]
 ----
 void concept_drop(struct Concept* concept)
 ----
@@ -28,9 +28,9 @@ Frees the native rust ``Concept`` object
 `void`
 
 [#_concept_equals]
-==== concept_equals
+==== function <code>concept_equals</code>
 
-[source,cpp]
+[source,c]
 ----
 bool concept_equals(const struct Concept* lhs, const struct Concept* rhs)
 ----
@@ -44,9 +44,9 @@ Checks whether the provided ``Concept`` objects are equal
 `bool`
 
 [#_concept_get_boolean]
-==== concept_get_boolean
+==== function <code>concept_get_boolean</code>
 
-[source,cpp]
+[source,c]
 ----
 bool concept_get_boolean(const struct Concept* concept)
 ----
@@ -60,9 +60,9 @@ Returns a ``boolean`` value of this value concept. If the value has another type
 `bool`
 
 [#_concept_get_date_as_seconds]
-==== concept_get_date_as_seconds
+==== function <code>concept_get_date_as_seconds</code>
 
-[source,cpp]
+[source,c]
 ----
 int64_t concept_get_date_as_seconds(const struct Concept* concept)
 ----
@@ -76,9 +76,9 @@ Returns the value of this date value concept as seconds since the start of the U
 `int64_t`
 
 [#_concept_get_datetime]
-==== concept_get_datetime
+==== function <code>concept_get_datetime</code>
 
-[source,cpp]
+[source,c]
 ----
 struct DatetimeInNanos concept_get_datetime(const struct Concept* concept)
 ----
@@ -92,9 +92,9 @@ Returns the value of this datetime value concept as seconds and nanoseconds part
 `struct DatetimeInNanos`
 
 [#_concept_get_datetime_tz]
-==== concept_get_datetime_tz
+==== function <code>concept_get_datetime_tz</code>
 
-[source,cpp]
+[source,c]
 ----
 struct DatetimeAndTimeZone concept_get_datetime_tz(const struct Concept* concept)
 ----
@@ -108,9 +108,9 @@ Returns the value of this datetime-tz value concept as seconds and nanoseconds p
 `struct DatetimeAndTimeZone`
 
 [#_concept_get_decimal]
-==== concept_get_decimal
+==== function <code>concept_get_decimal</code>
 
-[source,cpp]
+[source,c]
 ----
 struct Decimal concept_get_decimal(const struct Concept* concept)
 ----
@@ -124,9 +124,9 @@ Returns the ``decimal`` value of this value concept. If the value has another ty
 `struct Decimal`
 
 [#_concept_get_double]
-==== concept_get_double
+==== function <code>concept_get_double</code>
 
-[source,cpp]
+[source,c]
 ----
 double concept_get_double(const struct Concept* concept)
 ----
@@ -140,9 +140,9 @@ Returns the ``double`` value of this value concept. If the value has another typ
 `double`
 
 [#_concept_get_duration]
-==== concept_get_duration
+==== function <code>concept_get_duration</code>
 
-[source,cpp]
+[source,c]
 ----
 struct Duration concept_get_duration(const struct Concept* concept)
 ----
@@ -156,9 +156,9 @@ Returns the value of this duration value. If the value has another type, the err
 `struct Duration`
 
 [#_concept_get_integer]
-==== concept_get_integer
+==== function <code>concept_get_integer</code>
 
-[source,cpp]
+[source,c]
 ----
 int64_t concept_get_integer(const struct Concept* concept)
 ----
@@ -172,9 +172,9 @@ Returns the ``integer`` value of this value concept. If the value has another ty
 `int64_t`
 
 [#_concept_get_label]
-==== concept_get_label
+==== function <code>concept_get_label</code>
 
-[source,cpp]
+[source,c]
 ----
 char* concept_get_label(const struct Concept* concept)
 ----
@@ -188,9 +188,9 @@ Retrieves the label of this ``Concept``. If this is an ``Instance``, returns the
 `char*`
 
 [#_concept_get_string]
-==== concept_get_string
+==== function <code>concept_get_string</code>
 
-[source,cpp]
+[source,c]
 ----
 char* concept_get_string(const struct Concept* concept)
 ----
@@ -204,9 +204,9 @@ Returns the ``string`` value of this value concept. If the value has another typ
 `char*`
 
 [#_concept_get_struct]
-==== concept_get_struct
+==== function <code>concept_get_struct</code>
 
-[source,cpp]
+[source,c]
 ----
 struct StringAndOptValueIterator* concept_get_struct(const struct Concept* concept)
 ----
@@ -220,9 +220,9 @@ Returns the value of this struct value concept represented as an iterator of {fi
 `struct StringAndOptValueIterator*`
 
 [#_concept_is_attribute]
-==== concept_is_attribute
+==== function <code>concept_is_attribute</code>
 
-[source,cpp]
+[source,c]
 ----
 bool concept_is_attribute(const struct Concept* concept)
 ----
@@ -236,9 +236,9 @@ Checks if this ``Concept`` is an ``Attribute``.
 `bool`
 
 [#_concept_is_attribute_type]
-==== concept_is_attribute_type
+==== function <code>concept_is_attribute_type</code>
 
-[source,cpp]
+[source,c]
 ----
 bool concept_is_attribute_type(const struct Concept* concept)
 ----
@@ -252,9 +252,9 @@ Checks if this ``Concept`` is an ``AttributeType``.
 `bool`
 
 [#_concept_is_boolean]
-==== concept_is_boolean
+==== function <code>concept_is_boolean</code>
 
-[source,cpp]
+[source,c]
 ----
 bool concept_is_boolean(const struct Concept* concept)
 ----
@@ -268,9 +268,9 @@ Returns ``true`` if the value which this ``Concept`` holds is of type ``boolean`
 `bool`
 
 [#_concept_is_date]
-==== concept_is_date
+==== function <code>concept_is_date</code>
 
-[source,cpp]
+[source,c]
 ----
 bool concept_is_date(const struct Concept* concept)
 ----
@@ -284,9 +284,9 @@ Returns ``true`` if the value which this ``Concept`` holds is of type ``date``. 
 `bool`
 
 [#_concept_is_datetime]
-==== concept_is_datetime
+==== function <code>concept_is_datetime</code>
 
-[source,cpp]
+[source,c]
 ----
 bool concept_is_datetime(const struct Concept* concept)
 ----
@@ -300,9 +300,9 @@ Returns ``true`` if the value which this ``Concept`` holds is of type ``datetime
 `bool`
 
 [#_concept_is_datetime_tz]
-==== concept_is_datetime_tz
+==== function <code>concept_is_datetime_tz</code>
 
-[source,cpp]
+[source,c]
 ----
 bool concept_is_datetime_tz(const struct Concept* concept)
 ----
@@ -316,9 +316,9 @@ Returns ``true`` if the value which this ``Concept`` holds is of type ``datetime
 `bool`
 
 [#_concept_is_decimal]
-==== concept_is_decimal
+==== function <code>concept_is_decimal</code>
 
-[source,cpp]
+[source,c]
 ----
 bool concept_is_decimal(const struct Concept* concept)
 ----
@@ -332,9 +332,9 @@ Returns ``true`` if the value which this ``Concept`` holds is of type ``decimal`
 `bool`
 
 [#_concept_is_double]
-==== concept_is_double
+==== function <code>concept_is_double</code>
 
-[source,cpp]
+[source,c]
 ----
 bool concept_is_double(const struct Concept* concept)
 ----
@@ -348,9 +348,9 @@ Returns ``true`` if the value which this ``Concept`` holds is of type ``double``
 `bool`
 
 [#_concept_is_duration]
-==== concept_is_duration
+==== function <code>concept_is_duration</code>
 
-[source,cpp]
+[source,c]
 ----
 bool concept_is_duration(const struct Concept* concept)
 ----
@@ -364,9 +364,9 @@ Returns ``true`` if the value which this ``Concept`` holds is of type ``duration
 `bool`
 
 [#_concept_is_entity]
-==== concept_is_entity
+==== function <code>concept_is_entity</code>
 
-[source,cpp]
+[source,c]
 ----
 bool concept_is_entity(const struct Concept* concept)
 ----
@@ -380,9 +380,9 @@ Checks if this ``Concept`` is an ``Entity``.
 `bool`
 
 [#_concept_is_entity_type]
-==== concept_is_entity_type
+==== function <code>concept_is_entity_type</code>
 
-[source,cpp]
+[source,c]
 ----
 bool concept_is_entity_type(const struct Concept* concept)
 ----
@@ -396,9 +396,9 @@ Checks if this ``Concept`` is an ``EntityType``.
 `bool`
 
 [#_concept_is_integer]
-==== concept_is_integer
+==== function <code>concept_is_integer</code>
 
-[source,cpp]
+[source,c]
 ----
 bool concept_is_integer(const struct Concept* concept)
 ----
@@ -412,9 +412,9 @@ Returns ``true`` if the value which this ``Concept`` holds is of type ``integer`
 `bool`
 
 [#_concept_is_relation]
-==== concept_is_relation
+==== function <code>concept_is_relation</code>
 
-[source,cpp]
+[source,c]
 ----
 bool concept_is_relation(const struct Concept* concept)
 ----
@@ -428,9 +428,9 @@ Checks if this ``Concept`` is a ``Relation``.
 `bool`
 
 [#_concept_is_relation_type]
-==== concept_is_relation_type
+==== function <code>concept_is_relation_type</code>
 
-[source,cpp]
+[source,c]
 ----
 bool concept_is_relation_type(const struct Concept* concept)
 ----
@@ -444,9 +444,9 @@ Checks if this ``Concept`` is a ``RelationType``.
 `bool`
 
 [#_concept_is_role_type]
-==== concept_is_role_type
+==== function <code>concept_is_role_type</code>
 
-[source,cpp]
+[source,c]
 ----
 bool concept_is_role_type(const struct Concept* concept)
 ----
@@ -460,9 +460,9 @@ Checks if this ``Concept`` is a ``RoleType``.
 `bool`
 
 [#_concept_is_string]
-==== concept_is_string
+==== function <code>concept_is_string</code>
 
-[source,cpp]
+[source,c]
 ----
 bool concept_is_string(const struct Concept* concept)
 ----
@@ -476,9 +476,9 @@ Returns ``true`` if the value which this ``Concept`` holds is of type ``string``
 `bool`
 
 [#_concept_is_struct]
-==== concept_is_struct
+==== function <code>concept_is_struct</code>
 
-[source,cpp]
+[source,c]
 ----
 bool concept_is_struct(const struct Concept* concept)
 ----
@@ -492,9 +492,9 @@ Returns ``true`` if the value which this ``Concept`` holds is of type ``struct``
 `bool`
 
 [#_concept_is_value]
-==== concept_is_value
+==== function <code>concept_is_value</code>
 
-[source,cpp]
+[source,c]
 ----
 bool concept_is_value(const struct Concept* concept)
 ----
@@ -508,9 +508,9 @@ Checks if this ``Concept`` is a ``Value``.
 `bool`
 
 [#_concept_to_string]
-==== concept_to_string
+==== function <code>concept_to_string</code>
 
-[source,cpp]
+[source,c]
 ----
 char* concept_to_string(const struct Concept* concept)
 ----
@@ -524,9 +524,9 @@ A string representation of this ``Concept`` object.
 `char*`
 
 [#_concept_try_get_iid]
-==== concept_try_get_iid
+==== function <code>concept_try_get_iid</code>
 
-[source,cpp]
+[source,c]
 ----
 char* concept_try_get_iid(struct Concept* instance)
 ----
@@ -540,9 +540,9 @@ Retrieves the unique id (IID) of this ``Concept``. If this is an Entity or Relat
 `char*`
 
 [#_concept_try_get_label]
-==== concept_try_get_label
+==== function <code>concept_try_get_label</code>
 
-[source,cpp]
+[source,c]
 ----
 char* concept_try_get_label(const struct Concept* concept)
 ----
@@ -556,9 +556,9 @@ Retrieves the optional label of this ``Concept``. If this is an ``Instance``, re
 `char*`
 
 [#_concept_try_get_value]
-==== concept_try_get_value
+==== function <code>concept_try_get_value</code>
 
-[source,cpp]
+[source,c]
 ----
 struct Concept* concept_try_get_value(const struct Concept* concept)
 ----
@@ -572,9 +572,9 @@ Retrieves the value of this ``Concept``, if it exists. If this is an ``Attribute
 `struct Concept*`
 
 [#_concept_try_get_value_type]
-==== concept_try_get_value_type
+==== function <code>concept_try_get_value_type</code>
 
-[source,cpp]
+[source,c]
 ----
 char* concept_try_get_value_type(const struct Concept* concept)
 ----

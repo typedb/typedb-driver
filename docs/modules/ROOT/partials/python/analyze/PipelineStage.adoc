@@ -10,7 +10,7 @@ Representation of a stage in a Pipeline.
 
 // tag::methods[]
 [#_PipelineStage_as_delete_]
-==== as_delete
+==== method <code>as_delete</code>
 
 [source,python]
 ----
@@ -24,7 +24,7 @@ as_delete() -> DeleteStage
 `DeleteStage`
 
 [#_PipelineStage_as_distinct_]
-==== as_distinct
+==== method <code>as_distinct</code>
 
 [source,python]
 ----
@@ -38,7 +38,7 @@ as_distinct() -> DistinctStage
 `DistinctStage`
 
 [#_PipelineStage_as_insert_]
-==== as_insert
+==== method <code>as_insert</code>
 
 [source,python]
 ----
@@ -52,7 +52,7 @@ as_insert() -> InsertStage
 `InsertStage`
 
 [#_PipelineStage_as_limit_]
-==== as_limit
+==== method <code>as_limit</code>
 
 [source,python]
 ----
@@ -66,7 +66,7 @@ as_limit() -> LimitStage
 `LimitStage`
 
 [#_PipelineStage_as_match_]
-==== as_match
+==== method <code>as_match</code>
 
 [source,python]
 ----
@@ -80,7 +80,7 @@ as_match() -> MatchStage
 `MatchStage`
 
 [#_PipelineStage_as_offset_]
-==== as_offset
+==== method <code>as_offset</code>
 
 [source,python]
 ----
@@ -94,7 +94,7 @@ as_offset() -> OffsetStage
 `OffsetStage`
 
 [#_PipelineStage_as_put_]
-==== as_put
+==== method <code>as_put</code>
 
 [source,python]
 ----
@@ -108,7 +108,7 @@ as_put() -> PutStage
 `PutStage`
 
 [#_PipelineStage_as_reduce_]
-==== as_reduce
+==== method <code>as_reduce</code>
 
 [source,python]
 ----
@@ -122,7 +122,7 @@ as_reduce() -> ReduceStage
 `ReduceStage`
 
 [#_PipelineStage_as_require_]
-==== as_require
+==== method <code>as_require</code>
 
 [source,python]
 ----
@@ -136,7 +136,7 @@ as_require() -> RequireStage
 `RequireStage`
 
 [#_PipelineStage_as_select_]
-==== as_select
+==== method <code>as_select</code>
 
 [source,python]
 ----
@@ -150,7 +150,7 @@ as_select() -> SelectStage
 `SelectStage`
 
 [#_PipelineStage_as_sort_]
-==== as_sort
+==== method <code>as_sort</code>
 
 [source,python]
 ----
@@ -164,7 +164,7 @@ as_sort() -> SortStage
 `SortStage`
 
 [#_PipelineStage_as_update_]
-==== as_update
+==== method <code>as_update</code>
 
 [source,python]
 ----
@@ -178,7 +178,7 @@ as_update() -> UpdateStage
 `UpdateStage`
 
 [#_PipelineStage_is_delete_]
-==== is_delete
+==== method <code>is_delete</code>
 
 [source,python]
 ----
@@ -192,7 +192,7 @@ is_delete() -> bool
 `bool`
 
 [#_PipelineStage_is_distinct_]
-==== is_distinct
+==== method <code>is_distinct</code>
 
 [source,python]
 ----
@@ -206,7 +206,7 @@ is_distinct() -> bool
 `bool`
 
 [#_PipelineStage_is_insert_]
-==== is_insert
+==== method <code>is_insert</code>
 
 [source,python]
 ----
@@ -220,7 +220,7 @@ is_insert() -> bool
 `bool`
 
 [#_PipelineStage_is_limit_]
-==== is_limit
+==== method <code>is_limit</code>
 
 [source,python]
 ----
@@ -234,7 +234,7 @@ is_limit() -> bool
 `bool`
 
 [#_PipelineStage_is_match_]
-==== is_match
+==== method <code>is_match</code>
 
 [source,python]
 ----
@@ -248,7 +248,7 @@ is_match() -> bool
 `bool`
 
 [#_PipelineStage_is_offset_]
-==== is_offset
+==== method <code>is_offset</code>
 
 [source,python]
 ----
@@ -262,7 +262,7 @@ is_offset() -> bool
 `bool`
 
 [#_PipelineStage_is_put_]
-==== is_put
+==== method <code>is_put</code>
 
 [source,python]
 ----
@@ -276,7 +276,7 @@ is_put() -> bool
 `bool`
 
 [#_PipelineStage_is_reduce_]
-==== is_reduce
+==== method <code>is_reduce</code>
 
 [source,python]
 ----
@@ -290,7 +290,7 @@ is_reduce() -> bool
 `bool`
 
 [#_PipelineStage_is_require_]
-==== is_require
+==== method <code>is_require</code>
 
 [source,python]
 ----
@@ -304,7 +304,7 @@ is_require() -> bool
 `bool`
 
 [#_PipelineStage_is_select_]
-==== is_select
+==== method <code>is_select</code>
 
 [source,python]
 ----
@@ -318,7 +318,7 @@ is_select() -> bool
 `bool`
 
 [#_PipelineStage_is_sort_]
-==== is_sort
+==== method <code>is_sort</code>
 
 [source,python]
 ----
@@ -332,7 +332,7 @@ is_sort() -> bool
 `bool`
 
 [#_PipelineStage_is_update_]
-==== is_update
+==== method <code>is_update</code>
 
 [source,python]
 ----

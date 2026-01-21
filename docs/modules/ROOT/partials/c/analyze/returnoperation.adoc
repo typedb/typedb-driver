@@ -5,16 +5,16 @@
 [.doc-api-reference-driver]
 ==== Struct ReturnOperation
 
-`class`
+`rust struct (pointer)`
 
 
 
 A representation of the return operation of the function
 
 [#_return_operation_drop]
-==== return_operation_drop
+==== function <code>return_operation_drop</code>
 
-[source,cpp]
+[source,c]
 ----
 void return_operation_drop(struct ReturnOperation* obj)
 ----
@@ -28,9 +28,9 @@ Frees the native rust ``ReturnOperation`` object.
 `void`
 
 [#_return_operation_reducers]
-==== return_operation_reducers
+==== function <code>return_operation_reducers</code>
 
-[source,cpp]
+[source,c]
 ----
 struct ReducerIterator* return_operation_reducers(const struct ReturnOperation* return_operation)
 ----
@@ -44,9 +44,9 @@ Unwraps the ``ReturnOperation`` instance as a Reduce variant, and returns the re
 `struct ReducerIterator*`
 
 [#_return_operation_single_selector]
-==== return_operation_single_selector
+==== function <code>return_operation_single_selector</code>
 
-[source,cpp]
+[source,c]
 ----
 char* return_operation_single_selector(const struct ReturnOperation* return_operation)
 ----
@@ -60,9 +60,9 @@ Unwraps the ``ReturnOperation`` instance as a Single variant, and returns the se
 `char*`
 
 [#_return_operation_single_variables]
-==== return_operation_single_variables
+==== function <code>return_operation_single_variables</code>
 
-[source,cpp]
+[source,c]
 ----
 struct VariableIterator* return_operation_single_variables(const struct ReturnOperation* return_operation)
 ----
@@ -76,9 +76,9 @@ Unwraps the ``ReturnOperation`` instance as a Single variant, and returns the re
 `struct VariableIterator*`
 
 [#_return_operation_stream_variables]
-==== return_operation_stream_variables
+==== function <code>return_operation_stream_variables</code>
 
-[source,cpp]
+[source,c]
 ----
 struct VariableIterator* return_operation_stream_variables(const struct ReturnOperation* return_operation)
 ----
@@ -92,9 +92,9 @@ Unwraps the ``ReturnOperation`` instance as a Stream variant, and returns the re
 `struct VariableIterator*`
 
 [#_return_operation_variant]
-==== return_operation_variant
+==== function <code>return_operation_variant</code>
 
-[source,cpp]
+[source,c]
 ----
 enum ReturnOperationVariant return_operation_variant(const struct ReturnOperation* return_operation)
 ----

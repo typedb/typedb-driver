@@ -14,7 +14,7 @@ A mapping of string keys to Fetch documents.
 
 // tag::methods[]
 [#_FetchObject_get_]
-==== get
+==== method <code>get</code>
 
 [source,python]
 ----
@@ -28,7 +28,7 @@ The Fetch object for the given key.
 `Fetch`
 
 [#_FetchObject_keys_]
-==== keys
+==== method <code>keys</code>
 
 [source,python]
 ----

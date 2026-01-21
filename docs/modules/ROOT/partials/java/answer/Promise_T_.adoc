@@ -12,7 +12,7 @@ The request it represents is performed immediately. The response is only retriev
 
 // tag::methods[]
 [#_Promise_T_Promise_java_util_function_Supplier_T_]
-==== Promise
+==== method <code>Promise</code>
 
 [source,java]
 ----
@@ -43,7 +43,7 @@ new Promise(supplier)
 ----
 
 [#_Promise_T_map_java_util_function_Supplier_T_java_util_function_Function_T_​U_]
-==== map
+==== method <code>map</code>
 
 [source,java]
 ----
@@ -76,7 +76,7 @@ Promise.map(supplier, mapper);
 ----
 
 [#_Promise_T_resolve_]
-==== resolve
+==== method <code>resolve</code>
 
 [source,java]
 ----

@@ -2,9 +2,9 @@
 === constraintspan
 
 [#_constraint_span_begin]
-==== constraint_span_begin
+==== function <code>constraint_span_begin</code>
 
-[source,cpp]
+[source,c]
 ----
 int64_t constraint_span_begin(const struct ConstraintWithSpan* constraint)
 ----
@@ -18,9 +18,9 @@ The offset of the first character of the specified constraint in the source quer
 `int64_t`
 
 [#_constraint_span_end]
-==== constraint_span_end
+==== function <code>constraint_span_end</code>
 
-[source,cpp]
+[source,c]
 ----
 int64_t constraint_span_end(const struct ConstraintWithSpan* constraint)
 ----

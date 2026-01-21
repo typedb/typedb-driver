@@ -5,7 +5,7 @@
 [.doc-api-reference-driver]
 ==== Struct ConstraintVertex
 
-`class`
+`rust struct (pointer)`
 
 
 
@@ -18,9 +18,9 @@ The answer to a TypeDB query is a set of concepts which satisfy the ``Constraint
 
 
 [#_constraint_vertex_as_label]
-==== constraint_vertex_as_label
+==== function <code>constraint_vertex_as_label</code>
 
-[source,cpp]
+[source,c]
 ----
 struct Concept* constraint_vertex_as_label(const struct ConstraintVertex* vertex)
 ----
@@ -34,9 +34,9 @@ Unwraps the ``ConstraintVertex`` instance as a Label. Will panic if the instance
 `struct Concept*`
 
 [#_constraint_vertex_as_named_role]
-==== constraint_vertex_as_named_role
+==== function <code>constraint_vertex_as_named_role</code>
 
-[source,cpp]
+[source,c]
 ----
 struct NamedRole* constraint_vertex_as_named_role(const struct ConstraintVertex* vertex)
 ----
@@ -50,9 +50,9 @@ Unwraps the ``ConstraintVertex`` instance as a NamedRole. 'links' &amp; 'relates
 `struct NamedRole*`
 
 [#_constraint_vertex_as_value]
-==== constraint_vertex_as_value
+==== function <code>constraint_vertex_as_value</code>
 
-[source,cpp]
+[source,c]
 ----
 struct Concept* constraint_vertex_as_value(const struct ConstraintVertex* vertex)
 ----
@@ -66,9 +66,9 @@ Unwraps the ``ConstraintVertex`` instance as a Value. Will panic if the instance
 `struct Concept*`
 
 [#_constraint_vertex_as_variable]
-==== constraint_vertex_as_variable
+==== function <code>constraint_vertex_as_variable</code>
 
-[source,cpp]
+[source,c]
 ----
 struct Variable* constraint_vertex_as_variable(const struct ConstraintVertex* vertex)
 ----
@@ -82,9 +82,9 @@ Unwraps the ``ConstraintVertex`` instance as a Variable. Will panic if the insta
 `struct Variable*`
 
 [#_constraint_vertex_drop]
-==== constraint_vertex_drop
+==== function <code>constraint_vertex_drop</code>
 
-[source,cpp]
+[source,c]
 ----
 void constraint_vertex_drop(struct ConstraintVertex* obj)
 ----
@@ -98,9 +98,9 @@ Frees the native rust ``ConstraintVertex`` object.
 `void`
 
 [#_constraint_vertex_variant]
-==== constraint_vertex_variant
+==== function <code>constraint_vertex_variant</code>
 
-[source,cpp]
+[source,c]
 ----
 enum ConstraintVertexVariant constraint_vertex_variant(const struct ConstraintVertex* vertex)
 ----

@@ -2,9 +2,9 @@
 === variableannotations
 
 [#_variable_annotations_drop]
-==== variable_annotations_drop
+==== function <code>variable_annotations_drop</code>
 
-[source,cpp]
+[source,c]
 ----
 void variable_annotations_drop(struct VariableAnnotations* obj)
 ----
@@ -18,9 +18,9 @@ Frees the native rust ``VariableAnnotations`` object.
 `void`
 
 [#_variable_annotations_instance]
-==== variable_annotations_instance
+==== function <code>variable_annotations_instance</code>
 
-[source,cpp]
+[source,c]
 ----
 struct ConceptIterator* variable_annotations_instance(const struct VariableAnnotations* annotations)
 ----
@@ -34,9 +34,9 @@ Unwraps the ``VariableAnnotations`` instance as annotations for an Instance vari
 `struct ConceptIterator*`
 
 [#_variable_annotations_type]
-==== variable_annotations_type
+==== function <code>variable_annotations_type</code>
 
-[source,cpp]
+[source,c]
 ----
 struct ConceptIterator* variable_annotations_type(const struct VariableAnnotations* annotations)
 ----
@@ -50,9 +50,9 @@ Unwraps the ``VariableAnnotations`` instance as annotations for a Type variable,
 `struct ConceptIterator*`
 
 [#_variable_annotations_value]
-==== variable_annotations_value
+==== function <code>variable_annotations_value</code>
 
-[source,cpp]
+[source,c]
 ----
 struct StringIterator* variable_annotations_value(const struct VariableAnnotations* annotations)
 ----
@@ -66,9 +66,9 @@ Unwraps the ``VariableAnnotations`` instance as annotations for a Value variable
 `struct StringIterator*`
 
 [#_variable_annotations_variant]
-==== variable_annotations_variant
+==== function <code>variable_annotations_variant</code>
 
-[source,cpp]
+[source,c]
 ----
 enum VariableAnnotationsVariant variable_annotations_variant(const struct VariableAnnotations* annotations)
 ----

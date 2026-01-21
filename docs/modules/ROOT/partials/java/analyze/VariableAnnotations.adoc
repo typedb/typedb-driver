@@ -8,7 +8,7 @@
 
 // tag::methods[]
 [#_VariableAnnotations_asInstance_]
-==== asInstance
+==== method <code>asInstance</code>
 
 [source,java]
 ----
@@ -22,7 +22,7 @@ java.util.stream.Stream<? extends Type> asInstance()
 `java.util.stream.Stream<? extends Type>`
 
 [#_VariableAnnotations_asType_]
-==== asType
+==== method <code>asType</code>
 
 [source,java]
 ----
@@ -36,7 +36,7 @@ java.util.stream.Stream<? extends Type> asType()
 `java.util.stream.Stream<? extends Type>`
 
 [#_VariableAnnotations_asValue_]
-==== asValue
+==== method <code>asValue</code>
 
 [source,java]
 ----
@@ -50,7 +50,7 @@ java.util.stream.Stream<java.lang.String> asValue()
 `java.util.stream.Stream<java.lang.String>`
 
 [#_VariableAnnotations_isInstance_]
-==== isInstance
+==== method <code>isInstance</code>
 
 [source,java]
 ----
@@ -64,7 +64,7 @@ boolean isInstance()
 `boolean`
 
 [#_VariableAnnotations_isType_]
-==== isType
+==== method <code>isType</code>
 
 [source,java]
 ----
@@ -78,7 +78,7 @@ boolean isType()
 `boolean`
 
 [#_VariableAnnotations_isValue_]
-==== isValue
+==== method <code>isValue</code>
 
 [source,java]
 ----
@@ -92,7 +92,7 @@ boolean isValue()
 `boolean`
 
 [#_VariableAnnotations_variant_]
-==== variant
+==== method <code>variant</code>
 
 [source,java]
 ----

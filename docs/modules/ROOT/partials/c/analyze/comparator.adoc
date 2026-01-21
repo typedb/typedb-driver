@@ -5,7 +5,7 @@
 [.doc-api-reference-driver]
 ==== Struct Comparator
 
-`class`
+`rust struct (pointer)`
 
 
 
@@ -15,7 +15,7 @@ A representation of the comparator used in a comparison constraint.
 [.doc-api-reference-driver]
 ==== Enum Comparator
 
-`class`
+`rust enum (pointer)`
 
 
 
@@ -40,9 +40,9 @@ a| `NotEqual`
 // end::enum_constants[]
 
 [#_comparator_get_name]
-==== comparator_get_name
+==== function <code>comparator_get_name</code>
 
-[source,cpp]
+[source,c]
 ----
 char* comparator_get_name(enum Comparator comparator)
 ----

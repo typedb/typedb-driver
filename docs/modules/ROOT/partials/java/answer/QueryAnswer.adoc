@@ -10,7 +10,7 @@ General answer on a query returned by a server. Can be a simple Ok response or a
 
 // tag::methods[]
 [#_QueryAnswer_asConceptDocuments_]
-==== asConceptDocuments
+==== method <code>asConceptDocuments</code>
 
 [source,java]
 ----
@@ -32,7 +32,7 @@ concept.asConceptDocuments();
 ----
 
 [#_QueryAnswer_asConceptRows_]
-==== asConceptRows
+==== method <code>asConceptRows</code>
 
 [source,java]
 ----
@@ -54,7 +54,7 @@ concept.asConceptRows();
 ----
 
 [#_QueryAnswer_asOk_]
-==== asOk
+==== method <code>asOk</code>
 
 [source,java]
 ----
@@ -76,7 +76,7 @@ concept.asOk();
 ----
 
 [#_QueryAnswer_getQueryType_]
-==== getQueryType
+==== method <code>getQueryType</code>
 
 [source,java]
 ----
@@ -99,7 +99,7 @@ queryAnswer.getQueryType();
 ----
 
 [#_QueryAnswer_isConceptDocuments_]
-==== isConceptDocuments
+==== method <code>isConceptDocuments</code>
 
 [source,java]
 ----
@@ -122,7 +122,7 @@ concept.isConceptDocuments();
 ----
 
 [#_QueryAnswer_isConceptRows_]
-==== isConceptRows
+==== method <code>isConceptRows</code>
 
 [source,java]
 ----
@@ -145,7 +145,7 @@ concept.isConceptRows();
 ----
 
 [#_QueryAnswer_isOk_]
-==== isOk
+==== method <code>isOk</code>
 
 [source,java]
 ----

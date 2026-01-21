@@ -5,16 +5,16 @@
 [.doc-api-reference-driver]
 ==== Struct Reducer
 
-`class`
+`rust struct (pointer)`
 
 
 
 Representation of a reducer used either in a ``PipelineStage::Reduce`` or in a function's ``ReturnOperation``.
 
 [#_reducer_drop]
-==== reducer_drop
+==== function <code>reducer_drop</code>
 
-[source,cpp]
+[source,c]
 ----
 void reducer_drop(struct Reducer* obj)
 ----
@@ -28,9 +28,9 @@ Frees the native rust ``Reducer`` object.
 `void`
 
 [#_reducer_get_arguments]
-==== reducer_get_arguments
+==== function <code>reducer_get_arguments</code>
 
-[source,cpp]
+[source,c]
 ----
 struct VariableIterator* reducer_get_arguments(const struct Reducer* reducer)
 ----
@@ -44,9 +44,9 @@ The arguments to this Reducer. e.g. ``$x`` in ``sum($x)``
 `struct VariableIterator*`
 
 [#_reducer_get_name]
-==== reducer_get_name
+==== function <code>reducer_get_name</code>
 
-[source,cpp]
+[source,c]
 ----
 char* reducer_get_name(const struct Reducer* reducer)
 ----

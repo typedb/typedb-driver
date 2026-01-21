@@ -5,16 +5,16 @@
 [.doc-api-reference-driver]
 ==== Struct ConjunctionID
 
-`class`
+`rust struct (pointer)`
 
 
 
 Holds the index of the conjunction in a ``Pipeline``'s ``conjunctions`` field. Used as indirection in the representation of a pipeline.
 
 [#_conjunction_id_as_u32]
-==== conjunction_id_as_u32
+==== function <code>conjunction_id_as_u32</code>
 
-[source,cpp]
+[source,c]
 ----
 uint32_t conjunction_id_as_u32(const struct ConjunctionID* conjunction_id)
 ----
@@ -28,9 +28,9 @@ Returns the ConjunctionID as u32 to use in hash, equality etc.
 `uint32_t`
 
 [#_conjunction_id_drop]
-==== conjunction_id_drop
+==== function <code>conjunction_id_drop</code>
 
-[source,cpp]
+[source,c]
 ----
 void conjunction_id_drop(struct ConjunctionID* obj)
 ----
@@ -44,9 +44,9 @@ Frees the native rust ``ConjunctionID`` object.
 `void`
 
 [#_conjunction_id_string_repr]
-==== conjunction_id_string_repr
+==== function <code>conjunction_id_string_repr</code>
 
-[source,cpp]
+[source,c]
 ----
 char* conjunction_id_string_repr(const struct ConjunctionID* conjunction_id)
 ----

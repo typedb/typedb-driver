@@ -8,7 +8,7 @@
 
 // tag::methods[]
 [#_Concept_as_attribute_]
-==== as_attribute
+==== method <code>as_attribute</code>
 
 [source,python]
 ----
@@ -29,7 +29,7 @@ concept.as_attribute()
 ----
 
 [#_Concept_as_attribute_type_]
-==== as_attribute_type
+==== method <code>as_attribute_type</code>
 
 [source,python]
 ----
@@ -50,7 +50,7 @@ concept.as_attribute_type()
 ----
 
 [#_Concept_as_entity_]
-==== as_entity
+==== method <code>as_entity</code>
 
 [source,python]
 ----
@@ -71,7 +71,7 @@ concept.as_entity()
 ----
 
 [#_Concept_as_entity_type_]
-==== as_entity_type
+==== method <code>as_entity_type</code>
 
 [source,python]
 ----
@@ -92,7 +92,7 @@ concept.as_entity_type()
 ----
 
 [#_Concept_as_instance_]
-==== as_instance
+==== method <code>as_instance</code>
 
 [source,python]
 ----
@@ -113,7 +113,7 @@ concept.as_instance()
 ----
 
 [#_Concept_as_relation_]
-==== as_relation
+==== method <code>as_relation</code>
 
 [source,python]
 ----
@@ -134,7 +134,7 @@ concept.as_relation()
 ----
 
 [#_Concept_as_relation_type_]
-==== as_relation_type
+==== method <code>as_relation_type</code>
 
 [source,python]
 ----
@@ -155,7 +155,7 @@ concept.as_relation_type()
 ----
 
 [#_Concept_as_role_type_]
-==== as_role_type
+==== method <code>as_role_type</code>
 
 [source,python]
 ----
@@ -176,7 +176,7 @@ concept.as_role_type()
 ----
 
 [#_Concept_as_type_]
-==== as_type
+==== method <code>as_type</code>
 
 [source,python]
 ----
@@ -197,7 +197,7 @@ concept.as_type()
 ----
 
 [#_Concept_as_value_]
-==== as_value
+==== method <code>as_value</code>
 
 [source,python]
 ----
@@ -218,7 +218,7 @@ concept.as_value()
 ----
 
 [#_Concept_get_label_]
-==== get_label
+==== method <code>get_label</code>
 
 [source,python]
 ----
@@ -239,7 +239,7 @@ concept.get_label()
 ----
 
 [#_Concept_is_attribute_]
-==== is_attribute
+==== method <code>is_attribute</code>
 
 [source,python]
 ----
@@ -260,7 +260,7 @@ concept.is_attribute()
 ----
 
 [#_Concept_is_attribute_type_]
-==== is_attribute_type
+==== method <code>is_attribute_type</code>
 
 [source,python]
 ----
@@ -281,7 +281,7 @@ concept.is_attribute_type()
 ----
 
 [#_Concept_is_boolean_]
-==== is_boolean
+==== method <code>is_boolean</code>
 
 [source,python]
 ----
@@ -302,7 +302,7 @@ concept.is_boolean()
 ----
 
 [#_Concept_is_date_]
-==== is_date
+==== method <code>is_date</code>
 
 [source,python]
 ----
@@ -323,7 +323,7 @@ concept.is_date()
 ----
 
 [#_Concept_is_datetime_]
-==== is_datetime
+==== method <code>is_datetime</code>
 
 [source,python]
 ----
@@ -344,7 +344,7 @@ concept.is_datetime()
 ----
 
 [#_Concept_is_datetime_tz_]
-==== is_datetime_tz
+==== method <code>is_datetime_tz</code>
 
 [source,python]
 ----
@@ -365,7 +365,7 @@ concept.is_datetime_tz()
 ----
 
 [#_Concept_is_decimal_]
-==== is_decimal
+==== method <code>is_decimal</code>
 
 [source,python]
 ----
@@ -386,7 +386,7 @@ concept.is_decimal()
 ----
 
 [#_Concept_is_double_]
-==== is_double
+==== method <code>is_double</code>
 
 [source,python]
 ----
@@ -407,7 +407,7 @@ concept.is_double()
 ----
 
 [#_Concept_is_duration_]
-==== is_duration
+==== method <code>is_duration</code>
 
 [source,python]
 ----
@@ -428,7 +428,7 @@ concept.is_duration()
 ----
 
 [#_Concept_is_entity_]
-==== is_entity
+==== method <code>is_entity</code>
 
 [source,python]
 ----
@@ -449,7 +449,7 @@ concept.is_entity()
 ----
 
 [#_Concept_is_entity_type_]
-==== is_entity_type
+==== method <code>is_entity_type</code>
 
 [source,python]
 ----
@@ -470,7 +470,7 @@ concept.is_entity_type()
 ----
 
 [#_Concept_is_instance_]
-==== is_instance
+==== method <code>is_instance</code>
 
 [source,python]
 ----
@@ -491,7 +491,7 @@ concept.is_instance()
 ----
 
 [#_Concept_is_integer_]
-==== is_integer
+==== method <code>is_integer</code>
 
 [source,python]
 ----
@@ -512,7 +512,7 @@ concept.is_integer()
 ----
 
 [#_Concept_is_relation_]
-==== is_relation
+==== method <code>is_relation</code>
 
 [source,python]
 ----
@@ -533,7 +533,7 @@ concept.is_relation()
 ----
 
 [#_Concept_is_relation_type_]
-==== is_relation_type
+==== method <code>is_relation_type</code>
 
 [source,python]
 ----
@@ -554,7 +554,7 @@ concept.is_relation_type()
 ----
 
 [#_Concept_is_role_type_]
-==== is_role_type
+==== method <code>is_role_type</code>
 
 [source,python]
 ----
@@ -575,7 +575,7 @@ concept.is_role_type()
 ----
 
 [#_Concept_is_string_]
-==== is_string
+==== method <code>is_string</code>
 
 [source,python]
 ----
@@ -596,7 +596,7 @@ concept.is_string()
 ----
 
 [#_Concept_is_struct_]
-==== is_struct
+==== method <code>is_struct</code>
 
 [source,python]
 ----
@@ -617,7 +617,7 @@ concept.is_struct()
 ----
 
 [#_Concept_is_type_]
-==== is_type
+==== method <code>is_type</code>
 
 [source,python]
 ----
@@ -638,7 +638,7 @@ concept.is_type()
 ----
 
 [#_Concept_is_value_]
-==== is_value
+==== method <code>is_value</code>
 
 [source,python]
 ----
@@ -659,7 +659,7 @@ concept.is_value()
 ----
 
 [#_Concept_try_get_boolean_]
-==== try_get_boolean
+==== method <code>try_get_boolean</code>
 
 [source,python]
 ----
@@ -680,7 +680,7 @@ value.try_get_boolean()
 ----
 
 [#_Concept_try_get_date_]
-==== try_get_date
+==== method <code>try_get_date</code>
 
 [source,python]
 ----
@@ -701,7 +701,7 @@ value.try_get_date()
 ----
 
 [#_Concept_try_get_datetime_]
-==== try_get_datetime
+==== method <code>try_get_datetime</code>
 
 [source,python]
 ----
@@ -722,7 +722,7 @@ value.try_get_datetime()
 ----
 
 [#_Concept_try_get_datetime_tz_]
-==== try_get_datetime_tz
+==== method <code>try_get_datetime_tz</code>
 
 [source,python]
 ----
@@ -743,7 +743,7 @@ value.try_get_datetime_tz()
 ----
 
 [#_Concept_try_get_decimal_]
-==== try_get_decimal
+==== method <code>try_get_decimal</code>
 
 [source,python]
 ----
@@ -764,7 +764,7 @@ value.try_get_decimal()
 ----
 
 [#_Concept_try_get_double_]
-==== try_get_double
+==== method <code>try_get_double</code>
 
 [source,python]
 ----
@@ -785,7 +785,7 @@ value.try_get_double()
 ----
 
 [#_Concept_try_get_duration_]
-==== try_get_duration
+==== method <code>try_get_duration</code>
 
 [source,python]
 ----
@@ -806,7 +806,7 @@ value.try_get_duration()
 ----
 
 [#_Concept_try_get_iid_]
-==== try_get_iid
+==== method <code>try_get_iid</code>
 
 [source,python]
 ----
@@ -827,7 +827,7 @@ concept.try_get_iid()
 ----
 
 [#_Concept_try_get_integer_]
-==== try_get_integer
+==== method <code>try_get_integer</code>
 
 [source,python]
 ----
@@ -848,7 +848,7 @@ value.try_get_integer()
 ----
 
 [#_Concept_try_get_label_]
-==== try_get_label
+==== method <code>try_get_label</code>
 
 [source,python]
 ----
@@ -869,7 +869,7 @@ concept.try_get_label()
 ----
 
 [#_Concept_try_get_string_]
-==== try_get_string
+==== method <code>try_get_string</code>
 
 [source,python]
 ----
@@ -890,7 +890,7 @@ value.try_get_string()
 ----
 
 [#_Concept_try_get_struct_]
-==== try_get_struct
+==== method <code>try_get_struct</code>
 
 [source,python]
 ----
@@ -911,7 +911,7 @@ value.try_get_struct()
 ----
 
 [#_Concept_try_get_value_]
-==== try_get_value
+==== method <code>try_get_value</code>
 
 [source,python]
 ----
@@ -932,7 +932,7 @@ concept.try_get_value()
 ----
 
 [#_Concept_try_get_value_type_]
-==== try_get_value_type
+==== method <code>try_get_value_type</code>
 
 [source,python]
 ----

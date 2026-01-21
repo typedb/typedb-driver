@@ -5,16 +5,16 @@
 [.doc-api-reference-driver]
 ==== Struct Database
 
-`class`
+`rust struct (pointer)`
 
 
 
 A TypeDB database
 
 [#_database_close]
-==== database_close
+==== function <code>database_close</code>
 
-[source,cpp]
+[source,c]
 ----
 void database_close(const struct Database* database)
 ----
@@ -28,9 +28,9 @@ Frees the native rust ``Database`` object
 `void`
 
 [#_database_delete]
-==== database_delete
+==== function <code>database_delete</code>
 
-[source,cpp]
+[source,c]
 ----
 void database_delete(const struct Database* database)
 ----
@@ -44,9 +44,9 @@ Deletes this database.
 `void`
 
 [#_database_export_to_file]
-==== database_export_to_file
+==== function <code>database_export_to_file</code>
 
-[source,cpp]
+[source,c]
 ----
 void database_export_to_file(const struct Database* database, const char* schema_file, const char* data_file)
 ----
@@ -72,9 +72,9 @@ a| `data_file` a| The path to the data file to be created. a| `const char*`
 `void`
 
 [#_database_get_name]
-==== database_get_name
+==== function <code>database_get_name</code>
 
-[source,cpp]
+[source,c]
 ----
 char* database_get_name(const struct Database* database)
 ----
@@ -88,9 +88,9 @@ The database name as a string.
 `char*`
 
 [#_database_type_schema]
-==== database_type_schema
+==== function <code>database_type_schema</code>
 
-[source,cpp]
+[source,c]
 ----
 char* database_type_schema(const struct Database* database)
 ----

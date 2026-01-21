@@ -14,7 +14,7 @@ Represents an IID constraint: &lt;concept&gt; iid &lt;iid&gt;
 
 // tag::methods[]
 [#_Iid_iid_]
-==== iid
+==== method <code>iid</code>
 
 [source,python]
 ----
@@ -28,7 +28,7 @@ iid() -> str
 `str`
 
 [#_Iid_variable_]
-==== variable
+==== method <code>variable</code>
 
 [source,python]
 ----

@@ -5,16 +5,16 @@
 [.doc-api-reference-driver]
 ==== Struct SortVariable
 
-`class`
+`rust struct (pointer)`
 
 
 
 The variable being sorted on and the ordering of the sort, as used in a ``PipelineStage::Sort``, e.g. ``sort $v desc``
 
 [#_sort_variable_drop]
-==== sort_variable_drop
+==== function <code>sort_variable_drop</code>
 
-[source,cpp]
+[source,c]
 ----
 void sort_variable_drop(struct SortVariable* obj)
 ----
@@ -28,9 +28,9 @@ Frees the native rust ``SortVariable`` object.
 `void`
 
 [#_sort_variable_get_order]
-==== sort_variable_get_order
+==== function <code>sort_variable_get_order</code>
 
-[source,cpp]
+[source,c]
 ----
 enum SortOrder sort_variable_get_order(const struct SortVariable* sort_variable)
 ----
@@ -44,9 +44,9 @@ Returns the sort order for the variable being sorted on.
 `enum SortOrder`
 
 [#_sort_variable_get_variable]
-==== sort_variable_get_variable
+==== function <code>sort_variable_get_variable</code>
 
-[source,cpp]
+[source,c]
 ----
 struct Variable* sort_variable_get_variable(const struct SortVariable* sort_variable)
 ----

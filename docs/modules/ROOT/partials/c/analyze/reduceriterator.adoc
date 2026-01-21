@@ -2,9 +2,9 @@
 === reduceriterator
 
 [#_reducer_iterator_drop]
-==== reducer_iterator_drop
+==== function <code>reducer_iterator_drop</code>
 
-[source,cpp]
+[source,c]
 ----
 void reducer_iterator_drop(struct ReducerIterator* it)
 ----
@@ -18,9 +18,9 @@ Frees the native rust ``ReducerIterator`` object.
 `void`
 
 [#_reducer_iterator_next]
-==== reducer_iterator_next
+==== function <code>reducer_iterator_next</code>
 
-[source,cpp]
+[source,c]
 ----
 struct Reducer* reducer_iterator_next(struct ReducerIterator* it)
 ----

@@ -5,16 +5,16 @@
 [.doc-api-reference-driver]
 ==== Struct ConceptIterator
 
-`class`
+`rust struct (pointer)`
 
 
 
 Iterator over the ``Concepts``s returned by an API method or query.
 
 [#_concept_iterator_drop]
-==== concept_iterator_drop
+==== function <code>concept_iterator_drop</code>
 
-[source,cpp]
+[source,c]
 ----
 void concept_iterator_drop(struct ConceptIterator* it)
 ----
@@ -28,9 +28,9 @@ Frees the native rust ``ConceptIterator`` object
 `void`
 
 [#_concept_iterator_next]
-==== concept_iterator_next
+==== function <code>concept_iterator_next</code>
 
-[source,cpp]
+[source,c]
 ----
 struct Concept* concept_iterator_next(struct ConceptIterator* it)
 ----

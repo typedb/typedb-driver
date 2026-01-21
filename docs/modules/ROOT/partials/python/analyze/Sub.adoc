@@ -14,7 +14,7 @@ Represents a ‘sub’ constraint: &lt;subtype&gt; sub(!) &lt;supertype&gt;
 
 // tag::methods[]
 [#_Sub_exactness_]
-==== exactness
+==== method <code>exactness</code>
 
 [source,python]
 ----
@@ -28,7 +28,7 @@ exactness() -> ConstraintExactness
 `ConstraintExactness`
 
 [#_Sub_subtype_]
-==== subtype
+==== method <code>subtype</code>
 
 [source,python]
 ----
@@ -42,7 +42,7 @@ subtype() -> ConstraintVertex
 `ConstraintVertex`
 
 [#_Sub_supertype_]
-==== supertype
+==== method <code>supertype</code>
 
 [source,python]
 ----

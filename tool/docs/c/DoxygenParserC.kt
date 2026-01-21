@@ -112,14 +112,14 @@ class DoxygenParserC : Callable<Unit> {
             dirs.keys.forEach { fileContents[resolveKey(it)] = ArrayList() }
             typedefs.map {
                 println("Resolving ${it.name}")
-                fileContents[resolveKey(it.name)]!!.add(it.toAsciiDoc("cpp", headerLevel = 4))
+                fileContents[resolveKey(it.name)]!!.add(it.toAsciiDoc("c", headerLevel = 4))
                 println("Done Resolving ${it.name}")
             }
             enums.forEach {
-                fileContents[resolveKey(it.name)]!!.add(it.toAsciiDoc("cpp", headerLevel = 4))
+                fileContents[resolveKey(it.name)]!!.add(it.toAsciiDoc("c", headerLevel = 4))
             }
             functions.forEach {
-                fileContents[resolveKey(it.name)]!!.add(it.toAsciiDoc("cpp"))
+                fileContents[resolveKey(it.name)]!!.add(it.toAsciiDoc("c"))
             }
 
             // Write to files

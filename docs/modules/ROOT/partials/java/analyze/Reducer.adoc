@@ -10,7 +10,7 @@ Representation of a reducer used either in a ``PipelineStage::Reduce`` or in a f
 
 // tag::methods[]
 [#_Reducer_arguments_]
-==== arguments
+==== method <code>arguments</code>
 
 [source,java]
 ----
@@ -24,7 +24,7 @@ java.util.stream.Stream<? extends Variable> arguments()
 `java.util.stream.Stream<? extends Variable>`
 
 [#_Reducer_name_]
-==== name
+==== method <code>name</code>
 
 [source,java]
 ----

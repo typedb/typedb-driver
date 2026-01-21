@@ -5,7 +5,7 @@
 [.doc-api-reference-driver]
 ==== Struct ConstraintExactness
 
-`class`
+`rust struct (pointer)`
 
 
 
@@ -15,7 +15,7 @@ Tells apart exact variants of constraints from the ones allowing subtype-polymor
 [.doc-api-reference-driver]
 ==== Enum ConstraintExactness
 
-`class`
+`rust enum (pointer)`
 
 
 

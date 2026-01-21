@@ -5,16 +5,16 @@
 [.doc-api-reference-driver]
 ==== Struct Conjunction
 
-`class`
+`rust struct (pointer)`
 
 
 
 A representation of the constraints involved in the query, and types inferred for each variable.
 
 [#_conjunction_drop]
-==== conjunction_drop
+==== function <code>conjunction_drop</code>
 
-[source,cpp]
+[source,c]
 ----
 void conjunction_drop(struct Conjunction* obj)
 ----
@@ -28,9 +28,9 @@ Frees the native rust ``Conjunction`` object.
 `void`
 
 [#_conjunction_get_annotated_variables]
-==== conjunction_get_annotated_variables
+==== function <code>conjunction_get_annotated_variables</code>
 
-[source,cpp]
+[source,c]
 ----
 struct VariableIterator* conjunction_get_annotated_variables(const struct Conjunction* conjunction)
 ----
@@ -44,9 +44,9 @@ Returns the variables in the current conjunction for which type annotations are 
 `struct VariableIterator*`
 
 [#_conjunction_get_constraints]
-==== conjunction_get_constraints
+==== function <code>conjunction_get_constraints</code>
 
-[source,cpp]
+[source,c]
 ----
 struct ConstraintWithSpanIterator* conjunction_get_constraints(const struct Conjunction* conjunction)
 ----
@@ -60,9 +60,9 @@ Returns the ``Constraint``s in the given conjunction.
 `struct ConstraintWithSpanIterator*`
 
 [#_conjunction_get_variable_annotations]
-==== conjunction_get_variable_annotations
+==== function <code>conjunction_get_variable_annotations</code>
 
-[source,cpp]
+[source,c]
 ----
 struct VariableAnnotations* conjunction_get_variable_annotations(const struct Conjunction* conjunction, const struct Variable* variable)
 ----

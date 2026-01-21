@@ -14,7 +14,7 @@ Represents an ‘owns’ constraint: &lt;owner&gt; owns &lt;attribute&gt;
 
 // tag::methods[]
 [#_Owns_attribute_]
-==== attribute
+==== method <code>attribute</code>
 
 [source,python]
 ----
@@ -28,7 +28,7 @@ attribute() -> ConstraintVertex
 `ConstraintVertex`
 
 [#_Owns_exactness_]
-==== exactness
+==== method <code>exactness</code>
 
 [source,python]
 ----
@@ -42,7 +42,7 @@ exactness() -> ConstraintExactness
 `ConstraintExactness`
 
 [#_Owns_owner_]
-==== owner
+==== method <code>owner</code>
 
 [source,python]
 ----

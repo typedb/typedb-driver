@@ -14,7 +14,7 @@ Indicates the function returns a stream of concepts. e.g. ``return { $x, $y };``
 
 // tag::methods[]
 [#_Function_ReturnOperation_Stream_asCheck_]
-==== asCheck
+==== method <code>asCheck</code>
 
 [source,java]
 ----
@@ -28,7 +28,7 @@ Down-casts this ReturnOperation to a ``Check`` return operation.
 `Function.ReturnOperation.Check`
 
 [#_Function_ReturnOperation_Stream_asReduce_]
-==== asReduce
+==== method <code>asReduce</code>
 
 [source,java]
 ----
@@ -42,7 +42,7 @@ Down-casts this ReturnOperation to a Reduce return operation.
 `Function.ReturnOperation.Reduce`
 
 [#_Function_ReturnOperation_Stream_asSingle_]
-==== asSingle
+==== method <code>asSingle</code>
 
 [source,java]
 ----
@@ -56,7 +56,7 @@ Down-casts this ReturnOperation to a ``Single`` return operation.
 `Function.ReturnOperation.Single`
 
 [#_Function_ReturnOperation_Stream_asStream_]
-==== asStream
+==== method <code>asStream</code>
 
 [source,java]
 ----
@@ -70,7 +70,7 @@ Down-casts this ReturnOperation to a ``Stream`` return operation.
 `Function.ReturnOperation.Stream`
 
 [#_Function_ReturnOperation_Stream_isCheck_]
-==== isCheck
+==== method <code>isCheck</code>
 
 [source,java]
 ----
@@ -84,7 +84,7 @@ boolean isCheck()
 `boolean`
 
 [#_Function_ReturnOperation_Stream_isReduce_]
-==== isReduce
+==== method <code>isReduce</code>
 
 [source,java]
 ----
@@ -98,7 +98,7 @@ boolean isReduce()
 `boolean`
 
 [#_Function_ReturnOperation_Stream_isSingle_]
-==== isSingle
+==== method <code>isSingle</code>
 
 [source,java]
 ----
@@ -112,7 +112,7 @@ boolean isSingle()
 `boolean`
 
 [#_Function_ReturnOperation_Stream_isStream_]
-==== isStream
+==== method <code>isStream</code>
 
 [source,java]
 ----
@@ -126,7 +126,7 @@ boolean isStream()
 `boolean`
 
 [#_Function_ReturnOperation_Stream_variables_]
-==== variables
+==== method <code>variables</code>
 
 [source,java]
 ----
@@ -140,7 +140,7 @@ Gets the variables in the returned row.
 `java.util.stream.Stream<? extends Variable>`
 
 [#_Function_ReturnOperation_Stream_variant_]
-==== variant
+==== method <code>variant</code>
 
 [source,java]
 ----

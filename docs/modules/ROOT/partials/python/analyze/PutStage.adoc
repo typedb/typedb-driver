@@ -14,7 +14,7 @@ Represents a ‘put’ stage: put &lt;block&gt;
 
 // tag::methods[]
 [#_PutStage_block_]
-==== block
+==== method <code>block</code>
 
 [source,python]
 ----

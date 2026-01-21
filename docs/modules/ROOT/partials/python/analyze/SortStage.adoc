@@ -14,7 +14,7 @@ Represents a ‘sort’ stage: sort &lt;variables-and-order&gt;
 
 // tag::methods[]
 [#_SortStage_variables_]
-==== variables
+==== method <code>variables</code>
 
 [source,python]
 ----

@@ -8,7 +8,7 @@
 
 // tag::methods[]
 [#_Duration_equals_java_lang_Object]
-==== equals
+==== method <code>equals</code>
 
 [source,java]
 ----
@@ -39,7 +39,7 @@ label.equals(obj);
 ----
 
 [#_Duration_getDatePart_]
-==== getDatePart
+==== method <code>getDatePart</code>
 
 [source,java]
 ----
@@ -61,7 +61,7 @@ duration.getDatePart();
 ----
 
 [#_Duration_getDays_]
-==== getDays
+==== method <code>getDays</code>
 
 [source,java]
 ----
@@ -83,7 +83,7 @@ duration.getMonths();
 ----
 
 [#_Duration_getMonths_]
-==== getMonths
+==== method <code>getMonths</code>
 
 [source,java]
 ----
@@ -105,7 +105,7 @@ duration.getMonths();
 ----
 
 [#_Duration_getNano_]
-==== getNano
+==== method <code>getNano</code>
 
 [source,java]
 ----
@@ -127,7 +127,7 @@ duration.getNano();
 ----
 
 [#_Duration_getSeconds_]
-==== getSeconds
+==== method <code>getSeconds</code>
 
 [source,java]
 ----
@@ -149,7 +149,7 @@ duration.getSeconds();
 ----
 
 [#_Duration_getTimePart_]
-==== getTimePart
+==== method <code>getTimePart</code>
 
 [source,java]
 ----
@@ -171,7 +171,7 @@ duration.getTimePart();
 ----
 
 [#_Duration_parse_java_lang_String]
-==== parse
+==== method <code>parse</code>
 
 [source,java]
 ----
@@ -203,7 +203,7 @@ Duration.parse("P1Y10M7DT15H44M5.00394892S");
 ----
 
 [#_Duration_toString_]
-==== toString
+==== method <code>toString</code>
 
 [source,java]
 ----

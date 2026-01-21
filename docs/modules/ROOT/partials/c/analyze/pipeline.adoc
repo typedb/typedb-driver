@@ -5,16 +5,16 @@
 [.doc-api-reference-driver]
 ==== Struct Pipeline
 
-`class`
+`rust struct (pointer)`
 
 
 
 A representation of a query pipeline.
 
 [#_pipeline_drop]
-==== pipeline_drop
+==== function <code>pipeline_drop</code>
 
-[source,cpp]
+[source,c]
 ----
 void pipeline_drop(struct Pipeline* obj)
 ----
@@ -28,9 +28,9 @@ Frees the native rust ``Pipeline`` object.
 `void`
 
 [#_pipeline_get_conjunction]
-==== pipeline_get_conjunction
+==== function <code>pipeline_get_conjunction</code>
 
-[source,cpp]
+[source,c]
 ----
 struct Conjunction* pipeline_get_conjunction(const struct Pipeline* pipeline, const struct ConjunctionID* conjunction_id)
 ----

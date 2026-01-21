@@ -10,7 +10,7 @@ The span of a constraint in the source query.
 
 // tag::methods[]
 [#_Span_begin_]
-==== begin
+==== method <code>begin</code>
 
 [source,python]
 ----
@@ -24,7 +24,7 @@ The offset of the first character.
 `int`
 
 [#_Span_end_]
-==== end
+==== method <code>end</code>
 
 [source,python]
 ----

@@ -12,7 +12,7 @@
 
 // tag::methods[]
 [#_ReturnOperationStream_variables_]
-==== variables
+==== method <code>variables</code>
 
 [source,python]
 ----

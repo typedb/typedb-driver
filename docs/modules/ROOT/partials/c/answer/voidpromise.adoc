@@ -5,16 +5,16 @@
 [.doc-api-reference-driver]
 ==== Struct VoidPromise
 
-`class`
+`rust struct (pointer)`
 
 
 
 Promise object representing the result of an asynchronous operation. A VoidPromise does not return a value, but must be resolved using void_promise_resolve(VoidPromise*) to ensure the operation has completed, or for a failed operation to set the error.
 
 [#_void_promise_drop]
-==== void_promise_drop
+==== function <code>void_promise_drop</code>
 
-[source,cpp]
+[source,c]
 ----
 void void_promise_drop(struct VoidPromise* promise)
 ----
@@ -28,9 +28,9 @@ Frees the native rust ``VoidPromise`` object.
 `void`
 
 [#_void_promise_resolve]
-==== void_promise_resolve
+==== function <code>void_promise_resolve</code>
 
-[source,cpp]
+[source,c]
 ----
 void void_promise_resolve(struct VoidPromise* promise)
 ----

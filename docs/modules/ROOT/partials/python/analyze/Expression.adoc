@@ -14,7 +14,7 @@ Represents an expression: let &lt;assigned&gt; = &lt;expression&gt;
 
 // tag::methods[]
 [#_Expression_arguments_]
-==== arguments
+==== method <code>arguments</code>
 
 [source,python]
 ----
@@ -28,7 +28,7 @@ arguments() -> Iterator['ConstraintVertex']
 `Iterator['ConstraintVertex']`
 
 [#_Expression_assigned_]
-==== assigned
+==== method <code>assigned</code>
 
 [source,python]
 ----
@@ -42,7 +42,7 @@ assigned() -> ConstraintVertex
 `ConstraintVertex`
 
 [#_Expression_text_]
-==== text
+==== method <code>text</code>
 
 [source,python]
 ----

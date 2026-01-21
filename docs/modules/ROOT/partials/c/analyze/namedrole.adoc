@@ -5,16 +5,16 @@
 [.doc-api-reference-driver]
 ==== Struct NamedRole
 
-`class`
+`rust struct (pointer)`
 
 
 
 A ``NamedRole`` vertex is used in links &amp; relates constraints, as multiple relations may have roles with the same name.
 
 [#_named_role_as_u32]
-==== named_role_as_u32
+==== function <code>named_role_as_u32</code>
 
-[source,cpp]
+[source,c]
 ----
 uint32_t named_role_as_u32(const struct NamedRole* named_role)
 ----
@@ -28,9 +28,9 @@ Returns a u32 identifying the named role instance. Meant to be used to implement
 `uint32_t`
 
 [#_named_role_drop]
-==== named_role_drop
+==== function <code>named_role_drop</code>
 
-[source,cpp]
+[source,c]
 ----
 void named_role_drop(struct NamedRole* obj)
 ----
@@ -44,9 +44,9 @@ Frees the native rust ``NamedRole`` object.
 `void`
 
 [#_named_role_get_name]
-==== named_role_get_name
+==== function <code>named_role_get_name</code>
 
-[source,cpp]
+[source,c]
 ----
 char* named_role_get_name(const struct NamedRole* named_role)
 ----
@@ -60,9 +60,9 @@ Returns the role name associated with the NamedRole.
 `char*`
 
 [#_named_role_get_variable]
-==== named_role_get_variable
+==== function <code>named_role_get_variable</code>
 
-[source,cpp]
+[source,c]
 ----
 struct Variable* named_role_get_variable(const struct NamedRole* named_role)
 ----
@@ -76,9 +76,9 @@ Returns the role-type variable associated with the NamedRole.
 `struct Variable*`
 
 [#_named_role_string_repr]
-==== named_role_string_repr
+==== function <code>named_role_string_repr</code>
 
-[source,cpp]
+[source,c]
 ----
 char* named_role_string_repr(const struct NamedRole* named_role)
 ----

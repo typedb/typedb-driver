@@ -5,7 +5,7 @@
 [.doc-api-reference-driver]
 ==== Struct TransactionOptions
 
-`class`
+`rust struct (pointer)`
 
 
 
@@ -13,9 +13,9 @@ TypeDB transaction options. ``TransactionOptions`` object can be used to overrid
 
 
 [#_transaction_options_drop]
-==== transaction_options_drop
+==== function <code>transaction_options_drop</code>
 
-[source,cpp]
+[source,c]
 ----
 void transaction_options_drop(struct TransactionOptions* options)
 ----
@@ -29,9 +29,9 @@ Frees the native Rust ``TransactionOptions`` object.
 `void`
 
 [#_transaction_options_get_schema_lock_acquire_timeout_millis]
-==== transaction_options_get_schema_lock_acquire_timeout_millis
+==== function <code>transaction_options_get_schema_lock_acquire_timeout_millis</code>
 
-[source,cpp]
+[source,c]
 ----
 int64_t transaction_options_get_schema_lock_acquire_timeout_millis(const struct TransactionOptions* options)
 ----
@@ -45,9 +45,9 @@ Returns the value set for the schema lock acquire timeout in this ``TransactionO
 `int64_t`
 
 [#_transaction_options_get_transaction_timeout_millis]
-==== transaction_options_get_transaction_timeout_millis
+==== function <code>transaction_options_get_transaction_timeout_millis</code>
 
-[source,cpp]
+[source,c]
 ----
 int64_t transaction_options_get_transaction_timeout_millis(const struct TransactionOptions* options)
 ----
@@ -61,9 +61,9 @@ Returns the value set for the transaction timeout in this ``TransactionOptions``
 `int64_t`
 
 [#_transaction_options_has_schema_lock_acquire_timeout_millis]
-==== transaction_options_has_schema_lock_acquire_timeout_millis
+==== function <code>transaction_options_has_schema_lock_acquire_timeout_millis</code>
 
-[source,cpp]
+[source,c]
 ----
 bool transaction_options_has_schema_lock_acquire_timeout_millis(const struct TransactionOptions* options)
 ----
@@ -77,9 +77,9 @@ Checks whether the option for schema lock acquire timeout was explicitly set for
 `bool`
 
 [#_transaction_options_has_transaction_timeout_millis]
-==== transaction_options_has_transaction_timeout_millis
+==== function <code>transaction_options_has_transaction_timeout_millis</code>
 
-[source,cpp]
+[source,c]
 ----
 bool transaction_options_has_transaction_timeout_millis(const struct TransactionOptions* options)
 ----
@@ -93,9 +93,9 @@ Checks whether the option for transaction timeout was explicitly set for this ``
 `bool`
 
 [#_transaction_options_new]
-==== transaction_options_new
+==== function <code>transaction_options_new</code>
 
-[source,cpp]
+[source,c]
 ----
 struct TransactionOptions* transaction_options_new(void)
 ----
@@ -109,9 +109,9 @@ Produces a new ``TransactionOptions`` object.
 `struct TransactionOptions*`
 
 [#_transaction_options_set_schema_lock_acquire_timeout_millis]
-==== transaction_options_set_schema_lock_acquire_timeout_millis
+==== function <code>transaction_options_set_schema_lock_acquire_timeout_millis</code>
 
-[source,cpp]
+[source,c]
 ----
 void transaction_options_set_schema_lock_acquire_timeout_millis(struct TransactionOptions* options, int64_t timeout_millis)
 ----
@@ -125,9 +125,9 @@ Explicitly sets schema lock acquire timeout. If set, specifies how long the driv
 `void`
 
 [#_transaction_options_set_transaction_timeout_millis]
-==== transaction_options_set_transaction_timeout_millis
+==== function <code>transaction_options_set_transaction_timeout_millis</code>
 
-[source,cpp]
+[source,c]
 ----
 void transaction_options_set_transaction_timeout_millis(struct TransactionOptions* options, int64_t timeout_millis)
 ----

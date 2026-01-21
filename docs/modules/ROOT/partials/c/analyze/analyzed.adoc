@@ -2,9 +2,9 @@
 === analyzed
 
 [#_analyzed_fetch]
-==== analyzed_fetch
+==== function <code>analyzed_fetch</code>
 
-[source,cpp]
+[source,c]
 ----
 struct Fetch* analyzed_fetch(const struct AnalyzedQuery* analyzed_query)
 ----
@@ -18,9 +18,9 @@ Returns the analyzed fetch
 `struct Fetch*`
 
 [#_analyzed_preamble]
-==== analyzed_preamble
+==== function <code>analyzed_preamble</code>
 
-[source,cpp]
+[source,c]
 ----
 struct FunctionIterator* analyzed_preamble(const struct AnalyzedQuery* analyzed_query)
 ----

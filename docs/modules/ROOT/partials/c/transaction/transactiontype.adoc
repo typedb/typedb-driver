@@ -5,7 +5,7 @@
 [.doc-api-reference-driver]
 ==== Struct TransactionType
 
-`class`
+`rust struct (pointer)`
 
 
 
@@ -16,7 +16,7 @@ This enum is used to specify the type of transaction.
 [.doc-api-reference-driver]
 ==== Enum TransactionType
 
-`class`
+`rust enum (pointer)`
 
 
 
