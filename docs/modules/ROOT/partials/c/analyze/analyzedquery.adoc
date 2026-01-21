@@ -12,7 +12,7 @@
 An ``AnalyzedQuery`` contains the server's representation of the query and preamble functions; as well as the result of types inferred for each variable by type-inference.
 
 [#_analyzed_query_drop]
-===== function ``analyzed_query_drop``
+==== function ``analyzed_query_drop``
 
 [source,c]
 ----
@@ -28,7 +28,7 @@ Frees the native rust ``AnalyzedQuery`` object.
 `void`
 
 [#_analyzed_query_pipeline]
-===== function ``analyzed_query_pipeline``
+==== function ``analyzed_query_pipeline``
 
 [source,c]
 ----

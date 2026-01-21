@@ -12,7 +12,7 @@
 Promise object representing the result of an asynchronous operation. Use string_promise_resolve(StringPromise*) to wait for and retrieve the resulting string.
 
 [#_string_promise_drop]
-===== function ``string_promise_drop``
+==== function ``string_promise_drop``
 
 [source,c]
 ----
@@ -28,7 +28,7 @@ Frees the native rust ``StringPromise`` object.
 `void`
 
 [#_string_promise_resolve]
-===== function ``string_promise_resolve``
+==== function ``string_promise_resolve``
 
 [source,c]
 ----

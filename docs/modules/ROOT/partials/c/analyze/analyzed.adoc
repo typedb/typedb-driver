@@ -2,7 +2,7 @@
 === analyzed
 
 [#_analyzed_fetch]
-===== function ``analyzed_fetch``
+==== function ``analyzed_fetch``
 
 [source,c]
 ----
@@ -18,7 +18,7 @@ Returns the analyzed fetch
 `struct Fetch*`
 
 [#_analyzed_preamble]
-===== function ``analyzed_preamble``
+==== function ``analyzed_preamble``
 
 [source,c]
 ----

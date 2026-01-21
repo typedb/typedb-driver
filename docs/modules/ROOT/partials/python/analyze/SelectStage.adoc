@@ -14,7 +14,7 @@ Represents a ‘select’ stage: select &lt;variables&gt;
 
 // tag::methods[]
 [#_SelectStage_variables_]
-===== method ``variables``
+==== method ``variables``
 
 [source,python]
 ----

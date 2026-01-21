@@ -12,7 +12,7 @@
 Promise object representing the result of an asynchronous operation. Use concept_promise_resolve(ConceptPromise*) to wait for and retrieve the resulting boolean value.
 
 [#_concept_promise_drop]
-===== function ``concept_promise_drop``
+==== function ``concept_promise_drop``
 
 [source,c]
 ----
@@ -28,7 +28,7 @@ Frees the native rust ``ConceptPromise`` object.
 `void`
 
 [#_concept_promise_resolve]
-===== function ``concept_promise_resolve``
+==== function ``concept_promise_resolve``
 
 [source,c]
 ----

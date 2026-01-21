@@ -164,7 +164,7 @@ data class Class(
         if (this.methods.isNotEmpty()) {
             result += builder.tagBegin("methods")
             if (mergeWith == null) {
-                this.methods.sortedBy { it.name }.forEach { result += it.toAsciiDoc(language) }
+                this.methods.sortedBy { it.name }.forEach { result += it.toAsciiDoc(language, headerLevel + 1) }
             } else {
                 val mergeMethods = mergeWith.methods.associateBy {
                     it.name

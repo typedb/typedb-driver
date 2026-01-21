@@ -17,7 +17,7 @@ Represents an "isa" constraint:
 
 // tag::methods[]
 [#_Constraint_Isa_asComparison_]
-===== method ``asComparison``
+==== method ``asComparison``
 
 [source,java]
 ----
@@ -31,7 +31,7 @@ Constraint.Comparison asComparison()
 `Constraint.Comparison`
 
 [#_Constraint_Isa_asExpression_]
-===== method ``asExpression``
+==== method ``asExpression``
 
 [source,java]
 ----
@@ -45,7 +45,7 @@ Constraint.Expression asExpression()
 `Constraint.Expression`
 
 [#_Constraint_Isa_asFunctionCall_]
-===== method ``asFunctionCall``
+==== method ``asFunctionCall``
 
 [source,java]
 ----
@@ -59,7 +59,7 @@ Constraint.FunctionCall asFunctionCall()
 `Constraint.FunctionCall`
 
 [#_Constraint_Isa_asHas_]
-===== method ``asHas``
+==== method ``asHas``
 
 [source,java]
 ----
@@ -73,7 +73,7 @@ Constraint.Has asHas()
 `Constraint.Has`
 
 [#_Constraint_Isa_asIid_]
-===== method ``asIid``
+==== method ``asIid``
 
 [source,java]
 ----
@@ -87,7 +87,7 @@ Constraint.Iid asIid()
 `Constraint.Iid`
 
 [#_Constraint_Isa_asIs_]
-===== method ``asIs``
+==== method ``asIs``
 
 [source,java]
 ----
@@ -101,7 +101,7 @@ Constraint.Is asIs()
 `Constraint.Is`
 
 [#_Constraint_Isa_asIsa_]
-===== method ``asIsa``
+==== method ``asIsa``
 
 [source,java]
 ----
@@ -115,7 +115,7 @@ Constraint.Isa asIsa()
 `Constraint.Isa`
 
 [#_Constraint_Isa_asKind_]
-===== method ``asKind``
+==== method ``asKind``
 
 [source,java]
 ----
@@ -129,7 +129,7 @@ Constraint.Kind asKind()
 `Constraint.Kind`
 
 [#_Constraint_Isa_asLabel_]
-===== method ``asLabel``
+==== method ``asLabel``
 
 [source,java]
 ----
@@ -143,7 +143,7 @@ Constraint.Label asLabel()
 `Constraint.Label`
 
 [#_Constraint_Isa_asLinks_]
-===== method ``asLinks``
+==== method ``asLinks``
 
 [source,java]
 ----
@@ -157,7 +157,7 @@ Constraint.Links asLinks()
 `Constraint.Links`
 
 [#_Constraint_Isa_asNot_]
-===== method ``asNot``
+==== method ``asNot``
 
 [source,java]
 ----
@@ -171,7 +171,7 @@ Constraint.Not asNot()
 `Constraint.Not`
 
 [#_Constraint_Isa_asOr_]
-===== method ``asOr``
+==== method ``asOr``
 
 [source,java]
 ----
@@ -185,7 +185,7 @@ Constraint.Or asOr()
 `Constraint.Or`
 
 [#_Constraint_Isa_asOwns_]
-===== method ``asOwns``
+==== method ``asOwns``
 
 [source,java]
 ----
@@ -199,7 +199,7 @@ Constraint.Owns asOwns()
 `Constraint.Owns`
 
 [#_Constraint_Isa_asPlays_]
-===== method ``asPlays``
+==== method ``asPlays``
 
 [source,java]
 ----
@@ -213,7 +213,7 @@ Constraint.Plays asPlays()
 `Constraint.Plays`
 
 [#_Constraint_Isa_asRelates_]
-===== method ``asRelates``
+==== method ``asRelates``
 
 [source,java]
 ----
@@ -227,7 +227,7 @@ Constraint.Relates asRelates()
 `Constraint.Relates`
 
 [#_Constraint_Isa_asSub_]
-===== method ``asSub``
+==== method ``asSub``
 
 [source,java]
 ----
@@ -241,7 +241,7 @@ Constraint.Sub asSub()
 `Constraint.Sub`
 
 [#_Constraint_Isa_asTry_]
-===== method ``asTry``
+==== method ``asTry``
 
 [source,java]
 ----
@@ -255,7 +255,7 @@ Constraint.Try asTry()
 `Constraint.Try`
 
 [#_Constraint_Isa_asValue_]
-===== method ``asValue``
+==== method ``asValue``
 
 [source,java]
 ----
@@ -269,7 +269,7 @@ Constraint.Value asValue()
 `Constraint.Value`
 
 [#_Constraint_Isa_exactness_]
-===== method ``exactness``
+==== method ``exactness``
 
 [source,java]
 ----
@@ -283,7 +283,7 @@ com.typedb.driver.jni.ConstraintExactness exactness()
 `com.typedb.driver.jni.ConstraintExactness`
 
 [#_Constraint_Isa_instance_]
-===== method ``instance``
+==== method ``instance``
 
 [source,java]
 ----
@@ -297,7 +297,7 @@ ConstraintVertex instance()
 `ConstraintVertex`
 
 [#_Constraint_Isa_isComparison_]
-===== method ``isComparison``
+==== method ``isComparison``
 
 [source,java]
 ----
@@ -311,7 +311,7 @@ boolean isComparison()
 `boolean`
 
 [#_Constraint_Isa_isExpression_]
-===== method ``isExpression``
+==== method ``isExpression``
 
 [source,java]
 ----
@@ -325,7 +325,7 @@ boolean isExpression()
 `boolean`
 
 [#_Constraint_Isa_isFunctionCall_]
-===== method ``isFunctionCall``
+==== method ``isFunctionCall``
 
 [source,java]
 ----
@@ -339,7 +339,7 @@ boolean isFunctionCall()
 `boolean`
 
 [#_Constraint_Isa_isHas_]
-===== method ``isHas``
+==== method ``isHas``
 
 [source,java]
 ----
@@ -353,7 +353,7 @@ boolean isHas()
 `boolean`
 
 [#_Constraint_Isa_isIid_]
-===== method ``isIid``
+==== method ``isIid``
 
 [source,java]
 ----
@@ -367,7 +367,7 @@ boolean isIid()
 `boolean`
 
 [#_Constraint_Isa_isIs_]
-===== method ``isIs``
+==== method ``isIs``
 
 [source,java]
 ----
@@ -381,7 +381,7 @@ boolean isIs()
 `boolean`
 
 [#_Constraint_Isa_isIsa_]
-===== method ``isIsa``
+==== method ``isIsa``
 
 [source,java]
 ----
@@ -395,7 +395,7 @@ boolean isIsa()
 `boolean`
 
 [#_Constraint_Isa_isKind_]
-===== method ``isKind``
+==== method ``isKind``
 
 [source,java]
 ----
@@ -409,7 +409,7 @@ boolean isKind()
 `boolean`
 
 [#_Constraint_Isa_isLabel_]
-===== method ``isLabel``
+==== method ``isLabel``
 
 [source,java]
 ----
@@ -423,7 +423,7 @@ boolean isLabel()
 `boolean`
 
 [#_Constraint_Isa_isLinks_]
-===== method ``isLinks``
+==== method ``isLinks``
 
 [source,java]
 ----
@@ -437,7 +437,7 @@ boolean isLinks()
 `boolean`
 
 [#_Constraint_Isa_isNot_]
-===== method ``isNot``
+==== method ``isNot``
 
 [source,java]
 ----
@@ -451,7 +451,7 @@ boolean isNot()
 `boolean`
 
 [#_Constraint_Isa_isOr_]
-===== method ``isOr``
+==== method ``isOr``
 
 [source,java]
 ----
@@ -465,7 +465,7 @@ boolean isOr()
 `boolean`
 
 [#_Constraint_Isa_isOwns_]
-===== method ``isOwns``
+==== method ``isOwns``
 
 [source,java]
 ----
@@ -479,7 +479,7 @@ boolean isOwns()
 `boolean`
 
 [#_Constraint_Isa_isPlays_]
-===== method ``isPlays``
+==== method ``isPlays``
 
 [source,java]
 ----
@@ -493,7 +493,7 @@ boolean isPlays()
 `boolean`
 
 [#_Constraint_Isa_isRelates_]
-===== method ``isRelates``
+==== method ``isRelates``
 
 [source,java]
 ----
@@ -507,7 +507,7 @@ boolean isRelates()
 `boolean`
 
 [#_Constraint_Isa_isSub_]
-===== method ``isSub``
+==== method ``isSub``
 
 [source,java]
 ----
@@ -521,7 +521,7 @@ boolean isSub()
 `boolean`
 
 [#_Constraint_Isa_isTry_]
-===== method ``isTry``
+==== method ``isTry``
 
 [source,java]
 ----
@@ -535,7 +535,7 @@ boolean isTry()
 `boolean`
 
 [#_Constraint_Isa_isValue_]
-===== method ``isValue``
+==== method ``isValue``
 
 [source,java]
 ----
@@ -549,7 +549,7 @@ boolean isValue()
 `boolean`
 
 [#_Constraint_Isa_span_]
-===== method ``span``
+==== method ``span``
 
 [source,java]
 ----
@@ -563,7 +563,7 @@ Gets the span of this constraint.
 `Constraint.Span`
 
 [#_Constraint_Isa_type_]
-===== method ``type``
+==== method ``type``
 
 [source,java]
 ----
@@ -577,7 +577,7 @@ ConstraintVertex type()
 `ConstraintVertex`
 
 [#_Constraint_Isa_variant_]
-===== method ``variant``
+==== method ``variant``
 
 [source,java]
 ----

@@ -12,7 +12,7 @@ The request it represents is performed immediately. The response is only retriev
 
 // tag::methods[]
 [#_Promise_map_]
-===== method ``map``
+==== method ``map``
 
 [source,python]
 ----
@@ -26,7 +26,7 @@ classmethod map(ctor: Callable[[U], T], raw: Callable[[], U]) -> Promise[T]
 `Promise[T]`
 
 [#_Promise_resolve_]
-===== method ``resolve``
+==== method ``resolve``
 
 [source,python]
 ----

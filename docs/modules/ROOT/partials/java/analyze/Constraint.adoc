@@ -10,7 +10,7 @@ A representation of a TypeQL constraint.
 
 // tag::methods[]
 [#_Constraint_asComparison_]
-===== method ``asComparison``
+==== method ``asComparison``
 
 [source,java]
 ----
@@ -24,7 +24,7 @@ Constraint.Comparison asComparison()
 `Constraint.Comparison`
 
 [#_Constraint_asExpression_]
-===== method ``asExpression``
+==== method ``asExpression``
 
 [source,java]
 ----
@@ -38,7 +38,7 @@ Constraint.Expression asExpression()
 `Constraint.Expression`
 
 [#_Constraint_asFunctionCall_]
-===== method ``asFunctionCall``
+==== method ``asFunctionCall``
 
 [source,java]
 ----
@@ -52,7 +52,7 @@ Constraint.FunctionCall asFunctionCall()
 `Constraint.FunctionCall`
 
 [#_Constraint_asHas_]
-===== method ``asHas``
+==== method ``asHas``
 
 [source,java]
 ----
@@ -66,7 +66,7 @@ Constraint.Has asHas()
 `Constraint.Has`
 
 [#_Constraint_asIid_]
-===== method ``asIid``
+==== method ``asIid``
 
 [source,java]
 ----
@@ -80,7 +80,7 @@ Constraint.Iid asIid()
 `Constraint.Iid`
 
 [#_Constraint_asIs_]
-===== method ``asIs``
+==== method ``asIs``
 
 [source,java]
 ----
@@ -94,7 +94,7 @@ Constraint.Is asIs()
 `Constraint.Is`
 
 [#_Constraint_asIsa_]
-===== method ``asIsa``
+==== method ``asIsa``
 
 [source,java]
 ----
@@ -108,7 +108,7 @@ Constraint.Isa asIsa()
 `Constraint.Isa`
 
 [#_Constraint_asKind_]
-===== method ``asKind``
+==== method ``asKind``
 
 [source,java]
 ----
@@ -122,7 +122,7 @@ Constraint.Kind asKind()
 `Constraint.Kind`
 
 [#_Constraint_asLabel_]
-===== method ``asLabel``
+==== method ``asLabel``
 
 [source,java]
 ----
@@ -136,7 +136,7 @@ Constraint.Label asLabel()
 `Constraint.Label`
 
 [#_Constraint_asLinks_]
-===== method ``asLinks``
+==== method ``asLinks``
 
 [source,java]
 ----
@@ -150,7 +150,7 @@ Constraint.Links asLinks()
 `Constraint.Links`
 
 [#_Constraint_asNot_]
-===== method ``asNot``
+==== method ``asNot``
 
 [source,java]
 ----
@@ -164,7 +164,7 @@ Constraint.Not asNot()
 `Constraint.Not`
 
 [#_Constraint_asOr_]
-===== method ``asOr``
+==== method ``asOr``
 
 [source,java]
 ----
@@ -178,7 +178,7 @@ Constraint.Or asOr()
 `Constraint.Or`
 
 [#_Constraint_asOwns_]
-===== method ``asOwns``
+==== method ``asOwns``
 
 [source,java]
 ----
@@ -192,7 +192,7 @@ Constraint.Owns asOwns()
 `Constraint.Owns`
 
 [#_Constraint_asPlays_]
-===== method ``asPlays``
+==== method ``asPlays``
 
 [source,java]
 ----
@@ -206,7 +206,7 @@ Constraint.Plays asPlays()
 `Constraint.Plays`
 
 [#_Constraint_asRelates_]
-===== method ``asRelates``
+==== method ``asRelates``
 
 [source,java]
 ----
@@ -220,7 +220,7 @@ Constraint.Relates asRelates()
 `Constraint.Relates`
 
 [#_Constraint_asSub_]
-===== method ``asSub``
+==== method ``asSub``
 
 [source,java]
 ----
@@ -234,7 +234,7 @@ Constraint.Sub asSub()
 `Constraint.Sub`
 
 [#_Constraint_asTry_]
-===== method ``asTry``
+==== method ``asTry``
 
 [source,java]
 ----
@@ -248,7 +248,7 @@ Constraint.Try asTry()
 `Constraint.Try`
 
 [#_Constraint_asValue_]
-===== method ``asValue``
+==== method ``asValue``
 
 [source,java]
 ----
@@ -262,7 +262,7 @@ Constraint.Value asValue()
 `Constraint.Value`
 
 [#_Constraint_isComparison_]
-===== method ``isComparison``
+==== method ``isComparison``
 
 [source,java]
 ----
@@ -276,7 +276,7 @@ boolean isComparison()
 `boolean`
 
 [#_Constraint_isExpression_]
-===== method ``isExpression``
+==== method ``isExpression``
 
 [source,java]
 ----
@@ -290,7 +290,7 @@ boolean isExpression()
 `boolean`
 
 [#_Constraint_isFunctionCall_]
-===== method ``isFunctionCall``
+==== method ``isFunctionCall``
 
 [source,java]
 ----
@@ -304,7 +304,7 @@ boolean isFunctionCall()
 `boolean`
 
 [#_Constraint_isHas_]
-===== method ``isHas``
+==== method ``isHas``
 
 [source,java]
 ----
@@ -318,7 +318,7 @@ boolean isHas()
 `boolean`
 
 [#_Constraint_isIid_]
-===== method ``isIid``
+==== method ``isIid``
 
 [source,java]
 ----
@@ -332,7 +332,7 @@ boolean isIid()
 `boolean`
 
 [#_Constraint_isIs_]
-===== method ``isIs``
+==== method ``isIs``
 
 [source,java]
 ----
@@ -346,7 +346,7 @@ boolean isIs()
 `boolean`
 
 [#_Constraint_isIsa_]
-===== method ``isIsa``
+==== method ``isIsa``
 
 [source,java]
 ----
@@ -360,7 +360,7 @@ boolean isIsa()
 `boolean`
 
 [#_Constraint_isKind_]
-===== method ``isKind``
+==== method ``isKind``
 
 [source,java]
 ----
@@ -374,7 +374,7 @@ boolean isKind()
 `boolean`
 
 [#_Constraint_isLabel_]
-===== method ``isLabel``
+==== method ``isLabel``
 
 [source,java]
 ----
@@ -388,7 +388,7 @@ boolean isLabel()
 `boolean`
 
 [#_Constraint_isLinks_]
-===== method ``isLinks``
+==== method ``isLinks``
 
 [source,java]
 ----
@@ -402,7 +402,7 @@ boolean isLinks()
 `boolean`
 
 [#_Constraint_isNot_]
-===== method ``isNot``
+==== method ``isNot``
 
 [source,java]
 ----
@@ -416,7 +416,7 @@ boolean isNot()
 `boolean`
 
 [#_Constraint_isOr_]
-===== method ``isOr``
+==== method ``isOr``
 
 [source,java]
 ----
@@ -430,7 +430,7 @@ boolean isOr()
 `boolean`
 
 [#_Constraint_isOwns_]
-===== method ``isOwns``
+==== method ``isOwns``
 
 [source,java]
 ----
@@ -444,7 +444,7 @@ boolean isOwns()
 `boolean`
 
 [#_Constraint_isPlays_]
-===== method ``isPlays``
+==== method ``isPlays``
 
 [source,java]
 ----
@@ -458,7 +458,7 @@ boolean isPlays()
 `boolean`
 
 [#_Constraint_isRelates_]
-===== method ``isRelates``
+==== method ``isRelates``
 
 [source,java]
 ----
@@ -472,7 +472,7 @@ boolean isRelates()
 `boolean`
 
 [#_Constraint_isSub_]
-===== method ``isSub``
+==== method ``isSub``
 
 [source,java]
 ----
@@ -486,7 +486,7 @@ boolean isSub()
 `boolean`
 
 [#_Constraint_isTry_]
-===== method ``isTry``
+==== method ``isTry``
 
 [source,java]
 ----
@@ -500,7 +500,7 @@ boolean isTry()
 `boolean`
 
 [#_Constraint_isValue_]
-===== method ``isValue``
+==== method ``isValue``
 
 [source,java]
 ----
@@ -514,7 +514,7 @@ boolean isValue()
 `boolean`
 
 [#_Constraint_span_]
-===== method ``span``
+==== method ``span``
 
 [source,java]
 ----
@@ -528,7 +528,7 @@ Gets the span of this constraint.
 `Constraint.Span`
 
 [#_Constraint_variant_]
-===== method ``variant``
+==== method ``variant``
 
 [source,java]
 ----

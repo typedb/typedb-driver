@@ -2,7 +2,7 @@
 === string
 
 [#_string_free]
-===== function ``string_free``
+==== function ``string_free``
 
 [source,c]
 ----

@@ -18,7 +18,7 @@ A relation type must specify at least one role.
 
 // tag::methods[]
 [#_RelationType_as_relation_type_]
-===== method ``as_relation_type``
+==== method ``as_relation_type``
 
 [source,python]
 ----
@@ -39,7 +39,7 @@ relation_type.as_relation_type()
 ----
 
 [#_RelationType_is_relation_type_]
-===== method ``is_relation_type``
+==== method ``is_relation_type``
 
 [source,python]
 ----

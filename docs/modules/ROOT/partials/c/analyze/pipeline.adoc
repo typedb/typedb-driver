@@ -12,7 +12,7 @@
 A representation of a query pipeline.
 
 [#_pipeline_drop]
-===== function ``pipeline_drop``
+==== function ``pipeline_drop``
 
 [source,c]
 ----
@@ -28,7 +28,7 @@ Frees the native rust ``Pipeline`` object.
 `void`
 
 [#_pipeline_get_conjunction]
-===== function ``pipeline_get_conjunction``
+==== function ``pipeline_get_conjunction``
 
 [source,c]
 ----

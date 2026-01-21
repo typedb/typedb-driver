@@ -13,7 +13,7 @@ TypeDB query options. ``QueryOptions`` object can be used to override the defaul
 
 
 [#_query_options_drop]
-===== function ``query_options_drop``
+==== function ``query_options_drop``
 
 [source,c]
 ----
@@ -29,7 +29,7 @@ Frees the native Rust ``QueryOptions`` object.
 `void`
 
 [#_query_options_get_include_instance_types]
-===== function ``query_options_get_include_instance_types``
+==== function ``query_options_get_include_instance_types``
 
 [source,c]
 ----
@@ -45,7 +45,7 @@ Returns the value set for the "include instance types" flag in this ``QueryOptio
 `bool`
 
 [#_query_options_get_include_query_structure]
-===== function ``query_options_get_include_query_structure``
+==== function ``query_options_get_include_query_structure``
 
 [source,c]
 ----
@@ -61,7 +61,7 @@ Returns the value set for 'include query structure' in this ``QueryOptions`` obj
 `bool`
 
 [#_query_options_get_prefetch_size]
-===== function ``query_options_get_prefetch_size``
+==== function ``query_options_get_prefetch_size``
 
 [source,c]
 ----
@@ -77,7 +77,7 @@ Returns the value set for the prefetch size in this ``QueryOptions`` object. If 
 `int64_t`
 
 [#_query_options_has_include_instance_types]
-===== function ``query_options_has_include_instance_types``
+==== function ``query_options_has_include_instance_types``
 
 [source,c]
 ----
@@ -93,7 +93,7 @@ Checks whether the "include instance types" flag was explicitly set for this ``Q
 `bool`
 
 [#_query_options_has_include_query_structure]
-===== function ``query_options_has_include_query_structure``
+==== function ``query_options_has_include_query_structure``
 
 [source,c]
 ----
@@ -109,7 +109,7 @@ Checks whether the prefetch size was explicitly set for this ``QueryOptions`` ob
 `bool`
 
 [#_query_options_has_prefetch_size]
-===== function ``query_options_has_prefetch_size``
+==== function ``query_options_has_prefetch_size``
 
 [source,c]
 ----
@@ -125,7 +125,7 @@ Checks whether the prefetch size was explicitly set for this ``QueryOptions`` ob
 `bool`
 
 [#_query_options_new]
-===== function ``query_options_new``
+==== function ``query_options_new``
 
 [source,c]
 ----
@@ -141,7 +141,7 @@ Produces a new ``QueryOptions`` object.
 `struct QueryOptions*`
 
 [#_query_options_set_include_instance_types]
-===== function ``query_options_set_include_instance_types``
+==== function ``query_options_set_include_instance_types``
 
 [source,c]
 ----
@@ -157,7 +157,7 @@ Explicitly set the "include instance types" flag. If set, specifies if types sho
 `void`
 
 [#_query_options_set_include_query_structure]
-===== function ``query_options_set_include_query_structure``
+==== function ``query_options_set_include_query_structure``
 
 [source,c]
 ----
@@ -173,7 +173,7 @@ Explicitly set the prefetch size. If set, it requests the server to include the 
 `void`
 
 [#_query_options_set_prefetch_size]
-===== function ``query_options_set_prefetch_size``
+==== function ``query_options_set_prefetch_size``
 
 [source,c]
 ----

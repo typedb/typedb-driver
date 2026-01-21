@@ -12,7 +12,7 @@
 
 // tag::methods[]
 [#_ReturnOperationSingle_selector_]
-===== method ``selector``
+==== method ``selector``
 
 [source,python]
 ----
@@ -26,7 +26,7 @@ Gets the selector that determines how the operation selects the row.
 `str`
 
 [#_ReturnOperationSingle_variables_]
-===== method ``variables``
+==== method ``variables``
 
 [source,python]
 ----

@@ -10,7 +10,7 @@ The leaf of a Fetch object. Holds information on the value it can hold.
 
 // tag::methods[]
 [#_Fetch_FetchLeaf_annotations_]
-===== method ``annotations``
+==== method ``annotations``
 
 [source,java]
 ----

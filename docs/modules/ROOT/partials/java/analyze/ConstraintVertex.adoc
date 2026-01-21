@@ -10,7 +10,7 @@ The answer to a TypeDB query is a set of concepts which satisfy the constraints 
 
 // tag::methods[]
 [#_ConstraintVertex_asLabel_]
-===== method ``asLabel``
+==== method ``asLabel``
 
 [source,java]
 ----
@@ -24,7 +24,7 @@ Down-casts this vertex to a type label.
 `Type`
 
 [#_ConstraintVertex_asNamedRole_]
-===== method ``asNamedRole``
+==== method ``asNamedRole``
 
 [source,java]
 ----
@@ -38,7 +38,7 @@ Down-casts this vertex to a NamedRole. This is an internal variable injected to 
 `NamedRole`
 
 [#_ConstraintVertex_asValue_]
-===== method ``asValue``
+==== method ``asValue``
 
 [source,java]
 ----
@@ -52,7 +52,7 @@ Down-casts this vertex to a value.
 `Value`
 
 [#_ConstraintVertex_asVariable_]
-===== method ``asVariable``
+==== method ``asVariable``
 
 [source,java]
 ----
@@ -66,7 +66,7 @@ Down-casts this variable to a vertex.
 `Variable`
 
 [#_ConstraintVertex_isLabel_]
-===== method ``isLabel``
+==== method ``isLabel``
 
 [source,java]
 ----
@@ -80,7 +80,7 @@ Checks if this vertex is a label.
 `boolean`
 
 [#_ConstraintVertex_isNamedRole_]
-===== method ``isNamedRole``
+==== method ``isNamedRole``
 
 [source,java]
 ----
@@ -94,7 +94,7 @@ Checks if this vertex is a named role.
 `boolean`
 
 [#_ConstraintVertex_isValue_]
-===== method ``isValue``
+==== method ``isValue``
 
 [source,java]
 ----
@@ -108,7 +108,7 @@ Checks if this vertex is a value.
 `boolean`
 
 [#_ConstraintVertex_isVariable_]
-===== method ``isVariable``
+==== method ``isVariable``
 
 [source,java]
 ----

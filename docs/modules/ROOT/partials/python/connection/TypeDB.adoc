@@ -8,7 +8,7 @@
 
 // tag::methods[]
 [#_TypeDB_driver_address_str_credentials_Credentials_driver_options_DriverOptions]
-===== method ``driver``
+==== method ``driver``
 
 [source,python]
 ----

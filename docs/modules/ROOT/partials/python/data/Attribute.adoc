@@ -16,7 +16,7 @@ Attributes can be uniquely addressed by their type and value.
 
 // tag::methods[]
 [#_Attribute_as_attribute_]
-===== method ``as_attribute``
+==== method ``as_attribute``
 
 [source,python]
 ----
@@ -37,7 +37,7 @@ attribute.as_attribute()
 ----
 
 [#_Attribute_get_boolean_]
-===== method ``get_boolean``
+==== method ``get_boolean``
 
 [source,python]
 ----
@@ -58,7 +58,7 @@ attribute.get_boolean()
 ----
 
 [#_Attribute_get_date_]
-===== method ``get_date``
+==== method ``get_date``
 
 [source,python]
 ----
@@ -79,7 +79,7 @@ attribute.get_date()
 ----
 
 [#_Attribute_get_datetime_]
-===== method ``get_datetime``
+==== method ``get_datetime``
 
 [source,python]
 ----
@@ -100,7 +100,7 @@ attribute.get_datetime()
 ----
 
 [#_Attribute_get_datetime_tz_]
-===== method ``get_datetime_tz``
+==== method ``get_datetime_tz``
 
 [source,python]
 ----
@@ -121,7 +121,7 @@ attribute.get_datetime_tz()
 ----
 
 [#_Attribute_get_decimal_]
-===== method ``get_decimal``
+==== method ``get_decimal``
 
 [source,python]
 ----
@@ -142,7 +142,7 @@ attribute.get_decimal()
 ----
 
 [#_Attribute_get_double_]
-===== method ``get_double``
+==== method ``get_double``
 
 [source,python]
 ----
@@ -163,7 +163,7 @@ attribute.get_double()
 ----
 
 [#_Attribute_get_duration_]
-===== method ``get_duration``
+==== method ``get_duration``
 
 [source,python]
 ----
@@ -184,7 +184,7 @@ attribute.get_duration()
 ----
 
 [#_Attribute_get_integer_]
-===== method ``get_integer``
+==== method ``get_integer``
 
 [source,python]
 ----
@@ -205,7 +205,7 @@ attribute.get_integer()
 ----
 
 [#_Attribute_get_string_]
-===== method ``get_string``
+==== method ``get_string``
 
 [source,python]
 ----
@@ -226,7 +226,7 @@ attribute.get_string()
 ----
 
 [#_Attribute_get_struct_]
-===== method ``get_struct``
+==== method ``get_struct``
 
 [source,python]
 ----
@@ -247,7 +247,7 @@ attribute.get_struct()
 ----
 
 [#_Attribute_get_type_]
-===== method ``get_type``
+==== method ``get_type``
 
 [source,python]
 ----
@@ -268,7 +268,7 @@ attribute.get_type()
 ----
 
 [#_Attribute_get_value_]
-===== method ``get_value``
+==== method ``get_value``
 
 [source,python]
 ----
@@ -289,7 +289,7 @@ attribute.get_value()
 ----
 
 [#_Attribute_get_value_type_]
-===== method ``get_value_type``
+==== method ``get_value_type``
 
 [source,python]
 ----
@@ -310,7 +310,7 @@ attribute.get_value_type()
 ----
 
 [#_Attribute_is_attribute_]
-===== method ``is_attribute``
+==== method ``is_attribute``
 
 [source,python]
 ----

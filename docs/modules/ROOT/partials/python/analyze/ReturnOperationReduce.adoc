@@ -12,7 +12,7 @@
 
 // tag::methods[]
 [#_ReturnOperationReduce_reducers_]
-===== method ``reducers``
+==== method ``reducers``
 
 [source,python]
 ----

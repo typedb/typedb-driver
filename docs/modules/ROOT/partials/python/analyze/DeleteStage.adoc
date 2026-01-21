@@ -14,7 +14,7 @@ Represents a ‘delete’ stage.
 
 // tag::methods[]
 [#_DeleteStage_block_]
-===== method ``block``
+==== method ``block``
 
 [source,python]
 ----
@@ -28,7 +28,7 @@ block() -> ConjunctionID
 `ConjunctionID`
 
 [#_DeleteStage_deleted_variables_]
-===== method ``deleted_variables``
+==== method ``deleted_variables``
 
 [source,python]
 ----
