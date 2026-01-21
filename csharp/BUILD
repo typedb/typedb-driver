@@ -24,7 +24,7 @@ load(":build_opts.bzl", "target_framework", "target_frameworks", "targeting_pack
 load(":rules.bzl", "swig_native_csharp_library", "swig_native_nuget_pack")
 load("//csharp:docs_structure.bzl", "dir_mapping")
 load("//tool/docs:csharp/rules.bzl", "doxygen_csharp_to_adoc")
-load("//tool/docs:csharp/rules.bzl", "doxygen_csharp_to_adoc")
+load("//tool/docs:examples/rules.bzl", "test_to_example", "update_markdown_example")
 
 swig_native_csharp_library(
     name = "typedb_driver_pinvoke",
@@ -137,6 +137,29 @@ doxygen_csharp_to_adoc(
     tags = ["manual"]
 )
 
+test_to_example(
+    name = "example",
+    input = "//csharp/Test/Integration:ExampleTest.cs",
+    output = "csharp/TypeDBExample.cs",
+    removed_lines = ["Assert", "Fail(", "Xunit"],
+    changed_words = {
+        "TypeDB.Driver.Test.Integration": "TypeDB.Driver.Examples",
+        "ExampleTest": "TypeDBExample",
+        "ServerAddress,": "TypeDB.DefaultAddress,",
+    },
+    header_comment_sign = "//",
+)
+
+update_markdown_example(
+    name = "readme_example",
+    input = "TypeDBExample.cs",
+    output = ":README.md",
+    start_marker = "EXAMPLE_START_MARKER",
+    end_marker = "EXAMPLE_END_MARKER",
+    language_tag = "csharp",
+    removed_header = "//",
+)
+
 checkstyle_test(
     name = "checkstyle",
     size = "small",
@@ -144,6 +167,7 @@ checkstyle_test(
     exclude = glob([
         "README.md",
         "docs/**/*.adoc",
+        "TypeDBExample.cs",
     ]),
     license_type = "apache-header",
 )
