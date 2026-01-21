@@ -14,7 +14,7 @@ Represents a "match" stage: match &lt;block&gt; e.g. ``match $f isa friendship, 
 
 // tag::methods[]
 [#_PipelineStage_MatchStage_asDelete_]
-==== method <code>asDelete</code>
+==== method ``asDelete``
 
 [source,java]
 ----
@@ -28,7 +28,7 @@ PipelineStage.DeleteStage asDelete()
 `PipelineStage.DeleteStage`
 
 [#_PipelineStage_MatchStage_asDistinct_]
-==== method <code>asDistinct</code>
+==== method ``asDistinct``
 
 [source,java]
 ----
@@ -42,7 +42,7 @@ PipelineStage.DistinctStage asDistinct()
 `PipelineStage.DistinctStage`
 
 [#_PipelineStage_MatchStage_asInsert_]
-==== method <code>asInsert</code>
+==== method ``asInsert``
 
 [source,java]
 ----
@@ -56,7 +56,7 @@ PipelineStage.InsertStage asInsert()
 `PipelineStage.InsertStage`
 
 [#_PipelineStage_MatchStage_asLimit_]
-==== method <code>asLimit</code>
+==== method ``asLimit``
 
 [source,java]
 ----
@@ -70,7 +70,7 @@ PipelineStage.LimitStage asLimit()
 `PipelineStage.LimitStage`
 
 [#_PipelineStage_MatchStage_asMatch_]
-==== method <code>asMatch</code>
+==== method ``asMatch``
 
 [source,java]
 ----
@@ -84,7 +84,7 @@ PipelineStage.MatchStage asMatch()
 `PipelineStage.MatchStage`
 
 [#_PipelineStage_MatchStage_asOffset_]
-==== method <code>asOffset</code>
+==== method ``asOffset``
 
 [source,java]
 ----
@@ -98,7 +98,7 @@ PipelineStage.OffsetStage asOffset()
 `PipelineStage.OffsetStage`
 
 [#_PipelineStage_MatchStage_asPut_]
-==== method <code>asPut</code>
+==== method ``asPut``
 
 [source,java]
 ----
@@ -112,7 +112,7 @@ PipelineStage.PutStage asPut()
 `PipelineStage.PutStage`
 
 [#_PipelineStage_MatchStage_asReduce_]
-==== method <code>asReduce</code>
+==== method ``asReduce``
 
 [source,java]
 ----
@@ -126,7 +126,7 @@ PipelineStage.ReduceStage asReduce()
 `PipelineStage.ReduceStage`
 
 [#_PipelineStage_MatchStage_asRequire_]
-==== method <code>asRequire</code>
+==== method ``asRequire``
 
 [source,java]
 ----
@@ -140,7 +140,7 @@ PipelineStage.RequireStage asRequire()
 `PipelineStage.RequireStage`
 
 [#_PipelineStage_MatchStage_asSelect_]
-==== method <code>asSelect</code>
+==== method ``asSelect``
 
 [source,java]
 ----
@@ -154,7 +154,7 @@ PipelineStage.SelectStage asSelect()
 `PipelineStage.SelectStage`
 
 [#_PipelineStage_MatchStage_asSort_]
-==== method <code>asSort</code>
+==== method ``asSort``
 
 [source,java]
 ----
@@ -168,7 +168,7 @@ PipelineStage.SortStage asSort()
 `PipelineStage.SortStage`
 
 [#_PipelineStage_MatchStage_asUpdate_]
-==== method <code>asUpdate</code>
+==== method ``asUpdate``
 
 [source,java]
 ----
@@ -182,7 +182,7 @@ PipelineStage.UpdateStage asUpdate()
 `PipelineStage.UpdateStage`
 
 [#_PipelineStage_MatchStage_block_]
-==== method <code>block</code>
+==== method ``block``
 
 [source,java]
 ----
@@ -196,7 +196,7 @@ The index into ``Pipeline.conjunctions``
 `ConjunctionID`
 
 [#_PipelineStage_MatchStage_getVariant_]
-==== method <code>getVariant</code>
+==== method ``getVariant``
 
 [source,java]
 ----
@@ -210,7 +210,7 @@ com.typedb.driver.jni.PipelineStageVariant getVariant()
 `com.typedb.driver.jni.PipelineStageVariant`
 
 [#_PipelineStage_MatchStage_isDelete_]
-==== method <code>isDelete</code>
+==== method ``isDelete``
 
 [source,java]
 ----
@@ -224,7 +224,7 @@ boolean isDelete()
 `boolean`
 
 [#_PipelineStage_MatchStage_isDistinct_]
-==== method <code>isDistinct</code>
+==== method ``isDistinct``
 
 [source,java]
 ----
@@ -238,7 +238,7 @@ boolean isDistinct()
 `boolean`
 
 [#_PipelineStage_MatchStage_isInsert_]
-==== method <code>isInsert</code>
+==== method ``isInsert``
 
 [source,java]
 ----
@@ -252,7 +252,7 @@ boolean isInsert()
 `boolean`
 
 [#_PipelineStage_MatchStage_isLimit_]
-==== method <code>isLimit</code>
+==== method ``isLimit``
 
 [source,java]
 ----
@@ -266,7 +266,7 @@ boolean isLimit()
 `boolean`
 
 [#_PipelineStage_MatchStage_isMatch_]
-==== method <code>isMatch</code>
+==== method ``isMatch``
 
 [source,java]
 ----
@@ -280,7 +280,7 @@ boolean isMatch()
 `boolean`
 
 [#_PipelineStage_MatchStage_isOffset_]
-==== method <code>isOffset</code>
+==== method ``isOffset``
 
 [source,java]
 ----
@@ -294,7 +294,7 @@ boolean isOffset()
 `boolean`
 
 [#_PipelineStage_MatchStage_isPut_]
-==== method <code>isPut</code>
+==== method ``isPut``
 
 [source,java]
 ----
@@ -308,7 +308,7 @@ boolean isPut()
 `boolean`
 
 [#_PipelineStage_MatchStage_isReduce_]
-==== method <code>isReduce</code>
+==== method ``isReduce``
 
 [source,java]
 ----
@@ -322,7 +322,7 @@ boolean isReduce()
 `boolean`
 
 [#_PipelineStage_MatchStage_isRequire_]
-==== method <code>isRequire</code>
+==== method ``isRequire``
 
 [source,java]
 ----
@@ -336,7 +336,7 @@ boolean isRequire()
 `boolean`
 
 [#_PipelineStage_MatchStage_isSelect_]
-==== method <code>isSelect</code>
+==== method ``isSelect``
 
 [source,java]
 ----
@@ -350,7 +350,7 @@ boolean isSelect()
 `boolean`
 
 [#_PipelineStage_MatchStage_isSort_]
-==== method <code>isSort</code>
+==== method ``isSort``
 
 [source,java]
 ----
@@ -364,7 +364,7 @@ boolean isSort()
 `boolean`
 
 [#_PipelineStage_MatchStage_isUpdate_]
-==== method <code>isUpdate</code>
+==== method ``isUpdate``
 
 [source,java]
 ----

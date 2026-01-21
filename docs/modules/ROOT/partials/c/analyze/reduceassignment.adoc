@@ -12,7 +12,7 @@
 Representation of an assignment from a reduction in a ``PipelineStage::Reduce``, such as ``reduce $c = sum($x);``
 
 [#_reduce_assignment_drop]
-==== function <code>reduce_assignment_drop</code>
+==== function ``reduce_assignment_drop``
 
 [source,c]
 ----
@@ -28,7 +28,7 @@ Frees the native rust ``ReduceAssignment`` object.
 `void`
 
 [#_reduce_assignment_get_assigned]
-==== function <code>reduce_assignment_get_assigned</code>
+==== function ``reduce_assignment_get_assigned``
 
 [source,c]
 ----
@@ -44,7 +44,7 @@ The variable being assigned to in this ReduceAssignment. e.g. ``$c`` in ``$c = s
 `struct Variable*`
 
 [#_reduce_assignment_get_reducer]
-==== function <code>reduce_assignment_get_reducer</code>
+==== function ``reduce_assignment_get_reducer``
 
 [source,c]
 ----

@@ -14,7 +14,7 @@ Represents a ‘reduce’ stage: reduce &lt;reducers&gt; groupby &lt;groupby&gt;
 
 // tag::methods[]
 [#_ReduceStage_group_by_]
-==== method <code>group_by</code>
+==== method ``group_by``
 
 [source,python]
 ----
@@ -28,7 +28,7 @@ The variables to group by.
 `Iterator['Variable']`
 
 [#_ReduceStage_reduce_assignments_]
-==== method <code>reduce_assignments</code>
+==== method ``reduce_assignments``
 
 [source,python]
 ----

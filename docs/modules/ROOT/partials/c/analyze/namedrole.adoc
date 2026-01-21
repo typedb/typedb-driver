@@ -12,7 +12,7 @@
 A ``NamedRole`` vertex is used in links &amp; relates constraints, as multiple relations may have roles with the same name.
 
 [#_named_role_as_u32]
-==== function <code>named_role_as_u32</code>
+==== function ``named_role_as_u32``
 
 [source,c]
 ----
@@ -28,7 +28,7 @@ Returns a u32 identifying the named role instance. Meant to be used to implement
 `uint32_t`
 
 [#_named_role_drop]
-==== function <code>named_role_drop</code>
+==== function ``named_role_drop``
 
 [source,c]
 ----
@@ -44,7 +44,7 @@ Frees the native rust ``NamedRole`` object.
 `void`
 
 [#_named_role_get_name]
-==== function <code>named_role_get_name</code>
+==== function ``named_role_get_name``
 
 [source,c]
 ----
@@ -60,7 +60,7 @@ Returns the role name associated with the NamedRole.
 `char*`
 
 [#_named_role_get_variable]
-==== function <code>named_role_get_variable</code>
+==== function ``named_role_get_variable``
 
 [source,c]
 ----
@@ -76,7 +76,7 @@ Returns the role-type variable associated with the NamedRole.
 `struct Variable*`
 
 [#_named_role_string_repr]
-==== function <code>named_role_string_repr</code>
+==== function ``named_role_string_repr``
 
 [source,c]
 ----

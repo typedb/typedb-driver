@@ -30,7 +30,7 @@ a| `WRITE` a| `1`
 
 // tag::methods[]
 [#_QueryType_is_read_]
-==== method <code>is_read</code>
+==== method ``is_read``
 
 [source,python]
 ----
@@ -44,7 +44,7 @@ is_read() -> bool
 `bool`
 
 [#_QueryType_is_schema_]
-==== method <code>is_schema</code>
+==== method ``is_schema``
 
 [source,python]
 ----
@@ -58,7 +58,7 @@ is_schema() -> bool
 `bool`
 
 [#_QueryType_is_write_]
-==== method <code>is_write</code>
+==== method ``is_write``
 
 [source,python]
 ----

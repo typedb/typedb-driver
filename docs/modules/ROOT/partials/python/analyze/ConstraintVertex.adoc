@@ -10,7 +10,7 @@ The answer to a TypeDB query is a set of concepts which satisfy the constraints 
 
 // tag::methods[]
 [#_ConstraintVertex_as_label_]
-==== method <code>as_label</code>
+==== method ``as_label``
 
 [source,python]
 ----
@@ -24,7 +24,7 @@ Down-casts this vertex to a type label.
 `typedb.api.concept.type.type.Type`
 
 [#_ConstraintVertex_as_named_role_]
-==== method <code>as_named_role</code>
+==== method ``as_named_role``
 
 [source,python]
 ----
@@ -38,7 +38,7 @@ Down-casts this vertex to a NamedRole. This is an internal variable injected to 
 `typedb.api.analyze.named_role.NamedRole`
 
 [#_ConstraintVertex_as_value_]
-==== method <code>as_value</code>
+==== method ``as_value``
 
 [source,python]
 ----
@@ -52,7 +52,7 @@ Down-casts this vertex to a value.
 `typedb.api.concept.value.value.Value`
 
 [#_ConstraintVertex_as_variable_]
-==== method <code>as_variable</code>
+==== method ``as_variable``
 
 [source,python]
 ----
@@ -66,7 +66,7 @@ Down-casts this vertex to a variable.
 `Variable`
 
 [#_ConstraintVertex_is_label_]
-==== method <code>is_label</code>
+==== method ``is_label``
 
 [source,python]
 ----
@@ -80,7 +80,7 @@ Checks if this vertex is a label.
 `bool`
 
 [#_ConstraintVertex_is_named_role_]
-==== method <code>is_named_role</code>
+==== method ``is_named_role``
 
 [source,python]
 ----
@@ -94,7 +94,7 @@ Checks if this vertex is a named role.
 `bool`
 
 [#_ConstraintVertex_is_value_]
-==== method <code>is_value</code>
+==== method ``is_value``
 
 [source,python]
 ----
@@ -108,7 +108,7 @@ Checks if this vertex is a value.
 `bool`
 
 [#_ConstraintVertex_is_variable_]
-==== method <code>is_variable</code>
+==== method ``is_variable``
 
 [source,python]
 ----

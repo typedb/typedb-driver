@@ -12,7 +12,7 @@
 The fundamental TypeQL object.
 
 [#_concept_drop]
-==== function <code>concept_drop</code>
+==== function ``concept_drop``
 
 [source,c]
 ----
@@ -28,7 +28,7 @@ Frees the native rust ``Concept`` object
 `void`
 
 [#_concept_equals]
-==== function <code>concept_equals</code>
+==== function ``concept_equals``
 
 [source,c]
 ----
@@ -44,7 +44,7 @@ Checks whether the provided ``Concept`` objects are equal
 `bool`
 
 [#_concept_get_boolean]
-==== function <code>concept_get_boolean</code>
+==== function ``concept_get_boolean``
 
 [source,c]
 ----
@@ -60,7 +60,7 @@ Returns a ``boolean`` value of this value concept. If the value has another type
 `bool`
 
 [#_concept_get_date_as_seconds]
-==== function <code>concept_get_date_as_seconds</code>
+==== function ``concept_get_date_as_seconds``
 
 [source,c]
 ----
@@ -76,7 +76,7 @@ Returns the value of this date value concept as seconds since the start of the U
 `int64_t`
 
 [#_concept_get_datetime]
-==== function <code>concept_get_datetime</code>
+==== function ``concept_get_datetime``
 
 [source,c]
 ----
@@ -92,7 +92,7 @@ Returns the value of this datetime value concept as seconds and nanoseconds part
 `struct DatetimeInNanos`
 
 [#_concept_get_datetime_tz]
-==== function <code>concept_get_datetime_tz</code>
+==== function ``concept_get_datetime_tz``
 
 [source,c]
 ----
@@ -108,7 +108,7 @@ Returns the value of this datetime-tz value concept as seconds and nanoseconds p
 `struct DatetimeAndTimeZone`
 
 [#_concept_get_decimal]
-==== function <code>concept_get_decimal</code>
+==== function ``concept_get_decimal``
 
 [source,c]
 ----
@@ -124,7 +124,7 @@ Returns the ``decimal`` value of this value concept. If the value has another ty
 `struct Decimal`
 
 [#_concept_get_double]
-==== function <code>concept_get_double</code>
+==== function ``concept_get_double``
 
 [source,c]
 ----
@@ -140,7 +140,7 @@ Returns the ``double`` value of this value concept. If the value has another typ
 `double`
 
 [#_concept_get_duration]
-==== function <code>concept_get_duration</code>
+==== function ``concept_get_duration``
 
 [source,c]
 ----
@@ -156,7 +156,7 @@ Returns the value of this duration value. If the value has another type, the err
 `struct Duration`
 
 [#_concept_get_integer]
-==== function <code>concept_get_integer</code>
+==== function ``concept_get_integer``
 
 [source,c]
 ----
@@ -172,7 +172,7 @@ Returns the ``integer`` value of this value concept. If the value has another ty
 `int64_t`
 
 [#_concept_get_label]
-==== function <code>concept_get_label</code>
+==== function ``concept_get_label``
 
 [source,c]
 ----
@@ -188,7 +188,7 @@ Retrieves the label of this ``Concept``. If this is an ``Instance``, returns the
 `char*`
 
 [#_concept_get_string]
-==== function <code>concept_get_string</code>
+==== function ``concept_get_string``
 
 [source,c]
 ----
@@ -204,7 +204,7 @@ Returns the ``string`` value of this value concept. If the value has another typ
 `char*`
 
 [#_concept_get_struct]
-==== function <code>concept_get_struct</code>
+==== function ``concept_get_struct``
 
 [source,c]
 ----
@@ -220,7 +220,7 @@ Returns the value of this struct value concept represented as an iterator of {fi
 `struct StringAndOptValueIterator*`
 
 [#_concept_is_attribute]
-==== function <code>concept_is_attribute</code>
+==== function ``concept_is_attribute``
 
 [source,c]
 ----
@@ -236,7 +236,7 @@ Checks if this ``Concept`` is an ``Attribute``.
 `bool`
 
 [#_concept_is_attribute_type]
-==== function <code>concept_is_attribute_type</code>
+==== function ``concept_is_attribute_type``
 
 [source,c]
 ----
@@ -252,7 +252,7 @@ Checks if this ``Concept`` is an ``AttributeType``.
 `bool`
 
 [#_concept_is_boolean]
-==== function <code>concept_is_boolean</code>
+==== function ``concept_is_boolean``
 
 [source,c]
 ----
@@ -268,7 +268,7 @@ Returns ``true`` if the value which this ``Concept`` holds is of type ``boolean`
 `bool`
 
 [#_concept_is_date]
-==== function <code>concept_is_date</code>
+==== function ``concept_is_date``
 
 [source,c]
 ----
@@ -284,7 +284,7 @@ Returns ``true`` if the value which this ``Concept`` holds is of type ``date``. 
 `bool`
 
 [#_concept_is_datetime]
-==== function <code>concept_is_datetime</code>
+==== function ``concept_is_datetime``
 
 [source,c]
 ----
@@ -300,7 +300,7 @@ Returns ``true`` if the value which this ``Concept`` holds is of type ``datetime
 `bool`
 
 [#_concept_is_datetime_tz]
-==== function <code>concept_is_datetime_tz</code>
+==== function ``concept_is_datetime_tz``
 
 [source,c]
 ----
@@ -316,7 +316,7 @@ Returns ``true`` if the value which this ``Concept`` holds is of type ``datetime
 `bool`
 
 [#_concept_is_decimal]
-==== function <code>concept_is_decimal</code>
+==== function ``concept_is_decimal``
 
 [source,c]
 ----
@@ -332,7 +332,7 @@ Returns ``true`` if the value which this ``Concept`` holds is of type ``decimal`
 `bool`
 
 [#_concept_is_double]
-==== function <code>concept_is_double</code>
+==== function ``concept_is_double``
 
 [source,c]
 ----
@@ -348,7 +348,7 @@ Returns ``true`` if the value which this ``Concept`` holds is of type ``double``
 `bool`
 
 [#_concept_is_duration]
-==== function <code>concept_is_duration</code>
+==== function ``concept_is_duration``
 
 [source,c]
 ----
@@ -364,7 +364,7 @@ Returns ``true`` if the value which this ``Concept`` holds is of type ``duration
 `bool`
 
 [#_concept_is_entity]
-==== function <code>concept_is_entity</code>
+==== function ``concept_is_entity``
 
 [source,c]
 ----
@@ -380,7 +380,7 @@ Checks if this ``Concept`` is an ``Entity``.
 `bool`
 
 [#_concept_is_entity_type]
-==== function <code>concept_is_entity_type</code>
+==== function ``concept_is_entity_type``
 
 [source,c]
 ----
@@ -396,7 +396,7 @@ Checks if this ``Concept`` is an ``EntityType``.
 `bool`
 
 [#_concept_is_integer]
-==== function <code>concept_is_integer</code>
+==== function ``concept_is_integer``
 
 [source,c]
 ----
@@ -412,7 +412,7 @@ Returns ``true`` if the value which this ``Concept`` holds is of type ``integer`
 `bool`
 
 [#_concept_is_relation]
-==== function <code>concept_is_relation</code>
+==== function ``concept_is_relation``
 
 [source,c]
 ----
@@ -428,7 +428,7 @@ Checks if this ``Concept`` is a ``Relation``.
 `bool`
 
 [#_concept_is_relation_type]
-==== function <code>concept_is_relation_type</code>
+==== function ``concept_is_relation_type``
 
 [source,c]
 ----
@@ -444,7 +444,7 @@ Checks if this ``Concept`` is a ``RelationType``.
 `bool`
 
 [#_concept_is_role_type]
-==== function <code>concept_is_role_type</code>
+==== function ``concept_is_role_type``
 
 [source,c]
 ----
@@ -460,7 +460,7 @@ Checks if this ``Concept`` is a ``RoleType``.
 `bool`
 
 [#_concept_is_string]
-==== function <code>concept_is_string</code>
+==== function ``concept_is_string``
 
 [source,c]
 ----
@@ -476,7 +476,7 @@ Returns ``true`` if the value which this ``Concept`` holds is of type ``string``
 `bool`
 
 [#_concept_is_struct]
-==== function <code>concept_is_struct</code>
+==== function ``concept_is_struct``
 
 [source,c]
 ----
@@ -492,7 +492,7 @@ Returns ``true`` if the value which this ``Concept`` holds is of type ``struct``
 `bool`
 
 [#_concept_is_value]
-==== function <code>concept_is_value</code>
+==== function ``concept_is_value``
 
 [source,c]
 ----
@@ -508,7 +508,7 @@ Checks if this ``Concept`` is a ``Value``.
 `bool`
 
 [#_concept_to_string]
-==== function <code>concept_to_string</code>
+==== function ``concept_to_string``
 
 [source,c]
 ----
@@ -524,7 +524,7 @@ A string representation of this ``Concept`` object.
 `char*`
 
 [#_concept_try_get_iid]
-==== function <code>concept_try_get_iid</code>
+==== function ``concept_try_get_iid``
 
 [source,c]
 ----
@@ -540,7 +540,7 @@ Retrieves the unique id (IID) of this ``Concept``. If this is an Entity or Relat
 `char*`
 
 [#_concept_try_get_label]
-==== function <code>concept_try_get_label</code>
+==== function ``concept_try_get_label``
 
 [source,c]
 ----
@@ -556,7 +556,7 @@ Retrieves the optional label of this ``Concept``. If this is an ``Instance``, re
 `char*`
 
 [#_concept_try_get_value]
-==== function <code>concept_try_get_value</code>
+==== function ``concept_try_get_value``
 
 [source,c]
 ----
@@ -572,7 +572,7 @@ Retrieves the value of this ``Concept``, if it exists. If this is an ``Attribute
 `struct Concept*`
 
 [#_concept_try_get_value_type]
-==== function <code>concept_try_get_value_type</code>
+==== function ``concept_try_get_value_type``
 
 [source,c]
 ----

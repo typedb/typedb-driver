@@ -10,7 +10,7 @@ A representation of the constraints involved in the query, and types inferred fo
 
 // tag::methods[]
 [#_Conjunction_annotated_variables_]
-==== method <code>annotated_variables</code>
+==== method ``annotated_variables``
 
 [source,python]
 ----
@@ -24,7 +24,7 @@ The variables that have annotations in this conjunction.
 `Iterator['Variable']`
 
 [#_Conjunction_constraints_]
-==== method <code>constraints</code>
+==== method ``constraints``
 
 [source,python]
 ----
@@ -38,7 +38,7 @@ The Constraint(s) in the conjunction.
 `Iterator['Constraint']`
 
 [#_Conjunction_variable_annotations_variable_Variable]
-==== method <code>variable_annotations</code>
+==== method ``variable_annotations``
 
 [source,python]
 ----

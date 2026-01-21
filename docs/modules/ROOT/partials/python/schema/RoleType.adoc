@@ -16,7 +16,7 @@ Roles allow a schema to enforce logical constraints on types of role players.
 
 // tag::methods[]
 [#_RoleType_as_role_type_]
-==== method <code>as_role_type</code>
+==== method ``as_role_type``
 
 [source,python]
 ----
@@ -37,7 +37,7 @@ role_type.as_role_type()
 ----
 
 [#_RoleType_is_role_type_]
-==== method <code>is_role_type</code>
+==== method ``is_role_type``
 
 [source,python]
 ----

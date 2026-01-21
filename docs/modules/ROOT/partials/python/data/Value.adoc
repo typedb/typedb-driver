@@ -12,7 +12,7 @@
 
 // tag::methods[]
 [#_Value_as_value_]
-==== method <code>as_value</code>
+==== method ``as_value``
 
 [source,python]
 ----
@@ -33,7 +33,7 @@ value.as_value()
 ----
 
 [#_Value_get_]
-==== method <code>get</code>
+==== method ``get``
 
 [source,python]
 ----
@@ -54,7 +54,7 @@ value.get()
 ----
 
 [#_Value_get_boolean_]
-==== method <code>get_boolean</code>
+==== method ``get_boolean``
 
 [source,python]
 ----
@@ -75,7 +75,7 @@ value.get_boolean()
 ----
 
 [#_Value_get_date_]
-==== method <code>get_date</code>
+==== method ``get_date``
 
 [source,python]
 ----
@@ -96,7 +96,7 @@ value.get_date()
 ----
 
 [#_Value_get_datetime_]
-==== method <code>get_datetime</code>
+==== method ``get_datetime``
 
 [source,python]
 ----
@@ -117,7 +117,7 @@ value.get_datetime()
 ----
 
 [#_Value_get_datetime_tz_]
-==== method <code>get_datetime_tz</code>
+==== method ``get_datetime_tz``
 
 [source,python]
 ----
@@ -138,7 +138,7 @@ value.get_datetime_tz()
 ----
 
 [#_Value_get_decimal_]
-==== method <code>get_decimal</code>
+==== method ``get_decimal``
 
 [source,python]
 ----
@@ -159,7 +159,7 @@ value.get_decimal()
 ----
 
 [#_Value_get_double_]
-==== method <code>get_double</code>
+==== method ``get_double``
 
 [source,python]
 ----
@@ -180,7 +180,7 @@ value.get_double()
 ----
 
 [#_Value_get_duration_]
-==== method <code>get_duration</code>
+==== method ``get_duration``
 
 [source,python]
 ----
@@ -201,7 +201,7 @@ value.get_duration()
 ----
 
 [#_Value_get_integer_]
-==== method <code>get_integer</code>
+==== method ``get_integer``
 
 [source,python]
 ----
@@ -222,7 +222,7 @@ value.get_integer()
 ----
 
 [#_Value_get_string_]
-==== method <code>get_string</code>
+==== method ``get_string``
 
 [source,python]
 ----
@@ -243,7 +243,7 @@ value.get_string()
 ----
 
 [#_Value_get_struct_]
-==== method <code>get_struct</code>
+==== method ``get_struct``
 
 [source,python]
 ----
@@ -264,7 +264,7 @@ value.get_struct()
 ----
 
 [#_Value_get_type_]
-==== method <code>get_type</code>
+==== method ``get_type``
 
 [source,python]
 ----
@@ -285,7 +285,7 @@ value.get_type()
 ----
 
 [#_Value_is_value_]
-==== method <code>is_value</code>
+==== method ``is_value``
 
 [source,python]
 ----

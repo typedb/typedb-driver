@@ -14,7 +14,7 @@ Indicates the function returns an aggregation over the rows in the body. e.g. ``
 
 // tag::methods[]
 [#_Function_ReturnOperation_Reduce_asCheck_]
-==== method <code>asCheck</code>
+==== method ``asCheck``
 
 [source,java]
 ----
@@ -28,7 +28,7 @@ Down-casts this ReturnOperation to a ``Check`` return operation.
 `Function.ReturnOperation.Check`
 
 [#_Function_ReturnOperation_Reduce_asReduce_]
-==== method <code>asReduce</code>
+==== method ``asReduce``
 
 [source,java]
 ----
@@ -42,7 +42,7 @@ Down-casts this ReturnOperation to a Reduce return operation.
 `Function.ReturnOperation.Reduce`
 
 [#_Function_ReturnOperation_Reduce_asSingle_]
-==== method <code>asSingle</code>
+==== method ``asSingle``
 
 [source,java]
 ----
@@ -56,7 +56,7 @@ Down-casts this ReturnOperation to a ``Single`` return operation.
 `Function.ReturnOperation.Single`
 
 [#_Function_ReturnOperation_Reduce_asStream_]
-==== method <code>asStream</code>
+==== method ``asStream``
 
 [source,java]
 ----
@@ -70,7 +70,7 @@ Down-casts this ReturnOperation to a ``Stream`` return operation.
 `Function.ReturnOperation.Stream`
 
 [#_Function_ReturnOperation_Reduce_isCheck_]
-==== method <code>isCheck</code>
+==== method ``isCheck``
 
 [source,java]
 ----
@@ -84,7 +84,7 @@ boolean isCheck()
 `boolean`
 
 [#_Function_ReturnOperation_Reduce_isReduce_]
-==== method <code>isReduce</code>
+==== method ``isReduce``
 
 [source,java]
 ----
@@ -98,7 +98,7 @@ boolean isReduce()
 `boolean`
 
 [#_Function_ReturnOperation_Reduce_isSingle_]
-==== method <code>isSingle</code>
+==== method ``isSingle``
 
 [source,java]
 ----
@@ -112,7 +112,7 @@ boolean isSingle()
 `boolean`
 
 [#_Function_ReturnOperation_Reduce_isStream_]
-==== method <code>isStream</code>
+==== method ``isStream``
 
 [source,java]
 ----
@@ -126,7 +126,7 @@ boolean isStream()
 `boolean`
 
 [#_Function_ReturnOperation_Reduce_reducers_]
-==== method <code>reducers</code>
+==== method ``reducers``
 
 [source,java]
 ----
@@ -140,7 +140,7 @@ Gets the reducers used to compute the aggregations.
 `java.util.stream.Stream<? extends Reducer>`
 
 [#_Function_ReturnOperation_Reduce_variant_]
-==== method <code>variant</code>
+==== method ``variant``
 
 [source,java]
 ----

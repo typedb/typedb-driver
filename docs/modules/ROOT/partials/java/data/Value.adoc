@@ -12,7 +12,7 @@
 
 // tag::methods[]
 [#_Value_asAttribute_]
-==== method <code>asAttribute</code>
+==== method ``asAttribute``
 
 [source,java]
 ----
@@ -34,7 +34,7 @@ concept.asAttribute();
 ----
 
 [#_Value_asAttributeType_]
-==== method <code>asAttributeType</code>
+==== method ``asAttributeType``
 
 [source,java]
 ----
@@ -56,7 +56,7 @@ concept.asAttributeType();
 ----
 
 [#_Value_asEntity_]
-==== method <code>asEntity</code>
+==== method ``asEntity``
 
 [source,java]
 ----
@@ -78,7 +78,7 @@ concept.asEntity();
 ----
 
 [#_Value_asEntityType_]
-==== method <code>asEntityType</code>
+==== method ``asEntityType``
 
 [source,java]
 ----
@@ -100,7 +100,7 @@ concept.asEntityType();
 ----
 
 [#_Value_asInstance_]
-==== method <code>asInstance</code>
+==== method ``asInstance``
 
 [source,java]
 ----
@@ -122,7 +122,7 @@ concept.asInstance();
 ----
 
 [#_Value_asRelation_]
-==== method <code>asRelation</code>
+==== method ``asRelation``
 
 [source,java]
 ----
@@ -144,7 +144,7 @@ concept.asRelation();
 ----
 
 [#_Value_asRelationType_]
-==== method <code>asRelationType</code>
+==== method ``asRelationType``
 
 [source,java]
 ----
@@ -166,7 +166,7 @@ concept.asRelationType();
 ----
 
 [#_Value_asRoleType_]
-==== method <code>asRoleType</code>
+==== method ``asRoleType``
 
 [source,java]
 ----
@@ -188,7 +188,7 @@ concept.asRoleType();
 ----
 
 [#_Value_asType_]
-==== method <code>asType</code>
+==== method ``asType``
 
 [source,java]
 ----
@@ -210,7 +210,7 @@ concept.asType();
 ----
 
 [#_Value_asValue_]
-==== method <code>asValue</code>
+==== method ``asValue``
 
 [source,java]
 ----
@@ -232,7 +232,7 @@ concept.asValue();
 ----
 
 [#_Value_get_]
-==== method <code>get</code>
+==== method ``get``
 
 [source,java]
 ----
@@ -254,7 +254,7 @@ value.get();
 ----
 
 [#_Value_getBoolean_]
-==== method <code>getBoolean</code>
+==== method ``getBoolean``
 
 [source,java]
 ----
@@ -276,7 +276,7 @@ value.getBoolean();
 ----
 
 [#_Value_getDate_]
-==== method <code>getDate</code>
+==== method ``getDate``
 
 [source,java]
 ----
@@ -298,7 +298,7 @@ value.getDate();
 ----
 
 [#_Value_getDatetime_]
-==== method <code>getDatetime</code>
+==== method ``getDatetime``
 
 [source,java]
 ----
@@ -320,7 +320,7 @@ value.getDatetime();
 ----
 
 [#_Value_getDatetimeTZ_]
-==== method <code>getDatetimeTZ</code>
+==== method ``getDatetimeTZ``
 
 [source,java]
 ----
@@ -342,7 +342,7 @@ value.getDatetimeTZ();
 ----
 
 [#_Value_getDecimal_]
-==== method <code>getDecimal</code>
+==== method ``getDecimal``
 
 [source,java]
 ----
@@ -364,7 +364,7 @@ value.getDecimal();
 ----
 
 [#_Value_getDouble_]
-==== method <code>getDouble</code>
+==== method ``getDouble``
 
 [source,java]
 ----
@@ -386,7 +386,7 @@ value.getDouble();
 ----
 
 [#_Value_getDuration_]
-==== method <code>getDuration</code>
+==== method ``getDuration``
 
 [source,java]
 ----
@@ -408,7 +408,7 @@ value.getDuration();
 ----
 
 [#_Value_getInteger_]
-==== method <code>getInteger</code>
+==== method ``getInteger``
 
 [source,java]
 ----
@@ -430,7 +430,7 @@ value.getInteger();
 ----
 
 [#_Value_getLabel_]
-==== method <code>getLabel</code>
+==== method ``getLabel``
 
 [source,java]
 ----
@@ -453,7 +453,7 @@ concept.getLabel();
 ----
 
 [#_Value_getString_]
-==== method <code>getString</code>
+==== method ``getString``
 
 [source,java]
 ----
@@ -475,7 +475,7 @@ value.getString();
 ----
 
 [#_Value_getStruct_]
-==== method <code>getStruct</code>
+==== method ``getStruct``
 
 [source,java]
 ----
@@ -497,7 +497,7 @@ value.getStruct();
 ----
 
 [#_Value_getType_]
-==== method <code>getType</code>
+==== method ``getType``
 
 [source,java]
 ----
@@ -519,7 +519,7 @@ value.getType()
 ----
 
 [#_Value_isAttribute_]
-==== method <code>isAttribute</code>
+==== method ``isAttribute``
 
 [source,java]
 ----
@@ -542,7 +542,7 @@ concept.isAttribute();
 ----
 
 [#_Value_isAttributeType_]
-==== method <code>isAttributeType</code>
+==== method ``isAttributeType``
 
 [source,java]
 ----
@@ -565,7 +565,7 @@ concept.isAttributeType();
 ----
 
 [#_Value_isBoolean_]
-==== method <code>isBoolean</code>
+==== method ``isBoolean``
 
 [source,java]
 ----
@@ -588,7 +588,7 @@ concept.isBoolean()
 ----
 
 [#_Value_isDate_]
-==== method <code>isDate</code>
+==== method ``isDate``
 
 [source,java]
 ----
@@ -611,7 +611,7 @@ concept.isDate();
 ----
 
 [#_Value_isDatetime_]
-==== method <code>isDatetime</code>
+==== method ``isDatetime``
 
 [source,java]
 ----
@@ -634,7 +634,7 @@ concept.isDatetime();
 ----
 
 [#_Value_isDatetimeTZ_]
-==== method <code>isDatetimeTZ</code>
+==== method ``isDatetimeTZ``
 
 [source,java]
 ----
@@ -657,7 +657,7 @@ concept.isDatetimeTZ();
 ----
 
 [#_Value_isDecimal_]
-==== method <code>isDecimal</code>
+==== method ``isDecimal``
 
 [source,java]
 ----
@@ -680,7 +680,7 @@ concept.isDecimal();
 ----
 
 [#_Value_isDouble_]
-==== method <code>isDouble</code>
+==== method ``isDouble``
 
 [source,java]
 ----
@@ -703,7 +703,7 @@ concept.isDouble();
 ----
 
 [#_Value_isDuration_]
-==== method <code>isDuration</code>
+==== method ``isDuration``
 
 [source,java]
 ----
@@ -726,7 +726,7 @@ concept.isDuration();
 ----
 
 [#_Value_isEntity_]
-==== method <code>isEntity</code>
+==== method ``isEntity``
 
 [source,java]
 ----
@@ -749,7 +749,7 @@ concept.isEntity();
 ----
 
 [#_Value_isEntityType_]
-==== method <code>isEntityType</code>
+==== method ``isEntityType``
 
 [source,java]
 ----
@@ -772,7 +772,7 @@ concept.isEntityType();
 ----
 
 [#_Value_isInstance_]
-==== method <code>isInstance</code>
+==== method ``isInstance``
 
 [source,java]
 ----
@@ -795,7 +795,7 @@ concept.isInstance();
 ----
 
 [#_Value_isInteger_]
-==== method <code>isInteger</code>
+==== method ``isInteger``
 
 [source,java]
 ----
@@ -818,7 +818,7 @@ concept.isInteger();
 ----
 
 [#_Value_isRelation_]
-==== method <code>isRelation</code>
+==== method ``isRelation``
 
 [source,java]
 ----
@@ -841,7 +841,7 @@ concept.isRelation();
 ----
 
 [#_Value_isRelationType_]
-==== method <code>isRelationType</code>
+==== method ``isRelationType``
 
 [source,java]
 ----
@@ -864,7 +864,7 @@ concept.isRelationType();
 ----
 
 [#_Value_isRoleType_]
-==== method <code>isRoleType</code>
+==== method ``isRoleType``
 
 [source,java]
 ----
@@ -887,7 +887,7 @@ concept.isRoleType();
 ----
 
 [#_Value_isString_]
-==== method <code>isString</code>
+==== method ``isString``
 
 [source,java]
 ----
@@ -910,7 +910,7 @@ concept.isString();
 ----
 
 [#_Value_isStruct_]
-==== method <code>isStruct</code>
+==== method ``isStruct``
 
 [source,java]
 ----
@@ -933,7 +933,7 @@ concept.isStruct();
 ----
 
 [#_Value_isType_]
-==== method <code>isType</code>
+==== method ``isType``
 
 [source,java]
 ----
@@ -956,7 +956,7 @@ concept.isType();
 ----
 
 [#_Value_isValue_]
-==== method <code>isValue</code>
+==== method ``isValue``
 
 [source,java]
 ----
@@ -978,7 +978,7 @@ concept.isValue();
 ----
 
 [#_Value_tryGetBoolean_]
-==== method <code>tryGetBoolean</code>
+==== method ``tryGetBoolean``
 
 [source,java]
 ----
@@ -1000,7 +1000,7 @@ concept.tryGetBoolean();
 ----
 
 [#_Value_tryGetDate_]
-==== method <code>tryGetDate</code>
+==== method ``tryGetDate``
 
 [source,java]
 ----
@@ -1022,7 +1022,7 @@ concept.tryGetDate();
 ----
 
 [#_Value_tryGetDatetime_]
-==== method <code>tryGetDatetime</code>
+==== method ``tryGetDatetime``
 
 [source,java]
 ----
@@ -1044,7 +1044,7 @@ concept.tryGetDatetime();
 ----
 
 [#_Value_tryGetDatetimeTZ_]
-==== method <code>tryGetDatetimeTZ</code>
+==== method ``tryGetDatetimeTZ``
 
 [source,java]
 ----
@@ -1066,7 +1066,7 @@ concept.tryGetDatetimeTZ();
 ----
 
 [#_Value_tryGetDecimal_]
-==== method <code>tryGetDecimal</code>
+==== method ``tryGetDecimal``
 
 [source,java]
 ----
@@ -1088,7 +1088,7 @@ concept.tryGetDecimal();
 ----
 
 [#_Value_tryGetDouble_]
-==== method <code>tryGetDouble</code>
+==== method ``tryGetDouble``
 
 [source,java]
 ----
@@ -1110,7 +1110,7 @@ concept.tryGetDouble();
 ----
 
 [#_Value_tryGetDuration_]
-==== method <code>tryGetDuration</code>
+==== method ``tryGetDuration``
 
 [source,java]
 ----
@@ -1132,7 +1132,7 @@ concept.tryGetDuration();
 ----
 
 [#_Value_tryGetIID_]
-==== method <code>tryGetIID</code>
+==== method ``tryGetIID``
 
 [source,java]
 ----
@@ -1155,7 +1155,7 @@ concept.tryGetIID();
 ----
 
 [#_Value_tryGetInteger_]
-==== method <code>tryGetInteger</code>
+==== method ``tryGetInteger``
 
 [source,java]
 ----
@@ -1177,7 +1177,7 @@ concept.tryGetInteger();
 ----
 
 [#_Value_tryGetLabel_]
-==== method <code>tryGetLabel</code>
+==== method ``tryGetLabel``
 
 [source,java]
 ----
@@ -1200,7 +1200,7 @@ concept.tryGetLabel();
 ----
 
 [#_Value_tryGetString_]
-==== method <code>tryGetString</code>
+==== method ``tryGetString``
 
 [source,java]
 ----
@@ -1222,7 +1222,7 @@ concept.tryGetString();
 ----
 
 [#_Value_tryGetStruct_]
-==== method <code>tryGetStruct</code>
+==== method ``tryGetStruct``
 
 [source,java]
 ----
@@ -1244,7 +1244,7 @@ concept.tryGetStruct();
 ----
 
 [#_Value_tryGetValue_]
-==== method <code>tryGetValue</code>
+==== method ``tryGetValue``
 
 [source,java]
 ----
@@ -1267,7 +1267,7 @@ concept.tryGetValue();
 ----
 
 [#_Value_tryGetValueType_]
-==== method <code>tryGetValueType</code>
+==== method ``tryGetValueType``
 
 [source,java]
 ----

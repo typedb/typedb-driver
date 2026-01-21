@@ -14,7 +14,7 @@ Represents a ‘plays’ constraint: &lt;player&gt; plays &lt;role&gt;
 
 // tag::methods[]
 [#_Plays_exactness_]
-==== method <code>exactness</code>
+==== method ``exactness``
 
 [source,python]
 ----
@@ -28,7 +28,7 @@ exactness() -> ConstraintExactness
 `ConstraintExactness`
 
 [#_Plays_player_]
-==== method <code>player</code>
+==== method ``player``
 
 [source,python]
 ----
@@ -42,7 +42,7 @@ player() -> ConstraintVertex
 `ConstraintVertex`
 
 [#_Plays_role_]
-==== method <code>role</code>
+==== method ``role``
 
 [source,python]
 ----

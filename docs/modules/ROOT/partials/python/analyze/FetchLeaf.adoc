@@ -14,7 +14,7 @@ The leaf of a Fetch object. Holds information on the value it can hold.
 
 // tag::methods[]
 [#_FetchLeaf_annotations_]
-==== method <code>annotations</code>
+==== method ``annotations``
 
 [source,python]
 ----

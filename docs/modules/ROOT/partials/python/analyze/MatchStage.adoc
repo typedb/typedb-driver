@@ -14,7 +14,7 @@ Represents a ‘match’ stage: match &lt;block&gt;
 
 // tag::methods[]
 [#_MatchStage_block_]
-==== method <code>block</code>
+==== method ``block``
 
 [source,python]
 ----

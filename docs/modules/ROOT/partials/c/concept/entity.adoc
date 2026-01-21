@@ -2,7 +2,7 @@
 === entity
 
 [#_entity_get_type]
-==== function <code>entity_get_type</code>
+==== function ``entity_get_type``
 
 [source,c]
 ----

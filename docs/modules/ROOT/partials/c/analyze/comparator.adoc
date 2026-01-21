@@ -40,7 +40,7 @@ a| `NotEqual`
 // end::enum_constants[]
 
 [#_comparator_get_name]
-==== function <code>comparator_get_name</code>
+==== function ``comparator_get_name``
 
 [source,c]
 ----

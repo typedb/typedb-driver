@@ -18,7 +18,7 @@ The answer to a TypeDB query is a set of concepts which satisfy the ``Constraint
 
 
 [#_constraint_vertex_as_label]
-==== function <code>constraint_vertex_as_label</code>
+==== function ``constraint_vertex_as_label``
 
 [source,c]
 ----
@@ -34,7 +34,7 @@ Unwraps the ``ConstraintVertex`` instance as a Label. Will panic if the instance
 `struct Concept*`
 
 [#_constraint_vertex_as_named_role]
-==== function <code>constraint_vertex_as_named_role</code>
+==== function ``constraint_vertex_as_named_role``
 
 [source,c]
 ----
@@ -50,7 +50,7 @@ Unwraps the ``ConstraintVertex`` instance as a NamedRole. 'links' &amp; 'relates
 `struct NamedRole*`
 
 [#_constraint_vertex_as_value]
-==== function <code>constraint_vertex_as_value</code>
+==== function ``constraint_vertex_as_value``
 
 [source,c]
 ----
@@ -66,7 +66,7 @@ Unwraps the ``ConstraintVertex`` instance as a Value. Will panic if the instance
 `struct Concept*`
 
 [#_constraint_vertex_as_variable]
-==== function <code>constraint_vertex_as_variable</code>
+==== function ``constraint_vertex_as_variable``
 
 [source,c]
 ----
@@ -82,7 +82,7 @@ Unwraps the ``ConstraintVertex`` instance as a Variable. Will panic if the insta
 `struct Variable*`
 
 [#_constraint_vertex_drop]
-==== function <code>constraint_vertex_drop</code>
+==== function ``constraint_vertex_drop``
 
 [source,c]
 ----
@@ -98,7 +98,7 @@ Frees the native rust ``ConstraintVertex`` object.
 `void`
 
 [#_constraint_vertex_variant]
-==== function <code>constraint_vertex_variant</code>
+==== function ``constraint_vertex_variant``
 
 [source,c]
 ----

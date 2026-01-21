@@ -12,7 +12,7 @@
 Uniquely identifies a variable in a ``Pipeline``pipeline. Its name (if any) can be retrieved from the ``variable_names`` field in ``Pipeline``
 
 [#_variable_drop]
-==== function <code>variable_drop</code>
+==== function ``variable_drop``
 
 [source,c]
 ----
@@ -28,7 +28,7 @@ Frees the native rust ``Variable`` object.
 `void`
 
 [#_variable_get_name]
-==== function <code>variable_get_name</code>
+==== function ``variable_get_name``
 
 [source,c]
 ----
@@ -44,7 +44,7 @@ Returns the name of the specified variable if it has one, and null otherwise. Th
 `char*`
 
 [#_variable_id_as_u32]
-==== function <code>variable_id_as_u32</code>
+==== function ``variable_id_as_u32``
 
 [source,c]
 ----
@@ -60,7 +60,7 @@ Returns the Variable id as u32 to use in hash, equality etc.
 `uint32_t`
 
 [#_variable_string_repr]
-==== function <code>variable_string_repr</code>
+==== function ``variable_string_repr``
 
 [source,c]
 ----

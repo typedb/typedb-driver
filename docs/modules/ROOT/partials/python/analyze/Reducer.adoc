@@ -10,7 +10,7 @@ Representation of a reducer used either in a PipelineStage::Reduce or in a funct
 
 // tag::methods[]
 [#_Reducer_arguments_]
-==== method <code>arguments</code>
+==== method ``arguments``
 
 [source,python]
 ----
@@ -24,7 +24,7 @@ The arguments to the reducer.
 `Iterator['Variable']`
 
 [#_Reducer_name_]
-==== method <code>name</code>
+==== method ``name``
 
 [source,python]
 ----

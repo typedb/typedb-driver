@@ -6,7 +6,7 @@
 
 // tag::methods[]
 [#_TypeDBHttpDriver_TypeDBHttpDriver_params_DriverParams]
-==== method <code>TypeDBHttpDriver</code>
+==== method ``TypeDBHttpDriver``
 
 [source,typescript]
 ----
@@ -29,7 +29,7 @@ a| `params` a|  a| `DriverParams`
 `TypeDBHttpDriver`
 
 [#_TypeDBHttpDriver_analyze_transactionId_string_query_string_analyzeOptions_AnalyzeOptions]
-==== method <code>analyze</code>
+==== method ``analyze``
 
 [source,typescript]
 ----
@@ -54,7 +54,7 @@ a| `analyzeOptions` a|  a| `AnalyzeOptions`
 `Promise<ApiResponse<AnalyzeResponse>>`
 
 [#_TypeDBHttpDriver_closeTransaction_transactionId_string]
-==== method <code>closeTransaction</code>
+==== method ``closeTransaction``
 
 [source,typescript]
 ----
@@ -77,7 +77,7 @@ a| `transactionId` a|  a| `string`
 `Promise<ApiResponse>`
 
 [#_TypeDBHttpDriver_commitTransaction_transactionId_string]
-==== method <code>commitTransaction</code>
+==== method ``commitTransaction``
 
 [source,typescript]
 ----
@@ -100,7 +100,7 @@ a| `transactionId` a|  a| `string`
 `Promise<ApiResponse>`
 
 [#_TypeDBHttpDriver_createDatabase_name_string]
-==== method <code>createDatabase</code>
+==== method ``createDatabase``
 
 [source,typescript]
 ----
@@ -123,7 +123,7 @@ a| `name` a|  a| `string`
 `Promise<ApiResponse>`
 
 [#_TypeDBHttpDriver_createUser_username_string_password_string]
-==== method <code>createUser</code>
+==== method ``createUser``
 
 [source,typescript]
 ----
@@ -147,7 +147,7 @@ a| `password` a|  a| `string`
 `Promise<ApiResponse>`
 
 [#_TypeDBHttpDriver_deleteDatabase_name_string]
-==== method <code>deleteDatabase</code>
+==== method ``deleteDatabase``
 
 [source,typescript]
 ----
@@ -170,7 +170,7 @@ a| `name` a|  a| `string`
 `Promise<ApiResponse>`
 
 [#_TypeDBHttpDriver_deleteUser_username_string]
-==== method <code>deleteUser</code>
+==== method ``deleteUser``
 
 [source,typescript]
 ----
@@ -193,7 +193,7 @@ a| `username` a|  a| `string`
 `Promise<ApiResponse>`
 
 [#_TypeDBHttpDriver_getCurrentUser_]
-==== method <code>getCurrentUser</code>
+==== method ``getCurrentUser``
 
 [source,typescript]
 ----
@@ -207,7 +207,7 @@ getCurrentUser(): Promise<ApiResponse<User>>
 `Promise<ApiResponse<User>>`
 
 [#_TypeDBHttpDriver_getDatabase_name_string]
-==== method <code>getDatabase</code>
+==== method ``getDatabase``
 
 [source,typescript]
 ----
@@ -230,7 +230,7 @@ a| `name` a|  a| `string`
 `Promise<ApiResponse<Database>>`
 
 [#_TypeDBHttpDriver_getDatabaseSchema_name_string]
-==== method <code>getDatabaseSchema</code>
+==== method ``getDatabaseSchema``
 
 [source,typescript]
 ----
@@ -253,7 +253,7 @@ a| `name` a|  a| `string`
 `Promise<ApiResponse<string>>`
 
 [#_TypeDBHttpDriver_getDatabaseTypeSchema_name_string]
-==== method <code>getDatabaseTypeSchema</code>
+==== method ``getDatabaseTypeSchema``
 
 [source,typescript]
 ----
@@ -276,7 +276,7 @@ a| `name` a|  a| `string`
 `Promise<ApiResponse<string>>`
 
 [#_TypeDBHttpDriver_getDatabases_]
-==== method <code>getDatabases</code>
+==== method ``getDatabases``
 
 [source,typescript]
 ----
@@ -290,7 +290,7 @@ getDatabases(): Promise<ApiResponse<DatabasesListResponse>>
 `Promise<ApiResponse<DatabasesListResponse>>`
 
 [#_TypeDBHttpDriver_getUser_username_string]
-==== method <code>getUser</code>
+==== method ``getUser``
 
 [source,typescript]
 ----
@@ -313,7 +313,7 @@ a| `username` a|  a| `string`
 `Promise<ApiResponse<User>>`
 
 [#_TypeDBHttpDriver_getUsers_]
-==== method <code>getUsers</code>
+==== method ``getUsers``
 
 [source,typescript]
 ----
@@ -327,7 +327,7 @@ getUsers(): Promise<ApiResponse<UsersListResponse>>
 `Promise<ApiResponse<UsersListResponse>>`
 
 [#_TypeDBHttpDriver_health_]
-==== method <code>health</code>
+==== method ``health``
 
 [source,typescript]
 ----
@@ -341,7 +341,7 @@ health(): Promise<ApiResponse>
 `Promise<ApiResponse>`
 
 [#_TypeDBHttpDriver_oneShotQuery_query_string_commit_boolean_databaseName_string_transactionType_TransactionType_transactionOptions_TransactionOptions_queryOptions_QueryOptions]
-==== method <code>oneShotQuery</code>
+==== method ``oneShotQuery``
 
 [source,typescript]
 ----
@@ -369,7 +369,7 @@ a| `queryOptions` a|  a| `QueryOptions`
 `Promise<ApiResponse<QueryResponse>>`
 
 [#_TypeDBHttpDriver_openTransaction_databaseName_string_transactionType_TransactionType_transactionOptions_TransactionOptions]
-==== method <code>openTransaction</code>
+==== method ``openTransaction``
 
 [source,typescript]
 ----
@@ -394,7 +394,7 @@ a| `transactionOptions` a|  a| `TransactionOptions`
 `Promise<ApiResponse<TransactionOpenResponse>>`
 
 [#_TypeDBHttpDriver_query_transactionId_string_query_string_queryOptions_QueryOptions]
-==== method <code>query</code>
+==== method ``query``
 
 [source,typescript]
 ----
@@ -419,7 +419,7 @@ a| `queryOptions` a|  a| `QueryOptions`
 `Promise<ApiResponse<QueryResponse>>`
 
 [#_TypeDBHttpDriver_rollbackTransaction_transactionId_string]
-==== method <code>rollbackTransaction</code>
+==== method ``rollbackTransaction``
 
 [source,typescript]
 ----
@@ -442,7 +442,7 @@ a| `transactionId` a|  a| `string`
 `Promise<ApiResponse>`
 
 [#_TypeDBHttpDriver_updateUser_username_string_password_string]
-==== method <code>updateUser</code>
+==== method ``updateUser``
 
 [source,typescript]
 ----
@@ -466,7 +466,7 @@ a| `password` a|  a| `string`
 `Promise<ApiResponse>`
 
 [#_TypeDBHttpDriver_version_]
-==== method <code>version</code>
+==== method ``version``
 
 [source,typescript]
 ----

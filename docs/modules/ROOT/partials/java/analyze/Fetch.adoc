@@ -10,7 +10,7 @@ A representation of the 'fetch' stage of a query
 
 // tag::methods[]
 [#_Fetch_asLeaf_]
-==== method <code>asLeaf</code>
+==== method ``asLeaf``
 
 [source,java]
 ----
@@ -24,7 +24,7 @@ Down-casts this ``Fetch`` as a ``FetchLeaf`` variant
 `Fetch.FetchLeaf`
 
 [#_Fetch_asList_]
-==== method <code>asList</code>
+==== method ``asList``
 
 [source,java]
 ----
@@ -38,7 +38,7 @@ Down-casts this ``Fetch`` as a ``FetchList`` variant
 `Fetch.FetchList`
 
 [#_Fetch_asObject_]
-==== method <code>asObject</code>
+==== method ``asObject``
 
 [source,java]
 ----
@@ -52,7 +52,7 @@ Down-casts this ``Fetch`` as a ``FetchObject`` variant
 `Fetch.FetchObject`
 
 [#_Fetch_isLeaf_]
-==== method <code>isLeaf</code>
+==== method ``isLeaf``
 
 [source,java]
 ----
@@ -66,7 +66,7 @@ boolean isLeaf()
 `boolean`
 
 [#_Fetch_isList_]
-==== method <code>isList</code>
+==== method ``isList``
 
 [source,java]
 ----
@@ -80,7 +80,7 @@ boolean isList()
 `boolean`
 
 [#_Fetch_isObject_]
-==== method <code>isObject</code>
+==== method ``isObject``
 
 [source,java]
 ----
@@ -94,7 +94,7 @@ boolean isObject()
 `boolean`
 
 [#_Fetch_variant_]
-==== method <code>variant</code>
+==== method ``variant``
 
 [source,java]
 ----

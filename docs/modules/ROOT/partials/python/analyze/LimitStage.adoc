@@ -14,7 +14,7 @@ Represents a ‘limit’ stage: limit &lt;limit&gt;
 
 // tag::methods[]
 [#_LimitStage_limit_]
-==== method <code>limit</code>
+==== method ``limit``
 
 [source,python]
 ----

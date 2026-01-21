@@ -12,7 +12,7 @@
 A single row of concepts representing substitutions for variables in the query. Contains a Header (column names and query type), and the row of optional concepts. An empty concept in a column means the variable does not have a substitution in this answer.
 
 [#_concept_row_drop]
-==== function <code>concept_row_drop</code>
+==== function ``concept_row_drop``
 
 [source,c]
 ----
@@ -28,7 +28,7 @@ Frees the native rust ``ConceptRow`` object.
 `void`
 
 [#_concept_row_equals]
-==== function <code>concept_row_equals</code>
+==== function ``concept_row_equals``
 
 [source,c]
 ----
@@ -44,7 +44,7 @@ Checks whether the provided ``ConceptRow`` objects are equal
 `bool`
 
 [#_concept_row_get]
-==== function <code>concept_row_get</code>
+==== function ``concept_row_get``
 
 [source,c]
 ----
@@ -60,7 +60,7 @@ Retrieves a concept for a given column name.
 `struct Concept*`
 
 [#_concept_row_get_column_names]
-==== function <code>concept_row_get_column_names</code>
+==== function ``concept_row_get_column_names``
 
 [source,c]
 ----
@@ -76,7 +76,7 @@ Produces an ``Iterator`` over all ``String`` column names of the ``ConceptRow``'
 `struct StringIterator*`
 
 [#_concept_row_get_concepts]
-==== function <code>concept_row_get_concepts</code>
+==== function ``concept_row_get_concepts``
 
 [source,c]
 ----
@@ -92,7 +92,7 @@ Produces an ``Iterator`` over all ``Concepts`` in this ``ConceptRow``.
 `struct ConceptIterator*`
 
 [#_concept_row_get_index]
-==== function <code>concept_row_get_index</code>
+==== function ``concept_row_get_index``
 
 [source,c]
 ----
@@ -108,7 +108,7 @@ Retrieves a concept for a given column index.
 `struct Concept*`
 
 [#_concept_row_get_query_structure]
-==== function <code>concept_row_get_query_structure</code>
+==== function ``concept_row_get_query_structure``
 
 [source,c]
 ----
@@ -124,7 +124,7 @@ Retrieve the executed query's structure from the ``ConceptRow``'s header, if set
 `struct Pipeline*`
 
 [#_concept_row_get_query_type]
-==== function <code>concept_row_get_query_type</code>
+==== function ``concept_row_get_query_type``
 
 [source,c]
 ----
@@ -140,7 +140,7 @@ Retrieve the executed query's type of the ``ConceptRow``'s header.
 `enum QueryType`
 
 [#_concept_row_involved_conjunctions]
-==== function <code>concept_row_involved_conjunctions</code>
+==== function ``concept_row_involved_conjunctions``
 
 [source,c]
 ----
@@ -156,7 +156,7 @@ Retrieve the ``ConjunctionID``s of ``Conjunction``s that answered this row. May 
 `struct ConjunctionIDIterator*`
 
 [#_concept_row_to_string]
-==== function <code>concept_row_to_string</code>
+==== function ``concept_row_to_string``
 
 [source,c]
 ----

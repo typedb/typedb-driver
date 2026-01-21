@@ -2,7 +2,7 @@
 === user
 
 [#_user_delete]
-==== function <code>user_delete</code>
+==== function ``user_delete``
 
 [source,c]
 ----
@@ -18,7 +18,7 @@ Deletes this database.
 `void`
 
 [#_user_drop]
-==== function <code>user_drop</code>
+==== function ``user_drop``
 
 [source,c]
 ----
@@ -34,7 +34,7 @@ Frees the native rust ``User`` object.
 `void`
 
 [#_user_get_name]
-==== function <code>user_get_name</code>
+==== function ``user_get_name``
 
 [source,c]
 ----
@@ -50,7 +50,7 @@ Returns the name of this user.
 `char*`
 
 [#_user_update_password]
-==== function <code>user_update_password</code>
+==== function ``user_update_password``
 
 [source,c]
 ----

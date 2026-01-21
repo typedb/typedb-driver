@@ -2,7 +2,7 @@
 === relation
 
 [#_relation_get_type]
-==== function <code>relation_get_type</code>
+==== function ``relation_get_type``
 
 [source,c]
 ----

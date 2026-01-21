@@ -6,7 +6,7 @@
 
 // tag::methods[]
 [#_getVariableName_getVariableName_structure_AnalyzedPipeline_variable_ConstraintVertexVariable]
-==== method <code>getVariableName</code>
+==== method ``getVariableName``
 
 [source,typescript]
 ----

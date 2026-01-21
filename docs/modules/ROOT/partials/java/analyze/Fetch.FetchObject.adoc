@@ -10,7 +10,7 @@ A mapping of string keys to ``Fetch`` documents.
 
 // tag::methods[]
 [#_Fetch_FetchObject_get_java_lang_String]
-==== method <code>get</code>
+==== method ``get``
 
 [source,java]
 ----
@@ -24,7 +24,7 @@ Fetch get​(java.lang.String key)
 `Fetch`
 
 [#_Fetch_FetchObject_keys_]
-==== method <code>keys</code>
+==== method ``keys``
 
 [source,java]
 ----

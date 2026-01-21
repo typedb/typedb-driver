@@ -23,7 +23,7 @@ a| `nanos` a| `int` a| The nanoseconds part of the duration
 
 // tag::methods[]
 [#_Duration_fromstring_duration_str_str]
-==== method <code>fromstring</code>
+==== method ``fromstring``
 
 [source,python]
 ----

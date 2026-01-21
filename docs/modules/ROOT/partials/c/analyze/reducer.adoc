@@ -12,7 +12,7 @@
 Representation of a reducer used either in a ``PipelineStage::Reduce`` or in a function's ``ReturnOperation``.
 
 [#_reducer_drop]
-==== function <code>reducer_drop</code>
+==== function ``reducer_drop``
 
 [source,c]
 ----
@@ -28,7 +28,7 @@ Frees the native rust ``Reducer`` object.
 `void`
 
 [#_reducer_get_arguments]
-==== function <code>reducer_get_arguments</code>
+==== function ``reducer_get_arguments``
 
 [source,c]
 ----
@@ -44,7 +44,7 @@ The arguments to this Reducer. e.g. ``$x`` in ``sum($x)``
 `struct VariableIterator*`
 
 [#_reducer_get_name]
-==== function <code>reducer_get_name</code>
+==== function ``reducer_get_name``
 
 [source,c]
 ----

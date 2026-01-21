@@ -12,7 +12,7 @@
 Iterator over a set of ``User``s
 
 [#_user_iterator_drop]
-==== function <code>user_iterator_drop</code>
+==== function ``user_iterator_drop``
 
 [source,c]
 ----
@@ -28,7 +28,7 @@ Frees the native rust ``UserIterator`` object
 `void`
 
 [#_user_iterator_next]
-==== function <code>user_iterator_next</code>
+==== function ``user_iterator_next``
 
 [source,c]
 ----

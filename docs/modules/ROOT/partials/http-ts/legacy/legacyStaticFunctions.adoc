@@ -6,7 +6,7 @@
 
 // tag::methods[]
 [#_isQueryResponseLegacy_isQueryResponseLegacy_res_ConceptRowsQueryResponse]
-==== method <code>isQueryResponseLegacy</code>
+==== method ``isQueryResponseLegacy``
 
 [source,typescript]
 ----

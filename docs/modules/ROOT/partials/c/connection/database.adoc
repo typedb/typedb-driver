@@ -12,7 +12,7 @@
 A TypeDB database
 
 [#_database_close]
-==== function <code>database_close</code>
+==== function ``database_close``
 
 [source,c]
 ----
@@ -28,7 +28,7 @@ Frees the native rust ``Database`` object
 `void`
 
 [#_database_delete]
-==== function <code>database_delete</code>
+==== function ``database_delete``
 
 [source,c]
 ----
@@ -44,7 +44,7 @@ Deletes this database.
 `void`
 
 [#_database_export_to_file]
-==== function <code>database_export_to_file</code>
+==== function ``database_export_to_file``
 
 [source,c]
 ----
@@ -72,7 +72,7 @@ a| `data_file` a| The path to the data file to be created. a| `const char*`
 `void`
 
 [#_database_get_name]
-==== function <code>database_get_name</code>
+==== function ``database_get_name``
 
 [source,c]
 ----
@@ -88,7 +88,7 @@ The database name as a string.
 `char*`
 
 [#_database_type_schema]
-==== function <code>database_type_schema</code>
+==== function ``database_type_schema``
 
 [source,c]
 ----

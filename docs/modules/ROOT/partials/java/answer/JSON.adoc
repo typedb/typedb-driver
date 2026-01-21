@@ -8,7 +8,7 @@
 
 // tag::methods[]
 [#_JSON_JSON_]
-==== method <code>JSON</code>
+==== method ``JSON``
 
 [source,java]
 ----
@@ -22,7 +22,7 @@ public JSON()
 `public`
 
 [#_JSON_asArray_]
-==== method <code>asArray</code>
+==== method ``asArray``
 
 [source,java]
 ----
@@ -36,7 +36,7 @@ public java.util.List<JSON> asArray()
 `public java.util.List<JSON>`
 
 [#_JSON_asBoolean_]
-==== method <code>asBoolean</code>
+==== method ``asBoolean``
 
 [source,java]
 ----
@@ -50,7 +50,7 @@ public boolean asBoolean()
 `public boolean`
 
 [#_JSON_asNumber_]
-==== method <code>asNumber</code>
+==== method ``asNumber``
 
 [source,java]
 ----
@@ -64,7 +64,7 @@ public double asNumber()
 `public double`
 
 [#_JSON_asObject_]
-==== method <code>asObject</code>
+==== method ``asObject``
 
 [source,java]
 ----
@@ -78,7 +78,7 @@ public java.util.Map<java.lang.String,​JSON> asObject()
 `public java.util.Map<java.lang.String,​JSON>`
 
 [#_JSON_asString_]
-==== method <code>asString</code>
+==== method ``asString``
 
 [source,java]
 ----
@@ -92,7 +92,7 @@ public java.lang.String asString()
 `public java.lang.String`
 
 [#_JSON_isArray_]
-==== method <code>isArray</code>
+==== method ``isArray``
 
 [source,java]
 ----
@@ -106,7 +106,7 @@ public boolean isArray()
 `public boolean`
 
 [#_JSON_isBoolean_]
-==== method <code>isBoolean</code>
+==== method ``isBoolean``
 
 [source,java]
 ----
@@ -120,7 +120,7 @@ public boolean isBoolean()
 `public boolean`
 
 [#_JSON_isNumber_]
-==== method <code>isNumber</code>
+==== method ``isNumber``
 
 [source,java]
 ----
@@ -134,7 +134,7 @@ public boolean isNumber()
 `public boolean`
 
 [#_JSON_isObject_]
-==== method <code>isObject</code>
+==== method ``isObject``
 
 [source,java]
 ----
@@ -148,7 +148,7 @@ public boolean isObject()
 `public boolean`
 
 [#_JSON_isString_]
-==== method <code>isString</code>
+==== method ``isString``
 
 [source,java]
 ----
@@ -162,7 +162,7 @@ public boolean isString()
 `public boolean`
 
 [#_JSON_parse_java_lang_String]
-==== method <code>parse</code>
+==== method ``parse``
 
 [source,java]
 ----

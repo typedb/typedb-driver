@@ -8,7 +8,7 @@
 
 // tag::methods[]
 [#_ReturnOperation_as_check_]
-==== method <code>as_check</code>
+==== method ``as_check``
 
 [source,python]
 ----
@@ -22,7 +22,7 @@ as_check() -> ReturnOperationCheck
 `ReturnOperationCheck`
 
 [#_ReturnOperation_as_reduce_]
-==== method <code>as_reduce</code>
+==== method ``as_reduce``
 
 [source,python]
 ----
@@ -36,7 +36,7 @@ as_reduce() -> ReturnOperationReduce
 `ReturnOperationReduce`
 
 [#_ReturnOperation_as_single_]
-==== method <code>as_single</code>
+==== method ``as_single``
 
 [source,python]
 ----
@@ -50,7 +50,7 @@ as_single() -> ReturnOperationSingle
 `ReturnOperationSingle`
 
 [#_ReturnOperation_as_stream_]
-==== method <code>as_stream</code>
+==== method ``as_stream``
 
 [source,python]
 ----
@@ -64,7 +64,7 @@ as_stream() -> ReturnOperationStream
 `ReturnOperationStream`
 
 [#_ReturnOperation_is_check_]
-==== method <code>is_check</code>
+==== method ``is_check``
 
 [source,python]
 ----
@@ -78,7 +78,7 @@ is_check() -> bool
 `bool`
 
 [#_ReturnOperation_is_reduce_]
-==== method <code>is_reduce</code>
+==== method ``is_reduce``
 
 [source,python]
 ----
@@ -92,7 +92,7 @@ is_reduce() -> bool
 `bool`
 
 [#_ReturnOperation_is_single_]
-==== method <code>is_single</code>
+==== method ``is_single``
 
 [source,python]
 ----
@@ -106,7 +106,7 @@ is_single() -> bool
 `bool`
 
 [#_ReturnOperation_is_stream_]
-==== method <code>is_stream</code>
+==== method ``is_stream``
 
 [source,python]
 ----
