@@ -5,16 +5,16 @@
 [.doc-api-reference-driver]
 ==== Struct DatabaseIterator
 
-`class`
+`rust struct (pointer)`
 
 
 
 An ``Iterator`` over databases present on the TypeDB server.
 
 [#_database_iterator_drop]
-==== database_iterator_drop
+==== function ``database_iterator_drop``
 
-[source,cpp]
+[source,c]
 ----
 void database_iterator_drop(struct DatabaseIterator* it)
 ----
@@ -28,9 +28,9 @@ Frees the native rust ``DatabaseIterator`` object.
 `void`
 
 [#_database_iterator_next]
-==== database_iterator_next
+==== function ``database_iterator_next``
 
-[source,cpp]
+[source,c]
 ----
 const struct Database* database_iterator_next(struct DatabaseIterator* it)
 ----

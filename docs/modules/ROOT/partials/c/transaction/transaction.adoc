@@ -5,16 +5,16 @@
 [.doc-api-reference-driver]
 ==== Struct Transaction
 
-`class`
+`rust struct (pointer)`
 
 
 
 A transaction with a TypeDB database.
 
 [#_transaction_analyze]
-==== transaction_analyze
+==== function ``transaction_analyze``
 
-[source,cpp]
+[source,c]
 ----
 struct AnalyzedQueryPromise* transaction_analyze(struct Transaction* transaction, const char* query)
 ----
@@ -39,9 +39,9 @@ a| `query` a| The query string. a| `const char*`
 `struct AnalyzedQueryPromise*`
 
 [#_transaction_close]
-==== transaction_close
+==== function ``transaction_close``
 
-[source,cpp]
+[source,c]
 ----
 struct VoidPromise* transaction_close(struct Transaction* txn)
 ----
@@ -55,9 +55,9 @@ Forcibly closes this transaction. To be used in exceptional cases.
 `struct VoidPromise*`
 
 [#_transaction_commit]
-==== transaction_commit
+==== function ``transaction_commit``
 
-[source,cpp]
+[source,c]
 ----
 struct VoidPromise* transaction_commit(struct Transaction* txn)
 ----
@@ -71,9 +71,9 @@ Commits the changes made via this transaction to the TypeDB database. Whether or
 `struct VoidPromise*`
 
 [#_transaction_is_open]
-==== transaction_is_open
+==== function ``transaction_is_open``
 
-[source,cpp]
+[source,c]
 ----
 bool transaction_is_open(const struct Transaction* txn)
 ----
@@ -87,9 +87,9 @@ Checks whether this transaction is open.
 `bool`
 
 [#_transaction_new]
-==== transaction_new
+==== function ``transaction_new``
 
-[source,cpp]
+[source,c]
 ----
 struct Transaction* transaction_new(struct TypeDBDriver* driver, const char* database_name, enum TransactionType type_, const struct TransactionOptions* options)
 ----
@@ -116,9 +116,9 @@ a| `options` a| ``TransactionOptions`` to configure the opened transaction. a| `
 `struct Transaction*`
 
 [#_transaction_on_close]
-==== transaction_on_close
+==== function ``transaction_on_close``
 
-[source,cpp]
+[source,c]
 ----
 struct VoidPromise* transaction_on_close(const struct Transaction* txn, uintptr_t callback_id, void(*)(uintptr_t, struct Error*) callback)
 ----
@@ -144,9 +144,9 @@ a| `callback` a| The function to be called a|
 `struct VoidPromise*`
 
 [#_transaction_query]
-==== transaction_query
+==== function ``transaction_query``
 
-[source,cpp]
+[source,c]
 ----
 struct QueryAnswerPromise* transaction_query(struct Transaction* transaction, const char* query, const struct QueryOptions* options)
 ----
@@ -172,9 +172,9 @@ a| `options` a| ``QueryOptions`` to configure the executed query. a| `const stru
 `struct QueryAnswerPromise*`
 
 [#_transaction_rollback]
-==== transaction_rollback
+==== function ``transaction_rollback``
 
-[source,cpp]
+[source,c]
 ----
 struct VoidPromise* transaction_rollback(const struct Transaction* txn)
 ----
@@ -188,9 +188,9 @@ Rolls back the uncommitted changes made via this transaction.
 `struct VoidPromise*`
 
 [#_transaction_submit_close]
-==== transaction_submit_close
+==== function ``transaction_submit_close``
 
-[source,cpp]
+[source,c]
 ----
 void transaction_submit_close(struct Transaction* txn)
 ----

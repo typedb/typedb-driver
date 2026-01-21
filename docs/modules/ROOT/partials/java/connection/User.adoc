@@ -10,7 +10,7 @@ TypeDB user information
 
 // tag::methods[]
 [#_User_delete_]
-==== delete
+==== method ``delete``
 
 [source,java]
 ----
@@ -32,7 +32,7 @@ driver.users().delete(username);
 ----
 
 [#_User_name_]
-==== name
+==== method ``name``
 
 [source,java]
 ----
@@ -47,7 +47,7 @@ Returns the name of this user.
 `java.lang.String`
 
 [#_User_updatePassword_java_lang_String]
-==== updatePassword
+==== method ``updatePassword``
 
 [source,java]
 ----

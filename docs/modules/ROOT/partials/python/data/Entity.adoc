@@ -16,7 +16,7 @@ Entity does not have a value. It is usually addressed by its ownership over attr
 
 // tag::methods[]
 [#_Entity_as_entity_]
-==== as_entity
+==== method ``as_entity``
 
 [source,python]
 ----
@@ -37,7 +37,7 @@ entity.as_entity()
 ----
 
 [#_Entity_get_iid_]
-==== get_iid
+==== method ``get_iid``
 
 [source,python]
 ----
@@ -58,7 +58,7 @@ entity.get_iid()
 ----
 
 [#_Entity_get_type_]
-==== get_type
+==== method ``get_type``
 
 [source,python]
 ----
@@ -79,7 +79,7 @@ entity.get_type()
 ----
 
 [#_Entity_is_entity_]
-==== is_entity
+==== method ``is_entity``
 
 [source,python]
 ----

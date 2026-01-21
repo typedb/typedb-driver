@@ -2,9 +2,9 @@
 === constraintwithspaniterator
 
 [#_constraint_with_span_iterator_drop]
-==== constraint_with_span_iterator_drop
+==== function ``constraint_with_span_iterator_drop``
 
-[source,cpp]
+[source,c]
 ----
 void constraint_with_span_iterator_drop(struct ConstraintWithSpanIterator* it)
 ----
@@ -18,9 +18,9 @@ Frees the native rust ``ConstraintWithSpanIterator`` object.
 `void`
 
 [#_constraint_with_span_iterator_next]
-==== constraint_with_span_iterator_next
+==== function ``constraint_with_span_iterator_next``
 
-[source,cpp]
+[source,c]
 ----
 struct ConstraintWithSpan* constraint_with_span_iterator_next(struct ConstraintWithSpanIterator* it)
 ----

@@ -5,16 +5,16 @@
 [.doc-api-reference-driver]
 ==== Struct Variable
 
-`class`
+`rust struct (pointer)`
 
 
 
 Uniquely identifies a variable in a ``Pipeline``pipeline. Its name (if any) can be retrieved from the ``variable_names`` field in ``Pipeline``
 
 [#_variable_drop]
-==== variable_drop
+==== function ``variable_drop``
 
-[source,cpp]
+[source,c]
 ----
 void variable_drop(struct Variable* obj)
 ----
@@ -28,9 +28,9 @@ Frees the native rust ``Variable`` object.
 `void`
 
 [#_variable_get_name]
-==== variable_get_name
+==== function ``variable_get_name``
 
-[source,cpp]
+[source,c]
 ----
 char* variable_get_name(const struct Pipeline* pipeline_structure, const struct Variable* variable)
 ----
@@ -44,9 +44,9 @@ Returns the name of the specified variable if it has one, and null otherwise. Th
 `char*`
 
 [#_variable_id_as_u32]
-==== variable_id_as_u32
+==== function ``variable_id_as_u32``
 
-[source,cpp]
+[source,c]
 ----
 uint32_t variable_id_as_u32(const struct Variable* variable)
 ----
@@ -60,9 +60,9 @@ Returns the Variable id as u32 to use in hash, equality etc.
 `uint32_t`
 
 [#_variable_string_repr]
-==== variable_string_repr
+==== function ``variable_string_repr``
 
-[source,cpp]
+[source,c]
 ----
 char* variable_string_repr(const struct Variable* variable)
 ----

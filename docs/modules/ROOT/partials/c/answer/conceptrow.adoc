@@ -5,16 +5,16 @@
 [.doc-api-reference-driver]
 ==== Struct ConceptRow
 
-`class`
+`rust struct (pointer)`
 
 
 
 A single row of concepts representing substitutions for variables in the query. Contains a Header (column names and query type), and the row of optional concepts. An empty concept in a column means the variable does not have a substitution in this answer.
 
 [#_concept_row_drop]
-==== concept_row_drop
+==== function ``concept_row_drop``
 
-[source,cpp]
+[source,c]
 ----
 void concept_row_drop(struct ConceptRow* concept_row)
 ----
@@ -28,9 +28,9 @@ Frees the native rust ``ConceptRow`` object.
 `void`
 
 [#_concept_row_equals]
-==== concept_row_equals
+==== function ``concept_row_equals``
 
-[source,cpp]
+[source,c]
 ----
 bool concept_row_equals(const struct ConceptRow* lhs, const struct ConceptRow* rhs)
 ----
@@ -44,9 +44,9 @@ Checks whether the provided ``ConceptRow`` objects are equal
 `bool`
 
 [#_concept_row_get]
-==== concept_row_get
+==== function ``concept_row_get``
 
-[source,cpp]
+[source,c]
 ----
 struct Concept* concept_row_get(const struct ConceptRow* concept_row, const char* column_name)
 ----
@@ -60,9 +60,9 @@ Retrieves a concept for a given column name.
 `struct Concept*`
 
 [#_concept_row_get_column_names]
-==== concept_row_get_column_names
+==== function ``concept_row_get_column_names``
 
-[source,cpp]
+[source,c]
 ----
 struct StringIterator* concept_row_get_column_names(const struct ConceptRow* concept_row)
 ----
@@ -76,9 +76,9 @@ Produces an ``Iterator`` over all ``String`` column names of the ``ConceptRow``'
 `struct StringIterator*`
 
 [#_concept_row_get_concepts]
-==== concept_row_get_concepts
+==== function ``concept_row_get_concepts``
 
-[source,cpp]
+[source,c]
 ----
 struct ConceptIterator* concept_row_get_concepts(const struct ConceptRow* concept_row)
 ----
@@ -92,9 +92,9 @@ Produces an ``Iterator`` over all ``Concepts`` in this ``ConceptRow``.
 `struct ConceptIterator*`
 
 [#_concept_row_get_index]
-==== concept_row_get_index
+==== function ``concept_row_get_index``
 
-[source,cpp]
+[source,c]
 ----
 struct Concept* concept_row_get_index(const struct ConceptRow* concept_row, uintptr_t column_index)
 ----
@@ -108,9 +108,9 @@ Retrieves a concept for a given column index.
 `struct Concept*`
 
 [#_concept_row_get_query_structure]
-==== concept_row_get_query_structure
+==== function ``concept_row_get_query_structure``
 
-[source,cpp]
+[source,c]
 ----
 struct Pipeline* concept_row_get_query_structure(const struct ConceptRow* concept_row)
 ----
@@ -124,9 +124,9 @@ Retrieve the executed query's structure from the ``ConceptRow``'s header, if set
 `struct Pipeline*`
 
 [#_concept_row_get_query_type]
-==== concept_row_get_query_type
+==== function ``concept_row_get_query_type``
 
-[source,cpp]
+[source,c]
 ----
 enum QueryType concept_row_get_query_type(const struct ConceptRow* concept_row)
 ----
@@ -140,9 +140,9 @@ Retrieve the executed query's type of the ``ConceptRow``'s header.
 `enum QueryType`
 
 [#_concept_row_involved_conjunctions]
-==== concept_row_involved_conjunctions
+==== function ``concept_row_involved_conjunctions``
 
-[source,cpp]
+[source,c]
 ----
 struct ConjunctionIDIterator* concept_row_involved_conjunctions(const struct ConceptRow* concept_row)
 ----
@@ -156,9 +156,9 @@ Retrieve the ``ConjunctionID``s of ``Conjunction``s that answered this row. May 
 `struct ConjunctionIDIterator*`
 
 [#_concept_row_to_string]
-==== concept_row_to_string
+==== function ``concept_row_to_string``
 
-[source,cpp]
+[source,c]
 ----
 char* concept_row_to_string(const struct ConceptRow* concept_row)
 ----

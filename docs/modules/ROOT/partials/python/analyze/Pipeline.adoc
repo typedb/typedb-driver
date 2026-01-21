@@ -10,7 +10,7 @@ A representation of a query pipeline.
 
 // tag::methods[]
 [#_Pipeline_conjunction_conjunction_id_ConjunctionID]
-==== conjunction
+==== method ``conjunction``
 
 [source,python]
 ----
@@ -33,7 +33,7 @@ a| `conjunction_id` a| the ConjunctionID of the conjunction to retrieve a| `Conj
 `'Conjunction' | None`
 
 [#_Pipeline_get_variable_name_variable_Variable]
-==== get_variable_name
+==== method ``get_variable_name``
 
 [source,python]
 ----
@@ -56,7 +56,7 @@ a| `variable` a| the variable from this pipeline a| `Variable` a|
 `str | None`
 
 [#_Pipeline_stages_]
-==== stages
+==== method ``stages``
 
 [source,python]
 ----

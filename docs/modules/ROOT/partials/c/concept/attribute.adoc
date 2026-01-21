@@ -2,9 +2,9 @@
 === attribute
 
 [#_attribute_get_type]
-==== attribute_get_type
+==== function ``attribute_get_type``
 
-[source,cpp]
+[source,c]
 ----
 struct Concept* attribute_get_type(const struct Concept* attribute)
 ----

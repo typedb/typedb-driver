@@ -2,9 +2,9 @@
 === users
 
 [#_users_all]
-==== users_all
+==== function ``users_all``
 
-[source,cpp]
+[source,c]
 ----
 struct UserIterator* users_all(const struct TypeDBDriver* driver)
 ----
@@ -18,9 +18,9 @@ Retrieves all users which exist on the TypeDB server.
 `struct UserIterator*`
 
 [#_users_contains]
-==== users_contains
+==== function ``users_contains``
 
-[source,cpp]
+[source,c]
 ----
 bool users_contains(const struct TypeDBDriver* driver, const char* username)
 ----
@@ -34,9 +34,9 @@ Checks if a user with the given name exists.
 `bool`
 
 [#_users_create]
-==== users_create
+==== function ``users_create``
 
-[source,cpp]
+[source,c]
 ----
 void users_create(const struct TypeDBDriver* driver, const char* username, const char* password)
 ----
@@ -50,9 +50,9 @@ Creates a user with the given name &amp; password.
 `void`
 
 [#_users_get]
-==== users_get
+==== function ``users_get``
 
-[source,cpp]
+[source,c]
 ----
 struct User* users_get(const struct TypeDBDriver* driver, const char* username)
 ----
@@ -66,9 +66,9 @@ Retrieves a user with the given name.
 `struct User*`
 
 [#_users_get_current_user]
-==== users_get_current_user
+==== function ``users_get_current_user``
 
-[source,cpp]
+[source,c]
 ----
 struct User* users_get_current_user(const struct TypeDBDriver* driver)
 ----

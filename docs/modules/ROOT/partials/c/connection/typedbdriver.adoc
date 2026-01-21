@@ -5,7 +5,7 @@
 [.doc-api-reference-driver]
 ==== Struct TypeDBDriver
 
-`class`
+`rust struct (pointer)`
 
 
 

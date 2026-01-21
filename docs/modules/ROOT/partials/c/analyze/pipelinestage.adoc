@@ -5,16 +5,16 @@
 [.doc-api-reference-driver]
 ==== Struct PipelineStage
 
-`class`
+`rust struct (pointer)`
 
 
 
 Representation of a stage in a ``Pipeline``.
 
 [#_pipeline_stage_delete_get_deleted_variables]
-==== pipeline_stage_delete_get_deleted_variables
+==== function ``pipeline_stage_delete_get_deleted_variables``
 
-[source,cpp]
+[source,c]
 ----
 struct VariableIterator* pipeline_stage_delete_get_deleted_variables(const struct PipelineStage* stage)
 ----
@@ -28,9 +28,9 @@ Unwraps the ``PipelineStage`` instance as a Delete stage, and returns the variab
 `struct VariableIterator*`
 
 [#_pipeline_stage_drop]
-==== pipeline_stage_drop
+==== function ``pipeline_stage_drop``
 
-[source,cpp]
+[source,c]
 ----
 void pipeline_stage_drop(struct PipelineStage* obj)
 ----
@@ -44,9 +44,9 @@ Frees the native rust ``PipelineStage`` object.
 `void`
 
 [#_pipeline_stage_get_block]
-==== pipeline_stage_get_block
+==== function ``pipeline_stage_get_block``
 
-[source,cpp]
+[source,c]
 ----
 struct ConjunctionID* pipeline_stage_get_block(const struct PipelineStage* stage)
 ----
@@ -60,9 +60,9 @@ Returns the block of the pipeline stage - this is the ``ConjunctionID`` of the r
 `struct ConjunctionID*`
 
 [#_pipeline_stage_limit_get_limit]
-==== pipeline_stage_limit_get_limit
+==== function ``pipeline_stage_limit_get_limit``
 
-[source,cpp]
+[source,c]
 ----
 int64_t pipeline_stage_limit_get_limit(const struct PipelineStage* stage)
 ----
@@ -76,9 +76,9 @@ Unwraps the ``PipelineStage`` instance as a Limit stage, and returns the limit a
 `int64_t`
 
 [#_pipeline_stage_offset_get_offset]
-==== pipeline_stage_offset_get_offset
+==== function ``pipeline_stage_offset_get_offset``
 
-[source,cpp]
+[source,c]
 ----
 int64_t pipeline_stage_offset_get_offset(const struct PipelineStage* stage)
 ----
@@ -92,9 +92,9 @@ Unwraps the ``PipelineStage`` instance as an Offset stage, and returns the offse
 `int64_t`
 
 [#_pipeline_stage_reduce_get_groupby]
-==== pipeline_stage_reduce_get_groupby
+==== function ``pipeline_stage_reduce_get_groupby``
 
-[source,cpp]
+[source,c]
 ----
 struct VariableIterator* pipeline_stage_reduce_get_groupby(const struct PipelineStage* stage)
 ----
@@ -108,9 +108,9 @@ Unwraps the ``PipelineStage`` instance as a Reduce stage, and returns the variab
 `struct VariableIterator*`
 
 [#_pipeline_stage_reduce_get_reducer_assignments]
-==== pipeline_stage_reduce_get_reducer_assignments
+==== function ``pipeline_stage_reduce_get_reducer_assignments``
 
-[source,cpp]
+[source,c]
 ----
 struct ReduceAssignmentIterator* pipeline_stage_reduce_get_reducer_assignments(const struct PipelineStage* stage)
 ----
@@ -124,9 +124,9 @@ Unwraps the ``PipelineStage`` instance as a Reduce stage, and returns the reduce
 `struct ReduceAssignmentIterator*`
 
 [#_pipeline_stage_require_get_variables]
-==== pipeline_stage_require_get_variables
+==== function ``pipeline_stage_require_get_variables``
 
-[source,cpp]
+[source,c]
 ----
 struct VariableIterator* pipeline_stage_require_get_variables(const struct PipelineStage* stage)
 ----
@@ -140,9 +140,9 @@ Unwraps the ``PipelineStage`` instance as a Require stage, and returns the requi
 `struct VariableIterator*`
 
 [#_pipeline_stage_select_get_variables]
-==== pipeline_stage_select_get_variables
+==== function ``pipeline_stage_select_get_variables``
 
-[source,cpp]
+[source,c]
 ----
 struct VariableIterator* pipeline_stage_select_get_variables(const struct PipelineStage* stage)
 ----
@@ -156,9 +156,9 @@ Unwraps the ``PipelineStage`` instance as a Select stage, and returns the variab
 `struct VariableIterator*`
 
 [#_pipeline_stage_sort_get_sort_variables]
-==== pipeline_stage_sort_get_sort_variables
+==== function ``pipeline_stage_sort_get_sort_variables``
 
-[source,cpp]
+[source,c]
 ----
 struct SortVariableIterator* pipeline_stage_sort_get_sort_variables(const struct PipelineStage* stage)
 ----
@@ -172,9 +172,9 @@ Unwraps the ``PipelineStage`` instance as a Sort stage, and returns the ``SortVa
 `struct SortVariableIterator*`
 
 [#_pipeline_stage_string_repr]
-==== pipeline_stage_string_repr
+==== function ``pipeline_stage_string_repr``
 
-[source,cpp]
+[source,c]
 ----
 char* pipeline_stage_string_repr(const struct PipelineStage* stage)
 ----
@@ -188,9 +188,9 @@ Returns a string representation of the pipeline stage
 `char*`
 
 [#_pipeline_stage_variant]
-==== pipeline_stage_variant
+==== function ``pipeline_stage_variant``
 
-[source,cpp]
+[source,c]
 ----
 enum PipelineStageVariant pipeline_stage_variant(const struct PipelineStage* stage)
 ----
@@ -204,9 +204,9 @@ Returns the variant of the ``Pipeline`` stage.
 `enum PipelineStageVariant`
 
 [#_pipeline_stages]
-==== pipeline_stages
+==== function ``pipeline_stages``
 
-[source,cpp]
+[source,c]
 ----
 struct PipelineStageIterator* pipeline_stages(const struct Pipeline* pipeline)
 ----

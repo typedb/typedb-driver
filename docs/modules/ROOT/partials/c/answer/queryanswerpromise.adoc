@@ -5,16 +5,16 @@
 [.doc-api-reference-driver]
 ==== Struct QueryAnswerPromise
 
-`class`
+`rust struct (pointer)`
 
 
 
 Promise object representing the result of an asynchronous operation. Use query_answer_promise_resolve(QueryAnswerPromise*) to wait for and retrieve the resulting boolean value.
 
 [#_query_answer_promise_drop]
-==== query_answer_promise_drop
+==== function ``query_answer_promise_drop``
 
-[source,cpp]
+[source,c]
 ----
 void query_answer_promise_drop(struct QueryAnswerPromise* promise)
 ----
@@ -28,9 +28,9 @@ Frees the native rust ``QueryAnswerPromise`` object.
 `void`
 
 [#_query_answer_promise_resolve]
-==== query_answer_promise_resolve
+==== function ``query_answer_promise_resolve``
 
-[source,cpp]
+[source,c]
 ----
 struct QueryAnswer* query_answer_promise_resolve(struct QueryAnswerPromise* promise)
 ----

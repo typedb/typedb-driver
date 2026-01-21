@@ -8,7 +8,7 @@
 
 // tag::methods[]
 [#_JSON_JSON_]
-==== JSON
+==== method ``JSON``
 
 [source,java]
 ----
@@ -22,7 +22,7 @@ public JSON()
 `public`
 
 [#_JSON_asArray_]
-==== asArray
+==== method ``asArray``
 
 [source,java]
 ----
@@ -36,7 +36,7 @@ public java.util.List<JSON> asArray()
 `public java.util.List<JSON>`
 
 [#_JSON_asBoolean_]
-==== asBoolean
+==== method ``asBoolean``
 
 [source,java]
 ----
@@ -50,7 +50,7 @@ public boolean asBoolean()
 `public boolean`
 
 [#_JSON_asNumber_]
-==== asNumber
+==== method ``asNumber``
 
 [source,java]
 ----
@@ -64,7 +64,7 @@ public double asNumber()
 `public double`
 
 [#_JSON_asObject_]
-==== asObject
+==== method ``asObject``
 
 [source,java]
 ----
@@ -78,7 +78,7 @@ public java.util.Map<java.lang.String,​JSON> asObject()
 `public java.util.Map<java.lang.String,​JSON>`
 
 [#_JSON_asString_]
-==== asString
+==== method ``asString``
 
 [source,java]
 ----
@@ -92,7 +92,7 @@ public java.lang.String asString()
 `public java.lang.String`
 
 [#_JSON_isArray_]
-==== isArray
+==== method ``isArray``
 
 [source,java]
 ----
@@ -106,7 +106,7 @@ public boolean isArray()
 `public boolean`
 
 [#_JSON_isBoolean_]
-==== isBoolean
+==== method ``isBoolean``
 
 [source,java]
 ----
@@ -120,7 +120,7 @@ public boolean isBoolean()
 `public boolean`
 
 [#_JSON_isNumber_]
-==== isNumber
+==== method ``isNumber``
 
 [source,java]
 ----
@@ -134,7 +134,7 @@ public boolean isNumber()
 `public boolean`
 
 [#_JSON_isObject_]
-==== isObject
+==== method ``isObject``
 
 [source,java]
 ----
@@ -148,7 +148,7 @@ public boolean isObject()
 `public boolean`
 
 [#_JSON_isString_]
-==== isString
+==== method ``isString``
 
 [source,java]
 ----
@@ -162,7 +162,7 @@ public boolean isString()
 `public boolean`
 
 [#_JSON_parse_java_lang_String]
-==== parse
+==== method ``parse``
 
 [source,java]
 ----

@@ -2,9 +2,9 @@
 === reduceassignmentiterator
 
 [#_reduce_assignment_iterator_drop]
-==== reduce_assignment_iterator_drop
+==== function ``reduce_assignment_iterator_drop``
 
-[source,cpp]
+[source,c]
 ----
 void reduce_assignment_iterator_drop(struct ReduceAssignmentIterator* it)
 ----
@@ -18,9 +18,9 @@ Frees the native rust ``ReduceAssignmentIterator`` object.
 `void`
 
 [#_reduce_assignment_iterator_next]
-==== reduce_assignment_iterator_next
+==== function ``reduce_assignment_iterator_next``
 
-[source,cpp]
+[source,c]
 ----
 struct ReduceAssignment* reduce_assignment_iterator_next(struct ReduceAssignmentIterator* it)
 ----

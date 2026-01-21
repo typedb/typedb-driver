@@ -2,9 +2,9 @@
 === sortvariableiterator
 
 [#_sort_variable_iterator_drop]
-==== sort_variable_iterator_drop
+==== function ``sort_variable_iterator_drop``
 
-[source,cpp]
+[source,c]
 ----
 void sort_variable_iterator_drop(struct SortVariableIterator* it)
 ----
@@ -18,9 +18,9 @@ Frees the native rust ``SortVariableIterator`` object.
 `void`
 
 [#_sort_variable_iterator_next]
-==== sort_variable_iterator_next
+==== function ``sort_variable_iterator_next``
 
-[source,cpp]
+[source,c]
 ----
 struct SortVariable* sort_variable_iterator_next(struct SortVariableIterator* it)
 ----

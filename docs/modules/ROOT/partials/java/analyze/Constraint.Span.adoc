@@ -10,7 +10,7 @@ The span of a constraint in the source query
 
 // tag::methods[]
 [#_Constraint_Span_begin_]
-==== begin
+==== method ``begin``
 
 [source,java]
 ----
@@ -24,7 +24,7 @@ long begin()
 `long`
 
 [#_Constraint_Span_end_]
-==== end
+==== method ``end``
 
 [source,java]
 ----

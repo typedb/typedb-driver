@@ -5,16 +5,16 @@
 [.doc-api-reference-driver]
 ==== Struct ReduceAssignment
 
-`class`
+`rust struct (pointer)`
 
 
 
 Representation of an assignment from a reduction in a ``PipelineStage::Reduce``, such as ``reduce $c = sum($x);``
 
 [#_reduce_assignment_drop]
-==== reduce_assignment_drop
+==== function ``reduce_assignment_drop``
 
-[source,cpp]
+[source,c]
 ----
 void reduce_assignment_drop(struct ReduceAssignment* obj)
 ----
@@ -28,9 +28,9 @@ Frees the native rust ``ReduceAssignment`` object.
 `void`
 
 [#_reduce_assignment_get_assigned]
-==== reduce_assignment_get_assigned
+==== function ``reduce_assignment_get_assigned``
 
-[source,cpp]
+[source,c]
 ----
 struct Variable* reduce_assignment_get_assigned(const struct ReduceAssignment* reduce_assignment)
 ----
@@ -44,9 +44,9 @@ The variable being assigned to in this ReduceAssignment. e.g. ``$c`` in ``$c = s
 `struct Variable*`
 
 [#_reduce_assignment_get_reducer]
-==== reduce_assignment_get_reducer
+==== function ``reduce_assignment_get_reducer``
 
-[source,cpp]
+[source,c]
 ----
 struct Reducer* reduce_assignment_get_reducer(const struct ReduceAssignment* reduce_assignment)
 ----

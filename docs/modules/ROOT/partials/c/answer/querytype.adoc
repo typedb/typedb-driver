@@ -5,7 +5,7 @@
 [.doc-api-reference-driver]
 ==== Struct QueryType
 
-`class`
+`rust struct (pointer)`
 
 
 
@@ -16,7 +16,7 @@ This enum is used to specify the type of the query resulted in this answer.
 [.doc-api-reference-driver]
 ==== Enum QueryType
 
-`class`
+`rust enum (pointer)`
 
 
 

@@ -5,16 +5,16 @@
 [.doc-api-reference-driver]
 ==== Struct ConceptPromise
 
-`class`
+`rust struct (pointer)`
 
 
 
 Promise object representing the result of an asynchronous operation. Use concept_promise_resolve(ConceptPromise*) to wait for and retrieve the resulting boolean value.
 
 [#_concept_promise_drop]
-==== concept_promise_drop
+==== function ``concept_promise_drop``
 
-[source,cpp]
+[source,c]
 ----
 void concept_promise_drop(struct ConceptPromise* promise)
 ----
@@ -28,9 +28,9 @@ Frees the native rust ``ConceptPromise`` object.
 `void`
 
 [#_concept_promise_resolve]
-==== concept_promise_resolve
+==== function ``concept_promise_resolve``
 
-[source,cpp]
+[source,c]
 ----
 struct Concept* concept_promise_resolve(struct ConceptPromise* promise)
 ----

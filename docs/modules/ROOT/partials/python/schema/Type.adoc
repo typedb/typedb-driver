@@ -12,7 +12,7 @@
 
 // tag::methods[]
 [#_Type_is_type_]
-==== is_type
+==== method ``is_type``
 
 [source,python]
 ----

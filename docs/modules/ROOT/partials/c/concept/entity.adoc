@@ -2,9 +2,9 @@
 === entity
 
 [#_entity_get_type]
-==== entity_get_type
+==== function ``entity_get_type``
 
-[source,cpp]
+[source,c]
 ----
 struct Concept* entity_get_type(const struct Concept* entity)
 ----

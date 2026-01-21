@@ -10,7 +10,7 @@ A representation of a TypeQL constraint.
 
 // tag::methods[]
 [#_Constraint_as_comparison_]
-==== as_comparison
+==== method ``as_comparison``
 
 [source,python]
 ----
@@ -24,7 +24,7 @@ as_comparison() -> Comparison
 `Comparison`
 
 [#_Constraint_as_expression_]
-==== as_expression
+==== method ``as_expression``
 
 [source,python]
 ----
@@ -38,7 +38,7 @@ as_expression() -> Expression
 `Expression`
 
 [#_Constraint_as_function_call_]
-==== as_function_call
+==== method ``as_function_call``
 
 [source,python]
 ----
@@ -52,7 +52,7 @@ as_function_call() -> FunctionCall
 `FunctionCall`
 
 [#_Constraint_as_has_]
-==== as_has
+==== method ``as_has``
 
 [source,python]
 ----
@@ -66,7 +66,7 @@ as_has() -> Has
 `Has`
 
 [#_Constraint_as_iid_]
-==== as_iid
+==== method ``as_iid``
 
 [source,python]
 ----
@@ -80,7 +80,7 @@ as_iid() -> Iid
 `Iid`
 
 [#_Constraint_as_is_]
-==== as_is
+==== method ``as_is``
 
 [source,python]
 ----
@@ -94,7 +94,7 @@ as_is() -> Is
 `Is`
 
 [#_Constraint_as_isa_]
-==== as_isa
+==== method ``as_isa``
 
 [source,python]
 ----
@@ -108,7 +108,7 @@ as_isa() -> Isa
 `Isa`
 
 [#_Constraint_as_kind_]
-==== as_kind
+==== method ``as_kind``
 
 [source,python]
 ----
@@ -122,7 +122,7 @@ as_kind() -> Kind
 `Kind`
 
 [#_Constraint_as_label_]
-==== as_label
+==== method ``as_label``
 
 [source,python]
 ----
@@ -136,7 +136,7 @@ as_label() -> Label
 `Label`
 
 [#_Constraint_as_links_]
-==== as_links
+==== method ``as_links``
 
 [source,python]
 ----
@@ -150,7 +150,7 @@ as_links() -> Links
 `Links`
 
 [#_Constraint_as_not_]
-==== as_not
+==== method ``as_not``
 
 [source,python]
 ----
@@ -164,7 +164,7 @@ as_not() -> Not
 `Not`
 
 [#_Constraint_as_or_]
-==== as_or
+==== method ``as_or``
 
 [source,python]
 ----
@@ -178,7 +178,7 @@ as_or() -> Or
 `Or`
 
 [#_Constraint_as_owns_]
-==== as_owns
+==== method ``as_owns``
 
 [source,python]
 ----
@@ -192,7 +192,7 @@ as_owns() -> Owns
 `Owns`
 
 [#_Constraint_as_plays_]
-==== as_plays
+==== method ``as_plays``
 
 [source,python]
 ----
@@ -206,7 +206,7 @@ as_plays() -> Plays
 `Plays`
 
 [#_Constraint_as_relates_]
-==== as_relates
+==== method ``as_relates``
 
 [source,python]
 ----
@@ -220,7 +220,7 @@ as_relates() -> Relates
 `Relates`
 
 [#_Constraint_as_sub_]
-==== as_sub
+==== method ``as_sub``
 
 [source,python]
 ----
@@ -234,7 +234,7 @@ as_sub() -> Sub
 `Sub`
 
 [#_Constraint_as_try_]
-==== as_try
+==== method ``as_try``
 
 [source,python]
 ----
@@ -248,7 +248,7 @@ as_try() -> Try
 `Try`
 
 [#_Constraint_as_value_]
-==== as_value
+==== method ``as_value``
 
 [source,python]
 ----
@@ -262,7 +262,7 @@ as_value() -> Value
 `Value`
 
 [#_Constraint_is_comparison_]
-==== is_comparison
+==== method ``is_comparison``
 
 [source,python]
 ----
@@ -276,7 +276,7 @@ is_comparison() -> bool
 `bool`
 
 [#_Constraint_is_expression_]
-==== is_expression
+==== method ``is_expression``
 
 [source,python]
 ----
@@ -290,7 +290,7 @@ is_expression() -> bool
 `bool`
 
 [#_Constraint_is_function_call_]
-==== is_function_call
+==== method ``is_function_call``
 
 [source,python]
 ----
@@ -304,7 +304,7 @@ is_function_call() -> bool
 `bool`
 
 [#_Constraint_is_has_]
-==== is_has
+==== method ``is_has``
 
 [source,python]
 ----
@@ -318,7 +318,7 @@ is_has() -> bool
 `bool`
 
 [#_Constraint_is_iid_]
-==== is_iid
+==== method ``is_iid``
 
 [source,python]
 ----
@@ -332,7 +332,7 @@ is_iid() -> bool
 `bool`
 
 [#_Constraint_is_is_]
-==== is_is
+==== method ``is_is``
 
 [source,python]
 ----
@@ -346,7 +346,7 @@ is_is() -> bool
 `bool`
 
 [#_Constraint_is_isa_]
-==== is_isa
+==== method ``is_isa``
 
 [source,python]
 ----
@@ -360,7 +360,7 @@ is_isa() -> bool
 `bool`
 
 [#_Constraint_is_kind_of_]
-==== is_kind_of
+==== method ``is_kind_of``
 
 [source,python]
 ----
@@ -374,7 +374,7 @@ is_kind_of() -> bool
 `bool`
 
 [#_Constraint_is_label_]
-==== is_label
+==== method ``is_label``
 
 [source,python]
 ----
@@ -388,7 +388,7 @@ is_label() -> bool
 `bool`
 
 [#_Constraint_is_links_]
-==== is_links
+==== method ``is_links``
 
 [source,python]
 ----
@@ -402,7 +402,7 @@ is_links() -> bool
 `bool`
 
 [#_Constraint_is_not_]
-==== is_not
+==== method ``is_not``
 
 [source,python]
 ----
@@ -416,7 +416,7 @@ is_not() -> bool
 `bool`
 
 [#_Constraint_is_or_]
-==== is_or
+==== method ``is_or``
 
 [source,python]
 ----
@@ -430,7 +430,7 @@ is_or() -> bool
 `bool`
 
 [#_Constraint_is_owns_]
-==== is_owns
+==== method ``is_owns``
 
 [source,python]
 ----
@@ -444,7 +444,7 @@ is_owns() -> bool
 `bool`
 
 [#_Constraint_is_plays_]
-==== is_plays
+==== method ``is_plays``
 
 [source,python]
 ----
@@ -458,7 +458,7 @@ is_plays() -> bool
 `bool`
 
 [#_Constraint_is_relates_]
-==== is_relates
+==== method ``is_relates``
 
 [source,python]
 ----
@@ -472,7 +472,7 @@ is_relates() -> bool
 `bool`
 
 [#_Constraint_is_sub_]
-==== is_sub
+==== method ``is_sub``
 
 [source,python]
 ----
@@ -486,7 +486,7 @@ is_sub() -> bool
 `bool`
 
 [#_Constraint_is_try_]
-==== is_try
+==== method ``is_try``
 
 [source,python]
 ----
@@ -500,7 +500,7 @@ is_try() -> bool
 `bool`
 
 [#_Constraint_is_value_]
-==== is_value
+==== method ``is_value``
 
 [source,python]
 ----
@@ -514,7 +514,7 @@ is_value() -> bool
 `bool`
 
 [#_Constraint_span_]
-==== span
+==== method ``span``
 
 [source,python]
 ----

@@ -2,9 +2,9 @@
 === relation
 
 [#_relation_get_type]
-==== relation_get_type
+==== function ``relation_get_type``
 
-[source,cpp]
+[source,c]
 ----
 struct Concept* relation_get_type(const struct Concept* relation)
 ----

@@ -19,7 +19,7 @@ a| `DEFAULT_ADDRESS` a| `static java.lang.String` a|
 
 // tag::methods[]
 [#_TypeDB_TypeDB_]
-==== TypeDB
+==== method ``TypeDB``
 
 [source,java]
 ----
@@ -33,7 +33,7 @@ public TypeDB()
 `public`
 
 [#_TypeDB_driver_java_lang_String_Credentials_DriverOptions]
-==== driver
+==== method ``driver``
 
 [source,java]
 ----

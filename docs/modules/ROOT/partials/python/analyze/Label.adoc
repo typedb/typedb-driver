@@ -14,7 +14,7 @@ Represents a label constraint: &lt;type&gt; label &lt;label&gt;
 
 // tag::methods[]
 [#_Label_label_]
-==== label
+==== method ``label``
 
 [source,python]
 ----
@@ -28,7 +28,7 @@ label() -> str
 `str`
 
 [#_Label_variable_]
-==== variable
+==== method ``variable``
 
 [source,python]
 ----

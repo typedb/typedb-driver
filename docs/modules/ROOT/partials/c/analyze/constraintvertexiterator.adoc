@@ -2,9 +2,9 @@
 === constraintvertexiterator
 
 [#_constraint_vertex_iterator_drop]
-==== constraint_vertex_iterator_drop
+==== function ``constraint_vertex_iterator_drop``
 
-[source,cpp]
+[source,c]
 ----
 void constraint_vertex_iterator_drop(struct ConstraintVertexIterator* it)
 ----
@@ -18,9 +18,9 @@ Frees the native rust ``ConstraintVertexIterator`` object.
 `void`
 
 [#_constraint_vertex_iterator_next]
-==== constraint_vertex_iterator_next
+==== function ``constraint_vertex_iterator_next``
 
-[source,cpp]
+[source,c]
 ----
 struct ConstraintVertex* constraint_vertex_iterator_next(struct ConstraintVertexIterator* it)
 ----

@@ -10,7 +10,7 @@ An assignment of a reducer to a variable
 
 // tag::methods[]
 [#_PipelineStage_ReduceStage_ReduceAssignment_assigned_]
-==== assigned
+==== method ``assigned``
 
 [source,java]
 ----
@@ -24,7 +24,7 @@ The variable being assigned to
 `Variable`
 
 [#_PipelineStage_ReduceStage_ReduceAssignment_reducer_]
-==== reducer
+==== method ``reducer``
 
 [source,java]
 ----

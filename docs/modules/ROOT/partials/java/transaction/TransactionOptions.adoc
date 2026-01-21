@@ -10,7 +10,7 @@ TypeDB transaction options. ``TransactionOptions`` object can be used to overrid
 
 // tag::methods[]
 [#_TransactionOptions_TransactionOptions_]
-==== TransactionOptions
+==== method ``TransactionOptions``
 
 [source,java]
 ----
@@ -32,7 +32,7 @@ TransactionOptions options = TransactionOptions();
 ----
 
 [#_TransactionOptions_schemaLockAcquireTimeoutMillis_]
-==== schemaLockAcquireTimeoutMillis
+==== method ``schemaLockAcquireTimeoutMillis``
 
 [source,java]
 ----
@@ -54,7 +54,7 @@ options.schemaLockAcquireTimeoutMillis();
 ----
 
 [#_TransactionOptions_schemaLockAcquireTimeoutMillis_int]
-==== schemaLockAcquireTimeoutMillis
+==== method ``schemaLockAcquireTimeoutMillis``
 
 [source,java]
 ----
@@ -85,7 +85,7 @@ options.schemaLockAcquireTimeoutMillis(schemaLockAcquireTimeoutMillis);
 ----
 
 [#_TransactionOptions_transactionTimeoutMillis_]
-==== transactionTimeoutMillis
+==== method ``transactionTimeoutMillis``
 
 [source,java]
 ----
@@ -108,7 +108,7 @@ options.transactionTimeoutMillis();
 ----
 
 [#_TransactionOptions_transactionTimeoutMillis_int]
-==== transactionTimeoutMillis
+==== method ``transactionTimeoutMillis``
 
 [source,java]
 ----

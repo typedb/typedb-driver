@@ -5,7 +5,7 @@
 [.doc-api-reference-driver]
 ==== Struct Duration
 
-`class`
+`rust struct (pointer)`
 
 
 

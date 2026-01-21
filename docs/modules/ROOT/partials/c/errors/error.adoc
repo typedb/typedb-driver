@@ -5,16 +5,16 @@
 [.doc-api-reference-driver]
 ==== Struct Error
 
-`class`
+`rust struct (pointer)`
 
 
 
 Represents errors encountered during operation.
 
 [#_check_error]
-==== check_error
+==== function ``check_error``
 
-[source,cpp]
+[source,c]
 ----
 bool check_error(void)
 ----
@@ -28,9 +28,9 @@ Checks if the error flag was set by the last operation. If true, the error can b
 `bool`
 
 [#_error_code]
-==== error_code
+==== function ``error_code``
 
-[source,cpp]
+[source,c]
 ----
 char* error_code(const struct Error* error)
 ----
@@ -44,9 +44,9 @@ Returns the error code of the ``Error`` object
 `char*`
 
 [#_error_drop]
-==== error_drop
+==== function ``error_drop``
 
-[source,cpp]
+[source,c]
 ----
 void error_drop(struct Error* error)
 ----
@@ -60,9 +60,9 @@ Frees the native rust ``Error`` object
 `void`
 
 [#_error_message]
-==== error_message
+==== function ``error_message``
 
-[source,cpp]
+[source,c]
 ----
 char* error_message(const struct Error* error)
 ----
@@ -76,9 +76,9 @@ Returns the error message of the ``Error`` object
 `char*`
 
 [#_get_last_error]
-==== get_last_error
+==== function ``get_last_error``
 
-[source,cpp]
+[source,c]
 ----
 struct Error* get_last_error(void)
 ----

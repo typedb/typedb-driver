@@ -2,9 +2,9 @@
 === variableiterator
 
 [#_variable_iterator_drop]
-==== variable_iterator_drop
+==== function ``variable_iterator_drop``
 
-[source,cpp]
+[source,c]
 ----
 void variable_iterator_drop(struct VariableIterator* it)
 ----
@@ -18,9 +18,9 @@ Frees the native rust ``VariableIterator`` object.
 `void`
 
 [#_variable_iterator_next]
-==== variable_iterator_next
+==== function ``variable_iterator_next``
 
-[source,cpp]
+[source,c]
 ----
 struct Variable* variable_iterator_next(struct VariableIterator* it)
 ----

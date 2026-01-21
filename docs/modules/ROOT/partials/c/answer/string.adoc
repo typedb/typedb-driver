@@ -2,9 +2,9 @@
 === string
 
 [#_string_free]
-==== string_free
+==== function ``string_free``
 
-[source,cpp]
+[source,c]
 ----
 void string_free(char* str)
 ----

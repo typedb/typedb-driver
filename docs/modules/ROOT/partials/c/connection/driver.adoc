@@ -2,9 +2,9 @@
 === driver
 
 [#_driver_close]
-==== driver_close
+==== function ``driver_close``
 
-[source,cpp]
+[source,c]
 ----
 void driver_close(struct TypeDBDriver* driver)
 ----
@@ -18,9 +18,9 @@ Closes the driver. Before instantiating a new driver, the driver that’s curren
 `void`
 
 [#_driver_force_close]
-==== driver_force_close
+==== function ``driver_force_close``
 
-[source,cpp]
+[source,c]
 ----
 void driver_force_close(struct TypeDBDriver* driver)
 ----
@@ -34,9 +34,9 @@ Forcibly closes the driver. To be used in exceptional cases.
 `void`
 
 [#_driver_is_open]
-==== driver_is_open
+==== function ``driver_is_open``
 
-[source,cpp]
+[source,c]
 ----
 bool driver_is_open(const struct TypeDBDriver* driver)
 ----
@@ -50,9 +50,9 @@ Checks whether this connection is presently open.
 `bool`
 
 [#_driver_open]
-==== driver_open
+==== function ``driver_open``
 
-[source,cpp]
+[source,c]
 ----
 struct TypeDBDriver* driver_open(const char* address, const struct Credentials* credentials, const struct DriverOptions* driver_options)
 ----
@@ -78,9 +78,9 @@ a| `driver_options` a| The ``DriverOptions`` to connect with a| `const struct Dr
 `struct TypeDBDriver*`
 
 [#_driver_open_with_description]
-==== driver_open_with_description
+==== function ``driver_open_with_description``
 
-[source,cpp]
+[source,c]
 ----
 struct TypeDBDriver* driver_open_with_description(const char* address, const struct Credentials* credentials, const struct DriverOptions* driver_options, const char* driver_lang)
 ----
@@ -107,9 +107,9 @@ a| `driver_lang` a| The language of the driver connecting to the server a| `cons
 `struct TypeDBDriver*`
 
 [#_init_logging]
-==== init_logging
+==== function ``init_logging``
 
-[source,cpp]
+[source,c]
 ----
 void init_logging(void)
 ----

@@ -2,9 +2,9 @@
 === functioniterator
 
 [#_function_iterator_drop]
-==== function_iterator_drop
+==== function ``function_iterator_drop``
 
-[source,cpp]
+[source,c]
 ----
 void function_iterator_drop(struct FunctionIterator* it)
 ----
@@ -18,9 +18,9 @@ Frees the native rust ``FunctionIterator`` object.
 `void`
 
 [#_function_iterator_next]
-==== function_iterator_next
+==== function ``function_iterator_next``
 
-[source,cpp]
+[source,c]
 ----
 struct Function* function_iterator_next(struct FunctionIterator* it)
 ----

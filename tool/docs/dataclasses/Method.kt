@@ -35,10 +35,11 @@ data class Method(
     val returnType: String? = null,
 ) {
     fun toAsciiDoc(language: String, headerLevel: Int = 4): String {
+        val languageMethodDescriptor = languageMethodDescriptor(language)
         val builder = AsciiDocBuilder()
         var result = ""
         result += builder.anchor(this.anchor ?: replaceSymbolsForAnchor(this.name))
-        result += builder.header(headerLevel, this.name)
+        result += builder.header(headerLevel, "${languageMethodDescriptor} ``${this.name}``")
         result += builder.codeBlock(this.signature, language)
         result += "${this.description.joinToString("\n\n")}\n\n"
 
@@ -69,6 +70,14 @@ data class Method(
         }
 
         return result
+    }
+
+    fun languageMethodDescriptor(language: String): String {
+        return when (language) {
+            "c" -> "function"
+            "cpp" -> "function"
+            else -> "method"
+        }
     }
 
     fun toAsciiDocFeaturesMerged(vararg otherMethods: Method): String {

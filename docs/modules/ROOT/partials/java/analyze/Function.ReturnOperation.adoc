@@ -10,7 +10,7 @@ A representation of the return operation of a function.
 
 // tag::methods[]
 [#_Function_ReturnOperation_asCheck_]
-==== asCheck
+==== method ``asCheck``
 
 [source,java]
 ----
@@ -24,7 +24,7 @@ Down-casts this ReturnOperation to a ``Check`` return operation.
 `Function.ReturnOperation.Check`
 
 [#_Function_ReturnOperation_asReduce_]
-==== asReduce
+==== method ``asReduce``
 
 [source,java]
 ----
@@ -38,7 +38,7 @@ Down-casts this ReturnOperation to a Reduce return operation.
 `Function.ReturnOperation.Reduce`
 
 [#_Function_ReturnOperation_asSingle_]
-==== asSingle
+==== method ``asSingle``
 
 [source,java]
 ----
@@ -52,7 +52,7 @@ Down-casts this ReturnOperation to a ``Single`` return operation.
 `Function.ReturnOperation.Single`
 
 [#_Function_ReturnOperation_asStream_]
-==== asStream
+==== method ``asStream``
 
 [source,java]
 ----
@@ -66,7 +66,7 @@ Down-casts this ReturnOperation to a ``Stream`` return operation.
 `Function.ReturnOperation.Stream`
 
 [#_Function_ReturnOperation_isCheck_]
-==== isCheck
+==== method ``isCheck``
 
 [source,java]
 ----
@@ -80,7 +80,7 @@ boolean isCheck()
 `boolean`
 
 [#_Function_ReturnOperation_isReduce_]
-==== isReduce
+==== method ``isReduce``
 
 [source,java]
 ----
@@ -94,7 +94,7 @@ boolean isReduce()
 `boolean`
 
 [#_Function_ReturnOperation_isSingle_]
-==== isSingle
+==== method ``isSingle``
 
 [source,java]
 ----
@@ -108,7 +108,7 @@ boolean isSingle()
 `boolean`
 
 [#_Function_ReturnOperation_isStream_]
-==== isStream
+==== method ``isStream``
 
 [source,java]
 ----
@@ -122,7 +122,7 @@ boolean isStream()
 `boolean`
 
 [#_Function_ReturnOperation_variant_]
-==== variant
+==== method ``variant``
 
 [source,java]
 ----

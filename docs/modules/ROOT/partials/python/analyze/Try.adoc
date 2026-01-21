@@ -14,7 +14,7 @@ Represents a ‘try’ constraint: try { &lt;conjunction&gt; }
 
 // tag::methods[]
 [#_Try_conjunction_]
-==== conjunction
+==== method ``conjunction``
 
 [source,python]
 ----

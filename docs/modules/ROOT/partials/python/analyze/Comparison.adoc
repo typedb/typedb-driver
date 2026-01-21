@@ -14,7 +14,7 @@ Represents a comparison: &lt;lhs&gt; &lt;comparator&gt; &lt;rhs&gt;
 
 // tag::methods[]
 [#_Comparison_comparator_]
-==== comparator
+==== method ``comparator``
 
 [source,python]
 ----
@@ -28,7 +28,7 @@ comparator() -> Comparator
 `Comparator`
 
 [#_Comparison_lhs_]
-==== lhs
+==== method ``lhs``
 
 [source,python]
 ----
@@ -42,7 +42,7 @@ lhs() -> ConstraintVertex
 `ConstraintVertex`
 
 [#_Comparison_rhs_]
-==== rhs
+==== method ``rhs``
 
 [source,python]
 ----

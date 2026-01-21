@@ -23,7 +23,7 @@ a| `LANGUAGE` a| `static java.lang.String` a|
 
 // tag::methods[]
 [#_Driver_close_]
-==== close
+==== method ``close``
 
 [source,java]
 ----
@@ -45,7 +45,7 @@ driver.close()
 ----
 
 [#_Driver_databases_]
-==== databases
+==== method ``databases``
 
 [source,java]
 ----
@@ -60,7 +60,7 @@ The ``DatabaseManager`` for this connection, providing access to database manage
 `DatabaseManager`
 
 [#_Driver_isOpen_]
-==== isOpen
+==== method ``isOpen``
 
 [source,java]
 ----
@@ -83,7 +83,7 @@ driver.isOpen();
 ----
 
 [#_Driver_transaction_java_lang_String_Transaction_Type]
-==== transaction
+==== method ``transaction``
 
 [source,java]
 ----
@@ -118,7 +118,7 @@ driver.transaction(database, sessionType);
 ----
 
 [#_Driver_transaction_java_lang_String_Transaction_Type_TransactionOptions]
-==== transaction
+==== method ``transaction``
 
 [source,java]
 ----
@@ -154,7 +154,7 @@ driver.transaction(database, sessionType);
 ----
 
 [#_Driver_users_]
-==== users
+==== method ``users``
 
 [source,java]
 ----

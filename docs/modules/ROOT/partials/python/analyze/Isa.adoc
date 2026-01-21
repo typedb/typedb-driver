@@ -14,7 +14,7 @@ Represents an ‘isa’ constraint: &lt;instance&gt; isa(!) &lt;type&gt;
 
 // tag::methods[]
 [#_Isa_exactness_]
-==== exactness
+==== method ``exactness``
 
 [source,python]
 ----
@@ -28,7 +28,7 @@ exactness() -> ConstraintExactness
 `ConstraintExactness`
 
 [#_Isa_instance_]
-==== instance
+==== method ``instance``
 
 [source,python]
 ----
@@ -42,7 +42,7 @@ instance() -> ConstraintVertex
 `ConstraintVertex`
 
 [#_Isa_type_]
-==== type
+==== method ``type``
 
 [source,python]
 ----

@@ -14,7 +14,7 @@ Represents a ‘require’ stage: require &lt;variables&gt;
 
 // tag::methods[]
 [#_RequireStage_variables_]
-==== variables
+==== method ``variables``
 
 [source,python]
 ----

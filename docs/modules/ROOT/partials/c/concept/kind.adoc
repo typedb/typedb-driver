@@ -5,7 +5,7 @@
 [.doc-api-reference-driver]
 ==== Struct Kind
 
-`class`
+`rust struct (pointer)`
 
 
 
@@ -15,7 +15,7 @@ Kind represents the base of a defined type to describe its capabilities. For exa
 [.doc-api-reference-driver]
 ==== Enum Kind
 
-`class`
+`rust enum (pointer)`
 
 
 

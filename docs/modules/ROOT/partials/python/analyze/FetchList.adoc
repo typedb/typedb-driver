@@ -14,7 +14,7 @@ A list of Fetch documents.
 
 // tag::methods[]
 [#_FetchList_element_]
-==== element
+==== method ``element``
 
 [source,python]
 ----

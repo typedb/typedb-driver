@@ -5,16 +5,16 @@
 [.doc-api-reference-driver]
 ==== Struct BoolPromise
 
-`class`
+`rust struct (pointer)`
 
 
 
 Promise object representing the result of an asynchronous operation. Use bool_promise_resolve(BoolPromise*) to wait for and retrieve the resulting boolean value.
 
 [#_bool_promise_drop]
-==== bool_promise_drop
+==== function ``bool_promise_drop``
 
-[source,cpp]
+[source,c]
 ----
 void bool_promise_drop(struct BoolPromise* promise)
 ----
@@ -28,9 +28,9 @@ Frees the native rust ``BoolPromise`` object.
 `void`
 
 [#_bool_promise_resolve]
-==== bool_promise_resolve
+==== function ``bool_promise_resolve``
 
-[source,cpp]
+[source,c]
 ----
 bool bool_promise_resolve(struct BoolPromise* promise)
 ----

@@ -14,7 +14,7 @@ Represents an "insert" stage: insert &lt;block&gt; e.g. ``insert $f isa friendsh
 
 // tag::methods[]
 [#_PipelineStage_InsertStage_asDelete_]
-==== asDelete
+==== method ``asDelete``
 
 [source,java]
 ----
@@ -28,7 +28,7 @@ PipelineStage.DeleteStage asDelete()
 `PipelineStage.DeleteStage`
 
 [#_PipelineStage_InsertStage_asDistinct_]
-==== asDistinct
+==== method ``asDistinct``
 
 [source,java]
 ----
@@ -42,7 +42,7 @@ PipelineStage.DistinctStage asDistinct()
 `PipelineStage.DistinctStage`
 
 [#_PipelineStage_InsertStage_asInsert_]
-==== asInsert
+==== method ``asInsert``
 
 [source,java]
 ----
@@ -56,7 +56,7 @@ PipelineStage.InsertStage asInsert()
 `PipelineStage.InsertStage`
 
 [#_PipelineStage_InsertStage_asLimit_]
-==== asLimit
+==== method ``asLimit``
 
 [source,java]
 ----
@@ -70,7 +70,7 @@ PipelineStage.LimitStage asLimit()
 `PipelineStage.LimitStage`
 
 [#_PipelineStage_InsertStage_asMatch_]
-==== asMatch
+==== method ``asMatch``
 
 [source,java]
 ----
@@ -84,7 +84,7 @@ PipelineStage.MatchStage asMatch()
 `PipelineStage.MatchStage`
 
 [#_PipelineStage_InsertStage_asOffset_]
-==== asOffset
+==== method ``asOffset``
 
 [source,java]
 ----
@@ -98,7 +98,7 @@ PipelineStage.OffsetStage asOffset()
 `PipelineStage.OffsetStage`
 
 [#_PipelineStage_InsertStage_asPut_]
-==== asPut
+==== method ``asPut``
 
 [source,java]
 ----
@@ -112,7 +112,7 @@ PipelineStage.PutStage asPut()
 `PipelineStage.PutStage`
 
 [#_PipelineStage_InsertStage_asReduce_]
-==== asReduce
+==== method ``asReduce``
 
 [source,java]
 ----
@@ -126,7 +126,7 @@ PipelineStage.ReduceStage asReduce()
 `PipelineStage.ReduceStage`
 
 [#_PipelineStage_InsertStage_asRequire_]
-==== asRequire
+==== method ``asRequire``
 
 [source,java]
 ----
@@ -140,7 +140,7 @@ PipelineStage.RequireStage asRequire()
 `PipelineStage.RequireStage`
 
 [#_PipelineStage_InsertStage_asSelect_]
-==== asSelect
+==== method ``asSelect``
 
 [source,java]
 ----
@@ -154,7 +154,7 @@ PipelineStage.SelectStage asSelect()
 `PipelineStage.SelectStage`
 
 [#_PipelineStage_InsertStage_asSort_]
-==== asSort
+==== method ``asSort``
 
 [source,java]
 ----
@@ -168,7 +168,7 @@ PipelineStage.SortStage asSort()
 `PipelineStage.SortStage`
 
 [#_PipelineStage_InsertStage_asUpdate_]
-==== asUpdate
+==== method ``asUpdate``
 
 [source,java]
 ----
@@ -182,7 +182,7 @@ PipelineStage.UpdateStage asUpdate()
 `PipelineStage.UpdateStage`
 
 [#_PipelineStage_InsertStage_block_]
-==== block
+==== method ``block``
 
 [source,java]
 ----
@@ -196,7 +196,7 @@ The index into ``Pipeline.conjunctions``
 `ConjunctionID`
 
 [#_PipelineStage_InsertStage_getVariant_]
-==== getVariant
+==== method ``getVariant``
 
 [source,java]
 ----
@@ -210,7 +210,7 @@ com.typedb.driver.jni.PipelineStageVariant getVariant()
 `com.typedb.driver.jni.PipelineStageVariant`
 
 [#_PipelineStage_InsertStage_isDelete_]
-==== isDelete
+==== method ``isDelete``
 
 [source,java]
 ----
@@ -224,7 +224,7 @@ boolean isDelete()
 `boolean`
 
 [#_PipelineStage_InsertStage_isDistinct_]
-==== isDistinct
+==== method ``isDistinct``
 
 [source,java]
 ----
@@ -238,7 +238,7 @@ boolean isDistinct()
 `boolean`
 
 [#_PipelineStage_InsertStage_isInsert_]
-==== isInsert
+==== method ``isInsert``
 
 [source,java]
 ----
@@ -252,7 +252,7 @@ boolean isInsert()
 `boolean`
 
 [#_PipelineStage_InsertStage_isLimit_]
-==== isLimit
+==== method ``isLimit``
 
 [source,java]
 ----
@@ -266,7 +266,7 @@ boolean isLimit()
 `boolean`
 
 [#_PipelineStage_InsertStage_isMatch_]
-==== isMatch
+==== method ``isMatch``
 
 [source,java]
 ----
@@ -280,7 +280,7 @@ boolean isMatch()
 `boolean`
 
 [#_PipelineStage_InsertStage_isOffset_]
-==== isOffset
+==== method ``isOffset``
 
 [source,java]
 ----
@@ -294,7 +294,7 @@ boolean isOffset()
 `boolean`
 
 [#_PipelineStage_InsertStage_isPut_]
-==== isPut
+==== method ``isPut``
 
 [source,java]
 ----
@@ -308,7 +308,7 @@ boolean isPut()
 `boolean`
 
 [#_PipelineStage_InsertStage_isReduce_]
-==== isReduce
+==== method ``isReduce``
 
 [source,java]
 ----
@@ -322,7 +322,7 @@ boolean isReduce()
 `boolean`
 
 [#_PipelineStage_InsertStage_isRequire_]
-==== isRequire
+==== method ``isRequire``
 
 [source,java]
 ----
@@ -336,7 +336,7 @@ boolean isRequire()
 `boolean`
 
 [#_PipelineStage_InsertStage_isSelect_]
-==== isSelect
+==== method ``isSelect``
 
 [source,java]
 ----
@@ -350,7 +350,7 @@ boolean isSelect()
 `boolean`
 
 [#_PipelineStage_InsertStage_isSort_]
-==== isSort
+==== method ``isSort``
 
 [source,java]
 ----
@@ -364,7 +364,7 @@ boolean isSort()
 `boolean`
 
 [#_PipelineStage_InsertStage_isUpdate_]
-==== isUpdate
+==== method ``isUpdate``
 
 [source,java]
 ----
