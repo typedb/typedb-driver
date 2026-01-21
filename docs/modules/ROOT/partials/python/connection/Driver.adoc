@@ -20,7 +20,7 @@ a| `users` a| `UserManager` a| The ``UserManager`` instance for this connection,
 
 // tag::methods[]
 [#_Driver_close_]
-==== method ``close``
+===== method ``close``
 
 [source,python]
 ----
@@ -41,7 +41,7 @@ driver.close()
 ----
 
 [#_Driver_is_open_]
-==== method ``is_open``
+===== method ``is_open``
 
 [source,python]
 ----
@@ -62,7 +62,7 @@ driver.is_open()
 ----
 
 [#_Driver_transaction_database_name_str_transaction_type_TransactionType_options_TransactionOptions_None]
-==== method ``transaction``
+===== method ``transaction``
 
 [source,python]
 ----

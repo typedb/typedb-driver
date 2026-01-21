@@ -10,7 +10,7 @@ Holds a representation of a function, and the result of type-inference for each 
 
 // tag::methods[]
 [#_Function_argument_annotations_]
-==== method ``argument_annotations``
+===== method ``argument_annotations``
 
 [source,java]
 ----
@@ -24,7 +24,7 @@ Gets the type annotations for each argument of the function.
 `java.util.stream.Stream<? extends VariableAnnotations>`
 
 [#_Function_argument_variables_]
-==== method ``argument_variables``
+===== method ``argument_variables``
 
 [source,java]
 ----
@@ -38,7 +38,7 @@ Gets the variables which are the arguments of the function.
 `java.util.stream.Stream<? extends Variable>`
 
 [#_Function_body_]
-==== method ``body``
+===== method ``body``
 
 [source,java]
 ----
@@ -52,7 +52,7 @@ Gets the pipeline which forms the body of the function.
 `Pipeline`
 
 [#_Function_return_annotations_]
-==== method ``return_annotations``
+===== method ``return_annotations``
 
 [source,java]
 ----
@@ -66,7 +66,7 @@ Gets the type annotations for each concept returned by the function.
 `java.util.stream.Stream<? extends VariableAnnotations>`
 
 [#_Function_return_operation_]
-==== method ``return_operation``
+===== method ``return_operation``
 
 [source,java]
 ----

@@ -31,7 +31,7 @@ a| `WRITE`
 
 // tag::methods[]
 [#_Transaction_Type_id_]
-==== method ``id``
+===== method ``id``
 
 [source,java]
 ----
@@ -45,7 +45,7 @@ public int id()
 `public int`
 
 [#_Transaction_Type_isRead_]
-==== method ``isRead``
+===== method ``isRead``
 
 [source,java]
 ----
@@ -59,7 +59,7 @@ public boolean isRead()
 `public boolean`
 
 [#_Transaction_Type_isSchema_]
-==== method ``isSchema``
+===== method ``isSchema``
 
 [source,java]
 ----
@@ -73,7 +73,7 @@ public boolean isSchema()
 `public boolean`
 
 [#_Transaction_Type_isWrite_]
-==== method ``isWrite``
+===== method ``isWrite``
 
 [source,java]
 ----
@@ -87,7 +87,7 @@ public boolean isWrite()
 `public boolean`
 
 [#_Transaction_Type_valueOf_java_lang_String]
-==== method ``valueOf``
+===== method ``valueOf``
 
 [source,java]
 ----
@@ -110,7 +110,7 @@ a| `name` a| the name of the enum constant to be returned. a| `java.lang.String`
 `public static Transaction.Type`
 
 [#_Transaction_Type_values_]
-==== method ``values``
+===== method ``values``
 
 [source,java]
 ----

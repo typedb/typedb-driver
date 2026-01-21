@@ -30,7 +30,7 @@ a| `WRITE` a| `1`
 
 // tag::methods[]
 [#_TransactionType_is_read_]
-==== method ``is_read``
+===== method ``is_read``
 
 [source,python]
 ----
@@ -44,7 +44,7 @@ is_read() -> bool
 `bool`
 
 [#_TransactionType_is_schema_]
-==== method ``is_schema``
+===== method ``is_schema``
 
 [source,python]
 ----
@@ -58,7 +58,7 @@ is_schema() -> bool
 `bool`
 
 [#_TransactionType_is_write_]
-==== method ``is_write``
+===== method ``is_write``
 
 [source,python]
 ----

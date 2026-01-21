@@ -23,7 +23,7 @@ a| `query_type` a| `QueryType` a| Retrieves the executed query’s type of this 
 
 // tag::methods[]
 [#_ConceptRow_column_names_]
-==== method ``column_names``
+===== method ``column_names``
 
 [source,python]
 ----
@@ -44,7 +44,7 @@ concept_row.column_names()
 ----
 
 [#_ConceptRow_concepts_]
-==== method ``concepts``
+===== method ``concepts``
 
 [source,python]
 ----
@@ -65,7 +65,7 @@ concept_row.concepts()
 ----
 
 [#_ConceptRow_get_column_name_str]
-==== method ``get``
+===== method ``get``
 
 [source,python]
 ----
@@ -95,7 +95,7 @@ concept_row.get(column_name)
 ----
 
 [#_ConceptRow_get_index_column_index_int]
-==== method ``get_index``
+===== method ``get_index``
 
 [source,python]
 ----
@@ -125,7 +125,7 @@ concept_row.get_index(column_index)
 ----
 
 [#_ConceptRow_involved_conjunctions_]
-==== method ``involved_conjunctions``
+===== method ``involved_conjunctions``
 
 [source,python]
 ----
@@ -146,7 +146,7 @@ concept_row.involved_conjunctions()
 ----
 
 [#_ConceptRow_query_structure_]
-==== method ``query_structure``
+===== method ``query_structure``
 
 [source,python]
 ----

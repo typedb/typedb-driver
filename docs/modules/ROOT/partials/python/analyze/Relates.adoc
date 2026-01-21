@@ -14,7 +14,7 @@ Represents a ‘relates’ constraint: &lt;relation&gt; relates &lt;role&gt;
 
 // tag::methods[]
 [#_Relates_exactness_]
-==== method ``exactness``
+===== method ``exactness``
 
 [source,python]
 ----
@@ -28,7 +28,7 @@ exactness() -> ConstraintExactness
 `ConstraintExactness`
 
 [#_Relates_relation_]
-==== method ``relation``
+===== method ``relation``
 
 [source,python]
 ----
@@ -42,7 +42,7 @@ relation() -> ConstraintVertex
 `ConstraintVertex`
 
 [#_Relates_role_]
-==== method ``role``
+===== method ``role``
 
 [source,python]
 ----

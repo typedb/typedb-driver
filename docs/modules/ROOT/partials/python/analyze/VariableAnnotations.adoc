@@ -10,7 +10,7 @@ Holds typing information about a variable (instance/type/value annotations).
 
 // tag::methods[]
 [#_VariableAnnotations_as_instance_]
-==== method ``as_instance``
+===== method ``as_instance``
 
 [source,python]
 ----
@@ -24,7 +24,7 @@ The possible Types of instances this variable can hold.
 `Iterator['Type']`
 
 [#_VariableAnnotations_as_type_]
-==== method ``as_type``
+===== method ``as_type``
 
 [source,python]
 ----
@@ -38,7 +38,7 @@ The possible types this variable can hold.
 `Iterator['Type']`
 
 [#_VariableAnnotations_as_value_]
-==== method ``as_value``
+===== method ``as_value``
 
 [source,python]
 ----
@@ -52,7 +52,7 @@ The possible ValueType(s) of values this variable can hold.
 `Iterator[str]`
 
 [#_VariableAnnotations_is_instance_]
-==== method ``is_instance``
+===== method ``is_instance``
 
 [source,python]
 ----
@@ -66,7 +66,7 @@ Returns True if this variable is an Instance variable.
 `bool`
 
 [#_VariableAnnotations_is_type_]
-==== method ``is_type``
+===== method ``is_type``
 
 [source,python]
 ----
@@ -80,7 +80,7 @@ Returns True if this variable is a Type variable.
 `bool`
 
 [#_VariableAnnotations_is_value_]
-==== method ``is_value``
+===== method ``is_value``
 
 [source,python]
 ----

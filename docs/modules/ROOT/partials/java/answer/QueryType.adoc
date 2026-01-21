@@ -31,7 +31,7 @@ a| `WRITE`
 
 // tag::methods[]
 [#_QueryType_id_]
-==== method ``id``
+===== method ``id``
 
 [source,java]
 ----
@@ -45,7 +45,7 @@ public int id()
 `public int`
 
 [#_QueryType_isRead_]
-==== method ``isRead``
+===== method ``isRead``
 
 [source,java]
 ----
@@ -59,7 +59,7 @@ public boolean isRead()
 `public boolean`
 
 [#_QueryType_isSchema_]
-==== method ``isSchema``
+===== method ``isSchema``
 
 [source,java]
 ----
@@ -73,7 +73,7 @@ public boolean isSchema()
 `public boolean`
 
 [#_QueryType_isWrite_]
-==== method ``isWrite``
+===== method ``isWrite``
 
 [source,java]
 ----
@@ -87,7 +87,7 @@ public boolean isWrite()
 `public boolean`
 
 [#_QueryType_of_com_typedb_driver_jni_QueryType]
-==== method ``of``
+===== method ``of``
 
 [source,java]
 ----
@@ -101,7 +101,7 @@ public static QueryType of​(com.typedb.driver.jni.QueryType nativeType)
 `public static QueryType`
 
 [#_QueryType_valueOf_java_lang_String]
-==== method ``valueOf``
+===== method ``valueOf``
 
 [source,java]
 ----
@@ -124,7 +124,7 @@ a| `name` a| the name of the enum constant to be returned. a| `java.lang.String`
 `public static QueryType`
 
 [#_QueryType_values_]
-==== method ``values``
+===== method ``values``
 
 [source,java]
 ----

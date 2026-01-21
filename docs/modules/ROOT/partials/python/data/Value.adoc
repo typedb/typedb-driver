@@ -12,7 +12,7 @@
 
 // tag::methods[]
 [#_Value_as_value_]
-==== method ``as_value``
+===== method ``as_value``
 
 [source,python]
 ----
@@ -33,7 +33,7 @@ value.as_value()
 ----
 
 [#_Value_get_]
-==== method ``get``
+===== method ``get``
 
 [source,python]
 ----
@@ -54,7 +54,7 @@ value.get()
 ----
 
 [#_Value_get_boolean_]
-==== method ``get_boolean``
+===== method ``get_boolean``
 
 [source,python]
 ----
@@ -75,7 +75,7 @@ value.get_boolean()
 ----
 
 [#_Value_get_date_]
-==== method ``get_date``
+===== method ``get_date``
 
 [source,python]
 ----
@@ -96,7 +96,7 @@ value.get_date()
 ----
 
 [#_Value_get_datetime_]
-==== method ``get_datetime``
+===== method ``get_datetime``
 
 [source,python]
 ----
@@ -117,7 +117,7 @@ value.get_datetime()
 ----
 
 [#_Value_get_datetime_tz_]
-==== method ``get_datetime_tz``
+===== method ``get_datetime_tz``
 
 [source,python]
 ----
@@ -138,7 +138,7 @@ value.get_datetime_tz()
 ----
 
 [#_Value_get_decimal_]
-==== method ``get_decimal``
+===== method ``get_decimal``
 
 [source,python]
 ----
@@ -159,7 +159,7 @@ value.get_decimal()
 ----
 
 [#_Value_get_double_]
-==== method ``get_double``
+===== method ``get_double``
 
 [source,python]
 ----
@@ -180,7 +180,7 @@ value.get_double()
 ----
 
 [#_Value_get_duration_]
-==== method ``get_duration``
+===== method ``get_duration``
 
 [source,python]
 ----
@@ -201,7 +201,7 @@ value.get_duration()
 ----
 
 [#_Value_get_integer_]
-==== method ``get_integer``
+===== method ``get_integer``
 
 [source,python]
 ----
@@ -222,7 +222,7 @@ value.get_integer()
 ----
 
 [#_Value_get_string_]
-==== method ``get_string``
+===== method ``get_string``
 
 [source,python]
 ----
@@ -243,7 +243,7 @@ value.get_string()
 ----
 
 [#_Value_get_struct_]
-==== method ``get_struct``
+===== method ``get_struct``
 
 [source,python]
 ----
@@ -264,7 +264,7 @@ value.get_struct()
 ----
 
 [#_Value_get_type_]
-==== method ``get_type``
+===== method ``get_type``
 
 [source,python]
 ----
@@ -285,7 +285,7 @@ value.get_type()
 ----
 
 [#_Value_is_value_]
-==== method ``is_value``
+===== method ``is_value``
 
 [source,python]
 ----

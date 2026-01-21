@@ -28,7 +28,7 @@ a| `NotEqual` a| `1`
 
 // tag::methods[]
 [#_Comparator_symbol_]
-==== method ``symbol``
+===== method ``symbol``
 
 [source,python]
 ----
