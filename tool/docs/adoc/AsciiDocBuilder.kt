@@ -20,8 +20,11 @@
 package com.typedb.driver.tool.docs.adoc
 
 class AsciiDocBuilder {
-    fun header(level: Int, header: String): String {
-        return "=".repeat(level) + " $header\n\n"
+    fun header(level: Int, header: String, customClass: String? = null): String {
+        // If a class is provided, prepend it using the [.className] syntax
+        val classPrefix = if (!customClass.isNullOrBlank()) "[.$customClass]\n" else ""
+
+        return "$classPrefix${"=".repeat(level)} $header\n\n"
     }
 
     fun anchor(link: String): String {

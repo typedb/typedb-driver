@@ -85,7 +85,7 @@ data class Class(
         val builder = AsciiDocBuilder()
         var result = ""
         result += builder.anchor(this.anchor ?: replaceSymbolsForAnchor(this.name))
-        result += builder.header(headerLevel,  this.name)
+        result += builder.header(headerLevel, this.name, "doc-api-reference-driver")
         val nameDescriptor = nameDescriptor(language)
         result += "`$nameDescriptor`\n\n"
 
