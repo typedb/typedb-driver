@@ -34,7 +34,7 @@ data class Method(
     val returnDescription: String? = null,
     val returnType: String? = null,
 ) {
-    fun toAsciiDoc(language: String, headerLevel: Int = 4): String {
+    fun toAsciiDoc(language: String, headerLevel: Int = 5): String {
         val languageMethodDescriptor = languageMethodDescriptor(language)
         val builder = AsciiDocBuilder()
         var result = ""

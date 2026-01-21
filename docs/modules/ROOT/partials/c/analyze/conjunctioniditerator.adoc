@@ -2,7 +2,7 @@
 === conjunctioniditerator
 
 [#_conjunction_id_iterator_drop]
-==== function ``conjunction_id_iterator_drop``
+===== function ``conjunction_id_iterator_drop``
 
 [source,c]
 ----
@@ -18,7 +18,7 @@ Frees the native rust ``ConjunctionIDIterator`` object.
 `void`
 
 [#_conjunction_id_iterator_next]
-==== function ``conjunction_id_iterator_next``
+===== function ``conjunction_id_iterator_next``
 
 [source,c]
 ----

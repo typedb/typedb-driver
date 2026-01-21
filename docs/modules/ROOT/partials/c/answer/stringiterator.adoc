@@ -12,7 +12,7 @@
 Iterator over the strings in the result of a request or a TypeQL Fetch query.
 
 [#_string_iterator_drop]
-==== function ``string_iterator_drop``
+===== function ``string_iterator_drop``
 
 [source,c]
 ----
@@ -28,7 +28,7 @@ Frees the native rust ``StringIterator`` object
 `void`
 
 [#_string_iterator_next]
-==== function ``string_iterator_next``
+===== function ``string_iterator_next``
 
 [source,c]
 ----

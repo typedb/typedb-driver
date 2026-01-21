@@ -2,7 +2,7 @@
 === attribute
 
 [#_attribute_get_type]
-==== function ``attribute_get_type``
+===== function ``attribute_get_type``
 
 [source,c]
 ----

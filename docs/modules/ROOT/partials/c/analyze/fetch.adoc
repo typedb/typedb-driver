@@ -12,7 +12,7 @@
 A representation of the 'fetch' stage of a query
 
 [#_fetch_drop]
-==== function ``fetch_drop``
+===== function ``fetch_drop``
 
 [source,c]
 ----
@@ -28,7 +28,7 @@ Frees the native rust ``Fetch`` object.
 `void`
 
 [#_fetch_leaf_annotations]
-==== function ``fetch_leaf_annotations``
+===== function ``fetch_leaf_annotations``
 
 [source,c]
 ----
@@ -44,7 +44,7 @@ Unwraps the ``Fetch`` instance as a Leaf variant, and returns an iterator over p
 `struct StringIterator*`
 
 [#_fetch_list_element]
-==== function ``fetch_list_element``
+===== function ``fetch_list_element``
 
 [source,c]
 ----
@@ -60,7 +60,7 @@ Unwraps the ``Fetch`` instance as a List variant, and returns the ``Fetch`` for 
 `struct Fetch*`
 
 [#_fetch_object_fields]
-==== function ``fetch_object_fields``
+===== function ``fetch_object_fields``
 
 [source,c]
 ----
@@ -76,7 +76,7 @@ Unwraps the ``Fetch`` instance as an Object variant, and returns the available f
 `struct StringIterator*`
 
 [#_fetch_object_get_field]
-==== function ``fetch_object_get_field``
+===== function ``fetch_object_get_field``
 
 [source,c]
 ----
@@ -92,7 +92,7 @@ Unwraps the ``Fetch`` instance as an Object variant, and returns the value of th
 `struct Fetch*`
 
 [#_fetch_variant]
-==== function ``fetch_variant``
+===== function ``fetch_variant``
 
 [source,c]
 ----

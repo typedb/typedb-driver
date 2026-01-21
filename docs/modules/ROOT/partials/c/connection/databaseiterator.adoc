@@ -12,7 +12,7 @@
 An ``Iterator`` over databases present on the TypeDB server.
 
 [#_database_iterator_drop]
-==== function ``database_iterator_drop``
+===== function ``database_iterator_drop``
 
 [source,c]
 ----
@@ -28,7 +28,7 @@ Frees the native rust ``DatabaseIterator`` object.
 `void`
 
 [#_database_iterator_next]
-==== function ``database_iterator_next``
+===== function ``database_iterator_next``
 
 [source,c]
 ----

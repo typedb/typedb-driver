@@ -12,7 +12,7 @@
 Promise object representing the result of an asynchronous operation. Use bool_promise_resolve(BoolPromise*) to wait for and retrieve the resulting boolean value.
 
 [#_bool_promise_drop]
-==== function ``bool_promise_drop``
+===== function ``bool_promise_drop``
 
 [source,c]
 ----
@@ -28,7 +28,7 @@ Frees the native rust ``BoolPromise`` object.
 `void`
 
 [#_bool_promise_resolve]
-==== function ``bool_promise_resolve``
+===== function ``bool_promise_resolve``
 
 [source,c]
 ----

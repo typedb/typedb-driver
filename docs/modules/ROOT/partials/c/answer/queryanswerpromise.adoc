@@ -12,7 +12,7 @@
 Promise object representing the result of an asynchronous operation. Use query_answer_promise_resolve(QueryAnswerPromise*) to wait for and retrieve the resulting boolean value.
 
 [#_query_answer_promise_drop]
-==== function ``query_answer_promise_drop``
+===== function ``query_answer_promise_drop``
 
 [source,c]
 ----
@@ -28,7 +28,7 @@ Frees the native rust ``QueryAnswerPromise`` object.
 `void`
 
 [#_query_answer_promise_resolve]
-==== function ``query_answer_promise_resolve``
+===== function ``query_answer_promise_resolve``
 
 [source,c]
 ----

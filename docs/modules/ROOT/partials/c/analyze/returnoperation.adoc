@@ -12,7 +12,7 @@
 A representation of the return operation of the function
 
 [#_return_operation_drop]
-==== function ``return_operation_drop``
+===== function ``return_operation_drop``
 
 [source,c]
 ----
@@ -28,7 +28,7 @@ Frees the native rust ``ReturnOperation`` object.
 `void`
 
 [#_return_operation_reducers]
-==== function ``return_operation_reducers``
+===== function ``return_operation_reducers``
 
 [source,c]
 ----
@@ -44,7 +44,7 @@ Unwraps the ``ReturnOperation`` instance as a Reduce variant, and returns the re
 `struct ReducerIterator*`
 
 [#_return_operation_single_selector]
-==== function ``return_operation_single_selector``
+===== function ``return_operation_single_selector``
 
 [source,c]
 ----
@@ -60,7 +60,7 @@ Unwraps the ``ReturnOperation`` instance as a Single variant, and returns the se
 `char*`
 
 [#_return_operation_single_variables]
-==== function ``return_operation_single_variables``
+===== function ``return_operation_single_variables``
 
 [source,c]
 ----
@@ -76,7 +76,7 @@ Unwraps the ``ReturnOperation`` instance as a Single variant, and returns the re
 `struct VariableIterator*`
 
 [#_return_operation_stream_variables]
-==== function ``return_operation_stream_variables``
+===== function ``return_operation_stream_variables``
 
 [source,c]
 ----
@@ -92,7 +92,7 @@ Unwraps the ``ReturnOperation`` instance as a Stream variant, and returns the re
 `struct VariableIterator*`
 
 [#_return_operation_variant]
-==== function ``return_operation_variant``
+===== function ``return_operation_variant``
 
 [source,c]
 ----
