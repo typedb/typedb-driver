@@ -136,279 +136,90 @@
 
 %noexception init_logging;
 
-/* simple getters do not throw */
-%noexception options_new;
-%noexception options_get_infer;
-%noexception options_get_trace_inference;
-%noexception options_get_explain;
-%noexception options_get_parallel;
-%noexception options_get_prefetch;
-%noexception options_get_prefetch_size;
-%noexception options_get_session_idle_timeout_millis;
-%noexception options_get_transaction_timeout_millis;
-%noexception options_get_schema_lock_acquire_timeout_millis;
-%noexception options_get_read_any_replica;
-%noexception options_set_infer;
-%noexception options_set_trace_inference;
-%noexception options_set_explain;
-%noexception options_set_parallel;
-%noexception options_set_prefetch;
-%noexception options_set_prefetch_size;
-%noexception options_set_session_idle_timeout_millis;
-%noexception options_set_transaction_timeout_millis;
-%noexception options_set_schema_lock_acquire_timeout_millis;
-%noexception options_set_read_any_replica;
-%noexception options_has_infer;
-%noexception options_has_trace_inference;
-%noexception options_has_explain;
-%noexception options_has_parallel;
-%noexception options_has_prefetch;
-%noexception options_has_prefetch_size;
-%noexception options_has_session_idle_timeout_millis;
-%noexception options_has_transaction_timeout_millis;
-%noexception options_has_schema_lock_acquire_timeout_millis;
-%noexception options_has_read_any_replica;
-
-%noexception annotation_new_key;
-%noexception annotation_new_unique;
-%noexception annotation_is_key;
-%noexception annotation_is_unique;
-%noexception annotation_to_string;
-%noexception annotation_equals;
-
+/* Error functions do not throw */
 %noexception error_code;
 %noexception error_message;
-%noexception schema_exception_code;
-%noexception schema_exception_message;
 
+/* Driver state check does not throw */
 %noexception driver_is_open;
 
-%noexception session_is_open;
-%noexception session_get_database_name;
-
+/* Transaction state check does not throw */
 %noexception transaction_is_open;
 
-%noexception user_get_username;
+/* User property getters do not throw */
+%noexception user_get_name;
 %noexception user_get_password_expiry_seconds;
 
+/* Replica info getters do not throw */
 %noexception replica_info_get_server;
 %noexception replica_info_is_primary;
 %noexception replica_info_is_preferred;
 %noexception replica_info_get_term;
 
+/* Database property getters do not throw */
 %noexception database_get_name;
 %noexception database_get_replicas_info;
 %noexception database_get_primary_replica_info;
 %noexception database_get_preferred_replica_info;
 
-%noexception concept_is_entity;
-%noexception concept_is_relation;
-%noexception concept_is_attribute;
-%noexception concept_is_value;
-%noexception concept_is_root_thing_type;
-%noexception concept_is_entity_type;
-%noexception concept_is_relation_type;
-%noexception concept_is_attribute_type;
-%noexception concept_is_role_type;
-%noexception concept_as_entity;
-%noexception concept_as_relation;
-%noexception concept_as_attribute;
-%noexception concept_as_value;
-%noexception concept_as_root_thing_type;
-%noexception concept_as_entity_type;
-%noexception concept_as_relation_type;
-%noexception concept_as_attribute_type;
-%noexception concept_to_string;
-%noexception concept_equals;
+/* Query options do not throw */
+%noexception query_options_new;
+%noexception query_options_get_include_instance_types;
+%noexception query_options_get_include_query_structure;
+%noexception query_options_get_prefetch_size;
+%noexception query_options_has_include_instance_types;
+%noexception query_options_has_include_query_structure;
+%noexception query_options_has_prefetch_size;
+%noexception query_options_set_include_instance_types;
+%noexception query_options_set_include_query_structure;
+%noexception query_options_set_prefetch_size;
 
-%noexception concepts_get_root_entity_type;
-%noexception concepts_get_root_relation_type;
-%noexception concepts_get_root_attribute_type;
+/* Transaction options do not throw */
+%noexception transaction_options_new;
+%noexception transaction_options_get_transaction_timeout_millis;
+%noexception transaction_options_get_schema_lock_acquire_timeout_millis;
+%noexception transaction_options_has_transaction_timeout_millis;
+%noexception transaction_options_has_schema_lock_acquire_timeout_millis;
+%noexception transaction_options_set_transaction_timeout_millis;
+%noexception transaction_options_set_schema_lock_acquire_timeout_millis;
 
-%noexception attribute_type_get_value_type;
+/* Query answer getters do not throw */
+%noexception query_answer_get_query_type;
+%noexception query_answer_is_ok;
+%noexception query_answer_is_concept_row_stream;
+%noexception query_answer_is_concept_document_stream;
 
-%noexception role_type_is_root;
-%noexception role_type_is_abstract;
-%noexception role_type_get_scope;
-%noexception role_type_get_name;
+/* Concept row getters do not throw */
+%noexception concept_row_get_query_type;
+%noexception concept_row_equals;
+%noexception concept_row_to_string;
 
-%noexception thing_get_iid;
-%noexception thing_get_is_inferred;
-%noexception entity_get_type;
-%noexception relation_get_type;
-%noexception attribute_get_type;
-%noexception attribute_get_value;
-
-%noexception value_get_boolean;
-%noexception value_get_date_time_as_millis;
-%noexception value_get_double;
-%noexception value_get_integer;
-%noexception value_get_string;
-%noexception value_is_boolean;
-%noexception value_is_date_time;
-%noexception value_is_double;
-%noexception value_is_integer;
-%noexception value_is_string;
-%noexception value_new_boolean;
-%noexception value_new_date_time_from_millis;
-%noexception value_new_double;
-%noexception value_new_integer;
-%noexception value_new_string;
-
-%noexception role_player_get_role_type;
-%noexception role_player_get_player;
-
-%noexception rule_get_label;
-%noexception rule_get_when;
-%noexception rule_get_then;
-%noexception rule_to_string;
-
-%noexception concept_map_equals;
-%noexception concept_map_get;
-%noexception concept_map_get_explainables;
-%noexception concept_map_get_values;
-%noexception concept_map_get_variables;
-%noexception concept_map_to_string;
-
-%noexception explainable_get_conjunction;
-%noexception explainable_get_id;
-%noexception explainables_equals;
-%noexception explainables_get_attribute;
-%noexception explainables_get_attributes_keys;
-%noexception explainables_get_ownership;
-%noexception explainables_get_ownerships_keys;
-%noexception explainables_get_relation;
-%noexception explainables_get_relations_keys;
-%noexception explainables_to_string;
-
-%noexception explanation_equals;
-%noexception explanation_to_string;
-%noexception explanation_get_rule;
-%noexception explanation_get_conclusion;
-%noexception explanation_get_condition;
-%noexception explanation_get_mapped_variables;
-%noexception explanation_get_mapping;
-
-%noexception concept_map_group_get_owner;
-%noexception concept_map_group_get_concept_maps;
-%noexception concept_map_group_to_string;
-%noexception concept_map_group_equals;
-
-%noexception value_group_to_string;
-%noexception value_group_equals;
-%noexception value_group_get_owner;
-%noexception value_group_get_value;
-
-%noexception StringPair::_0;
-%noexception StringPair::_1;
-
-/* director constructors do not throw */
-%noexception SessionCallbackDirector;
+/* Director constructor does not throw */
 %noexception TransactionCallbackDirector;
 
-/* destructors do not throw */
-%noexception ~Annotation;
-%noexception ~Concept;
-%noexception ~ConceptIterator;
-%noexception ~ConceptMap;
-%noexception ~ConceptMapGroup;
-%noexception ~ConceptMapGroupIterator;
-%noexception ~ConceptMapIterator;
+/* Destructors do not throw */
 %noexception ~Connection;
 %noexception ~Credentials;
 %noexception ~Database;
 %noexception ~DatabaseIterator;
-%noexception ~DatabaseManager;
-%noexception ~DatabaseManager;
 %noexception ~Error;
-%noexception ~Error;
-%noexception ~Explainable;
-%noexception ~Explainables;
-%noexception ~Explanation;
-%noexception ~ExplanationIterator;
-%noexception ~Options;
-%noexception ~ReplicaInfo;
-%noexception ~ReplicaInfoIterator;
-%noexception ~RolePlayer;
-%noexception ~RolePlayerIterator;
-%noexception ~Rule;
-%noexception ~RuleIterator;
-%noexception ~SchemaException;
-%noexception ~SchemaExceptionIterator;
-%noexception ~Session;
-%noexception ~SessionCallbackDirector;
+%noexception ~QueryAnswer;
+%noexception ~QueryOptions;
+%noexception ~TransactionOptions;
+%noexception ~ConceptRowIterator;
+%noexception ~ConceptRow;
+%noexception ~Concept;
+%noexception ~ConceptIterator;
 %noexception ~StringIterator;
-%noexception ~StringPair;
-%noexception ~StringPairIterator;
+%noexception ~StringAndOptValueIterator;
 %noexception ~Transaction;
 %noexception ~TransactionCallbackDirector;
 %noexception ~User;
 %noexception ~UserIterator;
-%noexception ~UserManager;
-%noexception ~Value;
-%noexception ~ValueGroup;
-%noexception ~ValueGroupIterator;
+%noexception ~ReplicaInfo;
+%noexception ~ReplicaInfoIterator;
 
-/* one-shot network requests do not throw when first constructed, only when resolved */
-%noexception concepts_get_entity_type;
-%noexception concepts_get_relation_type;
-%noexception concepts_get_attribute_type;
-%noexception concepts_put_entity_type;
-%noexception concepts_put_relation_type;
-%noexception concepts_put_attribute_type;
-%noexception concepts_get_entity;
-%noexception concepts_get_relation;
-%noexception concepts_get_attribute;
-%noexception thing_delete;
-%noexception thing_is_deleted;
-%noexception thing_set_has;
-%noexception thing_unset_has;
-%noexception relation_add_role_player;
-%noexception relation_remove_role_player;
-%noexception thing_type_is_deleted;
-%noexception thing_type_delete;
-%noexception thing_type_get_label;
-%noexception thing_type_set_label;
-%noexception thing_type_set_abstract;
-%noexception thing_type_unset_abstract;
-%noexception thing_type_get_owns_overridden;
-%noexception thing_type_set_owns;
-%noexception thing_type_unset_owns;
-%noexception thing_type_get_plays_overridden;
-%noexception thing_type_set_plays;
-%noexception thing_type_unset_plays;
-%noexception thing_type_get_syntax;
-%noexception entity_type_create;
-%noexception entity_type_get_supertype;
-%noexception entity_type_set_supertype;
-%noexception relation_type_create;
-%noexception relation_type_get_supertype;
-%noexception relation_type_set_supertype;
-%noexception relation_type_get_relates_for_role_label;
-%noexception relation_type_get_relates_overridden;
-%noexception relation_type_set_relates;
-%noexception relation_type_unset_relates;
-%noexception attribute_type_put;
-%noexception attribute_type_get;
-%noexception attribute_type_get_supertype;
-%noexception attribute_type_set_supertype;
-%noexception attribute_type_get_regex;
-%noexception attribute_type_set_regex;
-%noexception attribute_type_unset_regex;
-%noexception role_type_is_deleted;
-%noexception role_type_get_relation_type;
-%noexception role_type_delete;
-%noexception role_type_set_label;
-%noexception role_type_get_supertype;
-%noexception rule_set_label;
-%noexception rule_delete;
-%noexception rule_is_deleted;
-%noexception logic_manager_put_rule;
-%noexception logic_manager_get_rule;
-%noexception query_define;
-%noexception query_undefine;
-%noexception query_delete;
-%noexception query_get_aggregate;
+/* Commit and rollback are non-throwing operations on construction */
 %noexception transaction_commit;
 %noexception transaction_rollback;
 
@@ -454,8 +265,7 @@
 }%}
 %enddef
 
-%promise(Concept, Concept, concept)
-%promise(Rule, Rule, rule)
+/* 3.0 API promises - only String and Bool are used */
 %promise(String, string, string)
 %promise(Bool, bool, bool)
 
@@ -559,17 +369,6 @@
 %iterator(User, User, user)
 %iterator(Database, Database, database)
 
-/* Legacy 2.x API iterators - kept for compatibility */
-%iterator(RolePlayer, RolePlayer, role_player)
-%iterator(ConceptMap, ConceptMap, concept_map)
-%iterator(ConceptMapGroup, ConceptMapGroup, concept_map_group)
-%iterator(ValueGroup, ValueGroup, value_group)
-%iterator(Explanation, Explanation, explanation)
-%iterator(StringPair, StringPair, string_pair)
-%iterator(Rule, Rule, rule)
-%iterator(ReplicaInfo, ReplicaInfo, replica_info)
-%iterator(SchemaException, SchemaException, schema_exception)
-
 
 %define %array(Type)
 %typemap(ctype) Type ** "Type**"
@@ -614,7 +413,7 @@
 %}
 %enddef
 
-%array(Annotation)
+/* 3.0 API arrays */
 %array(Concept)
 
 
@@ -661,27 +460,6 @@
 
 %typemap(in) char ** "$1 = $input;"
 %typemap(freearg) char ** ""
-
-
-%typemap(in) enum ValueType * {
-    if ($input >= 0)
-    {
-        $1 = (enum ValueType *)malloc(sizeof(enum ValueType));
-        *$1 = (enum ValueType)$input;
-    }
-}
-
-%typemap(freearg) enum ValueType * { free($1); }
-
-%typemap(ctype) enum ValueType * "int"
-%typemap(imtype) enum ValueType * "int"
-%typemap(cstype) enum ValueType * "ValueType?"
-
-%typemap(csin) enum ValueType * "$csinput == null ? -1 : (int)$csinput"
-%typemap(csout) enum ValueType *
-{
-    return $imcall;
-}
 
 
 /* QueryAnswer needs custom handling because into_rows/into_documents consume ownership */
