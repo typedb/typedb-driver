@@ -479,21 +479,16 @@ impl Context {
         let username = username.unwrap_or(Self::ADMIN_USERNAME);
         let password = password.unwrap_or(Self::ADMIN_USERNAME);
         match self.is_cluster {
-            false => self.create_driver_community(Self::DEFAULT_ADDRESS, username, password).await,
+            false => self.create_driver_core(Self::DEFAULT_ADDRESS, username, password).await,
             true => self.create_driver_cluster(&Self::DEFAULT_CLUSTER_ADDRESSES, username, password).await,
         }
     }
 
-    async fn create_driver_community(
-        &self,
-        address: &str,
-        username: &str,
-        password: &str,
-    ) -> TypeDBResult<TypeDBDriver> {
+    async fn create_driver_core(&self, address: &str, username: &str, password: &str) -> TypeDBResult<TypeDBDriver> {
         assert!(!self.is_cluster, "Only non-cluster drivers are available in this mode");
         let addresses = Addresses::try_from_address_str(address).expect("Expected addresses");
         let credentials = Credentials::new(username, password);
-        // TLS is always off for a community driver test
+        // TLS is always off for a core driver test
         let options = self.driver_options().unwrap_or_default().tls_config(DriverTlsConfig::disabled());
         TypeDBDriver::new(addresses, credentials, options).await
     }

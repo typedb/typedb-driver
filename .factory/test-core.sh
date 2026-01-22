@@ -17,4 +17,4 @@
 # under the License.
 
 set -ex
-bazel test $(bazel query "filter('^.*community.*$', kind(.*_test, $1))") "${@:2}"
+bazel test $(bazel query "filter('^.*core.*$', kind(.*_test, $1))") "${@:2}"

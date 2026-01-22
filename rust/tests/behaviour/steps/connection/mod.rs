@@ -70,7 +70,7 @@ async fn connection_opens_with_a_wrong_host(context: &mut Context, may_error: pa
     may_error.check(match context.is_cluster {
         false => {
             context
-                .create_driver_community(
+                .create_driver_core(
                     &change_host(Context::DEFAULT_ADDRESS, "surely-not-localhost"),
                     Context::ADMIN_USERNAME,
                     Context::ADMIN_PASSWORD,
@@ -91,7 +91,7 @@ async fn connection_opens_with_a_wrong_port(context: &mut Context, may_error: pa
     may_error.check(match context.is_cluster {
         false => {
             context
-                .create_driver_community(
+                .create_driver_core(
                     &change_port(Context::DEFAULT_ADDRESS, "0"),
                     Context::ADMIN_USERNAME,
                     Context::ADMIN_PASSWORD,

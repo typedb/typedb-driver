@@ -42,7 +42,7 @@ public class DatabaseTest extends BehaviourTest {
     // 3) Select 'Bazel test DatabaseTest'
     //
     // 4) Ensure 'Target Expression' is set correctly:
-    //    a) Use '//<this>/<package>/<name>:test-community' to test against typedb (TypeDB Community Edition)
+    //    a) Use '//<this>/<package>/<name>:test-core' to test against typedb (TypeDB Community Edition)
     //    b) Use '//<this>/<package>/<name>:test-cluster' to test against typedb-cluster (TypeDB Cloud / Enterprise)
     //
     // 5) Update 'Bazel Flags':

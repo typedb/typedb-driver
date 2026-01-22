@@ -38,9 +38,9 @@ java_library(
 )
 
 java_library(
-    name = "steps-community",
+    name = "steps-core",
     srcs = [
-        "ConnectionStepsCommunity.java",
+        "ConnectionStepsCore.java",
     ],
     visibility = ["//visibility:public"],
     deps = [

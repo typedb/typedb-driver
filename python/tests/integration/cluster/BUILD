@@ -19,7 +19,7 @@ load(":cluster_test_rule.bzl", "typedb_cloud_py_test")
 load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("@typedb_driver_pip//:requirements.bzl", "requirement")
 
-# TODO: This package can contain cluster-specific integration tests. Tests available for running for both community
+# TODO: This package can contain cluster-specific integration tests. Tests available for running for both core
 # edition and cluster should be run for both setups (and be limited: always prefer BDDs to integration tests)!
 
 #typedb_cloud_py_test(

@@ -39,7 +39,7 @@ typedb_java_test(
         "@maven//:io_cucumber_cucumber_junit",
     ],
     runtime_deps = [
-        "//java/test/behaviour/connection:steps-community",
+        "//java/test/behaviour/connection:steps-core",
         "//java/test/behaviour/config:parameters",
         "//java/test/behaviour/query:steps",
     ],

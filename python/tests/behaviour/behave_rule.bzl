@@ -43,10 +43,10 @@ def py_behave_test(*, name, background, steps, feats, deps, data=[], typedb_port
         **kwargs,
     )
 
-def typedb_behaviour_py_test_community(name, **kwargs):
+def typedb_behaviour_py_test_core(name, **kwargs):
     py_behave_test(
-        name = name + "-community",
-        background = "@//python/tests/behaviour/background:community",
+        name = name + "-core",
+        background = "@//python/tests/behaviour/background:core",
         toolchains = ["@rules_python//python:current_py_toolchain"],
         typedb_port = "1729", # TODO: Not needed?
         **kwargs,
@@ -62,5 +62,5 @@ def typedb_behaviour_py_test_cluster(name, **kwargs):
     )
 
 def typedb_behaviour_py_test(name, **kwargs):
-    typedb_behaviour_py_test_community(name, **kwargs)
+    typedb_behaviour_py_test_core(name, **kwargs)
     typedb_behaviour_py_test_cluster(name, **kwargs)
