@@ -1,0 +1,659 @@
+[#_struct_DatabaseManager]
+=== DatabaseManager
+
+*Implements traits:*
+
+* `Debug`
+
+Provides access to all database management methods.
+
+// tag::methods[]
+[#_struct_DatabaseManager_all_]
+==== all
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn all(&self) -> Result<Vec<Arc<Database>>>
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn all(&self) -> Result<Vec<Arc<Database>>>
+----
+
+--
+====
+
+Retrieves all databases present on the TypeDB server, using default strong consistency.
+
+See <<#_struct_DatabaseManager_method_all_with_consistency,`Self::all_with_consistency`>> for more details and options.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<Vec<Arc<Database>>>
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+driver.databases().all().await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+driver.databases().all();
+----
+
+--
+====
+
+[#_struct_DatabaseManager_all_with_consistency_consistency_level_ConsistencyLevel]
+==== all_with_consistency
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn all_with_consistency(
+    &self,
+    consistency_level: ConsistencyLevel,
+) -> Result<Vec<Arc<Database>>>
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn all_with_consistency(
+    &self,
+    consistency_level: ConsistencyLevel,
+) -> Result<Vec<Arc<Database>>>
+----
+
+--
+====
+
+Retrieves all databases present on the TypeDB server.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `consistency_level` a|  — The consistency level to use for the operation a| `ConsistencyLevel`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<Vec<Arc<Database>>>
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+driver.databases().all_with_consistency(ConsistencyLevel::Strong).await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+driver.databases().all_with_consistency(ConsistencyLevel::Strong);
+----
+
+--
+====
+
+[#_struct_DatabaseManager_contains_]
+==== contains
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn contains(&self, name: impl Into<String>) -> Result<bool>
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn contains(&self, name: impl Into<String>) -> Result<bool>
+----
+
+--
+====
+
+Checks if a database with the given name exists, using default strong consistency.
+
+See <<#_struct_DatabaseManager_method_contains_with_consistency,`Self::contains_with_consistency`>> for more details and options.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<bool>
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+driver.databases().contains(name).await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+driver.databases().contains(name);
+----
+
+--
+====
+
+[#_struct_DatabaseManager_contains_with_consistency_name_impl_Into_String_consistency_level_ConsistencyLevel]
+==== contains_with_consistency
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn contains_with_consistency(
+    &self,
+    name: impl Into<String>,
+    consistency_level: ConsistencyLevel,
+) -> Result<bool>
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn contains_with_consistency(
+    &self,
+    name: impl Into<String>,
+    consistency_level: ConsistencyLevel,
+) -> Result<bool>
+----
+
+--
+====
+
+Checks if a database with the given name exists.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `name` a|  — The database name to be checked a| `impl Into<String>`
+a| `consistency_level` a|  — The consistency level to use for the operation a| `ConsistencyLevel`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<bool>
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+driver.databases().contains_with_consistency(name, ConsistencyLevel::Strong).await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+driver.databases().contains_with_consistency(name, ConsistencyLevel::Strong);
+----
+
+--
+====
+
+[#_struct_DatabaseManager_create_name_impl_Into_String_]
+==== create
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn create(&self, name: impl Into<String>) -> Result
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn create(&self, name: impl Into<String>) -> Result
+----
+
+--
+====
+
+Creates a database with the given name, using default strong consistency.
+
+See <<#_struct_DatabaseManager_method_create_with_consistency,`Self::create_with_consistency`>> for more details and options.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `name` a|  — The name of the database to be created a| `impl Into<String>`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+driver.databases().create(name).await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+driver.databases().create(name);
+----
+
+--
+====
+
+[#_struct_DatabaseManager_create_with_consistency_name_impl_Into_String_consistency_level_ConsistencyLevel]
+==== create_with_consistency
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn create_with_consistency(
+    &self,
+    name: impl Into<String>,
+    consistency_level: ConsistencyLevel,
+) -> Result
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn create_with_consistency(
+    &self,
+    name: impl Into<String>,
+    consistency_level: ConsistencyLevel,
+) -> Result
+----
+
+--
+====
+
+Creates a database with the given name
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `name` a|  — The name of the database to be created a| `impl Into<String>`
+a| `consistency_level` a|  — The consistency level to use for the operation a| `ConsistencyLevel`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+driver.databases().create_with_consistency(name, ConsistencyLevel::Strong).await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+driver.databases().create_with_consistency(name, ConsistencyLevel::Strong);
+----
+
+--
+====
+
+[#_struct_DatabaseManager_get_]
+==== get
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn get(&self, name: impl Into<String>) -> Result<Arc<Database>>
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn get(&self, name: impl Into<String>) -> Result<Arc<Database>>
+----
+
+--
+====
+
+Retrieves the database with the given name, using default strong consistency.
+
+See <<#_struct_DatabaseManager_method_get_with_consistency,`Self::get_with_consistency`>> for more details and options.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<Arc<Database>>
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+driver.databases().get(name).await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+driver.databases().get(name);
+----
+
+--
+====
+
+[#_struct_DatabaseManager_get_with_consistency_name_impl_Into_String_consistency_level_ConsistencyLevel]
+==== get_with_consistency
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn get_with_consistency(
+    &self,
+    name: impl Into<String>,
+    consistency_level: ConsistencyLevel,
+) -> Result<Arc<Database>>
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn get_with_consistency(
+    &self,
+    name: impl Into<String>,
+    consistency_level: ConsistencyLevel,
+) -> Result<Arc<Database>>
+----
+
+--
+====
+
+Retrieves the database with the given name.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `name` a|  — The name of the database to retrieve a| `impl Into<String>`
+a| `consistency_level` a|  — The consistency level to use for the operation a| `ConsistencyLevel`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<Arc<Database>>
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+driver.databases().get_with_consistency(name, ConsistencyLevel::Strong).await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+driver.databases().get_with_consistency(name, ConsistencyLevel::Strong);
+----
+
+--
+====
+
+[#_struct_DatabaseManager_import_from_file_name_impl_Into_String_schema_impl_Into_String_data_file_path_impl_AsRef_Path_]
+==== import_from_file
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn import_from_file(
+    &self,
+    name: impl Into<String>,
+    schema: impl Into<String>,
+    data_file_path: impl AsRef<Path>,
+) -> Result
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn import_from_file(
+    &self,
+    name: impl Into<String>,
+    schema: impl Into<String>,
+    data_file_path: impl AsRef<Path>,
+) -> Result
+----
+
+--
+====
+
+Creates a database with the given name based on previously exported another database’s data loaded from a file. Always uses strong consistency. This is a blocking operation and may take a significant amount of time depending on the database size.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `name` a|  — The name of the database to be created a| `impl Into<String>`
+a| `schema` a|  — The schema definition query string for the database a| `impl Into<String>`
+a| `data_file_path` a|  — The exported database file to import the data from a| `impl AsRef<Path>`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+driver.databases().import_from_file(name, schema, data_path).await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+driver.databases().import_from_file(name, schema, data_path);
+----
+
+--
+====
+
+// end::methods[]
+

@@ -1,0 +1,52 @@
+[#_struct_Relation]
+=== Relation
+
+*Implements traits:*
+
+* `Clone`
+* `Debug`
+* `Eq`
+* `PartialEq`
+* `StructuralPartialEq`
+
+Relation is an instance of a relation type and can be uniquely addressed by a combination of its type, owned attributes and role players.
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `iid` a| `IID` a| The unique id of this Relation
+a| `type_` a| `Option<RelationType>` a| The type which this Relation belongs to
+|===
+// end::properties[]
+
+// tag::methods[]
+[#_struct_Relation_iid_]
+==== iid
+
+[source,rust]
+----
+pub fn iid(&self) -> &IID
+----
+
+Retrieves the unique id of the ``Relation``.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+&IID
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+relation.iid();
+----
+
+// end::methods[]
+

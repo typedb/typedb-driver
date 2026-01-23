@@ -1,0 +1,54 @@
+[#_enum_ConnectionError]
+=== ConnectionError
+
+[caption=""]
+.Enum variants
+// tag::enum_constants[]
+[cols=""]
+[options="header"]
+|===
+|Variant
+a| `AbsentTlsConfigForTlsConnection`
+a| `AddressTranslationWithoutTranslation`
+a| `AnalyzeNoResponse`
+a| `BrokenPipe`
+a| `ClusterReplicaNotPrimary`
+a| `ConnectionRefusedNetworking`
+a| `DatabaseExportChannelIsClosed`
+a| `DatabaseExportStreamNoResponse`
+a| `DatabaseImportChannelIsClosed`
+a| `DatabaseImportStreamUnexpectedResponse`
+a| `EncryptionSettingsMismatch`
+a| `InvalidAddressWithScheme`
+a| `ListsNotImplemented`
+a| `MissingPort`
+a| `MissingResponseField`
+a| `NoAvailableReplicas`
+a| `NoPrimaryReplica`
+a| `NotPrimaryOnReadOnly`
+a| `QueryStreamNoResponse`
+a| `RPCMethodUnavailable`
+a| `SchemeTlsSettingsMismatch`
+a| `ServerConnectionFailed`
+a| `ServerConnectionFailedNetworking`
+a| `ServerConnectionFailedWithError`
+a| `ServerConnectionIsClosed`
+a| `ServerConnectionIsClosedUnexpectedly`
+a| `ServerIsNotInitialised`
+a| `SslCertificateNotValidated`
+a| `TokenCredentialInvalid`
+a| `TransactionIsClosed`
+a| `TransactionIsClosedWithErrors`
+a| `UnexpectedConnectionClose`
+a| `UnexpectedKind`
+a| `UnexpectedQueryType`
+a| `UnexpectedReplicaRole`
+a| `UnexpectedResponse`
+a| `UnknownDirectReplica`
+a| `UnknownRequestId`
+a| `ValueStructNotImplemented`
+a| `ValueTimeZoneNameNotRecognised`
+a| `ValueTimeZoneOffsetNotRecognised`
+|===
+// end::enum_constants[]
+

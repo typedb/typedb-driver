@@ -1,0 +1,78 @@
+[#_struct_TransactionOptions]
+=== TransactionOptions
+
+*Implements traits:*
+
+* `Clone`
+* `Debug`
+* `Default`
+
+TypeDB transaction options. ``TransactionOptions`` object can be used to override the default behaviour for opened transactions.
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `read_consistency_level` a| `Option<ConsistencyLevel>` a| If set, specifies the requested consistency level of the transaction opening operation. Affects only read transactions, as write and schema transactions require primary replicas.
+a| `schema_lock_acquire_timeout` a| `Option<Duration>` a| If set, specifies how long the driver should wait if opening a transaction is blocked by an exclusive schema write lock.
+a| `transaction_timeout` a| `Option<Duration>` a| If set, specifies a timeout for killing transactions automatically, preventing memory leaks in unclosed transactions.
+|===
+// end::properties[]
+
+// tag::methods[]
+[#_struct_TransactionOptions_read_consistency_level_]
+==== read_consistency_level
+
+[source,rust]
+----
+pub fn read_consistency_level(self, consistency_level: ConsistencyLevel) -> Self
+----
+
+If set, specifies the requested consistency level of the transaction opening operation. Affects only read transactions, as write and schema transactions require primary replicas.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Self
+----
+
+[#_struct_TransactionOptions_schema_lock_acquire_timeout_]
+==== schema_lock_acquire_timeout
+
+[source,rust]
+----
+pub fn schema_lock_acquire_timeout(self, timeout: Duration) -> Self
+----
+
+If set, specifies how long the driver should wait if opening a transaction is blocked by an exclusive schema write lock.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Self
+----
+
+[#_struct_TransactionOptions_transaction_timeout_]
+==== transaction_timeout
+
+[source,rust]
+----
+pub fn transaction_timeout(self, timeout: Duration) -> Self
+----
+
+If set, specifies a timeout for killing transactions automatically, preventing memory leaks in unclosed transactions.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Self
+----
+
+// end::methods[]
+

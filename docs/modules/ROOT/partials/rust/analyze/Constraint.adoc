@@ -1,0 +1,33 @@
+[#_enum_Constraint]
+=== Constraint
+
+A representation of a TypeQL constraint.
+
+[caption=""]
+.Enum variants
+// tag::enum_constants[]
+[cols=""]
+[options="header"]
+|===
+|Variant
+a| `Comparison`
+a| `Expression`
+a| `FunctionCall`
+a| `Has`
+a| `Iid`
+a| `Is`
+a| `Isa`
+a| `Kind`
+a| `Label`
+a| `Links`
+a| `Not`
+a| `Or`
+a| `Owns`
+a| `Plays`
+a| `Relates`
+a| `Sub`
+a| `Try`
+a| `Value`
+|===
+// end::enum_constants[]
+

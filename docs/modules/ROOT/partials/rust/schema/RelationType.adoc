@@ -1,0 +1,56 @@
+[#_struct_RelationType]
+=== RelationType
+
+*Implements traits:*
+
+* `Clone`
+* `Debug`
+* `Display`
+* `Eq`
+* `PartialEq`
+* `StructuralPartialEq`
+
+Relation types (or subtypes of the relation root type) represent relationships between types. Relation types have roles.
+
+Other types can play roles in relations if it’s mentioned in their definition.
+
+A relation type must specify at least one role.
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `label` a| `String` a| 
+|===
+// end::properties[]
+
+// tag::methods[]
+[#_struct_RelationType_label_]
+==== label
+
+[source,rust]
+----
+pub fn label(&self) -> &str
+----
+
+Retrieves the unique label of the ``RelationType``.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+&str
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+relation_type.label()
+----
+
+// end::methods[]
+

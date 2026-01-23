@@ -1,0 +1,592 @@
+[#_struct_Database]
+=== Database
+
+*Implements traits:*
+
+* `Clone`
+* `Debug`
+
+A TypeDB database.
+
+// tag::methods[]
+[#_struct_Database_delete_]
+==== delete
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn delete(self: Arc<Self>) -> Result
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn delete(self: Arc<Self>) -> Result
+----
+
+--
+====
+
+Deletes this database, using default strong consistency.
+
+See <<#_struct_Database_method_delete_with_consistency,`Self::delete_with_consistency`>> for more details and options.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+database.delete().await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+database.delete();
+----
+
+--
+====
+
+[#_struct_Database_delete_with_consistency_consistency_level_ConsistencyLevel]
+==== delete_with_consistency
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn delete_with_consistency(
+    self: Arc<Self>,
+    consistency_level: ConsistencyLevel,
+) -> Result
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn delete_with_consistency(
+    self: Arc<Self>,
+    consistency_level: ConsistencyLevel,
+) -> Result
+----
+
+--
+====
+
+Deletes this database.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `consistency_level` a|  — The consistency level to use for the operation a| `ConsistencyLevel`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+database.delete_with_consistency(ConsistencyLevel::Strong).await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+database.delete_with_consistency(ConsistencyLevel::Strong);
+----
+
+--
+====
+
+[#_struct_Database_export_to_file_]
+==== export_to_file
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn export_to_file(
+    &self,
+    schema_file_path: impl AsRef<Path>,
+    data_file_path: impl AsRef<Path>,
+) -> Result
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn export_to_file(
+    &self,
+    schema_file_path: impl AsRef<Path>,
+    data_file_path: impl AsRef<Path>,
+) -> Result
+----
+
+--
+====
+
+Export a database into a schema definition and a data files saved to the disk, using default strong consistency. This is a blocking operation and may take a significant amount of time depending on the database size.
+
+See <<#_struct_Database_method_export_to_file_with_consistency,`Self::export_to_file_with_consistency`>> for more details and options.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+database.export_to_file(schema_path, data_path).await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+database.export_to_file(schema_path, data_path);
+----
+
+--
+====
+
+[#_struct_Database_export_to_file_with_consistency_schema_file_path_impl_AsRef_Path_data_file_path_impl_AsRef_Path_consistency_level_ConsistencyLevel]
+==== export_to_file_with_consistency
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn export_to_file_with_consistency(
+    &self,
+    schema_file_path: impl AsRef<Path>,
+    data_file_path: impl AsRef<Path>,
+    consistency_level: ConsistencyLevel,
+) -> Result
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn export_to_file_with_consistency(
+    &self,
+    schema_file_path: impl AsRef<Path>,
+    data_file_path: impl AsRef<Path>,
+    consistency_level: ConsistencyLevel,
+) -> Result
+----
+
+--
+====
+
+Export a database into a schema definition and a data files saved to the disk. This is a blocking operation and may take a significant amount of time depending on the database size.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `schema_file_path` a|  — The path to the schema definition file to be created a| `impl AsRef<Path>`
+a| `data_file_path` a|  — The path to the data file to be created a| `impl AsRef<Path>`
+a| `consistency_level` a|  — The consistency level to use for the operation a| `ConsistencyLevel`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+database.export_to_file_with_consistency(schema_path, data_path, ConsistencyLevel::Strong).await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+database.export_to_file_with_consistency(schema_path, data_path, ConsistencyLevel::Strong);
+----
+
+--
+====
+
+[#_struct_Database_name_]
+==== name
+
+[source,rust]
+----
+pub fn name(&self) -> &str
+----
+
+Retrieves the database name as a string.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+&str
+----
+
+[#_struct_Database_schema_]
+==== schema
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn schema(&self) -> Result<String>
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn schema(&self) -> Result<String>
+----
+
+--
+====
+
+Returns a full schema text as a valid TypeQL define query string, using default strong consistency.
+
+See <<#_struct_Database_method_schema_with_consistency,`Self::schema_with_consistency`>> for more details and options.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<String>
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+database.schema().await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+database.schema();
+----
+
+--
+====
+
+[#_struct_Database_schema_with_consistency_consistency_level_ConsistencyLevel]
+==== schema_with_consistency
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn schema_with_consistency(
+    &self,
+    consistency_level: ConsistencyLevel,
+) -> Result<String>
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn schema_with_consistency(
+    &self,
+    consistency_level: ConsistencyLevel,
+) -> Result<String>
+----
+
+--
+====
+
+Returns a full schema text as a valid TypeQL define query string.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `consistency_level` a|  — The consistency level to use for the operation a| `ConsistencyLevel`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<String>
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+database.schema_with_consistency(ConsistencyLevel::Strong).await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+database.schema_with_consistency(ConsistencyLevel::Strong);
+----
+
+--
+====
+
+[#_struct_Database_type_schema_]
+==== type_schema
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn type_schema(&self) -> Result<String>
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn type_schema(&self) -> Result<String>
+----
+
+--
+====
+
+Returns the types in the schema as a valid TypeQL define query string, using default strong consistency.
+
+See <<#_struct_Database_method_type_schema_with_consistency,`Self::type_schema_with_consistency`>> for more details and options.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<String>
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+database.type_schema().await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+database.type_schema();
+----
+
+--
+====
+
+[#_struct_Database_type_schema_with_consistency_consistency_level_ConsistencyLevel]
+==== type_schema_with_consistency
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn type_schema_with_consistency(
+    &self,
+    consistency_level: ConsistencyLevel,
+) -> Result<String>
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn type_schema_with_consistency(
+    &self,
+    consistency_level: ConsistencyLevel,
+) -> Result<String>
+----
+
+--
+====
+
+Returns the types in the schema as a valid TypeQL define query string.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `consistency_level` a|  — The consistency level to use for the operation a| `ConsistencyLevel`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<String>
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+database.type_schema_with_consistency(ConsistencyLevel::Strong).await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+database.type_schema_with_consistency(ConsistencyLevel::Strong);
+----
+
+--
+====
+
+// end::methods[]
+

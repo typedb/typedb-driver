@@ -1,0 +1,18 @@
+[#_enum_ConsistencyLevel]
+=== ConsistencyLevel
+
+Consistency levels of operations against a distributed server. All driver methods have default recommended values, however, most of the operations can be configured in order to potentially speed up the execution (introducing risks of stale data) or test a specific replica. This setting does not affect clusters with a single node.
+
+[caption=""]
+.Enum variants
+// tag::enum_constants[]
+[cols=""]
+[options="header"]
+|===
+|Variant
+a| `Eventual`
+a| `ReplicaDependent`
+a| `Strong`
+|===
+// end::enum_constants[]
+

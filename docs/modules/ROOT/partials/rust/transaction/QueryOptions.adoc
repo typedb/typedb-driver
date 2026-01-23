@@ -1,0 +1,79 @@
+[#_struct_QueryOptions]
+=== QueryOptions
+
+*Implements traits:*
+
+* `Clone`
+* `Copy`
+* `Debug`
+* `Default`
+
+TypeDB query options. ``QueryOptions`` object can be used to override the default server behaviour for executed queries.
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `include_instance_types` a| `Option<bool>` a| If set, specifies if types should be included in instance structs returned in ConceptRow answers. This option allows reducing the amount of unnecessary data transmitted.
+a| `include_query_structure` a| `Option<bool>` a| If set, requests the server to return the structure of the query in the ConceptRow header.
+a| `prefetch_size` a| `Option<u64>` a| If set, specifies the number of extra query responses sent before the client side has to re-request more responses. Increasing this may increase performance for queries with a huge number of answers, as it can reduce the number of network round-trips at the cost of more resources on the server side. Minimal value: 1.
+|===
+// end::properties[]
+
+// tag::methods[]
+[#_struct_QueryOptions_include_instance_types_]
+==== include_instance_types
+
+[source,rust]
+----
+pub fn include_instance_types(self, include_instance_types: bool) -> Self
+----
+
+If set, specifies if types should be included in instance structs returned in ConceptRow answers. This option allows reducing the amount of unnecessary data transmitted.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Self
+----
+
+[#_struct_QueryOptions_include_query_structure_]
+==== include_query_structure
+
+[source,rust]
+----
+pub fn include_query_structure(self, include_query_structure: bool) -> Self
+----
+
+If set, requests the server to return the structure of the query in the ConceptRow header.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Self
+----
+
+[#_struct_QueryOptions_prefetch_size_]
+==== prefetch_size
+
+[source,rust]
+----
+pub fn prefetch_size(self, prefetch_size: u64) -> Self
+----
+
+If set, specifies the number of extra query responses sent before the client side has to re-request more responses. Increasing this may increase performance for queries with a huge number of answers, as it can reduce the number of network round-trips at the cost of more resources on the server side.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Self
+----
+
+// end::methods[]
+

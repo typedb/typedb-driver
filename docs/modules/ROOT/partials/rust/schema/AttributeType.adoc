@@ -1,0 +1,82 @@
+[#_struct_AttributeType]
+=== AttributeType
+
+*Implements traits:*
+
+* `Clone`
+* `Debug`
+* `Display`
+* `PartialEq`
+* `StructuralPartialEq`
+
+Attribute types represent properties that other types can own.
+
+Attribute types have a value type. This value type is fixed and unique for every given instance of the attribute type.
+
+Other types can own an attribute type. That means that instances of these other types can own an instance of this attribute type. This usually means that an object in our domain has a property with the matching value.
+
+Multiple types can own the same attribute type, and different instances of the same type or different types can share ownership of the same attribute instance.
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `label` a| `String` a| 
+a| `value_type` a| `Option<ValueType>` a| 
+|===
+// end::properties[]
+
+// tag::methods[]
+[#_struct_AttributeType_label_]
+==== label
+
+[source,rust]
+----
+pub fn label(&self) -> &str
+----
+
+Retrieves the unique label of the ``AttributeType``.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+&str
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+attribute_type.label()
+----
+
+[#_struct_AttributeType_value_type_]
+==== value_type
+
+[source,rust]
+----
+pub fn value_type(&self) -> Option<&ValueType>
+----
+
+Retrieves the ``ValueType`` of the ``AttributeType``.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Option<&ValueType>
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+attribute_type.value_type()
+----
+
+// end::methods[]
+

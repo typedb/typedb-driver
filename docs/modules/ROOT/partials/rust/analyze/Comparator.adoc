@@ -1,0 +1,43 @@
+[#_enum_Comparator]
+=== Comparator
+
+A representation of the comparator used in a comparison constraint.
+
+[caption=""]
+.Enum variants
+// tag::enum_constants[]
+[cols=""]
+[options="header"]
+|===
+|Variant
+a| `Contains = 7`
+a| `Equal = 0`
+a| `Greater = 4`
+a| `GreaterOrEqual = 5`
+a| `LessOrEqual = 3`
+a| `LessThan = 2`
+a| `Like = 6`
+a| `NotEqual = 1`
+|===
+// end::enum_constants[]
+
+// tag::methods[]
+[#_enum_Comparator_symbol_]
+==== symbol
+
+[source,rust]
+----
+pub fn symbol(&self) -> &'static str
+----
+
+The symbol representing the comparator in TypeQL
+
+[caption=""]
+.Returns
+[source,rust]
+----
+&'static str
+----
+
+// end::methods[]
+

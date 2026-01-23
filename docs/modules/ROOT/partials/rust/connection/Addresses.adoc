@@ -1,0 +1,231 @@
+[#_enum_Addresses]
+=== Addresses
+
+A collection of server addresses used for connection.
+
+[caption=""]
+.Enum variants
+// tag::enum_constants[]
+[cols=""]
+[options="header"]
+|===
+|Variant
+a| `Direct(Vec<Address>)`
+a| `Translated(HashMap<Address, Address>)`
+|===
+// end::enum_constants[]
+
+// tag::methods[]
+[#_enum_Addresses_contains_]
+==== contains
+
+[source,rust]
+----
+pub fn contains(&self, address: &Address) -> bool
+----
+
+Checks if the public address is a part of the addresses.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+bool
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+addresses.contains(&address)
+----
+
+[#_enum_Addresses_from_address_]
+==== from_address
+
+[source,rust]
+----
+pub fn from_address(address: Address) -> Self
+----
+
+Prepare addresses based on a single TypeDB address.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Self
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+let address = "127.0.0.1:11729".parse().unwrap();
+Addresses::from_address(address)
+----
+
+[#_enum_Addresses_from_addresses_]
+==== from_addresses
+
+[source,rust]
+----
+pub fn from_addresses(addresses: impl IntoIterator<Item = Address>) -> Self
+----
+
+Prepare addresses based on multiple TypeDB addresses.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Self
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+let address1 = "127.0.0.1:11729".parse().unwrap();
+let address2 = "127.0.0.1:11730".parse().unwrap();
+let address3 = "127.0.0.1:11731".parse().unwrap();
+Addresses::from_addresses([address1, address2, address3])
+----
+
+[#_enum_Addresses_from_translation_]
+==== from_translation
+
+[source,rust]
+----
+pub fn from_translation(addresses: HashMap<Address, Address>) -> Self
+----
+
+Prepare addresses based on multiple key-value (public-private) TypeDB address pairs. Translation map from addresses to be used by the driver for connection to addresses received from the TypeDB server(s).
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Self
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+let translation: HashMap<Address, Address> = [
+    ("typedb-cloud.ext:11729".parse()?, "127.0.0.1:11729".parse()?),
+    ("typedb-cloud.ext:11730".parse()?, "127.0.0.1:11730".parse()?),
+    ("typedb-cloud.ext:11731".parse()?, "127.0.0.1:11731".parse()?)
+].into();
+Addresses::from_translation(translation)
+----
+
+[#_enum_Addresses_len_]
+==== len
+
+[source,rust]
+----
+pub fn len(&self) -> usize
+----
+
+Returns the number of address entries (addresses or address pairs) in the collection.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+usize
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+addresses.len()
+----
+
+[#_enum_Addresses_try_from_address_str_]
+==== try_from_address_str
+
+[source,rust]
+----
+pub fn try_from_address_str(address_str: impl AsRef<str>) -> Result<Self>
+----
+
+Prepare addresses based on a single “host:port” string.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<Self>
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+Addresses::try_from_address_str("127.0.0.1:11729")
+----
+
+[#_enum_Addresses_try_from_addresses_str_]
+==== try_from_addresses_str
+
+[source,rust]
+----
+pub fn try_from_addresses_str(
+    addresses_str: impl IntoIterator<Item = impl AsRef<str>>,
+) -> Result<Self>
+----
+
+Prepare addresses based on multiple “host:port” strings. Is used to specify multiple addresses connect to.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<Self>
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+Addresses::try_from_addresses_str(["127.0.0.1:11729", "127.0.0.1:11730", "127.0.0.1:11731"])
+----
+
+[#_enum_Addresses_try_from_translation_str_]
+==== try_from_translation_str
+
+[source,rust]
+----
+pub fn try_from_translation_str(
+    addresses_str: HashMap<impl AsRef<str>, impl AsRef<str>>,
+) -> Result<Self>
+----
+
+Prepare addresses based on multiple key-value (public-private) “key:port” string pairs. Translation map from addresses to be used by the driver for connection to addresses received from the TypeDB server(s).
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<Self>
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+Addresses::try_from_addresses_str(
+    [
+        ("typedb-cloud.ext:11729", "127.0.0.1:11729"),
+        ("typedb-cloud.ext:11730", "127.0.0.1:11730"),
+        ("typedb-cloud.ext:11731", "127.0.0.1:11731")
+    ].into()
+)
+----
+
+// end::methods[]
+

@@ -1,0 +1,15 @@
+[#_struct_Address]
+=== Address
+
+*Implements traits:*
+
+* `Clone`
+* `Debug`
+* `Default`
+* `Display`
+* `Eq`
+* `FromStr`
+* `Hash`
+* `PartialEq`
+* `StructuralPartialEq`
+

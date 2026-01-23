@@ -1,0 +1,103 @@
+[#_struct_AvailableServerReplica]
+=== AvailableServerReplica
+
+*Implements traits:*
+
+* `Clone`
+* `Debug`
+* `Eq`
+* `Hash`
+* `PartialEq`
+* `Replica`
+* `StructuralPartialEq`
+
+A specialization of an available ``ServerReplica`` with a known connection address.
+
+// tag::methods[]
+[#_struct_AvailableServerReplica_address_]
+==== address
+
+[source,rust]
+----
+pub fn address(&self) -> &Address
+----
+
+Returns the address this replica is hosted at.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+&Address
+----
+
+[#_struct_AvailableServerReplica_id_]
+==== id
+
+[source,rust]
+----
+fn id(&self) -> u64
+----
+
+Returns the id of this replica. 0 (default) if it’s not a part of a cluster.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+u64
+----
+
+[#_struct_AvailableServerReplica_is_primary_]
+==== is_primary
+
+[source,rust]
+----
+fn is_primary(&self) -> bool
+----
+
+Checks whether this is the primary replica of the raft cluster.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+bool
+----
+
+[#_struct_AvailableServerReplica_role_]
+==== role
+
+[source,rust]
+----
+fn role(&self) -> Option<ReplicaRole>
+----
+
+Returns whether this is the primary replica of the raft cluster or any of the supporting roles.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Option<ReplicaRole>
+----
+
+[#_struct_AvailableServerReplica_term_]
+==== term
+
+[source,rust]
+----
+fn term(&self) -> Option<u64>
+----
+
+Returns the raft protocol ‘term’ of this replica.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Option<u64>
+----
+
+// end::methods[]
+

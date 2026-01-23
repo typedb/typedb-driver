@@ -1,0 +1,333 @@
+[#_struct_User]
+=== User
+
+*Implements traits:*
+
+* `Clone`
+* `Debug`
+
+// tag::methods[]
+[#_struct_User_delete_]
+==== delete
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn delete(self) -> Result
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn delete(self) -> Result
+----
+
+--
+====
+
+Deletes this user, using default strong consistency.
+
+See <<#_struct_User_method_delete_with_consistency,`Self::delete_with_consistency`>> for more details and options.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+user.delete().await;
+user.delete(username).await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+user.delete();
+user.delete(username).await;
+----
+
+--
+====
+
+[#_struct_User_delete_with_consistency_consistency_level_ConsistencyLevel]
+==== delete_with_consistency
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn delete_with_consistency(
+    self,
+    consistency_level: ConsistencyLevel,
+) -> Result
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn delete_with_consistency(
+    self,
+    consistency_level: ConsistencyLevel,
+) -> Result
+----
+
+--
+====
+
+Deletes this user.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `consistency_level` a|  — The consistency level to use for the operation a| `ConsistencyLevel`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+user.delete_with_consistency(ConsistencyLevel::Strong).await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+user.delete_with_consistency(ConsistencyLevel::Strong);
+----
+
+--
+====
+
+[#_struct_User_name_]
+==== name
+
+[source,rust]
+----
+pub fn name(&self) -> &str
+----
+
+Retrieves the username as a string.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+&str
+----
+
+[#_struct_User_password_]
+==== password
+
+[source,rust]
+----
+pub fn password(&self) -> Option<&str>
+----
+
+Retrieves the password as a string, if accessible.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Option<&str>
+----
+
+[#_struct_User_update_password_password_impl_Into_String_-_Result_]
+==== update_password
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn update_password(&self, password: impl Into<String>) -> Result<()>
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn update_password(&self, password: impl Into<String>) -> Result<()>
+----
+
+--
+====
+
+Updates the user’s password, using default strong consistency.
+
+See <<#_struct_User_method_update_password_with_consistency,`Self::update_password_with_consistency`>> for more details and options.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `password` a|  — The new password a| `impl Into<String>) -> Result<(`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<()>
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+user.update_password(password).await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+user.update_password(password);
+----
+
+--
+====
+
+[#_struct_User_update_password_with_consistency_password_impl_Into_String_consistency_level_ConsistencyLevel]
+==== update_password_with_consistency
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn update_password_with_consistency(
+    &self,
+    password: impl Into<String>,
+    consistency_level: ConsistencyLevel,
+) -> Result<()>
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn update_password_with_consistency(
+    &self,
+    password: impl Into<String>,
+    consistency_level: ConsistencyLevel,
+) -> Result<()>
+----
+
+--
+====
+
+Updates the user’s password.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `password` a|  — The new password a| `impl Into<String>`
+a| `consistency_level` a|  — The consistency level to use for the operation a| `ConsistencyLevel`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<()>
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+user.update_password_with_consistency(password, ConsistencyLevel::Strong).await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+user.update_password_with_consistency(password, ConsistencyLevel::Strong);
+----
+
+--
+====
+
+// end::methods[]
+

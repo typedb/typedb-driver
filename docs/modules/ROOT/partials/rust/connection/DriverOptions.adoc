@@ -1,0 +1,121 @@
+[#_struct_DriverOptions]
+=== DriverOptions
+
+*Implements traits:*
+
+* `Clone`
+* `Debug`
+* `Default`
+
+TypeDB driver connection options. ``DriverOptions`` object can be used to override the default driver behavior while connecting to TypeDB.
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `primary_failover_retries` a| `usize` a| Limits the number of attempts to redirect a strongly consistent request to another primary replica in case of a failure due to the change of replica roles. Defaults to 1.
+a| `replica_discovery_attempts` a| `Option<usize>` a| Limits the number of driver attempts to discover a single working replica to perform an operation in case of a replica unavailability. Every replica is tested once, which means that at most:
+
+ {limit} operations are performed if the limit &lt;= the number of replicas.
+ {number of replicas} operations are performed if the limit &gt; the number of replicas.
+ {number of replicas} operations are performed if the limit is None. Affects every eventually consistent operation, including redirect failover, when the new primary replica is unknown. Defaults to None.
+
+a| `tls_config` a| `DriverTlsConfig` a| Specifies the TLS configuration of the connection to TypeDB. WARNING: Disabled TLS settings will make the driver sending passwords as plaintext. Defaults to an enabled TLS configuration based on the system’s native trust roots.
+a| `use_replication` a| `bool` a| Specifies whether the connection to TypeDB can use cluster replicas provided by the server or it should be limited to a single configured address. Defaults to true.
+|===
+// end::properties[]
+
+// tag::methods[]
+[#_struct_DriverOptions_new_]
+==== new
+
+[source,rust]
+----
+pub fn new(tls_config: DriverTlsConfig) -> Self
+----
+
+Creates new ``DriverOptions`` to configure connections to TypeDB using custom TLS settings. WARNING: Disabled TLS settings will make the driver sending passwords as plaintext.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Self
+----
+
+[#_struct_DriverOptions_primary_failover_retries_]
+==== primary_failover_retries
+
+[source,rust]
+----
+pub fn primary_failover_retries(self, primary_failover_retries: usize) -> Self
+----
+
+Limits the number of attempts to redirect a strongly consistent request to another primary replica in case of a failure due to the change of replica roles. Defaults to 1.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Self
+----
+
+[#_struct_DriverOptions_replica_discovery_attempts_]
+==== replica_discovery_attempts
+
+[source,rust]
+----
+pub fn replica_discovery_attempts(
+    self,
+    replica_discovery_attempts: Option<usize>,
+) -> Self
+----
+
+Limits the number of driver attempts to discover a single working replica to perform an operation in case of a replica unavailability. Every replica is tested once, which means that at most:
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Self
+----
+
+[#_struct_DriverOptions_tls_config_]
+==== tls_config
+
+[source,rust]
+----
+pub fn tls_config(self, tls_config: DriverTlsConfig) -> Self
+----
+
+Override the existing TLS configuration. WARNING: Disabled TLS settings will make the driver sending passwords as plaintext.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Self
+----
+
+[#_struct_DriverOptions_use_replication_]
+==== use_replication
+
+[source,rust]
+----
+pub fn use_replication(self, use_replication: bool) -> Self
+----
+
+Specifies whether the connection to TypeDB can use cluster replicas provided by the server or it should be limited to the provided address. If set to false, restricts the driver to only a single address.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Self
+----
+
+// end::methods[]
+

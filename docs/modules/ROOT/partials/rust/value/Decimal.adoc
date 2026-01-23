@@ -1,0 +1,34 @@
+[#_struct_Decimal]
+=== Decimal
+
+*Implements traits:*
+
+* `Add`
+* `Clone`
+* `Copy`
+* `Debug`
+* `Default`
+* `Display`
+* `Eq`
+* `Hash`
+* `Neg`
+* `Ord`
+* `PartialEq`
+* `PartialOrd`
+* `StructuralPartialEq`
+* `Sub`
+
+A fixed-point decimal number. Holds exactly 19 digits after the decimal point and a 64-bit value before the decimal point.
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `fractional` a| `u64` a| The fractional part of the decimal, in multiples of 10^-19 (Decimal::FRACTIONAL_PART_DENOMINATOR). This means that the smallest decimal representable is 10^-19, and up to 19 decimal places are supported.
+a| `integer` a| `i64` a| The integer part of the decimal as normal signed 64 bit number
+|===
+// end::properties[]
+

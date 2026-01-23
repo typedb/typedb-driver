@@ -1,0 +1,34 @@
+[#_trait_Promise]
+=== Trait Promise
+
+[tabs]
+====
+async::
++
+--
+Async promise, an alias for Rust’s built-in Future. A ``BoxPromise`` is an alias for Rust’s built-in BoxFuture.
+
+[caption=""]
+.Examples
+[source,rust]
+----
+promise.await
+----
+
+--
+
+sync::
++
+--
+A resolvable promise that can be resolved at a later time. a ``BoxPromise`` is in practical terms a ``Box&lt;dyn Promise&gt;`` and resolves with ``.resolve()``.
+
+[caption=""]
+.Examples
+[source,rust]
+----
+promise.resolve()
+----
+
+--
+====
+

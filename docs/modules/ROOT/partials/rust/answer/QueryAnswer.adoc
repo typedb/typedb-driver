@@ -1,0 +1,163 @@
+[#_enum_QueryAnswer]
+=== QueryAnswer
+
+[caption=""]
+.Enum variants
+// tag::enum_constants[]
+[cols=""]
+[options="header"]
+|===
+|Variant
+a| `ConceptDocumentStream(Arc<ConceptDocumentHeader>, BoxStream<'static, Result<ConceptDocument>>)`
+a| `ConceptRowStream(Arc<ConceptRowHeader>, BoxStream<'static, Result<ConceptRow>>)`
+a| `Ok(QueryType)`
+|===
+// end::enum_constants[]
+
+// tag::methods[]
+[#_enum_QueryAnswer_get_query_type_]
+==== get_query_type
+
+[source,rust]
+----
+pub fn get_query_type(&self) -> QueryType
+----
+
+Retrieves the executed query’s type (shared by all elements in this stream).
+
+[caption=""]
+.Returns
+[source,rust]
+----
+QueryType
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+query_answer.get_query_type()
+----
+
+[#_enum_QueryAnswer_into_documents_]
+==== into_documents
+
+[source,rust]
+----
+pub fn into_documents(self) -> BoxStream<'static, Result<ConceptDocument>>
+----
+
+Unwraps the ``QueryAnswer`` into a ``ConceptDocumentStream``. Panics if it is not a ``ConceptDocumentStream``.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+BoxStream<'static, Result<ConceptDocument>>
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+query_answer.into_documents()
+----
+
+[#_enum_QueryAnswer_into_rows_]
+==== into_rows
+
+[source,rust]
+----
+pub fn into_rows(self) -> BoxStream<'static, Result<ConceptRow>>
+----
+
+Unwraps the ``QueryAnswer`` into a ``ConceptRowStream``. Panics if it is not a ``ConceptRowStream``.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+BoxStream<'static, Result<ConceptRow>>
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+query_answer.into_rows()
+----
+
+[#_enum_QueryAnswer_is_document_stream_]
+==== is_document_stream
+
+[source,rust]
+----
+pub fn is_document_stream(&self) -> bool
+----
+
+Checks if the ``QueryAnswer`` is a ``ConceptDocumentStream``.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+bool
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+query_answer.is_document_stream()
+----
+
+[#_enum_QueryAnswer_is_ok_]
+==== is_ok
+
+[source,rust]
+----
+pub fn is_ok(&self) -> bool
+----
+
+Checks if the ``QueryAnswer`` is an ``Ok`` response.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+bool
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+query_answer.is_ok()
+----
+
+[#_enum_QueryAnswer_is_row_stream_]
+==== is_row_stream
+
+[source,rust]
+----
+pub fn is_row_stream(&self) -> bool
+----
+
+Checks if the ``QueryAnswer`` is a ``ConceptRowStream``.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+bool
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+query_answer.is_row_stream()
+----
+
+// end::methods[]
+

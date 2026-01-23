@@ -1,0 +1,233 @@
+[#_struct_ConceptRow]
+=== ConceptRow
+
+*Implements traits:*
+
+* `Clone`
+* `Debug`
+* `Display`
+* `PartialEq`
+
+A single row of concepts representing substitutions for variables in the query. Contains a Header (column names and query type), and the row of optional concepts. An empty concept in a column means the variable does not have a substitution in this answer.
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `row` a| `Vec<Option<Concept>>` a| 
+|===
+// end::properties[]
+
+// tag::methods[]
+[#_struct_ConceptRow_get_var_name]
+==== get
+
+[source,rust]
+----
+pub fn get(&self, column_name: &str) -> Result<Option<&Concept>>
+----
+
+Retrieves a concept for a given variable. Returns an empty optional if the variable name has an empty answer. Returns an error if the variable name is not present.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `var_name` a|  — The variable name in the row to retrieve a| 
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<Option<&Concept>>
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+concept_row.get(var_name)
+----
+
+[#_struct_ConceptRow_get_column_names_]
+==== get_column_names
+
+[source,rust]
+----
+pub fn get_column_names(&self) -> &[String]
+----
+
+Retrieves the row column names (shared by all elements in this stream).
+
+[caption=""]
+.Returns
+[source,rust]
+----
+&[String]
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+concept_row.get_column_names()
+----
+
+[#_struct_ConceptRow_get_concepts_]
+==== get_concepts
+
+[source,rust]
+----
+pub fn get_concepts(&self) -> impl Iterator<Item = &Concept>
+----
+
+Produces an iterator over all concepts in this ``ConceptRow``, skipping empty results
+
+[caption=""]
+.Returns
+[source,rust]
+----
+impl Iterator<Item = &Concept>
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+concept_row.concepts()
+----
+
+[#_struct_ConceptRow_get_index_column_index_usize]
+==== get_index
+
+[source,rust]
+----
+pub fn get_index(&self, column_index: usize) -> Result<Option<&Concept>>
+----
+
+Retrieves a concept for a given column index. Returns an empty optional if the index points to an empty answer. Returns an error if the index is not in the row’s range.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `column_index` a|  — The position in the row to retrieve a| `usize`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<Option<&Concept>>
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+concept_row.get_position(column_index)
+----
+
+[#_struct_ConceptRow_get_involved_conjunctions_]
+==== get_involved_conjunctions
+
+[source,rust]
+----
+pub fn get_involved_conjunctions(
+    &self,
+) -> Option<impl Iterator<Item = ConjunctionID> + '_>
+----
+
+Retrieve the ``ConjunctionID``s of ``Conjunction``s that answered this row.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Option<impl Iterator<Item = ConjunctionID> + '_>
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+concept_row.get_involved_conjunctions()
+----
+
+[#_struct_ConceptRow_get_involved_conjunctions_cloned_]
+==== get_involved_conjunctions_cloned
+
+[source,rust]
+----
+pub fn get_involved_conjunctions_cloned(
+    &self,
+) -> Option<impl Iterator<Item = ConjunctionID> + 'static>
+----
+
+Like ``ConceptRow::get_involved_conjunctions`` but clones the underlying data. Meant for simpler lifetimes over FFI.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Option<impl Iterator<Item = ConjunctionID> + 'static>
+----
+
+[#_struct_ConceptRow_get_query_structure_]
+==== get_query_structure
+
+[source,rust]
+----
+pub fn get_query_structure(&self) -> Option<&Pipeline>
+----
+
+Retrieve the executed query’s structure from the ``ConceptRow``’s header, if set. It must be requested via “include query structure” in ``QueryOptions``
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Option<&Pipeline>
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+concept_row.get_query_structure()
+----
+
+[#_struct_ConceptRow_get_query_type_]
+==== get_query_type
+
+[source,rust]
+----
+pub fn get_query_type(&self) -> QueryType
+----
+
+Retrieves the executed query’s type (shared by all elements in this stream).
+
+[caption=""]
+.Returns
+[source,rust]
+----
+QueryType
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+concept_row.get_query_type()
+----
+
+// end::methods[]
+

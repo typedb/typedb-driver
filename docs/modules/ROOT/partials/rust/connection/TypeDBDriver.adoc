@@ -1,0 +1,1109 @@
+[#_struct_TypeDBDriver]
+=== TypeDBDriver
+
+*Implements traits:*
+
+* `Debug`
+
+A connection to a TypeDB server which serves as the starting point for all interaction.
+
+// tag::methods[]
+[#_struct_TypeDBDriver_configured_addresses_]
+==== configured_addresses
+
+[source,rust]
+----
+pub fn configured_addresses(&self) -> &Addresses
+----
+
+The ``Addresses`` this connection is configured to.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+&Addresses
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+driver.configured_addresses()
+----
+
+[#_struct_TypeDBDriver_databases_]
+==== databases
+
+[source,rust]
+----
+pub fn databases(&self) -> &DatabaseManager
+----
+
+The ``DatabaseManager`` for this connection, providing access to database management methods.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+&DatabaseManager
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+driver.databases()
+----
+
+[#_struct_TypeDBDriver_deregister_replica_replica_id_u64]
+==== deregister_replica
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn deregister_replica(&self, replica_id: u64) -> Result
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn deregister_replica(&self, replica_id: u64) -> Result
+----
+
+--
+====
+
+Deregisters a replica from the cluster the driver is currently connected to. This replica will no longer play a raft role in this cluster.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `replica_id` a|  — The numeric identifier of the deregistered replica a| `u64`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+driver.deregister_replica(2).await
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+driver.deregister_replica(2)
+----
+
+--
+====
+
+[#_struct_TypeDBDriver_force_close_]
+==== force_close
+
+[source,rust]
+----
+pub fn force_close(&self) -> Result
+----
+
+Closes this connection if it is open.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+driver.force_close()
+----
+
+[#_struct_TypeDBDriver_init_logging_]
+==== init_logging
+
+[source,rust]
+----
+pub fn init_logging()
+----
+
+Initialize logging configuration for the TypeDB driver.
+
+This function sets up tracing with the following priority:
+
+The logging is initialized only once using a static flag to prevent multiple initializations in applications that create multiple drivers.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+null
+----
+
+[#_struct_TypeDBDriver_is_open_]
+==== is_open
+
+[source,rust]
+----
+pub fn is_open(&self) -> bool
+----
+
+Checks it this connection is opened.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+bool
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+driver.is_open()
+----
+
+[#_struct_TypeDBDriver_new_addresses_Addresses_credentials_Credentials_driver_options_DriverOptions]
+==== new
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn new(
+    addresses: Addresses,
+    credentials: Credentials,
+    driver_options: DriverOptions,
+) -> Result<Self>
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn new(
+    addresses: Addresses,
+    credentials: Credentials,
+    driver_options: DriverOptions,
+) -> Result<Self>
+----
+
+--
+====
+
+Creates a new TypeDB Server connection.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `addresses` a|  — The address(es) of the TypeDB Server(s), provided in a unified format a| `Addresses`
+a| `credentials` a|  — The Credentials to connect with a| `Credentials`
+a| `driver_options` a|  — The DriverOptions to connect with a| `DriverOptions`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<Self>
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+TypeDBDriver::new(Addresses::try_from_address_str("127.0.0.1:1729").unwrap(), Credentials::new("username", "password"), DriverOptions::new(true, None)).await
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+TypeDBDriver::new(Addresses::try_from_address_str("127.0.0.1:1729").unwrap(), Credentials::new("username", "password"), DriverOptions::new(true, None))
+----
+
+--
+====
+
+[#_struct_TypeDBDriver_new_with_description_addresses_Addresses_credentials_Credentials_driver_options_DriverOptions_driver_lang_impl_AsRef_str_]
+==== new_with_description
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn new_with_description(
+    addresses: Addresses,
+    credentials: Credentials,
+    driver_options: DriverOptions,
+    driver_lang: impl AsRef<str>,
+) -> Result<Self>
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn new_with_description(
+    addresses: Addresses,
+    credentials: Credentials,
+    driver_options: DriverOptions,
+    driver_lang: impl AsRef<str>,
+) -> Result<Self>
+----
+
+--
+====
+
+Creates a new TypeDB Server connection with a description. This method is generally used by TypeDB drivers built on top of the Rust driver. In other cases, use <<#_struct_TypeDBDriver_method_new,`Self::new`>> instead.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `addresses` a|  — The address(es) of the TypeDB Server(s), provided in a unified format a| `Addresses`
+a| `credentials` a|  — The Credentials to connect with a| `Credentials`
+a| `driver_options` a|  — The DriverOptions to connect with a| `DriverOptions`
+a| `driver_lang` a|  — The language of the driver connecting to the server a| `impl AsRef<str>`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<Self>
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+TypeDBDriver::new_with_description(Addresses::try_from_address_str("127.0.0.1:1729").unwrap(), Credentials::new("username", "password"), DriverOptions::new(true, None), "rust").await
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+TypeDBDriver::new_with_description(Addresses::try_from_address_str("127.0.0.1:1729").unwrap(), Credentials::new("username", "password"), DriverOptions::new(true, None), "rust")
+----
+
+--
+====
+
+[#_struct_TypeDBDriver_options_]
+==== options
+
+[source,rust]
+----
+pub fn options(&self) -> &DriverOptions
+----
+
+The ``DriverOptions`` for this connection.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+&DriverOptions
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+driver.options()
+----
+
+[#_struct_TypeDBDriver_primary_replica_]
+==== primary_replica
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn primary_replica(&self) -> Result<Option<AvailableServerReplica>>
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn primary_replica(&self) -> Result<Option<AvailableServerReplica>>
+----
+
+--
+====
+
+Retrieves the server’s primary replica, if exists, using default strong consistency.
+
+See <<#_struct_TypeDBDriver_method_primary_replica_with_consistency,`Self::primary_replica_with_consistency`>> for more details and options.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<Option<AvailableServerReplica>>
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+driver.primary_replica().await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+driver.primary_replica();
+----
+
+--
+====
+
+[#_struct_TypeDBDriver_primary_replica_with_consistency_consistency_level_ConsistencyLevel]
+==== primary_replica_with_consistency
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn primary_replica_with_consistency(
+    &self,
+    consistency_level: ConsistencyLevel,
+) -> Result<Option<AvailableServerReplica>>
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn primary_replica_with_consistency(
+    &self,
+    consistency_level: ConsistencyLevel,
+) -> Result<Option<AvailableServerReplica>>
+----
+
+--
+====
+
+Retrieves the server’s primary replica, if exists.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `consistency_level` a|  — The consistency level to use for the operation a| `ConsistencyLevel`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<Option<AvailableServerReplica>>
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+driver.primary_replica_with_consistency(ConsistencyLevel::Strong).await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+driver.primary_replica_with_consistency(ConsistencyLevel::Strong);
+----
+
+--
+====
+
+[#_struct_TypeDBDriver_register_replica_replica_id_u64_address_String]
+==== register_replica
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn register_replica(&self, replica_id: u64, address: String) -> Result
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn register_replica(&self, replica_id: u64, address: String) -> Result
+----
+
+--
+====
+
+Registers a new replica in the cluster the driver is currently connected to. The registered replica will become available eventually, depending on the behavior of the whole cluster. To register a replica, its clustering address should be passed, not the connection address.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `replica_id` a|  — The numeric identifier of the new replica a| `u64`
+a| `address` a|  — The clustering address of the TypeDB replica as a string a| `String`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+driver.register_replica(2, "127.0.0.1:2729").await
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+driver.register_replica(2, "127.0.0.1:2729")
+----
+
+--
+====
+
+[#_struct_TypeDBDriver_replicas_]
+==== replicas
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn replicas(&self) -> Result<HashSet<ServerReplica>>
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn replicas(&self) -> Result<HashSet<ServerReplica>>
+----
+
+--
+====
+
+Retrieves the server’s replicas, using default strong consistency.
+
+See <<#_struct_TypeDBDriver_method_replicas_with_consistency,`Self::replicas_with_consistency`>> for more details and options.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<HashSet<ServerReplica>>
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+driver.replicas().await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+driver.replicas();
+----
+
+--
+====
+
+[#_struct_TypeDBDriver_replicas_with_consistency_consistency_level_ConsistencyLevel]
+==== replicas_with_consistency
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn replicas_with_consistency(
+    &self,
+    consistency_level: ConsistencyLevel,
+) -> Result<HashSet<ServerReplica>>
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn replicas_with_consistency(
+    &self,
+    consistency_level: ConsistencyLevel,
+) -> Result<HashSet<ServerReplica>>
+----
+
+--
+====
+
+Retrieves the server’s replicas, using default strong consistency.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `consistency_level` a|  — The consistency level to use for the operation a| `ConsistencyLevel`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<HashSet<ServerReplica>>
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+driver.replicas_with_consistency(ConsistencyLevel::Strong).await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+driver.replicas_with_consistency();
+----
+
+--
+====
+
+[#_struct_TypeDBDriver_server_version_]
+==== server_version
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn server_version(&self) -> Result<ServerVersion>
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn server_version(&self) -> Result<ServerVersion>
+----
+
+--
+====
+
+Retrieves the server’s version, using default strong consistency.
+
+See <<#_struct_TypeDBDriver_method_server_version_with_consistency,`Self::server_version_with_consistency`>> for more details and options.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<ServerVersion>
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+driver.server_version().await
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+driver.server_version()
+----
+
+--
+====
+
+[#_struct_TypeDBDriver_server_version_with_consistency_consistency_level_ConsistencyLevel]
+==== server_version_with_consistency
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn server_version_with_consistency(
+    &self,
+    consistency_level: ConsistencyLevel,
+) -> Result<ServerVersion>
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn server_version_with_consistency(
+    &self,
+    consistency_level: ConsistencyLevel,
+) -> Result<ServerVersion>
+----
+
+--
+====
+
+Retrieves the server’s version, using default strong consistency.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `consistency_level` a|  — The consistency level to use for the operation a| `ConsistencyLevel`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<ServerVersion>
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+driver.server_version_with_consistency(ConsistencyLevel::Strong).await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+driver.server_version_with_consistency(ConsistencyLevel::Strong);
+----
+
+--
+====
+
+[#_struct_TypeDBDriver_transaction_]
+==== transaction
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn transaction(
+    &self,
+    database_name: impl AsRef<str>,
+    transaction_type: TransactionType,
+) -> Result<Transaction>
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn transaction(
+    &self,
+    database_name: impl AsRef<str>,
+    transaction_type: TransactionType,
+) -> Result<Transaction>
+----
+
+--
+====
+
+Opens a transaction with default options.
+
+See <<#_struct_TypeDBDriver_method_transaction_with_options,`TypeDBDriver::transaction_with_options`>> for more details.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<Transaction>
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+driver.users().all_with_consistency(ConsistencyLevel::Strong).await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+driver.users().all_with_consistency(ConsistencyLevel::Strong);
+----
+
+--
+====
+
+[#_struct_TypeDBDriver_transaction_with_options_options_TransactionOptions_database_name_impl_AsRef_str_transaction_type_TransactionType_options_TransactionOptions]
+==== transaction_with_options
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn transaction_with_options(
+    &self,
+    database_name: impl AsRef<str>,
+    transaction_type: TransactionType,
+    options: TransactionOptions,
+) -> Result<Transaction>
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn transaction_with_options(
+    &self,
+    database_name: impl AsRef<str>,
+    transaction_type: TransactionType,
+    options: TransactionOptions,
+) -> Result<Transaction>
+----
+
+--
+====
+
+Opens a new transaction with the following consistency level:
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `options` a| read transaction - strong consistency, can be overridden through ; a| `TransactionOptions`
+a| `database_name` a|  — The name of the database to connect to a| `impl AsRef<str>`
+a| `transaction_type` a|  — The TransactionType to open the transaction with a| `TransactionType`
+a| `options` a|  — The TransactionOptions to open the transaction with a| `TransactionOptions`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<Transaction>
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+transaction.transaction_with_options(database_name, transaction_type, options).await
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+transaction.transaction_with_options(database_name, transaction_type, options)
+----
+
+--
+====
+
+[#_struct_TypeDBDriver_update_address_translation_addresses_Addresses]
+==== update_address_translation
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn update_address_translation(&self, addresses: Addresses) -> Result
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn update_address_translation(&self, addresses: Addresses) -> Result
+----
+
+--
+====
+
+Updates address translation of the driver. This lets you actualize new translation information without recreating the driver from scratch. Useful after registering new replicas requiring address translation. This operation will update existing connections using the provided addresses.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `addresses` a|  — Addresses containing the new address translation information a| `Addresses`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+driver.update_address_translation(Addresses::try_from_translation_str([("typedb-cloud.ext:11729", "127.0.0.1:1729")].into()).unwrap()).await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+driver.update_address_translation(Addresses::try_from_translation_str([("typedb-cloud.ext:11729", "127.0.0.1:1729")].into()).unwrap());
+----
+
+--
+====
+
+[#_struct_TypeDBDriver_users_]
+==== users
+
+[source,rust]
+----
+pub fn users(&self) -> &UserManager
+----
+
+The ``UserManager`` for this connection, providing access to user management methods.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+&UserManager
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+driver.databases()
+----
+
+// end::methods[]
+

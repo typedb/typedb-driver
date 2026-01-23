@@ -1,0 +1,164 @@
+[#_struct_DriverTlsConfig]
+=== DriverTlsConfig
+
+*Implements traits:*
+
+* `Clone`
+* `Debug`
+* `Default`
+
+TLS configuration for the TypeDB driver.
+
+``DriverTlsConfig`` represents a fully constructed and validated TLS configuration. If TLS is enabled, the underlying TLS config is built eagerly at construction time, ensuring that no connection attempt can observe a partially-configured TLS state.
+
+The driver defaults to using TLS with native system trust roots. This matches typical system and container deployments while still allowing explicit opt-out or custom PKI configuration.
+
+// tag::methods[]
+[#_struct_DriverTlsConfig_disabled_]
+==== disabled
+
+[source,rust]
+----
+pub fn disabled() -> Self
+----
+
+Disable TLS entirely (NOT recommended for production).
+
+Disabling TLS causes credentials and data to be transmitted in plaintext. This should only be used in trusted, local, or test environments.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Self
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+let tls = DriverTlsConfig::disabled();
+----
+
+[#_struct_DriverTlsConfig_enabled_with_native_root_ca_]
+==== enabled_with_native_root_ca
+
+[source,rust]
+----
+pub fn enabled_with_native_root_ca() -> Self
+----
+
+Default TLS using system trust roots.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Self
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+let tls = DriverTlsConfig::enabled_with_native_root_ca();
+----
+
+[#_struct_DriverTlsConfig_enabled_with_root_ca_]
+==== enabled_with_root_ca
+
+[source,rust]
+----
+pub fn enabled_with_root_ca(tls_root_ca: &Path) -> Result<Self>
+----
+
+TLS with a custom root CA.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<Self>
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+let tls = DriverTlsConfig::enabled_with_root_ca("path/to/ca-certificate.pem").unwrap();
+----
+
+[#_struct_DriverTlsConfig_is_enabled_]
+==== is_enabled
+
+[source,rust]
+----
+pub fn is_enabled(&self) -> bool
+----
+
+Returns whether TLS is enabled in the configuration.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+bool
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+config.is_enabled()
+----
+
+[#_struct_DriverTlsConfig_network_config_]
+==== network_config
+
+[source,rust]
+----
+pub fn network_config(&self) -> Option<&NetworkTlsConfig>
+----
+
+Returns the network TLS config object, if present.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Option<&NetworkTlsConfig>
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+config.network_config()
+----
+
+[#_struct_DriverTlsConfig_root_ca_path_]
+==== root_ca_path
+
+[source,rust]
+----
+pub fn root_ca_path(&self) -> Option<&Path>
+----
+
+Returns the custom root CA path, if provided.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Option<&Path>
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+config.root_ca_path()
+----
+
+// end::methods[]
+

@@ -1,0 +1,727 @@
+[#_struct_UserManager]
+=== UserManager
+
+*Implements traits:*
+
+* `Debug`
+
+Provides access to all user management methods.
+
+// tag::methods[]
+[#_struct_UserManager_all_]
+==== all
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn all(&self) -> Result<Vec<User>>
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn all(&self) -> Result<Vec<User>>
+----
+
+--
+====
+
+Retrieves all users which exist on the TypeDB server, using default strong consistency.
+
+See <<#_struct_UserManager_method_all_with_consistency,`Self::all_with_consistency`>> for more details and options.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<Vec<User>>
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+driver.users().all().await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+driver.users().all();
+----
+
+--
+====
+
+[#_struct_UserManager_all_with_consistency_consistency_level_ConsistencyLevel]
+==== all_with_consistency
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn all_with_consistency(
+    &self,
+    consistency_level: ConsistencyLevel,
+) -> Result<Vec<User>>
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn all_with_consistency(
+    &self,
+    consistency_level: ConsistencyLevel,
+) -> Result<Vec<User>>
+----
+
+--
+====
+
+Retrieves all users which exist on the TypeDB server.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `consistency_level` a|  — The consistency level to use for the operation a| `ConsistencyLevel`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<Vec<User>>
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+driver.users().all_with_consistency(ConsistencyLevel::Strong).await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+driver.users().all_with_consistency(ConsistencyLevel::Strong);
+----
+
+--
+====
+
+[#_struct_UserManager_contains_]
+==== contains
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn contains(&self, username: impl Into<String>) -> Result<bool>
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn contains(&self, username: impl Into<String>) -> Result<bool>
+----
+
+--
+====
+
+Checks if a user with the given name exists, using default strong consistency.
+
+See <<#_struct_UserManager_method_contains_with_consistency,`Self::contains_with_consistency`>> for more details and options.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<bool>
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+driver.users().contains(username).await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+driver.users().contains(username);
+----
+
+--
+====
+
+[#_struct_UserManager_contains_with_consistency_username_impl_Into_String_consistency_level_ConsistencyLevel]
+==== contains_with_consistency
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn contains_with_consistency(
+    &self,
+    username: impl Into<String>,
+    consistency_level: ConsistencyLevel,
+) -> Result<bool>
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn contains_with_consistency(
+    &self,
+    username: impl Into<String>,
+    consistency_level: ConsistencyLevel,
+) -> Result<bool>
+----
+
+--
+====
+
+Checks if a user with the given name exists.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `username` a|  — The username to be checked a| `impl Into<String>`
+a| `consistency_level` a|  — The consistency level to use for the operation a| `ConsistencyLevel`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<bool>
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+driver.users().contains_with_consistency(username, ConsistencyLevel::Strong).await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+driver.users().contains_with_consistency(username, ConsistencyLevel::Strong);
+----
+
+--
+====
+
+[#_struct_UserManager_create_username_impl_Into_String_password_impl_Into_String_]
+==== create
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn create(
+    &self,
+    username: impl Into<String>,
+    password: impl Into<String>,
+) -> Result
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn create(
+    &self,
+    username: impl Into<String>,
+    password: impl Into<String>,
+) -> Result
+----
+
+--
+====
+
+Creates a user with the given name &amp; password, using default strong consistency.
+
+See <<#_struct_UserManager_method_contains_with_consistency,`Self::contains_with_consistency`>> for more details and options.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `username` a|  — The name of the user to be created a| `impl Into<String>`
+a| `password` a|  — The password of the user to be created a| `impl Into<String>`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+driver.users().create(username, password).await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+driver.users().create(username, password);
+----
+
+--
+====
+
+[#_struct_UserManager_create_with_consistency_username_impl_Into_String_password_impl_Into_String_consistency_level_ConsistencyLevel]
+==== create_with_consistency
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn create_with_consistency(
+    &self,
+    username: impl Into<String>,
+    password: impl Into<String>,
+    consistency_level: ConsistencyLevel,
+) -> Result
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn create_with_consistency(
+    &self,
+    username: impl Into<String>,
+    password: impl Into<String>,
+    consistency_level: ConsistencyLevel,
+) -> Result
+----
+
+--
+====
+
+Creates a user with the given name &amp; password.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `username` a|  — The name of the user to be created a| `impl Into<String>`
+a| `password` a|  — The password of the user to be created a| `impl Into<String>`
+a| `consistency_level` a|  — The consistency level to use for the operation a| `ConsistencyLevel`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+driver.users().create_with_consistency(username, password, ConsistencyLevel::Strong).await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+driver.users().create_with_consistency(username, password, ConsistencyLevel::Strong);
+----
+
+--
+====
+
+[#_struct_UserManager_get_]
+==== get
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn get(&self, username: impl Into<String>) -> Result<Option<User>>
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn get(&self, username: impl Into<String>) -> Result<Option<User>>
+----
+
+--
+====
+
+Retrieves a user with the given name, using default strong consistency.
+
+See <<#_struct_UserManager_method_get_with_consistency,`Self::get_with_consistency`>> for more details and options.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<Option<User>>
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+driver.users().get(username).await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+driver.users().get(username);
+----
+
+--
+====
+
+[#_struct_UserManager_get_current_]
+==== get_current
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn get_current(&self) -> Result<Option<User>>
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn get_current(&self) -> Result<Option<User>>
+----
+
+--
+====
+
+Returns the user of the current connection, using default strong consistency.
+
+See <<#_struct_UserManager_method_get_current_with_consistency,`Self::get_current_with_consistency`>> for more details and options.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<Option<User>>
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+driver.users().get_current().await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+driver.users().get_current();
+----
+
+--
+====
+
+[#_struct_UserManager_get_current_with_consistency_consistency_level_ConsistencyLevel]
+==== get_current_with_consistency
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn get_current_with_consistency(
+    &self,
+    consistency_level: ConsistencyLevel,
+) -> Result<Option<User>>
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn get_current_with_consistency(
+    &self,
+    consistency_level: ConsistencyLevel,
+) -> Result<Option<User>>
+----
+
+--
+====
+
+Returns the user of the current connection.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `consistency_level` a|  — The consistency level to use for the operation a| `ConsistencyLevel`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<Option<User>>
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+driver.users().get_current_with_consistency(ConsistencyLevel::Strong).await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+driver.users().get_current_with_consistency(ConsistencyLevel::Strong);
+----
+
+--
+====
+
+[#_struct_UserManager_get_with_consistency_username_impl_Into_String_consistency_level_ConsistencyLevel]
+==== get_with_consistency
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn get_with_consistency(
+    &self,
+    username: impl Into<String>,
+    consistency_level: ConsistencyLevel,
+) -> Result<Option<User>>
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn get_with_consistency(
+    &self,
+    username: impl Into<String>,
+    consistency_level: ConsistencyLevel,
+) -> Result<Option<User>>
+----
+
+--
+====
+
+Retrieves a user with the given name.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `username` a|  — The name of the user to retrieve a| `impl Into<String>`
+a| `consistency_level` a|  — The consistency level to use for the operation a| `ConsistencyLevel`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<Option<User>>
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+driver.users().get_with_consistency(username, ConsistencyLevel::Strong).await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+driver.users().get_with_consistency(username, ConsistencyLevel::Strong);
+----
+
+--
+====
+
+// end::methods[]
+

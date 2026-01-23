@@ -1,0 +1,50 @@
+[#_struct_ConceptDocument]
+=== ConceptDocument
+
+*Implements traits:*
+
+* `Clone`
+* `Debug`
+* `PartialEq`
+* `StructuralPartialEq`
+
+A single document of concepts representing substitutions for variables in the query. Contains a Header (query type), and the document of concepts.
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `root` a| `Option<Node>` a| 
+|===
+// end::properties[]
+
+// tag::methods[]
+[#_struct_ConceptDocument_get_query_type_]
+==== get_query_type
+
+[source,rust]
+----
+pub fn get_query_type(&self) -> QueryType
+----
+
+Retrieves the executed query’s type (shared by all elements in this stream).
+
+[caption=""]
+.Returns
+[source,rust]
+----
+QueryType
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+concept_document.get_query_type()
+----
+
+// end::methods[]
+
