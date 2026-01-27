@@ -42,30 +42,6 @@ csharp_behaviour_test(
     target_frameworks = target_frameworks,
     targeting_packs = targeting_packs,
 )
-csharp_behaviour_test(
-    name = "test-cloud",
-    test_files = ["QueryTest.cs"],
-    steps_files = [
-        "//csharp/Test/Behaviour/Util:steps",
-        "//csharp/Test/Behaviour/Query:steps",
-        "//csharp/Test/Behaviour/Connection/Transaction:steps",
-        "//csharp/Test/Behaviour/Connection/Database:steps",
-        "//csharp/Test/Behaviour/Connection:steps-cloud",
-    ],
-    features = ["@typedb_behaviour//driver:query.feature"],
-    deps = [
-        "//csharp/Api:api",
-        "//csharp/Answer:answer",
-        "//csharp/Common:common",
-        "//csharp/Concept:concept",
-        "//csharp:driver-csharp",
-        "//csharp/Test/Behaviour/Util:util",
-        "@paket.csharp_deps//newtonsoft.json",
-    ],
-    add_certificates = True,
-    target_frameworks = target_frameworks,
-    targeting_packs = targeting_packs,
-)
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*"]),
