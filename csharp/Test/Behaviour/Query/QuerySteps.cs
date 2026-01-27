@@ -22,6 +22,7 @@ using DataTable = Gherkin.Ast.DataTable;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 using Xunit.Gherkin.Quick;
 
@@ -39,6 +40,10 @@ namespace TypeDB.Driver.Test.Behaviour
         private static List<IConceptRow>? _collectedRows;
         private static List<IJSON>? _collectedDocuments;
         private static QueryOptions? _queryOptions;
+
+        // Concurrent query state
+        private static List<IQueryAnswer>? _concurrentAnswers;
+        private static List<IEnumerator<IConceptRow>>? _concurrentRowStreams;
 
         // Transaction accessor from ConnectionStepsBase
         private static ITypeDBTransaction Tx => ConnectionStepsBase.Transactions[ConnectionStepsBase.Transactions.Count - 1];
@@ -1318,6 +1323,99 @@ namespace TypeDB.Driver.Test.Behaviour
                 Newtonsoft.Json.Linq.JToken.Parse(doc.ToString()),
                 Newtonsoft.Json.Linq.JToken.Parse(expected.ToString())));
             Assert.False(found, $"Unexpected document found: {expectedDocument.Content}");
+        }
+
+        #endregion
+
+        #region Concurrent Query Steps
+
+        private void ClearConcurrentAnswers()
+        {
+            if (_concurrentRowStreams != null)
+            {
+                foreach (var stream in _concurrentRowStreams)
+                {
+                    stream.Dispose();
+                }
+                _concurrentRowStreams = null;
+            }
+            _concurrentAnswers = null;
+        }
+
+        private void EnsureConcurrentRowStreams()
+        {
+            if (_concurrentRowStreams == null)
+            {
+                Assert.NotNull(_concurrentAnswers);
+                _concurrentRowStreams = _concurrentAnswers!
+                    .Select(a => a.AsConceptRows().GetEnumerator())
+                    .ToList();
+            }
+        }
+
+        [When(@"concurrently get answers of typeql read query (\d+) times")]
+        [Given(@"concurrently get answers of typeql read query (\d+) times")]
+        [When(@"concurrently get answers of typeql write query (\d+) times")]
+        [Given(@"concurrently get answers of typeql write query (\d+) times")]
+        [When(@"concurrently get answers of typeql schema query (\d+) times")]
+        [Given(@"concurrently get answers of typeql schema query (\d+) times")]
+        public void ConcurrentlyGetAnswersOfTypeqlQuery(int count, DocString query)
+        {
+            ClearConcurrentAnswers();
+            ClearAnswers();
+
+            var tasks = new Task<IQueryAnswer>[count];
+            for (int i = 0; i < count; i++)
+            {
+                tasks[i] = Task.Run(() =>
+                {
+                    if (_queryOptions != null)
+                        return Tx.Query(query.Content, _queryOptions);
+                    else
+                        return Tx.Query(query.Content);
+                });
+            }
+
+            Task.WaitAll(tasks);
+            _concurrentAnswers = tasks.Select(t => t.Result).ToList();
+        }
+
+        [Then(@"concurrently process (\d+) rows? from answers")]
+        [Given(@"concurrently process (\d+) rows? from answers")]
+        public void ConcurrentlyProcessRowsFromAnswers(int count)
+        {
+            EnsureConcurrentRowStreams();
+
+            foreach (var stream in _concurrentRowStreams!)
+            {
+                for (int i = 0; i < count; i++)
+                {
+                    Assert.True(stream.MoveNext(),
+                        "Expected more rows but stream was exhausted");
+                }
+            }
+        }
+
+        [Then(@"concurrently process (\d+) rows? from answers; fails")]
+        [Given(@"concurrently process (\d+) rows? from answers; fails")]
+        public void ConcurrentlyProcessRowsFromAnswersFails(int count)
+        {
+            EnsureConcurrentRowStreams();
+
+            foreach (var stream in _concurrentRowStreams!)
+            {
+                bool exhausted = false;
+                for (int i = 0; i < count; i++)
+                {
+                    if (!stream.MoveNext())
+                    {
+                        exhausted = true;
+                        break;
+                    }
+                }
+                Assert.True(exhausted,
+                    "Expected row processing to fail (stream exhausted), but it succeeded");
+            }
         }
 
         #endregion
