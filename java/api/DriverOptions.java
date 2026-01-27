@@ -29,12 +29,14 @@ import java.util.Optional;
 import static com.typedb.driver.jni.typedb_driver.driver_options_get_tls_config;
 import static com.typedb.driver.jni.typedb_driver.driver_options_get_primary_failover_retries;
 import static com.typedb.driver.jni.typedb_driver.driver_options_get_replica_discovery_attempts;
+import static com.typedb.driver.jni.typedb_driver.driver_options_get_request_timeout_millis;
 import static com.typedb.driver.jni.typedb_driver.driver_options_get_use_replication;
 import static com.typedb.driver.jni.typedb_driver.driver_options_has_replica_discovery_attempts;
 import static com.typedb.driver.jni.typedb_driver.driver_options_new;
 import static com.typedb.driver.jni.typedb_driver.driver_options_set_tls_config;
 import static com.typedb.driver.jni.typedb_driver.driver_options_set_primary_failover_retries;
 import static com.typedb.driver.jni.typedb_driver.driver_options_set_replica_discovery_attempts;
+import static com.typedb.driver.jni.typedb_driver.driver_options_set_request_timeout_millis;
 import static com.typedb.driver.jni.typedb_driver.driver_options_set_use_replication;
 
 /**
@@ -80,6 +82,42 @@ public class DriverOptions extends NativeObject<com.typedb.driver.jni.DriverOpti
     public DriverOptions tlsConfig(DriverTlsConfig tlsConfig) {
         Validator.requireNonNull(tlsConfig, "tlsConfig");
         driver_options_set_tls_config(nativeObject, tlsConfig.nativeObject);
+        return this;
+    }
+
+    /**
+     * Returns the request timeout in milliseconds set for this ``DriverOptions`` object.
+     * Specifies the maximum time to wait for a response to a unary RPC request.
+     * This applies to operations like database creation, user management, and initial
+     * transaction opening. It does NOT apply to operations within transactions (queries, commits).
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * options.requestTimeoutMillis();
+     * </pre>
+     */
+    @CheckReturnValue
+    public Long requestTimeoutMillis() {
+        return driver_options_get_request_timeout_millis(nativeObject);
+    }
+
+    /**
+     *
+     * Sets the maximum time (in milliseconds) to wait for a response to a unary RPC request.
+     * This applies to operations like database creation, user management, and initial
+     * transaction opening. It does NOT apply to operations within transactions (queries, commits).
+     * Defaults to 2 hours (7200000 milliseconds).
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * options.requestTimeoutMillis(30000); // 30 seconds
+     * </pre>
+     *
+     * @param requestTimeoutMillis The request timeout in milliseconds. Must be non-negative.
+     */
+    public DriverOptions requestTimeoutMillis(long requestTimeoutMillis) {
+        Validator.requireNonNegative(requestTimeoutMillis, "requestTimeoutMillis");
+        driver_options_set_request_timeout_millis(nativeObject, requestTimeoutMillis);
         return this;
     }
 

@@ -21,11 +21,13 @@ use std::{
     fs,
     path::{Path, PathBuf},
     sync::Arc,
+    time::Duration,
 };
 
 use crate::connection::driver_tls_config::DriverTlsConfig;
 
 // When changing these numbers, also update docs in DriverOptions
+const DEFAULT_REQUEST_TIMEOUT: Duration = Duration::from_secs(2 * 60 * 60); // 2 hours
 const DEFAULT_USE_REPLICATION: bool = true;
 const DEFAULT_REDIRECT_FAILOVER_RETRIES: usize = 1;
 const DEFAULT_DISCOVERY_FAILOVER_RETRIES: Option<usize> = None;
@@ -45,6 +47,11 @@ pub struct DriverOptions {
     /// WARNING: Disabled TLS settings will make the driver sending passwords as plaintext.
     /// Defaults to an enabled TLS configuration based on the system's native trust roots.
     pub tls_config: DriverTlsConfig,
+    /// Specifies the maximum time to wait for a response to a unary RPC request.
+    /// This applies to operations like database creation, user management, and initial
+    /// transaction opening. It does NOT apply to operations within transactions (queries, commits).
+    /// Defaults to 2 hours.
+    pub request_timeout: Duration,
     /// Specifies whether the connection to TypeDB can use cluster replicas provided by the server
     /// or it should be limited to a single configured address.
     /// Defaults to true.
@@ -104,6 +111,14 @@ impl DriverOptions {
     pub fn replica_discovery_attempts(self, replica_discovery_attempts: Option<usize>) -> Self {
         Self { replica_discovery_attempts, ..self }
     }
+
+    /// Specifies the maximum time to wait for a response to a unary RPC request.
+    /// This applies to operations like database creation, user management, and initial
+    /// transaction opening. It does NOT apply to operations within transactions (queries, commits).
+    /// Defaults to 2 hours.
+    pub fn request_timeout(self, request_timeout: Duration) -> Self {
+        Self { request_timeout, ..self }
+    }
 }
 
 impl Default for DriverOptions {
@@ -113,6 +128,7 @@ impl Default for DriverOptions {
             use_replication: DEFAULT_USE_REPLICATION,
             primary_failover_retries: DEFAULT_REDIRECT_FAILOVER_RETRIES,
             replica_discovery_attempts: DEFAULT_DISCOVERY_FAILOVER_RETRIES,
+            request_timeout: DEFAULT_REQUEST_TIMEOUT,
         }
     }
 }

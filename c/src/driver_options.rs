@@ -17,7 +17,7 @@
  * under the License.
  */
 
-use std::{ffi::c_char, path::Path};
+use std::{ffi::c_char, path::Path, time::Duration};
 
 use typedb_driver::{DriverOptions, DriverTlsConfig};
 
@@ -122,4 +122,23 @@ pub extern "C" fn driver_options_get_replica_discovery_attempts(options: *const 
 #[no_mangle]
 pub extern "C" fn driver_options_has_replica_discovery_attempts(options: *const DriverOptions) -> bool {
     borrow(options).replica_discovery_attempts.is_some()
+}
+
+/// Sets the maximum time (in milliseconds) to wait for a response to a unary RPC request.
+/// This applies to operations like database creation, user management, and initial
+/// transaction opening. It does NOT apply to operations within transactions (queries, commits).
+/// Set to 0 to disable the timeout (not recommended for production use).
+/// Defaults to 2 hours (7200000 milliseconds).
+#[no_mangle]
+pub extern "C" fn driver_options_set_request_timeout_millis(options: *mut DriverOptions, timeout_millis: i64) {
+    borrow_mut(options).request_timeout = Duration::from_millis(timeout_millis as u64);
+}
+
+/// Returns the request timeout in milliseconds set for this <code>DriverOptions</code> object.
+/// Specifies the maximum time to wait for a response to a unary RPC request.
+/// This applies to operations like database creation, user management, and initial
+/// transaction opening. It does NOT apply to operations within transactions (queries, commits).
+#[no_mangle]
+pub extern "C" fn driver_options_get_request_timeout_millis(options: *const DriverOptions) -> i64 {
+    borrow(options).request_timeout.as_millis() as i64
 }
