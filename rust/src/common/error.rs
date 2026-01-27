@@ -209,7 +209,7 @@ error_messages! { ConnectionError
     SchemeTlsSettingsMismatch { scheme: http::uri::Scheme, is_tls_enabled: bool } =
         42: "Scheme {scheme} is not compatible with tls setting `enabled: {is_tls_enabled}`",
     RequestTimeout { timeout_secs: u64 } =
-        43: "Request timed out after {timeout_secs} seconds. The server may be unresponsive. Consider increasing 'request_timeout' in DriverOptions if you expect long-running operations.",
+        43: "Request timed out after {timeout_secs} seconds. The server may be unresponsive.",
 }
 
 error_messages! { ConceptError

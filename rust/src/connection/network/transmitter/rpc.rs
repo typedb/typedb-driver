@@ -166,6 +166,7 @@ impl RPCTransmitter {
                 let response_source = rpc.database_export(request.try_into_proto()?).await?;
                 Ok(Response::DatabaseExportStream { response_source })
             }
+
             Request::Transaction(transaction_request) => {
                 let timeout = rpc.request_timeout();
                 match tokio::time::timeout(timeout, Self::open_transaction(rpc, transaction_request)).await {
@@ -175,6 +176,7 @@ impl RPCTransmitter {
                     }
                 }
             }
+
             Request::UsersAll => rpc.users_all(request.try_into_proto()?).await.map(Response::from_proto),
             Request::UsersContains { .. } => {
                 rpc.users_contains(request.try_into_proto()?).await.map(Response::from_proto)
