@@ -35,7 +35,16 @@ namespace TypeDB.Driver.Test.Behaviour
 
         public BehaviourSteps()
             : base()
-        {}
+        {
+            // Reset query-level state between scenarios.
+            // These static fields persist across scenarios and must be cleared.
+            _queryOptions = null;
+            _queryAnswer = null;
+            _collectedRows = null;
+            _collectedDocuments = null;
+            _concurrentAnswers = null;
+            _concurrentRowStreams = null;
+        }
 
         public override IDriver CreateTypeDBDriver(string address)
         {
