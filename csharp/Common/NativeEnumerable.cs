@@ -27,17 +27,15 @@ using InternalError = TypeDB.Driver.Common.Error.Internal;
 
 namespace TypeDB.Driver.Common
 {
-    public class NativeEnumerable<T> : IEnumerable<T>, System.IDisposable
+    public class NativeEnumerable<T> : IEnumerable<T>
     {
         private readonly NativeEnumerator<T> _enumerator;
         private bool _enumeratorUsed;
-        private bool _disposed;
 
         public NativeEnumerable(IEnumerator<T> enumerator)
         {
             _enumerator = new NativeEnumerator<T>(enumerator);
             _enumeratorUsed = false;
-            _disposed = false;
         }
 
         public IEnumerator<T> GetEnumerator()
@@ -51,15 +49,6 @@ namespace TypeDB.Driver.Common
         IEnumerator IEnumerable.GetEnumerator()
         {
             return this.GetEnumerator();
-        }
-
-        public void Dispose()
-        {
-            if (!_disposed)
-            {
-                _disposed = true;
-                _enumerator.Dispose();
-            }
         }
     }
 
@@ -101,12 +90,6 @@ namespace TypeDB.Driver.Common
 
         public void Dispose()
         {
-            // Dispose the underlying native iterator to release native resources immediately
-            // instead of waiting for GC finalization (which can cause race conditions)
-            if (_innerEnumerator is System.IDisposable disposable)
-            {
-                disposable.Dispose();
-            }
         }
     }
 }

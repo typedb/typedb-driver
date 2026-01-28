@@ -149,12 +149,6 @@ namespace TypeDB.Driver.Connection
         public void Dispose()
         {
             Close();
-//            // Dispose all native objects to free native memory immediately
-//            // instead of waiting for GC finalization (which can cause race conditions)
-//            if (NativeObject is IDisposable nativeDisposable)
-//            {
-//                nativeDisposable.Dispose();
-//            }
         }
     }
 }
