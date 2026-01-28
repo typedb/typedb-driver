@@ -28,6 +28,7 @@ a| `NoPrimaryReplica`
 a| `NotPrimaryOnReadOnly`
 a| `QueryStreamNoResponse`
 a| `RPCMethodUnavailable`
+a| `RequestTimeout`
 a| `SchemeTlsSettingsMismatch`
 a| `ServerConnectionFailed`
 a| `ServerConnectionFailedNetworking`
