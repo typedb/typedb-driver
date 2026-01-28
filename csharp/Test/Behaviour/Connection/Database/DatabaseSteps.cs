@@ -91,13 +91,7 @@ namespace TypeDB.Driver.Test.Behaviour
         [When(@"connection delete database: (\S+)")]
         public void ConnectionDeleteDatabase(string name)
         {
-            var db = Driver!.Databases.Get(name);
-            db.Delete();
-            // Dispose the wrapper to free native resources immediately
-            if (db is IDisposable disposable)
-            {
-                disposable.Dispose();
-            }
+            Driver!.Databases.Get(name).Delete();
         }
 
         [When(@"connection delete databases:")]
@@ -220,22 +214,9 @@ namespace TypeDB.Driver.Test.Behaviour
         [Then(@"connection delete database: (.*); fails")]
         public void ConnectionDeleteDatabaseFails(string name)
         {
-            // The failure can happen at Get (nonexistent database) or Delete (e.g., open transactions)
             Assert.ThrowsAny<TypeDBDriverException>(() =>
             {
-                var db = Driver!.Databases.Get(name);
-                try
-                {
-                    db.Delete();
-                }
-                finally
-                {
-                    // Explicitly dispose the database wrapper to free native resources immediately.
-                    if (db is IDisposable disposable)
-                    {
-                        disposable.Dispose();
-                    }
-                }
+                Driver!.Databases.Get(name).Delete();
             });
         }
 

@@ -37,19 +37,11 @@ namespace TypeDB.Driver.Connection
     public class TypeDBTransaction : NativeObjectWrapper<Pinvoke.Transaction>, ITypeDBTransaction
     {
         private readonly List<TransactionOnClose> _callbacks;
-        // Keep a reference to prevent GC collection while native code uses it
-        private readonly TransactionOptions _options;
-        // Keep a reference to the driver to prevent it from being GC'd while the transaction is alive.
-        // The transaction's native object uses the driver's BackgroundRuntime, which would be freed
-        // if the driver is garbage collected, causing use-after-free crashes.
-        private readonly IDriver _driver;
 
         internal TypeDBTransaction(IDriver driver, Pinvoke.Transaction transaction, TransactionType type, TransactionOptions options)
             : base(transaction)
         {
-            _driver = driver;
             Type = type;
-            _options = options;
             _callbacks = new List<TransactionOnClose>();
         }
 
@@ -174,12 +166,6 @@ namespace TypeDB.Driver.Connection
         public void Dispose()
         {
             Close();
-            // Dispose the underlying SWIG object to free native memory immediately
-            // instead of waiting for GC finalization (which can cause race conditions)
-            if (NativeObject is System.IDisposable disposable)
-            {
-                disposable.Dispose();
-            }
         }
 
         private class TransactionOnClose : Pinvoke.TransactionCallbackDirector

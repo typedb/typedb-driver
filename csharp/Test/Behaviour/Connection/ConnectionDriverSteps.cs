@@ -152,7 +152,7 @@ namespace TypeDB.Driver.Test.Behaviour
         {
             var bgDriver = CreateBackgroundDriver();
             bgDriver.Databases.Create(databaseName);
-            if (bgDriver is IDisposable disposable) disposable.Dispose();
+            bgDriver.Close();
         }
 
         [When(@"in background, connection delete database: (.+)")]
@@ -161,7 +161,7 @@ namespace TypeDB.Driver.Test.Behaviour
         {
             var bgDriver = CreateBackgroundDriver();
             bgDriver.Databases.Get(databaseName).Delete();
-            if (bgDriver is IDisposable disposable) disposable.Dispose();
+            bgDriver.Close();
         }
 
         [When(@"in background, connection open schema transaction for database: ([^;]+)$")]

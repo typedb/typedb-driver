@@ -37,9 +37,9 @@ namespace TypeDB.Driver.Test.Behaviour
         [Then(@"connection opens with username '([^']*)', password '([^']*)'")]
         public void ConnectionOpensWithUsername(string username, string password)
         {
-            if (Driver != null && Driver is IDisposable disposable)
+            if (Driver != null)
             {
-                disposable.Dispose();
+                Driver.Close();
             }
             Driver = TypeDB.Driver(
                 TypeDB.DefaultAddress,

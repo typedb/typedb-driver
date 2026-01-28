@@ -119,17 +119,8 @@ namespace TypeDB.Driver.Test.Behaviour
 
         public ConnectionStepsBase() // "Before"
         {
-            // Sleep between scenarios to let async driver cleanup complete
             Thread.Sleep(BeforeTimeoutMillis);
-
-            // Force GC to run BEFORE creating a new driver.
-            // This ensures all finalizers from the previous test complete
-            // before we start creating native objects for this test.
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-
             CleanInCaseOfPreviousFail();
-
             BackgroundDriver = CreateDefaultTypeDBDriver();
         }
 
@@ -201,21 +192,12 @@ namespace TypeDB.Driver.Test.Behaviour
                 BackgroundDriver = null;
             }
 
-            // Dispose the main driver
+            // Close the main driver
             if (Driver != null)
             {
-                try
-                {
-                    if (Driver is IDisposable disposable) disposable.Dispose();
-                }
-                catch { }
+                try { Driver.Close(); } catch { }
                 Driver = null;
             }
-
-            // Force garbage collection
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-            Thread.Sleep(BeforeTimeoutMillis);
         }
 
         public abstract IDriver CreateTypeDBDriver(string address);
@@ -419,7 +401,7 @@ namespace TypeDB.Driver.Test.Behaviour
 
                 if (Driver != null)
                 {
-                    try { if (Driver is IDisposable d) d.Dispose(); } catch { }
+                    try { Driver.Close(); } catch { }
                     Driver = null;
                 }
             }
