@@ -61,10 +61,10 @@ namespace TypeDB.Driver.Connection
                     driverOptions.NativeObject,
                     IDriver.Language);
 
-                // Prevent GC from collecting credentials/driverOptions during the native call
-                // The Rust code borrows these pointers and the objects must remain alive
-                GC.KeepAlive(credentials);
-                GC.KeepAlive(driverOptions);
+//                // Prevent GC from collecting credentials/driverOptions during the native call
+//                // The Rust code borrows these pointers and the objects must remain alive
+//                GC.KeepAlive(credentials);
+//                GC.KeepAlive(driverOptions);
 
                 return result;
             }
@@ -114,8 +114,8 @@ namespace TypeDB.Driver.Connection
                     (Pinvoke.TransactionType)type,
                     options.NativeObject);
 
-                // Prevent GC from collecting options during the native call
-                GC.KeepAlive(options);
+//                // Prevent GC from collecting options during the native call
+//                GC.KeepAlive(options);
 
                 return new TypeDBTransaction(this, nativeTransaction, type, options);
             }

@@ -146,8 +146,8 @@ namespace TypeDB.Driver.Connection
                 // Execute query and wait for completion
                 var promise = Pinvoke.typedb_driver.transaction_query(NativeObject, query, options.NativeObject);
 
-                // Prevent GC from collecting options during the native call
-                GC.KeepAlive(options);
+//                // Prevent GC from collecting options during the native call
+//                GC.KeepAlive(options);
 
                 // query_answer_promise_resolve CONSUMES the native promise via take_ownership in Rust.
                 // We must release ownership on the C# wrapper BEFORE calling resolve to prevent
