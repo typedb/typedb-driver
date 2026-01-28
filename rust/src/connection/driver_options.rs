@@ -51,6 +51,8 @@ pub struct DriverOptions {
     /// This applies to operations like database creation, user management, and initial
     /// transaction opening. It does NOT apply to operations within transactions (queries, commits).
     /// Defaults to 2 hours.
+    // TODO: What if the server does not respond on queries/commits? 
+    // Shall we apply the same or a different timeout?
     pub request_timeout: Duration,
     /// Specifies whether the connection to TypeDB can use cluster replicas provided by the server
     /// or it should be limited to a single configured address.
