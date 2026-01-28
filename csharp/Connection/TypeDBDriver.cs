@@ -17,10 +17,8 @@
  * under the License.
  */
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 
 using TypeDB.Driver;
 using TypeDB.Driver.Api;
@@ -60,11 +58,6 @@ namespace TypeDB.Driver.Connection
                     credentials.NativeObject,
                     driverOptions.NativeObject,
                     IDriver.Language);
-
-//                // Prevent GC from collecting credentials/driverOptions during the native call
-//                // The Rust code borrows these pointers and the objects must remain alive
-//                GC.KeepAlive(credentials);
-//                GC.KeepAlive(driverOptions);
 
                 return result;
             }
@@ -113,9 +106,6 @@ namespace TypeDB.Driver.Connection
                     database,
                     (Pinvoke.TransactionType)type,
                     options.NativeObject);
-
-//                // Prevent GC from collecting options during the native call
-//                GC.KeepAlive(options);
 
                 return new TypeDBTransaction(this, nativeTransaction, type, options);
             }
