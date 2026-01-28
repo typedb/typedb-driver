@@ -164,15 +164,13 @@ namespace TypeDB.Driver.Test.Behaviour
             if (bgDriver is IDisposable disposable) disposable.Dispose();
         }
 
-        [When(@"in background, connection open schema transaction for database: (.+)")]
-        [Then(@"in background, connection open schema transaction for database: (.+)")]
+        [When(@"in background, connection open schema transaction for database: ([^;]+)$")]
+        [Then(@"in background, connection open schema transaction for database: ([^;]+)$")]
         public void InBackgroundConnectionOpenSchemaTransaction(string databaseName)
         {
-            BackgroundDriver = CreateBackgroundDriver();
-            ITypeDBTransaction tx = CurrentTransactionOptions != null
-                ? BackgroundDriver.Transaction(
-                    databaseName, TransactionType.Schema, CurrentTransactionOptions)
-                : BackgroundDriver.Transaction(databaseName, TransactionType.Schema);
+            BackgroundDriver ??= ConnectionStepsBase.CreateDefaultTypeDBDriver();
+            var tx = ConnectionStepsBase.OpenTransaction(
+                BackgroundDriver, databaseName.Trim(), TransactionType.Schema, CurrentTransactionOptions);
             BackgroundTransactions.Add(tx);
         }
 
@@ -241,15 +239,5 @@ namespace TypeDB.Driver.Test.Behaviour
             CurrentTransactionOptions.SchemaLockAcquireTimeoutMillis = value;
         }
 
-        // Transaction: rollback fails with message
-
-        [Then(@"transaction rollbacks; fails with a message containing: ""(.*)""")]
-        public void TransactionRollbacksFailsWithMessage(string expectedMessage)
-        {
-            Assert.True(Transactions.Count > 0, "No transaction to rollback");
-            var tx = Transactions[Transactions.Count - 1];
-            var exception = Assert.Throws<TypeDBDriverException>(() => tx.Rollback());
-            Assert.Contains(expectedMessage, exception.Message);
-        }
     }
 }

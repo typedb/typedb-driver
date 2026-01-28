@@ -77,6 +77,14 @@ namespace TypeDB.Driver.Test.Behaviour
             Assert.True(File.Exists(ConnectionStepsBase.FullPath(fileName)));
         }
 
+        // Pattern: file(X) is empty
+        [Then(@"file\(([^)]+)\) is empty")]
+        public void FileIsEmpty(string fileName)
+        {
+            var path = ConnectionStepsBase.FullPath(fileName);
+            Assert.True(!File.Exists(path) || new FileInfo(path).Length == 0);
+        }
+
         // Pattern: file(X) is not empty
         [Then(@"file\(([^)]+)\) is not empty")]
         public void FileIsNotEmpty(string fileName)
