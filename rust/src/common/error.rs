@@ -17,7 +17,7 @@
  * under the License.
  */
 
-use std::{error::Error as StdError, fmt};
+use std::{error::Error as StdError, fmt, time::Duration};
 
 use tonic::{Code, Status};
 use tonic_types::StatusExt;
@@ -208,8 +208,31 @@ error_messages! { ConnectionError
         41: "Could not find a primary replica.",
     SchemeTlsSettingsMismatch { scheme: http::uri::Scheme, is_tls_enabled: bool } =
         42: "Scheme {scheme} is not compatible with tls setting `enabled: {is_tls_enabled}`",
-    RequestTimeout { timeout_secs: u64 } =
-        43: "Request timed out after {timeout_secs} seconds. The server may be unresponsive.",
+    RequestTimeout { timeout: String } =
+        43: "Request timed out after {timeout}. The server may be unresponsive.",
+}
+
+impl ConnectionError {
+    pub fn request_timeout(timeout: Duration) -> Self {
+        let (value, decimal, unit) = if timeout.as_secs() > 0 {
+            let decimal = timeout.subsec_millis();
+            (timeout.as_secs(), (decimal > 0).then_some(decimal), "seconds")
+        } else if timeout.subsec_millis() > 0 {
+            let decimal = timeout.subsec_micros() % 1000;
+            (timeout.subsec_millis() as u64, (decimal > 0).then_some(decimal), "milliseconds")
+        } else if timeout.subsec_micros() > 0 {
+            let decimal = timeout.subsec_nanos() % 1000;
+            (timeout.subsec_micros() as u64, (decimal > 0).then_some(decimal), "microseconds")
+        } else {
+            (timeout.subsec_nanos() as u64, None, "nanoseconds")
+        };
+
+        let timeout_str = match decimal {
+            Some(d) => format!("{value}.{d:03} {unit}"),
+            None => format!("{value} {unit}"),
+        };
+        ConnectionError::RequestTimeout { timeout: timeout_str }
+    }
 }
 
 error_messages! { ConceptError

@@ -169,12 +169,9 @@ impl RPCTransmitter {
 
             Request::Transaction(transaction_request) => {
                 let timeout = rpc.request_timeout();
-                match tokio::time::timeout(timeout, Self::open_transaction(rpc, transaction_request)).await {
-                    Ok(result) => result,
-                    Err(_) => {
-                        Err(Error::Connection(ConnectionError::RequestTimeout { timeout_secs: timeout.as_secs() }))
-                    }
-                }
+                tokio::time::timeout(timeout, Self::open_transaction(rpc, transaction_request))
+                    .await
+                    .map_err(|_| ConnectionError::request_timeout(timeout))?
             }
 
             Request::UsersAll => rpc.users_all(request.try_into_proto()?).await.map(Response::from_proto),

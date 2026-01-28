@@ -241,14 +241,11 @@ impl<Channel: GRPCChannel> RPCStub<Channel> {
         R: 'static,
     {
         let timeout = self.request_timeout;
-        match tokio::time::timeout(
+        tokio::time::timeout(
             timeout,
             self.call_with_auto_renew_token(|this| Box::pin(call(this).map(|r| Ok(r?.into_inner())))),
         )
         .await
-        {
-            Ok(result) => result,
-            Err(_) => Err(Error::Connection(ConnectionError::RequestTimeout { timeout_secs: timeout.as_secs() })),
-        }
+        .map_err(|_| ConnectionError::request_timeout(timeout))?
     }
 }

@@ -85,6 +85,14 @@ impl DriverOptions {
         Self { tls_config, ..self }
     }
 
+    /// Specifies the maximum time to wait for a response to a unary RPC request.
+    /// This applies to operations like database creation, user management, and initial
+    /// transaction opening. It does NOT apply to operations within transactions (queries, commits).
+    /// Defaults to 2 hours.
+    pub fn request_timeout(self, request_timeout: Duration) -> Self {
+        Self { request_timeout, ..self }
+    }
+
     /// Specifies whether the connection to TypeDB can use cluster replicas provided by the server
     /// or it should be limited to the provided address.
     /// If set to false, restricts the driver to only a single address.
@@ -111,24 +119,16 @@ impl DriverOptions {
     pub fn replica_discovery_attempts(self, replica_discovery_attempts: Option<usize>) -> Self {
         Self { replica_discovery_attempts, ..self }
     }
-
-    /// Specifies the maximum time to wait for a response to a unary RPC request.
-    /// This applies to operations like database creation, user management, and initial
-    /// transaction opening. It does NOT apply to operations within transactions (queries, commits).
-    /// Defaults to 2 hours.
-    pub fn request_timeout(self, request_timeout: Duration) -> Self {
-        Self { request_timeout, ..self }
-    }
 }
 
 impl Default for DriverOptions {
     fn default() -> Self {
         Self {
             tls_config: DriverTlsConfig::default(),
+            request_timeout: DEFAULT_REQUEST_TIMEOUT,
             use_replication: DEFAULT_USE_REPLICATION,
             primary_failover_retries: DEFAULT_REDIRECT_FAILOVER_RETRIES,
             replica_discovery_attempts: DEFAULT_DISCOVERY_FAILOVER_RETRIES,
-            request_timeout: DEFAULT_REQUEST_TIMEOUT,
         }
     }
 }
