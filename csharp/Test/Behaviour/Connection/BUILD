@@ -21,6 +21,11 @@ filegroup(
     srcs = ["ConnectionStepsBase.cs", "ConnectionStepsCore.cs"],
     visibility = ["//csharp/Test/Behaviour:__subpackages__"],
 )
+filegroup(
+    name = "steps-driver",
+    srcs = ["ConnectionDriverSteps.cs"],
+    visibility = ["//csharp/Test/Behaviour:__subpackages__"],
+)
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*"]),

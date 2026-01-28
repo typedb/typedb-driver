@@ -106,5 +106,20 @@ namespace TypeDB.Driver.Connection
                 throw new TypeDBDriverException(e);
             }
         }
+
+        /// <inheritdoc/>
+        public void ImportFromFile(string name, string schema, string dataFile)
+        {
+            Validator.NonEmptyString(name, DriverError.MISSING_DB_NAME);
+
+            try
+            {
+                Pinvoke.typedb_driver.databases_import_from_file(_nativeDriver, name, schema, dataFile);
+            }
+            catch (Pinvoke.Error e)
+            {
+                throw new TypeDBDriverException(e);
+            }
+        }
     }
 }

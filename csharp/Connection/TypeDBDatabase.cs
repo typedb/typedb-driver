@@ -91,6 +91,21 @@ namespace TypeDB.Driver.Connection
             }
         }
 
+        /// <inheritdoc/>
+        public void ExportToFile(string schemaFile, string dataFile)
+        {
+            Validator.ThrowIfFalse(NativeObject.IsOwned, DriverError.DATABASE_DELETED);
+
+            try
+            {
+                Pinvoke.typedb_driver.database_export_to_file(NativeObject, schemaFile, dataFile);
+            }
+            catch (Pinvoke.Error e)
+            {
+                throw new TypeDBDriverException(e);
+            }
+        }
+
         public override string ToString()
         {
             return Name;

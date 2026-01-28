@@ -16,26 +16,30 @@
 # under the License.
 package(default_visibility = ["//csharp/Test/Behaviour:__subpackages__"])
 load("//csharp:build_opts.bzl", "nullable_context", "target_frameworks", "targeting_packs")
-load("@rules_dotnet//dotnet:defs.bzl", "csharp_library")
-load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("//csharp/Test:build_opts.bzl", "behaviour_tests_deps")
-csharp_library(
-    name = "util",
-    srcs = glob(["*.cs"], exclude = ["UtilSteps.cs"]),
-    deps = behaviour_tests_deps + ["@paket.csharp_deps//newtonsoft.json"],
-    runtime_identifier = "any",
-    nullable = nullable_context,
+load("//csharp/Test:rules.bzl", "csharp_behaviour_test")
+load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+csharp_behaviour_test(
+    name = "test-core",
+    test_files = ["UserTest.cs"],
+    steps_files = [
+        "//csharp/Test/Behaviour/Util:steps",
+        "//csharp/Test/Behaviour/Query:steps",
+        "//csharp/Test/Behaviour/Connection/User:steps",
+        "//csharp/Test/Behaviour/Connection:steps-core",
+    ],
+    features = ["@typedb_behaviour//driver:user.feature"],
+    deps = [
+        "//csharp/Api:api",
+        "//csharp/Answer:answer",
+        "//csharp/Common:common",
+        "//csharp/Concept:concept",
+        "//csharp:driver-csharp",
+        "//csharp/Test/Behaviour/Util:util",
+        "@paket.csharp_deps//newtonsoft.json",
+    ],
     target_frameworks = target_frameworks,
     targeting_packs = targeting_packs,
-)
-exports_files(
-    ["TestRunner.cs"],
-    visibility = ["//csharp/Test:__subpackages__"],
-)
-filegroup(
-    name = "steps",
-    srcs = ["UtilSteps.cs"],
-    visibility = ["//csharp/Test/Behaviour:__subpackages__"],
 )
 checkstyle_test(
     name = "checkstyle",

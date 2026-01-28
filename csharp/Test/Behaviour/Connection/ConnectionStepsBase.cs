@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -58,6 +59,41 @@ namespace TypeDB.Driver.Test.Behaviour
 
         // TODO: Add transaction tracking when transactions are implemented in Milestone 2
         public static List<ITypeDBTransaction> Transactions = new List<ITypeDBTransaction>();
+
+        // Background driver and transactions for "in background" steps
+        public static IDriver? BackgroundDriver;
+        public static List<ITypeDBTransaction> BackgroundTransactions = new List<ITypeDBTransaction>();
+
+        // Transaction options set via "set transaction option" steps
+        public static TransactionOptions? CurrentTransactionOptions;
+
+        // Temporary directory for migration file operations (export/import)
+        private static string? _tempDir;
+
+        /// <summary>
+        /// Gets or creates a temporary directory for the current test run.
+        /// Used by file-related step definitions (export, import, file existence checks).
+        /// </summary>
+        public static string TempDir
+        {
+            get
+            {
+                if (_tempDir == null || !Directory.Exists(_tempDir))
+                {
+                    _tempDir = Path.Combine(Path.GetTempPath(), "typedb-test-" + Guid.NewGuid().ToString("N"));
+                    Directory.CreateDirectory(_tempDir);
+                }
+                return _tempDir;
+            }
+        }
+
+        /// <summary>
+        /// Resolves a file name to a full path in the temp directory.
+        /// </summary>
+        public static string FullPath(string fileName)
+        {
+            return Path.Combine(TempDir, fileName);
+        }
 
         // TODO: implement configuration and remove skips when @ignore-typedb-driver is removed from .feature.
         protected bool _requiredConfiguration = false;
@@ -104,7 +140,29 @@ namespace TypeDB.Driver.Test.Behaviour
             }
             Transactions.Clear();
 
-            // Clean up databases using current driver before closing
+            // Clean up background transactions and driver
+            foreach (var bgTx in BackgroundTransactions)
+            {
+                try
+                {
+                    if (bgTx.IsOpen()) bgTx.Close();
+                    if (bgTx is IDisposable bgTxDisp) bgTxDisp.Dispose();
+                }
+                catch { }
+            }
+            BackgroundTransactions.Clear();
+
+            if (BackgroundDriver != null)
+            {
+                try { if (BackgroundDriver is IDisposable bgDisp) bgDisp.Dispose(); }
+                catch { }
+                BackgroundDriver = null;
+            }
+
+            // Reset transaction options
+            CurrentTransactionOptions = null;
+
+            // Clean up databases and users using current driver before closing
             if (Driver != null)
             {
                 if (Driver.IsOpen())
@@ -127,6 +185,21 @@ namespace TypeDB.Driver.Test.Behaviour
                     {
                         // Ignore errors
                     }
+
+                    try
+                    {
+                        foreach (var user in Driver.Users.GetAll())
+                        {
+                            if (user.Username != "admin")
+                            {
+                                try { user.Delete(); } catch { }
+                            }
+                        }
+                    }
+                    catch
+                    {
+                        // Ignore errors (e.g. non-admin connection)
+                    }
                 }
 
                 // Dispose the driver to free native resources immediately
@@ -137,6 +210,20 @@ namespace TypeDB.Driver.Test.Behaviour
                 }
             }
             Driver = null;
+
+            // Clean up temp directory
+            if (_tempDir != null && Directory.Exists(_tempDir))
+            {
+                try
+                {
+                    Directory.Delete(_tempDir, recursive: true);
+                }
+                catch
+                {
+                    // Ignore cleanup errors
+                }
+                _tempDir = null;
+            }
 
             // Force garbage collection to run any remaining finalizers synchronously
             // This ensures all native resources are freed before starting the next test
@@ -212,8 +299,8 @@ namespace TypeDB.Driver.Test.Behaviour
             }
         }
 
-        [Given(@"connection has (\d+) databases")]
-        [Then(@"connection has (\d+) databases")]
+        [Given(@"connection has (\d+) databases?")]
+        [Then(@"connection has (\d+) databases?")]
         public void ConnectionHasDatabaseCount(int expectedCount)
         {
             if (_requiredConfiguration) return; // Skip tests with configuration
@@ -246,7 +333,9 @@ namespace TypeDB.Driver.Test.Behaviour
         {
             if (_requiredConfiguration) return;
 
-            var tx = Driver!.Transaction(name, TransactionType.Schema);
+            var tx = CurrentTransactionOptions != null
+                ? Driver!.Transaction(name, TransactionType.Schema, CurrentTransactionOptions)
+                : Driver!.Transaction(name, TransactionType.Schema);
             Transactions.Add(tx);
         }
 
@@ -257,7 +346,9 @@ namespace TypeDB.Driver.Test.Behaviour
         {
             if (_requiredConfiguration) return;
 
-            var tx = Driver!.Transaction(name, TransactionType.Read);
+            var tx = CurrentTransactionOptions != null
+                ? Driver!.Transaction(name, TransactionType.Read, CurrentTransactionOptions)
+                : Driver!.Transaction(name, TransactionType.Read);
             Transactions.Add(tx);
         }
 
@@ -268,7 +359,9 @@ namespace TypeDB.Driver.Test.Behaviour
         {
             if (_requiredConfiguration) return;
 
-            var tx = Driver!.Transaction(name, TransactionType.Write);
+            var tx = CurrentTransactionOptions != null
+                ? Driver!.Transaction(name, TransactionType.Write, CurrentTransactionOptions)
+                : Driver!.Transaction(name, TransactionType.Write);
             Transactions.Add(tx);
         }
 
@@ -278,7 +371,11 @@ namespace TypeDB.Driver.Test.Behaviour
             if (_requiredConfiguration) return;
 
             bool expected = bool.Parse(expectedState);
-            Assert.True(Transactions.Count > 0, "No transaction is open");
+            if (Transactions.Count == 0)
+            {
+                Assert.False(expected, "No transaction exists, but expected one to be open");
+                return;
+            }
             var tx = Transactions[Transactions.Count - 1];
             Assert.Equal(expected, tx.IsOpen());
         }
@@ -321,6 +418,20 @@ namespace TypeDB.Driver.Test.Behaviour
                 }
                 Transactions.Clear();
 
+                // Clean up leftover background resources
+                foreach (var bgTx in BackgroundTransactions)
+                {
+                    try { if (bgTx.IsOpen()) bgTx.Close(); } catch { }
+                    try { if (bgTx is IDisposable d) d.Dispose(); } catch { }
+                }
+                BackgroundTransactions.Clear();
+                if (BackgroundDriver != null)
+                {
+                    try { if (BackgroundDriver is IDisposable d) d.Dispose(); } catch { }
+                    BackgroundDriver = null;
+                }
+                CurrentTransactionOptions = null;
+
                 // Clean up leftover databases from previous failed tests
                 // Create a fresh driver to do cleanup since the old one might be in a bad state
                 try
@@ -335,6 +446,14 @@ namespace TypeDB.Driver.Test.Behaviour
                         foreach (var db in cleanupDriver.Databases.GetAll())
                         {
                             try { db.Delete(); } catch { }
+                        }
+
+                        foreach (var user in cleanupDriver.Users.GetAll())
+                        {
+                            if (user.Username != "admin")
+                            {
+                                try { user.Delete(); } catch { }
+                            }
                         }
                     }
 
