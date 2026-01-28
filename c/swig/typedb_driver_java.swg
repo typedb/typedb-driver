@@ -113,6 +113,8 @@
 %nojavaexception driver_options_new;
 %nojavaexception driver_options_set_tls_config;
 %nojavaexception driver_options_get_tls_config;
+%nojavaexception driver_options_set_request_timeout_millis;
+%nojavaexception driver_options_get_request_timeout_millis;
 %nojavaexception driver_options_set_use_replication;
 %nojavaexception driver_options_get_use_replication;
 %nojavaexception driver_options_set_primary_failover_retries;

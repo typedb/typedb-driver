@@ -292,11 +292,17 @@ impl ServerManager {
                         ConnectionError::ClusterReplicaNotPrimary => {
                             debug!("Could not connect to the primary replica: no longer primary. Retrying...");
                             let replicas = iter::once(primary_replica).chain(replicas_without_old_primary);
-                            self.seek_primary_replica_in(replicas).await?
+                            match self.seek_primary_replica_in(replicas).await {
+                                Ok(replica) => replica,
+                                Err(_) => return Err(connection_error.into()),
+                            }
                         }
                         err => {
                             debug!("Could not connect to the primary replica: {err:?}. Retrying...");
-                            self.seek_primary_replica_in(replicas_without_old_primary).await?
+                            match self.seek_primary_replica_in(replicas_without_old_primary).await {
+                                Ok(replica) => replica,
+                                Err(_) => return Err(connection_error.into()),
+                            }
                         }
                     };
 

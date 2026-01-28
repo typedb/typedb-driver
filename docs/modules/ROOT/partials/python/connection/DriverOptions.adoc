@@ -11,8 +11,8 @@ Options could be specified either as constructor arguments or using properties a
 .Examples
 [source,python]
 ----
-options = DriverOptions(DriverTlsConfig.enabled_with_native_root_ca(), use_replication=False)
-options.use_replication = True
+options = DriverOptions(DriverTlsConfig.enabled_with_native_root_ca(), request_timeout_millis=6000)
+options.request_timeout_millis = 6000
 ----
 
 [caption=""]
@@ -24,6 +24,7 @@ options.use_replication = True
 |Name |Type |Description
 a| `primary_failover_retries` a| `int` a| Returns the value set for the primary failover retries limit in this ``DriverOptions`` object. Limits the number of attempts to redirect a strongly consistent request to another primary replica in case of a failure due to the change of replica roles. Defaults to 1.
 a| `replica_discovery_attempts` a| `int \| None` a| Returns the value set for the replica discovery attempts limit in this ``DriverOptions`` object. Limits the number of driver attempts to discover a single working replica to perform an operation in case of a replica unavailability. Every replica is tested once, which means that at most: - {limit} operations are performed if the limit &lt;= the number of replicas. - {number of replicas} operations are performed if the limit &gt; the number of replicas. - {number of replicas} operations are performed if the limit is None. Affects every eventually consistent operation, including redirect failover, when the new primary replica is unknown. If not set, the maximum (practically unlimited) value is used.
+a| `request_timeout_millis` a| `int` a| Returns the request timeout in milliseconds set for this ``DriverOptions`` object. Specifies the maximum time to wait for a response to a unary RPC request. This applies to operations like database creation, user management, and initial transaction opening. It does NOT apply to operations within transactions (queries, commits).
 a| `tls_config` a| `DriverTlsConfig` a| Returns the TLS configuration associated with this ``DriverOptions``. Specifies the TLS configuration of the connection to TypeDB.
 a| `use_replication` a| `bool` a| Returns the value set for the replication usage flag in this ``DriverOptions`` object. Specifies whether the connection to TypeDB can use cluster replicas provided by the server or it should be limited to a single configured address. Defaults to True.
 |===

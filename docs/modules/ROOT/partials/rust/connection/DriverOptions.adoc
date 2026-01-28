@@ -23,6 +23,7 @@ a| `replica_discovery_attempts` a| `Option<usize>` a| Limits the number of drive
  {number of replicas} operations are performed if the limit &gt; the number of replicas.
  {number of replicas} operations are performed if the limit is None. Affects every eventually consistent operation, including redirect failover, when the new primary replica is unknown. Defaults to None.
 
+a| `request_timeout` a| `Duration` a| Specifies the maximum time to wait for a response to a unary RPC request. This applies to operations like database creation, user management, and initial transaction opening. It does NOT apply to operations within transactions (queries, commits). Defaults to 2 hours.
 a| `tls_config` a| `DriverTlsConfig` a| Specifies the TLS configuration of the connection to TypeDB. WARNING: Disabled TLS settings will make the driver sending passwords as plaintext. Defaults to an enabled TLS configuration based on the system’s native trust roots.
 a| `use_replication` a| `bool` a| Specifies whether the connection to TypeDB can use cluster replicas provided by the server or it should be limited to a single configured address. Defaults to true.
 |===
@@ -75,6 +76,23 @@ pub fn replica_discovery_attempts(
 ----
 
 Limits the number of driver attempts to discover a single working replica to perform an operation in case of a replica unavailability. Every replica is tested once, which means that at most:
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Self
+----
+
+[#_struct_DriverOptions_request_timeout_]
+==== request_timeout
+
+[source,rust]
+----
+pub fn request_timeout(self, request_timeout: Duration) -> Self
+----
+
+Specifies the maximum time to wait for a response to a unary RPC request. This applies to operations like database creation, user management, and initial transaction opening. It does NOT apply to operations within transactions (queries, commits). Defaults to 2 hours.
 
 [caption=""]
 .Returns

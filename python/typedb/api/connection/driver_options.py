@@ -25,6 +25,7 @@ from typedb.native_driver_wrapper import driver_options_get_tls_config, driver_o
     driver_options_get_use_replication, driver_options_set_use_replication, driver_options_get_primary_failover_retries, \
     driver_options_set_primary_failover_retries, driver_options_get_replica_discovery_attempts, \
     driver_options_set_replica_discovery_attempts, driver_options_has_replica_discovery_attempts, \
+    driver_options_get_request_timeout_millis, driver_options_set_request_timeout_millis, \
     DriverOptions as NativeDriverOptions
 
 
@@ -39,8 +40,8 @@ class DriverOptions(NativeWrapper[NativeDriverOptions]):
     --------
     ::
 
-      options = DriverOptions(DriverTlsConfig.enabled_with_native_root_ca(), use_replication=False)
-      options.use_replication = True
+      options = DriverOptions(DriverTlsConfig.enabled_with_native_root_ca(), request_timeout_millis=6000)
+      options.request_timeout_millis = 6000
     """
 
     def __init__(self,
@@ -49,6 +50,7 @@ class DriverOptions(NativeWrapper[NativeDriverOptions]):
                  use_replication: Optional[bool] = None,
                  primary_failover_retries: Optional[int] = None,
                  replica_discovery_attempts: Optional[int] = None,
+                 request_timeout_millis: Optional[int] = None,
                  ):
         """
         Produces a new ``DriverOptions`` object for connecting to TypeDB Server using custom TLS settings.
@@ -68,6 +70,8 @@ class DriverOptions(NativeWrapper[NativeDriverOptions]):
             self.primary_failover_retries = primary_failover_retries
         if replica_discovery_attempts is not None:
             self.replica_discovery_attempts = replica_discovery_attempts
+        if request_timeout_millis is not None:
+            self.request_timeout_millis = request_timeout_millis
 
     @property
     def _native_object_not_owned_exception(self) -> TypeDBDriverException:
@@ -101,6 +105,27 @@ class DriverOptions(NativeWrapper[NativeDriverOptions]):
         """
         require_non_null(tls_config, "tls_config")
         driver_options_set_tls_config(self.native_object, tls_config.native_object)
+
+    @property
+    def request_timeout_millis(self) -> int:
+        """
+        Returns the request timeout in milliseconds set for this ``DriverOptions`` object.
+        Specifies the maximum time to wait for a response to a unary RPC request.
+        This applies to operations like database creation, user management, and initial
+        transaction opening. It does NOT apply to operations within transactions (queries, commits).
+        """
+        return driver_options_get_request_timeout_millis(self.native_object)
+
+    @request_timeout_millis.setter
+    def request_timeout_millis(self, request_timeout_millis: int):
+        """
+        Sets the maximum time (in milliseconds) to wait for a response to a unary RPC request.
+        This applies to operations like database creation, user management, and initial
+        transaction opening. It does NOT apply to operations within transactions (queries, commits).
+        Defaults to 2 hours (7200000 milliseconds).
+        """
+        require_non_negative(request_timeout_millis, "request_timeout_millis")
+        driver_options_set_request_timeout_millis(self.native_object, request_timeout_millis)
 
     @property
     def use_replication(self) -> bool:

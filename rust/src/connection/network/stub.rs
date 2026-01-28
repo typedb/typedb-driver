@@ -17,7 +17,7 @@
  * under the License.
  */
 
-use std::sync::Arc;
+use std::{sync::Arc, time::Duration};
 
 use futures::{future::BoxFuture, FutureExt, TryFutureExt};
 use tokio::sync::mpsc::{unbounded_channel as unbounded_async, UnboundedSender};
@@ -41,11 +41,16 @@ type TonicResult<T> = StdResult<Response<T>, Status>;
 pub(super) struct RPCStub<Channel: GRPCChannel> {
     grpc: GRPC<Channel>,
     call_credentials: Option<Arc<CallCredentials>>,
+    request_timeout: Duration,
 }
 
 impl<Channel: GRPCChannel> RPCStub<Channel> {
-    pub(super) async fn new(channel: Channel, call_credentials: Option<Arc<CallCredentials>>) -> Self {
-        Self { grpc: GRPC::new(channel), call_credentials }
+    pub(super) async fn new(
+        channel: Channel,
+        call_credentials: Option<Arc<CallCredentials>>,
+        request_timeout: Duration,
+    ) -> Self {
+        Self { grpc: GRPC::new(channel), call_credentials, request_timeout }
     }
 
     async fn call_with_auto_renew_token<F, R>(&mut self, call: F) -> Result<R>
@@ -226,11 +231,21 @@ impl<Channel: GRPCChannel> RPCStub<Channel> {
         self.single(|this| Box::pin(this.grpc.users_delete(req.clone()))).await
     }
 
+    pub(super) fn request_timeout(&self) -> Duration {
+        self.request_timeout
+    }
+
     async fn single<F, R>(&mut self, call: F) -> Result<R>
     where
         for<'a> F: Fn(&'a mut Self) -> BoxFuture<'a, TonicResult<R>> + Send + Sync,
         R: 'static,
     {
-        self.call_with_auto_renew_token(|this| Box::pin(call(this).map(|r| Ok(r?.into_inner())))).await
+        let timeout = self.request_timeout;
+        tokio::time::timeout(
+            timeout,
+            self.call_with_auto_renew_token(|this| Box::pin(call(this).map(|r| Ok(r?.into_inner())))),
+        )
+        .await
+        .map_err(|_| ConnectionError::request_timeout(timeout))?
     }
 }

@@ -17,6 +17,8 @@
  * under the License.
  */
 
+use std::time::Duration;
+
 use futures::StreamExt;
 use tokio::{
     select,
@@ -57,9 +59,10 @@ impl RPCTransmitter {
     ) -> Result<Self> {
         let (request_sink, request_source) = unbounded_async();
         let (shutdown_sink, shutdown_source) = unbounded_async();
+        let request_timeout = driver_options.request_timeout;
         runtime.run_blocking(async move {
             let (channel, call_cred) = open_callcred_channel(address, credentials, driver_options)?;
-            let rpc = RPCStub::new(channel, Some(call_cred)).await;
+            let rpc = RPCStub::new(channel, Some(call_cred), request_timeout).await;
             tokio::spawn(Self::dispatcher_loop(rpc, request_source, shutdown_source));
             Ok::<(), Error>(())
         })?;
@@ -165,32 +168,10 @@ impl RPCTransmitter {
             }
 
             Request::Transaction(transaction_request) => {
-                let req = transaction_request.into_proto();
-                let open_request_id = RequestID::from(req.req_id.clone());
-                let (request_sink, mut response_source) = rpc.transaction(req).await?;
-                match response_source.next().await {
-                    Some(Ok(transaction::Server { server: Some(Server::Res(res)) })) => {
-                        match TransactionResponse::try_from_proto(res) {
-                            Ok(TransactionResponse::Open { server_duration_millis }) => {
-                                Ok(Response::TransactionStream {
-                                    open_request_id,
-                                    request_sink,
-                                    response_source,
-                                    server_duration_millis,
-                                })
-                            }
-                            Err(error) => Err(error),
-                            Ok(other) => Err(Error::Connection(ConnectionError::UnexpectedResponse {
-                                response: format!("{other:?}"),
-                            })),
-                        }
-                    }
-                    Some(Ok(other)) => {
-                        Err(Error::Connection(ConnectionError::UnexpectedResponse { response: format!("{other:?}") }))
-                    }
-                    Some(Err(status)) => Err(status.into()),
-                    None => Err(Error::Connection(ConnectionError::UnexpectedConnectionClose)),
-                }
+                let timeout = rpc.request_timeout();
+                tokio::time::timeout(timeout, Self::open_transaction(rpc, transaction_request))
+                    .await
+                    .map_err(|_| ConnectionError::request_timeout(timeout))?
             }
 
             Request::UsersAll => rpc.users_all(request.try_into_proto()?).await.map(Response::from_proto),
@@ -201,6 +182,36 @@ impl RPCTransmitter {
             Request::UsersUpdate { .. } => rpc.users_update(request.try_into_proto()?).await.map(Response::from_proto),
             Request::UsersDelete { .. } => rpc.users_delete(request.try_into_proto()?).await.map(Response::from_proto),
             Request::UsersGet { .. } => rpc.users_get(request.try_into_proto()?).await.map(Response::from_proto),
+        }
+    }
+
+    async fn open_transaction<Channel: GRPCChannel>(
+        mut rpc: RPCStub<Channel>,
+        transaction_request: crate::connection::message::TransactionRequest,
+    ) -> Result<Response> {
+        let req = transaction_request.into_proto();
+        let open_request_id = RequestID::from(req.req_id.clone());
+        let (request_sink, mut response_source) = rpc.transaction(req).await?;
+        match response_source.next().await {
+            Some(Ok(transaction::Server { server: Some(Server::Res(res)) })) => {
+                match TransactionResponse::try_from_proto(res) {
+                    Ok(TransactionResponse::Open { server_duration_millis }) => Ok(Response::TransactionStream {
+                        open_request_id,
+                        request_sink,
+                        response_source,
+                        server_duration_millis,
+                    }),
+                    Err(error) => Err(error),
+                    Ok(other) => {
+                        Err(Error::Connection(ConnectionError::UnexpectedResponse { response: format!("{other:?}") }))
+                    }
+                }
+            }
+            Some(Ok(other)) => {
+                Err(Error::Connection(ConnectionError::UnexpectedResponse { response: format!("{other:?}") }))
+            }
+            Some(Err(status)) => Err(status.into()),
+            None => Err(Error::Connection(ConnectionError::UnexpectedConnectionClose)),
         }
     }
 }
