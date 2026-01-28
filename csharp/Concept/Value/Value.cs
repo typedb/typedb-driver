@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 using TypeDB.Driver.Api;
 using TypeDB.Driver.Common;
@@ -139,16 +140,68 @@ namespace TypeDB.Driver.Concept
         {
             if (IsBoolean()) return GetBoolean().ToString().ToLower();
             if (IsInteger()) return GetInteger().ToString();
-            if (IsDouble()) return GetDouble().ToString("0.0#####");
-            if (IsDecimal()) return GetDecimal().ToString();
+            if (IsDouble())
+            {
+                var d = GetDouble();
+                // Format doubles to show at least one decimal place
+                return d.ToString("G17", CultureInfo.InvariantCulture);
+            }
+            if (IsDecimal())
+            {
+                var dec = GetDecimal();
+                // Format with 19 decimal places and remove trailing zeros
+                var formatted = dec.ToString("0.0000000000000000000", CultureInfo.InvariantCulture).TrimEnd('0');
+                if (formatted.EndsWith(".")) formatted += "0";
+                return formatted + "dec";
+            }
             if (IsString()) return GetString();
-            if (IsDate()) return GetDate().ToString();
-            if (IsDatetime()) return GetDatetime().ToString();
-            if (IsDatetimeTZ()) return GetDatetimeTZ().ToString();
-            if (IsDuration()) return GetDuration().ToString();
+            if (IsDate()) return GetDate().ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
+            if (IsDatetime() || IsDatetimeTZ() || IsDuration())
+            {
+                // Use the native concept_to_string and extract just the value part
+                // The native format wraps values in "Value(<type>: <value>)"
+                return ExtractNativeValueString();
+            }
             if (IsStruct()) return GetStruct().ToString() ?? "{}";
 
             throw new TypeDBDriverException(InternalError.UNEXPECTED_NATIVE_VALUE);
+        }
+
+        private string ExtractNativeValueString()
+        {
+            var native = Pinvoke.typedb_driver.concept_to_string(NativeObject);
+            // Native format: "Value(<type>: <value>)"
+            // Example: "Value(datetime-tz: 2024-09-20T16:40:05.000000001 Europe/London)"
+            var colonIndex = native.IndexOf(": ");
+            if (native.StartsWith("Value(") && native.EndsWith(")") && colonIndex > 0)
+            {
+                var value = native.Substring(colonIndex + 2, native.Length - colonIndex - 3);
+                // Post-process to match expected TypeDB format:
+                // 1. Remove trailing .000000000 (no subsecond nanos)
+                value = value.Replace(".000000000", "");
+                // 2. Remove colon from fixed offset format (+00:00 -> +0000)
+                value = NormalizeTimezoneOffset(value);
+                return value;
+            }
+            return native;
+        }
+
+        private static string NormalizeTimezoneOffset(string value)
+        {
+            // Convert +HH:MM or -HH:MM to +HHMM or -HHMM for fixed offsets
+            // But preserve IANA timezone names (e.g., "Europe/London")
+            // Fixed offsets appear at the end of datetime-tz values
+            if (value.Length >= 6)
+            {
+                // Check for pattern like +00:00 or -05:30 at the end
+                var lastPart = value.Substring(value.Length - 6);
+                if ((lastPart[0] == '+' || lastPart[0] == '-') && lastPart[3] == ':')
+                {
+                    // Remove the colon from the offset
+                    return value.Substring(0, value.Length - 3) + value.Substring(value.Length - 2);
+                }
+            }
+            return value;
         }
 
         public override int GetHashCode()

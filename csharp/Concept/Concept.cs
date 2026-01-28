@@ -122,31 +122,38 @@ namespace TypeDB.Driver.Concept
 
         #region Value Accessors
 
+        // Helper to check if this concept can have a value (Values and Attributes, not Types)
+        private bool CanHaveValue()
+        {
+            return Pinvoke.typedb_driver.concept_is_value(NativeObject)
+                || Pinvoke.typedb_driver.concept_is_attribute(NativeObject);
+        }
+
         /// <inheritdoc/>
         public bool? TryGetBoolean()
         {
-            if (!IsBoolean()) return null;
+            if (!CanHaveValue() || !IsBoolean()) return null;
             return Pinvoke.typedb_driver.concept_get_boolean(NativeObject);
         }
 
         /// <inheritdoc/>
         public long? TryGetInteger()
         {
-            if (!IsInteger()) return null;
+            if (!CanHaveValue() || !IsInteger()) return null;
             return Pinvoke.typedb_driver.concept_get_integer(NativeObject);
         }
 
         /// <inheritdoc/>
         public double? TryGetDouble()
         {
-            if (!IsDouble()) return null;
+            if (!CanHaveValue() || !IsDouble()) return null;
             return Pinvoke.typedb_driver.concept_get_double(NativeObject);
         }
 
         /// <inheritdoc/>
         public decimal? TryGetDecimal()
         {
-            if (!IsDecimal()) return null;
+            if (!CanHaveValue() || !IsDecimal()) return null;
             var nativeDecimal = Pinvoke.typedb_driver.concept_get_decimal(NativeObject);
             // Convert native Decimal to C# decimal
             // The native format uses integer_part and fractional_part
@@ -156,14 +163,14 @@ namespace TypeDB.Driver.Concept
         /// <inheritdoc/>
         public string? TryGetString()
         {
-            if (!IsString()) return null;
+            if (!CanHaveValue() || !IsString()) return null;
             return Pinvoke.typedb_driver.concept_get_string(NativeObject);
         }
 
         /// <inheritdoc/>
         public DateOnly? TryGetDate()
         {
-            if (!IsDate()) return null;
+            if (!CanHaveValue() || !IsDate()) return null;
             long seconds = Pinvoke.typedb_driver.concept_get_date_as_seconds(NativeObject);
             var dateTime = DateTimeOffset.FromUnixTimeSeconds(seconds).DateTime;
             return DateOnly.FromDateTime(dateTime);
@@ -172,7 +179,7 @@ namespace TypeDB.Driver.Concept
         /// <inheritdoc/>
         public DateTime? TryGetDatetime()
         {
-            if (!IsDatetime()) return null;
+            if (!CanHaveValue() || !IsDatetime()) return null;
             var nativeDatetime = Pinvoke.typedb_driver.concept_get_datetime(NativeObject);
             long seconds = nativeDatetime.seconds;
             uint nanos = nativeDatetime.subsec_nanos;
@@ -183,7 +190,7 @@ namespace TypeDB.Driver.Concept
         /// <inheritdoc/>
         public DateTimeOffset? TryGetDatetimeTZ()
         {
-            if (!IsDatetimeTZ()) return null;
+            if (!CanHaveValue() || !IsDatetimeTZ()) return null;
             var nativeDatetimeTz = Pinvoke.typedb_driver.concept_get_datetime_tz(NativeObject);
             var datetimeInNanos = nativeDatetimeTz.datetime_in_nanos;
             long seconds = datetimeInNanos.seconds;
@@ -208,7 +215,7 @@ namespace TypeDB.Driver.Concept
         /// <inheritdoc/>
         public Duration? TryGetDuration()
         {
-            if (!IsDuration()) return null;
+            if (!CanHaveValue() || !IsDuration()) return null;
             var nativeDuration = Pinvoke.typedb_driver.concept_get_duration(NativeObject);
             return new Duration(nativeDuration);
         }
@@ -216,7 +223,7 @@ namespace TypeDB.Driver.Concept
         /// <inheritdoc/>
         public IReadOnlyDictionary<string, IValue?>? TryGetStruct()
         {
-            if (!IsStruct()) return null;
+            if (!CanHaveValue() || !IsStruct()) return null;
 
             // TODO: Fix struct iteration once SWIG binding field names are determined
             // The native iterator uses StringAndOptValue which has string/value fields

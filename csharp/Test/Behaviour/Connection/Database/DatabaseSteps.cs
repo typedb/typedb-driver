@@ -21,6 +21,7 @@ using DataTable = Gherkin.Ast.DataTable;
 using DocString = Gherkin.Ast.DocString;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -173,6 +174,7 @@ namespace TypeDB.Driver.Test.Behaviour
             Assert.True(expectedDatabasesSize >= Driver!.Databases.GetAll().Count);
         }
 
+        [Given(@"connection does not have database: (.+)")]
         [Then(@"connection does not have database: (.+)")]
         public void ConnectionDoesNotHaveDatabase(string name)
         {
@@ -267,5 +269,70 @@ namespace TypeDB.Driver.Test.Behaviour
         }
 
         // Query-related steps moved to QuerySteps.cs
+
+        #region Export / Import Steps
+
+        // Pattern: connection get database(X) export to schema file(Y), data file(Z)
+        [Given(@"connection get database\(([^)]+)\) export to schema file\(([^)]+)\), data file\(([^)]+)\)$")]
+        [When(@"connection get database\(([^)]+)\) export to schema file\(([^)]+)\), data file\(([^)]+)\)$")]
+        [Then(@"connection get database\(([^)]+)\) export to schema file\(([^)]+)\), data file\(([^)]+)\)$")]
+        public void ConnectionGetDatabaseExportToFiles(string name, string schemaFile, string dataFile)
+        {
+            var schemaPath = ConnectionStepsBase.FullPath(schemaFile);
+            var dataPath = ConnectionStepsBase.FullPath(dataFile);
+            Driver!.Databases.Get(name).ExportToFile(schemaPath, dataPath);
+        }
+
+        // Pattern: connection get database(X) export to schema file(Y), data file(Z); fails with a message containing: "MSG"
+        [When(@"connection get database\(([^)]+)\) export to schema file\(([^)]+)\), data file\(([^)]+)\); fails with a message containing: ""(.*)""")]
+        [Then(@"connection get database\(([^)]+)\) export to schema file\(([^)]+)\), data file\(([^)]+)\); fails with a message containing: ""(.*)""")]
+        public void ConnectionGetDatabaseExportToFilesFailsWithMessage(
+            string name, string schemaFile, string dataFile, string expectedMessage)
+        {
+            var schemaPath = ConnectionStepsBase.FullPath(schemaFile);
+            var dataPath = ConnectionStepsBase.FullPath(dataFile);
+            var exception = Assert.ThrowsAny<Exception>(
+                () => Driver!.Databases.Get(name).ExportToFile(schemaPath, dataPath));
+            Assert.Contains(expectedMessage, exception.Message);
+        }
+
+        // Pattern: connection import database(X) from schema file(Y), data file(Z)
+        [Given(@"connection import database\(([^)]+)\) from schema file\(([^)]+)\), data file\(([^)]+)\)$")]
+        [When(@"connection import database\(([^)]+)\) from schema file\(([^)]+)\), data file\(([^)]+)\)$")]
+        [Then(@"connection import database\(([^)]+)\) from schema file\(([^)]+)\), data file\(([^)]+)\)$")]
+        public void ConnectionImportDatabaseFromFiles(string name, string schemaFile, string dataFile)
+        {
+            var schemaPath = ConnectionStepsBase.FullPath(schemaFile);
+            var schema = File.ReadAllText(schemaPath);
+            var dataPath = ConnectionStepsBase.FullPath(dataFile);
+            Driver!.Databases.ImportFromFile(name, schema, dataPath);
+        }
+
+        // Pattern: connection import database(X) from schema file(Y), data file(Z); fails with a message containing: "MSG"
+        [Then(@"connection import database\(([^)]+)\) from schema file\(([^)]+)\), data file\(([^)]+)\); fails with a message containing: ""(.*)""")]
+        public void ConnectionImportDatabaseFromFilesFailsWithMessage(
+            string name, string schemaFile, string dataFile, string expectedMessage)
+        {
+            var schemaPath = ConnectionStepsBase.FullPath(schemaFile);
+            var schema = File.ReadAllText(schemaPath);
+            var dataPath = ConnectionStepsBase.FullPath(dataFile);
+            var exception = Assert.ThrowsAny<Exception>(
+                () => Driver!.Databases.ImportFromFile(name, schema, dataPath));
+            Assert.Contains(expectedMessage, exception.Message);
+        }
+
+        // Pattern: connection import database(X) from data file(Y) and schema (with DocString)
+        [Given(@"connection import database\(([^)]+)\) from data file\(([^)]+)\) and schema")]
+        [When(@"connection import database\(([^)]+)\) from data file\(([^)]+)\) and schema")]
+        public void ConnectionImportDatabaseFromDataFileAndSchema(
+            string name, string dataFile, DocString schema)
+        {
+            var dataPath = ConnectionStepsBase.FullPath(dataFile);
+            // RemoveTwoSpacesInTabulation is defined in UtilSteps.cs (same partial class)
+            var schemaText = RemoveTwoSpacesInTabulation(schema.Content);
+            Driver!.Databases.ImportFromFile(name, schemaText, dataPath);
+        }
+
+        #endregion
     }
 }

@@ -754,7 +754,7 @@ namespace TypeDB.Driver.Test.Behaviour
             Assert.NotNull(concept);
             Assert.True(concept!.IsAttribute());
             var value = concept.AsAttribute().Value;
-            Assert.Equal(expectedValue, value.GetString());
+            Assert.Equal(expectedValue.Replace("\\\"", "\""), value.GetString());
         }
 
         [Then(@"answer get row\((\d+)\) get attribute by index of variable\(([^)]+)\) get value is: ""(.*)""")]
@@ -765,7 +765,7 @@ namespace TypeDB.Driver.Test.Behaviour
             Assert.NotNull(concept);
             Assert.True(concept!.IsAttribute());
             var value = concept.AsAttribute().Value;
-            Assert.Equal(expectedValue, value.GetString());
+            Assert.Equal(expectedValue.Replace("\\\"", "\""), value.GetString());
         }
 
         #endregion

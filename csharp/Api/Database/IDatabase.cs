@@ -67,5 +67,19 @@ namespace TypeDB.Driver.Api
         /// </code>
         /// </example>
         public void Delete();
+
+        /// <summary>
+        /// Exports this database to a schema definition file and a data file on disk.
+        /// This is a blocking operation and may take a significant amount of time
+        /// depending on the database size.
+        /// </summary>
+        /// <param name="schemaFile">The path to the schema definition file to be created.</param>
+        /// <param name="dataFile">The path to the data file to be created.</param>
+        /// <example>
+        /// <code>
+        /// database.ExportToFile("schema.tql", "data.typedb");
+        /// </code>
+        /// </example>
+        public void ExportToFile(string schemaFile, string dataFile);
     }
 }
