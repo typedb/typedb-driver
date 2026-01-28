@@ -45,9 +45,6 @@ namespace TypeDB.Driver.Test.Behaviour
         private static List<IQueryAnswer>? _concurrentAnswers;
         private static List<IEnumerator<IConceptRow>>? _concurrentRowStreams;
 
-        // Transaction accessor from ConnectionStepsBase
-        private static ITypeDBTransaction Tx => ConnectionStepsBase.Transactions[ConnectionStepsBase.Transactions.Count - 1];
-
         private void ClearAnswers()
         {
             _queryAnswer = null;
@@ -125,272 +122,121 @@ namespace TypeDB.Driver.Test.Behaviour
         [Given(@"typeql schema query")]
         [When(@"typeql schema query")]
         [Then(@"typeql schema query")]
-        public void TypeqlSchemaQuery(DocString query)
+        [Given(@"typeql write query")]
+        [When(@"typeql write query")]
+        [Then(@"typeql write query")]
+        [Given(@"typeql read query")]
+        [When(@"typeql read query")]
+        [Then(@"typeql read query")]
+        public void TypeqlQuery(DocString query)
         {
             ClearAnswers();
-            if (_queryOptions != null)
-            {
-                Tx.Query(query.Content, _queryOptions);
-            }
-            else
-            {
-                Tx.Query(query.Content);
-            }
+            ExecuteQuery(query.Content);
         }
 
         [Given(@"typeql schema query; fails")]
         [When(@"typeql schema query; fails")]
         [Then(@"typeql schema query; fails")]
-        public void TypeqlSchemaQueryFails(DocString query)
+        [Given(@"typeql write query; fails")]
+        [When(@"typeql write query; fails")]
+        [Then(@"typeql write query; fails")]
+        [Given(@"typeql read query; fails")]
+        [When(@"typeql read query; fails")]
+        [Then(@"typeql read query; fails")]
+        public void TypeqlQueryFails(DocString query)
         {
             ClearAnswers();
-            Assert.ThrowsAny<Exception>(() =>
-            {
-                if (_queryOptions != null)
-                {
-                    Tx.Query(query.Content, _queryOptions);
-                }
-                else
-                {
-                    Tx.Query(query.Content);
-                }
-            });
+            Assert.ThrowsAny<Exception>(() => ExecuteQuery(query.Content));
         }
 
         [Given(@"typeql schema query; fails with a message containing: ""(.*)""")]
         [When(@"typeql schema query; fails with a message containing: ""(.*)""")]
         [Then(@"typeql schema query; fails with a message containing: ""(.*)""")]
-        public void TypeqlSchemaQueryFailsWithMessage(string expectedMessage, DocString query)
-        {
-            ClearAnswers();
-            var exception = Assert.ThrowsAny<Exception>(() =>
-            {
-                if (_queryOptions != null)
-                {
-                    Tx.Query(query.Content, _queryOptions);
-                }
-                else
-                {
-                    Tx.Query(query.Content);
-                }
-            });
-            Assert.Contains(expectedMessage, exception.Message);
-        }
-
-        [Given(@"typeql write query")]
-        [When(@"typeql write query")]
-        [Then(@"typeql write query")]
-        public void TypeqlWriteQuery(DocString query)
-        {
-            ClearAnswers();
-            if (_queryOptions != null)
-            {
-                Tx.Query(query.Content, _queryOptions);
-            }
-            else
-            {
-                Tx.Query(query.Content);
-            }
-        }
-
-        [Given(@"typeql write query; fails")]
-        [When(@"typeql write query; fails")]
-        [Then(@"typeql write query; fails")]
-        public void TypeqlWriteQueryFails(DocString query)
-        {
-            ClearAnswers();
-            Assert.ThrowsAny<Exception>(() =>
-            {
-                if (_queryOptions != null)
-                {
-                    Tx.Query(query.Content, _queryOptions);
-                }
-                else
-                {
-                    Tx.Query(query.Content);
-                }
-            });
-        }
-
         [Given(@"typeql write query; fails with a message containing: ""(.*)""")]
         [When(@"typeql write query; fails with a message containing: ""(.*)""")]
         [Then(@"typeql write query; fails with a message containing: ""(.*)""")]
-        public void TypeqlWriteQueryFailsWithMessage(string expectedMessage, DocString query)
-        {
-            ClearAnswers();
-            var exception = Assert.ThrowsAny<Exception>(() =>
-            {
-                if (_queryOptions != null)
-                {
-                    Tx.Query(query.Content, _queryOptions);
-                }
-                else
-                {
-                    Tx.Query(query.Content);
-                }
-            });
-            Assert.Contains(expectedMessage, exception.Message);
-        }
-
-        [Given(@"typeql read query")]
-        [When(@"typeql read query")]
-        [Then(@"typeql read query")]
-        public void TypeqlReadQuery(DocString query)
-        {
-            ClearAnswers();
-            if (_queryOptions != null)
-            {
-                Tx.Query(query.Content, _queryOptions);
-            }
-            else
-            {
-                Tx.Query(query.Content);
-            }
-        }
-
-        [Given(@"typeql read query; fails")]
-        [When(@"typeql read query; fails")]
-        [Then(@"typeql read query; fails")]
-        public void TypeqlReadQueryFails(DocString query)
-        {
-            ClearAnswers();
-            Assert.ThrowsAny<Exception>(() =>
-            {
-                if (_queryOptions != null)
-                {
-                    Tx.Query(query.Content, _queryOptions);
-                }
-                else
-                {
-                    Tx.Query(query.Content);
-                }
-            });
-        }
-
         [Given(@"typeql read query; fails with a message containing: ""(.*)""")]
         [When(@"typeql read query; fails with a message containing: ""(.*)""")]
         [Then(@"typeql read query; fails with a message containing: ""(.*)""")]
-        public void TypeqlReadQueryFailsWithMessage(string expectedMessage, DocString query)
+        public void TypeqlQueryFailsWithMessage(string expectedMessage, DocString query)
         {
             ClearAnswers();
-            var exception = Assert.ThrowsAny<Exception>(() =>
-            {
-                if (_queryOptions != null)
-                {
-                    Tx.Query(query.Content, _queryOptions);
-                }
-                else
-                {
-                    Tx.Query(query.Content);
-                }
-            });
+            var exception = Assert.ThrowsAny<Exception>(() => ExecuteQuery(query.Content));
             Assert.Contains(expectedMessage, exception.Message);
         }
 
-        // "parsing fails" steps - same as "fails" since parsing errors are thrown as TypeDBDriverException
         [Given(@"typeql schema query; parsing fails")]
         [When(@"typeql schema query; parsing fails")]
         [Then(@"typeql schema query; parsing fails")]
-        public void TypeqlSchemaQueryParsingFails(DocString query)
-        {
-            ClearAnswers();
-            Assert.ThrowsAny<Exception>(() =>
-            {
-                if (_queryOptions != null)
-                {
-                    Tx.Query(query.Content, _queryOptions);
-                }
-                else
-                {
-                    Tx.Query(query.Content);
-                }
-            });
-        }
-
         [Given(@"typeql write query; parsing fails")]
         [When(@"typeql write query; parsing fails")]
         [Then(@"typeql write query; parsing fails")]
-        public void TypeqlWriteQueryParsingFails(DocString query)
-        {
-            ClearAnswers();
-            Assert.ThrowsAny<Exception>(() =>
-            {
-                if (_queryOptions != null)
-                {
-                    Tx.Query(query.Content, _queryOptions);
-                }
-                else
-                {
-                    Tx.Query(query.Content);
-                }
-            });
-        }
-
         [Given(@"typeql read query; parsing fails")]
         [When(@"typeql read query; parsing fails")]
         [Then(@"typeql read query; parsing fails")]
-        public void TypeqlReadQueryParsingFails(DocString query)
+        public void TypeqlQueryParsingFails(DocString query)
         {
             ClearAnswers();
-            Assert.ThrowsAny<Exception>(() =>
-            {
-                if (_queryOptions != null)
-                {
-                    Tx.Query(query.Content, _queryOptions);
-                }
-                else
-                {
-                    Tx.Query(query.Content);
-                }
-            });
+            Assert.ThrowsAny<Exception>(() => ExecuteQuery(query.Content));
+        }
+
+        private IQueryAnswer ExecuteQuery(string queryText)
+        {
+            if (_queryOptions != null)
+                return Tx.Query(queryText, _queryOptions);
+            return Tx.Query(queryText);
         }
 
         [Given(@"get answers of typeql schema query")]
         [When(@"get answers of typeql schema query")]
         [Then(@"get answers of typeql schema query")]
-        public void GetAnswersOfTypeqlSchemaQuery(DocString query)
-        {
-            ClearAnswers();
-            if (_queryOptions != null)
-            {
-                _queryAnswer = Tx.Query(query.Content, _queryOptions);
-            }
-            else
-            {
-                _queryAnswer = Tx.Query(query.Content);
-            }
-        }
-
         [Given(@"get answers of typeql write query")]
         [When(@"get answers of typeql write query")]
         [Then(@"get answers of typeql write query")]
-        public void GetAnswersOfTypeqlWriteQuery(DocString query)
-        {
-            ClearAnswers();
-            if (_queryOptions != null)
-            {
-                _queryAnswer = Tx.Query(query.Content, _queryOptions);
-            }
-            else
-            {
-                _queryAnswer = Tx.Query(query.Content);
-            }
-        }
-
         [Given(@"get answers of typeql read query")]
         [When(@"get answers of typeql read query")]
         [Then(@"get answers of typeql read query")]
-        public void GetAnswersOfTypeqlReadQuery(DocString query)
+        public void GetAnswersOfTypeqlQuery(DocString query)
         {
             ClearAnswers();
-            if (_queryOptions != null)
+            _queryAnswer = ExecuteQuery(query.Content);
+        }
+
+        [Given(@"get answers of typeql schema query; fails")]
+        [When(@"get answers of typeql schema query; fails")]
+        [Then(@"get answers of typeql schema query; fails")]
+        [Given(@"get answers of typeql write query; fails")]
+        [When(@"get answers of typeql write query; fails")]
+        [Then(@"get answers of typeql write query; fails")]
+        [Given(@"get answers of typeql read query; fails")]
+        [When(@"get answers of typeql read query; fails")]
+        [Then(@"get answers of typeql read query; fails")]
+        public void GetAnswersOfTypeqlQueryFails(DocString query)
+        {
+            ClearAnswers();
+            Assert.ThrowsAny<Exception>(() =>
             {
-                _queryAnswer = Tx.Query(query.Content, _queryOptions);
-            }
-            else
+                _queryAnswer = ExecuteQuery(query.Content);
+            });
+        }
+
+        [Given(@"get answers of typeql schema query; fails with a message containing: ""(.*)""")]
+        [When(@"get answers of typeql schema query; fails with a message containing: ""(.*)""")]
+        [Then(@"get answers of typeql schema query; fails with a message containing: ""(.*)""")]
+        [Given(@"get answers of typeql write query; fails with a message containing: ""(.*)""")]
+        [When(@"get answers of typeql write query; fails with a message containing: ""(.*)""")]
+        [Then(@"get answers of typeql write query; fails with a message containing: ""(.*)""")]
+        [Given(@"get answers of typeql read query; fails with a message containing: ""(.*)""")]
+        [When(@"get answers of typeql read query; fails with a message containing: ""(.*)""")]
+        [Then(@"get answers of typeql read query; fails with a message containing: ""(.*)""")]
+        public void GetAnswersOfTypeqlQueryFailsWithMessage(string expectedMessage, DocString query)
+        {
+            ClearAnswers();
+            var exception = Assert.ThrowsAny<Exception>(() =>
             {
-                _queryAnswer = Tx.Query(query.Content);
-            }
+                _queryAnswer = ExecuteQuery(query.Content);
+            });
+            Assert.Contains(expectedMessage, exception.Message);
         }
 
         #endregion
@@ -614,6 +460,38 @@ namespace TypeDB.Driver.Test.Behaviour
             CollectRowsAnswerIfNeeded();
             var concepts = GetRowGetConcepts(rowIndex);
             Assert.Equal(size, concepts.Count);
+        }
+
+        [Then(@"answer get row\((\d+)\) get variable\(([^)]+)\) is empty")]
+        public void AnswerGetRowGetVariableIsEmpty(int rowIndex, string variable)
+        {
+            CollectRowsAnswerIfNeeded();
+            IConcept? concept = GetRowGetConcept(rowIndex, variable);
+            Assert.Null(concept);
+        }
+
+        [Then(@"answer get row\((\d+)\) get variable\(([^)]+)\) is not empty")]
+        public void AnswerGetRowGetVariableIsNotEmpty(int rowIndex, string variable)
+        {
+            CollectRowsAnswerIfNeeded();
+            IConcept? concept = GetRowGetConcept(rowIndex, variable);
+            Assert.NotNull(concept);
+        }
+
+        [Then(@"answer get row\((\d+)\) get variable by index of variable\(([^)]+)\) is empty")]
+        public void AnswerGetRowGetVariableByIndexIsEmpty(int rowIndex, string variable)
+        {
+            CollectRowsAnswerIfNeeded();
+            IConcept? concept = GetRowGetConcept(rowIndex, variable, byIndex: true);
+            Assert.Null(concept);
+        }
+
+        [Then(@"answer get row\((\d+)\) get variable by index of variable\(([^)]+)\) is not empty")]
+        public void AnswerGetRowGetVariableByIndexIsNotEmpty(int rowIndex, string variable)
+        {
+            CollectRowsAnswerIfNeeded();
+            IConcept? concept = GetRowGetConcept(rowIndex, variable, byIndex: true);
+            Assert.NotNull(concept);
         }
 
         [Then(@"answer get row\((\d+)\) get variable\(([^)]+)\) try get label is not none")]
@@ -1071,7 +949,7 @@ namespace TypeDB.Driver.Test.Behaviour
                     return false;
 
                 // Use the current transaction to run a subquery
-                var tx = ConnectionStepsBase.Transactions[ConnectionStepsBase.Transactions.Count - 1];
+                var tx = ConnectionStepsBase.Tx;
 
                 // Build a query to find things with this specific key attribute value
                 // Format: match $x iid <iid>, has <typeLabel> <value>;

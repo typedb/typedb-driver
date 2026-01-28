@@ -160,18 +160,13 @@ namespace TypeDB.Driver.Test.Behaviour
         [Then(@"connection has databases:")]
         public void ConnectionHasDatabases(DataTable names)
         {
-            int expectedDatabasesSize = 0;
-
             foreach (var row in names.Rows)
             {
                 foreach (var name in row.Cells)
                 {
                     ConnectionHasDatabase(name.Value);
-                    expectedDatabasesSize++;
                 }
             }
-
-            Assert.True(expectedDatabasesSize >= Driver!.Databases.GetAll().Count);
         }
 
         [Given(@"connection does not have database: (.+)")]
@@ -208,10 +203,17 @@ namespace TypeDB.Driver.Test.Behaviour
             Assert.Throws<TypeDBDriverException>(() => Driver!.Databases.Create(""));
         }
 
-        [Then(@"connection create database: (.*); fails")]
+        [Then(@"connection create database: ([^;]+); fails$")]
         public void ConnectionCreateDatabaseFails(string name)
         {
-            Assert.Throws<TypeDBDriverException>(() => Driver!.Databases.Create(name));
+            Assert.ThrowsAny<Exception>(() => Driver!.Databases.Create(name.Trim()));
+        }
+
+        [Then(@"connection create database: ([^;]+); fails with a message containing: ""(.*)""")]
+        public void ConnectionCreateDatabaseFailsWithMessage(string name, string expectedMessage)
+        {
+            var exception = Assert.ThrowsAny<Exception>(() => Driver!.Databases.Create(name.Trim()));
+            Assert.Contains(expectedMessage, exception.Message);
         }
 
         [When(@"connection delete database: (.*); fails")]

@@ -57,12 +57,14 @@ namespace TypeDB.Driver.Test.Behaviour
     {
         public static IDriver? Driver;
 
-        // TODO: Add transaction tracking when transactions are implemented in Milestone 2
         public static List<ITypeDBTransaction> Transactions = new List<ITypeDBTransaction>();
 
         // Background driver and transactions for "in background" steps
         public static IDriver? BackgroundDriver;
         public static List<ITypeDBTransaction> BackgroundTransactions = new List<ITypeDBTransaction>();
+
+        // Parallel transactions for "in parallel" steps
+        public static List<Task<ITypeDBTransaction>> TransactionsParallel = new List<Task<ITypeDBTransaction>>();
 
         // Transaction options set via "set transaction option" steps
         public static TransactionOptions? CurrentTransactionOptions;
@@ -98,10 +100,22 @@ namespace TypeDB.Driver.Test.Behaviour
         // TODO: implement configuration and remove skips when @ignore-typedb-driver is removed from .feature.
         protected bool _requiredConfiguration = false;
 
+        public static ITypeDBTransaction Tx => Transactions[0];
+
+        public static ITypeDBTransaction TxPop()
+        {
+            var tx = Transactions[0];
+            Transactions.RemoveAt(0);
+            return tx;
+        }
+
         // Sleep between scenarios to let the driver close completely
         // (`close` is not synced and can cause lock failures in CI)
         // This mirrors the Java driver's workaround for the same issue.
         private const int BeforeTimeoutMillis = 50;  // Small delay for async cleanup
+
+        public static readonly string AdminUsername = "admin";
+        public static readonly string AdminPassword = "password";
 
         public ConnectionStepsBase() // "Before"
         {
@@ -115,154 +129,93 @@ namespace TypeDB.Driver.Test.Behaviour
             GC.WaitForPendingFinalizers();
 
             CleanInCaseOfPreviousFail();
+
+            BackgroundDriver = CreateDefaultTypeDBDriver();
+        }
+
+        public static IDriver CreateDefaultTypeDBDriver()
+        {
+            return TypeDB.Driver(
+                TypeDB.DefaultAddress,
+                new Credentials(AdminUsername, AdminPassword),
+                new DriverOptions(false, null));
         }
 
         public virtual void Dispose() // "After"
         {
-            foreach (var tx in Transactions)
-            {
-                try
-                {
-                    if (tx.IsOpen())
-                    {
-                        tx.Close();
-                    }
-                    // Explicitly dispose to release native resources immediately
-                    if (tx is IDisposable disposable)
-                    {
-                        disposable.Dispose();
-                    }
-                }
-                catch
-                {
-                    // Ignore cleanup errors
-                }
-            }
-            Transactions.Clear();
-
-            // Clean up background transactions and driver
-            foreach (var bgTx in BackgroundTransactions)
-            {
-                try
-                {
-                    if (bgTx.IsOpen()) bgTx.Close();
-                    if (bgTx is IDisposable bgTxDisp) bgTxDisp.Dispose();
-                }
-                catch { }
-            }
-            BackgroundTransactions.Clear();
-
-            if (BackgroundDriver != null)
-            {
-                try { if (BackgroundDriver is IDisposable bgDisp) bgDisp.Dispose(); }
-                catch { }
-                BackgroundDriver = null;
-            }
-
-            // Reset transaction options
-            CurrentTransactionOptions = null;
-
-            // Clean up databases and users using current driver before closing
-            if (Driver != null)
-            {
-                if (Driver.IsOpen())
-                {
-                    try
-                    {
-                        foreach (var db in Driver.Databases.GetAll())
-                        {
-                            try
-                            {
-                                db.Delete();
-                            }
-                            catch
-                            {
-                                // Ignore individual database deletion errors
-                            }
-                        }
-                    }
-                    catch
-                    {
-                        // Ignore errors
-                    }
-
-                    try
-                    {
-                        foreach (var user in Driver.Users.GetAll())
-                        {
-                            if (user.Username != "admin")
-                            {
-                                try { user.Delete(); } catch { }
-                            }
-                        }
-                    }
-                    catch
-                    {
-                        // Ignore errors (e.g. non-admin connection)
-                    }
-                }
-
-                // Dispose the driver to free native resources immediately
-                // instead of waiting for GC finalization (which can cause race conditions)
-                if (Driver is IDisposable disposable)
-                {
-                    disposable.Dispose();
-                }
-            }
-            Driver = null;
-
             // Clean up temp directory
             if (_tempDir != null && Directory.Exists(_tempDir))
             {
-                try
-                {
-                    Directory.Delete(_tempDir, recursive: true);
-                }
-                catch
-                {
-                    // Ignore cleanup errors
-                }
+                try { Directory.Delete(_tempDir, recursive: true); } catch { }
                 _tempDir = null;
             }
 
-            // Force garbage collection to run any remaining finalizers synchronously
-            // This ensures all native resources are freed before starting the next test
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
+            // Clean up transactions (matches Java's after() order)
+            CleanupTransactions();
+            CleanupBackgroundTransactions();
+            CurrentTransactionOptions = null;
 
-            // Sleep to let async driver cleanup complete
-            Thread.Sleep(BeforeTimeoutMillis);
-        }
-
-        private void CleanupAllDatabases()
-        {
-            // Note: This method is not used - cleanup is done in Dispose() using the current driver
-            // Keeping this for potential future use with a separate cleanup driver
+            // Create a fresh driver to clean up state (like Java's after())
             try
             {
-                var cleanupDriver = TypeDB.Driver(
-                    TypeDB.DefaultAddress,
-                    new Credentials("admin", "password"),
-                    new DriverOptions(false, null));
+                var cleanupDriver = CreateDefaultTypeDBDriver();
 
-                foreach (var db in cleanupDriver.Databases.GetAll())
+                // Delete non-admin users
+                try
                 {
-                    try
+                    foreach (var user in cleanupDriver.Users.GetAll())
                     {
-                        db.Delete();
-                    }
-                    catch
-                    {
-                        // Ignore individual database deletion errors
+                        if (user.Username != AdminUsername)
+                        {
+                            try { cleanupDriver.Users.Get(user.Username).Delete(); } catch { }
+                        }
                     }
                 }
+                catch { }
+
+                // Reset admin password
+                try
+                {
+                    cleanupDriver.Users.Get(AdminUsername).UpdatePassword(AdminPassword);
+                }
+                catch { }
+
+                // Delete all databases
+                try
+                {
+                    foreach (var db in cleanupDriver.Databases.GetAll())
+                    {
+                        try { cleanupDriver.Databases.Get(db.Name).Delete(); } catch { }
+                    }
+                }
+                catch { }
 
                 cleanupDriver.Close();
             }
-            catch
+            catch { }
+
+            // Close the background driver
+            if (BackgroundDriver != null)
             {
-                // Ignore cleanup errors
+                try { BackgroundDriver.Close(); } catch { }
+                BackgroundDriver = null;
             }
+
+            // Dispose the main driver
+            if (Driver != null)
+            {
+                try
+                {
+                    if (Driver is IDisposable disposable) disposable.Dispose();
+                }
+                catch { }
+                Driver = null;
+            }
+
+            // Force garbage collection
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            Thread.Sleep(BeforeTimeoutMillis);
         }
 
         public abstract IDriver CreateTypeDBDriver(string address);
@@ -315,15 +268,44 @@ namespace TypeDB.Driver.Test.Behaviour
         {
             if (_requiredConfiguration) return; // Skip tests with configuration
 
+            CleanupTransactions();
             if (Driver != null)
             {
-                // Dispose the driver to free native resources immediately
-                if (Driver is IDisposable disposable)
-                {
-                    disposable.Dispose();
-                }
+                Driver.Close();
             }
             Driver = null;
+        }
+
+        private static void CleanupTransactions()
+        {
+            foreach (var tx in Transactions)
+            {
+                try { tx.Close(); } catch { }
+            }
+            Transactions.Clear();
+
+            foreach (var futureTx in TransactionsParallel)
+            {
+                try { futureTx.Result.Close(); } catch { }
+            }
+            TransactionsParallel.Clear();
+        }
+
+        private static void CleanupBackgroundTransactions()
+        {
+            foreach (var tx in BackgroundTransactions)
+            {
+                try { tx.Close(); } catch { }
+            }
+            BackgroundTransactions.Clear();
+        }
+
+        public static ITypeDBTransaction OpenTransaction(
+            IDriver driver, string databaseName, TransactionType type, TransactionOptions? options = null)
+        {
+            if (options != null)
+                return driver.Transaction(databaseName, type, options);
+            return driver.Transaction(databaseName, type);
         }
 
         [When(@"connection open schema transaction for database: (\S+)")]
@@ -333,9 +315,8 @@ namespace TypeDB.Driver.Test.Behaviour
         {
             if (_requiredConfiguration) return;
 
-            var tx = CurrentTransactionOptions != null
-                ? Driver!.Transaction(name, TransactionType.Schema, CurrentTransactionOptions)
-                : Driver!.Transaction(name, TransactionType.Schema);
+            Transactions.Clear();
+            var tx = OpenTransaction(Driver!, name, TransactionType.Schema, CurrentTransactionOptions);
             Transactions.Add(tx);
         }
 
@@ -346,9 +327,8 @@ namespace TypeDB.Driver.Test.Behaviour
         {
             if (_requiredConfiguration) return;
 
-            var tx = CurrentTransactionOptions != null
-                ? Driver!.Transaction(name, TransactionType.Read, CurrentTransactionOptions)
-                : Driver!.Transaction(name, TransactionType.Read);
+            Transactions.Clear();
+            var tx = OpenTransaction(Driver!, name, TransactionType.Read, CurrentTransactionOptions);
             Transactions.Add(tx);
         }
 
@@ -359,9 +339,8 @@ namespace TypeDB.Driver.Test.Behaviour
         {
             if (_requiredConfiguration) return;
 
-            var tx = CurrentTransactionOptions != null
-                ? Driver!.Transaction(name, TransactionType.Write, CurrentTransactionOptions)
-                : Driver!.Transaction(name, TransactionType.Write);
+            Transactions.Clear();
+            var tx = OpenTransaction(Driver!, name, TransactionType.Write, CurrentTransactionOptions);
             Transactions.Add(tx);
         }
 
@@ -371,13 +350,7 @@ namespace TypeDB.Driver.Test.Behaviour
             if (_requiredConfiguration) return;
 
             bool expected = bool.Parse(expectedState);
-            if (Transactions.Count == 0)
-            {
-                Assert.False(expected, "No transaction exists, but expected one to be open");
-                return;
-            }
-            var tx = Transactions[Transactions.Count - 1];
-            Assert.Equal(expected, tx.IsOpen());
+            Assert.Equal(expected, Transactions.Count > 0 && Transactions[0].IsOpen());
         }
 
         [Given(@"transaction commits")]
@@ -386,11 +359,7 @@ namespace TypeDB.Driver.Test.Behaviour
         public void TransactionCommits()
         {
             if (_requiredConfiguration) return;
-
-            Assert.True(Transactions.Count > 0, "No transaction to commit");
-            var tx = Transactions[Transactions.Count - 1];
-            tx.Commit();
-            // Don't remove from list - tests may want to check IsOpen() afterward
+            TxPop().Commit();
         }
 
         [Given(@"transaction closes")]
@@ -399,82 +368,62 @@ namespace TypeDB.Driver.Test.Behaviour
         public void TransactionCloses()
         {
             if (_requiredConfiguration) return;
-
-            Assert.True(Transactions.Count > 0, "No transaction to close");
-            var tx = Transactions[Transactions.Count - 1];
-            tx.Close();
-            // Don't remove from list - tests may want to check IsOpen() afterward
+            TxPop().Close();
         }
 
-        private void CleanInCaseOfPreviousFail() // Fails are exceptions which do not clean resources
+        [Given(@"transaction rollbacks")]
+        [When(@"transaction rollbacks")]
+        [Then(@"transaction rollbacks")]
+        public void TransactionRollbacks()
+        {
+            if (_requiredConfiguration) return;
+            Tx.Rollback();
+        }
+
+
+        private void CleanInCaseOfPreviousFail()
         {
             try
             {
-                // Close any leftover transactions from previous failed tests
-                foreach (var tx in Transactions)
-                {
-                    try { if (tx.IsOpen()) tx.Close(); } catch { }
-                    try { if (tx is IDisposable d) d.Dispose(); } catch { }
-                }
-                Transactions.Clear();
-
-                // Clean up leftover background resources
-                foreach (var bgTx in BackgroundTransactions)
-                {
-                    try { if (bgTx.IsOpen()) bgTx.Close(); } catch { }
-                    try { if (bgTx is IDisposable d) d.Dispose(); } catch { }
-                }
-                BackgroundTransactions.Clear();
+                CleanupTransactions();
+                CleanupBackgroundTransactions();
                 if (BackgroundDriver != null)
                 {
-                    try { if (BackgroundDriver is IDisposable d) d.Dispose(); } catch { }
+                    try { BackgroundDriver.Close(); } catch { }
                     BackgroundDriver = null;
                 }
                 CurrentTransactionOptions = null;
 
-                // Clean up leftover databases from previous failed tests
-                // Create a fresh driver to do cleanup since the old one might be in a bad state
                 try
                 {
-                    var cleanupDriver = TypeDB.Driver(
-                        TypeDB.DefaultAddress,
-                        new Credentials("admin", "password"),
-                        new DriverOptions(false, null));
+                    var cleanupDriver = CreateDefaultTypeDBDriver();
 
-                    if (cleanupDriver.IsOpen())
+                    foreach (var user in cleanupDriver.Users.GetAll())
                     {
-                        foreach (var db in cleanupDriver.Databases.GetAll())
+                        if (user.Username != AdminUsername)
                         {
-                            try { db.Delete(); } catch { }
-                        }
-
-                        foreach (var user in cleanupDriver.Users.GetAll())
-                        {
-                            if (user.Username != "admin")
-                            {
-                                try { user.Delete(); } catch { }
-                            }
+                            try { cleanupDriver.Users.Get(user.Username).Delete(); } catch { }
                         }
                     }
 
-                    if (cleanupDriver is IDisposable cd) cd.Dispose();
-                }
-                catch
-                {
-                    // Ignore - server might not be running yet
-                }
+                    try { cleanupDriver.Users.Get(AdminUsername).UpdatePassword(AdminPassword); } catch { }
 
-                // Dispose leftover driver to free native resources
+                    foreach (var db in cleanupDriver.Databases.GetAll())
+                    {
+                        try { cleanupDriver.Databases.Get(db.Name).Delete(); } catch { }
+                    }
+
+                    cleanupDriver.Close();
+                }
+                catch { }
+
                 if (Driver != null)
                 {
                     try { if (Driver is IDisposable d) d.Dispose(); } catch { }
                     Driver = null;
                 }
             }
-            catch
-            {
-                // Ignore cleanup errors from previous failed tests
-            }
+            catch { }
         }
     }
 }
