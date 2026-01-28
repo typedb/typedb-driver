@@ -37,9 +37,6 @@ namespace TypeDB.Driver.Connection
     {
         private readonly IDatabaseManager _databaseManager;
         private readonly UserManager _userManager;
-        // Keep references to prevent GC collection while native code uses them
-        private readonly Credentials _credentials;
-        private readonly DriverOptions _driverOptions;
 
         /// <summary>
         /// Creates a new TypeDB driver connection using the 3.0 unified API.
@@ -50,8 +47,6 @@ namespace TypeDB.Driver.Connection
         public TypeDBDriver(string address, Credentials credentials, DriverOptions driverOptions)
             : base(Open(address, credentials, driverOptions))
         {
-            _credentials = credentials;
-            _driverOptions = driverOptions;
             _databaseManager = new TypeDBDatabaseManager(NativeObject);
             _userManager = new UserManager(NativeObject);
         }
@@ -154,20 +149,12 @@ namespace TypeDB.Driver.Connection
         public void Dispose()
         {
             Close();
-            // Dispose all native objects to free native memory immediately
-            // instead of waiting for GC finalization (which can cause race conditions)
-            if (NativeObject is IDisposable nativeDisposable)
-            {
-                nativeDisposable.Dispose();
-            }
-            if (_credentials is IDisposable credentialsDisposable)
-            {
-                credentialsDisposable.Dispose();
-            }
-            if (_driverOptions is IDisposable optionsDisposable)
-            {
-                optionsDisposable.Dispose();
-            }
+//            // Dispose all native objects to free native memory immediately
+//            // instead of waiting for GC finalization (which can cause race conditions)
+//            if (NativeObject is IDisposable nativeDisposable)
+//            {
+//                nativeDisposable.Dispose();
+//            }
         }
     }
 }
