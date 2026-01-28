@@ -30,31 +30,30 @@ using DriverError = TypeDB.Driver.Common.Error.Driver;
 
 namespace TypeDB.Driver.Connection
 {
-    public class TypeDBDatabaseManager : NativeObjectWrapper<Pinvoke.DatabaseManager>, IDatabaseManager
+    /// <summary>
+    /// Provides access to database management operations.
+    /// </summary>
+    public class TypeDBDatabaseManager : IDatabaseManager
     {
-        public TypeDBDatabaseManager(Pinvoke.Connection nativeConnection)
-            : base(NewNative(nativeConnection))
-        {}
+        private readonly Pinvoke.TypeDBDriver _nativeDriver;
 
-        private static Pinvoke.DatabaseManager NewNative(Pinvoke.Connection nativeConnection)
+        /// <summary>
+        /// Creates a new database manager for the given driver.
+        /// </summary>
+        /// <param name="nativeDriver">The native driver object.</param>
+        public TypeDBDatabaseManager(Pinvoke.TypeDBDriver nativeDriver)
         {
-            try
-            {
-                return Pinvoke.typedb_driver.database_manager_new(nativeConnection);
-            }
-            catch (Pinvoke.Error e)
-            {
-                throw new TypeDBDriverException(e);
-            }
+            _nativeDriver = nativeDriver;
         }
 
+        /// <inheritdoc/>
         public IDatabase Get(string name)
         {
             Validator.NonEmptyString(name, DriverError.MISSING_DB_NAME);
 
             try
             {
-                return new TypeDBDatabase(Pinvoke.typedb_driver.databases_get(NativeObject, name));
+                return new TypeDBDatabase(Pinvoke.typedb_driver.databases_get(_nativeDriver, name));
             }
             catch (Pinvoke.Error e)
             {
@@ -62,13 +61,14 @@ namespace TypeDB.Driver.Connection
             }
         }
 
+        /// <inheritdoc/>
         public bool Contains(string name)
         {
             Validator.NonEmptyString(name, DriverError.MISSING_DB_NAME);
 
             try
             {
-                return Pinvoke.typedb_driver.databases_contains(NativeObject, name);
+                return Pinvoke.typedb_driver.databases_contains(_nativeDriver, name);
             }
             catch (Pinvoke.Error e)
             {
@@ -76,13 +76,14 @@ namespace TypeDB.Driver.Connection
             }
         }
 
+        /// <inheritdoc/>
         public void Create(string name)
         {
             Validator.NonEmptyString(name, DriverError.MISSING_DB_NAME);
 
             try
             {
-                Pinvoke.typedb_driver.databases_create(NativeObject, name);
+                Pinvoke.typedb_driver.databases_create(_nativeDriver, name);
             }
             catch (Pinvoke.Error e)
             {
@@ -90,14 +91,30 @@ namespace TypeDB.Driver.Connection
             }
         }
 
+        /// <inheritdoc/>
         public IList<IDatabase> GetAll()
         {
             try
             {
                 return new NativeEnumerable<Pinvoke.Database>(
-                    Pinvoke.typedb_driver.databases_all(NativeObject))
+                    Pinvoke.typedb_driver.databases_all(_nativeDriver))
                     .Select(obj => new TypeDBDatabase(obj))
                     .ToList<IDatabase>();
+            }
+            catch (Pinvoke.Error e)
+            {
+                throw new TypeDBDriverException(e);
+            }
+        }
+
+        /// <inheritdoc/>
+        public void ImportFromFile(string name, string schema, string dataFile)
+        {
+            Validator.NonEmptyString(name, DriverError.MISSING_DB_NAME);
+
+            try
+            {
+                Pinvoke.typedb_driver.databases_import_from_file(_nativeDriver, name, schema, dataFile);
             }
             catch (Pinvoke.Error e)
             {

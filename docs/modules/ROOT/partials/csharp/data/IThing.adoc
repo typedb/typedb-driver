@@ -7,6 +7,10 @@
 
 * `TypeDB.Driver.Api.IConcept`
 
+
+
+Represents an instance (entity, relation, or attribute) in TypeDB. In TypeDB 3.0, instances are read-only data returned from queries.
+
 // tag::methods[]
 [#_IThing_IConcept_TypeDB_Driver_Api_IThing_AsThing_]
 ==== AsThing
@@ -18,7 +22,28 @@ IThing IConcept. AsThing()
 
 
 
-Casts the concept to ``IThing``.
+Casts the concept to IThing (instance).
+
+ 
+  Exceptions
+ 
+ 
+  
+   
+    
+     TypeDBDriverException
+     If the concept is not a thing/instance.
+    
+   
+  
+ 
+
+
+ 
+  concept.AsThing()
+ 
+
+
 
 
 Implements TypeDB.Driver.Api.IConcept.
@@ -26,264 +51,6 @@ Implements TypeDB.Driver.Api.IConcept.
 [caption=""]
 .Returns
 `IThing IConcept.`
-
-[caption=""]
-.Code examples
-[source,cs]
-----
-thing.AsThing();
-----
-
-[#_VoidPromise_TypeDB_Driver_Api_IThing_Delete_ITypeDBTransaction_transaction_]
-==== Delete
-
-[source,cs]
-----
-VoidPromise Delete(ITypeDBTransaction transaction)
-----
-
-
-
-Deletes this ``IThing``.
-
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `ITypeDBTransaction`
-|===
-
-[caption=""]
-.Returns
-`VoidPromise`
-
-[caption=""]
-.Code examples
-[source,cs]
-----
-thing.Delete(transaction).Resolve();
-----
-
-[#_IEnumerable_IAttribute_TypeDB_Driver_Api_IThing_GetHas_ITypeDBTransaction_transaction_params_IAttributeType_attributeTypes_]
-==== GetHas
-
-[source,cs]
-----
-IEnumerable< IAttribute > GetHas(ITypeDBTransaction transaction, params IAttributeType[] attributeTypes)
-----
-
-
-
-Retrieves the ``IAttribute``s that this ``IThing`` owns, optionally filtered by ``IAttributeType``s.
-
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `ITypeDBTransaction`
-a| `attributeTypes` a| The ``IAttributeType``s to filter the attributes by a| `params IAttributeType[]`
-|===
-
-[caption=""]
-.Returns
-`IEnumerable< IAttribute >`
-
-[caption=""]
-.Code examples
-[source,cs]
-----
-thing.GetHas(transaction);
-thing.GetHas(transaction, attributeType);
-----
-
-[#_IEnumerable_IAttribute_TypeDB_Driver_Api_IThing_GetHas_ITypeDBTransaction_transaction_ICollection_Annotation_annotations_]
-==== GetHas
-
-[source,cs]
-----
-IEnumerable< IAttribute > GetHas(ITypeDBTransaction transaction, ICollection< Annotation > annotations)
-----
-
-
-
-Retrieves the ``IAttribute``s that this ``IThing`` owns, filtered by ``Annotation``s.
-
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `ITypeDBTransaction`
-a| `annotations` a| Only retrieve attributes with all given ``Annotation``s a| `ICollection< Annotation >`
-|===
-
-[caption=""]
-.Returns
-`IEnumerable< IAttribute >`
-
-[caption=""]
-.Code examples
-[source,cs]
-----
-thing.GetHas(transaction);
-thing.GetHas(transaction, new []{NewKey()});
-----
-
-[#_IEnumerable_IRoleType_TypeDB_Driver_Api_IThing_GetPlaying_ITypeDBTransaction_transaction_]
-==== GetPlaying
-
-[source,cs]
-----
-IEnumerable< IRoleType > GetPlaying(ITypeDBTransaction transaction)
-----
-
-
-
-Retrieves the roles that this ``IThing`` is currently playing.
-
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `ITypeDBTransaction`
-|===
-
-[caption=""]
-.Returns
-`IEnumerable< IRoleType >`
-
-[caption=""]
-.Code examples
-[source,cs]
-----
-thing.GetPlaying(transaction);
-----
-
-[#_IEnumerable_IRelation_TypeDB_Driver_Api_IThing_GetRelations_ITypeDBTransaction_transaction_params_IRoleType_roleTypes_]
-==== GetRelations
-
-[source,cs]
-----
-IEnumerable< IRelation > GetRelations(ITypeDBTransaction transaction, params IRoleType[] roleTypes)
-----
-
-
-
-Retrieves all the ``Relations`` which this ``IThing`` plays a role in, optionally filtered by one or more given roles.
-
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `ITypeDBTransaction`
-a| `roleTypes` a| The array of roles to filter the relations by. a| `params IRoleType[]`
-|===
-
-[caption=""]
-.Returns
-`IEnumerable< IRelation >`
-
-[caption=""]
-.Code examples
-[source,cs]
-----
-thing.GetRelations(transaction, roleTypes);
-----
-
-[#_string_TypeDB_Driver_Api_IThing_IID]
-==== IID
-
-[source,cs]
-----
-string TypeDB.Driver.Api.IThing.IID
-----
-
-
-
-The unique id of the ``IThing``.
-
-
-[caption=""]
-.Returns
-`string`
-
-[caption=""]
-.Code examples
-[source,cs]
-----
-thing.IID;
-----
-
-[#_Promise_bool_TypeDB_Driver_Api_IThing_IsDeleted_ITypeDBTransaction_transaction_]
-==== IsDeleted
-
-[source,cs]
-----
-Promise< bool > IsDeleted(ITypeDBTransaction transaction)
-----
-
-
-
-Checks if this ``IThing`` is deleted.
-
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `ITypeDBTransaction`
-|===
-
-[caption=""]
-.Returns
-`Promise< bool >`
-
-[caption=""]
-.Code examples
-[source,cs]
-----
-thing.IsDeleted(transaction).Resolve();
-----
-
-[#_bool_TypeDB_Driver_Api_IThing_IsInferred_]
-==== IsInferred
-
-[source,cs]
-----
-bool IsInferred()
-----
-
-
-
-Checks if this ``IThing`` is inferred by a [Reasoning Rule].
-
-
-[caption=""]
-.Returns
-`bool`
-
-[caption=""]
-.Code examples
-[source,cs]
-----
-thing.IsInferred();
-----
 
 [#_bool_IConcept_TypeDB_Driver_Api_IThing_IsThing_]
 ==== IsThing
@@ -295,7 +62,13 @@ bool IConcept. IsThing()
 
 
 
-Checks if the concept is a ``IThing``.
+Checks if the concept is a IThing. Note: In 3.0, this is also known as IsInstance().
+
+ 
+  concept.IsThing()
+ 
+
+
 
 
 Implements TypeDB.Driver.Api.IConcept.
@@ -303,47 +76,6 @@ Implements TypeDB.Driver.Api.IConcept.
 [caption=""]
 .Returns
 `bool IConcept.`
-
-[caption=""]
-.Code examples
-[source,cs]
-----
-thing.IsThing();
-----
-
-[#_VoidPromise_TypeDB_Driver_Api_IThing_SetHas_ITypeDBTransaction_transaction_IAttribute_attribute_]
-==== SetHas
-
-[source,cs]
-----
-VoidPromise SetHas(ITypeDBTransaction transaction, IAttribute attribute)
-----
-
-
-
-Assigns an ``IAttribute`` to be owned by this ``IThing``.
-
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `ITypeDBTransaction`
-a| `attribute` a| The ``IAttribute`` to be owned by this ``IThing``. a| `IAttribute`
-|===
-
-[caption=""]
-.Returns
-`VoidPromise`
-
-[caption=""]
-.Code examples
-[source,cs]
-----
-thing.SetHas(transaction, attribute).Resolve();
-----
 
 [#_IThingType_TypeDB_Driver_Api_IThing_Type]
 ==== Type
@@ -355,53 +87,13 @@ IThingType TypeDB.Driver.Api.IThing.Type
 
 
 
-The type which this ``IThing`` belongs to.
+The type which this instance belongs to.
 
+Implemented in TypeDB.Driver.Api.IAttribute, TypeDB.Driver.Api.IEntity, and TypeDB.Driver.Api.IRelation.
 
 [caption=""]
 .Returns
 `IThingType`
-
-[caption=""]
-.Code examples
-[source,cs]
-----
-thing.Type;
-----
-
-[#_VoidPromise_TypeDB_Driver_Api_IThing_UnsetHas_ITypeDBTransaction_transaction_IAttribute_attribute_]
-==== UnsetHas
-
-[source,cs]
-----
-VoidPromise UnsetHas(ITypeDBTransaction transaction, IAttribute attribute)
-----
-
-
-
-Unassigns an ``IAttribute`` from this ``IThing``.
-
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `ITypeDBTransaction`
-a| `attribute` a| The ``IAttribute`` to be disowned from this ``IThing``. a| `IAttribute`
-|===
-
-[caption=""]
-.Returns
-`VoidPromise`
-
-[caption=""]
-.Code examples
-[source,cs]
-----
-thing.UnsetHas(transaction, attribute).Resolve();
-----
 
 // end::methods[]
 

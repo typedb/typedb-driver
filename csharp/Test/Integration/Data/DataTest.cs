@@ -17,109 +17,103 @@
  * under the License.
  */
 
-using NUnit.Framework;
 using System;
-using System.Collections.Generic;
 using System.Linq;
+
+using Xunit;
 
 using TypeDB.Driver;
 using TypeDB.Driver.Api;
 using TypeDB.Driver.Common;
-using static TypeDB.Driver.Api.IThingType;
-using static TypeDB.Driver.Api.IThingType.Annotation;
 
 namespace TypeDB.Driver.Test.Integration
 {
-    [TestFixture]
-    public class DataTestFixture
+    public class DataTest
     {
-        [Test]
-        public void TransitivityEnumIsCorrectlyConvertible()
-        {
-            void CheckConversions(Pinvoke.Transitivity native, IConcept.Transitivity wrapper)
-            {
-                Assert.AreEqual(wrapper, (IConcept.Transitivity)native);
-                Assert.AreEqual(native, (Pinvoke.Transitivity)wrapper);
-            }
+        private const string ServerAddress = "127.0.0.1:1730";
 
-            CheckConversions(Pinvoke.Transitivity.Transitive, IConcept.Transitivity.Transitive);
-            CheckConversions(Pinvoke.Transitivity.Explicit, IConcept.Transitivity.Explicit);
-        }
-
-        [Test]
-        public void SessionTypeEnumIsCorrectlyConvertible()
-        {
-            void CheckConversions(Pinvoke.SessionType native, SessionType wrapper)
-            {
-                Assert.AreEqual(wrapper, (SessionType)native);
-                Assert.AreEqual(native, (Pinvoke.SessionType)wrapper);
-            }
-
-            CheckConversions(Pinvoke.SessionType.Schema, SessionType.Schema);
-            CheckConversions(Pinvoke.SessionType.Data, SessionType.Data);
-        }
-
-        [Test]
+        [Fact]
         public void TransactionTypeEnumIsCorrectlyConvertible()
         {
             void CheckConversions(Pinvoke.TransactionType native, TransactionType wrapper)
             {
-                Assert.AreEqual(wrapper, (TransactionType)native);
-                Assert.AreEqual(native, (Pinvoke.TransactionType)wrapper);
+                Assert.Equal(wrapper, (TransactionType)native);
+                Assert.Equal(native, (Pinvoke.TransactionType)wrapper);
             }
 
             CheckConversions(Pinvoke.TransactionType.Read, TransactionType.Read);
             CheckConversions(Pinvoke.TransactionType.Write, TransactionType.Write);
+            CheckConversions(Pinvoke.TransactionType.Schema, TransactionType.Schema);
         }
 
-        [Test]
-        public void ValueTypeEnumIsCorrectlyConvertible()
+        [Fact]
+        public void QueryTypeEnumFromNativeIsCorrect()
         {
-            void CheckConversions(Pinvoke.ValueType native, IValue.ValueType wrapper)
+            Assert.Equal(QueryType.Read, QueryTypeExtensions.FromNative(Pinvoke.QueryType.ReadQuery));
+            Assert.Equal(QueryType.Write, QueryTypeExtensions.FromNative(Pinvoke.QueryType.WriteQuery));
+            Assert.Equal(QueryType.Schema, QueryTypeExtensions.FromNative(Pinvoke.QueryType.SchemaQuery));
+        }
+
+        [Fact]
+        public void QueryTypeExtensionMethodsWork()
+        {
+            Assert.True(QueryType.Read.IsRead());
+            Assert.False(QueryType.Read.IsWrite());
+            Assert.False(QueryType.Read.IsSchema());
+
+            Assert.False(QueryType.Write.IsRead());
+            Assert.True(QueryType.Write.IsWrite());
+            Assert.False(QueryType.Write.IsSchema());
+
+            Assert.False(QueryType.Schema.IsRead());
+            Assert.False(QueryType.Schema.IsWrite());
+            Assert.True(QueryType.Schema.IsSchema());
+        }
+
+        [Fact]
+        public void TransactionTypeMatchesQueryType()
+        {
+            using var driver = TypeDB.Driver(ServerAddress, new Credentials("admin", "password"), new DriverOptions(false, null));
+
+            string dbName = "test-data-enums";
+            if (driver.Databases.Contains(dbName))
             {
-                Assert.AreEqual(wrapper, (IValue.ValueType)native);
-                Assert.AreEqual(native, (Pinvoke.ValueType)wrapper);
+                driver.Databases.Get(dbName).Delete();
             }
+            driver.Databases.Create(dbName);
 
-            CheckConversions(Pinvoke.ValueType.Object, IValue.ValueType.Object);
-            CheckConversions(Pinvoke.ValueType.Boolean, IValue.ValueType.Bool);
-            CheckConversions(Pinvoke.ValueType.Long, IValue.ValueType.Long);
-            CheckConversions(Pinvoke.ValueType.Double, IValue.ValueType.Double);
-            CheckConversions(Pinvoke.ValueType.String, IValue.ValueType.String);
-            CheckConversions(Pinvoke.ValueType.DateTime, IValue.ValueType.DateTime);
-        }
+            try
+            {
+                // Read transaction should return Read query type
+                using (var tx = driver.Transaction(dbName, TransactionType.Read))
+                {
+                    Assert.Equal(TransactionType.Read, tx.Type);
+                    var answer = tx.Query("match entity $x;");
+                    Assert.Equal(QueryType.Read, answer.QueryType);
+                }
 
-        [Test]
-        public void ValueTypeEnumsGetValueClassIsCorrect()
-        {
-            Assert.AreEqual(typeof(object), IValue.ValueType.Object.GetValueClass());
-            Assert.AreEqual(typeof(bool), IValue.ValueType.Bool.GetValueClass());
-            Assert.AreEqual(typeof(long), IValue.ValueType.Long.GetValueClass());
-            Assert.AreEqual(typeof(double), IValue.ValueType.Double.GetValueClass());
-            Assert.AreEqual(typeof(string), IValue.ValueType.String.GetValueClass());
-            Assert.AreEqual(typeof(System.DateTime), IValue.ValueType.DateTime.GetValueClass());
-        }
+                // Schema transaction should return Schema query type for define
+                using (var tx = driver.Transaction(dbName, TransactionType.Schema))
+                {
+                    Assert.Equal(TransactionType.Schema, tx.Type);
+                    var answer = tx.Query("define entity test-entity;");
+                    Assert.Equal(QueryType.Schema, answer.QueryType);
+                    tx.Commit();
+                }
 
-        [Test]
-        public void ValueTypeEnumsIsWritableIsCorrect()
-        {
-            Assert.False(IValue.ValueType.Object.IsWritable());
-            Assert.True(IValue.ValueType.Bool.IsWritable());
-            Assert.True(IValue.ValueType.Long.IsWritable());
-            Assert.True(IValue.ValueType.Double.IsWritable());
-            Assert.True(IValue.ValueType.String.IsWritable());
-            Assert.True(IValue.ValueType.DateTime.IsWritable());
-        }
-
-        [Test]
-        public void ValueTypeEnumsIsKeyableIsCorrect()
-        {
-            Assert.False(IValue.ValueType.Object.IsKeyable());
-            Assert.False(IValue.ValueType.Bool.IsKeyable());
-            Assert.True(IValue.ValueType.Long.IsKeyable());
-            Assert.False(IValue.ValueType.Double.IsKeyable());
-            Assert.True(IValue.ValueType.String.IsKeyable());
-            Assert.True(IValue.ValueType.DateTime.IsKeyable());
+                // Write transaction should return Write query type for insert
+                using (var tx = driver.Transaction(dbName, TransactionType.Write))
+                {
+                    Assert.Equal(TransactionType.Write, tx.Type);
+                    var answer = tx.Query("insert $x isa test-entity;");
+                    Assert.Equal(QueryType.Write, answer.QueryType);
+                    tx.Commit();
+                }
+            }
+            finally
+            {
+                driver.Databases.Get(dbName).Delete();
+            }
         }
     }
 }

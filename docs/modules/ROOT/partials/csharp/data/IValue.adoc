@@ -7,151 +7,11 @@
 
 * `TypeDB.Driver.Api.IConcept`
 
+
+
+Represents a value concept in TypeDB. In TypeDB 3.0, values are read-only data returned from queries.
+
 // tag::methods[]
-[#_bool_TypeDB_Driver_Api_IValue_AsBool_]
-==== AsBool
-
-[source,cs]
-----
-bool AsBool()
-----
-
-
-
-Returns a ``bool`` value of this value concept. If the value has another type, raises an exception.
-
-
-[caption=""]
-.Returns
-`bool`
-
-[caption=""]
-.Code examples
-[source,cs]
-----
-value.AsBool();
-----
-
-[#_System_DateTime_TypeDB_Driver_Api_IValue_AsDateTime_]
-==== AsDateTime
-
-[source,cs]
-----
-System.DateTime AsDateTime()
-----
-
-
-
-Returns a ``datetime`` value of this value concept. This value contains raw date and time without considering your time zone (Kind = Unspecified). If the value has another type, raises an exception.
-
-
-[caption=""]
-.Returns
-`System.DateTime`
-
-[caption=""]
-.Code examples
-[source,cs]
-----
-value.AsDateTime();
-----
-
-[#_double_TypeDB_Driver_Api_IValue_AsDouble_]
-==== AsDouble
-
-[source,cs]
-----
-double AsDouble()
-----
-
-
-
-Returns a ``double`` value of this value concept. If the value has another type, raises an exception.
-
-
-[caption=""]
-.Returns
-`double`
-
-[caption=""]
-.Code examples
-[source,cs]
-----
-value.AsDouble();
-----
-
-[#_long_TypeDB_Driver_Api_IValue_AsLong_]
-==== AsLong
-
-[source,cs]
-----
-long AsLong()
-----
-
-
-
-Returns a ``long`` value of this value concept. If the value has another type, raises an exception.
-
-
-[caption=""]
-.Returns
-`long`
-
-[caption=""]
-.Code examples
-[source,cs]
-----
-value.AsLong();
-----
-
-[#_string_TypeDB_Driver_Api_IValue_AsString_]
-==== AsString
-
-[source,cs]
-----
-string AsString()
-----
-
-
-
-Returns a ``string`` value of this value concept. If the value has another type, raises an exception.
-
-
-[caption=""]
-.Returns
-`string`
-
-[caption=""]
-.Code examples
-[source,cs]
-----
-value.AsString();
-----
-
-[#_object_TypeDB_Driver_Api_IValue_AsUntyped_]
-==== AsUntyped
-
-[source,cs]
-----
-object AsUntyped()
-----
-
-
-
-Returns an untyped ``object`` value of this value concept. This is useful for value equality or printing without having to switch on the actual contained value.
-
-
-[caption=""]
-.Returns
-`object`
-
-[caption=""]
-.Code examples
-[source,cs]
-----
-value.AsUntyped();
-----
-
 [#_IValue_IConcept_TypeDB_Driver_Api_IValue_AsValue_]
 ==== AsValue
 
@@ -162,7 +22,26 @@ IValue IConcept. AsValue()
 
 
 
-Casts the concept to ``IValue``.
+Casts the concept to IValue.
+
+ 
+  Exceptions
+ 
+ 
+  
+   
+    
+     TypeDBDriverException
+     If the concept is not a value.
+    
+   
+  
+ 
+
+
+ 
+  concept.AsValue()
+ 
 
 
 
@@ -173,132 +52,197 @@ Implements TypeDB.Driver.Api.IConcept.
 .Returns
 `IValue IConcept.`
 
+[#_object_TypeDB_Driver_Api_IValue_Get_]
+==== Get
+
+[source,cs]
+----
+object Get()
+----
+
+
+
+Returns an untyped object value of this value concept. This is useful for value equality or printing without having to switch on the actual contained value.
+
 [caption=""]
-.Code examples
-[source,cs]
-----
-concept.AsValue();
-----
+.Returns
+`object`
 
-[#_bool_TypeDB_Driver_Api_IValue_IsBool_]
-==== IsBool
+[#_bool_TypeDB_Driver_Api_IValue_GetBoolean_]
+==== GetBoolean
 
 [source,cs]
 ----
-bool IsBool()
+bool GetBoolean()
 ----
 
 
 
-Returns ``True`` if the value which this value concept holds is of type ``bool``. Otherwise, returns ``false``.
-
+Returns a boolean value of this value concept. If the value has another type, raises an exception.
 
 [caption=""]
 .Returns
 `bool`
 
-[caption=""]
-.Code examples
-[source,cs]
-----
-value.IsBool();
-----
-
-[#_bool_TypeDB_Driver_Api_IValue_IsDateTime_]
-==== IsDateTime
+[#_DateOnly_TypeDB_Driver_Api_IValue_GetDate_]
+==== GetDate
 
 [source,cs]
 ----
-bool IsDateTime()
+DateOnly GetDate()
 ----
 
 
 
-Returns ``True`` if the value which this value concept holds is of type ``datetime``. Otherwise, returns ``false``.
-
+Returns a date value of this value concept. If the value has another type, raises an exception.
 
 [caption=""]
 .Returns
-`bool`
+`DateOnly`
 
-[caption=""]
-.Code examples
-[source,cs]
-----
-value.IsDateTime();
-----
-
-[#_bool_TypeDB_Driver_Api_IValue_IsDouble_]
-==== IsDouble
+[#_DateTime_TypeDB_Driver_Api_IValue_GetDatetime_]
+==== GetDatetime
 
 [source,cs]
 ----
-bool IsDouble()
+DateTime GetDatetime()
 ----
 
 
 
-Returns ``True`` if the value which this value concept holds is of type ``double``. Otherwise, returns ``false``.
-
+Returns a datetime value of this value concept. If the value has another type, raises an exception.
 
 [caption=""]
 .Returns
-`bool`
+`DateTime`
 
-[caption=""]
-.Code examples
-[source,cs]
-----
-value.IsDouble();
-----
-
-[#_bool_TypeDB_Driver_Api_IValue_IsLong_]
-==== IsLong
+[#_DateTimeOffset_TypeDB_Driver_Api_IValue_GetDatetimeTZ_]
+==== GetDatetimeTZ
 
 [source,cs]
 ----
-bool IsLong()
+DateTimeOffset GetDatetimeTZ()
 ----
 
 
 
-Returns ``True`` if the value which this value concept holds is of type ``long``. Otherwise, returns ``false``.
-
+Returns a datetime with timezone value of this value concept. If the value has another type, raises an exception.
 
 [caption=""]
 .Returns
-`bool`
+`DateTimeOffset`
 
-[caption=""]
-.Code examples
-[source,cs]
-----
-value.IsLong();
-----
-
-[#_bool_TypeDB_Driver_Api_IValue_IsString_]
-==== IsString
+[#_decimal_TypeDB_Driver_Api_IValue_GetDecimal_]
+==== GetDecimal
 
 [source,cs]
 ----
-bool IsString()
+decimal GetDecimal()
 ----
 
 
 
-Returns ``True`` if the value which this value concept holds is of type ``string``. Otherwise, returns ``false``.
-
+Returns a decimal value of this value concept. If the value has another type, raises an exception.
 
 [caption=""]
 .Returns
-`bool`
+`decimal`
 
-[caption=""]
-.Code examples
+[#_double_TypeDB_Driver_Api_IValue_GetDouble_]
+==== GetDouble
+
 [source,cs]
 ----
-value.IsString();
+double GetDouble()
 ----
+
+
+
+Returns a double value of this value concept. If the value has another type, raises an exception.
+
+[caption=""]
+.Returns
+`double`
+
+[#_Duration_TypeDB_Driver_Api_IValue_GetDuration_]
+==== GetDuration
+
+[source,cs]
+----
+Duration GetDuration()
+----
+
+
+
+Returns a duration value of this value concept. If the value has another type, raises an exception.
+
+[caption=""]
+.Returns
+`Duration`
+
+[#_long_TypeDB_Driver_Api_IValue_GetInteger_]
+==== GetInteger
+
+[source,cs]
+----
+long GetInteger()
+----
+
+
+
+Returns an integer (long) value of this value concept. If the value has another type, raises an exception.
+
+[caption=""]
+.Returns
+`long`
+
+[#_string_TypeDB_Driver_Api_IValue_GetString_]
+==== GetString
+
+[source,cs]
+----
+string GetString()
+----
+
+
+
+Returns a string value of this value concept. If the value has another type, raises an exception.
+
+[caption=""]
+.Returns
+`string`
+
+[#_IReadOnlyDictionary_string_IValue_TypeDB_Driver_Api_IValue_GetStruct_]
+==== GetStruct
+
+[source,cs]
+----
+IReadOnlyDictionary< string, IValue? > GetStruct()
+----
+
+
+
+Returns a struct value of this value concept represented as a dictionary from field names to values. If the value has another type, raises an exception.
+
+[caption=""]
+.Returns
+`IReadOnlyDictionary< string, IValue? >`
+
+[#_string_TypeDB_Driver_Api_IValue_GetValueType_]
+==== GetValueType
+
+[source,cs]
+----
+string GetValueType()
+----
+
+
+
+Retrieves the value type of this value concept as a string.
+
+[caption=""]
+.Returns
+`string`
 
 [#_bool_IConcept_TypeDB_Driver_Api_IValue_IsValue_]
 ==== IsValue
@@ -310,7 +254,11 @@ bool IConcept. IsValue()
 
 
 
-Checks if the concept is a ``IValue``.
+Checks if the concept is a IValue.
+
+ 
+  concept.IsValue()
+ 
 
 
 
@@ -320,37 +268,6 @@ Implements TypeDB.Driver.Api.IConcept.
 [caption=""]
 .Returns
 `bool IConcept.`
-
-[caption=""]
-.Code examples
-[source,cs]
-----
-concept.IsValue();
-----
-
-[#_ValueType_TypeDB_Driver_Api_IValue_Type]
-==== Type
-
-[source,cs]
-----
-ValueType TypeDB.Driver.Api.IValue.Type
-----
-
-
-
-Retrieves the ``IValue.ValueType`` of this value concept.
-
-
-[caption=""]
-.Returns
-`ValueType`
-
-[caption=""]
-.Code examples
-[source,cs]
-----
-value.Type;
-----
 
 // end::methods[]
 

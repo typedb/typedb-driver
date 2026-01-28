@@ -37,295 +37,216 @@ namespace TypeDB.Driver.Test.Behaviour
     {
         private TransactionType StringToTransactionType(string value)
         {
-            switch (value)
+            switch (value.ToLower())
             {
                 case "read":
                     return TransactionType.Read;
                 case "write":
                     return TransactionType.Write;
+                case "schema":
+                    return TransactionType.Schema;
+                case "<type>":
+                    throw new BehaviourTestException(
+                        "KNOWN LIMITATION: Xunit.Gherkin.Quick doesn't substitute <type> placeholder in DataTables.");
                 default:
                     throw new Exception($"The test value {value} passed to StringToTransactionType is invalid!");
             }
         }
 
-        public void ForEachSessionOpenTransactionsOfType(List<string> types)
+        [Then(@"transaction has type: (\S+)")]
+        public void TransactionHasType(string type)
         {
-            List<TransactionType> transactionTypes = types
-                .Select(type => StringToTransactionType(type))
-                .ToList();
+            Assert.Equal(StringToTransactionType(type), ConnectionStepsBase.Tx.Type);
+        }
 
-            foreach (ITypeDBSession session in Sessions)
+        [Then(@"transactions are open: (.*)")]
+        public void TransactionsAreOpen(string expectedState)
+        {
+            bool expected = bool.Parse(expectedState);
+            foreach (var tx in Transactions)
             {
-                List<ITypeDBTransaction> transactions = new List<ITypeDBTransaction>();
-
-                foreach (TransactionType transactionType in transactionTypes)
-                {
-                    ITypeDBTransaction transaction =
-                        session.Transaction(transactionType, TransactionOptions);
-
-                    transactions.Add(transaction);
-                }
-
-                SessionsToTransactions[session] = transactions;
+                Assert.Equal(expected, tx.IsOpen());
             }
         }
 
-        [Given(@"[for each ]*session[,]? open[s]? transaction[s]? of type: {word}")]
-        [When(@"[for each ]*session[,]? open[s]? transaction[s]? of type: {word}")]
-        [Then(@"[for each ]*session[,]? open[s]? transaction[s]? of type: {word}")]
-        public void ForEachSessionOpenTransactionsOfType(string type)
+        // Transaction commits/closes/rollbacks ; fails variants
+
+        [Then(@"transaction commits; fails")]
+        public void TransactionCommitsFails()
         {
-            ForEachSessionOpenTransactionsOfType(new List<string>(){type});
+            Assert.ThrowsAny<Exception>(() => TxPop().Commit());
         }
 
-        [When(@"[for each ]*session[,]? open transaction[s]? of type:")]
-        public void ForEachSessionOpenTransactionsOfType(DataTable types)
+        [Then(@"transaction commits; fails with a message containing: ""(.*)""")]
+        public void TransactionCommitsFailsWithMessage(string expectedMessage)
         {
-            ForEachSessionOpenTransactionsOfType(
-                Util.ParseDataTableToTypeList<string>(types, val => val.ToString()));
+            var exception = Assert.ThrowsAny<Exception>(() => TxPop().Commit());
+            Assert.Contains(expectedMessage, exception.Message);
         }
 
-        [When(@"[for each ]*session[,]? open transaction[s]? of type; throws exception: {word}")]
-        public void ForEachSessionOpenTransactionsOfTypeThrowsException(string type)
+        [Then(@"transaction closes; fails")]
+        public void TransactionClosesFails()
         {
-            TransactionType transactionType = StringToTransactionType(type);
-
-            foreach (ITypeDBSession session in Sessions)
-            {
-                Assert.Throws<TypeDBDriverException>(
-                    () => session.Transaction(transactionType));
-            }
+            Assert.ThrowsAny<Exception>(() => TxPop().Close());
         }
 
-        [Then(@"[for each ]*session[,]? open transaction[s]? of type; throws exception")]
-        public void ForEachSessionOpenTransactionsOfTypeThrowsException(DataTable types)
+        [Then(@"transaction closes; fails with a message containing: ""(.*)""")]
+        public void TransactionClosesFailsWithMessage(string expectedMessage)
+        {
+            var exception = Assert.ThrowsAny<Exception>(() => TxPop().Close());
+            Assert.Contains(expectedMessage, exception.Message);
+        }
+
+        [Then(@"transaction rollbacks; fails")]
+        public void TransactionRollbacksFails()
+        {
+            Assert.ThrowsAny<Exception>(() => ConnectionStepsBase.Tx.Rollback());
+        }
+
+        [Then(@"transaction rollbacks; fails with a message containing: ""(.*)""")]
+        public void TransactionRollbacksFailsWithMessage(string expectedMessage)
+        {
+            var exception = Assert.ThrowsAny<Exception>(() => ConnectionStepsBase.Tx.Rollback());
+            Assert.Contains(expectedMessage, exception.Message);
+        }
+
+        // Plural transaction open steps
+
+        [When(@"connection open transactions for database: (\S+), of type:")]
+        public void ConnectionOpenTransactionsForDatabase(string database, DataTable types)
         {
             foreach (var row in types.Rows)
             {
-                foreach (var type in row.Cells)
+                foreach (var cell in row.Cells)
                 {
-                    ForEachSessionOpenTransactionsOfTypeThrowsException(type.Value);
+                    var type = StringToTransactionType(cell.Value);
+                    var tx = ConnectionStepsBase.OpenTransaction(
+                        Driver!, database, type, CurrentTransactionOptions);
+                    Transactions.Add(tx);
                 }
             }
         }
 
-        [Then(@"[for each ]*session[,]? transaction[s]? [is|are]+ null: {}")]
-        public void ForEachSessionTransactionsAreNull(bool expectedNull)
+        [Then(@"transactions have type:")]
+        public void TransactionsHaveType(DataTable types)
         {
-            foreach (ITypeDBSession session in Sessions)
+            var expectedTypes = new List<TransactionType>();
+            foreach (var row in types.Rows)
             {
-                foreach (ITypeDBTransaction transaction in SessionsToTransactions[session])
+                foreach (var cell in row.Cells)
                 {
-                    Assert.Equal(expectedNull, transaction == null);
+                    expectedTypes.Add(StringToTransactionType(cell.Value));
                 }
+            }
+
+            var typeIterator = expectedTypes.GetEnumerator();
+            foreach (var tx in Transactions)
+            {
+                Assert.True(typeIterator.MoveNext(), "types list is shorter than saved transactions");
+                Assert.Equal(typeIterator.Current, tx.Type);
+            }
+            Assert.False(typeIterator.MoveNext(), "types list is longer than saved transactions");
+        }
+
+        // Parallel transaction steps
+
+        [When(@"connection open transactions in parallel for database: (\S+), of type:")]
+        public void ConnectionOpenTransactionsInParallelForDatabase(string database, DataTable types)
+        {
+            TransactionsParallel.Clear();
+
+            var collectedTypes = new List<TransactionType>();
+            foreach (var row in types.Rows)
+            {
+                foreach (var cell in row.Cells)
+                {
+                    collectedTypes.Add(StringToTransactionType(cell.Value));
+                }
+            }
+
+            foreach (var type in collectedTypes)
+            {
+                var txType = type;
+                TransactionsParallel.Add(Task.Run(() =>
+                    Driver!.Transaction(database, txType)));
             }
         }
 
-        [Then(@"[for each ]*session[,]? transaction[s]? [is|are]+ open: {}")]
-        public void ForEachSessionTransactionsAreOpen(bool expectedOpen)
+        [Then(@"transactions in parallel are open: (.*)")]
+        public void TransactionsInParallelAreOpen(string expectedState)
         {
-            foreach (ITypeDBSession session in Sessions)
+            bool expected = bool.Parse(expectedState);
+            var assertions = new List<Task>();
+
+            foreach (var txTask in TransactionsParallel)
             {
-                foreach (ITypeDBTransaction transaction in SessionsToTransactions[session])
-                {
-                    Assert.Equal(expectedOpen, transaction.IsOpen());
-                }
-            }
-        }
-
-        [Given(@"transaction commits")]
-        [When(@"transaction commits")]
-        [Then(@"transaction commits")]
-        public void TransactionCommits()
-        {
-            Tx.Commit();
-        }
-
-        [Then(@"transaction commits; throws exception")]
-        public void TransactionCommitsThrowsException()
-        {
-            Assert.Throws<TypeDBDriverException>(() => TransactionCommits());
-        }
-
-        [Then(@"transaction commits; throws exception containing {string}")]
-        public void TransactionCommitsThrowsException(string expectedMessage)
-        {
-            var exception = Assert.Throws<TypeDBDriverException>(
-                () => TransactionCommits());
-
-            Assert.Equal(expectedMessage, exception.Message);
-        }
-
-        [Then(@"[for each ]*session[,]? transaction[s]? commit[s]?")]
-        public void ForEachSessionTransactionsCommit()
-        {
-            foreach (ITypeDBSession session in Sessions)
-            {
-                foreach (ITypeDBTransaction transaction in SessionsToTransactions[session])
-                {
-                    transaction.Commit();
-                }
-            }
-        }
-
-        [Then(@"[for each ]*session[,]? transaction[s]? commit[s]?; throws exception")]
-        public void ForEachSessionTransactionsCommitThrowsException()
-        {
-            foreach (ITypeDBSession session in Sessions)
-            {
-                foreach (ITypeDBTransaction transaction in SessionsToTransactions[session])
-                {
-                    Assert.Throws<TypeDBDriverException>(() => transaction.Commit());
-                }
-            }
-        }
-
-        [Given(@"[for each ]*session[,]? transaction close[s]?")]
-        [Then(@"[for each ]*session[,]? transaction close[s]?")]
-        public void ForEachSessionTransactionCloses()
-        {
-            foreach (ITypeDBSession session in Sessions)
-            {
-                foreach (ITypeDBTransaction transaction in SessionsToTransactions[session])
-                {
-                    transaction.Close();
-                }
-            }
-        }
-
-        private void ForEachSessionTransactionsHaveType(List<string> types)
-        {
-            foreach (ITypeDBSession session in Sessions)
-            {
-                List<ITypeDBTransaction> transactions = SessionsToTransactions[session];
-                Assert.Equal(types.Count, transactions.Count);
-
-                IEnumerator<string> typesEnumerator = types.GetEnumerator();
-                IEnumerator<ITypeDBTransaction> transactionsEnumerator = transactions.GetEnumerator();
-
-                while (typesEnumerator.MoveNext())
-                {
-                    Assert.True(transactionsEnumerator.MoveNext());
-                    Assert.Equal(
-                        StringToTransactionType(typesEnumerator.Current),
-                        transactionsEnumerator.Current.Type);
-                }
-            }
-        }
-
-        [Then(@"[for each ]*session[,]? transaction[s]? [has|have]+ type: {word}")]
-        public void ForEachSessionTransactionsHaveType(string type)
-        {
-            ForEachSessionTransactionsHaveType(new List<string>(){type});
-        }
-
-        [Then(@"[for each ]*session[,]? transaction[s]? [has|have]+ type:")]
-        public void ForEachSessionTransactionsHaveType(DataTable types)
-        {
-            List<string> collectedTypes = Util.ParseDataTableToTypeList(types, val => val.ToString());
-            ForEachSessionTransactionsHaveType(collectedTypes);
-        }
-
-        [When(@"[for each ]*session, open transaction[s]? in parallel of type:")]
-        public void ForEachSessionOpenTransactionsInParallelOfType(DataTable types)
-        {
-            List<TransactionType> collectedTypes =
-                Util.ParseDataTableToTypeList<TransactionType>(types, StringToTransactionType);
-
-            int workerThreads;
-            int ioThreads;
-            ThreadPool.GetAvailableThreads(out workerThreads, out ioThreads);
-            Assert.True(workerThreads > collectedTypes.Count);
-
-            foreach (ITypeDBSession session in Sessions)
-            {
-                List<Task<ITypeDBTransaction>> parallelTransactions = new List<Task<ITypeDBTransaction>>();
-                for (int i = 0; i < collectedTypes.Count; i++)
-                {
-                    TransactionType type = collectedTypes[i];
-
-                    parallelTransactions.Add(Task.Factory.StartNew<ITypeDBTransaction>(() =>
-                        {
-                            return session.Transaction(type);
-                        }));
-                }
-
-                SessionsToParallelTransactions[session] = parallelTransactions;
-            }
-        }
-
-        [Then(@"[for each ]*session, transactions in parallel are null: {}")]
-        public void ForEachSessionTransactionsInParallelAreNull(bool expectedNull)
-        {
-            List<Task> assertions = new List<Task>();
-
-            foreach (ITypeDBSession session in Sessions)
-            {
-                foreach (var transaction in SessionsToParallelTransactions[session])
-                {
-                    assertions.Add(transaction.ContinueWith(
-                        antecedent => Assert.Equal(expectedNull, antecedent.Result == null)));
-                }
+                assertions.Add(txTask.ContinueWith(
+                    antecedent => Assert.Equal(expected, antecedent.Result.IsOpen())));
             }
 
             Task.WaitAll(assertions.ToArray());
         }
 
-        [Then(@"[for each ]*session, transactions in parallel are open: {}")]
-        public void ForEachSessionTransactionsInParallelAreOpen(bool expectedOpen)
+        [Then(@"transactions in parallel have type:")]
+        public void TransactionsInParallelHaveType(DataTable types)
         {
-            List<Task> assertions = new List<Task>();
-
-            foreach (ITypeDBSession session in Sessions)
+            var expectedTypes = new List<TransactionType>();
+            foreach (var row in types.Rows)
             {
-                foreach (var transaction in SessionsToParallelTransactions[session])
+                foreach (var cell in row.Cells)
                 {
-                    assertions.Add(transaction.ContinueWith(
-                        antecedent => Assert.Equal(expectedOpen, antecedent.Result.IsOpen())));
+                    expectedTypes.Add(StringToTransactionType(cell.Value));
                 }
             }
 
-            Task.WaitAll(assertions.ToArray());
-        }
-
-        [Then(@"[for each ]*session, transactions in parallel have type:")]
-        public void ForEachSessionTransactionsInParallelHaveType(DataTable types)
-        {
-            List<TransactionType> collectedTypes =
-                Util.ParseDataTableToTypeList<TransactionType>(types, StringToTransactionType);
-
-            List<Task> assertions = new List<Task>();
-
-            foreach (ITypeDBSession session in Sessions)
+            var assertions = new List<Task>();
+            int index = 0;
+            foreach (var txTask in TransactionsParallel)
             {
-                var transactions = SessionsToParallelTransactions[session];
-
-                Assert.Equal(transactions.Count, collectedTypes.Count);
-
-                IEnumerator<TransactionType> typesEnumerator = collectedTypes.GetEnumerator();
-                IEnumerator<Task<ITypeDBTransaction>> transactionsEnumerator = transactions.GetEnumerator();
-
-                while (typesEnumerator.MoveNext())
-                {
-                    Assert.True(transactionsEnumerator.MoveNext());
-                    var expectedType = typesEnumerator.Current;
-                    assertions.Add(transactionsEnumerator.Current.ContinueWith(
-                        antecedent => Assert.Equal(antecedent.Result.Type, expectedType)));
-                }
+                Assert.True(index < expectedTypes.Count, "types list is shorter than saved transactions");
+                var expectedType = expectedTypes[index++];
+                assertions.Add(txTask.ContinueWith(
+                    antecedent => Assert.Equal(expectedType, antecedent.Result.Type)));
             }
 
             Task.WaitAll(assertions.ToArray());
+            Assert.Equal(expectedTypes.Count, index);
         }
 
-        [Given(@"set transaction option {} to: {word}")]
-        public void SetTransactionOptionTo(string option, string value)
-        {
-            if (!OptionSetters.ContainsKey(option))
-            {
-                throw new Exception("Unrecognised option: " + option);
-            }
+        // Background transaction steps - any transaction type with may_error
 
-            OptionSetters[option](TransactionOptions, value.ToString());
+        [When(@"in background, connection open schema transaction for database: ([^;]+); fails with a message containing: ""(.*)""")]
+        [Then(@"in background, connection open schema transaction for database: ([^;]+); fails with a message containing: ""(.*)""")]
+        public void InBackgroundConnectionOpenSchemaTransactionFailsWithMessage(string databaseName, string expectedMessage)
+        {
+            var exception = Assert.ThrowsAny<Exception>(() =>
+            {
+                BackgroundDriver ??= ConnectionStepsBase.CreateDefaultTypeDBDriver();
+                var tx = ConnectionStepsBase.OpenTransaction(
+                    BackgroundDriver, databaseName.Trim(), TransactionType.Schema, CurrentTransactionOptions);
+                BackgroundTransactions.Add(tx);
+            });
+            Assert.Contains(expectedMessage, exception.Message);
+        }
+
+        [When(@"in background, connection open write transaction for database: ([^;]+)")]
+        [Then(@"in background, connection open write transaction for database: ([^;]+)")]
+        public void InBackgroundConnectionOpenWriteTransaction(string databaseName)
+        {
+            BackgroundDriver ??= ConnectionStepsBase.CreateDefaultTypeDBDriver();
+            var tx = ConnectionStepsBase.OpenTransaction(
+                BackgroundDriver, databaseName.Trim(), TransactionType.Write, CurrentTransactionOptions);
+            BackgroundTransactions.Add(tx);
+        }
+
+        [When(@"in background, connection open read transaction for database: ([^;]+)")]
+        [Then(@"in background, connection open read transaction for database: ([^;]+)")]
+        public void InBackgroundConnectionOpenReadTransaction(string databaseName)
+        {
+            BackgroundDriver ??= ConnectionStepsBase.CreateDefaultTypeDBDriver();
+            var tx = ConnectionStepsBase.OpenTransaction(
+                BackgroundDriver, databaseName.Trim(), TransactionType.Read, CurrentTransactionOptions);
+            BackgroundTransactions.Add(tx);
         }
     }
 }

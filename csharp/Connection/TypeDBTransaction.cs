@@ -21,58 +21,34 @@ using System;
 using System.Collections.Generic;
 
 using TypeDB.Driver;
+using TypeDB.Driver.Answer;
 using TypeDB.Driver.Api;
-using TypeDB.Driver.Concept;
+using TypeDB.Driver.Api.Answer;
 using TypeDB.Driver.Common;
 using TypeDB.Driver.Common.Validation;
-using TypeDB.Driver.Logic;
-using TypeDB.Driver.Query;
 
 using DriverError = TypeDB.Driver.Common.Error.Driver;
 
 namespace TypeDB.Driver.Connection
 {
+    /// <summary>
+    /// A transaction with a TypeDB database.
+    /// </summary>
     public class TypeDBTransaction : NativeObjectWrapper<Pinvoke.Transaction>, ITypeDBTransaction
     {
         private readonly List<TransactionOnClose> _callbacks;
 
-        internal TypeDBTransaction(TypeDBSession session, TransactionType type, TypeDBOptions options)
-            : base(NewNative(session, type, options))
+        internal TypeDBTransaction(IDriver driver, Pinvoke.Transaction transaction, TransactionType type, TransactionOptions options)
+            : base(transaction)
         {
             Type = type;
-            Options = options;
-
-            Concepts = new ConceptManager(NativeObject);
-            Logic = new LogicManager(NativeObject);
-            Query = new QueryManager(NativeObject);
-
             _callbacks = new List<TransactionOnClose>();
         }
 
-        private static Pinvoke.Transaction NewNative(
-            TypeDBSession session, TransactionType type, TypeDBOptions options)
-        {
-            try
-            {
-                return Pinvoke.typedb_driver.transaction_new(
-                    session.NativeObject, (Pinvoke.TransactionType)type, options.NativeObject);
-            }
-            catch (Pinvoke.Error e)
-            {
-                throw new TypeDBDriverException(e);
-            }
-        }
-
+        /// <inheritdoc/>
         public TransactionType Type { get; }
 
-        public TypeDBOptions Options { get; }
-
-        public IConceptManager Concepts { get; }
-
-        public ILogicManager Logic { get; }
-
-        public IQueryManager Query { get; }
-
+        /// <inheritdoc/>
         public bool IsOpen()
         {
             return NativeObject.IsOwned()
@@ -80,7 +56,8 @@ namespace TypeDB.Driver.Connection
                 : false;
         }
 
-        public void OnClose(Action<Exception> function)
+        /// <inheritdoc/>
+        public void OnClose(Action<Exception?> function)
         {
             Validator.ThrowIfFalse(NativeObject.IsOwned, DriverError.TRANSACTION_CLOSED);
 
@@ -88,7 +65,7 @@ namespace TypeDB.Driver.Connection
             {
                 TransactionOnClose callback = new TransactionOnClose(function);
                 _callbacks.Add(callback);
-                Pinvoke.typedb_driver.transaction_on_close(NativeObject, callback.Released());
+                Pinvoke.typedb_driver.transaction_on_close(NativeObject, callback.Released()).Resolve();
             }
             catch (Pinvoke.Error e)
             {
@@ -96,6 +73,7 @@ namespace TypeDB.Driver.Connection
             }
         }
 
+        /// <inheritdoc/>
         public void Commit()
         {
             Validator.ThrowIfFalse(NativeObject.IsOwned, DriverError.TRANSACTION_CLOSED);
@@ -110,6 +88,7 @@ namespace TypeDB.Driver.Connection
             }
         }
 
+        /// <inheritdoc/>
         public void Rollback()
         {
             Validator.ThrowIfFalse(NativeObject.IsOwned, DriverError.TRANSACTION_CLOSED);
@@ -124,6 +103,7 @@ namespace TypeDB.Driver.Connection
             }
         }
 
+        /// <inheritdoc/>
         public void Close()
         {
             if (!NativeObject.IsOwned())
@@ -133,18 +113,53 @@ namespace TypeDB.Driver.Connection
 
             try
             {
-                Pinvoke.typedb_driver.transaction_force_close(NativeObject);
+                // Call transaction_close and wait for it to complete.
+                // IMPORTANT: We must wait for close to complete BEFORE clearing callbacks.
+                // The native close process invokes OnClose callbacks, which go through
+                // the SWIG director mechanism. If we clear _callbacks first, the GC can
+                // finalize TransactionOnClose objects and release their SWIG directors
+                // while native code is still trying to invoke them, causing use-after-free.
+                Pinvoke.typedb_driver.transaction_close(NativeObject).Resolve();
+
+                // Now safe to clear callbacks - all native callbacks have been invoked
+                _callbacks.Clear();
             }
             catch (Pinvoke.Error e)
             {
                 throw new TypeDBDriverException(e);
             }
-            finally
+        }
+
+        /// <inheritdoc/>
+        public IQueryAnswer Query(string query)
+        {
+            return Query(query, new QueryOptions());
+        }
+
+        /// <inheritdoc/>
+        public IQueryAnswer Query(string query, QueryOptions options)
+        {
+            Validator.ThrowIfFalse(NativeObject.IsOwned, DriverError.TRANSACTION_CLOSED);
+
+            try
             {
-                _callbacks.Clear();
+                // Execute query and wait for completion
+                var promise = Pinvoke.typedb_driver.transaction_query(NativeObject, query, options.NativeObject);
+
+                // query_answer_promise_resolve CONSUMES the native promise via take_ownership in Rust.
+                // We must release ownership on the C# wrapper BEFORE calling resolve to prevent
+                // the wrapper's finalizer from trying to free an already-freed pointer.
+                var releasedPromise = promise.Released();
+                var nativeAnswer = Pinvoke.typedb_driver.query_answer_promise_resolve(releasedPromise);
+                return QueryAnswer.Of(nativeAnswer);
+            }
+            catch (Pinvoke.Error e)
+            {
+                throw new TypeDBDriverException(e);
             }
         }
 
+        /// <inheritdoc/>
         public void Dispose()
         {
             Close();
@@ -152,9 +167,9 @@ namespace TypeDB.Driver.Connection
 
         private class TransactionOnClose : Pinvoke.TransactionCallbackDirector
         {
-            private readonly Action<Exception> _function;
+            private readonly Action<Exception?> _function;
 
-            public TransactionOnClose(Action<Exception> function)
+            public TransactionOnClose(Action<Exception?> function)
             {
                 _function = function;
             }

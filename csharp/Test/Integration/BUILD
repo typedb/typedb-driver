@@ -16,6 +16,26 @@
 # under the License.
 
 load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("//csharp:build_opts.bzl", "target_frameworks", "targeting_packs")
+load("//csharp/Test:rules.bzl", "csharp_xunit_integration_test")
+
+exports_files(
+    ["ExampleTest.cs"],
+    visibility = ["//csharp:__subpackages__"],
+)
+
+csharp_xunit_integration_test(
+    name = "test-example",
+    srcs = ["ExampleTest.cs"],
+    deps = [
+        "//csharp:driver-csharp",
+        "//csharp/Api:api",
+        "//csharp/Answer:answer",
+        "//csharp/Common:common",
+    ],
+    target_frameworks = target_frameworks,
+    targeting_packs = targeting_packs,
+)
 
 checkstyle_test(
     name = "checkstyle",

@@ -18,12 +18,12 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 using Xunit;
 using TypeDB.Driver;
 using TypeDB.Driver.Api;
+using TypeDB.Driver.Api.Answer;
 using TypeDB.Driver.Common;
 
 namespace TypeDB.Driver.Test.Deployment
@@ -33,77 +33,96 @@ namespace TypeDB.Driver.Test.Deployment
         [Fact]
         public static void Main()
         {
-            Console.WriteLine("Starting test...");
+            Console.WriteLine("Starting NuGet deployment test...");
 
             string dbName = "nuget-test-database";
 
-            using (ITypeDBDriver driver = Drivers.CoreDriver("localhost:1729"))
+            using (var driver = TypeDB.Driver(TypeDB.DefaultAddress, new Credentials("admin", "password"), new DriverOptions(false, null)))
             {
-                try
+                if (driver.Databases.Contains(dbName))
                 {
-                    driver.Databases.Create(dbName);
-                }
-                catch (TypeDBDriverException e)
-                {
-                    if (!e.Message.Contains("already exists"))
-                    {
-                        throw e;
-                    }
-
                     driver.Databases.Get(dbName).Delete();
-                    driver.Databases.Create(dbName);
                 }
+                driver.Databases.Create(dbName);
 
-                IDatabase database = driver.Databases.Get(dbName);
+                var database = driver.Databases.Get(dbName);
+                Assert.NotNull(database);
+                Assert.Equal(dbName, database.Name);
 
                 try
                 {
-                    using (ITypeDBSession session = driver.Session(dbName, SessionType.Schema))
+                    // Schema transaction - define types
+                    using (var transaction = driver.Transaction(dbName, TransactionType.Schema))
                     {
-                        using (ITypeDBTransaction transaction = session.Transaction(TransactionType.Write))
-                        {
-                            IEntityType root = transaction.Concepts.RootEntityType;
-                            Assert.NotNull(root);
-                            Assert.Single(root.GetSubtypes(transaction));
+                        var defineQuery = @"define
+                            entity person, owns name, owns age;
+                            attribute name, value string;
+                            attribute age, value integer;";
 
-                            transaction.Query.Define("define person sub entity;").Resolve();
-                            string longQuery = "define name sub attribute, value string; person owns name;";
-                            transaction.Query.Define(longQuery).Resolve();
-                            transaction.Commit();
-                        }
+                        var answer = transaction.Query(defineQuery);
+                        Assert.True(answer.IsOk);
+                        Assert.Equal(QueryType.Schema, answer.QueryType);
+
+                        transaction.Commit();
                     }
 
-                    using (ITypeDBSession session = driver.Session(dbName, SessionType.Data))
+                    // Write transaction - insert data
+                    using (var transaction = driver.Transaction(dbName, TransactionType.Write))
                     {
-                        using (ITypeDBTransaction transaction = session.Transaction(TransactionType.Write))
-                        {
-                            IEntityType root = transaction.Concepts.RootEntityType;
-                            Assert.NotNull(root);
-                            Assert.Equal(2, root.GetSubtypes(transaction).Count());
+                        var insertQuery = "insert $p isa person, has name \"Alice\", has age 30;";
+                        var answer = transaction.Query(insertQuery);
 
-                            string query = "insert $p isa person, has name 'Alice';";
-                            IEnumerable<IConceptMap> insertResults = transaction.Query.Insert(query);
-                            Assert.NotNull(insertResults);
-                            Assert.Single(insertResults);
+                        Assert.True(answer.IsConceptRows);
+                        Assert.Equal(QueryType.Write, answer.QueryType);
 
-                            transaction.Commit();
-                        }
+                        var rows = answer.AsConceptRows().ToList();
+                        Assert.Single(rows);
 
-                        using (ITypeDBTransaction transaction = session.Transaction(TransactionType.Read))
-                        {
-                            IConceptMap[] matchResults =
-                                transaction.Query.Get("match $p isa person, has name $n; get $n;").ToArray();
+                        var row = rows[0];
+                        var p = row.Get("p");
+                        Assert.NotNull(p);
+                        Assert.True(p!.IsEntity());
 
-                            var fetchResults =
-                                transaction.Query.Fetch("match $f isa person, has name $n; fetch $n;").ToList();
-                            Assert.NotNull(fetchResults);
-                            Assert.Single(fetchResults);
+                        transaction.Commit();
+                    }
 
-                            foreach (var result in fetchResults)
-                            {
-                                Console.WriteLine($"JSON result: {result}");
-                            }
-                        }
+                    // Read transaction - match query
+                    using (var transaction = driver.Transaction(dbName, TransactionType.Read))
+                    {
+                        var matchQuery = "match $p isa person, has name $n;";
+                        var matchAnswer = transaction.Query(matchQuery);
+
+                        Assert.True(matchAnswer.IsConceptRows);
+                        Assert.Equal(QueryType.Read, matchAnswer.QueryType);
+
+                        var matchRows = matchAnswer.AsConceptRows().ToList();
+                        Assert.Single(matchRows);
+
+                        var row = matchRows[0];
+                        var n = row.Get("n");
+                        Assert.NotNull(n);
+                        Assert.True(n!.IsAttribute());
+                    }
+
+                    // Read transaction - fetch query
+                    using (var transaction = driver.Transaction(dbName, TransactionType.Read))
+                    {
+                        var fetchQuery = @"match
+                            $p isa person, has name $n;
+                            fetch {
+                                ""person_name"": $n
+                            };";
+
+                        var fetchAnswer = transaction.Query(fetchQuery);
+
+                        Assert.True(fetchAnswer.IsConceptDocuments);
+                        Assert.Equal(QueryType.Read, fetchAnswer.QueryType);
+
+                        var documents = fetchAnswer.AsConceptDocuments().ToList();
+                        Assert.Single(documents);
+
+                        var doc = documents[0];
+                        Console.WriteLine($"Fetched document: {doc}");
                     }
                 }
                 finally
@@ -112,7 +131,7 @@ namespace TypeDB.Driver.Test.Deployment
                 }
             }
 
-            Console.WriteLine("Success!");
+            Console.WriteLine("NuGet deployment test completed successfully!");
         }
     }
 }

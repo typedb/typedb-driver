@@ -1,0 +1,66 @@
+[#_DriverOptions]
+=== DriverOptions
+
+*Package*: `TypeDB.Driver.Api`
+
+
+
+User connection settings (TLS encryption, etc.) for connecting to TypeDB Server.
+
+ 
+  // No TLS
+ 
+ 
+  DriverOptions options = new DriverOptions(false, null);
+ 
+ 
+ 
+ 
+  // TLS with custom CA certificate
+ 
+ 
+  DriverOptions options = new DriverOptions(true, "/path/to/ca-certificate.pem");
+ 
+ 
+  
+   TypeDB.Driver.Api.DriverOptions
+  
+  
+   User connection settings (TLS encryption, etc.) for connecting to TypeDB Server.
+  
+  
+   Definition DriverOptions.cs:37
+  
+ 
+
+
+// tag::methods[]
+[#_TypeDB_Driver_Api_DriverOptions_DriverOptions_bool_isTlsEnabled_string_tlsRootCAPath_null_]
+==== DriverOptions
+
+[source,cs]
+----
+DriverOptions(bool isTlsEnabled, string? tlsRootCAPath = null)
+----
+
+
+
+Creates a new DriverOptions for connecting to TypeDB Server.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `isTlsEnabled` a| Specify whether the connection to TypeDB Server must be done over TLS. a| `bool`
+a| `tlsRootCAPath` a| Path to the CA certificate to use for authenticating server certificates. Can be null if using system CA or TLS is disabled. a| 
+|===
+
+[caption=""]
+.Returns
+`DriverOptions`
+
+// end::methods[]
+
