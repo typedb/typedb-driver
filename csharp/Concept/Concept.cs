@@ -188,7 +188,7 @@ namespace TypeDB.Driver.Concept
         }
 
         /// <inheritdoc/>
-        public DateTimeOffset? TryGetDatetimeTZ()
+        public DatetimeTZ? TryGetDatetimeTZ()
         {
             if (!CanHaveValue() || !IsDatetimeTZ()) return null;
             var nativeDatetimeTz = Pinvoke.typedb_driver.concept_get_datetime_tz(NativeObject);
@@ -201,14 +201,17 @@ namespace TypeDB.Driver.Concept
                 int offsetSeconds = nativeDatetimeTz.local_minus_utc_offset;
                 var offset = TimeSpan.FromSeconds(offsetSeconds);
                 var dto = DateTimeOffset.FromUnixTimeSeconds(seconds).ToOffset(offset);
-                return dto.AddTicks(nanos / 100);
+                dto = dto.AddTicks(nanos / 100);
+                return new DatetimeTZ(dto);
             }
             else
             {
-                // IANA timezone - just return as UTC for now
-                // Full timezone support would require additional handling
-                var dto = DateTimeOffset.FromUnixTimeSeconds(seconds);
-                return dto.AddTicks(nanos / 100);
+                string zoneName = nativeDatetimeTz.zone_name;
+                var zoneInfo = TimeZoneInfo.FindSystemTimeZoneById(zoneName);
+                var utcDto = DateTimeOffset.FromUnixTimeSeconds(seconds).AddTicks(nanos / 100);
+                var offset = zoneInfo.GetUtcOffset(utcDto);
+                var dto = utcDto.ToOffset(offset);
+                return new DatetimeTZ(dto, zoneName);
             }
         }
 

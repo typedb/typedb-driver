@@ -106,7 +106,7 @@ namespace TypeDB.Driver.Concept
         }
 
         /// <inheritdoc/>
-        public DateTimeOffset GetDatetimeTZ()
+        public DatetimeTZ GetDatetimeTZ()
         {
             return Value.GetDatetimeTZ();
         }
