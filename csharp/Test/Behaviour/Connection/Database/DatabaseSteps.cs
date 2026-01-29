@@ -251,7 +251,102 @@ namespace TypeDB.Driver.Test.Behaviour
             Driver.Databases.Create(name);
         }
 
-        // Query-related steps moved to QuerySteps.cs
+        // Schema retrieval steps (from DriverSteps)
+
+        [Then(@"connection get database\(([^)]+)\) has schema:")]
+        public void ConnectionGetDatabaseHasSchema(string databaseName, DocString expectedSchema)
+        {
+            Assert.NotNull(Driver);
+            var actualSchema = Driver!.Databases.Get(databaseName).GetSchema();
+
+            var expectedText = expectedSchema.Content.Trim();
+            if (string.IsNullOrWhiteSpace(expectedText))
+            {
+                Assert.Equal("", actualSchema);
+                return;
+            }
+
+            // Normalize expected schema through a temp database for comparison
+            // (handles reordering and formatting differences)
+            // Note: Don't use RemoveTwoSpacesInTabulation here because the actual schema
+            // was inserted via typeql schema query which preserves Gherkin indentation
+            var expectedNormalized = ExecuteAndRetrieveSchemaForComparison(expectedText);
+            Assert.Equal(expectedNormalized, actualSchema);
+        }
+
+        [Then(@"connection get database\(([^)]+)\) has type schema:")]
+        public void ConnectionGetDatabaseHasTypeSchema(string databaseName, DocString expectedSchema)
+        {
+            Assert.NotNull(Driver);
+            var actualSchema = Driver!.Databases.Get(databaseName).GetTypeSchema();
+
+            var expectedText = expectedSchema.Content.Trim();
+            if (string.IsNullOrWhiteSpace(expectedText))
+            {
+                Assert.Equal("", actualSchema);
+                return;
+            }
+
+            // Normalize expected type schema through a temp database for comparison
+            // Note: Don't use RemoveTwoSpacesInTabulation here because the actual schema
+            // was inserted via typeql schema query which preserves Gherkin indentation
+            var tempName = "temp-" + new System.Random().Next(10000);
+            Driver!.Databases.Create(tempName);
+            try
+            {
+                var tx = Driver.Transaction(tempName, TransactionType.Schema);
+                tx.Query(expectedText);
+                tx.Commit();
+                var expectedNormalized = Driver.Databases.Get(tempName).GetTypeSchema();
+                Assert.Equal(expectedNormalized, actualSchema);
+            }
+            finally
+            {
+                try { Driver.Databases.Get(tempName).Delete(); } catch { }
+            }
+        }
+
+        // Create/delete with message variants (from DriverSteps)
+
+        [Then(@"connection create database with empty name; fails with a message containing: ""(.*)""")]
+        public void ConnectionCreateDatabaseWithEmptyNameFailsWithMessage(string expectedMessage)
+        {
+            var exception = Assert.ThrowsAny<Exception>(
+                () => Driver!.Databases.Create(""));
+            Assert.Contains(expectedMessage, exception.Message);
+        }
+
+        [When(@"connection delete database: ([^;]+); fails with a message containing: ""(.*)""")]
+        [Then(@"connection delete database: ([^;]+); fails with a message containing: ""(.*)""")]
+        public void ConnectionDeleteDatabaseFailsWithMessage(string name, string expectedMessage)
+        {
+            var exception = Assert.ThrowsAny<Exception>(() =>
+            {
+                var db = Driver!.Databases.Get(name.Trim());
+                db.Delete();
+            });
+            Assert.Contains(expectedMessage, exception.Message);
+        }
+
+        // Background database operations (from DriverSteps)
+
+        [When(@"in background, connection create database: (.+)")]
+        [Then(@"in background, connection create database: (.+)")]
+        public void InBackgroundConnectionCreateDatabase(string databaseName)
+        {
+            var bgDriver = ConnectionStepsBase.CreateBackgroundDriver();
+            bgDriver.Databases.Create(databaseName);
+            bgDriver.Close();
+        }
+
+        [When(@"in background, connection delete database: (.+)")]
+        [Then(@"in background, connection delete database: (.+)")]
+        public void InBackgroundConnectionDeleteDatabase(string databaseName)
+        {
+            var bgDriver = ConnectionStepsBase.CreateBackgroundDriver();
+            bgDriver.Databases.Get(databaseName).Delete();
+            bgDriver.Close();
+        }
 
         #region Export / Import Steps
 

@@ -29,7 +29,6 @@ csharp_behaviour_test(
         "//csharp/Test/Behaviour/Connection/Transaction:steps",
         "//csharp/Test/Behaviour/Connection/Database:steps",
         "//csharp/Test/Behaviour/Connection:steps-core",
-        "//csharp/Test/Behaviour/Connection:steps-driver",
     ],
     features = ["@typedb_behaviour//driver:migration.feature"],
     deps = [
