@@ -37,12 +37,11 @@ namespace TypeDB.Driver.Common
         /// </summary>
         /// <param name="dateTimeOffset">The date, time, and UTC offset.</param>
         /// <param name="zoneName">The IANA timezone name (e.g., "Europe/London").</param>
-        /// <param name="zoneInfo">The resolved timezone.</param>
-        public DatetimeTZ(DateTimeOffset dateTimeOffset, string zoneName, TimeZoneInfo zoneInfo)
+        public DatetimeTZ(DateTimeOffset dateTimeOffset, string zoneName)
         {
             DateTimeOffset = dateTimeOffset;
             ZoneName = zoneName;
-            ZoneInfo = zoneInfo;
+            ZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(zoneName);
             IsFixedOffset = false;
         }
 
