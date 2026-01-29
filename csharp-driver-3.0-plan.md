@@ -95,7 +95,7 @@ Core 3.0 API is complete. The SWIG crash issue has been resolved. Most tests are
   - [x] Value type checks using native `concept_is_*` functions
   - [x] Value accessors using native `concept_get_*` functions
   - [x] Metadata accessors using native `concept_*_label`, `concept_try_get_iid`, etc.
-  - [x] Proper type conversions (native Decimal to C# decimal, Duration, DateTimeOffset with timezone)
+  - [x] Proper type conversions (native Decimal to C# decimal, Duration, DatetimeTZ with timezone)
 - [x] Note: Thing → Instance rename deferred (would require extensive file renames)
 
 ### SWIG C# Finalization Bug - RESOLVED ✅
