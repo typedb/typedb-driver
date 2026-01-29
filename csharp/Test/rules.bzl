@@ -35,7 +35,10 @@ def csharp_behaviour_test(
 
     csharp_test(
         name = name,
-        srcs = test_files + steps_files + ["//csharp/Test/Behaviour/Util:TestRunner.cs"],
+        srcs = test_files + steps_files + [
+            "//csharp/Test/Behaviour/Util:TestRunner.cs",
+            "//csharp/Test/Behaviour:TestValueHelper.cs",
+        ],
         data = features + certificates,
         deps = deps + behaviour_tests_deps,
         target_frameworks = target_frameworks,

@@ -15,6 +15,10 @@
 # specific language governing permissions and limitations
 # under the License.
 load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+exports_files(
+    ["TestValueHelper.cs"],
+    visibility = ["//csharp/Test:__subpackages__"],
+)
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*"]),
