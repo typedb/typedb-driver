@@ -19,7 +19,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using Xunit;
 using Xunit.Gherkin.Quick;
@@ -313,145 +312,6 @@ namespace TypeDB.Driver.Test.Behaviour
             }
         }
 
-        /// <summary>
-        /// Parses an expected value string into the appropriate native type for comparison.
-        /// </summary>
-        private object ParseExpectedValue(string rawValue, string valueType)
-        {
-            switch (valueType.ToLower().Trim())
-            {
-                case "boolean":
-                    return bool.Parse(rawValue);
-                case "integer":
-                    return long.Parse(rawValue);
-                case "double":
-                    return double.Parse(rawValue, CultureInfo.InvariantCulture);
-                case "decimal":
-                    var decStr = rawValue.TrimEnd('d', 'e', 'c', 'D', 'E', 'C');
-                    // Handle "dec" suffix properly
-                    if (rawValue.EndsWith("dec", StringComparison.OrdinalIgnoreCase))
-                        decStr = rawValue.Substring(0, rawValue.Length - 3);
-                    return decimal.Parse(decStr, CultureInfo.InvariantCulture);
-                case "string":
-                    var str = rawValue;
-                    if (str.StartsWith("\"") && str.EndsWith("\""))
-                        str = str.Substring(1, str.Length - 2);
-                    str = str.Replace("\\\"", "\"");
-                    return str;
-                case "date":
-                    return DateOnly.Parse(rawValue, CultureInfo.InvariantCulture);
-                case "datetime":
-                    return ParseDatetime(rawValue);
-                case "datetime-tz":
-                    return ParseDatetimeTZ(rawValue);
-                case "duration":
-                    return rawValue; // Compare as string representation
-                case "struct":
-                    return rawValue; // Compare as string representation
-                default:
-                    throw new BehaviourTestException($"Unknown value type for parsing: {valueType}");
-            }
-        }
-
-        /// <summary>
-        /// Parse a datetime string, handling high-precision fractional seconds.
-        /// </summary>
-        private object ParseDatetime(string value)
-        {
-            // C# DateTime has tick precision (100ns, 7 fractional digits).
-            // TypeDB supports nanosecond precision (9 digits).
-            // Truncate to 7 digits if needed for C# parsing.
-            var dotIdx = value.IndexOf('.');
-            if (dotIdx >= 0)
-            {
-                var fractionalEnd = value.Length;
-                for (int i = dotIdx + 1; i < value.Length; i++)
-                {
-                    if (!char.IsDigit(value[i]))
-                    {
-                        fractionalEnd = i;
-                        break;
-                    }
-                }
-                var fractionalLen = fractionalEnd - dotIdx - 1;
-                if (fractionalLen > 7)
-                {
-                    value = value.Substring(0, dotIdx + 8) + value.Substring(fractionalEnd);
-                }
-            }
-            return DateTime.Parse(value, CultureInfo.InvariantCulture);
-        }
-
-        /// <summary>
-        /// Parse a datetime-tz string handling both offset and named timezone formats.
-        /// Returns the raw string for comparison since C# DateTimeOffset doesn't
-        /// natively support named IANA timezones.
-        /// </summary>
-        private object ParseDatetimeTZ(string value)
-        {
-            // For named timezone format (e.g., "2024-09-20T16:40:05 America/New_York"),
-            // return as string since C# doesn't natively support IANA timezone names.
-            // For offset format (e.g., "2024-09-20T16:40:05+0100"),
-            // also return as string for consistent comparison.
-            return value;
-        }
-
-        /// <summary>
-        /// Infers the value type from the value type string returned by GetValueType().
-        /// </summary>
-        private string InferValueType(string typeStr)
-        {
-            var lower = typeStr.ToLower().Replace("_", "-").Replace(" ", "-");
-            switch (lower)
-            {
-                case "boolean": return "boolean";
-                case "integer":
-                case "long": return "integer";
-                case "double": return "double";
-                case "decimal": return "decimal";
-                case "string": return "string";
-                case "date": return "date";
-                case "datetime": return "datetime";
-                case "datetime-tz":
-                case "datetimetz": return "datetime-tz";
-                case "duration": return "duration";
-                default: return "struct"; // Custom struct types
-            }
-        }
-
-        /// <summary>
-        /// Compares an expected value against an actual IValue using the appropriate type.
-        /// Returns true if they are equal.
-        /// </summary>
-        private bool CompareValues(IValue actual, string expectedStr, string? valueTypeHint)
-        {
-            var actualType = InferValueType(actual.GetValueType());
-            var valueType = valueTypeHint ?? actualType;
-
-            var expected = ParseExpectedValue(expectedStr, valueType);
-            var actualVal = GetValueAs(actual, actualType);
-
-            if (valueType == "datetime" || valueType == "datetime-tz" || valueType == "duration")
-            {
-                // For datetime, datetime-tz, and duration, use the native TypeDB string format
-                // via actual.ToString() which calls concept_to_string
-                return actual.ToString() == expectedStr;
-            }
-
-            if (valueType == "double")
-            {
-                // For doubles, use approximate comparison
-                var expectedDouble = (double)expected;
-                var actualDouble = (double)actualVal;
-                // Use relative comparison for very small numbers
-                if (Math.Abs(expectedDouble) < 1e-10 && Math.Abs(actualDouble) < 1e-10)
-                    return Math.Abs(expectedDouble - actualDouble) < 1e-25;
-                return Math.Abs(expectedDouble - actualDouble) <
-                       Math.Abs(expectedDouble) * 1e-10;
-            }
-
-            return expected.Equals(actualVal);
-        }
 
         #endregion
 
@@ -721,7 +581,7 @@ namespace TypeDB.Driver.Test.Behaviour
             Assert.NotNull(concept);
             IValue? value = TryGetValueOfConceptKind(concept!, conceptKind);
             Assert.NotNull(value);
-            Assert.True(CompareValues(value!, expectedValue, null),
+            Assert.True(TestValueHelper.CompareValues(value!, expectedValue, null),
                 $"Expected value '{expectedValue}' but got '{value}'");
         }
 
@@ -735,7 +595,7 @@ namespace TypeDB.Driver.Test.Behaviour
             Assert.NotNull(concept);
             IValue? value = TryGetValueOfConceptKind(concept!, conceptKind);
             Assert.NotNull(value);
-            Assert.False(CompareValues(value!, notExpectedValue, null),
+            Assert.False(TestValueHelper.CompareValues(value!, notExpectedValue, null),
                 $"Value should not equal '{notExpectedValue}' but it does");
         }
 
@@ -750,27 +610,10 @@ namespace TypeDB.Driver.Test.Behaviour
             IConcept unwrapped = UnwrapConceptAs(concept!, conceptKind);
             object? actual = TryGetValueTypeFromConcept(unwrapped, valueType);
             Assert.NotNull(actual);
-            if (valueType == "datetime" || valueType == "datetime-tz" || valueType == "duration")
-            {
-                // For datetime, datetime-tz, and duration, compare using native TypeDB format.
-                // Get the IValue from the concept to use its ToString() which calls concept_to_string.
-                IValue? valueObj = TryGetValueOfConceptKind(unwrapped, conceptKind);
-                Assert.NotNull(valueObj);
-                Assert.Equal(expectedValue, valueObj!.ToString());
-            }
-            else if (valueType == "double")
-            {
-                var expected = ParseExpectedValue(expectedValue, valueType);
-                var e = (double)expected;
-                var a = Convert.ToDouble(actual);
-                Assert.True(Math.Abs(e - a) < Math.Max(Math.Abs(e) * 1e-10, 1e-25),
-                    $"Expected double {e} but got {a}");
-            }
-            else
-            {
-                var expected = ParseExpectedValue(expectedValue, valueType);
-                Assert.Equal(expected, actual);
-            }
+            IValue? valueObj = TryGetValueOfConceptKind(unwrapped, conceptKind);
+            Assert.NotNull(valueObj);
+            Assert.True(TestValueHelper.CompareValues(valueObj!, expectedValue, valueType),
+                $"Expected value '{expectedValue}' but got '{valueObj}'");
         }
 
         // Pattern: answer get row(N) get CONCEPT_KIND(VAR) try get VALUE_TYPE is not: VALUE
@@ -784,18 +627,10 @@ namespace TypeDB.Driver.Test.Behaviour
             IConcept unwrapped = UnwrapConceptAs(concept!, conceptKind);
             object? actual = TryGetValueTypeFromConcept(unwrapped, valueType);
             Assert.NotNull(actual);
-            if (valueType == "datetime" || valueType == "datetime-tz" || valueType == "duration")
-            {
-                // For datetime, datetime-tz, and duration, compare using native TypeDB format.
-                IValue? valueObj = TryGetValueOfConceptKind(unwrapped, conceptKind);
-                Assert.NotNull(valueObj);
-                Assert.NotEqual(notExpectedValue, valueObj!.ToString());
-            }
-            else
-            {
-                var expected = ParseExpectedValue(notExpectedValue, valueType);
-                Assert.NotEqual(expected, actual);
-            }
+            IValue? valueObj = TryGetValueOfConceptKind(unwrapped, conceptKind);
+            Assert.NotNull(valueObj);
+            Assert.False(TestValueHelper.CompareValues(valueObj!, notExpectedValue, valueType),
+                $"Value should not equal '{notExpectedValue}' but it does");
         }
 
         // Pattern: answer get row(N) get attribute(VAR) get value is: VALUE (non-quoted)
@@ -808,7 +643,7 @@ namespace TypeDB.Driver.Test.Behaviour
             IConcept? concept = GetRowGetConcept(rowIndex, variable);
             Assert.NotNull(concept);
             IValue value = concept!.AsAttribute().Value;
-            Assert.True(CompareValues(value, expectedValue, null),
+            Assert.True(TestValueHelper.CompareValues(value, expectedValue, null),
                 $"Expected value '{expectedValue}' but got '{value}'");
         }
 
@@ -821,7 +656,7 @@ namespace TypeDB.Driver.Test.Behaviour
             IConcept? concept = GetRowGetConcept(rowIndex, variable);
             Assert.NotNull(concept);
             IValue value = concept!.AsAttribute().Value;
-            Assert.False(CompareValues(value, notExpectedValue, null),
+            Assert.False(TestValueHelper.CompareValues(value, notExpectedValue, null),
                 $"Value should not equal '{notExpectedValue}' but it does");
         }
 
@@ -832,26 +667,8 @@ namespace TypeDB.Driver.Test.Behaviour
         {
             CollectRowsAnswerIfNeeded();
             IValue value = GetRowGetValue(rowIndex, "attribute", variable);
-            if (valueType == "datetime" || valueType == "datetime-tz" || valueType == "duration")
-            {
-                // Use the IValue's ToString() which formats according to TypeDB conventions
-                Assert.Equal(expectedValue, value.ToString());
-            }
-            else if (valueType == "double")
-            {
-                var expected = ParseExpectedValue(expectedValue, valueType);
-                var actual = GetValueAs(value, valueType);
-                var e = (double)expected;
-                var a = (double)actual;
-                Assert.True(Math.Abs(e - a) < Math.Max(Math.Abs(e) * 1e-10, 1e-25),
-                    $"Expected double {e} but got {a}");
-            }
-            else
-            {
-                var expected = ParseExpectedValue(expectedValue, valueType);
-                var actual = GetValueAs(value, valueType);
-                Assert.Equal(expected, actual);
-            }
+            Assert.True(TestValueHelper.CompareValues(value, expectedValue, valueType),
+                $"Expected value '{expectedValue}' but got '{value}'");
         }
 
         // Pattern: answer get row(N) get attribute(VAR) get VALUE_TYPE is not: VALUE
@@ -861,17 +678,8 @@ namespace TypeDB.Driver.Test.Behaviour
         {
             CollectRowsAnswerIfNeeded();
             IValue value = GetRowGetValue(rowIndex, "attribute", variable);
-            if (valueType == "datetime" || valueType == "datetime-tz" || valueType == "duration")
-            {
-                // Use the IValue's ToString() which formats according to TypeDB conventions
-                Assert.NotEqual(notExpectedValue, value.ToString());
-            }
-            else
-            {
-                var expected = ParseExpectedValue(notExpectedValue, valueType);
-                var actual = GetValueAs(value, valueType);
-                Assert.NotEqual(expected, actual);
-            }
+            Assert.False(TestValueHelper.CompareValues(value, notExpectedValue, valueType),
+                $"Value should not equal '{notExpectedValue}' but it does");
         }
 
         // Pattern: answer get row(N) get attribute(VAR) get VALUE_TYPE (just success, no comparison)
@@ -911,7 +719,7 @@ namespace TypeDB.Driver.Test.Behaviour
             IConcept? concept = GetRowGetConcept(rowIndex, variable);
             Assert.NotNull(concept);
             IValue value = concept!.AsValue();
-            Assert.True(CompareValues(value, expectedValue, null),
+            Assert.True(TestValueHelper.CompareValues(value, expectedValue, null),
                 $"Expected value '{expectedValue}' but got '{value}'");
         }
 
@@ -923,7 +731,7 @@ namespace TypeDB.Driver.Test.Behaviour
             IConcept? concept = GetRowGetConcept(rowIndex, variable);
             Assert.NotNull(concept);
             IValue value = concept!.AsValue();
-            Assert.False(CompareValues(value, notExpectedValue, null),
+            Assert.False(TestValueHelper.CompareValues(value, notExpectedValue, null),
                 $"Value should not equal '{notExpectedValue}' but it does");
         }
 
@@ -937,7 +745,7 @@ namespace TypeDB.Driver.Test.Behaviour
             Assert.NotNull(concept);
             IValue? value = concept!.AsValue().TryGetValue();
             Assert.NotNull(value);
-            Assert.True(CompareValues(value!, expectedValue, null),
+            Assert.True(TestValueHelper.CompareValues(value!, expectedValue, null),
                 $"Expected value '{expectedValue}' but got '{value}'");
         }
 
@@ -951,7 +759,7 @@ namespace TypeDB.Driver.Test.Behaviour
             Assert.NotNull(concept);
             IValue? value = concept!.AsValue().TryGetValue();
             Assert.NotNull(value);
-            Assert.False(CompareValues(value!, notExpectedValue, null),
+            Assert.False(TestValueHelper.CompareValues(value!, notExpectedValue, null),
                 $"Value should not equal '{notExpectedValue}' but it does");
         }
 
@@ -964,26 +772,8 @@ namespace TypeDB.Driver.Test.Behaviour
             IConcept? concept = GetRowGetConcept(rowIndex, variable);
             Assert.NotNull(concept);
             IValue value = concept!.AsValue();
-            if (valueType == "datetime" || valueType == "datetime-tz" || valueType == "duration")
-            {
-                // Use the IValue's ToString() which formats according to TypeDB conventions
-                Assert.Equal(expectedValue, value.ToString());
-            }
-            else if (valueType == "double")
-            {
-                var expected = ParseExpectedValue(expectedValue, valueType);
-                var actual = GetValueAs(value, valueType);
-                var e = (double)expected;
-                var a = (double)actual;
-                Assert.True(Math.Abs(e - a) < Math.Max(Math.Abs(e) * 1e-10, 1e-25),
-                    $"Expected double {e} but got {a}");
-            }
-            else
-            {
-                var expected = ParseExpectedValue(expectedValue, valueType);
-                var actual = GetValueAs(value, valueType);
-                Assert.Equal(expected, actual);
-            }
+            Assert.True(TestValueHelper.CompareValues(value, expectedValue, valueType),
+                $"Expected value '{expectedValue}' but got '{value}'");
         }
 
         // Pattern: answer get row(N) get value(VAR) get VALUE_TYPE is not: VALUE
@@ -995,17 +785,8 @@ namespace TypeDB.Driver.Test.Behaviour
             IConcept? concept = GetRowGetConcept(rowIndex, variable);
             Assert.NotNull(concept);
             IValue value = concept!.AsValue();
-            if (valueType == "datetime" || valueType == "datetime-tz" || valueType == "duration")
-            {
-                // Use the IValue's ToString() which formats according to TypeDB conventions
-                Assert.NotEqual(notExpectedValue, value.ToString());
-            }
-            else
-            {
-                var expected = ParseExpectedValue(notExpectedValue, valueType);
-                var actual = GetValueAs(value, valueType);
-                Assert.NotEqual(expected, actual);
-            }
+            Assert.False(TestValueHelper.CompareValues(value, notExpectedValue, valueType),
+                $"Value should not equal '{notExpectedValue}' but it does");
         }
 
         // Pattern: answer get row(N) get value(VAR) try get VALUE_TYPE is: VALUE
@@ -1016,25 +797,11 @@ namespace TypeDB.Driver.Test.Behaviour
             CollectRowsAnswerIfNeeded();
             IConcept? concept = GetRowGetConcept(rowIndex, variable);
             Assert.NotNull(concept);
-            IConcept valueConcept = concept!.AsValue();
-            object? actual = TryGetValueTypeFromConcept(valueConcept, valueType);
+            IValue value = concept!.AsValue();
+            object? actual = TryGetValueTypeFromConcept(value, valueType);
             Assert.NotNull(actual);
-            var expected = ParseExpectedValue(expectedValue, valueType);
-            if (valueType == "datetime" || valueType == "datetime-tz" || valueType == "duration")
-            {
-                Assert.Equal(expected.ToString(), actual!.ToString());
-            }
-            else if (valueType == "double")
-            {
-                var e = (double)expected;
-                var a = Convert.ToDouble(actual);
-                Assert.True(Math.Abs(e - a) < Math.Max(Math.Abs(e) * 1e-10, 1e-25),
-                    $"Expected double {e} but got {a}");
-            }
-            else
-            {
-                Assert.Equal(expected, actual);
-            }
+            Assert.True(TestValueHelper.CompareValues(value, expectedValue, valueType),
+                $"Expected value '{expectedValue}' but got '{value}'");
         }
 
         // Pattern: answer get row(N) get value(VAR) try get VALUE_TYPE is not: VALUE
@@ -1045,18 +812,11 @@ namespace TypeDB.Driver.Test.Behaviour
             CollectRowsAnswerIfNeeded();
             IConcept? concept = GetRowGetConcept(rowIndex, variable);
             Assert.NotNull(concept);
-            IConcept valueConcept = concept!.AsValue();
-            object? actual = TryGetValueTypeFromConcept(valueConcept, valueType);
+            IValue value = concept!.AsValue();
+            object? actual = TryGetValueTypeFromConcept(value, valueType);
             Assert.NotNull(actual);
-            var expected = ParseExpectedValue(notExpectedValue, valueType);
-            if (valueType == "datetime" || valueType == "datetime-tz" || valueType == "duration")
-            {
-                Assert.NotEqual(expected.ToString(), actual!.ToString());
-            }
-            else
-            {
-                Assert.NotEqual(expected, actual);
-            }
+            Assert.False(TestValueHelper.CompareValues(value, notExpectedValue, valueType),
+                $"Value should not equal '{notExpectedValue}' but it does");
         }
 
         // Pattern: answer get row(N) get value(VAR) try get value type: VALUE_TYPE
