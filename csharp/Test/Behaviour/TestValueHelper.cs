@@ -21,6 +21,7 @@ using System;
 using System.Globalization;
 
 using TypeDB.Driver.Api;
+using TypeDB.Driver.Common;
 
 namespace TypeDB.Driver.Test.Behaviour
 {
@@ -82,9 +83,9 @@ namespace TypeDB.Driver.Test.Behaviour
                 case "datetime":
                     return ParseDatetime(rawValue);
                 case "datetime-tz":
-                    return rawValue; // Compare as string representation
+                    return DatetimeTZ.Parse(rawValue);
                 case "duration":
-                    return rawValue; // Compare as string representation
+                    return Duration.Parse(rawValue);
                 case "struct":
                     return rawValue; // Compare as string representation
                 default:
@@ -144,7 +145,6 @@ namespace TypeDB.Driver.Test.Behaviour
 
         /// <summary>
         /// Compares an IValue against an expected string using the appropriate type.
-        /// For datetime, datetime-tz, and duration, uses IValue.ToString() (native TypeDB format).
         /// For doubles, uses approximate comparison.
         /// For other types, parses the expected string and compares by value equality.
         /// </summary>
@@ -152,11 +152,6 @@ namespace TypeDB.Driver.Test.Behaviour
         {
             var actualType = InferValueType(actual.GetValueType());
             var valueType = valueTypeHint ?? actualType;
-
-            if (valueType == "datetime" || valueType == "datetime-tz" || valueType == "duration")
-            {
-                return actual.ToString() == expectedStr;
-            }
 
             if (valueType == "double")
             {
