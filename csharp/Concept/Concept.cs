@@ -206,12 +206,8 @@ namespace TypeDB.Driver.Concept
             }
             else
             {
-                string zoneName = nativeDatetimeTz.zone_name;
-                var zoneInfo = TimeZoneInfo.FindSystemTimeZoneById(zoneName);
-                var utcDto = DateTimeOffset.FromUnixTimeSeconds(seconds).AddTicks(nanos / 100);
-                var offset = zoneInfo.GetUtcOffset(utcDto);
-                var dto = utcDto.ToOffset(offset);
-                return new DatetimeTZ(dto, zoneName);
+                var utcDateTime = DateTimeOffset.FromUnixTimeSeconds(seconds).AddTicks(nanos / 100).UtcDateTime;
+                return new DatetimeTZ(utcDateTime, nativeDatetimeTz.zone_name);
             }
         }
 
