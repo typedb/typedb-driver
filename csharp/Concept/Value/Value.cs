@@ -176,6 +176,13 @@ namespace TypeDB.Driver.Concept
             return formatted;
         }
 
+        public override bool Equals(object? obj)
+        {
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj is not Value other) return false;
+            return GetValueType() == other.GetValueType() && Get().Equals(other.Get());
+        }
+
         public override int GetHashCode()
         {
             if (_hash == 0)

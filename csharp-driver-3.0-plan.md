@@ -112,6 +112,29 @@ Tests now run to completion without SIGABRT/SIGSEGV crashes.
 
 ---
 
+## TODO: Cross-Driver Fixes
+
+### Value Equals/HashCode contract (Java driver)
+**Issue**: `ConceptImpl.equals()` delegates to Rust's `concept_equals`, while `ValueImpl.hashCode()` uses `get().hashCode()`. Rust's `PartialEq` for `Value::DatetimeTZ` compares by UTC instant only (ignoring timezone), but Java's `ZonedDateTime.hashCode()` includes the zone. This violates the `equals`/`hashCode` contract.
+
+**Fix**: Override `equals` in `ValueImpl` to use typed comparison (matching `hashCode`), same as C# and Python already do:
+```java
+// In ValueImpl.java
+@Override
+public boolean equals(Object obj) {
+    if (this == obj) return true;
+    if (obj == null || getClass() != obj.getClass()) return false;
+    ValueImpl other = (ValueImpl) obj;
+    return tryGetValueType().equals(other.tryGetValueType()) && get().equals(other.get());
+}
+```
+
+**Status**: C# fixed (this branch). Python already correct (`_Value.__eq__` uses `self.get() == other.get()`). Java needs the fix.
+
+**Files**: `java/concept/value/ValueImpl.java`
+
+---
+
 ## Deferred
 
 ### Milestone 5: Analyze API (Optional - Deferred)
