@@ -33,15 +33,18 @@ namespace TypeDB.Driver.Common
         private int _hash = 0;
 
         /// <summary>
-        /// Creates a DatetimeTZ with an IANA timezone.
+        /// Creates a DatetimeTZ with an IANA timezone from a UTC datetime.
+        /// The local time and offset are computed from the zone's rules at the given UTC instant.
+        /// This mirrors Java's <c>ZonedDateTime.ofInstant(Instant, ZoneId)</c>.
         /// </summary>
-        /// <param name="dateTimeOffset">The date, time, and UTC offset.</param>
+        /// <param name="utcDateTime">The UTC datetime (Kind should be Utc or Unspecified).</param>
         /// <param name="zoneName">The IANA timezone name (e.g., "Europe/London").</param>
-        public DatetimeTZ(DateTimeOffset dateTimeOffset, string zoneName)
+        public DatetimeTZ(DateTime utcDateTime, string zoneName)
         {
-            DateTimeOffset = dateTimeOffset;
             ZoneName = zoneName;
             ZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(zoneName);
+            var offset = ZoneInfo.GetUtcOffset(utcDateTime);
+            DateTimeOffset = new DateTimeOffset(DateTime.SpecifyKind(utcDateTime, DateTimeKind.Utc)).ToOffset(offset);
             IsFixedOffset = false;
         }
 
@@ -58,7 +61,8 @@ namespace TypeDB.Driver.Common
         }
 
         /// <summary>
-        /// Gets the underlying <see cref="System.DateTimeOffset"/> value.
+        /// Gets the local date and time with its UTC offset.
+        /// For IANA zones, the offset is derived from the zone's rules at the stored instant.
         /// </summary>
         public DateTimeOffset DateTimeOffset { get; }
 
