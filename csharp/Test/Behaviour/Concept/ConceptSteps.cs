@@ -298,8 +298,7 @@ namespace TypeDB.Driver.Test.Behaviour
                     var dtm = concept.TryGetDatetime();
                     return dtm.HasValue ? (object)dtm.Value : null;
                 case "datetime-tz":
-                    var dtz = concept.TryGetDatetimeTZ();
-                    return dtz.HasValue ? (object)dtz.Value : null;
+                    return concept.TryGetDatetimeTZ();
                 case "duration":
                     return concept.TryGetDuration();
                 case "struct":

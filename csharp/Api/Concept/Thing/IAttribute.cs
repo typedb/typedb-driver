@@ -93,7 +93,7 @@ namespace TypeDB.Driver.Api
         /// Returns a datetime with timezone value of the value concept that this attribute holds.
         /// If the value has another type, raises an exception.
         /// </summary>
-        DateTimeOffset GetDatetimeTZ();
+        DatetimeTZ GetDatetimeTZ();
 
         /// <summary>
         /// Returns a duration value of the value concept that this attribute holds.

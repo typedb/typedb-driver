@@ -533,7 +533,7 @@ namespace TypeDB.Driver.Api
         /// concept.TryGetDatetimeTZ()
         /// </code>
         /// </example>
-        DateTimeOffset? TryGetDatetimeTZ();
+        DatetimeTZ? TryGetDatetimeTZ();
 
         /// <summary>
         /// Returns a duration value of this Concept.

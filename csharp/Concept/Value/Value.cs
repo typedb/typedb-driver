@@ -116,7 +116,7 @@ namespace TypeDB.Driver.Concept
         }
 
         /// <inheritdoc/>
-        public DateTimeOffset GetDatetimeTZ()
+        public DatetimeTZ GetDatetimeTZ()
         {
             return TryGetDatetimeTZ()
                 ?? throw new TypeDBDriverException(ConceptError.INVALID_VALUE_RETRIEVAL, "datetime-tz");
@@ -156,52 +156,24 @@ namespace TypeDB.Driver.Concept
             }
             if (IsString()) return GetString();
             if (IsDate()) return GetDate().ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
-            if (IsDatetime() || IsDatetimeTZ() || IsDuration())
-            {
-                // Use the native concept_to_string and extract just the value part
-                // The native format wraps values in "Value(<type>: <value>)"
-                return ExtractNativeValueString();
-            }
+            if (IsDatetime()) return FormatDatetime(GetDatetime());
+            if (IsDatetimeTZ()) return GetDatetimeTZ().ToString();
+            if (IsDuration()) return GetDuration().ToString();
             if (IsStruct()) return GetStruct().ToString() ?? "{}";
 
             throw new TypeDBDriverException(InternalError.UNEXPECTED_NATIVE_VALUE);
         }
 
-        private string ExtractNativeValueString()
+        private static string FormatDatetime(DateTime dt)
         {
-            var native = Pinvoke.typedb_driver.concept_to_string(NativeObject);
-            // Native format: "Value(<type>: <value>)"
-            // Example: "Value(datetime-tz: 2024-09-20T16:40:05.000000001 Europe/London)"
-            var colonIndex = native.IndexOf(": ");
-            if (native.StartsWith("Value(") && native.EndsWith(")") && colonIndex > 0)
+            string formatted = dt.ToString("yyyy-MM-dd'T'HH:mm:ss", CultureInfo.InvariantCulture);
+            long ticks = dt.Ticks % TimeSpan.TicksPerSecond;
+            if (ticks != 0)
             {
-                var value = native.Substring(colonIndex + 2, native.Length - colonIndex - 3);
-                // Post-process to match expected TypeDB format:
-                // 1. Remove trailing .000000000 (no subsecond nanos)
-                value = value.Replace(".000000000", "");
-                // 2. Remove colon from fixed offset format (+00:00 -> +0000)
-                value = NormalizeTimezoneOffset(value);
-                return value;
+                string fractional = ticks.ToString("D7").TrimEnd('0');
+                formatted += "." + fractional;
             }
-            return native;
-        }
-
-        private static string NormalizeTimezoneOffset(string value)
-        {
-            // Convert +HH:MM or -HH:MM to +HHMM or -HHMM for fixed offsets
-            // But preserve IANA timezone names (e.g., "Europe/London")
-            // Fixed offsets appear at the end of datetime-tz values
-            if (value.Length >= 6)
-            {
-                // Check for pattern like +00:00 or -05:30 at the end
-                var lastPart = value.Substring(value.Length - 6);
-                if ((lastPart[0] == '+' || lastPart[0] == '-') && lastPart[3] == ':')
-                {
-                    // Remove the colon from the offset
-                    return value.Substring(0, value.Length - 3) + value.Substring(value.Length - 2);
-                }
-            }
-            return value;
+            return formatted;
         }
 
         public override int GetHashCode()
