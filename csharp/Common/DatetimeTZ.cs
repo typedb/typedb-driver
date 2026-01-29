@@ -19,6 +19,7 @@
 
 using System;
 using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace TypeDB.Driver.Common
 {
@@ -81,6 +82,59 @@ namespace TypeDB.Driver.Common
         /// Gets whether this datetime-tz uses a fixed UTC offset (true) or an IANA zone (false).
         /// </summary>
         public bool IsFixedOffset { get; }
+
+        /// <summary>
+        /// Parses a datetime-tz string in TypeDB format.
+        /// IANA zones: "2024-09-20T16:40:05.000000001 Europe/London" (local time + zone name)
+        /// Fixed offsets: "2024-09-20T16:40:05.000000001+0100" (local time + offset without colon)
+        /// UTC shorthand: "2024-09-20T16:40:05Z"
+        /// </summary>
+        public static DatetimeTZ Parse(string value)
+        {
+            // Try to detect IANA zone: a space followed by a non-offset zone name
+            // Fixed offsets end with Z or +/-HHMM (digits only after the sign)
+            var zoneMatch = Regex.Match(value, @"^(.+?)\s+([A-Za-z].*)$");
+            if (zoneMatch.Success)
+            {
+                var datetimeStr = zoneMatch.Groups[1].Value;
+                var zoneName = zoneMatch.Groups[2].Value;
+                var localDt = ParseLocalDatetime(datetimeStr);
+                var zoneInfo = TimeZoneInfo.FindSystemTimeZoneById(zoneName);
+                var utcDt = TimeZoneInfo.ConvertTimeToUtc(
+                    DateTime.SpecifyKind(localDt, DateTimeKind.Unspecified), zoneInfo);
+                return new DatetimeTZ(utcDt, zoneName);
+            }
+
+            // Fixed offset: parse with DateTimeOffset
+            // Normalize offset format: +0100 → +01:00 for DateTimeOffset.Parse
+            var normalized = Regex.Replace(value, @"([+-])(\d{2})(\d{2})$", "$1$2:$3");
+            var dto = DateTimeOffset.Parse(normalized, CultureInfo.InvariantCulture);
+            return new DatetimeTZ(dto);
+        }
+
+        private static DateTime ParseLocalDatetime(string value)
+        {
+            // Handle nanosecond precision: truncate to 7 fractional digits (C# tick precision)
+            var dotIdx = value.IndexOf('.');
+            if (dotIdx >= 0)
+            {
+                var fractionalEnd = value.Length;
+                for (int i = dotIdx + 1; i < value.Length; i++)
+                {
+                    if (!char.IsDigit(value[i]))
+                    {
+                        fractionalEnd = i;
+                        break;
+                    }
+                }
+                var fractionalLen = fractionalEnd - dotIdx - 1;
+                if (fractionalLen > 7)
+                {
+                    value = value.Substring(0, dotIdx + 8) + value.Substring(fractionalEnd);
+                }
+            }
+            return DateTime.Parse(value, CultureInfo.InvariantCulture);
+        }
 
         /// <summary>
         /// Formats the datetime-tz as an ISO-8601 string.
