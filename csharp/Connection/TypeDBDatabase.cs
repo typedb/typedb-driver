@@ -83,7 +83,7 @@ namespace TypeDB.Driver.Connection
 
             try
             {
-                Pinvoke.typedb_driver.database_delete(NativeObject?.Released());
+                Pinvoke.typedb_driver.database_delete(NativeObject.Released());
             }
             catch (Pinvoke.Error e)
             {

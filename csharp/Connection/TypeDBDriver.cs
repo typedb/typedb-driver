@@ -37,7 +37,7 @@ namespace TypeDB.Driver.Connection
         private readonly UserManager _userManager;
 
         /// <summary>
-        /// Creates a new TypeDB driver connection using the 3.0 unified API.
+        /// Create a driver to connect to a TypeDB 3.0 server.
         /// </summary>
         /// <param name="address">The address (host:port) on which the TypeDB Server is running.</param>
         /// <param name="credentials">The credentials to connect with.</param>

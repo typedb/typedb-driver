@@ -76,6 +76,8 @@ TypeScript/JavaScript applications
 - No native code dependencies - runs in any JavaScript environment
 - Suitable for browsers and Node.js
 
+Each language driver directory contains its own `README.md` with language-specific architecture details, memory management notes, and usage examples. Read the relevant README before making changes to a driver package.
+
 ## Build Commands
 
 ```bash
