@@ -25,7 +25,7 @@ namespace TypeDB.Driver.Common
     /// <summary>
     /// Represents a datetime with timezone information.
     /// C#'s <see cref="DateTimeOffset"/> cannot carry IANA timezone names (e.g., "Europe/London"),
-    /// so this class wraps a <see cref="DateTimeOffset"/> alongside the original zone identifier.
+    /// so this class wraps a <see cref="DateTimeOffset"/> alongside the resolved <see cref="TimeZoneInfo"/>.
     /// This mirrors Java's <c>ZonedDateTime</c> which preserves the zone ID.
     /// </summary>
     public class DatetimeTZ : IEquatable<DatetimeTZ>
@@ -33,25 +33,25 @@ namespace TypeDB.Driver.Common
         private int _hash = 0;
 
         /// <summary>
-        /// Creates a DatetimeTZ with an IANA timezone name.
+        /// Creates a DatetimeTZ with an IANA timezone.
         /// </summary>
         /// <param name="dateTimeOffset">The date, time, and UTC offset.</param>
-        /// <param name="zoneName">The IANA timezone name (e.g., "Europe/London").</param>
-        public DatetimeTZ(DateTimeOffset dateTimeOffset, string zoneName)
+        /// <param name="zoneInfo">The resolved timezone (e.g., from "Europe/London").</param>
+        public DatetimeTZ(DateTimeOffset dateTimeOffset, TimeZoneInfo zoneInfo)
         {
             DateTimeOffset = dateTimeOffset;
-            ZoneName = zoneName;
+            ZoneInfo = zoneInfo;
             IsFixedOffset = false;
         }
 
         /// <summary>
-        /// Creates a DatetimeTZ with a fixed UTC offset (no IANA zone name).
+        /// Creates a DatetimeTZ with a fixed UTC offset (no IANA zone).
         /// </summary>
         /// <param name="dateTimeOffset">The date, time, and UTC offset.</param>
         public DatetimeTZ(DateTimeOffset dateTimeOffset)
         {
             DateTimeOffset = dateTimeOffset;
-            ZoneName = null;
+            ZoneInfo = null;
             IsFixedOffset = true;
         }
 
@@ -61,12 +61,13 @@ namespace TypeDB.Driver.Common
         public DateTimeOffset DateTimeOffset { get; }
 
         /// <summary>
-        /// Gets the IANA timezone name (e.g., "Europe/London"), or null for fixed offsets.
+        /// Gets the resolved <see cref="TimeZoneInfo"/>, or null for fixed offsets.
+        /// For IANA zones, <see cref="TimeZoneInfo.Id"/> returns the zone name (e.g., "Europe/London").
         /// </summary>
-        public string? ZoneName { get; }
+        public TimeZoneInfo? ZoneInfo { get; }
 
         /// <summary>
-        /// Gets whether this datetime-tz uses a fixed UTC offset (true) or an IANA zone name (false).
+        /// Gets whether this datetime-tz uses a fixed UTC offset (true) or an IANA zone (false).
         /// </summary>
         public bool IsFixedOffset { get; }
 
@@ -90,9 +91,9 @@ namespace TypeDB.Driver.Common
 
             formatted += FormatOffset(dt.Offset);
 
-            if (!IsFixedOffset && ZoneName != null)
+            if (!IsFixedOffset && ZoneInfo != null)
             {
-                formatted += " " + ZoneName;
+                formatted += " " + ZoneInfo.Id;
             }
 
             return formatted;
@@ -117,7 +118,7 @@ namespace TypeDB.Driver.Common
             if (ReferenceEquals(this, other)) return true;
             return DateTimeOffset.Equals(other.DateTimeOffset)
                 && IsFixedOffset == other.IsFixedOffset
-                && ZoneName == other.ZoneName;
+                && Equals(ZoneInfo, other.ZoneInfo);
         }
 
         /// <inheritdoc/>
@@ -131,7 +132,7 @@ namespace TypeDB.Driver.Common
         {
             if (_hash == 0)
             {
-                _hash = HashCode.Combine(DateTimeOffset, IsFixedOffset, ZoneName);
+                _hash = HashCode.Combine(DateTimeOffset, IsFixedOffset, ZoneInfo?.Id);
             }
             return _hash;
         }

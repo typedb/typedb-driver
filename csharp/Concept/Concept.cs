@@ -206,12 +206,11 @@ namespace TypeDB.Driver.Concept
             }
             else
             {
-                string zoneName = nativeDatetimeTz.zone_name;
-                var zoneInfo = TimeZoneInfo.FindSystemTimeZoneById(zoneName);
+                var zoneInfo = TimeZoneInfo.FindSystemTimeZoneById(nativeDatetimeTz.zone_name);
                 var utcDto = DateTimeOffset.FromUnixTimeSeconds(seconds).AddTicks(nanos / 100);
                 var offset = zoneInfo.GetUtcOffset(utcDto);
                 var dto = utcDto.ToOffset(offset);
-                return new DatetimeTZ(dto, zoneName);
+                return new DatetimeTZ(dto, zoneInfo);
             }
         }
 
