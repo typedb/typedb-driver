@@ -132,6 +132,14 @@ namespace TypeDB.Driver.Test.Behaviour
                 new DriverOptions(false, null));
         }
 
+        public static IDriver CreateBackgroundDriver()
+        {
+            return TypeDB.Driver(
+                TypeDB.DefaultAddress,
+                new Credentials("admin", "password"),
+                new DriverOptions(false, null));
+        }
+
         public virtual void Dispose() // "After"
         {
             // Clean up temp directory
@@ -206,7 +214,6 @@ namespace TypeDB.Driver.Test.Behaviour
 
         public abstract void ConnectionOpensWithDefaultAuthentication();
 
-        [Given(@"connection has been opened")]
         public virtual void ConnectionHasBeenOpened()
         {
             if (_requiredConfiguration) return; // Skip tests with configuration
@@ -215,37 +222,6 @@ namespace TypeDB.Driver.Test.Behaviour
             Assert.True(Driver.IsOpen());
         }
 
-        [Given(@"connection is open: (.*)")]
-        [Then(@"connection is open: (.*)")]
-        public void ConnectionIsOpen(string expectedState)
-        {
-            if (_requiredConfiguration) return; // Skip tests with configuration
-
-            bool expected = bool.Parse(expectedState);
-            if (expected)
-            {
-                Assert.NotNull(Driver);
-                Assert.True(Driver.IsOpen());
-            }
-            else
-            {
-                // If expected to not be open, either driver is null or not open
-                Assert.True(Driver == null || !Driver.IsOpen());
-            }
-        }
-
-        [Given(@"connection has (\d+) databases?")]
-        [Then(@"connection has (\d+) databases?")]
-        public void ConnectionHasDatabaseCount(int expectedCount)
-        {
-            if (_requiredConfiguration) return; // Skip tests with configuration
-
-            Assert.NotNull(Driver);
-            Assert.Equal(expectedCount, Driver.Databases.GetAll().Count);
-        }
-
-        [When(@"connection closes")]
-        [Then(@"connection closes")]
         public virtual void ConnectionCloses()
         {
             if (_requiredConfiguration) return; // Skip tests with configuration
@@ -258,7 +234,7 @@ namespace TypeDB.Driver.Test.Behaviour
             Driver = null;
         }
 
-        private static void CleanupTransactions()
+        public static void CleanupTransactions()
         {
             foreach (var tx in Transactions)
             {
@@ -273,7 +249,7 @@ namespace TypeDB.Driver.Test.Behaviour
             TransactionsParallel.Clear();
         }
 
-        private static void CleanupBackgroundTransactions()
+        public static void CleanupBackgroundTransactions()
         {
             foreach (var tx in BackgroundTransactions)
             {
@@ -289,79 +265,6 @@ namespace TypeDB.Driver.Test.Behaviour
                 return driver.Transaction(databaseName, type, options);
             return driver.Transaction(databaseName, type);
         }
-
-        [When(@"connection open schema transaction for database: (\S+)")]
-        [Given(@"connection open schema transaction for database: (\S+)")]
-        [Then(@"connection open schema transaction for database: (\S+)")]
-        public void ConnectionOpenSchemaTransactionForDatabase(string name)
-        {
-            if (_requiredConfiguration) return;
-
-            Transactions.Clear();
-            var tx = OpenTransaction(Driver!, name, TransactionType.Schema, CurrentTransactionOptions);
-            Transactions.Add(tx);
-        }
-
-        [When(@"connection open read transaction for database: (\S+)")]
-        [Given(@"connection open read transaction for database: (\S+)")]
-        [Then(@"connection open read transaction for database: (\S+)")]
-        public void ConnectionOpenReadTransactionForDatabase(string name)
-        {
-            if (_requiredConfiguration) return;
-
-            Transactions.Clear();
-            var tx = OpenTransaction(Driver!, name, TransactionType.Read, CurrentTransactionOptions);
-            Transactions.Add(tx);
-        }
-
-        [When(@"connection open write transaction for database: (\S+)")]
-        [Given(@"connection open write transaction for database: (\S+)")]
-        [Then(@"connection open write transaction for database: (\S+)")]
-        public void ConnectionOpenWriteTransactionForDatabase(string name)
-        {
-            if (_requiredConfiguration) return;
-
-            Transactions.Clear();
-            var tx = OpenTransaction(Driver!, name, TransactionType.Write, CurrentTransactionOptions);
-            Transactions.Add(tx);
-        }
-
-        [Then(@"transaction is open: (.*)")]
-        public void TransactionIsOpen(string expectedState)
-        {
-            if (_requiredConfiguration) return;
-
-            bool expected = bool.Parse(expectedState);
-            Assert.Equal(expected, Transactions.Count > 0 && Transactions[0].IsOpen());
-        }
-
-        [Given(@"transaction commits")]
-        [When(@"transaction commits")]
-        [Then(@"transaction commits")]
-        public void TransactionCommits()
-        {
-            if (_requiredConfiguration) return;
-            TxPop().Commit();
-        }
-
-        [Given(@"transaction closes")]
-        [When(@"transaction closes")]
-        [Then(@"transaction closes")]
-        public void TransactionCloses()
-        {
-            if (_requiredConfiguration) return;
-            TxPop().Close();
-        }
-
-        [Given(@"transaction rollbacks")]
-        [When(@"transaction rollbacks")]
-        [Then(@"transaction rollbacks")]
-        public void TransactionRollbacks()
-        {
-            if (_requiredConfiguration) return;
-            Tx.Rollback();
-        }
-
 
         private void CleanInCaseOfPreviousFail()
         {

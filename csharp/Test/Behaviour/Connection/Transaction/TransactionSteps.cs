@@ -53,11 +53,92 @@ namespace TypeDB.Driver.Test.Behaviour
             }
         }
 
+        // Transaction open steps (from Base)
+
+        [When(@"connection open schema transaction for database: (\S+)")]
+        [Given(@"connection open schema transaction for database: (\S+)")]
+        [Then(@"connection open schema transaction for database: (\S+)")]
+        public void ConnectionOpenSchemaTransactionForDatabase(string name)
+        {
+            if (_requiredConfiguration) return;
+
+            Transactions.Clear();
+            var tx = ConnectionStepsBase.OpenTransaction(
+                Driver!, name, TransactionType.Schema, CurrentTransactionOptions);
+            Transactions.Add(tx);
+        }
+
+        [When(@"connection open read transaction for database: (\S+)")]
+        [Given(@"connection open read transaction for database: (\S+)")]
+        [Then(@"connection open read transaction for database: (\S+)")]
+        public void ConnectionOpenReadTransactionForDatabase(string name)
+        {
+            if (_requiredConfiguration) return;
+
+            Transactions.Clear();
+            var tx = ConnectionStepsBase.OpenTransaction(
+                Driver!, name, TransactionType.Read, CurrentTransactionOptions);
+            Transactions.Add(tx);
+        }
+
+        [When(@"connection open write transaction for database: (\S+)")]
+        [Given(@"connection open write transaction for database: (\S+)")]
+        [Then(@"connection open write transaction for database: (\S+)")]
+        public void ConnectionOpenWriteTransactionForDatabase(string name)
+        {
+            if (_requiredConfiguration) return;
+
+            Transactions.Clear();
+            var tx = ConnectionStepsBase.OpenTransaction(
+                Driver!, name, TransactionType.Write, CurrentTransactionOptions);
+            Transactions.Add(tx);
+        }
+
+        // Transaction state steps (from Base)
+
+        [Then(@"transaction is open: (.*)")]
+        public void TransactionIsOpen(string expectedState)
+        {
+            if (_requiredConfiguration) return;
+
+            bool expected = bool.Parse(expectedState);
+            Assert.Equal(expected, Transactions.Count > 0 && Transactions[0].IsOpen());
+        }
+
         [Then(@"transaction has type: (\S+)")]
         public void TransactionHasType(string type)
         {
             Assert.Equal(StringToTransactionType(type), ConnectionStepsBase.Tx.Type);
         }
+
+        [Given(@"transaction commits")]
+        [When(@"transaction commits")]
+        [Then(@"transaction commits")]
+        public void TransactionCommits()
+        {
+            if (_requiredConfiguration) return;
+            TxPop().Commit();
+        }
+
+        [Given(@"transaction closes")]
+        [When(@"transaction closes")]
+        [Then(@"transaction closes")]
+        public void TransactionCloses()
+        {
+            if (_requiredConfiguration) return;
+            TxPop().Close();
+        }
+
+        [Given(@"transaction rollbacks")]
+        [When(@"transaction rollbacks")]
+        [Then(@"transaction rollbacks")]
+        public void TransactionRollbacks()
+        {
+            if (_requiredConfiguration) return;
+            Tx.Rollback();
+        }
+
+        // Transaction plural state steps
 
         [Then(@"transactions are open: (.*)")]
         public void TransactionsAreOpen(string expectedState)
@@ -213,7 +294,82 @@ namespace TypeDB.Driver.Test.Behaviour
             Assert.Equal(expectedTypes.Count, index);
         }
 
-        // Background transaction steps - any transaction type with may_error
+        // Transaction open fails with message (from DriverSteps)
+
+        [Then(@"connection open schema transaction for database: ([^;]+); fails with a message containing: ""(.*)""")]
+        public void ConnectionOpenSchemaTransactionFailsWithMessage(
+            string name, string expectedMessage)
+        {
+            var exception = Assert.ThrowsAny<Exception>(() =>
+            {
+                var tx = CurrentTransactionOptions != null
+                    ? Driver!.Transaction(
+                        name.Trim(), TransactionType.Schema, CurrentTransactionOptions)
+                    : Driver!.Transaction(name.Trim(), TransactionType.Schema);
+                Transactions.Add(tx);
+            });
+            Assert.Contains(expectedMessage, exception.Message);
+        }
+
+        [Then(@"connection open write transaction for database: ([^;]+); fails with a message containing: ""(.*)""")]
+        public void ConnectionOpenWriteTransactionFailsWithMessage(
+            string name, string expectedMessage)
+        {
+            var exception = Assert.ThrowsAny<Exception>(() =>
+            {
+                var tx = CurrentTransactionOptions != null
+                    ? Driver!.Transaction(
+                        name.Trim(), TransactionType.Write, CurrentTransactionOptions)
+                    : Driver!.Transaction(name.Trim(), TransactionType.Write);
+                Transactions.Add(tx);
+            });
+            Assert.Contains(expectedMessage, exception.Message);
+        }
+
+        [Then(@"connection open read transaction for database: ([^;]+); fails with a message containing: ""(.*)""")]
+        public void ConnectionOpenReadTransactionFailsWithMessage(
+            string name, string expectedMessage)
+        {
+            var exception = Assert.ThrowsAny<Exception>(() =>
+            {
+                var tx = CurrentTransactionOptions != null
+                    ? Driver!.Transaction(
+                        name.Trim(), TransactionType.Read, CurrentTransactionOptions)
+                    : Driver!.Transaction(name.Trim(), TransactionType.Read);
+                Transactions.Add(tx);
+            });
+            Assert.Contains(expectedMessage, exception.Message);
+        }
+
+        // Transaction options (from DriverSteps)
+
+        [When(@"set transaction option transaction_timeout_millis to: (\d+)")]
+        public void SetTransactionOptionTransactionTimeoutMillis(int value)
+        {
+            if (CurrentTransactionOptions == null)
+                CurrentTransactionOptions = new TransactionOptions();
+            CurrentTransactionOptions.TransactionTimeoutMillis = value;
+        }
+
+        [When(@"set transaction option schema_lock_acquire_timeout_millis to: (\d+)")]
+        public void SetTransactionOptionSchemaLockAcquireTimeoutMillis(int value)
+        {
+            if (CurrentTransactionOptions == null)
+                CurrentTransactionOptions = new TransactionOptions();
+            CurrentTransactionOptions.SchemaLockAcquireTimeoutMillis = value;
+        }
+
+        // Background transaction steps (from DriverSteps)
+
+        [When(@"in background, connection open schema transaction for database: ([^;]+)$")]
+        [Then(@"in background, connection open schema transaction for database: ([^;]+)$")]
+        public void InBackgroundConnectionOpenSchemaTransaction(string databaseName)
+        {
+            BackgroundDriver ??= ConnectionStepsBase.CreateDefaultTypeDBDriver();
+            var tx = ConnectionStepsBase.OpenTransaction(
+                BackgroundDriver, databaseName.Trim(), TransactionType.Schema, CurrentTransactionOptions);
+            BackgroundTransactions.Add(tx);
+        }
 
         [When(@"in background, connection open schema transaction for database: ([^;]+); fails with a message containing: ""(.*)""")]
         [Then(@"in background, connection open schema transaction for database: ([^;]+); fails with a message containing: ""(.*)""")]
