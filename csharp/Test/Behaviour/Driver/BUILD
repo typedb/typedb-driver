@@ -14,8 +14,11 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
+
 package(default_visibility = ["//csharp/Test/Behaviour/Driver:__subpackages__"])
+
 load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*"]),
