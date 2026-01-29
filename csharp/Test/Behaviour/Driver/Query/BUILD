@@ -14,11 +14,14 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
+
 package(default_visibility = ["//csharp/Test/Behaviour:__subpackages__"])
+
 load("//csharp:build_opts.bzl", "nullable_context", "target_frameworks", "targeting_packs")
 load("//csharp/Test:build_opts.bzl", "behaviour_tests_deps")
 load("//csharp/Test:rules.bzl", "csharp_behaviour_test")
 load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+
 csharp_behaviour_test(
     name = "test-core",
     test_files = ["QueryTest.cs"],
@@ -42,6 +45,7 @@ csharp_behaviour_test(
     target_frameworks = target_frameworks,
     targeting_packs = targeting_packs,
 )
+
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*"]),
