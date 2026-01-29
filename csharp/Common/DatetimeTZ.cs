@@ -36,10 +36,12 @@ namespace TypeDB.Driver.Common
         /// Creates a DatetimeTZ with an IANA timezone.
         /// </summary>
         /// <param name="dateTimeOffset">The date, time, and UTC offset.</param>
-        /// <param name="zoneInfo">The resolved timezone (e.g., from "Europe/London").</param>
-        public DatetimeTZ(DateTimeOffset dateTimeOffset, TimeZoneInfo zoneInfo)
+        /// <param name="zoneName">The IANA timezone name (e.g., "Europe/London").</param>
+        /// <param name="zoneInfo">The resolved timezone.</param>
+        public DatetimeTZ(DateTimeOffset dateTimeOffset, string zoneName, TimeZoneInfo zoneInfo)
         {
             DateTimeOffset = dateTimeOffset;
+            ZoneName = zoneName;
             ZoneInfo = zoneInfo;
             IsFixedOffset = false;
         }
@@ -51,6 +53,7 @@ namespace TypeDB.Driver.Common
         public DatetimeTZ(DateTimeOffset dateTimeOffset)
         {
             DateTimeOffset = dateTimeOffset;
+            ZoneName = null;
             ZoneInfo = null;
             IsFixedOffset = true;
         }
@@ -61,8 +64,13 @@ namespace TypeDB.Driver.Common
         public DateTimeOffset DateTimeOffset { get; }
 
         /// <summary>
+        /// Gets the IANA timezone name (e.g., "Europe/London"), or null for fixed offsets.
+        /// This is the original name from the database, independent of platform timezone ID conventions.
+        /// </summary>
+        public string? ZoneName { get; }
+
+        /// <summary>
         /// Gets the resolved <see cref="TimeZoneInfo"/>, or null for fixed offsets.
-        /// For IANA zones, <see cref="TimeZoneInfo.Id"/> returns the zone name (e.g., "Europe/London").
         /// </summary>
         public TimeZoneInfo? ZoneInfo { get; }
 
@@ -91,9 +99,9 @@ namespace TypeDB.Driver.Common
 
             formatted += FormatOffset(dt.Offset);
 
-            if (!IsFixedOffset && ZoneInfo != null)
+            if (!IsFixedOffset && ZoneName != null)
             {
-                formatted += " " + ZoneInfo.Id;
+                formatted += " " + ZoneName;
             }
 
             return formatted;
@@ -118,7 +126,7 @@ namespace TypeDB.Driver.Common
             if (ReferenceEquals(this, other)) return true;
             return DateTimeOffset.Equals(other.DateTimeOffset)
                 && IsFixedOffset == other.IsFixedOffset
-                && Equals(ZoneInfo, other.ZoneInfo);
+                && ZoneName == other.ZoneName;
         }
 
         /// <inheritdoc/>
@@ -132,7 +140,7 @@ namespace TypeDB.Driver.Common
         {
             if (_hash == 0)
             {
-                _hash = HashCode.Combine(DateTimeOffset, IsFixedOffset, ZoneInfo?.Id);
+                _hash = HashCode.Combine(DateTimeOffset, IsFixedOffset, ZoneName);
             }
             return _hash;
         }
