@@ -211,7 +211,7 @@ namespace TypeDB.Driver.Concept
                 var utcDto = DateTimeOffset.FromUnixTimeSeconds(seconds).AddTicks(nanos / 100);
                 var offset = zoneInfo.GetUtcOffset(utcDto);
                 var dto = utcDto.ToOffset(offset);
-                return new DatetimeTZ(dto, zoneName, zoneInfo);
+                return new DatetimeTZ(dto, zoneName);
             }
         }
 
