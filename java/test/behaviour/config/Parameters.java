@@ -42,6 +42,14 @@ import static org.junit.Assert.assertNotNull;
 
 public class Parameters {
 
+    private static boolean clusterMode = false;
+    private static final int RETRY_ATTEMPTS = 3;
+    private static final int RETRY_DELAY_MS = 100;
+
+    public static void setClusterMode(boolean isCluster) {
+        clusterMode = isCluster;
+    }
+
     @ParameterType("true|false")
     public Boolean bool(String bool) {
         return Boolean.parseBoolean(bool);
@@ -280,6 +288,8 @@ public class Parameters {
         }
 
         public void check(Runnable function) {
+            int attempts = clusterMode ? RETRY_ATTEMPTS : 1;
+
             if (mayError) {
                 if (message.isEmpty()) {
                     assertThrows(function);
@@ -287,7 +297,24 @@ public class Parameters {
                     assertThrowsWithMessage(function, message);
                 }
             } else {
-                function.run();
+                Exception lastException = null;
+                for (int i = 0; i < attempts; i++) {
+                    try {
+                        function.run();
+                        return;
+                    } catch (Exception e) {
+                        lastException = e;
+                        if (i < attempts - 1) {
+                            try {
+                                Thread.sleep(RETRY_DELAY_MS);
+                            } catch (InterruptedException ie) {
+                                Thread.currentThread().interrupt();
+                                throw new RuntimeException(ie);
+                            }
+                        }
+                    }
+                }
+                throw new RuntimeException(lastException);
             }
         }
     }

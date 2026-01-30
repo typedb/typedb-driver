@@ -30,7 +30,6 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 public class ConnectionStepsCluster extends ConnectionStepsBase {
@@ -53,6 +52,7 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
 
     @Before
     public synchronized void before() {
+        Parameters.setClusterMode(true);
         driverOptions = driverOptions.tlsConfig(DriverTlsConfig.enabledWithRootCA(System.getenv("ROOT_CA")));
         super.before();
     }

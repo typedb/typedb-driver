@@ -204,7 +204,6 @@ build:
         bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @typedb_dependencies//distribution/artifact:create-netrc
 
-
         # TODO: run `.factory/test-cluster.sh //java/test/behaviour/...` instead of multiple tests (cannot do Clustered migration now)
         source tool/test/start-cluster-servers.sh 3 &&
           .factory/test-cluster.sh //java/test/behaviour/connection/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
