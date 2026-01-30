@@ -24,7 +24,6 @@ rust_behaviour_test(
     name = "test_concept",
     srcs = ["concept.rs"],
     data = ["@typedb_behaviour//driver:concept.feature"],
-    size = "large", # TODO: This is a sign of not optimal server. Remove when the execution takes less than 5 mins!
 )
 
 rust_behaviour_test(

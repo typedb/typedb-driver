@@ -37,7 +37,6 @@ typedb_behaviour_py_test(
         "//python/tests/behaviour/background",
     ],
     data = ["//python:native-driver-binary-link", "//python:native-driver-wrapper-link"],
-    size = "large", # TODO: This is a sign of not optimal server. Remove when the execution takes less than 5 mins!
 )
 
 checkstyle_test(
