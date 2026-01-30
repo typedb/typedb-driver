@@ -119,6 +119,9 @@ public abstract class ConnectionStepsBase {
         transactionOptions = Optional.empty();
         queryOptions = Optional.empty();
 
+        if (driver.isOpen()) {
+            driver.close();
+        }
         driver = createDefaultTypeDBDriver();
         driver.users().all().stream().filter(user -> !user.name().equals(ADMIN_USERNAME)).forEach(user -> driver.users().get(user.name()).delete());
         driver.users().get(ADMIN_USERNAME).updatePassword(ADMIN_PASSWORD);

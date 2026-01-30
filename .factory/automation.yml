@@ -214,7 +214,6 @@ build:
           .factory/test-cluster.sh //java/test/behaviour/driver/user/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
           export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-cluster-servers.sh
-        exit 0
         exit $TEST_SUCCESS
 
     test-python-integration:
