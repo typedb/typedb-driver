@@ -177,14 +177,11 @@ namespace TypeDB.Driver.Concept
         }
 
         /// <inheritdoc/>
-        public DateTime? TryGetDatetime()
+        public Datetime? TryGetDatetime()
         {
             if (!CanHaveValue() || !IsDatetime()) return null;
             var nativeDatetime = Pinvoke.typedb_driver.concept_get_datetime(NativeObject);
-            long seconds = nativeDatetime.seconds;
-            uint nanos = nativeDatetime.subsec_nanos;
-            var dateTime = DateTimeOffset.FromUnixTimeSeconds(seconds).DateTime;
-            return dateTime.AddTicks(nanos / 100); // 1 tick = 100 nanoseconds
+            return new Datetime(nativeDatetime.seconds, nativeDatetime.subsec_nanos);
         }
 
         /// <inheritdoc/>
@@ -202,12 +199,12 @@ namespace TypeDB.Driver.Concept
                 var offset = TimeSpan.FromSeconds(offsetSeconds);
                 var dto = DateTimeOffset.FromUnixTimeSeconds(seconds).ToOffset(offset);
                 dto = dto.AddTicks(nanos / 100);
-                return new DatetimeTZ(dto);
+                return new DatetimeTZ(dto, nanos);
             }
             else
             {
                 var utcDateTime = DateTimeOffset.FromUnixTimeSeconds(seconds).AddTicks(nanos / 100).UtcDateTime;
-                return new DatetimeTZ(utcDateTime, nativeDatetimeTz.zone_name);
+                return new DatetimeTZ(utcDateTime, nativeDatetimeTz.zone_name, nanos);
             }
         }
 

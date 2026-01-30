@@ -93,7 +93,7 @@ namespace TypeDB.Driver.Api
         /// Returns a datetime value of this value concept.
         /// If the value has another type, raises an exception.
         /// </summary>
-        DateTime GetDatetime();
+        Datetime GetDatetime();
 
         /// <summary>
         /// Returns a datetime with timezone value of this value concept.

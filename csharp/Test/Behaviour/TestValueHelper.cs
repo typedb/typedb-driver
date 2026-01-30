@@ -105,32 +105,12 @@ namespace TypeDB.Driver.Test.Behaviour
         }
 
         /// <summary>
-        /// Parses a datetime string, handling high-precision fractional seconds.
-        /// C# DateTime has tick precision (100ns, 7 fractional digits).
-        /// TypeDB supports nanosecond precision (9 digits).
-        /// Truncates to 7 digits if needed for C# parsing.
+        /// Parses a datetime string with full nanosecond precision.
+        /// Delegates to <see cref="Datetime.Parse"/> which preserves all 9 fractional digits.
         /// </summary>
-        public static DateTime ParseDatetime(string value)
+        public static Datetime ParseDatetime(string value)
         {
-            var dotIdx = value.IndexOf('.');
-            if (dotIdx >= 0)
-            {
-                var fractionalEnd = value.Length;
-                for (int i = dotIdx + 1; i < value.Length; i++)
-                {
-                    if (!char.IsDigit(value[i]))
-                    {
-                        fractionalEnd = i;
-                        break;
-                    }
-                }
-                var fractionalLen = fractionalEnd - dotIdx - 1;
-                if (fractionalLen > 7)
-                {
-                    value = value.Substring(0, dotIdx + 8) + value.Substring(fractionalEnd);
-                }
-            }
-            return DateTime.Parse(value, CultureInfo.InvariantCulture);
+            return Datetime.Parse(value);
         }
 
         /// <summary>

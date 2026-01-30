@@ -109,7 +109,7 @@ namespace TypeDB.Driver.Concept
         }
 
         /// <inheritdoc/>
-        public DateTime GetDatetime()
+        public Datetime GetDatetime()
         {
             return TryGetDatetime()
                 ?? throw new TypeDBDriverException(ConceptError.INVALID_VALUE_RETRIEVAL, "datetime");
@@ -156,24 +156,12 @@ namespace TypeDB.Driver.Concept
             }
             if (IsString()) return GetString();
             if (IsDate()) return GetDate().ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
-            if (IsDatetime()) return FormatDatetime(GetDatetime());
+            if (IsDatetime()) return GetDatetime().ToString();
             if (IsDatetimeTZ()) return GetDatetimeTZ().ToString();
             if (IsDuration()) return GetDuration().ToString();
             if (IsStruct()) return GetStruct().ToString() ?? "{}";
 
             throw new TypeDBDriverException(InternalError.UNEXPECTED_NATIVE_VALUE);
-        }
-
-        private static string FormatDatetime(DateTime dt)
-        {
-            string formatted = dt.ToString("yyyy-MM-dd'T'HH:mm:ss", CultureInfo.InvariantCulture);
-            long ticks = dt.Ticks % TimeSpan.TicksPerSecond;
-            if (ticks != 0)
-            {
-                string fractional = ticks.ToString("D7").TrimEnd('0');
-                formatted += "." + fractional;
-            }
-            return formatted;
         }
 
         public override bool Equals(object? obj)
