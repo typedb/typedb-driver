@@ -522,7 +522,7 @@ namespace TypeDB.Driver.Api
         /// concept.TryGetDatetime()
         /// </code>
         /// </example>
-        DateTime? TryGetDatetime();
+        Datetime? TryGetDatetime();
 
         /// <summary>
         /// Returns a datetime-tz value of this Concept.

@@ -100,7 +100,7 @@ namespace TypeDB.Driver.Concept
         }
 
         /// <inheritdoc/>
-        public DateTime GetDatetime()
+        public Datetime GetDatetime()
         {
             return Value.GetDatetime();
         }
