@@ -12,7 +12,7 @@ Core 3.0 API is complete. The SWIG crash issue has been resolved. Most tests are
 | Test Suite | Passed | Failed | Skipped | Notes |
 |------------|--------|--------|---------|-------|
 | Database | 14 | 0 | 0 | ✅ Fully passing |
-| Transaction | 39 | 4 | 0 | `<type>` placeholder limitation |
+| Transaction | 43 | 0 | 0 | ✅ Fully passing (DataTable placeholder workaround) |
 | Driver Query | 10 | 9 | 0 | Missing steps (analyze, concurrent, structure) |
 | Define | ALL | 0 | 0 | ✅ Fully passing |
 | Insert | ALL | 0 | 0 | ✅ Fully passing |
@@ -22,15 +22,13 @@ Core 3.0 API is complete. The SWIG crash issue has been resolved. Most tests are
 
 ### Known Limitations (Not C# Driver Issues)
 
-1. **Transaction `<type>` placeholder** (4 tests) - Xunit.Gherkin.Quick doesn't substitute placeholders inside DataTables. Same functionality tested by explicit scenarios.
-
-2. **Missing BDD steps** (deferred):
+1. **Missing BDD steps** (deferred):
    - `get answers of typeql analyze` - Analyze API not implemented in SWIG
    - `concurrently get answers of typeql read query N times` - Concurrent step
    - `answers have query structure:` - Query structure inspection
    - `each answer satisfies` / `get answers of templated typeql read query` - Missing steps
 
-3. **Native layer precision issues** (Fetch/Match tests):
+2. **Native layer precision issues** (Fetch/Match tests):
    - Double precision: `2.01234567` serialized as `2.01234568` in JSON
    - Datetime-tz named timezone format differences
    - Duration fractional seconds format differences
