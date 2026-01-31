@@ -46,19 +46,19 @@ build:
         tool/http-ts/install-deps.sh
         export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
         export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-        bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
-        bazel run @typedb_dependencies//distribution/artifact:create-netrc
+        bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
         # TODO: Temporarily build only the 3.0-reimplemented drivers:
         # bazel build //...
-        bazel build //c/...
-        bazel build //rust/...
-        bazel build //java/...
-        bazel build //python/...
-        bazel build //http-ts/...
+        bazel build --config=ci //c/...
+        bazel build --config=ci //rust/...
+        bazel build --config=ci //java/...
+        bazel build --config=ci //python/...
+        bazel build --config=ci //http-ts/...
         
-        bazel run @typedb_dependencies//tool/checkstyle:test-coverage
-        bazel test $(bazel query 'kind(checkstyle_test, //...)') --test_output=errors
-        bazel test $(bazel query 'kind(rustfmt_test, //...)') --@rules_rust//:rustfmt.toml=//rust:rustfmt_config --test_output=errors
+        bazel run --config=ci @typedb_dependencies//tool/checkstyle:test-coverage
+        bazel test --config=ci $(bazel query 'kind(checkstyle_test, //...)') --test_output=errors
+        bazel test --config=ci $(bazel query 'kind(rustfmt_test, //...)') --@rules_rust//:rustfmt.toml=//rust:rustfmt_config --test_output=errors
 
 #    build-dependency:
 #      image: typedb-ubuntu-22.04
@@ -73,7 +73,7 @@ build:
       command: |
         curl -L https://github.com/doxygen/doxygen/releases/download/Release_1_10_0/doxygen-1.10.0.linux.bin.tar.gz | tar xzO doxygen-1.10.0/bin/doxygen > /var/tmp/doxygen &&
           sudo mv /var/tmp/doxygen /usr/local/bin/ && sudo chmod +x /usr/local/bin/doxygen
-        bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
         
         # TODO: Temporarily update only 3.0 drivers
         DOCS_DIRS=("docs/modules/ROOT/partials/rust" "docs/modules/ROOT/partials/java" "docs/modules/ROOT/partials/python" "docs/modules/ROOT/partials/http-ts" "docs/modules/ROOT/partials/c")
@@ -97,13 +97,13 @@ build:
       command: |
         export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
         export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-        bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
-        bazel run @typedb_dependencies//distribution/artifact:create-netrc
+        bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
         
-        bazel test //rust:typedb_driver_unit_tests --test_output=streamed || exit 1
+        bazel test --config=ci //rust:typedb_driver_unit_tests --test_output=streamed || exit 1
         
         tool/test/start-community-server.sh &&
-          bazel test //rust/tests/integration:all --test_output=streamed --test_arg=--nocapture &&
+          bazel test --config=ci //rust/tests/integration:all --test_output=streamed --test_arg=--nocapture &&
           export COMMUNITY_FAILED= || export COMMUNITY_FAILED=1
         tool/test/stop-community-server.sh
         if [[ -n "$COMMUNITY_FAILED" ]]; then exit 1; fi
@@ -120,11 +120,11 @@ build:
       command: |
         export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
         export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-        bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
-        bazel run @typedb_dependencies//distribution/artifact:create-netrc
+        bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
         
         tool/test/start-community-server.sh &&
-          bazel test //rust/tests/behaviour/... --test_output=streamed --jobs=1 &&
+          bazel test --config=ci //rust/tests/behaviour/... --test_output=streamed --jobs=1 &&
           export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-community-server.sh
         exit $TEST_SUCCESS
@@ -151,10 +151,10 @@ build:
       command: |
         export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
         export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-        bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
-        bazel run @typedb_dependencies//distribution/artifact:create-netrc
+        bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
         tool/test/start-community-server.sh &&
-          bazel test //c/tests/integration:test-driver --test_output=errors &&
+          bazel test --config=ci //c/tests/integration:test-driver --test_output=errors &&
           export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-community-server.sh
         exit $TEST_SUCCESS
@@ -164,11 +164,11 @@ build:
       command: |
         export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
         export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-        bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
-        bazel run @typedb_dependencies//distribution/artifact:create-netrc
+        bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
         
         tool/test/start-community-server.sh &&
-          bazel test //java/test/integration:all --test_output=streamed --jobs=1 &&
+          bazel test --config=ci //java/test/integration:all --test_output=streamed --jobs=1 &&
           export COMMUNITY_FAILED= || export COMMUNITY_FAILED=1
         tool/test/stop-community-server.sh
         if [[ -n "$COMMUNITY_FAILED" ]]; then exit 1; fi
@@ -185,8 +185,8 @@ build:
       command: |
         export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
         export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-        bazel run @typedb_dependencies//distribution/artifact:create-netrc
-        bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
+        bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
         
         tool/test/start-community-server.sh &&
           .factory/test-community.sh //java/test/behaviour/... --test_output=streamed --jobs=1 &&
@@ -218,11 +218,11 @@ build:
         export PATH="$HOME/.local/bin:$PATH"
         export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
         export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-        bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
-        bazel run @typedb_dependencies//distribution/artifact:create-netrc
+        bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
 
         tool/test/start-community-server.sh &&
-          bazel test //python/tests/integration:all --test_output=streamed --jobs=1 &&
+          bazel test --config=ci //python/tests/integration:all --test_output=streamed --jobs=1 &&
           export COMMUNITY_FAILED= || export COMMUNITY_FAILED=1
         tool/test/stop-community-server.sh
         if [[ -n "$COMMUNITY_FAILED" ]]; then exit 1; fi
@@ -241,8 +241,8 @@ build:
         export PATH="$HOME/.local/bin:$PATH"
         export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
         export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-        bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
-        bazel run @typedb_dependencies//distribution/artifact:create-netrc
+        bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
 
         tool/test/start-community-server.sh &&
           .factory/test-community.sh //python/tests/behaviour/... --test_output=streamed --jobs=1 &&
@@ -277,8 +277,8 @@ build:
         export PATH="$HOME/.local/bin:$PATH"
         export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
         export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-        bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
-        bazel run @typedb_dependencies//distribution/artifact:create-netrc
+        bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
         
         tool/http-ts/install-deps.sh
 
@@ -539,12 +539,12 @@ release:
     validate-dependencies:
       image: typedb-ubuntu-22.04
       command: |
-        bazel test //:release-validate-deps --test_output=streamed
+        bazel test --config=ci //:release-validate-deps --test_output=streamed
     validate-release-notes:
       image: typedb-ubuntu-22.04
       command: |
         export NOTES_VALIDATE_TOKEN=$REPO_GITHUB_TOKEN
-        bazel run @typedb_dependencies//tool/release/notes:validate --test_output=streamed -- $FACTORY_OWNER $FACTORY_REPO RELEASE_NOTES_LATEST.md
+        bazel run --config=ci @typedb_dependencies//tool/release/notes:validate --test_output=streamed -- $FACTORY_OWNER $FACTORY_REPO RELEASE_NOTES_LATEST.md
 
   deployment:
     trigger-release-circleci:

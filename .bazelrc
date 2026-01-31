@@ -37,3 +37,5 @@ build:macos --stamp --workspace_status_command=$PWD/workspace-status.sh
 build --@aspect_rules_ts//ts:skipLibCheck=always
 fetch --@aspect_rules_ts//ts:skipLibCheck=always
 query --@aspect_rules_ts//ts:skipLibCheck=always
+
+build:ci --disk_cache=
