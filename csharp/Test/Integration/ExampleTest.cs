@@ -38,8 +38,7 @@ namespace TypeDB.Driver.Test.Integration
     public class ExampleTest
     {
         // EXAMPLE END MARKER
-        // Test server address (test server uses 1730, default is 1729)
-        private const string ServerAddress = "127.0.0.1:1730";
+        private const string ServerAddress = "127.0.0.1:1729";
 
         public ExampleTest()
         {
