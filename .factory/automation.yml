@@ -31,7 +31,7 @@ build:
 #    dependency-analysis:
 #      image: typedb-ubuntu-22.04
 #      command: |
-#        bazel run @typedb_dependencies//factory/analysis:dependency-analysis
+#        bazel run --config=ci @typedb_dependencies//factory/analysis:dependency-analysis
 
   correctness:
     build:
@@ -63,10 +63,10 @@ build:
 #    build-dependency:
 #      image: typedb-ubuntu-22.04
 #      command: |
-#        bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+#        bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
 #        dependencies/maven/update.sh
 #        git diff --exit-code dependencies/maven/artifacts.snapshot
-#        bazel run @typedb_dependencies//tool/unuseddeps:unused-deps -- list
+#        bazel run --config=ci @typedb_dependencies//tool/unuseddeps:unused-deps -- list
 
     build-docs:
       image: typedb-ubuntu-22.04
@@ -110,7 +110,7 @@ build:
         
         # TODO: Use cluster server artifact with 3 nodes for the same common tests when available
         # tool/test/start-cluster-servers.sh 3 &&
-        #   bazel test //rust/tests/integration:all --test_output=streamed --test_arg=--nocapture &&
+        #   bazel test --config=ci //rust/tests/integration:all --test_output=streamed --test_arg=--nocapture &&
         #   export CLUSTER_FAILED= || export CLUSTER_FAILED=1
         # tool/test/stop-cluster-servers.sh
         # if [[ -n "$CLUSTER_FAILED" ]]; then exit 1; fi
@@ -137,11 +137,11 @@ build:
     #   command: |
     #     export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
     #     export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-    #     bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
-    #     bazel run @typedb_dependencies//distribution/artifact:create-netrc
+    #     bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+    #     bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
     #
     #     tool/test/start-cluster-servers.sh 3 &&
-    #       bazel test //rust/tests/behaviour/...  --//rust/tests/behaviour/config:mode=cluster --test_output=streamed --jobs=1 &&
+    #       bazel test --config=ci //rust/tests/behaviour/...  --//rust/tests/behaviour/config:mode=cluster --test_output=streamed --jobs=1 &&
     #       export TEST_SUCCESS=0 || export TEST_SUCCESS=1
     #     tool/test/stop-cluster-servers.sh
     #     exit $TEST_SUCCESS
@@ -175,7 +175,7 @@ build:
 
         # TODO: Use cluster server artifact with 3 nodes for the same common tests when available
         # tool/test/start-cluster-servers.sh 3 &&
-        #   bazel test //java/test/integration:all --test_output=streamed --jobs=1 &&
+        #   bazel test --config=ci //java/test/integration:all --test_output=streamed --jobs=1 &&
         #   export CLUSTER_FAILED= || export CLUSTER_FAILED=1
         # tool/test/stop-cluster-servers.sh
         # if [[ -n "CLUSTER_FAILED" ]]; then exit 1; fi
@@ -202,8 +202,8 @@ build:
     #   command: |
     #     export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
     #     export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-    #     bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
-    #     bazel run @typedb_dependencies//distribution/artifact:create-netrc
+    #     bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+    #     bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
     #
     #     tool/test/start-cluster-servers.sh 3 &&
     #       .factory/test-cluster.sh //java/test/behaviour/... --test_output=streamed --jobs=1 &&
@@ -229,7 +229,7 @@ build:
 
         # TODO: Use cluster server artifact with 3 nodes when available
         # tool/test/start-cluster-servers.sh 3 &&
-        #   bazel test //python/tests/integration:all --test_output=streamed --jobs=1 &&
+        #   bazel test --config=ci //python/tests/integration:all --test_output=streamed --jobs=1 &&
         #   export CLUSTER_FAILED= || export CLUSTER_FAILED=1
         # tool/test/stop-cluster-servers.sh
         # if [[ -n "$CLUSTER_FAILED" ]]; then exit 1; fi
@@ -260,8 +260,8 @@ build:
     #     export PATH="$HOME/.local/bin:$PATH"
     #     export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
     #     export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-    #     bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
-    #     bazel run @typedb_dependencies//distribution/artifact:create-netrc
+    #     bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+    #     bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
     #
     #     tool/test/start-cluster-servers.sh 3 &&
     #       .factory/test-cluster.sh //python/tests/behaviour/... --test_output=streamed --jobs=1 &&
@@ -295,8 +295,8 @@ build:
 #      command: |
 #        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
 #        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-#        bazel run @typedb_dependencies//distribution/artifact:create-netrc
-#        bazel build //nodejs/...
+#        bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
+#        bazel build --config=ci //nodejs/...
 #        cp -rL bazel-bin/nodejs/node_modules nodejs/.
 #        cp -rL bazel-bin/nodejs/dist nodejs/.
 #        tool/test/start-community-server.sh &&
@@ -321,7 +321,7 @@ build:
 #      command: |
 #        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
 #        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-#        bazel run @typedb_dependencies//distribution/artifact:create-netrc
+#        bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
 #        tool/test/start-community-server.sh &&
 #          .factory/test-community.sh //nodejs/test/behaviour/connection/database/... --test_output=errors --jobs=1 &&
 #          .factory/test-community.sh //nodejs/test/behaviour/connection/session/... --test_output=errors --jobs=1 &&
@@ -340,7 +340,7 @@ build:
 #      command: |
 #        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
 #        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-#        bazel run @typedb_dependencies//distribution/artifact:create-netrc
+#        bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
 #        source tool/test/start-cluster-servers.sh 3 && # use source to receive export vars
 #          .factory/test-cluster.sh //nodejs/test/behaviour/connection/database/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
 #          .factory/test-cluster.sh //nodejs/test/behaviour/connection/session/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
@@ -363,16 +363,16 @@ build:
 #        sudo apt install clang-format-15 -y && sudo ln -s $(which clang-format-15) /usr/bin/clang-format
 #        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
 #        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-#        bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
-#        bazel run @typedb_dependencies//distribution/artifact:create-netrc
+#        bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+#        bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
 #        tool/test/start-community-server.sh &&
-#          bazel test //cpp/test/integration:test-cpp-driver-core --test_output=streamed --jobs=1 &&
+#          bazel test --config=ci //cpp/test/integration:test-cpp-driver-core --test_output=streamed --jobs=1 &&
 #          export COMMUNITY_FAILED= || export COMMUNITY_FAILED=1
 #        tool/test/stop-community-server.sh
 #        if [[ -n "$COMMUNITY_FAILED" ]]; then exit 1; fi
 #
 #        source tool/test/start-cluster-servers.sh 3 && # use source to receive export vars
-#          bazel test //cpp/test/integration:test-cpp-driver-cloud --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
+#          bazel test --config=ci //cpp/test/integration:test-cpp-driver-cloud --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
 #          export CLUSTER_FAILED= || export CLUSTER_FAILED=1
 #        tool/test/stop-cluster-servers.sh
 #        if [[ -n "$CLUSTER_FAILED" ]]; then exit 1; fi
@@ -387,8 +387,8 @@ build:
 #        sudo apt install clang-format-15 -y && sudo ln -s $(which clang-format-15) /usr/bin/clang-format
 #        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
 #        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-#        bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
-#        bazel run @typedb_dependencies//distribution/artifact:create-netrc
+#        bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+#        bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
 #        tool/test/start-community-server.sh &&
 #          .factory/test-community.sh //cpp/test/behaviour/connection/database/... --test_output=streamed --jobs=1 &&
 #          .factory/test-community.sh //cpp/test/behaviour/connection/session/... --test_output=streamed --jobs=1 &&
@@ -408,8 +408,8 @@ build:
 #      command: |
 #        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
 #        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-#        bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
-#        bazel run @typedb_dependencies//distribution/artifact:create-netrc
+#        bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+#        bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
 #        source tool/test/start-cluster-servers.sh 3 &&
 #          .factory/test-cluster.sh //cpp/test/behaviour/connection/database/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
 #          .factory/test-cluster.sh //cpp/test/behaviour/connection/session/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
@@ -431,18 +431,18 @@ build:
 #        sudo apt-get update
 #        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
 #        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-#        bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
-#        bazel run @typedb_dependencies//distribution/artifact:create-netrc
+#        bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+#        bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
 #        tool/test/start-community-server.sh &&
-#          bazel test //csharp/Test/Integration/Data/... --test_output=streamed --jobs=1 &&
-#          bazel test //csharp/Test/Integration/Marshal/... --test_output=streamed --jobs=1 &&
+#          bazel test --config=ci //csharp/Test/Integration/Data/... --test_output=streamed --jobs=1 &&
+#          bazel test --config=ci //csharp/Test/Integration/Marshal/... --test_output=streamed --jobs=1 &&
 #          .factory/test-community.sh //csharp/Test/Integration/Examples/... --test_output=streamed --jobs=1 &&
 #          export COMMUNITY_FAILED= || export COMMUNITY_FAILED=1
 #        tool/test/stop-community-server.sh
 #        if [[ -n "$COMMUNITY_FAILED" ]]; then exit 1; fi
 #
 #        source tool/test/start-cluster-servers.sh 3 && # use source to receive export vars
-#          bazel test //csharp/Test/Integration/Network/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
+#          bazel test --config=ci //csharp/Test/Integration/Network/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
 #          .factory/test-cluster.sh //csharp/Test/Integration/Examples/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
 #          export CLUSTER_FAILED= || export CLUSTER_FAILED=1
 #        tool/test/stop-cluster-servers.sh
@@ -457,8 +457,8 @@ build:
 #        sudo apt-get update
 #        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
 #        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-#        bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
-#        bazel run @typedb_dependencies//distribution/artifact:create-netrc
+#        bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+#        bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
 #        tool/test/start-community-server.sh &&
 #          .factory/test-community.sh //csharp/Test/Behaviour/Connection/Database/... --test_output=errors --jobs=1 &&
 #          .factory/test-community.sh //csharp/Test/Behaviour/Connection/Session/... --test_output=errors --jobs=1 &&
@@ -479,8 +479,8 @@ build:
 #      command: |
 #        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
 #        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-#        bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
-#        bazel run @typedb_dependencies//distribution/artifact:create-netrc
+#        bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+#        bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
 #        source tool/test/start-cluster-servers.sh 3 &&
 #          .factory/test-cluster.sh //csharp/Test/Behaviour/Connection/Database/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
 #          .factory/test-cluster.sh //csharp/Test/Behaviour/Connection/Session/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
@@ -527,7 +527,7 @@ build:
 #        sudo apt update && sudo apt install -y python3.9 python3.9-distutils python3-pip
 #        python3.9 -m pip install -U cffi
 #        export SYNC_DEPENDENCIES_TOKEN=$REPO_GITHUB_TOKEN
-#        bazel run @typedb_dependencies//tool/sync:dependencies -- --source ${FACTORY_REPO}@${FACTORY_COMMIT}
+#        bazel run --config=ci @typedb_dependencies//tool/sync:dependencies -- --source ${FACTORY_REPO}@${FACTORY_COMMIT}
 
 # TODO #512: assembly tests for all drivers to run in factory
 

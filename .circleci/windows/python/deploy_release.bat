@@ -26,14 +26,14 @@ SET DEPLOY_PIP_PASSWORD=%REPO_PYPI_PASSWORD%
 python.exe -m pip install twine==3.3.0 importlib-metadata==3.4.0
 SET /p VER=<VERSION
 
-bazel --output_user_root=C:/tmp run --verbose_failures --define version=%VER% //python:deploy-pip39 --compilation_mode=opt -- release
+bazel --output_user_root=C:/tmp run --config=ci --verbose_failures --define version=%VER% //python:deploy-pip39 --compilation_mode=opt -- release
 IF %errorlevel% NEQ 0 EXIT /b %errorlevel%
 
-bazel --output_user_root=C:/tmp run --verbose_failures --define version=%VER% //python:deploy-pip310 --compilation_mode=opt -- release
+bazel --output_user_root=C:/tmp run --config=ci --verbose_failures --define version=%VER% //python:deploy-pip310 --compilation_mode=opt -- release
 IF %errorlevel% NEQ 0 EXIT /b %errorlevel%
 
-bazel --output_user_root=C:/tmp run --verbose_failures --define version=%VER% //python:deploy-pip311 --compilation_mode=opt -- release
+bazel --output_user_root=C:/tmp run --config=ci --verbose_failures --define version=%VER% //python:deploy-pip311 --compilation_mode=opt -- release
 IF %errorlevel% NEQ 0 EXIT /b %errorlevel%
 
-bazel --output_user_root=C:/tmp run --verbose_failures --define version=%VER% //python:deploy-pip312 --compilation_mode=opt -- release
+bazel --output_user_root=C:/tmp run --config=ci --verbose_failures --define version=%VER% //python:deploy-pip312 --compilation_mode=opt -- release
 IF %errorlevel% NEQ 0 EXIT /b %errorlevel%

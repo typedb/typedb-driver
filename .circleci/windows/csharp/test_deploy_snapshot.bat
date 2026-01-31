@@ -20,7 +20,7 @@ choco install dotnet-6.0-runtime --limit-output --yes --no-progress
 choco install 7zip.portable --limit-output --yes --no-progress
 CALL refreshenv
 
-bazel --output_user_root=C:\b build @typedb_artifact_windows-x86_64//file
+bazel --output_user_root=C:\b build --config=ci @typedb_artifact_windows-x86_64//file
 powershell -Command "Move-Item -Path bazel-typedb-driver\external\typedb_artifact_windows-x86_64\file\typedb-server-windows* -Destination typedb-server-windows.zip"
 7z x typedb-server-windows.zip
 RD /S /Q typedb-server-windows
