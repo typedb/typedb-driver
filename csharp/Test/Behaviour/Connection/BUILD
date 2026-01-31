@@ -17,8 +17,8 @@
 package(default_visibility = ["//csharp/Test/Behaviour:__subpackages__"])
 load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 filegroup(
-    name = "steps-core",
-    srcs = ["ConnectionStepsBase.cs", "ConnectionStepsCore.cs"],
+    name = "steps-community",
+    srcs = ["ConnectionStepsBase.cs", "ConnectionStepsCommunity.cs"],
     visibility = ["//csharp/Test/Behaviour:__subpackages__"],
 )
 checkstyle_test(

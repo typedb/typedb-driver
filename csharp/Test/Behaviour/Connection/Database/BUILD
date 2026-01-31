@@ -25,14 +25,14 @@ filegroup(
     visibility = ["//csharp/Test/Behaviour:__subpackages__"],
 )
 csharp_behaviour_test(
-    name = "test-core",
+    name = "test-community",
     test_files = ["DatabaseTest.cs"],
     steps_files = [
         ":steps",
         "//csharp/Test/Behaviour/Util:steps",
         "//csharp/Test/Behaviour/Query:steps",
         "//csharp/Test/Behaviour/Connection/Transaction:steps",
-        "//csharp/Test/Behaviour/Connection:steps-core",
+        "//csharp/Test/Behaviour/Connection:steps-community",
     ],
     features = ["@typedb_behaviour//connection:database.feature"],
     deps = [
