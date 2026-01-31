@@ -82,7 +82,7 @@ namespace TypeDB.Driver.Test.Behaviour
         [Given(@"typedb has configuration")]
         public void TypeDBHasConfiguration(DataTable data)
         {
-            throw new NotImplementedException("Core tests are not expected to use this method");
+            throw new NotImplementedException("Community tests are not expected to use this method");
         }
 
         // Connection-level steps (from Base)

@@ -23,13 +23,13 @@ load("//csharp/Test:rules.bzl", "csharp_behaviour_test")
 load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 csharp_behaviour_test(
-    name = "test-core",
+    name = "test-community",
     test_files = ["UserTest.cs"],
     steps_files = [
         "//csharp/Test/Behaviour/Util:steps",
         "//csharp/Test/Behaviour/Query:steps",
         "//csharp/Test/Behaviour/Connection/User:steps",
-        "//csharp/Test/Behaviour/Connection:steps-core",
+        "//csharp/Test/Behaviour/Connection:steps-community",
     ],
     features = ["@typedb_behaviour//driver:user.feature"],
     deps = [

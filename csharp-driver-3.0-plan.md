@@ -216,13 +216,13 @@ csharp/
 
 ```bash
 # Database management tests
-bazel test //csharp/Test/Behaviour/Connection/Database:test-core --test_output=errors
+bazel test //csharp/Test/Behaviour/Connection/Database:test-community --test_output=errors
 
 # Transaction tests
-bazel test //csharp/Test/Behaviour/Connection/Transaction:test-core --test_output=errors
+bazel test //csharp/Test/Behaviour/Connection/Transaction:test-community --test_output=errors
 
 # Query tests
-bazel test //csharp/Test/Behaviour/Driver/Query:test-core --test_output=errors
+bazel test //csharp/Test/Behaviour/Driver/Query:test-community --test_output=errors
 ```
 
 ---

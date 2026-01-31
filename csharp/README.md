@@ -70,9 +70,9 @@ The SWIG-generated wrapper classes (`Credentials`, `DriverOptions`, `Transaction
 
 ## Example usage
 
-### TypeDB Core
+### TypeDB Community
 
-Connect to TypeDB using `Drivers.CoreDriver` and perform basic read/write operations:
+Connect to TypeDB Community using `TypeDB.Driver` and perform basic read/write operations:
 ```cs
 using TypeDB.Driver;
 using TypeDB.Driver.Api;
@@ -87,7 +87,7 @@ class WelcomeToTypeDB
 
         try
         {
-            using (ITypeDBDriver driver = Drivers.CoreDriver(serverAddr))
+            using (ITypeDBDriver driver = TypeDB.Driver(serverAddr, new Credentials("admin", "password"), new DriverOptions(false, null)))
             {
                 driver.Databases.Create(dbName);
                 IDatabase database = driver.Databases.Get(dbName);
@@ -162,8 +162,8 @@ class WelcomeToTypeDB
 }
 ```
 
-### TypeDB Cloud
-Connect to TypeDB cloud instances using `Drivers.CloudDriver`:
+### TypeDB Cluster
+Connect to TypeDB Cluster (Cloud / Enterprise) using `TypeDB.CloudDriver`:
 ```cs
 using TypeDB.Driver;
 using TypeDB.Driver.Api;
@@ -185,7 +185,7 @@ class WelcomeToTypeDB
                 "password",
                 Environment.GetEnvironmentVariable("ROOT_CA")!);
 
-            using (ITypeDBDriver driver = Drivers.CloudDriver(serverAddrs, connectCredential))
+            using (ITypeDBDriver driver = TypeDB.CloudDriver(serverAddrs, connectCredential))
             {
                 driver.Databases.Create(dbName);
                 IDatabase database = driver.Databases.Get(dbName);
