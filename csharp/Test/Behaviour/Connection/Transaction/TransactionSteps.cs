@@ -35,6 +35,32 @@ namespace TypeDB.Driver.Test.Behaviour
 {
     public partial class BehaviourSteps
     {
+        // Xunit.Gherkin.Quick treats the first DataTable row as a header and does not
+        // substitute Scenario Outline placeholders in it, even though all rows are data.
+        // This helper resolves any remaining "<placeholder>" cells by copying the value
+        // from the first properly-substituted cell.
+        private static List<string> GetSubstitutedCellValues(DataTable table)
+        {
+            var values = table.Rows
+                .SelectMany(r => r.Cells)
+                .Select(c => c.Value)
+                .ToList();
+
+            var substituted = values.FirstOrDefault(v => !(v.StartsWith("<") && v.EndsWith(">")));
+            if (substituted != null)
+            {
+                for (int i = 0; i < values.Count; i++)
+                {
+                    if (values[i].StartsWith("<") && values[i].EndsWith(">"))
+                    {
+                        values[i] = substituted;
+                    }
+                }
+            }
+
+            return values;
+        }
+
         private TransactionType StringToTransactionType(string value)
         {
             switch (value.ToLower())
@@ -45,9 +71,6 @@ namespace TypeDB.Driver.Test.Behaviour
                     return TransactionType.Write;
                 case "schema":
                     return TransactionType.Schema;
-                case "<type>":
-                    throw new BehaviourTestException(
-                        "KNOWN LIMITATION: Xunit.Gherkin.Quick doesn't substitute <type> placeholder in DataTables.");
                 default:
                     throw new Exception($"The test value {value} passed to StringToTransactionType is invalid!");
             }
@@ -196,15 +219,12 @@ namespace TypeDB.Driver.Test.Behaviour
         [When(@"connection open transactions for database: (\S+), of type:")]
         public void ConnectionOpenTransactionsForDatabase(string database, DataTable types)
         {
-            foreach (var row in types.Rows)
+            foreach (var value in GetSubstitutedCellValues(types))
             {
-                foreach (var cell in row.Cells)
-                {
-                    var type = StringToTransactionType(cell.Value);
-                    var tx = ConnectionStepsBase.OpenTransaction(
-                        Driver!, database, type, CurrentTransactionOptions);
-                    Transactions.Add(tx);
-                }
+                var type = StringToTransactionType(value);
+                var tx = ConnectionStepsBase.OpenTransaction(
+                    Driver!, database, type, CurrentTransactionOptions);
+                Transactions.Add(tx);
             }
         }
 
@@ -212,12 +232,9 @@ namespace TypeDB.Driver.Test.Behaviour
         public void TransactionsHaveType(DataTable types)
         {
             var expectedTypes = new List<TransactionType>();
-            foreach (var row in types.Rows)
+            foreach (var value in GetSubstitutedCellValues(types))
             {
-                foreach (var cell in row.Cells)
-                {
-                    expectedTypes.Add(StringToTransactionType(cell.Value));
-                }
+                expectedTypes.Add(StringToTransactionType(value));
             }
 
             var typeIterator = expectedTypes.GetEnumerator();
@@ -237,12 +254,9 @@ namespace TypeDB.Driver.Test.Behaviour
             TransactionsParallel.Clear();
 
             var collectedTypes = new List<TransactionType>();
-            foreach (var row in types.Rows)
+            foreach (var value in GetSubstitutedCellValues(types))
             {
-                foreach (var cell in row.Cells)
-                {
-                    collectedTypes.Add(StringToTransactionType(cell.Value));
-                }
+                collectedTypes.Add(StringToTransactionType(value));
             }
 
             foreach (var type in collectedTypes)
@@ -272,12 +286,9 @@ namespace TypeDB.Driver.Test.Behaviour
         public void TransactionsInParallelHaveType(DataTable types)
         {
             var expectedTypes = new List<TransactionType>();
-            foreach (var row in types.Rows)
+            foreach (var value in GetSubstitutedCellValues(types))
             {
-                foreach (var cell in row.Cells)
-                {
-                    expectedTypes.Add(StringToTransactionType(cell.Value));
-                }
+                expectedTypes.Add(StringToTransactionType(value));
             }
 
             var assertions = new List<Task>();
