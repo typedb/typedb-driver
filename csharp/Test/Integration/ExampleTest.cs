@@ -18,8 +18,6 @@
  */
 
 // EXAMPLE START MARKER
-// EXAMPLE START MARKER
-// EXAMPLE START MARKER
 using System;
 using System.Collections.Generic;
 using System.Linq;

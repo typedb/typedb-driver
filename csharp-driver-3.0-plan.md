@@ -13,7 +13,7 @@ Core 3.0 API is complete. The SWIG crash issue has been resolved. Most tests are
 |------------|--------|--------|---------|-------|
 | Database | 14 | 0 | 0 | ✅ Fully passing |
 | Transaction | 43 | 0 | 0 | ✅ Fully passing (DataTable placeholder workaround) |
-| Driver Query | 10 | 9 | 0 | Missing steps (analyze, concurrent, structure) |
+| Driver Query | 14 | 5 | 0 | Missing steps (analyze, structure) |
 | Define | ALL | 0 | 0 | ✅ Fully passing |
 | Insert | ALL | 0 | 0 | ✅ Fully passing |
 | Match | 120 | 4 | 3 | 2 missing steps, 2 native precision issues |
@@ -23,10 +23,9 @@ Core 3.0 API is complete. The SWIG crash issue has been resolved. Most tests are
 ### Known Limitations (Not C# Driver Issues)
 
 1. **Missing BDD steps** (deferred):
-   - `get answers of typeql analyze` - Analyze API not implemented in SWIG
-   - `concurrently get answers of typeql read query N times` - Concurrent step
-   - `answers have query structure:` - Query structure inspection
-   - `each answer satisfies` / `get answers of templated typeql read query` - Missing steps
+   - `get answers of typeql analyze` - Analyze API not implemented in SWIG (3 tests)
+   - `answers have query structure:` - Query structure inspection (1 test)
+   - 1 test has an Assert.Equal failure in concept row processing (needs investigation)
 
 2. **Native layer precision issues** (Fetch/Match tests):
    - Double precision: `2.01234567` serialized as `2.01234568` in JSON
