@@ -3,6 +3,10 @@
 
 *Package*: `TypeDB.Driver.Api`
 
+
+
+A TypeDB database.
+
 // tag::methods[]
 [#_void_TypeDB_Driver_Api_IDatabase_Delete_]
 ==== Delete
@@ -16,65 +20,14 @@ void Delete()
 
 Deletes this database.
 
+ 
+  database.Delete();
+ 
+
 
 [caption=""]
 .Returns
 `void`
-
-[caption=""]
-.Code examples
-[source,cs]
-----
-database.Delete();
-----
-
-[#_ISet_IReplica_TypeDB_Driver_Api_IDatabase_GetReplicas_]
-==== GetReplicas
-
-[source,cs]
-----
-ISet< IReplica > GetReplicas()
-----
-
-
-
-Set of ``Replica`` instances for this database. Only works in TypeDB Cloud
-
-
-[caption=""]
-.Returns
-`ISet< IReplica >`
-
-[caption=""]
-.Code examples
-[source,cs]
-----
-database.GetReplicas();
-----
-
-[#_string_TypeDB_Driver_Api_IDatabase_GetRuleSchema_]
-==== GetRuleSchema
-
-[source,cs]
-----
-string GetRuleSchema()
-----
-
-
-
-The rules in the schema as a valid TypeQL define query string.
-
-
-[caption=""]
-.Returns
-`string`
-
-[caption=""]
-.Code examples
-[source,cs]
-----
-database.GetRuleSchema();
-----
 
 [#_string_TypeDB_Driver_Api_IDatabase_GetSchema_]
 ==== GetSchema
@@ -86,19 +39,24 @@ string GetSchema()
 
 
 
-A full schema text as a valid TypeQL define query string.
+Returns the full schema text as a valid TypeQL define query string.
+
+ 
+  Returns
+ 
+ 
+  The schema string.
+ 
+
+
+ 
+  database.GetSchema();
+ 
 
 
 [caption=""]
 .Returns
 `string`
-
-[caption=""]
-.Code examples
-[source,cs]
-----
-database.GetSchema();
-----
 
 [#_string_TypeDB_Driver_Api_IDatabase_GetTypeSchema_]
 ==== GetTypeSchema
@@ -110,19 +68,24 @@ string GetTypeSchema()
 
 
 
-The types in the schema as a valid TypeQL define query string.
+Returns the types in the schema as a valid TypeQL define query string.
+
+ 
+  Returns
+ 
+ 
+  The type schema string.
+ 
+
+
+ 
+  database.GetTypeSchema();
+ 
 
 
 [caption=""]
 .Returns
 `string`
-
-[caption=""]
-.Code examples
-[source,cs]
-----
-database.GetTypeSchema();
-----
 
 [#_string_TypeDB_Driver_Api_IDatabase_Name]
 ==== Name
@@ -136,65 +99,14 @@ string TypeDB.Driver.Api.IDatabase.Name
 
 The database name as a string.
 
+ 
+  database.Name;
+ 
+
 
 [caption=""]
 .Returns
 `string`
-
-[caption=""]
-.Code examples
-[source,cs]
-----
-database.Name;
-----
-
-[#_IReplica_TypeDB_Driver_Api_IDatabase_PreferredReplica]
-==== PreferredReplica
-
-[source,cs]
-----
-IReplica? TypeDB.Driver.Api.IDatabase.PreferredReplica
-----
-
-
-
-Returns the preferred replica for this database. Operations which can be run on any replica will prefer to use this replica. _Only works in TypeDB Cloud_
-
-
-[caption=""]
-.Returns
-`IReplica?`
-
-[caption=""]
-.Code examples
-[source,cs]
-----
-database.PreferredReplica;
-----
-
-[#_IReplica_TypeDB_Driver_Api_IDatabase_PrimaryReplica]
-==== PrimaryReplica
-
-[source,cs]
-----
-IReplica? TypeDB.Driver.Api.IDatabase.PrimaryReplica
-----
-
-
-
-Returns the primary replica for this database. _Only works in TypeDB Cloud_
-
-
-[caption=""]
-.Returns
-`IReplica?`
-
-[caption=""]
-.Code examples
-[source,cs]
-----
-database.PrimaryReplica;
-----
 
 // end::methods[]
 

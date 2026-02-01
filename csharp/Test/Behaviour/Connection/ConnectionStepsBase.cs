@@ -19,6 +19,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Gherkin.Quick;
@@ -29,93 +31,170 @@ using TypeDB.Driver.Common;
 
 namespace TypeDB.Driver.Test.Behaviour
 {
+    /// <summary>
+    /// Base class for connection-related behavior tests.
+    /// </summary>
     public abstract class ConnectionStepsBase : Feature, IDisposable
     {
-        public static ITypeDBDriver? Driver;
+        public static IDriver? Driver;
 
-        public static List<ITypeDBSession> Sessions = new List<ITypeDBSession>();
-        public static List<Task<ITypeDBSession>> ParallelSessions = new List<Task<ITypeDBSession>>();
+        public static List<ITypeDBTransaction> Transactions = new List<ITypeDBTransaction>();
 
-        public static Dictionary<ITypeDBSession, List<ITypeDBTransaction>> SessionsToTransactions =
-            new Dictionary<ITypeDBSession, List<ITypeDBTransaction>>();
-        public static Dictionary<ITypeDBSession, List<Task<ITypeDBTransaction>>> SessionsToParallelTransactions =
-            new Dictionary<ITypeDBSession, List<Task<ITypeDBTransaction>>>();
-        public static Dictionary<Task<ITypeDBSession>, List<Task<ITypeDBTransaction>>> ParallelSessionsToParallelTransactions =
-            new Dictionary<Task<ITypeDBSession>, List<Task<ITypeDBTransaction>>>();
+        // Background driver and transactions for "in background" steps
+        public static IDriver? BackgroundDriver;
+        public static List<ITypeDBTransaction> BackgroundTransactions = new List<ITypeDBTransaction>();
 
-        public static TypeDBOptions SessionOptions = new TypeDBOptions();
-        public static TypeDBOptions TransactionOptions = new TypeDBOptions();
+        // Parallel transactions for "in parallel" steps
+        public static List<Task<ITypeDBTransaction>> TransactionsParallel = new List<Task<ITypeDBTransaction>>();
 
-        public static readonly Dictionary<string, Action<TypeDBOptions, string>> OptionSetters =
-            new Dictionary<string, Action<TypeDBOptions, string>>(){
-                {"session-idle-timeout-millis", (option, val) => option.SessionIdleTimeoutMillis(Int32.Parse(val))},
-                {"transaction-timeout-millis", (option, val) => option.TransactionTimeoutMillis(Int32.Parse(val))}
-        };
+        // Transaction options set via "set transaction option" steps
+        public static TransactionOptions? CurrentTransactionOptions;
+
+        // Temporary directory for migration file operations (export/import)
+        private static string? _tempDir;
+
+        /// <summary>
+        /// Gets or creates a temporary directory for the current test run.
+        /// Used by file-related step definitions (export, import, file existence checks).
+        /// </summary>
+        public static string TempDir
+        {
+            get
+            {
+                if (_tempDir == null || !Directory.Exists(_tempDir))
+                {
+                    _tempDir = Path.Combine(Path.GetTempPath(), "typedb-test-" + Guid.NewGuid().ToString("N"));
+                    Directory.CreateDirectory(_tempDir);
+                }
+                return _tempDir;
+            }
+        }
+
+        /// <summary>
+        /// Resolves a file name to a full path in the temp directory.
+        /// </summary>
+        public static string FullPath(string fileName)
+        {
+            return Path.Combine(TempDir, fileName);
+        }
 
         // TODO: implement configuration and remove skips when @ignore-typedb-driver is removed from .feature.
         protected bool _requiredConfiguration = false;
 
+        public static ITypeDBTransaction Tx => Transactions[0];
+
+        public static ITypeDBTransaction TxPop()
+        {
+            var tx = Transactions[0];
+            Transactions.RemoveAt(0);
+            return tx;
+        }
+
+        // Sleep between scenarios to let the driver close completely
+        // (`close` is not synced and can cause lock failures in CI)
+        // This mirrors the Java driver's workaround for the same issue.
+        private const int BeforeTimeoutMillis = 50;  // Small delay for async cleanup
+
+        public static readonly string AdminUsername = "admin";
+        public static readonly string AdminPassword = "password";
+
         public ConnectionStepsBase() // "Before"
         {
+            Thread.Sleep(BeforeTimeoutMillis);
             CleanInCaseOfPreviousFail();
+            BackgroundDriver = CreateDefaultTypeDBDriver();
+        }
 
-            SessionOptions = SessionOptions.Infer(true);
-            TransactionOptions = TransactionOptions.Infer(true);
+        public static IDriver CreateDefaultTypeDBDriver()
+        {
+            return TypeDB.Driver(
+                TypeDB.DefaultAddress,
+                new Credentials(AdminUsername, AdminPassword),
+                new DriverOptions(false, null));
+        }
+
+        public static IDriver CreateBackgroundDriver()
+        {
+            return TypeDB.Driver(
+                TypeDB.DefaultAddress,
+                new Credentials("admin", "password"),
+                new DriverOptions(false, null));
         }
 
         public virtual void Dispose() // "After"
         {
-            foreach (var (session, transactions) in SessionsToParallelTransactions)
+            // Clean up temp directory
+            if (_tempDir != null && Directory.Exists(_tempDir))
             {
-                Task.WaitAll(transactions.ToArray());
-            }
-            SessionsToParallelTransactions.Clear();
-
-            foreach (var session in Sessions)
-            {
-                session.Close();
+                try { Directory.Delete(_tempDir, recursive: true); } catch { }
+                _tempDir = null;
             }
 
-            Sessions.Clear();
-            SessionsToTransactions.Clear();
+            // Clean up transactions (matches Java's after() order)
+            CleanupTransactions();
+            CleanupBackgroundTransactions();
+            CurrentTransactionOptions = null;
 
-            Task.WaitAll(ParallelSessions.ToArray());
-            ParallelSessions.Clear();
-
-            foreach (var (session, transactions) in ParallelSessionsToParallelTransactions)
+            // Create a fresh driver to clean up state (like Java's after())
+            try
             {
-                session.Wait();
-                Task.WaitAll(transactions.ToArray());
-            }
-            
-            ParallelSessionsToParallelTransactions.Clear();
+                var cleanupDriver = CreateDefaultTypeDBDriver();
 
+                // Delete non-admin users
+                try
+                {
+                    foreach (var user in cleanupDriver.Users.GetAll())
+                    {
+                        if (user.Username != AdminUsername)
+                        {
+                            try { cleanupDriver.Users.Get(user.Username).Delete(); } catch { }
+                        }
+                    }
+                }
+                catch { }
+
+                // Reset admin password
+                try
+                {
+                    cleanupDriver.Users.Get(AdminUsername).UpdatePassword(AdminPassword);
+                }
+                catch { }
+
+                // Delete all databases
+                try
+                {
+                    foreach (var db in cleanupDriver.Databases.GetAll())
+                    {
+                        try { cleanupDriver.Databases.Get(db.Name).Delete(); } catch { }
+                    }
+                }
+                catch { }
+
+                cleanupDriver.Close();
+            }
+            catch { }
+
+            // Close the background driver
+            if (BackgroundDriver != null)
+            {
+                try { BackgroundDriver.Close(); } catch { }
+                BackgroundDriver = null;
+            }
+
+            // Close the main driver
             if (Driver != null)
             {
-                foreach (var db in Driver!.Databases.GetAll())
-                {
-                    db.Delete();
-                }
-
-                if (Driver.IsOpen())
-                {
-                    Driver!.Close();
-                }
+                try { Driver.Close(); } catch { }
+                Driver = null;
             }
         }
 
-        public static ITypeDBTransaction Tx
-        {
-            get { return SessionsToTransactions[Sessions[0]][0]; }
-        }
-
-        public abstract ITypeDBDriver CreateTypeDBDriver(string address);
+        public abstract IDriver CreateTypeDBDriver(string address);
 
         public abstract void TypeDBStarts();
 
         public abstract void ConnectionOpensWithDefaultAuthentication();
 
-        [Given(@"connection has been opened")]
         public virtual void ConnectionHasBeenOpened()
         {
             if (_requiredConfiguration) return; // Skip tests with configuration
@@ -124,31 +203,93 @@ namespace TypeDB.Driver.Test.Behaviour
             Assert.True(Driver.IsOpen());
         }
 
-        [When(@"connection closes")]
-        [Then(@"connection closes")]
         public virtual void ConnectionCloses()
         {
             if (_requiredConfiguration) return; // Skip tests with configuration
 
-            Driver!.Close();
+            CleanupTransactions();
+            if (Driver != null)
+            {
+                Driver.Close();
+            }
             Driver = null;
         }
 
-        public static void ClearTransactions(ITypeDBSession session)
+        public static void CleanupTransactions()
         {
-            if (SessionsToTransactions.ContainsKey(session))
+            foreach (var tx in Transactions)
             {
-                SessionsToTransactions[session].Clear();
+                try { tx.Close(); } catch { }
             }
+            Transactions.Clear();
+
+            foreach (var futureTx in TransactionsParallel)
+            {
+                try { futureTx.Result.Close(); } catch { }
+            }
+            TransactionsParallel.Clear();
         }
 
-        private void CleanInCaseOfPreviousFail() // Fails are exceptions which do not clean resources
+        public static void CleanupBackgroundTransactions()
         {
-            TypeDBStarts();
-            ConnectionOpensWithDefaultAuthentication();
-            ConnectionHasBeenOpened();
-            Dispose();
-            ConnectionCloses();
+            foreach (var tx in BackgroundTransactions)
+            {
+                try { tx.Close(); } catch { }
+            }
+            BackgroundTransactions.Clear();
+        }
+
+        public static ITypeDBTransaction OpenTransaction(
+            IDriver driver, string databaseName, TransactionType type, TransactionOptions? options = null)
+        {
+            if (options != null)
+                return driver.Transaction(databaseName, type, options);
+            return driver.Transaction(databaseName, type);
+        }
+
+        private void CleanInCaseOfPreviousFail()
+        {
+            try
+            {
+                CleanupTransactions();
+                CleanupBackgroundTransactions();
+                if (BackgroundDriver != null)
+                {
+                    try { BackgroundDriver.Close(); } catch { }
+                    BackgroundDriver = null;
+                }
+                CurrentTransactionOptions = null;
+
+                try
+                {
+                    var cleanupDriver = CreateDefaultTypeDBDriver();
+
+                    foreach (var user in cleanupDriver.Users.GetAll())
+                    {
+                        if (user.Username != AdminUsername)
+                        {
+                            try { cleanupDriver.Users.Get(user.Username).Delete(); } catch { }
+                        }
+                    }
+
+                    try { cleanupDriver.Users.Get(AdminUsername).UpdatePassword(AdminPassword); } catch { }
+
+                    foreach (var db in cleanupDriver.Databases.GetAll())
+                    {
+                        try { cleanupDriver.Databases.Get(db.Name).Delete(); } catch { }
+                    }
+
+                    cleanupDriver.Close();
+                }
+                catch { }
+
+                if (Driver != null)
+                {
+                    try { Driver.Close(); } catch { }
+                    Driver = null;
+                }
+            }
+            catch { }
         }
     }
 }

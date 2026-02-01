@@ -18,131 +18,79 @@
  */
 
 using System;
-using System.Collections.Generic;
 
 using TypeDB.Driver.Api;
+using TypeDB.Driver.Api.Answer;
 using TypeDB.Driver.Common;
-using InternalError = TypeDB.Driver.Common.Error.Internal;
 
 namespace TypeDB.Driver.Api
 {
+    /// <summary>
+    /// A transaction with a TypeDB database.
+    /// </summary>
     public interface ITypeDBTransaction : IDisposable
     {
-        /**
-         * The transaction’s type (Read or Write).
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * transaction.Type;
-         * </pre>
-         */
+        /// <summary>
+        /// The transaction's type (Read, Write, or Schema).
+        /// </summary>
         TransactionType Type { get; }
 
-        /**
-         * The options for the transaction.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * transaction.Options;
-         * </pre>
-         */
-        TypeDBOptions Options { get; }
-
-        /**
-         * The <code>ConceptManager</code> for this transaction, providing access to all Concept API methods.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * transaction.Concepts;
-         * </pre>
-         */
-        IConceptManager Concepts { get; }
-
-        /**
-         * The <code>LogicManager</code> for this Transaction, providing access to all Concept API - Logic methods.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * transaction.Logic;
-         * </pre>
-         */
-        ILogicManager Logic { get; }
-
-        /**
-         * The<code></code>QueryManager<code></code> for this Transaction, from which any TypeQL query can be executed.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * transaction.Query;
-         * </pre>
-         */
-        IQueryManager Query { get; }
-
-        /**
-         * Checks whether this transaction is open.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * transaction.IsOpen();
-         * </pre>
-         */
+        /// <summary>
+        /// Checks whether this transaction is open.
+        /// </summary>
+        /// <returns><c>true</c> if the transaction is open, <c>false</c> otherwise.</returns>
         bool IsOpen();
 
-        /**
-         * Registers a callback function which will be executed when this transaction is closed.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * transaction.OnClose(function);
-         * </pre>
-         *
-         * @param function The callback function.
-         */
-        void OnClose(Action<Exception> function);
+        /// <summary>
+        /// Registers a callback function which will be executed when this transaction is closed.
+        /// </summary>
+        /// <param name="function">The callback function.</param>
+        void OnClose(Action<Exception?> function);
 
-        /**
-         * Commits the changes made via this transaction to the TypeDB database.
-         * Whether or not the transaction is committed successfully, it gets closed after the commit call.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * transaction.Commit();
-         * </pre>
-         */
+        /// <summary>
+        /// Commits the changes made via this transaction to the TypeDB database.
+        /// Whether or not the transaction is committed successfully, it gets closed after the commit call.
+        /// </summary>
         void Commit();
 
-        /**
-         * Rolls back the uncommitted changes made via this transaction.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * transaction.Rollback();
-         * </pre>
-         */
+        /// <summary>
+        /// Rolls back the uncommitted changes made via this transaction.
+        /// </summary>
         void Rollback();
 
-        /**
-         * Closes the transaction.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * transaction.Close();
-         * </pre>
-         */
+        /// <summary>
+        /// Closes the transaction.
+        /// </summary>
         void Close();
+
+        /// <summary>
+        /// Executes a TypeQL query in this transaction.
+        /// </summary>
+        /// <param name="query">The TypeQL query string to execute.</param>
+        /// <returns>The query answer containing the results.</returns>
+        IQueryAnswer Query(string query);
+
+        /// <summary>
+        /// Executes a TypeQL query in this transaction with custom options.
+        /// </summary>
+        /// <param name="query">The TypeQL query string to execute.</param>
+        /// <param name="options">Query options.</param>
+        /// <returns>The query answer containing the results.</returns>
+        IQueryAnswer Query(string query, QueryOptions options);
     }
 
-    /**
-     * Used to specify the type of transaction.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * session.Transaction(TransactionType.Read);
-     * </pre>
-     */
+    /// <summary>
+    /// Used to specify the type of transaction.
+    /// </summary>
+    /// <example>
+    /// <code>
+    /// driver.Transaction(database, TransactionType.Read);
+    /// </code>
+    /// </example>
     public enum TransactionType
     {
-        Read = Pinvoke.TransactionType.Read,
-        Write = Pinvoke.TransactionType.Write,
+        Read = 0,
+        Write = 1,
+        Schema = 2,
     }
 }

@@ -1,0 +1,89 @@
+[#_IConceptDocumentIterator]
+=== IConceptDocumentIterator
+
+*Package*: `TypeDB.Driver.Api.Answer`
+
+*Supertypes:*
+
+* `TypeDB.Driver.Api.Answer.IQueryAnswer`
+
+
+
+Represents an iterator over concept documents (represented as IJSONs) returned as a server answer.
+
+// tag::methods[]
+[#_IConceptDocumentIterator_IQueryAnswer_TypeDB_Driver_Api_Answer_IConceptDocumentIterator_AsConceptDocuments_]
+==== AsConceptDocuments
+
+[source,cs]
+----
+IConceptDocumentIterator IQueryAnswer. AsConceptDocuments()
+----
+
+
+
+Casts the query answer to IConceptDocumentIterator.
+
+ 
+  Returns
+ 
+ 
+  The IConceptDocumentIterator if this is a concept documents response.
+ 
+
+
+ 
+  Exceptions
+ 
+ 
+  
+   
+    
+     TypeDBDriverException
+     If the answer is not a concept documents response.
+    
+   
+  
+ 
+
+
+ 
+  queryAnswer.AsConceptDocuments()
+ 
+
+
+
+
+Implements TypeDB.Driver.Api.Answer.IQueryAnswer.
+
+[caption=""]
+.Returns
+`IConceptDocumentIterator IQueryAnswer.`
+
+[#_bool_IQueryAnswer_TypeDB_Driver_Api_Answer_IConceptDocumentIterator_IsConceptDocuments]
+==== IsConceptDocuments
+
+[source,cs]
+----
+bool IQueryAnswer. TypeDB.Driver.Api.Answer.IConceptDocumentIterator.IsConceptDocuments
+----
+
+
+
+Checks if the query answer is a IConceptDocumentIterator.
+
+ 
+  queryAnswer.IsConceptDocuments
+ 
+
+
+
+
+Implements TypeDB.Driver.Api.Answer.IQueryAnswer.
+
+[caption=""]
+.Returns
+`bool IQueryAnswer.`
+
+// end::methods[]
+

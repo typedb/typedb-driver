@@ -19,7 +19,7 @@
 
 use std::{ffi::c_char, ptr::null_mut};
 
-use typedb_driver::{Error, QueryOptions, Transaction, TransactionOptions, TransactionType, TypeDBDriver};
+use typedb_driver::{Error, Promise, QueryOptions, Transaction, TransactionOptions, TransactionType, TypeDBDriver};
 
 use super::memory::{borrow, borrow_mut, free, release, take_ownership};
 use crate::{
@@ -72,8 +72,27 @@ pub extern "C" fn transaction_analyze(
 }
 
 /// Closes the transaction and frees the native rust object.
+/// This is an async fire-and-forget close - use transaction_close_sync for synchronous close
+/// that waits for callbacks to complete.
 #[no_mangle]
 pub extern "C" fn transaction_submit_close(txn: *mut Transaction) {
+    free(txn);
+}
+
+/// Synchronously closes the transaction, waits for all callbacks to complete, then frees the memory.
+/// This should be used in finalizers/destructors to ensure callbacks are invoked before
+/// their handler objects (like SWIG directors) are freed.
+#[no_mangle]
+pub extern "C" fn transaction_close_sync(txn: *mut Transaction) {
+    if txn.is_null() {
+        return;
+    }
+
+    // First, close the transaction and wait for callbacks to complete
+    // This ensures all OnClose callbacks are invoked before we free the memory
+    let _ = borrow_mut(txn).close().resolve();
+
+    // Now safe to free the memory - all callbacks have been invoked
     free(txn);
 }
 

@@ -1,0 +1,89 @@
+[#_IOkQueryAnswer]
+=== IOkQueryAnswer
+
+*Package*: `TypeDB.Driver.Api.Answer`
+
+*Supertypes:*
+
+* `TypeDB.Driver.Api.Answer.IQueryAnswer`
+
+
+
+Represents a simple Ok message as a server answer. Doesn't contain concepts.
+
+// tag::methods[]
+[#_IOkQueryAnswer_IQueryAnswer_TypeDB_Driver_Api_Answer_IOkQueryAnswer_AsOk_]
+==== AsOk
+
+[source,cs]
+----
+IOkQueryAnswer IQueryAnswer. AsOk()
+----
+
+
+
+Casts the query answer to IOkQueryAnswer.
+
+ 
+  Returns
+ 
+ 
+  The IOkQueryAnswer if this is an Ok response.
+ 
+
+
+ 
+  Exceptions
+ 
+ 
+  
+   
+    
+     Common.TypeDBDriverException
+     If the answer is not an Ok response.
+    
+   
+  
+ 
+
+
+ 
+  queryAnswer.AsOk()
+ 
+
+
+
+
+Implements TypeDB.Driver.Api.Answer.IQueryAnswer.
+
+[caption=""]
+.Returns
+`IOkQueryAnswer IQueryAnswer.`
+
+[#_bool_IQueryAnswer_TypeDB_Driver_Api_Answer_IOkQueryAnswer_IsOk]
+==== IsOk
+
+[source,cs]
+----
+bool IQueryAnswer. TypeDB.Driver.Api.Answer.IOkQueryAnswer.IsOk
+----
+
+
+
+Checks if the query answer is an IOkQueryAnswer.
+
+ 
+  queryAnswer.IsOk
+ 
+
+
+
+
+Implements TypeDB.Driver.Api.Answer.IQueryAnswer.
+
+[caption=""]
+.Returns
+`bool IQueryAnswer.`
+
+// end::methods[]
+

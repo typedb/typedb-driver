@@ -14,18 +14,13 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-
 package(default_visibility = ["//csharp/Test/Behaviour:__subpackages__"])
-
-load("//csharp/Test:rules.bzl", "csharp_behaviour_test")
 load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-
 filegroup(
     name = "steps",
     srcs = ["QuerySteps.cs"],
     visibility = ["//csharp/Test/Behaviour:__subpackages__"],
 )
-
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*"]),

@@ -1,0 +1,358 @@
+[#_IJSON]
+=== IJSON
+
+*Package*: `TypeDB.Driver.Api.Answer`
+
+
+
+Represents a JSON value returned from a fetch query.
+
+// tag::methods[]
+[#_IReadOnlyList_IJSON_TypeDB_Driver_Api_Answer_IJSON_AsArray_]
+==== AsArray
+
+[source,cs]
+----
+IReadOnlyList< IJSON > AsArray()
+----
+
+
+
+Casts this JSON value to an array.
+
+ 
+  Returns
+ 
+ 
+  The JSON value as a list.
+ 
+
+
+ 
+  Exceptions
+ 
+ 
+  
+   
+    
+     TypeDBDriverException
+     If the value is not an array.
+    
+   
+  
+ 
+
+
+ 
+  json.AsArray()
+ 
+
+
+[caption=""]
+.Returns
+`IReadOnlyList< IJSON >`
+
+[#_bool_TypeDB_Driver_Api_Answer_IJSON_AsBoolean_]
+==== AsBoolean
+
+[source,cs]
+----
+bool AsBoolean()
+----
+
+
+
+Casts this JSON value to a boolean.
+
+ 
+  Returns
+ 
+ 
+  The JSON value as a boolean.
+ 
+
+
+ 
+  Exceptions
+ 
+ 
+  
+   
+    
+     TypeDBDriverException
+     If the value is not a boolean.
+    
+   
+  
+ 
+
+
+ 
+  json.AsBoolean()
+ 
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_double_TypeDB_Driver_Api_Answer_IJSON_AsNumber_]
+==== AsNumber
+
+[source,cs]
+----
+double AsNumber()
+----
+
+
+
+Casts this JSON value to a number.
+
+ 
+  Returns
+ 
+ 
+  The JSON value as a double.
+ 
+
+
+ 
+  Exceptions
+ 
+ 
+  
+   
+    
+     TypeDBDriverException
+     If the value is not a number.
+    
+   
+  
+ 
+
+
+ 
+  json.AsNumber()
+ 
+
+
+[caption=""]
+.Returns
+`double`
+
+[#_IReadOnlyDictionary_string_IJSON_TypeDB_Driver_Api_Answer_IJSON_AsObject_]
+==== AsObject
+
+[source,cs]
+----
+IReadOnlyDictionary< string, IJSON > AsObject()
+----
+
+
+
+Casts this JSON value to an object (dictionary).
+
+ 
+  Returns
+ 
+ 
+  The JSON value as a dictionary.
+ 
+
+
+ 
+  Exceptions
+ 
+ 
+  
+   
+    
+     TypeDBDriverException
+     If the value is not an object.
+    
+   
+  
+ 
+
+
+ 
+  json.AsObject()
+ 
+
+
+[caption=""]
+.Returns
+`IReadOnlyDictionary< string, IJSON >`
+
+[#_string_TypeDB_Driver_Api_Answer_IJSON_AsString_]
+==== AsString
+
+[source,cs]
+----
+string AsString()
+----
+
+
+
+Casts this JSON value to a string.
+
+ 
+  Returns
+ 
+ 
+  The JSON value as a string.
+ 
+
+
+ 
+  Exceptions
+ 
+ 
+  
+   
+    
+     TypeDBDriverException
+     If the value is not a string.
+    
+   
+  
+ 
+
+
+ 
+  json.AsString()
+ 
+
+
+[caption=""]
+.Returns
+`string`
+
+[#_bool_TypeDB_Driver_Api_Answer_IJSON_IsArray]
+==== IsArray
+
+[source,cs]
+----
+bool TypeDB.Driver.Api.Answer.IJSON.IsArray
+----
+
+
+
+Checks if this JSON value is an array.
+
+ 
+  json.IsArray
+ 
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_bool_TypeDB_Driver_Api_Answer_IJSON_IsBoolean]
+==== IsBoolean
+
+[source,cs]
+----
+bool TypeDB.Driver.Api.Answer.IJSON.IsBoolean
+----
+
+
+
+Checks if this JSON value is a boolean.
+
+ 
+  json.IsBoolean
+ 
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_bool_TypeDB_Driver_Api_Answer_IJSON_IsNull]
+==== IsNull
+
+[source,cs]
+----
+bool TypeDB.Driver.Api.Answer.IJSON.IsNull
+----
+
+
+
+Checks if this JSON value is null.
+
+ 
+  json.IsNull
+ 
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_bool_TypeDB_Driver_Api_Answer_IJSON_IsNumber]
+==== IsNumber
+
+[source,cs]
+----
+bool TypeDB.Driver.Api.Answer.IJSON.IsNumber
+----
+
+
+
+Checks if this JSON value is a number.
+
+ 
+  json.IsNumber
+ 
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_bool_TypeDB_Driver_Api_Answer_IJSON_IsObject]
+==== IsObject
+
+[source,cs]
+----
+bool TypeDB.Driver.Api.Answer.IJSON.IsObject
+----
+
+
+
+Checks if this JSON value is an object.
+
+ 
+  json.IsObject
+ 
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_bool_TypeDB_Driver_Api_Answer_IJSON_IsString]
+==== IsString
+
+[source,cs]
+----
+bool TypeDB.Driver.Api.Answer.IJSON.IsString
+----
+
+
+
+Checks if this JSON value is a string.
+
+ 
+  json.IsString
+ 
+
+
+[caption=""]
+.Returns
+`bool`
+
+// end::methods[]
+

@@ -23,48 +23,25 @@ load("//csharp/Test:rules.bzl", "csharp_behaviour_test")
 load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 csharp_behaviour_test(
-    name = "test-core",
+    name = "test-community",
     test_files = ["QueryTest.cs"],
     steps_files = [
         "//csharp/Test/Behaviour/Util:steps",
         "//csharp/Test/Behaviour/Query:steps",
         "//csharp/Test/Behaviour/Connection/Transaction:steps",
-        "//csharp/Test/Behaviour/Connection/Session:steps",
         "//csharp/Test/Behaviour/Connection/Database:steps",
-        "//csharp/Test/Behaviour/Connection:steps-core",
+        "//csharp/Test/Behaviour/Connection:steps-community",
     ],
-    features = ["@typedb_behaviour//driver:driver.feature"],
+    features = ["@typedb_behaviour//driver:query.feature"],
     deps = [
         "//csharp/Api:api",
+        "//csharp/Answer:answer",
         "//csharp/Common:common",
+        "//csharp/Concept:concept",
         "//csharp:driver-csharp",
         "//csharp/Test/Behaviour/Util:util",
         "@paket.csharp_deps//newtonsoft.json",
     ],
-    target_frameworks = target_frameworks,
-    targeting_packs = targeting_packs,
-)
-
-csharp_behaviour_test(
-    name = "test-cloud",
-    test_files = ["QueryTest.cs"],
-    steps_files = [
-        "//csharp/Test/Behaviour/Util:steps",
-        "//csharp/Test/Behaviour/Query:steps",
-        "//csharp/Test/Behaviour/Connection/Transaction:steps",
-        "//csharp/Test/Behaviour/Connection/Session:steps",
-        "//csharp/Test/Behaviour/Connection/Database:steps",
-        "//csharp/Test/Behaviour/Connection:steps-cloud",
-    ],
-    features = ["@typedb_behaviour//driver:driver.feature"],
-    deps = [
-        "//csharp/Api:api",
-        "//csharp/Common:common",
-        "//csharp:driver-csharp",
-        "//csharp/Test/Behaviour/Util:util",
-        "@paket.csharp_deps//newtonsoft.json",
-    ],
-    add_certificates = True,
     target_frameworks = target_frameworks,
     targeting_packs = targeting_packs,
 )

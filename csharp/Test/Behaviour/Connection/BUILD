@@ -14,25 +14,13 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-
 package(default_visibility = ["//csharp/Test/Behaviour:__subpackages__"])
-
-load("//csharp:build_opts.bzl", "nullable_context", "target_frameworks", "targeting_packs")
-load("//csharp/Test:build_opts.bzl", "behaviour_tests_deps")
 load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-
 filegroup(
-    name = "steps-core",
-    srcs = ["ConnectionStepsBase.cs", "ConnectionStepsCore.cs"],
+    name = "steps-community",
+    srcs = ["ConnectionStepsBase.cs", "ConnectionStepsCommunity.cs"],
     visibility = ["//csharp/Test/Behaviour:__subpackages__"],
 )
-
-filegroup(
-    name = "steps-cloud",
-    srcs = ["ConnectionStepsBase.cs", "ConnectionStepsCloud.cs"],
-    visibility = ["//csharp/Test/Behaviour:__subpackages__"],
-)
-
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*"]),

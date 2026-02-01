@@ -26,11 +26,9 @@ csharp_library(
     srcs = glob(["*.cs", "*/*.cs"],
     ),
     deps = [
+        "//csharp/Answer:answer",
         "//csharp/Api:api",
         "//csharp/Common:common",
-        "//csharp/Concept:concept",
-        "//csharp/Logic:logic",
-        "//csharp/Query:query",
         "//csharp/User:user",
         "//csharp:typedb_driver_pinvoke",
     ],

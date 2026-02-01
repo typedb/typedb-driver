@@ -1,0 +1,60 @@
+[#_TransactionOptions]
+=== TransactionOptions
+
+*Package*: `TypeDB.Driver.Api`
+
+
+
+Options for transactions.
+
+// tag::methods[]
+[#_long_TypeDB_Driver_Api_TransactionOptions_SchemaLockAcquireTimeoutMillis]
+==== SchemaLockAcquireTimeoutMillis
+
+[source,cs]
+----
+long? TypeDB.Driver.Api.TransactionOptions.SchemaLockAcquireTimeoutMillis
+----
+
+
+
+Gets or sets the schema lock acquire timeout in milliseconds.
+
+[caption=""]
+.Returns
+`long?`
+
+[#_TypeDB_Driver_Api_TransactionOptions_TransactionOptions_]
+==== TransactionOptions
+
+[source,cs]
+----
+TransactionOptions()
+----
+
+
+
+Creates a new TransactionOptions with default settings.
+
+[caption=""]
+.Returns
+`TransactionOptions`
+
+[#_long_TypeDB_Driver_Api_TransactionOptions_TransactionTimeoutMillis]
+==== TransactionTimeoutMillis
+
+[source,cs]
+----
+long? TypeDB.Driver.Api.TransactionOptions.TransactionTimeoutMillis
+----
+
+
+
+Gets or sets the transaction timeout in milliseconds.
+
+[caption=""]
+.Returns
+`long?`
+
+// end::methods[]
+

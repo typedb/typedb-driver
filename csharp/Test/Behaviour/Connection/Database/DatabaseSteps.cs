@@ -18,8 +18,10 @@
  */
 
 using DataTable = Gherkin.Ast.DataTable;
+using DocString = Gherkin.Ast.DocString;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -27,6 +29,7 @@ using Xunit;
 using Xunit.Gherkin.Quick;
 
 using TypeDB.Driver;
+using TypeDB.Driver.Api;
 using TypeDB.Driver.Common;
 using TypeDB.Driver.Test.Behaviour;
 
@@ -34,8 +37,8 @@ namespace TypeDB.Driver.Test.Behaviour
 {
     public partial class BehaviourSteps
     {
-        [Given(@"connection create database: {word}")]
-        [When(@"connection create database: {word}")]
+        [Given(@"connection create database: (.+)")]
+        [When(@"connection create database: (.+)")]
         public void ConnectionCreateDatabase(string name)
         {
             Driver!.Databases.Create(name);
@@ -85,7 +88,7 @@ namespace TypeDB.Driver.Test.Behaviour
             Task.WaitAll(taskArray);
         }
 
-        [When(@"connection delete database: {word}")]
+        [When(@"connection delete database: (\S+)")]
         public void ConnectionDeleteDatabase(string name)
         {
             Driver!.Databases.Get(name).Delete();
@@ -103,7 +106,7 @@ namespace TypeDB.Driver.Test.Behaviour
             }
         }
 
-        [When(@"connection delete database; throws exception: {word}")]
+        [When(@"connection delete database; throws exception: (\S+)")]
         public void ConnectionDeleteDatabaseThrowsException(string databaseName)
         {
             Assert.Throws<TypeDBDriverException>(
@@ -140,30 +143,28 @@ namespace TypeDB.Driver.Test.Behaviour
             Task.WaitAll(taskArray);
         }
 
-        [Then(@"connection has database: {word}")]
+        [Given(@"connection has database: (.+)")]
+        [Then(@"connection has database: (.+)")]
         public void ConnectionHasDatabase(string name)
         {
             Assert.True(Driver!.Databases.Contains(name));
         }
 
+        [Given(@"connection has databases:")]
         [Then(@"connection has databases:")]
         public void ConnectionHasDatabases(DataTable names)
         {
-            int expectedDatabasesSize = 0;
-
             foreach (var row in names.Rows)
             {
                 foreach (var name in row.Cells)
                 {
                     ConnectionHasDatabase(name.Value);
-                    expectedDatabasesSize++;
                 }
             }
-
-            Assert.True(expectedDatabasesSize >= Driver!.Databases.GetAll().Count);
         }
 
-        [Then(@"connection does not have database: {word}")]
+        [Given(@"connection does not have database: (.+)")]
+        [Then(@"connection does not have database: (.+)")]
         public void ConnectionDoesNotHaveDatabase(string name)
         {
             Assert.False(Driver!.Databases.Contains(name));
@@ -189,5 +190,227 @@ namespace TypeDB.Driver.Test.Behaviour
             Assert.True(Driver.IsOpen());
             Assert.Equal(0, Driver!.Databases.GetAll().Count);
         }
+
+        [Then(@"connection create database with empty name; fails")]
+        public void ConnectionCreateDatabaseWithEmptyNameFails()
+        {
+            Assert.Throws<TypeDBDriverException>(() => Driver!.Databases.Create(""));
+        }
+
+        [Then(@"connection create database: ([^;]+); fails$")]
+        public void ConnectionCreateDatabaseFails(string name)
+        {
+            Assert.ThrowsAny<Exception>(() => Driver!.Databases.Create(name.Trim()));
+        }
+
+        [Then(@"connection create database: ([^;]+); fails with a message containing: ""(.*)""")]
+        public void ConnectionCreateDatabaseFailsWithMessage(string name, string expectedMessage)
+        {
+            var exception = Assert.ThrowsAny<Exception>(() => Driver!.Databases.Create(name.Trim()));
+            Assert.Contains(expectedMessage, exception.Message);
+        }
+
+        [When(@"connection delete database: (.*); fails")]
+        [Then(@"connection delete database: (.*); fails")]
+        public void ConnectionDeleteDatabaseFails(string name)
+        {
+            Assert.ThrowsAny<TypeDBDriverException>(() =>
+            {
+                Driver!.Databases.Get(name).Delete();
+            });
+        }
+
+        [Given(@"connection delete database: (\S+)")]
+        [Then(@"connection delete database: (\S+)")]
+        public void ConnectionDeleteDatabaseGivenThen(string name)
+        {
+            ConnectionDeleteDatabase(name);
+        }
+
+        [Given(@"connection reset database: (.+)")]
+        [When(@"connection reset database: (.+)")]
+        public void ConnectionResetDatabase(string name)
+        {
+            // First close any open transactions for this database
+            foreach (var tx in Transactions.ToList())
+            {
+                if (tx.IsOpen())
+                {
+                    tx.Close();
+                }
+            }
+            Transactions.Clear();
+
+            // Delete the database if it exists
+            if (Driver!.Databases.Contains(name))
+            {
+                Driver.Databases.Get(name).Delete();
+            }
+
+            // Recreate the database
+            Driver.Databases.Create(name);
+        }
+
+        // Schema retrieval steps (from DriverSteps)
+
+        [Then(@"connection get database\(([^)]+)\) has schema:")]
+        public void ConnectionGetDatabaseHasSchema(string databaseName, DocString expectedSchema)
+        {
+            Assert.NotNull(Driver);
+            var actualSchema = Driver!.Databases.Get(databaseName).GetSchema();
+
+            var expectedText = expectedSchema.Content.Trim();
+            if (string.IsNullOrWhiteSpace(expectedText))
+            {
+                Assert.Equal("", actualSchema);
+                return;
+            }
+
+            // Normalize expected schema through a temp database for comparison
+            // (handles reordering and formatting differences)
+            // Note: Don't use RemoveTwoSpacesInTabulation here because the actual schema
+            // was inserted via typeql schema query which preserves Gherkin indentation
+            var expectedNormalized = ExecuteAndRetrieveSchemaForComparison(expectedText);
+            Assert.Equal(expectedNormalized, actualSchema);
+        }
+
+        [Then(@"connection get database\(([^)]+)\) has type schema:")]
+        public void ConnectionGetDatabaseHasTypeSchema(string databaseName, DocString expectedSchema)
+        {
+            Assert.NotNull(Driver);
+            var actualSchema = Driver!.Databases.Get(databaseName).GetTypeSchema();
+
+            var expectedText = expectedSchema.Content.Trim();
+            if (string.IsNullOrWhiteSpace(expectedText))
+            {
+                Assert.Equal("", actualSchema);
+                return;
+            }
+
+            // Normalize expected type schema through a temp database for comparison
+            // Note: Don't use RemoveTwoSpacesInTabulation here because the actual schema
+            // was inserted via typeql schema query which preserves Gherkin indentation
+            var tempName = "temp-" + new System.Random().Next(10000);
+            Driver!.Databases.Create(tempName);
+            try
+            {
+                var tx = Driver.Transaction(tempName, TransactionType.Schema);
+                tx.Query(expectedText);
+                tx.Commit();
+                var expectedNormalized = Driver.Databases.Get(tempName).GetTypeSchema();
+                Assert.Equal(expectedNormalized, actualSchema);
+            }
+            finally
+            {
+                try { Driver.Databases.Get(tempName).Delete(); } catch { }
+            }
+        }
+
+        // Create/delete with message variants (from DriverSteps)
+
+        [Then(@"connection create database with empty name; fails with a message containing: ""(.*)""")]
+        public void ConnectionCreateDatabaseWithEmptyNameFailsWithMessage(string expectedMessage)
+        {
+            var exception = Assert.ThrowsAny<Exception>(
+                () => Driver!.Databases.Create(""));
+            Assert.Contains(expectedMessage, exception.Message);
+        }
+
+        [When(@"connection delete database: ([^;]+); fails with a message containing: ""(.*)""")]
+        [Then(@"connection delete database: ([^;]+); fails with a message containing: ""(.*)""")]
+        public void ConnectionDeleteDatabaseFailsWithMessage(string name, string expectedMessage)
+        {
+            var exception = Assert.ThrowsAny<Exception>(() =>
+            {
+                var db = Driver!.Databases.Get(name.Trim());
+                db.Delete();
+            });
+            Assert.Contains(expectedMessage, exception.Message);
+        }
+
+        // Background database operations (from DriverSteps)
+
+        [When(@"in background, connection create database: (.+)")]
+        [Then(@"in background, connection create database: (.+)")]
+        public void InBackgroundConnectionCreateDatabase(string databaseName)
+        {
+            var bgDriver = ConnectionStepsBase.CreateBackgroundDriver();
+            bgDriver.Databases.Create(databaseName);
+            bgDriver.Close();
+        }
+
+        [When(@"in background, connection delete database: (.+)")]
+        [Then(@"in background, connection delete database: (.+)")]
+        public void InBackgroundConnectionDeleteDatabase(string databaseName)
+        {
+            var bgDriver = ConnectionStepsBase.CreateBackgroundDriver();
+            bgDriver.Databases.Get(databaseName).Delete();
+            bgDriver.Close();
+        }
+
+        #region Export / Import Steps
+
+        // Pattern: connection get database(X) export to schema file(Y), data file(Z)
+        [Given(@"connection get database\(([^)]+)\) export to schema file\(([^)]+)\), data file\(([^)]+)\)$")]
+        [When(@"connection get database\(([^)]+)\) export to schema file\(([^)]+)\), data file\(([^)]+)\)$")]
+        [Then(@"connection get database\(([^)]+)\) export to schema file\(([^)]+)\), data file\(([^)]+)\)$")]
+        public void ConnectionGetDatabaseExportToFiles(string name, string schemaFile, string dataFile)
+        {
+            var schemaPath = ConnectionStepsBase.FullPath(schemaFile);
+            var dataPath = ConnectionStepsBase.FullPath(dataFile);
+            Driver!.Databases.Get(name).ExportToFile(schemaPath, dataPath);
+        }
+
+        // Pattern: connection get database(X) export to schema file(Y), data file(Z); fails with a message containing: "MSG"
+        [When(@"connection get database\(([^)]+)\) export to schema file\(([^)]+)\), data file\(([^)]+)\); fails with a message containing: ""(.*)""")]
+        [Then(@"connection get database\(([^)]+)\) export to schema file\(([^)]+)\), data file\(([^)]+)\); fails with a message containing: ""(.*)""")]
+        public void ConnectionGetDatabaseExportToFilesFailsWithMessage(
+            string name, string schemaFile, string dataFile, string expectedMessage)
+        {
+            var schemaPath = ConnectionStepsBase.FullPath(schemaFile);
+            var dataPath = ConnectionStepsBase.FullPath(dataFile);
+            var exception = Assert.ThrowsAny<Exception>(
+                () => Driver!.Databases.Get(name).ExportToFile(schemaPath, dataPath));
+            Assert.Contains(expectedMessage, exception.Message);
+        }
+
+        // Pattern: connection import database(X) from schema file(Y), data file(Z)
+        [Given(@"connection import database\(([^)]+)\) from schema file\(([^)]+)\), data file\(([^)]+)\)$")]
+        [When(@"connection import database\(([^)]+)\) from schema file\(([^)]+)\), data file\(([^)]+)\)$")]
+        [Then(@"connection import database\(([^)]+)\) from schema file\(([^)]+)\), data file\(([^)]+)\)$")]
+        public void ConnectionImportDatabaseFromFiles(string name, string schemaFile, string dataFile)
+        {
+            var schemaPath = ConnectionStepsBase.FullPath(schemaFile);
+            var schema = File.ReadAllText(schemaPath);
+            var dataPath = ConnectionStepsBase.FullPath(dataFile);
+            Driver!.Databases.ImportFromFile(name, schema, dataPath);
+        }
+
+        // Pattern: connection import database(X) from schema file(Y), data file(Z); fails with a message containing: "MSG"
+        [Then(@"connection import database\(([^)]+)\) from schema file\(([^)]+)\), data file\(([^)]+)\); fails with a message containing: ""(.*)""")]
+        public void ConnectionImportDatabaseFromFilesFailsWithMessage(
+            string name, string schemaFile, string dataFile, string expectedMessage)
+        {
+            var schemaPath = ConnectionStepsBase.FullPath(schemaFile);
+            var schema = File.ReadAllText(schemaPath);
+            var dataPath = ConnectionStepsBase.FullPath(dataFile);
+            var exception = Assert.ThrowsAny<Exception>(
+                () => Driver!.Databases.ImportFromFile(name, schema, dataPath));
+            Assert.Contains(expectedMessage, exception.Message);
+        }
+
+        // Pattern: connection import database(X) from data file(Y) and schema (with DocString)
+        [Given(@"connection import database\(([^)]+)\) from data file\(([^)]+)\) and schema")]
+        [When(@"connection import database\(([^)]+)\) from data file\(([^)]+)\) and schema")]
+        public void ConnectionImportDatabaseFromDataFileAndSchema(
+            string name, string dataFile, DocString schema)
+        {
+            var dataPath = ConnectionStepsBase.FullPath(dataFile);
+            // RemoveTwoSpacesInTabulation is defined in UtilSteps.cs (same partial class)
+            var schemaText = RemoveTwoSpacesInTabulation(schema.Content);
+            Driver!.Databases.ImportFromFile(name, schemaText, dataPath);
+        }
+
+        #endregion
     }
 }

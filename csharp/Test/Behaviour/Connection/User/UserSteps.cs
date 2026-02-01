@@ -21,172 +21,193 @@ using DataTable = Gherkin.Ast.DataTable;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Xunit;
 using Xunit.Gherkin.Quick;
 
 using TypeDB.Driver;
+using TypeDB.Driver.Api;
 using TypeDB.Driver.Common;
-using TypeDB.Driver.Test.Behaviour;
 
 namespace TypeDB.Driver.Test.Behaviour
 {
     public partial class BehaviourSteps
     {
-        private bool IsUserInUsers(string username)
+        [Given(@"connection opens with username '([^']*)', password '([^']*)'")]
+        [When(@"connection opens with username '([^']*)', password '([^']*)'")]
+        [Then(@"connection opens with username '([^']*)', password '([^']*)'")]
+        public void ConnectionOpensWithUsername(string username, string password)
         {
-            HashSet<string> users = Driver!.Users.GetAll().Select(user => user.Username).ToHashSet();
-            return users.Contains(username);
-        }
-    
-        [Then(@"get connected user")]
-        public void GetConnectedUser()
-        {
-            if (_requiredConfiguration) return; // Skip tests with configuration
-
-            var retrievedUser = Driver!.GetCurrentUser();
-        }
-
-        [Then(@"users get user: {}; throws exception")]
-        public void UsersGetUserThrowsException(string username)
-        {
-            if (_requiredConfiguration) return; // Skip tests with configuration
-
-            Assert.Throws<TypeDBDriverException>(() => UsersGetUser(username));
+            if (Driver != null)
+            {
+                Driver.Close();
+            }
+            Driver = TypeDB.Driver(
+                TypeDB.DefaultAddress,
+                new Credentials(username, password),
+                new DriverOptions(false, null));
         }
 
-        [Then(@"users get all; throws exception")]
-        public void UsersGetAllThrowsException()
+        [Then(@"connection opens with username '([^']*)', password '([^']*)'; fails with a message containing: ""(.*)""")]
+        public void ConnectionOpensWithUsernameFailsWithMessage(
+            string username, string password, string expectedMessage)
         {
-            if (_requiredConfiguration) return; // Skip tests with configuration
-
-            Assert.Throws<TypeDBDriverException>(() => UsersGetAll());
+            var exception = Assert.ThrowsAny<Exception>(() =>
+            {
+                TypeDB.Driver(
+                    TypeDB.DefaultAddress,
+                    new Credentials(username, password),
+                    new DriverOptions(false, null));
+            });
+            Assert.Contains(expectedMessage, exception.Message);
         }
 
-        [Then(@"users contains: {}; throws exception")]
-        public void UsersContainsThrowsException(string username)
+        [Given(@"connection has (\d+) users?")]
+        [Then(@"connection has (\d+) users?")]
+        public void ConnectionHasUserCount(int expectedCount)
         {
-            if (_requiredConfiguration) return; // Skip tests with configuration
-
-            Assert.Throws<TypeDBDriverException>(() => UsersContains(username));
+            Assert.NotNull(Driver);
+            Assert.Equal(expectedCount, Driver!.Users.GetAll().Count);
         }
 
-        [Then(@"users not contains: {}; throws exception")]
-        public void UsersNotContainsThrowsException(string username)
+        [Then(@"get all users contains: (.+)")]
+        public void GetAllUsersContains(string username)
         {
-            if (_requiredConfiguration) return; // Skip tests with configuration
-
-            Assert.Throws<TypeDBDriverException>(() => UsersNotContains(username));
+            Assert.NotNull(Driver);
+            var allUsers = Driver!.Users.GetAll();
+            Assert.True(
+                allUsers.Any(u => u.Username == username),
+                $"Expected users to contain '{username}' but they don't. " +
+                $"Users: {string.Join(", ", allUsers.Select(u => u.Username))}");
         }
 
-        [Then(@"users create: {}, {}; throws exception")]
-        public void UsersCreateThrowsException(string username, string password)
+        [Then(@"get all users does not contain: (.+)")]
+        public void GetAllUsersDoesNotContain(string username)
         {
-            if (_requiredConfiguration) return; // Skip tests with configuration
-
-            Assert.Throws<TypeDBDriverException>(() => UsersCreate(username, password));
+            Assert.NotNull(Driver);
+            var allUsers = Driver!.Users.GetAll();
+            Assert.False(
+                allUsers.Any(u => u.Username == username),
+                $"Expected users to NOT contain '{username}' but they do.");
         }
 
-        [Then(@"users delete: {}; throws exception")]
-        public void UsersDeleteThrowsException(string username)
+        [Then(@"get all users:")]
+        public void GetAllUsersExact(DataTable names)
         {
-            if (_requiredConfiguration) return; // Skip tests with configuration
-
-            Assert.Throws<TypeDBDriverException>(() => UsersDelete(username));
+            Assert.NotNull(Driver);
+            var expectedNames = new HashSet<string>();
+            foreach (var row in names.Rows)
+            {
+                foreach (var cell in row.Cells)
+                {
+                    expectedNames.Add(cell.Value);
+                }
+            }
+            var actualNames = Driver!.Users.GetAll()
+                .Select(u => u.Username).ToHashSet();
+            Assert.Equal(expectedNames, actualNames);
         }
 
-        [Then(@"user password update: {}, {}; throws exception")]
-        public void UserPasswordUpdateThrowsException(string oldPassword, string newPassword)
+        [Then(@"get all users; fails with a message containing: ""(.*)""")]
+        public void GetAllUsersFailsWithMessage(string expectedMessage)
         {
-            if (_requiredConfiguration) return; // Skip tests with configuration
-
-            Assert.Throws<TypeDBDriverException>(
-                () => UserPasswordUpdate(oldPassword, newPassword));
+            Assert.NotNull(Driver);
+            var exception = Assert.ThrowsAny<Exception>(() => Driver!.Users.GetAll());
+            Assert.Contains(expectedMessage, exception.Message);
         }
 
-        [Then(@"users password set: {}, {}; throws exception")]
-        public void UsersPasswordSetThrowsException(string username, string passwordNew)
+        [Given(@"create user with username '([^']*)', password '([^']*)'")]
+        [When(@"create user with username '([^']*)', password '([^']*)'")]
+        [Then(@"create user with username '([^']*)', password '([^']*)'")]
+        public void CreateUserWithUsername(string username, string password)
         {
-            if (_requiredConfiguration) return; // Skip tests with configuration
-
-            Assert.Throws<TypeDBDriverException>(() => UsersPasswordSet(username, passwordNew));
-        }
-    
-        [Then(@"users get user: {}")]
-        public void UsersGetUser(string username)
-        {
-            if (_requiredConfiguration) return; // Skip tests with configuration
-
-            var retrievedUser = Driver!.Users.Get(username);
-        }
-
-        [Then(@"users get all")]
-        public void UsersGetAll()
-        {
-            if (_requiredConfiguration) return; // Skip tests with configuration
-
-            var allRetrievedUsers = Driver!.Users.GetAll();
-        }
-
-        [When(@"users contains: {}")]
-        [Then(@"users contains: {}")]
-        public void UsersContains(string username)
-        {
-            if (_requiredConfiguration) return; // Skip tests with configuration
-
-            Assert.True(IsUserInUsers(username));
-        }
-
-        [Then(@"users not contains: {}")]
-        public void UsersNotContains(string username)
-        {
-            if (_requiredConfiguration) return; // Skip tests with configuration
-
-            Assert.False(IsUserInUsers(username));
-        }
-
-        [When(@"users create: {}, {}")]
-        [Then(@"users create: {}, {}")]
-        public void UsersCreate(string username, string password)
-        {
-            if (_requiredConfiguration) return; // Skip tests with configuration
-
+            Assert.NotNull(Driver);
             Driver!.Users.Create(username, password);
         }
 
-        [Given(@"users delete: {}")]
-        [When(@"users delete: {}")]
-        public void UsersDelete(string username) 
+        [When(@"create user with username '([^']*)', password '([^']*)'; fails with a message containing: ""(.*)""")]
+        [Then(@"create user with username '([^']*)', password '([^']*)'; fails with a message containing: ""(.*)""")]
+        public void CreateUserWithUsernameFailsWithMessage(
+            string username, string password, string expectedMessage)
         {
-            if (_requiredConfiguration) return; // Skip tests with configuration
-
-            Driver!.Users.Delete(username);
+            Assert.NotNull(Driver);
+            var exception = Assert.ThrowsAny<Exception>(
+                () => Driver!.Users.Create(username, password));
+            Assert.Contains(expectedMessage, exception.Message);
         }
-    
-        [Then(@"user password update: {}, {}")]
-        [And(@"user password update: {}, {}")]
-        public void UserPasswordUpdate(string oldPassword, string newPassword)
-        {
-            if (_requiredConfiguration) return; // Skip tests with configuration
 
-            Driver!.Users.Get(Driver.GetCurrentUser().Username)!.UpdatePassword(oldPassword, newPassword);
+        [Given(@"delete user: (\S+)")]
+        [When(@"delete user: (\S+)")]
+        [Then(@"delete user: (\S+)")]
+        public void DeleteUser(string username)
+        {
+            Assert.NotNull(Driver);
+            var user = Driver!.Users.Get(username);
+            Assert.NotNull(user);
+            user!.Delete();
         }
-    
-        [Then(@"user expiry-seconds")]
-        public void UserExpirySeconds() 
-        {
-            if (_requiredConfiguration) return; // Skip tests with configuration
 
-            var retrievedSeconds = Driver!.GetCurrentUser().PasswordExpirySeconds;
+        [When(@"delete user: ([^;]+); fails with a message containing: ""(.*)""")]
+        [Then(@"delete user: ([^;]+); fails with a message containing: ""(.*)""")]
+        public void DeleteUserFailsWithMessage(string username, string expectedMessage)
+        {
+            Assert.NotNull(Driver);
+            var exception = Assert.ThrowsAny<Exception>(() =>
+            {
+                var user = Driver!.Users.Get(username.Trim());
+                user!.Delete();
+            });
+            Assert.Contains(expectedMessage, exception.Message);
         }
-    
-        [When(@"users password set: {}, {}")]
-        public void UsersPasswordSet(string username, string newPassword)
-        {
-            if (_requiredConfiguration) return; // Skip tests with configuration
 
-            Driver!.Users.SetPassword(username, newPassword);
+        [Then(@"get user\(([^)]+)\) get name: (.+)")]
+        public void GetUserGetName(string username, string expectedName)
+        {
+            Assert.NotNull(Driver);
+            var user = Driver!.Users.Get(username);
+            Assert.NotNull(user);
+            Assert.Equal(expectedName, user!.Username);
+        }
+
+        [Then(@"get user: ([^;]+); fails with a message containing: ""(.*)""")]
+        public void GetUserFailsWithMessage(string username, string expectedMessage)
+        {
+            Assert.NotNull(Driver);
+            var exception = Assert.ThrowsAny<Exception>(
+                () => Driver!.Users.Get(username.Trim()));
+            Assert.Contains(expectedMessage, exception.Message);
+        }
+
+        [Given(@"get user\(([^)]+)\) update password to '([^']*)'")]
+        [When(@"get user\(([^)]+)\) update password to '([^']*)'")]
+        [Then(@"get user\(([^)]+)\) update password to '([^']*)'")]
+        public void GetUserUpdatePassword(string username, string password)
+        {
+            Assert.NotNull(Driver);
+            var user = Driver!.Users.Get(username);
+            Assert.NotNull(user);
+            user!.UpdatePassword(password);
+        }
+
+        [Then(@"get user\(([^)]+)\) update password to '([^']*)'; fails with a message containing: ""(.*)""")]
+        public void GetUserUpdatePasswordFailsWithMessage(
+            string username, string password, string expectedMessage)
+        {
+            Assert.NotNull(Driver);
+            var exception = Assert.ThrowsAny<Exception>(() =>
+            {
+                var user = Driver!.Users.Get(username);
+                user!.UpdatePassword(password);
+            });
+            Assert.Contains(expectedMessage, exception.Message);
+        }
+
+        [Then(@"get current username: (.+)")]
+        public void GetCurrentUsername(string expectedUsername)
+        {
+            Assert.NotNull(Driver);
+            var currentUser = Driver!.Users.GetCurrentUser();
+            Assert.NotNull(currentUser);
+            Assert.Equal(expectedUsername, currentUser.Username);
         }
     }
 }

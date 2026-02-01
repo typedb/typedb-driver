@@ -1,0 +1,240 @@
+[#_IQueryAnswer]
+=== IQueryAnswer
+
+*Package*: `TypeDB.Driver.Api.Answer`
+
+
+
+General answer on a query returned by a server. Can be a simple Ok response or a collection of concepts.
+
+// tag::methods[]
+[#_IConceptDocumentIterator_TypeDB_Driver_Api_Answer_IQueryAnswer_AsConceptDocuments_]
+==== AsConceptDocuments
+
+[source,cs]
+----
+IConceptDocumentIterator AsConceptDocuments()
+----
+
+
+
+Casts the query answer to IConceptDocumentIterator.
+
+ 
+  Returns
+ 
+ 
+  The IConceptDocumentIterator if this is a concept documents response.
+ 
+
+
+ 
+  Exceptions
+ 
+ 
+  
+   
+    
+     TypeDBDriverException
+     If the answer is not a concept documents response.
+    
+   
+  
+ 
+
+
+ 
+  queryAnswer.AsConceptDocuments()
+ 
+
+
+Implemented in TypeDB.Driver.Api.Answer.IConceptDocumentIterator.
+
+[caption=""]
+.Returns
+`IConceptDocumentIterator`
+
+[#_IConceptRowIterator_TypeDB_Driver_Api_Answer_IQueryAnswer_AsConceptRows_]
+==== AsConceptRows
+
+[source,cs]
+----
+IConceptRowIterator AsConceptRows()
+----
+
+
+
+Casts the query answer to IConceptRowIterator.
+
+ 
+  Returns
+ 
+ 
+  The IConceptRowIterator if this is a concept rows response.
+ 
+
+
+ 
+  Exceptions
+ 
+ 
+  
+   
+    
+     TypeDBDriverException
+     If the answer is not a concept rows response.
+    
+   
+  
+ 
+
+
+ 
+  queryAnswer.AsConceptRows()
+ 
+
+
+Implemented in TypeDB.Driver.Api.Answer.IConceptRowIterator.
+
+[caption=""]
+.Returns
+`IConceptRowIterator`
+
+[#_IOkQueryAnswer_TypeDB_Driver_Api_Answer_IQueryAnswer_AsOk_]
+==== AsOk
+
+[source,cs]
+----
+IOkQueryAnswer AsOk()
+----
+
+
+
+Casts the query answer to IOkQueryAnswer.
+
+ 
+  Returns
+ 
+ 
+  The IOkQueryAnswer if this is an Ok response.
+ 
+
+
+ 
+  Exceptions
+ 
+ 
+  
+   
+    
+     Common.TypeDBDriverException
+     If the answer is not an Ok response.
+    
+   
+  
+ 
+
+
+ 
+  queryAnswer.AsOk()
+ 
+
+
+Implemented in TypeDB.Driver.Api.Answer.IOkQueryAnswer.
+
+[caption=""]
+.Returns
+`IOkQueryAnswer`
+
+[#_bool_TypeDB_Driver_Api_Answer_IQueryAnswer_IsConceptDocuments]
+==== IsConceptDocuments
+
+[source,cs]
+----
+bool TypeDB.Driver.Api.Answer.IQueryAnswer.IsConceptDocuments
+----
+
+
+
+Checks if the query answer is a IConceptDocumentIterator.
+
+ 
+  queryAnswer.IsConceptDocuments
+ 
+
+
+Implemented in TypeDB.Driver.Api.Answer.IConceptDocumentIterator.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_bool_TypeDB_Driver_Api_Answer_IQueryAnswer_IsConceptRows]
+==== IsConceptRows
+
+[source,cs]
+----
+bool TypeDB.Driver.Api.Answer.IQueryAnswer.IsConceptRows
+----
+
+
+
+Checks if the query answer is a IConceptRowIterator.
+
+ 
+  queryAnswer.IsConceptRows
+ 
+
+
+Implemented in TypeDB.Driver.Api.Answer.IConceptRowIterator.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_bool_TypeDB_Driver_Api_Answer_IQueryAnswer_IsOk]
+==== IsOk
+
+[source,cs]
+----
+bool TypeDB.Driver.Api.Answer.IQueryAnswer.IsOk
+----
+
+
+
+Checks if the query answer is an IOkQueryAnswer.
+
+ 
+  queryAnswer.IsOk
+ 
+
+
+Implemented in TypeDB.Driver.Api.Answer.IOkQueryAnswer.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_QueryType_TypeDB_Driver_Api_Answer_IQueryAnswer_QueryType]
+==== QueryType
+
+[source,cs]
+----
+QueryType TypeDB.Driver.Api.Answer.IQueryAnswer.QueryType
+----
+
+
+
+Retrieves the executed query's type of this IQueryAnswer.
+
+ 
+  queryAnswer.QueryType
+ 
+
+
+[caption=""]
+.Returns
+`QueryType`
+
+// end::methods[]
+

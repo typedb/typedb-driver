@@ -25,7 +25,7 @@ under the License.
     <PackageId>NugetApplicationTest</PackageId>
     <Title>NugetApplicationTest</Title>
     <Description>
-      This test checks that our TypeDB Driver Nuget package works correctly will all the transitive dependencies!
+      This test checks that our TypeDB Driver Nuget package works correctly with all the transitive dependencies!
     </Description>
     <Authors>TypeDB</Authors>
     <Company>TypeDB</Company>

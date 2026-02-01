@@ -42,7 +42,7 @@ pub extern "C" fn void_promise_resolve(promise: *mut VoidPromise) {
 /// Frees the native rust <code>VoidPromise</code> object.
 #[no_mangle]
 pub extern "C" fn void_promise_drop(promise: *mut VoidPromise) {
-    drop(take_ownership(promise))
+    drop(take_ownership(promise));
 }
 
 /// Promise object representing the result of an asynchronous operation.

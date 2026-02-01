@@ -23,81 +23,67 @@ using TypeDB.Driver.Api;
 
 namespace TypeDB.Driver.Api
 {
-    /**
-     * Provides access to all user management methods.
-     */
+    /// <summary>
+    /// Provides access to all user management methods.
+    /// </summary>
     public interface IUserManager
     {
-        /**
-         * Checks if a user with the given name exists.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * driver.Users.Contains(username);
-         * </pre>
-         *
-         * @param username The user name to be checked
-         */
+        /// <summary>
+        /// Checks if a user with the given name exists.
+        /// </summary>
+        /// <param name="username">The user name to be checked.</param>
+        /// <returns><c>true</c> if the user exists, <c>false</c> otherwise.</returns>
+        /// <example>
+        /// <code>
+        /// driver.Users.Contains(username);
+        /// </code>
+        /// </example>
         bool Contains(string username);
 
-        /**
-         * Creates a user with the given name &amp; password.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * driver.Users.Create(username, password);
-         * </pre>
-         *
-         * @param username The name of the user to be created
-         * @param password The password of the user to be created
-         */
+        /// <summary>
+        /// Creates a user with the given name and password.
+        /// </summary>
+        /// <param name="username">The name of the user to be created.</param>
+        /// <param name="password">The password of the user to be created.</param>
+        /// <example>
+        /// <code>
+        /// driver.Users.Create(username, password);
+        /// </code>
+        /// </example>
         void Create(string username, string password);
 
-        /**
-         * Deletes a user with the given name.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * driver.Users.Delete(username);
-         * </pre>
-         *
-         * @param username The name of the user to be deleted
-         */
-        void Delete(string username);
-
-        /**
-         * Retrieves a user with the given name.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * driver.Users.Get(username);
-         * </pre>
-         *
-         * @param username The name of the user to retrieve
-         */
+        /// <summary>
+        /// Retrieves a user with the given name.
+        /// </summary>
+        /// <param name="username">The name of the user to retrieve.</param>
+        /// <returns>The user if it exists, or <c>null</c> otherwise.</returns>
+        /// <example>
+        /// <code>
+        /// driver.Users.Get(username);
+        /// </code>
+        /// </example>
         IUser? Get(string username);
 
-        /**
-         * Retrieves all users which exist on the TypeDB server.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * driver.Users.GetAll();
-         * </pre>
-         */
+        /// <summary>
+        /// Retrieves all users which exist on the TypeDB server.
+        /// </summary>
+        /// <returns>A set of all users.</returns>
+        /// <example>
+        /// <code>
+        /// driver.Users.GetAll();
+        /// </code>
+        /// </example>
         ISet<IUser> GetAll();
 
-        /**
-         * Sets a new password for a user. This operation can only be performed by administrators.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * driver.Users.SetPassword(username, password);
-         * </pre>
-         *
-         * @param username The name of the user to set the password of
-         * @param password The new password
-         */
-        void SetPassword(string username, string password);
+        /// <summary>
+        /// Retrieves the currently logged in user.
+        /// </summary>
+        /// <returns>The current user.</returns>
+        /// <example>
+        /// <code>
+        /// driver.Users.GetCurrentUser();
+        /// </code>
+        /// </example>
+        IUser GetCurrentUser();
     }
 }

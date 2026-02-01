@@ -19,27 +19,25 @@
 
 namespace TypeDB.Driver.Api
 {
-    /**
-     *  TypeDB user information
-     */
+    /// <summary>
+    /// TypeDB user information.
+    /// </summary>
     public interface IUser
     {
-        /**
-         * Returns the name of this user.
-         */
+        /// <summary>
+        /// Returns the name of this user.
+        /// </summary>
         string Username { get; }
 
-        /**
-         * Returns the number of seconds remaining till this user’s current password expires.
-         */
-        long? PasswordExpirySeconds { get; }
+        /// <summary>
+        /// Updates the password for this user.
+        /// </summary>
+        /// <param name="password">The new password.</param>
+        void UpdatePassword(string password);
 
-        /**
-         * Updates the password for this user.
-         *
-         * @param passwordOld The current password of this user
-         * @param passwordNew The new password
-         */
-        void UpdatePassword(string passwordOld, string passwordNew);
+        /// <summary>
+        /// Deletes this user.
+        /// </summary>
+        void Delete();
     }
 }

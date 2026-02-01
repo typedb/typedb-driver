@@ -70,7 +70,7 @@ pub extern "C" fn driver_open_with_description(
     ))
 }
 
-/// Closes the driver. Before instantiating a new driver, the driver that’s currently open should first be closed.
+/// Closes the driver. Before instantiating a new driver, the driver that's currently open should first be closed.
 /// Closing a driver frees the underlying Rust object.
 #[no_mangle]
 pub extern "C" fn driver_close(driver: *mut TypeDBDriver) {

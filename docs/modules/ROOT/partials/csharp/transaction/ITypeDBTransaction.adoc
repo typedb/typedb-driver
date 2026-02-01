@@ -3,6 +3,10 @@
 
 *Package*: `TypeDB.Driver.Api`
 
+
+
+A transaction with a TypeDB database.
+
 // tag::methods[]
 [#_void_TypeDB_Driver_Api_ITypeDBTransaction_Close_]
 ==== Close
@@ -16,17 +20,9 @@ void Close()
 
 Closes the transaction.
 
-
 [caption=""]
 .Returns
 `void`
-
-[caption=""]
-.Code examples
-[source,cs]
-----
-transaction.Close();
-----
 
 [#_void_TypeDB_Driver_Api_ITypeDBTransaction_Commit_]
 ==== Commit
@@ -40,41 +36,9 @@ void Commit()
 
 Commits the changes made via this transaction to the TypeDB database. Whether or not the transaction is committed successfully, it gets closed after the commit call.
 
-
 [caption=""]
 .Returns
 `void`
-
-[caption=""]
-.Code examples
-[source,cs]
-----
-transaction.Commit();
-----
-
-[#_IConceptManager_TypeDB_Driver_Api_ITypeDBTransaction_Concepts]
-==== Concepts
-
-[source,cs]
-----
-IConceptManager TypeDB.Driver.Api.ITypeDBTransaction.Concepts
-----
-
-
-
-The ``ConceptManager`` for this transaction, providing access to all Concept API methods.
-
-
-[caption=""]
-.Returns
-`IConceptManager`
-
-[caption=""]
-.Code examples
-[source,cs]
-----
-transaction.Concepts;
-----
 
 [#_bool_TypeDB_Driver_Api_ITypeDBTransaction_IsOpen_]
 ==== IsOpen
@@ -88,48 +52,24 @@ bool IsOpen()
 
 Checks whether this transaction is open.
 
+ 
+  Returns
+ 
+ 
+  ``true`` if the transaction is open, ``false`` otherwise.
+ 
+
 
 [caption=""]
 .Returns
 `bool`
-
-[caption=""]
-.Code examples
-[source,cs]
-----
-transaction.IsOpen();
-----
-
-[#_ILogicManager_TypeDB_Driver_Api_ITypeDBTransaction_Logic]
-==== Logic
-
-[source,cs]
-----
-ILogicManager TypeDB.Driver.Api.ITypeDBTransaction.Logic
-----
-
-
-
-The ``LogicManager`` for this Transaction, providing access to all Concept API - Logic methods.
-
-
-[caption=""]
-.Returns
-`ILogicManager`
-
-[caption=""]
-.Code examples
-[source,cs]
-----
-transaction.Logic;
-----
 
 [#_void_TypeDB_Driver_Api_ITypeDBTransaction_OnClose_Action_Exception_function_]
 ==== OnClose
 
 [source,cs]
 ----
-void OnClose(Action< Exception > function)
+void OnClose(Action< Exception? > function)
 ----
 
 
@@ -143,67 +83,65 @@ Registers a callback function which will be executed when this transaction is cl
 [options="header"]
 |===
 |Name |Description |Type
-a| `function` a| The callback function. a| `Action< Exception >`
+a| `function` a| The callback function. a| `Action< Exception? >`
 |===
 
 [caption=""]
 .Returns
 `void`
 
-[caption=""]
-.Code examples
-[source,cs]
-----
-transaction.OnClose(function);
-----
-
-[#_TypeDBOptions_TypeDB_Driver_Api_ITypeDBTransaction_Options]
-==== Options
-
-[source,cs]
-----
-TypeDBOptions TypeDB.Driver.Api.ITypeDBTransaction.Options
-----
-
-
-
-The options for the transaction.
-
-
-[caption=""]
-.Returns
-`TypeDBOptions`
-
-[caption=""]
-.Code examples
-[source,cs]
-----
-transaction.Options;
-----
-
-[#_IQueryManager_TypeDB_Driver_Api_ITypeDBTransaction_Query]
+[#_IQueryAnswer_TypeDB_Driver_Api_ITypeDBTransaction_Query_string_query_]
 ==== Query
 
 [source,cs]
 ----
-IQueryManager TypeDB.Driver.Api.ITypeDBTransaction.Query
+IQueryAnswer Query(string query)
 ----
 
 
 
-The````QueryManager```` for this Transaction, from which any TypeQL query can be executed.
+Executes a TypeQL query in this transaction.
 
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `query` a| The TypeQL query string to execute. a| `string`
+|===
 
 [caption=""]
 .Returns
-`IQueryManager`
+`IQueryAnswer`
 
-[caption=""]
-.Code examples
+[#_IQueryAnswer_TypeDB_Driver_Api_ITypeDBTransaction_Query_string_query_QueryOptions_options_]
+==== Query
+
 [source,cs]
 ----
-transaction.Query;
+IQueryAnswer Query(string query, QueryOptions options)
 ----
+
+
+
+Executes a TypeQL query in this transaction with custom options.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `query` a| The TypeQL query string to execute. a| `string`
+a| `options` a| Query options. a| `QueryOptions`
+|===
+
+[caption=""]
+.Returns
+`IQueryAnswer`
 
 [#_void_TypeDB_Driver_Api_ITypeDBTransaction_Rollback_]
 ==== Rollback
@@ -217,17 +155,9 @@ void Rollback()
 
 Rolls back the uncommitted changes made via this transaction.
 
-
 [caption=""]
 .Returns
 `void`
-
-[caption=""]
-.Code examples
-[source,cs]
-----
-transaction.Rollback();
-----
 
 [#_TransactionType_TypeDB_Driver_Api_ITypeDBTransaction_Type]
 ==== Type
@@ -239,19 +169,11 @@ TransactionType TypeDB.Driver.Api.ITypeDBTransaction.Type
 
 
 
-The transaction’s type (Read or Write).
-
+The transaction's type (Read, Write, or Schema).
 
 [caption=""]
 .Returns
 `TransactionType`
-
-[caption=""]
-.Code examples
-[source,cs]
-----
-transaction.Type;
-----
 
 // end::methods[]
 

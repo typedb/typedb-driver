@@ -17,63 +17,128 @@
  * under the License.
  */
 
+using System;
 using System.Collections.Generic;
-using System.Linq;
 
 using TypeDB.Driver.Api;
 using TypeDB.Driver.Common;
-using TypeDB.Driver.Concept;
-using static TypeDB.Driver.Concept.Thing;
+
+using InternalError = TypeDB.Driver.Common.Error.Internal;
 
 namespace TypeDB.Driver.Concept
 {
+    /// <summary>
+    /// Represents an attribute instance in TypeDB.
+    /// In TypeDB 3.0, attribute instances are read-only data returned from queries.
+    /// </summary>
     public class Attribute : Thing, IAttribute
     {
+        private IAttributeType? _type;
+
         public Attribute(Pinvoke.Concept nativeConcept)
             : base(nativeConcept)
         {
         }
 
+        /// <inheritdoc/>
         public override IAttributeType Type
         {
-            get { return new AttributeType(Pinvoke.typedb_driver.attribute_get_type(NativeObject)); }
+            get { return _type ?? (_type = new AttributeType(Pinvoke.typedb_driver.attribute_get_type(NativeObject))); }
         }
 
+        /// <summary>
+        /// The base class Type property returns IThingType.
+        /// </summary>
+        IThingType IThing.Type => Type;
+
+        /// <inheritdoc/>
         public IValue Value
         {
-            get { return new Value(Pinvoke.typedb_driver.attribute_get_value(NativeObject)); }
+            get { return TryGetValue() ?? throw new TypeDBDriverException(InternalError.NULL_NATIVE_VALUE); }
         }
 
-        public IEnumerable<IThing> GetOwners(ITypeDBTransaction transaction)
+        /// <inheritdoc/>
+        public string GetValueType()
         {
-            try
-            {
-                return new NativeEnumerable<Pinvoke.Concept>(
-                    Pinvoke.typedb_driver.attribute_get_owners(
-                        NativeTransaction(transaction), NativeObject, null))
-                    .Select(obj => ThingOf(obj));
-            }
-            catch (Pinvoke.Error e)
-            {
-                throw new TypeDBDriverException(e);
-            }
+            return Value.GetValueType();
         }
 
-        public IEnumerable<IThing> GetOwners(ITypeDBTransaction transaction, IThingType ownerType)
+        /// <inheritdoc/>
+        public bool GetBoolean()
         {
-            try
+            return Value.GetBoolean();
+        }
+
+        /// <inheritdoc/>
+        public long GetInteger()
+        {
+            return Value.GetInteger();
+        }
+
+        /// <inheritdoc/>
+        public double GetDouble()
+        {
+            return Value.GetDouble();
+        }
+
+        /// <inheritdoc/>
+        public decimal GetDecimal()
+        {
+            return Value.GetDecimal();
+        }
+
+        /// <inheritdoc/>
+        public string GetString()
+        {
+            return Value.GetString();
+        }
+
+        /// <inheritdoc/>
+        public DateOnly GetDate()
+        {
+            return Value.GetDate();
+        }
+
+        /// <inheritdoc/>
+        public Datetime GetDatetime()
+        {
+            return Value.GetDatetime();
+        }
+
+        /// <inheritdoc/>
+        public DatetimeTZ GetDatetimeTZ()
+        {
+            return Value.GetDatetimeTZ();
+        }
+
+        /// <inheritdoc/>
+        public Duration GetDuration()
+        {
+            return Value.GetDuration();
+        }
+
+        /// <inheritdoc/>
+        public IReadOnlyDictionary<string, IValue?> GetStruct()
+        {
+            return Value.GetStruct();
+        }
+
+        /// <summary>
+        /// Returns this attribute as IAttribute.
+        /// </summary>
+        public IAttribute AsAttribute()
+        {
+            return this;
+        }
+
+        public override int GetHashCode()
+        {
+            if (_hash == 0)
             {
-                return new NativeEnumerable<Pinvoke.Concept>(
-                    Pinvoke.typedb_driver.attribute_get_owners(
-                        NativeTransaction(transaction),
-                        NativeObject,
-                        ((ThingType)ownerType).NativeObject))
-                    .Select(obj => ThingOf(obj));
+                _hash = Value.GetHashCode();
             }
-            catch (Pinvoke.Error e)
-            {
-                throw new TypeDBDriverException(e);
-            }
+
+            return _hash;
         }
     }
 }

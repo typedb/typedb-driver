@@ -1,0 +1,76 @@
+[#_QueryOptions]
+=== QueryOptions
+
+*Package*: `TypeDB.Driver.Api`
+
+
+
+Options for query execution.
+
+// tag::methods[]
+[#_bool_TypeDB_Driver_Api_QueryOptions_IncludeInstanceTypes]
+==== IncludeInstanceTypes
+
+[source,cs]
+----
+bool? TypeDB.Driver.Api.QueryOptions.IncludeInstanceTypes
+----
+
+
+
+Gets or sets whether to include instance types in query results.
+
+[caption=""]
+.Returns
+`bool?`
+
+[#_bool_TypeDB_Driver_Api_QueryOptions_IncludeQueryStructure]
+==== IncludeQueryStructure
+
+[source,cs]
+----
+bool? TypeDB.Driver.Api.QueryOptions.IncludeQueryStructure
+----
+
+
+
+Gets or sets whether to include query structure in query results.
+
+[caption=""]
+.Returns
+`bool?`
+
+[#_long_TypeDB_Driver_Api_QueryOptions_PrefetchSize]
+==== PrefetchSize
+
+[source,cs]
+----
+long? TypeDB.Driver.Api.QueryOptions.PrefetchSize
+----
+
+
+
+Gets or sets the prefetch size for query results.
+
+[caption=""]
+.Returns
+`long?`
+
+[#_TypeDB_Driver_Api_QueryOptions_QueryOptions_]
+==== QueryOptions
+
+[source,cs]
+----
+QueryOptions()
+----
+
+
+
+Creates a new QueryOptions with default settings.
+
+[caption=""]
+.Returns
+`QueryOptions`
+
+// end::methods[]
+

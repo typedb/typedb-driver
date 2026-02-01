@@ -17,810 +17,1096 @@
  * under the License.
  */
 
-using DataTable = Gherkin.Ast.DataTable;
 using DocString = Gherkin.Ast.DocString;
-using Newtonsoft.Json.Linq;
+using DataTable = Gherkin.Ast.DataTable;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Gherkin.Quick;
 
 using TypeDB.Driver;
 using TypeDB.Driver.Api;
+using TypeDB.Driver.Api.Answer;
+using TypeDB.Driver.Answer;
 using TypeDB.Driver.Common;
-using static TypeDB.Driver.Api.IThingType;
-using static TypeDB.Driver.Api.IThingType.Annotation;
-
-using QueryError = TypeDB.Driver.Common.Error.Query;
 
 namespace TypeDB.Driver.Test.Behaviour
 {
     public partial class BehaviourSteps
     {
-        [Given(@"typeql define")]
-        [When(@"typeql define")]
-        [Then(@"typeql define")]
-        public void TypeqlDefine(DocString defineQueryStatements)
+        private static IQueryAnswer? _queryAnswer;
+        private static List<IConceptRow>? _collectedRows;
+        private static List<IJSON>? _collectedDocuments;
+        private static QueryOptions? _queryOptions;
+
+        // Concurrent query state
+        private static List<IQueryAnswer>? _concurrentAnswers;
+        private static List<IEnumerator<IConceptRow>>? _concurrentRowStreams;
+
+        private void ClearAnswers()
         {
-            Tx.Query.Define(defineQueryStatements.Content).Resolve();
+            _queryAnswer = null;
+            _collectedRows = null;
+            _collectedDocuments = null;
         }
 
-        [Given(@"typeql define; throws exception")]
-        [When(@"typeql define; throws exception")]
-        [Then(@"typeql define; throws exception")]
-        public void TypeqlDefineThrowsException(DocString defineQueryStatements)
+        private void CollectAnswerIfNeeded()
         {
-            Assert.Throws<TypeDBDriverException>(() => TypeqlDefine(defineQueryStatements));
+            if (_collectedRows != null || _collectedDocuments != null)
+            {
+                return;
+            }
+
+            if (_queryAnswer!.IsConceptRows)
+            {
+                _collectedRows = _queryAnswer.AsConceptRows().ToList();
+            }
+            else if (_queryAnswer!.IsConceptDocuments)
+            {
+                _collectedDocuments = _queryAnswer.AsConceptDocuments().ToList();
+            }
         }
 
-        [Then(@"typeql define; throws exception containing {string}")]
-        public void TypeqlDefineThrowsExceptionContaining(string expectedMessage, DocString defineQueryStatements)
+        private void CollectRowsAnswerIfNeeded()
         {
-            var exception = Assert.Throws<TypeDBDriverException>(
-                () => TypeqlDefine(defineQueryStatements));
-
-            Assert.Contains(expectedMessage, exception.Message);
+            CollectAnswerIfNeeded();
+            Assert.NotNull(_collectedRows);
         }
 
-        [Given(@"typeql undefine")]
-        [When(@"typeql undefine")]
-        [Then(@"typeql undefine")]
-        public void TypeqlUndefine(DocString undefineQueryStatements)
+        private void CollectDocumentsAnswerIfNeeded()
         {
-            Tx.Query.Undefine(undefineQueryStatements.Content).Resolve();
+            CollectAnswerIfNeeded();
+            Assert.NotNull(_collectedDocuments);
         }
 
-        [Given(@"typeql undefine; throws exception")]
-        [When(@"typeql undefine; throws exception")]
-        [Then(@"typeql undefine; throws exception")]
-        public void TypeQlUndefineThrowsException(DocString undefineQueryStatements)
+        private List<IConcept> GetRowGetConcepts(int rowIndex)
         {
-            Assert.Throws<TypeDBDriverException>(() => TypeqlUndefine(undefineQueryStatements));
+            return _collectedRows![rowIndex].Concepts.ToList();
         }
 
-        [Then(@"typeql undefine; throws exception containing {string}")]
-        public void TypeqlUndefineThrowsExceptionContaining(string expectedMessage, DocString undefineQueryStatements)
+        private IConcept? GetRowGetConcept(int rowIndex, string variable, bool byIndex = false)
         {
-            var exception = Assert.Throws<TypeDBDriverException>(
-                () => TypeqlUndefine(undefineQueryStatements));
-
-            Assert.Contains(expectedMessage, exception.Message);
+            IConceptRow row = _collectedRows![rowIndex];
+            if (byIndex)
+            {
+                var columnNames = row.ColumnNames.ToList();
+                int index = columnNames.IndexOf(variable);
+                return row.GetIndex(index);
+            }
+            else
+            {
+                return row.Get(variable);
+            }
         }
 
-        [Given(@"typeql insert")]
-        [When(@"typeql insert")]
-        [Then(@"typeql insert")]
-        public IConceptMap[] TypeqlInsert(DocString insertQueryStatements)
+        private IValue GetRowGetValue(int rowIndex, string conceptKind, string variable, bool byIndex = false)
         {
-            return Tx.Query.Insert(insertQueryStatements.Content).ToArray();
+            IConcept? concept = GetRowGetConcept(rowIndex, variable, byIndex);
+            Assert.NotNull(concept);
+
+            switch (conceptKind.ToLower())
+            {
+                case "attribute":
+                    return concept!.AsAttribute().Value;
+                case "value":
+                    return concept!.AsValue();
+                default:
+                    throw new BehaviourTestException($"ConceptKind does not have values: {conceptKind}");
+            }
         }
 
-        [Given(@"typeql insert; throws exception")]
-        [When(@"typeql insert; throws exception")]
-        [Then(@"typeql insert; throws exception")]
-        public void TypeqlInsertThrowsException(DocString insertQueryStatements)
-        {
-            Assert.Throws<TypeDBDriverException>(() => TypeqlInsert(insertQueryStatements));
-        }
+        #region Query Execution Steps
 
-        [Then(@"typeql insert; throws exception containing {string}")]
-        public void TypeqlInsertThrowsExceptionContaining(string expectedMessage, DocString insertQueryStatements)
-        {
-            var exception = Assert.Throws<TypeDBDriverException>(() => TypeqlInsert(insertQueryStatements));
-
-            Assert.Contains(expectedMessage, exception.Message);
-        }
-
-        [Given(@"typeql delete")]
-        [When(@"typeql delete")]
-        [Then(@"typeql delete")]
-        public void TypeqlDelete(DocString deleteQueryStatements)
-        {
-            Tx.Query.Delete(deleteQueryStatements.Content).Resolve();
-        }
-
-        [Given(@"typeql delete; throws exception")]
-        [When(@"typeql delete; throws exception")]
-        [Then(@"typeql delete; throws exception")]
-        public void TypeqlDeleteThrowsException(DocString deleteQueryStatements)
-        {
-            Assert.Throws<TypeDBDriverException>(() => TypeqlDelete(deleteQueryStatements));
-        }
-
-        [Given(@"typeql delete; throws exception containing {string}")]
-        [When(@"typeql delete; throws exception containing {string}")]
-        public void TypeqlDeleteThrowsExceptionContaining(string expectedMessage, DocString deleteQueryStatements)
-        {
-            var exception = Assert.Throws<TypeDBDriverException>(
-                () => TypeqlDelete(deleteQueryStatements));
-
-            Assert.Contains(expectedMessage, exception.Message);
-        }
-
-        [Given(@"typeql update")]
-        [When(@"typeql update")]
-        [Then(@"typeql update")]
-        public IConceptMap[] TypeqlUpdate(DocString updateQueryStatements)
-        {
-            return Tx.Query.Update(updateQueryStatements.Content).ToArray();
-        }
-
-        [Given(@"typeql update; throws exception")]
-        [When(@"typeql update; throws exception")]
-        [Then(@"typeql update; throws exception")]
-        public void TypeqlUpdateThrowsException(DocString updateQueryStatements)
-        {
-            Assert.Throws<TypeDBDriverException>(() => TypeqlUpdate(updateQueryStatements));
-        }
-
-        [Then(@"typeql update; throws exception containing {string}")]
-        public void TypeqlUpdateThrowsExceptionContaining(string expectedMessage, DocString updateQueryStatements)
-        {
-            var exception = Assert.Throws<TypeDBDriverException>(() => TypeqlUpdate(updateQueryStatements));
-
-            Assert.Contains(expectedMessage, exception.Message);
-        }
-
-        [Given(@"get answers of typeql insert")]
-        [When(@"get answers of typeql insert")]
-        [Then(@"get answers of typeql insert")]
-        public void GetAnswersOfTypeqlInsert(DocString insertQueryStatements)
+        [Given(@"typeql schema query")]
+        [When(@"typeql schema query")]
+        [Then(@"typeql schema query")]
+        [Given(@"typeql write query")]
+        [When(@"typeql write query")]
+        [Then(@"typeql write query")]
+        [Given(@"typeql read query")]
+        [When(@"typeql read query")]
+        [Then(@"typeql read query")]
+        public void TypeqlQuery(DocString query)
         {
             ClearAnswers();
-            _answers = Tx.Query.Insert(insertQueryStatements.Content).ToList();
+            ExecuteQuery(query.Content);
         }
 
-        [Given(@"get answers of typeql get")]
-        [When(@"get answers of typeql get")]
-        [Then(@"get answers of typeql get")]
-        public void GetAnswersOfTypeqlGet(DocString getQueryStatements)
+        [Given(@"typeql schema query; fails")]
+        [When(@"typeql schema query; fails")]
+        [Then(@"typeql schema query; fails")]
+        [Given(@"typeql write query; fails")]
+        [When(@"typeql write query; fails")]
+        [Then(@"typeql write query; fails")]
+        [Given(@"typeql read query; fails")]
+        [When(@"typeql read query; fails")]
+        [Then(@"typeql read query; fails")]
+        public void TypeqlQueryFails(DocString query)
         {
             ClearAnswers();
-            _answers = Tx.Query.Get(getQueryStatements.Content).ToList();
+            Assert.ThrowsAny<Exception>(() => ExecuteQuery(query.Content));
         }
 
-        [Given(@"typeql get; throws exception")]
-        [When(@"typeql get; throws exception")]
-        [Then(@"typeql get; throws exception")]
-        public void TypeqlGetThrowsException(DocString getQueryStatements)
+        [Given(@"typeql schema query; fails with a message containing: ""(.*)""")]
+        [When(@"typeql schema query; fails with a message containing: ""(.*)""")]
+        [Then(@"typeql schema query; fails with a message containing: ""(.*)""")]
+        [Given(@"typeql write query; fails with a message containing: ""(.*)""")]
+        [When(@"typeql write query; fails with a message containing: ""(.*)""")]
+        [Then(@"typeql write query; fails with a message containing: ""(.*)""")]
+        [Given(@"typeql read query; fails with a message containing: ""(.*)""")]
+        [When(@"typeql read query; fails with a message containing: ""(.*)""")]
+        [Then(@"typeql read query; fails with a message containing: ""(.*)""")]
+        public void TypeqlQueryFailsWithMessage(string expectedMessage, DocString query)
         {
-            Assert.Throws<TypeDBDriverException>(() => GetAnswersOfTypeqlGet(getQueryStatements));
-        }
-
-        [When(@"typeql get; throws exception containing {string}")]
-        [Then(@"typeql get; throws exception containing {string}")]
-        public void TypeqlGetThrowsExceptionContaining(string expectedMessage, DocString getQueryStatements)
-        {
-            var exception = Assert.Throws<TypeDBDriverException>(
-                () => GetAnswersOfTypeqlGet(getQueryStatements));
-
+            ClearAnswers();
+            var exception = Assert.ThrowsAny<Exception>(() => ExecuteQuery(query.Content));
             Assert.Contains(expectedMessage, exception.Message);
         }
 
-        [When(@"typeql get aggregate")]
-        [Then(@"typeql get aggregate")]
-        [When(@"get answer of typeql get aggregate")]
-        [Then(@"get answer of typeql get aggregate")]
-        public void TypeqlGetAggregate(DocString getQueryStatements)
+        [Given(@"typeql schema query; parsing fails")]
+        [When(@"typeql schema query; parsing fails")]
+        [Then(@"typeql schema query; parsing fails")]
+        [Given(@"typeql write query; parsing fails")]
+        [When(@"typeql write query; parsing fails")]
+        [Then(@"typeql write query; parsing fails")]
+        [Given(@"typeql read query; parsing fails")]
+        [When(@"typeql read query; parsing fails")]
+        [Then(@"typeql read query; parsing fails")]
+        public void TypeqlQueryParsingFails(DocString query)
         {
             ClearAnswers();
-            _valueAnswer = Tx.Query.GetAggregate(getQueryStatements.Content).Resolve();
+            Assert.ThrowsAny<Exception>(() => ExecuteQuery(query.Content));
         }
 
-        [When(@"typeql get aggregate; throws exception")]
-        [Then(@"typeql get aggregate; throws exception")]
-        public void TypeqlGetAggregateThrowsException(DocString getQueryStatements)
+        private IQueryAnswer ExecuteQuery(string queryText)
         {
-            Assert.Throws<TypeDBDriverException>(() => TypeqlGetAggregate(getQueryStatements));
+            if (_queryOptions != null)
+                return Tx.Query(queryText, _queryOptions);
+            return Tx.Query(queryText);
         }
 
-        [When(@"typeql get group")]
-        [Then(@"typeql get group")]
-        [When(@"get answers of typeql get group")]
-        [Then(@"get answers of typeql get group")]
-        public void TypeqlGetGroup(DocString getQueryStatements)
-        {
-            ClearAnswers();
-            _answerGroups = Tx.Query.GetGroup(getQueryStatements.Content).ToList();
-        }
-
-        [When(@"typeql get group; throws exception")]
-        [Then(@"typeql get group; throws exception")]
-        public void TypeqlGetGroupThrowsException(DocString getQueryStatements)
-        {
-            Assert.Throws<TypeDBDriverException>(() => TypeqlGetGroup(getQueryStatements));
-        }
-
-        [When(@"typeql get group aggregate")]
-        [Then(@"typeql get group aggregate")]
-        [When(@"get answers of typeql get group aggregate")]
-        [Then(@"get answers of typeql get group aggregate")]
-        public void TypeqlGetGroupAggregate(DocString getQueryStatements)
+        [Given(@"get answers of typeql schema query")]
+        [When(@"get answers of typeql schema query")]
+        [Then(@"get answers of typeql schema query")]
+        [Given(@"get answers of typeql write query")]
+        [When(@"get answers of typeql write query")]
+        [Then(@"get answers of typeql write query")]
+        [Given(@"get answers of typeql read query")]
+        [When(@"get answers of typeql read query")]
+        [Then(@"get answers of typeql read query")]
+        public void GetAnswersOfTypeqlQuery(DocString query)
         {
             ClearAnswers();
-            _valueAnswerGroups = Tx.Query.GetGroupAggregate(getQueryStatements.Content).ToList();
+            _queryAnswer = ExecuteQuery(query.Content);
         }
 
-        [Given(@"answer size is: {}")]
-        [Then(@"answer size is: {}")]
-        public void AnswerSizeIs(int expectedAnswers)
+        [Given(@"get answers of typeql schema query; fails")]
+        [When(@"get answers of typeql schema query; fails")]
+        [Then(@"get answers of typeql schema query; fails")]
+        [Given(@"get answers of typeql write query; fails")]
+        [When(@"get answers of typeql write query; fails")]
+        [Then(@"get answers of typeql write query; fails")]
+        [Given(@"get answers of typeql read query; fails")]
+        [When(@"get answers of typeql read query; fails")]
+        [Then(@"get answers of typeql read query; fails")]
+        public void GetAnswersOfTypeqlQueryFails(DocString query)
         {
-            Assert.Equal(expectedAnswers, _answers!.Count);
+            ClearAnswers();
+            Assert.ThrowsAny<Exception>(() =>
+            {
+                _queryAnswer = ExecuteQuery(query.Content);
+            });
+        }
+
+        [Given(@"get answers of typeql schema query; fails with a message containing: ""(.*)""")]
+        [When(@"get answers of typeql schema query; fails with a message containing: ""(.*)""")]
+        [Then(@"get answers of typeql schema query; fails with a message containing: ""(.*)""")]
+        [Given(@"get answers of typeql write query; fails with a message containing: ""(.*)""")]
+        [When(@"get answers of typeql write query; fails with a message containing: ""(.*)""")]
+        [Then(@"get answers of typeql write query; fails with a message containing: ""(.*)""")]
+        [Given(@"get answers of typeql read query; fails with a message containing: ""(.*)""")]
+        [When(@"get answers of typeql read query; fails with a message containing: ""(.*)""")]
+        [Then(@"get answers of typeql read query; fails with a message containing: ""(.*)""")]
+        public void GetAnswersOfTypeqlQueryFailsWithMessage(string expectedMessage, DocString query)
+        {
+            ClearAnswers();
+            var exception = Assert.ThrowsAny<Exception>(() =>
+            {
+                _queryAnswer = ExecuteQuery(query.Content);
+            });
+            Assert.Contains(expectedMessage, exception.Message);
+        }
+
+        #endregion
+
+        #region Query Options Steps
+
+        [When(@"set query option include_instance_types to: (true|false)")]
+        [Given(@"set query option include_instance_types to: (true|false)")]
+        public void SetQueryOptionIncludeInstanceTypes(bool value)
+        {
+            if (_queryOptions == null)
+            {
+                _queryOptions = new QueryOptions();
+            }
+            _queryOptions.IncludeInstanceTypes = value;
+        }
+
+        [When(@"set query option include_query_structure to: (true|false)")]
+        [Given(@"set query option include_query_structure to: (true|false)")]
+        public void SetQueryOptionIncludeQueryStructure(bool value)
+        {
+            if (_queryOptions == null)
+            {
+                _queryOptions = new QueryOptions();
+            }
+            _queryOptions.IncludeQueryStructure = value;
+        }
+
+        [When(@"set query option prefetch_size to: (\d+)")]
+        [Given(@"set query option prefetch_size to: (\d+)")]
+        public void SetQueryOptionPrefetchSize(int value)
+        {
+            if (_queryOptions == null)
+            {
+                _queryOptions = new QueryOptions();
+            }
+            _queryOptions.PrefetchSize = value;
+        }
+
+        #endregion
+
+        #region Answer Type Steps
+
+        [Then(@"answer type is: ok")]
+        public void AnswerTypeIsOk()
+        {
+            Assert.True(_queryAnswer!.IsOk);
+        }
+
+        [Then(@"answer type is: concept rows")]
+        public void AnswerTypeIsConceptRows()
+        {
+            Assert.True(_queryAnswer!.IsConceptRows);
+        }
+
+        [Then(@"answer type is: concept documents")]
+        public void AnswerTypeIsConceptDocuments()
+        {
+            Assert.True(_queryAnswer!.IsConceptDocuments);
+        }
+
+        [Then(@"answer type is not: ok")]
+        public void AnswerTypeIsNotOk()
+        {
+            Assert.False(_queryAnswer!.IsOk);
+        }
+
+        [Then(@"answer type is not: concept rows")]
+        public void AnswerTypeIsNotConceptRows()
+        {
+            Assert.False(_queryAnswer!.IsConceptRows);
+        }
+
+        [Then(@"answer type is not: concept documents")]
+        public void AnswerTypeIsNotConceptDocuments()
+        {
+            Assert.False(_queryAnswer!.IsConceptDocuments);
+        }
+
+        [Then(@"answer unwraps as ok")]
+        public void AnswerUnwrapsAsOk()
+        {
+            Assert.NotNull(_queryAnswer!.AsOk());
+        }
+
+        [Then(@"answer unwraps as concept rows")]
+        public void AnswerUnwrapsAsConceptRows()
+        {
+            Assert.NotNull(_queryAnswer!.AsConceptRows());
+        }
+
+        [Then(@"answer unwraps as concept documents")]
+        public void AnswerUnwrapsAsConceptDocuments()
+        {
+            Assert.NotNull(_queryAnswer!.AsConceptDocuments());
+        }
+
+        [Then(@"answer query type is: read")]
+        public void AnswerQueryTypeIsRead()
+        {
+            Assert.Equal(QueryType.Read, _queryAnswer!.QueryType);
+        }
+
+        [Then(@"answer query type is: write")]
+        public void AnswerQueryTypeIsWrite()
+        {
+            Assert.Equal(QueryType.Write, _queryAnswer!.QueryType);
+        }
+
+        [Then(@"answer query type is: schema")]
+        public void AnswerQueryTypeIsSchema()
+        {
+            Assert.Equal(QueryType.Schema, _queryAnswer!.QueryType);
+        }
+
+        [Then(@"answer query type is not: read")]
+        public void AnswerQueryTypeIsNotRead()
+        {
+            Assert.NotEqual(QueryType.Read, _queryAnswer!.QueryType);
+        }
+
+        [Then(@"answer query type is not: write")]
+        public void AnswerQueryTypeIsNotWrite()
+        {
+            Assert.NotEqual(QueryType.Write, _queryAnswer!.QueryType);
+        }
+
+        [Then(@"answer query type is not: schema")]
+        public void AnswerQueryTypeIsNotSchema()
+        {
+            Assert.NotEqual(QueryType.Schema, _queryAnswer!.QueryType);
+        }
+
+        #endregion
+
+        #region Answer Size and Column Steps
+
+        [Given(@"answer size is: (\d+)")]
+        [Then(@"answer size is: (\d+)")]
+        public void AnswerSizeIs(int expectedSize)
+        {
+            CollectAnswerIfNeeded();
+            int actualSize;
+            if (_collectedRows != null)
+            {
+                actualSize = _collectedRows.Count;
+            }
+            else if (_collectedDocuments != null)
+            {
+                actualSize = _collectedDocuments.Count;
+            }
+            else
+            {
+                throw new BehaviourTestException("Query answer is not collected: the size is NULL");
+            }
+            Assert.Equal(expectedSize, actualSize);
+        }
+
+        [Then(@"answer column names are:")]
+        public void AnswerColumnNamesAre(DataTable names)
+        {
+            CollectRowsAnswerIfNeeded();
+            var expectedNames = names.Rows.First().Cells.Select(c => c.Value).OrderBy(n => n).ToList();
+            var actualNames = _collectedRows![0].ColumnNames.OrderBy(n => n).ToList();
+            Assert.Equal(expectedNames, actualNames);
+        }
+
+        #endregion
+
+        #region Answer Row Query Type Steps
+
+        [Then(@"answer get row\((\d+)\) query type is: read")]
+        public void AnswerGetRowQueryTypeIsRead(int rowIndex)
+        {
+            CollectRowsAnswerIfNeeded();
+            Assert.Equal(QueryType.Read, _collectedRows![rowIndex].QueryType);
+        }
+
+        [Then(@"answer get row\((\d+)\) query type is: write")]
+        public void AnswerGetRowQueryTypeIsWrite(int rowIndex)
+        {
+            CollectRowsAnswerIfNeeded();
+            Assert.Equal(QueryType.Write, _collectedRows![rowIndex].QueryType);
+        }
+
+        [Then(@"answer get row\((\d+)\) query type is: schema")]
+        public void AnswerGetRowQueryTypeIsSchema(int rowIndex)
+        {
+            CollectRowsAnswerIfNeeded();
+            Assert.Equal(QueryType.Schema, _collectedRows![rowIndex].QueryType);
+        }
+
+        [Then(@"answer get row\((\d+)\) query type is not: read")]
+        public void AnswerGetRowQueryTypeIsNotRead(int rowIndex)
+        {
+            CollectRowsAnswerIfNeeded();
+            Assert.NotEqual(QueryType.Read, _collectedRows![rowIndex].QueryType);
+        }
+
+        [Then(@"answer get row\((\d+)\) query type is not: write")]
+        public void AnswerGetRowQueryTypeIsNotWrite(int rowIndex)
+        {
+            CollectRowsAnswerIfNeeded();
+            Assert.NotEqual(QueryType.Write, _collectedRows![rowIndex].QueryType);
+        }
+
+        [Then(@"answer get row\((\d+)\) query type is not: schema")]
+        public void AnswerGetRowQueryTypeIsNotSchema(int rowIndex)
+        {
+            CollectRowsAnswerIfNeeded();
+            Assert.NotEqual(QueryType.Schema, _collectedRows![rowIndex].QueryType);
+        }
+
+        #endregion
+
+        #region Answer Row Concepts Steps
+
+        [Then(@"answer get row\((\d+)\) get concepts size is: (\d+)")]
+        public void AnswerGetRowGetConceptsSizeIs(int rowIndex, int size)
+        {
+            CollectRowsAnswerIfNeeded();
+            var concepts = GetRowGetConcepts(rowIndex);
+            Assert.Equal(size, concepts.Count);
+        }
+
+        [Then(@"answer get row\((\d+)\) get variable\(([^)]+)\) is empty")]
+        public void AnswerGetRowGetVariableIsEmpty(int rowIndex, string variable)
+        {
+            CollectRowsAnswerIfNeeded();
+            IConcept? concept = GetRowGetConcept(rowIndex, variable);
+            Assert.Null(concept);
+        }
+
+        [Then(@"answer get row\((\d+)\) get variable\(([^)]+)\) is not empty")]
+        public void AnswerGetRowGetVariableIsNotEmpty(int rowIndex, string variable)
+        {
+            CollectRowsAnswerIfNeeded();
+            IConcept? concept = GetRowGetConcept(rowIndex, variable);
+            Assert.NotNull(concept);
+        }
+
+        [Then(@"answer get row\((\d+)\) get variable by index of variable\(([^)]+)\) is empty")]
+        public void AnswerGetRowGetVariableByIndexIsEmpty(int rowIndex, string variable)
+        {
+            CollectRowsAnswerIfNeeded();
+            IConcept? concept = GetRowGetConcept(rowIndex, variable, byIndex: true);
+            Assert.Null(concept);
+        }
+
+        [Then(@"answer get row\((\d+)\) get variable by index of variable\(([^)]+)\) is not empty")]
+        public void AnswerGetRowGetVariableByIndexIsNotEmpty(int rowIndex, string variable)
+        {
+            CollectRowsAnswerIfNeeded();
+            IConcept? concept = GetRowGetConcept(rowIndex, variable, byIndex: true);
+            Assert.NotNull(concept);
+        }
+
+        [Then(@"answer get row\((\d+)\) get variable\(([^)]+)\) try get label is not none")]
+        public void AnswerGetRowGetVariableTryGetLabelIsNotNone(int rowIndex, string variable)
+        {
+            CollectRowsAnswerIfNeeded();
+            IConcept? concept = GetRowGetConcept(rowIndex, variable);
+            Assert.NotNull(concept);
+            Assert.NotNull(concept!.TryGetLabel());
+        }
+
+        [Then(@"answer get row\((\d+)\) get variable\(([^)]+)\) try get label is none")]
+        public void AnswerGetRowGetVariableTryGetLabelIsNone(int rowIndex, string variable)
+        {
+            CollectRowsAnswerIfNeeded();
+            IConcept? concept = GetRowGetConcept(rowIndex, variable);
+            Assert.NotNull(concept);
+            Assert.Null(concept!.TryGetLabel());
+        }
+
+        #endregion
+
+        #region Answer Row Entity Steps
+
+        [Then(@"answer get row\((\d+)\) get entity\(([^)]+)\) get type get label: (.+)")]
+        public void AnswerGetRowGetEntityGetTypeGetLabel(int rowIndex, string variable, string label)
+        {
+            CollectRowsAnswerIfNeeded();
+            IConcept? concept = GetRowGetConcept(rowIndex, variable);
+            Assert.NotNull(concept);
+            Assert.True(concept!.IsEntity());
+            Assert.Equal(label, concept.AsEntity().Type.GetLabel());
+        }
+
+        [Then(@"answer get row\((\d+)\) get entity by index of variable\(([^)]+)\) get type get label: (.+)")]
+        public void AnswerGetRowGetEntityByIndexGetTypeGetLabel(int rowIndex, string variable, string label)
+        {
+            CollectRowsAnswerIfNeeded();
+            IConcept? concept = GetRowGetConcept(rowIndex, variable, byIndex: true);
+            Assert.NotNull(concept);
+            Assert.True(concept!.IsEntity());
+            Assert.Equal(label, concept.AsEntity().Type.GetLabel());
+        }
+
+        [Then(@"answer get row\((\d+)\) get entity type\(([^)]+)\) get label: (.+)")]
+        public void AnswerGetRowGetEntityTypeGetLabel(int rowIndex, string variable, string label)
+        {
+            CollectRowsAnswerIfNeeded();
+            IConcept? concept = GetRowGetConcept(rowIndex, variable);
+            Assert.NotNull(concept);
+            Assert.True(concept!.IsEntityType());
+            Assert.Equal(label, concept.AsEntityType().GetLabel());
+        }
+
+        [Then(@"answer get row\((\d+)\) get entity type by index of variable\(([^)]+)\) get label: (.+)")]
+        public void AnswerGetRowGetEntityTypeByIndexGetLabel(int rowIndex, string variable, string label)
+        {
+            CollectRowsAnswerIfNeeded();
+            IConcept? concept = GetRowGetConcept(rowIndex, variable, byIndex: true);
+            Assert.NotNull(concept);
+            Assert.True(concept!.IsEntityType());
+            Assert.Equal(label, concept.AsEntityType().GetLabel());
+        }
+
+        #endregion
+
+        #region Answer Row Relation Steps
+
+        [Then(@"answer get row\((\d+)\) get relation\(([^)]+)\) get type get label: (.+)")]
+        public void AnswerGetRowGetRelationGetTypeGetLabel(int rowIndex, string variable, string label)
+        {
+            CollectRowsAnswerIfNeeded();
+            IConcept? concept = GetRowGetConcept(rowIndex, variable);
+            Assert.NotNull(concept);
+            Assert.True(concept!.IsRelation());
+            Assert.Equal(label, concept.AsRelation().Type.GetLabel());
+        }
+
+        [Then(@"answer get row\((\d+)\) get relation type\(([^)]+)\) get label: (.+)")]
+        public void AnswerGetRowGetRelationTypeGetLabel(int rowIndex, string variable, string label)
+        {
+            CollectRowsAnswerIfNeeded();
+            IConcept? concept = GetRowGetConcept(rowIndex, variable);
+            Assert.NotNull(concept);
+            Assert.True(concept!.IsRelationType());
+            Assert.Equal(label, concept.AsRelationType().GetLabel());
+        }
+
+        #endregion
+
+        #region Answer Row Attribute Steps
+
+        [Then(@"answer get row\((\d+)\) get attribute\(([^)]+)\) get type get label: (.+)")]
+        public void AnswerGetRowGetAttributeGetTypeGetLabel(int rowIndex, string variable, string label)
+        {
+            CollectRowsAnswerIfNeeded();
+            IConcept? concept = GetRowGetConcept(rowIndex, variable);
+            Assert.NotNull(concept);
+            Assert.True(concept!.IsAttribute());
+            Assert.Equal(label, concept.AsAttribute().Type.GetLabel());
+        }
+
+        [Then(@"answer get row\((\d+)\) get attribute by index of variable\(([^)]+)\) get type get label: (.+)")]
+        public void AnswerGetRowGetAttributeByIndexGetTypeGetLabel(int rowIndex, string variable, string label)
+        {
+            CollectRowsAnswerIfNeeded();
+            IConcept? concept = GetRowGetConcept(rowIndex, variable, byIndex: true);
+            Assert.NotNull(concept);
+            Assert.True(concept!.IsAttribute());
+            Assert.Equal(label, concept.AsAttribute().Type.GetLabel());
+        }
+
+        [Then(@"answer get row\((\d+)\) get attribute type\(([^)]+)\) get label: (.+)")]
+        public void AnswerGetRowGetAttributeTypeGetLabel(int rowIndex, string variable, string label)
+        {
+            CollectRowsAnswerIfNeeded();
+            IConcept? concept = GetRowGetConcept(rowIndex, variable);
+            Assert.NotNull(concept);
+            Assert.True(concept!.IsAttributeType());
+            Assert.Equal(label, concept.AsAttributeType().GetLabel());
+        }
+
+        [Then(@"answer get row\((\d+)\) get attribute type by index of variable\(([^)]+)\) get label: (.+)")]
+        public void AnswerGetRowGetAttributeTypeByIndexGetLabel(int rowIndex, string variable, string label)
+        {
+            CollectRowsAnswerIfNeeded();
+            IConcept? concept = GetRowGetConcept(rowIndex, variable, byIndex: true);
+            Assert.NotNull(concept);
+            Assert.True(concept!.IsAttributeType());
+            Assert.Equal(label, concept.AsAttributeType().GetLabel());
+        }
+
+        [Then(@"answer get row\((\d+)\) get attribute\(([^)]+)\) get value is: ""(.*)""")]
+        public void AnswerGetRowGetAttributeGetValueIsString(int rowIndex, string variable, string expectedValue)
+        {
+            CollectRowsAnswerIfNeeded();
+            IConcept? concept = GetRowGetConcept(rowIndex, variable);
+            Assert.NotNull(concept);
+            Assert.True(concept!.IsAttribute());
+            var value = concept.AsAttribute().Value;
+            Assert.Equal(expectedValue.Replace("\\\"", "\""), value.GetString());
+        }
+
+        [Then(@"answer get row\((\d+)\) get attribute by index of variable\(([^)]+)\) get value is: ""(.*)""")]
+        public void AnswerGetRowGetAttributeByIndexGetValueIsString(int rowIndex, string variable, string expectedValue)
+        {
+            CollectRowsAnswerIfNeeded();
+            IConcept? concept = GetRowGetConcept(rowIndex, variable, byIndex: true);
+            Assert.NotNull(concept);
+            Assert.True(concept!.IsAttribute());
+            var value = concept.AsAttribute().Value;
+            Assert.Equal(expectedValue.Replace("\\\"", "\""), value.GetString());
+        }
+
+        #endregion
+
+        #region Uniquely Identify Answer Concepts Steps
+
+        /// <summary>
+        /// Interface for matching concepts against expected identifiers.
+        /// Based on the Node.js/Java implementation pattern.
+        /// </summary>
+        private interface IConceptMatcher
+        {
+            bool Matches(IConcept concept);
+        }
+
+        /// <summary>
+        /// Matches type concepts by label (e.g., "label:person" for entity type person).
+        /// </summary>
+        private class TypeLabelMatcher : IConceptMatcher
+        {
+            private readonly string _label;
+
+            public TypeLabelMatcher(string label)
+            {
+                _label = label;
+            }
+
+            public bool Matches(IConcept concept)
+            {
+                if (!concept.IsType())
+                    return false;
+
+                string actualLabel;
+                if (concept.IsRoleType())
+                {
+                    // RoleType has scoped labels like "employment:employee"
+                    actualLabel = concept.AsRoleType().GetLabel();
+                }
+                else
+                {
+                    actualLabel = concept.AsType().GetLabel();
+                }
+
+                return actualLabel == _label;
+            }
+        }
+
+        /// <summary>
+        /// Base class for attribute-based matchers with value comparison.
+        /// </summary>
+        private abstract class AttributeMatcherBase : IConceptMatcher
+        {
+            protected readonly string TypeLabel;
+            protected readonly string Value;
+
+            protected AttributeMatcherBase(string typeAndValue)
+            {
+                // Parse "typeLabel:value" format
+                var colonIndex = typeAndValue.IndexOf(':');
+                if (colonIndex < 0)
+                {
+                    throw new BehaviourTestException($"Invalid attribute identifier format: {typeAndValue}. Expected 'typeLabel:value'");
+                }
+                TypeLabel = typeAndValue.Substring(0, colonIndex);
+                Value = typeAndValue.Substring(colonIndex + 1);
+            }
+
+            protected bool CheckValue(IAttribute attribute)
+            {
+                return TestValueHelper.CompareValues(attribute.Value, Value, null);
+            }
+
+            public abstract bool Matches(IConcept concept);
+        }
+
+        /// <summary>
+        /// Matches attribute concepts by type label and value (e.g., "attr:name:Alice").
+        /// </summary>
+        private class AttributeValueMatcher : AttributeMatcherBase
+        {
+            public AttributeValueMatcher(string typeAndValue) : base(typeAndValue) { }
+
+            public override bool Matches(IConcept concept)
+            {
+                if (!concept.IsAttribute())
+                    return false;
+
+                var attribute = concept.AsAttribute();
+                if (attribute.Type.GetLabel() != TypeLabel)
+                    return false;
+
+                return CheckValue(attribute);
+            }
+        }
+
+        /// <summary>
+        /// Matches thing concepts (Entity/Relation/Attribute) by their key attribute (e.g., "key:ref:0").
+        /// Uses a subquery approach since TypeDB 3.0's read-only concept API doesn't have GetHas().
+        /// </summary>
+        private class ThingKeyMatcher : AttributeMatcherBase
+        {
+            public ThingKeyMatcher(string typeAndValue) : base(typeAndValue) { }
+
+            public override bool Matches(IConcept concept)
+            {
+                if (!concept.IsThing())
+                    return false;
+
+                var thing = concept.AsThing();
+
+                // Get the IID of this thing
+                var thingIid = thing.TryGetIID();
+                if (thingIid == null)
+                    return false;
+
+                // Use the current transaction to run a subquery
+                var tx = ConnectionStepsBase.Tx;
+
+                // Build a query to find things with this specific key attribute value
+                // Format: match $x iid <iid>, has <typeLabel> <value>;
+                string valueStr = Value;
+                string query;
+
+                // Try to determine if the value is numeric or string
+                if (long.TryParse(valueStr, out _))
+                {
+                    // Integer value
+                    query = $"match $x iid {thingIid}; $x has {TypeLabel} {valueStr};";
+                }
+                else if (double.TryParse(valueStr, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out _))
+                {
+                    // Double value
+                    query = $"match $x iid {thingIid}; $x has {TypeLabel} {valueStr};";
+                }
+                else if (valueStr == "true" || valueStr == "false")
+                {
+                    // Boolean value
+                    query = $"match $x iid {thingIid}; $x has {TypeLabel} {valueStr};";
+                }
+                else
+                {
+                    // String value - needs quotes
+                    query = $"match $x iid {thingIid}; $x has {TypeLabel} \"{valueStr}\";";
+                }
+
+                try
+                {
+                    var answer = tx.Query(query);
+                    if (answer.IsConceptRows)
+                    {
+                        // Check if any rows are returned - if so, the thing has this key
+                        var rows = answer.AsConceptRows().ToList();
+                        return rows.Count > 0;
+                    }
+                    return false;
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Matches Value concepts by value type and value (e.g., "value:long:42").
+        /// </summary>
+        private class ValueMatcher : IConceptMatcher
+        {
+            private readonly string _valueType;
+            private readonly string _value;
+
+            public ValueMatcher(string typeAndValue)
+            {
+                // Parse "valueType:value" format
+                var colonIndex = typeAndValue.IndexOf(':');
+                if (colonIndex < 0)
+                {
+                    throw new BehaviourTestException($"Invalid value identifier format: {typeAndValue}. Expected 'valueType:value'");
+                }
+                _valueType = typeAndValue.Substring(0, colonIndex);
+                _value = typeAndValue.Substring(colonIndex + 1);
+            }
+
+            public bool Matches(IConcept concept)
+            {
+                if (!concept.IsValue())
+                    return false;
+
+                var value = concept.AsValue();
+                var actualType = value.GetValueType().ToLower();
+
+                // Map type names (some variations exist)
+                var expectedType = _valueType.ToLower();
+                if (expectedType == "long") expectedType = "integer";
+                if (actualType == "long") actualType = "integer";
+
+                if (actualType != expectedType)
+                    return false;
+
+                switch (actualType)
+                {
+                    case "boolean":
+                        return value.GetBoolean() == bool.Parse(_value);
+                    case "integer":
+                        return value.GetInteger() == long.Parse(_value);
+                    case "double":
+                        return Math.Abs(value.GetDouble() - double.Parse(_value, System.Globalization.CultureInfo.InvariantCulture)) < 0.0001;
+                    case "string":
+                        return value.GetString() == _value;
+                    default:
+                        return false;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Matches null/absent concepts (represented by "none" in test tables).
+        /// </summary>
+        private class NoneMatcher : IConceptMatcher
+        {
+            public bool Matches(IConcept concept)
+            {
+                // This matcher should match null concepts, but the Matches method
+                // receives a non-null concept, so it should always return false.
+                // The check for null is done in AnswerConceptsMatch.
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Parses a concept identifier and returns the appropriate matcher.
+        /// Format: "identifierType:identifierBody"
+        /// Examples: "label:person", "key:email:john@example.com", "attr:name:Alice", "value:long:42", "none"
+        /// </summary>
+        private IConceptMatcher ParseConceptIdentifier(string identifier)
+        {
+            // Special case: "none" means the concept should be null/absent
+            if (identifier == "none")
+            {
+                return new NoneMatcher();
+            }
+
+            var colonIndex = identifier.IndexOf(':');
+            if (colonIndex < 0)
+            {
+                throw new BehaviourTestException($"Invalid concept identifier format: {identifier}");
+            }
+
+            var identifierType = identifier.Substring(0, colonIndex);
+            var identifierBody = identifier.Substring(colonIndex + 1);
+
+            switch (identifierType)
+            {
+                case "label":
+                    return new TypeLabelMatcher(identifierBody);
+                case "key":
+                    return new ThingKeyMatcher(identifierBody);
+                case "attr":
+                    return new AttributeValueMatcher(identifierBody);
+                case "value":
+                    return new ValueMatcher(identifierBody);
+                default:
+                    throw new BehaviourTestException($"Unknown concept identifier type: {identifierType}");
+            }
+        }
+
+        /// <summary>
+        /// Checks if a set of concept identifiers matches a concept row.
+        /// </summary>
+        private bool AnswerConceptsMatch(Dictionary<string, string> answerIdentifier, IConceptRow row)
+        {
+            foreach (var kv in answerIdentifier)
+            {
+                var variable = kv.Key;
+                var conceptIdentifier = kv.Value;
+                var concept = row.Get(variable);
+
+                // Special handling for "none" - the concept should be null
+                if (conceptIdentifier == "none")
+                {
+                    if (concept != null)
+                        return false;
+                    continue;
+                }
+
+                var matcher = ParseConceptIdentifier(conceptIdentifier);
+
+                if (concept == null || !matcher.Matches(concept))
+                    return false;
+            }
+            return true;
         }
 
         [Given(@"uniquely identify answer concepts")]
         [Then(@"uniquely identify answer concepts")]
-        public void UniquelyIdentifyAnswerConcepts(DataTable answerConcepts)
+        public void UniquelyIdentifyAnswerConcepts(DataTable table)
         {
-            var parsedConcepts = Util.ParseDataTableToMultiDictionary(answerConcepts);
-            Assert.Equal(parsedConcepts.Count, _answers!.Count);
+            CollectRowsAnswerIfNeeded();
 
-            foreach (IConceptMap answer in _answers)
+            // Parse table header to get variable names
+            var rows = table.Rows.ToList();
+            var headerRow = rows[0];
+            var varNames = headerRow.Cells.Select(c => c.Value).ToList();
+
+            // Parse expected answer identifiers from table
+            var answerIdentifiers = new List<Dictionary<string, string>>();
+            for (int i = 1; i < rows.Count; i++)
             {
-                List<Dictionary<string, string>> matchingIdentifiers = new List<Dictionary<string, string>>();
-
-                foreach (Dictionary<string, string> answerIdentifier in parsedConcepts)
+                var row = rows[i];
+                var cells = row.Cells.ToList();
+                var identifier = new Dictionary<string, string>();
+                for (int j = 0; j < varNames.Count; j++)
                 {
-                    if (MatchAnswerConcept(answerIdentifier, answer))
+                    identifier[varNames[j]] = cells[j].Value;
+                }
+                answerIdentifiers.Add(identifier);
+            }
+
+            // Verify the number of answers matches
+            Assert.Equal(answerIdentifiers.Count, _collectedRows!.Count);
+
+            // Track which answers match each identifier
+            var resultSet = answerIdentifiers.Select(ai => (ai, new List<IConceptRow>())).ToList();
+
+            foreach (var answer in _collectedRows!)
+            {
+                foreach (var (answerIdentifier, matchedAnswers) in resultSet)
+                {
+                    if (AnswerConceptsMatch(answerIdentifier, answer))
                     {
-                        matchingIdentifiers.Add(answerIdentifier);
+                        matchedAnswers.Add(answer);
                     }
                 }
+            }
 
-                Assert.Equal(1, matchingIdentifiers.Count);
+            // Each identifier should match exactly one answer
+            foreach (var (answerIdentifier, matchedAnswers) in resultSet)
+            {
+                var identifierStr = string.Join(", ", answerIdentifier.Select(kv => $"{kv.Key}={kv.Value}"));
+                Assert.True(matchedAnswers.Count == 1,
+                    $"Each answer identifier should match precisely 1 answer, but [{matchedAnswers.Count}] matched the identifier [{identifierStr}].");
             }
         }
 
-        [Then(@"order of answer concepts is")]
-        public void OrderOfAnswerConceptsIs(DataTable answersIdentifiers)
-        {
-            var parsedIdentifiers = Util.ParseDataTableToMultiDictionary(answersIdentifiers);
-            Assert.Equal(parsedIdentifiers.Count, _answers!.Count);
+        #endregion
 
-            for (int i = 0; i < _answers!.Count; i++)
+        #region Answer Document Steps
+
+        [Then(@"answer contains document:")]
+        public void AnswerContainsDocument(DocString expectedDocument)
+        {
+            CollectDocumentsAnswerIfNeeded();
+            var expected = JSON.Parse(expectedDocument.Content);
+            bool found = _collectedDocuments!.Any(doc => Util.JsonDeepEqualsUnordered(
+                Newtonsoft.Json.Linq.JToken.Parse(doc.ToString()),
+                Newtonsoft.Json.Linq.JToken.Parse(expected.ToString())));
+            Assert.True(found, $"Expected document not found: {expectedDocument.Content}");
+        }
+
+        [Then(@"answer does not contain document:")]
+        public void AnswerDoesNotContainDocument(DocString expectedDocument)
+        {
+            CollectDocumentsAnswerIfNeeded();
+            var expected = JSON.Parse(expectedDocument.Content);
+            bool found = _collectedDocuments!.Any(doc => Util.JsonDeepEqualsUnordered(
+                Newtonsoft.Json.Linq.JToken.Parse(doc.ToString()),
+                Newtonsoft.Json.Linq.JToken.Parse(expected.ToString())));
+            Assert.False(found, $"Unexpected document found: {expectedDocument.Content}");
+        }
+
+        #endregion
+
+        #region Concurrent Query Steps
+
+        private void ClearConcurrentAnswers()
+        {
+            if (_concurrentRowStreams != null)
             {
-                IConceptMap answer = _answers[i];
-                Dictionary<string, string> answerIdentifiers = parsedIdentifiers[i];
-
-                Assert.True(
-                    MatchAnswerConcept(answerIdentifiers, answer),
-                    $"The answer at index {i} does not match the identifier entry (row) at index {i}");
-            }
-        }
-
-        [Then(@"aggregate value is: {}")]
-        public void AggregateValueIs(double expectedAnswer)
-        {
-            Assert.NotNull(_valueAnswer);
-
-            double value = _valueAnswer.IsDouble()
-                ? _valueAnswer.AsDouble()
-                : _valueAnswer.AsLong();
-
-            Assert.Equal(expectedAnswer, value, 0.001);
-        }
-
-        [Then(@"aggregate answer is empty")]
-        public void AggregateAnswerIsEmpty()
-        {
-            Assert.Null(_valueAnswer);
-        }
-
-        [Then(@"answer groups are")]
-        public void AnswerGroupsAre(DataTable answerIdentifiers)
-        {
-            var parsedAnswerIdentifiers = Util.ParseDataTableToMultiDictionary(answerIdentifiers);
-
-            HashSet<AnswerIdentifierGroup> answerIdentifierGroups = parsedAnswerIdentifiers
-                .GroupBy(x => x[AnswerIdentifierGroup.GROUP_COLUMN_NAME])
-                .Select(group => new AnswerIdentifierGroup(group.ToList()))
-                .ToHashSet();
-
-            Assert.Equal(answerIdentifierGroups.Count, _answerGroups!.Count);
-
-            foreach (AnswerIdentifierGroup answerIdentifierGroup in answerIdentifierGroups)
-            {
-                string[] identifier = answerIdentifierGroup.OwnerIdentifier.Split(":", 2);
-                UniquenessCheck checker;
-
-                switch (identifier[0]) {
-                    case "label":
-                        checker = new LabelUniquenessCheck(identifier[1]);
-                        break;
-                    case "key":
-                        checker = new KeyUniquenessCheck(identifier[1]);
-                        break;
-                    case "attr":
-                        checker = new AttributeValueUniquenessCheck(identifier[1]);
-                        break;
-                    case "value":
-                        checker = new ValueUniquenessCheck(identifier[1]);
-                        break;
-                    default:
-                        throw new BehaviourTestException("Unexpected value: " + identifier[0]);
-                }
-
-                IConceptMapGroup answerGroup = _answerGroups!
-                    .Where(ag => checker.Check(ag.Owner))
-                    .First();
-
-                List<Dictionary<string, string>> answersIdentifiers = answerIdentifierGroup.AnswersIdentifiers;
-
-                foreach (var answer in answerGroup.GetConceptMaps())
+                foreach (var stream in _concurrentRowStreams)
                 {
-                    List<Dictionary<string, string>> matchingIdentifiers = new List<Dictionary<string, string>>();
-
-                    foreach (Dictionary<string, string> answerIds in answersIdentifiers)
-                    {
-                        if (MatchAnswerConcept(answerIds, answer))
-                        {
-                            matchingIdentifiers.Add(answerIds);
-                        }
-                    }
-
-                    Assert.Equal(1, matchingIdentifiers.Count);
+                    stream.Dispose();
                 }
+                _concurrentRowStreams = null;
             }
+            _concurrentAnswers = null;
         }
 
-        [Then(@"group aggregate values are")]
-        public void GroupAggregateValuesAre(DataTable answerIdentifiers)
+        private void EnsureConcurrentRowStreams()
         {
-            var parsedAnswerIdentifiers = Util.ParseDataTableToMultiDictionary(answerIdentifiers);
-            Dictionary<string, double> expectations = new Dictionary<string, double>();
-
-            foreach (Dictionary<string, string> answerIdentifierRow in parsedAnswerIdentifiers)
+            if (_concurrentRowStreams == null)
             {
-                string groupOwnerIdentifier = answerIdentifierRow[AnswerIdentifierGroup.GROUP_COLUMN_NAME];
-                double expectedAnswer = Double.Parse(answerIdentifierRow["value"]);
-                expectations[groupOwnerIdentifier] = expectedAnswer;
-            }
-
-            Assert.Equal(expectations.Count, _valueAnswerGroups!.Count);
-
-            foreach (var (expectationKey, expectedAnswer) in expectations)
-            {
-                string[] identifier = expectationKey.Split(":", 2);
-                UniquenessCheck checker;
-
-                switch (identifier[0])
-                {
-                    case "label":
-                        checker = new LabelUniquenessCheck(identifier[1]);
-                        break;
-                    case "key":
-                        checker = new KeyUniquenessCheck(identifier[1]);
-                        break;
-                    case "attr":
-                        checker = new AttributeValueUniquenessCheck(identifier[1]);
-                        break;
-                    case "value":
-                        checker = new ValueUniquenessCheck(identifier[1]);
-                        break;
-                    default:
-                        throw new BehaviourTestException("Unexpected value: " + identifier[0]);
-                }
-
-                IValueGroup answerGroup = _valueAnswerGroups!
-                    .Where(ag => checker.Check(ag.Owner))
-                    .First();
-
-                IValue? value = answerGroup.Value;
-                Assert.NotNull(value);
-
-                double actualAnswer = value.IsDouble() ? value.AsDouble() : value.AsLong();
-
-                Assert.Equal(expectedAnswer, actualAnswer, 3);
+                Assert.NotNull(_concurrentAnswers);
+                _concurrentRowStreams = _concurrentAnswers!
+                    .Select(a => a.AsConceptRows().GetEnumerator())
+                    .ToList();
             }
         }
 
-        [Then(@"number of groups is: {int}")]
-        public void NumberOfGroupsIs(int expectedGroupsCount)
+        [When(@"concurrently get answers of typeql read query (\d+) times")]
+        [Given(@"concurrently get answers of typeql read query (\d+) times")]
+        [When(@"concurrently get answers of typeql write query (\d+) times")]
+        [Given(@"concurrently get answers of typeql write query (\d+) times")]
+        [When(@"concurrently get answers of typeql schema query (\d+) times")]
+        [Given(@"concurrently get answers of typeql schema query (\d+) times")]
+        public void ConcurrentlyGetAnswersOfTypeqlQuery(int count, DocString query)
         {
-            Assert.Equal(expectedGroupsCount, _answerGroups!.Count);
-        }
-
-        public class AnswerIdentifierGroup
-        {
-            public string OwnerIdentifier { get; }
-            public List<Dictionary<string, string>> AnswersIdentifiers { get; }
-
-            public const string GROUP_COLUMN_NAME = "owner";
-
-            public AnswerIdentifierGroup(List<Dictionary<string, string>> answerIdentifiers)
-            {
-                OwnerIdentifier = answerIdentifiers[0][GROUP_COLUMN_NAME];
-                AnswersIdentifiers = new List<Dictionary<string, string>>();
-
-                foreach (Dictionary<string, string> rawAnswerIdentifiers in answerIdentifiers)
-                {
-                    AnswersIdentifiers.Add(rawAnswerIdentifiers
-                        .Where(entry => !entry.Key.Equals(GROUP_COLUMN_NAME))
-                        .ToDictionary(entry => entry.Key, entry => entry.Value));
-                }
-            }
-        }
-
-        [Then(@"group aggregate answer value is empty")]
-        public void GroupAggregateAnswerValueIsEmpty()
-        {
-            Assert.Equal(1, _valueAnswerGroups!.Count);
-            Assert.True(_valueAnswerGroups![0].Value == null);
-        }
-
-        [When(@"get answers of typeql fetch")]
-        public void TypeqlFetch(DocString fetchQueryStatements)
-        {
+            ClearConcurrentAnswers();
             ClearAnswers();
-            _fetchAnswers = Tx.Query.Fetch(fetchQueryStatements.Content).ToList();
-        }
 
-        [When(@"typeql fetch; throws exception")]
-        public void TypeQlFetchThrowsException(DocString fetchQueryStatements)
-        {
-            Assert.Throws<TypeDBDriverException>(() => TypeqlFetch(fetchQueryStatements));
-        }
-
-        public class JObjectHelper
-        {
-            private JObject _object;
-
-            public JObjectHelper(JObject obj)
+            var tasks = new Task<IQueryAnswer>[count];
+            for (int i = 0; i < count; i++)
             {
-                _object = obj;
-            }
-
-            public override bool Equals(object? obj)
-            {
-                if (Object.ReferenceEquals(this, obj))
+                tasks[i] = Task.Run(() =>
                 {
-                    return true;
-                }
+                    if (_queryOptions != null)
+                        return Tx.Query(query.Content, _queryOptions);
+                    else
+                        return Tx.Query(query.Content);
+                });
+            }
 
-                if (obj == null || this.GetType() != obj.GetType())
+            Task.WaitAll(tasks);
+            _concurrentAnswers = tasks.Select(t => t.Result).ToList();
+        }
+
+        [Then(@"concurrently process (\d+) rows? from answers")]
+        [Given(@"concurrently process (\d+) rows? from answers")]
+        public void ConcurrentlyProcessRowsFromAnswers(int count)
+        {
+            EnsureConcurrentRowStreams();
+
+            foreach (var stream in _concurrentRowStreams!)
+            {
+                for (int i = 0; i < count; i++)
                 {
-                    return false;
+                    Assert.True(stream.MoveNext(),
+                        "Expected more rows but stream was exhausted");
                 }
-
-                return JToken.DeepEquals((((JObjectHelper)obj)._object), _object);
-            }
-
-            public override int GetHashCode() { return _object.GetHashCode(); }
-
-            public override string ToString() { return _object.ToString();}
-        }
-
-        [Then(@"fetch answers are")]
-        public void FetchAnswersAre(DocString expectedJSON)
-        {
-            var expected = new JArray(JArray.Parse(expectedJSON.Content).ToObject<List<JObject>>()!);
-            var answers = new JArray(_fetchAnswers!);
-
-            Assert.True(Util.JsonDeepEqualsUnordered(expected, answers));
-        }
-
-        private bool CurrentRulesContain(string ruleLabel)
-        {
-            return Tx.Logic.GetRules().Any(rule => rule.Label.Equals(ruleLabel));
-        }
-
-        [Then(@"rules contain: {}")]
-        public void RulesContain(string ruleLabel)
-        {
-            Assert.True(CurrentRulesContain(ruleLabel));
-        }
-
-        [Then(@"rules do not contain: {}")]
-        public void RulesDoNotContain(string ruleLabel)
-        {
-            Assert.False(CurrentRulesContain(ruleLabel));
-        }
-
-        [Then(@"each answer satisfies")]
-        public void EachAnswerSatisfies(DocString templatedQuery)
-        {
-            foreach (IConceptMap answer in _answers!)
-            {
-                string query = ApplyQueryTemplate(templatedQuery.Content, answer);
-                long answerSize = Tx.Query.Get(query).ToArray().Length;
-                Assert.Equal(1, answerSize);
             }
         }
 
-        [Then(@"get answers of templated typeql get")]
-        public void GetAnswersOfTemplatedTypeqlGet(DocString templatedQuery)
+        [Then(@"concurrently process (\d+) rows? from answers; fails")]
+        [Given(@"concurrently process (\d+) rows? from answers; fails")]
+        public void ConcurrentlyProcessRowsFromAnswersFails(int count)
         {
-            if (_answers!.Count != 1)
+            EnsureConcurrentRowStreams();
+
+            foreach (var stream in _concurrentRowStreams!)
             {
-                throw new BehaviourTestException("Can only retrieve answers of templated typeql get given 1 previous answer");
-            }
-
-            IConceptMap answer = _answers![0];
-
-            string query = ApplyQueryTemplate(templatedQuery.Content, answer);
-            ClearAnswers();
-            _answers = Tx.Query.Get(query).ToList();
-        }
-
-        [Then(@"templated typeql get; throws exception")]
-        public void TemplatedTypeqlGetThrowsException(DocString templatedQuery)
-        {
-            foreach (IConceptMap answer in _answers!)
-            {
-                string query = ApplyQueryTemplate(templatedQuery.Content, answer);
-
-                var exception = Assert.Throws<TypeDBDriverException>(() =>
+                bool exhausted = false;
+                for (int i = 0; i < count; i++)
+                {
+                    if (!stream.MoveNext())
                     {
-                        long ignored = Tx.Query.Get(query).ToArray().Length;
-                    });
-            }
-        }
-
-        private string ApplyQueryTemplate(string template, IConceptMap templateFiller)
-        {
-            // find shortest matching strings between <>
-            Regex pattern = new Regex(@"<.+?>");
-            MatchCollection matches = pattern.Matches(template);
-
-            StringBuilder builder = new StringBuilder();
-            int i = 0;
-
-            foreach (Match match in matches)
-            {
-                var matchedGroup = match.Groups[0];
-
-                int valStartIndex = 1;
-                string requiredVariable = VariableFromTemplatePlaceholder(
-                    matchedGroup.Value.Substring(valStartIndex, matchedGroup.Length - valStartIndex - 1));
-
-                builder.Append(template, i, matchedGroup.Index - i);
-
-                IConcept concept = templateFiller.Get(requiredVariable);
-                if (!concept.IsThing())
-                {
-                    throw new BehaviourTestException("Cannot apply IID templating to Type concepts");
-                }
-
-                string conceptId = concept.AsThing().IID;
-                builder.Append(conceptId);
-
-                i = matchedGroup.Index + matchedGroup.Length;
-            }
-
-            builder.Append(template, i, template.Length - i);
-
-            return builder.ToString();
-        }
-
-        private string VariableFromTemplatePlaceholder(string placeholder)
-        {
-            if (placeholder.EndsWith(".iid"))
-            {
-                string trimmed = placeholder.Replace(".iid", "");
-                string withoutPrefix = trimmed.Replace("answer.", "");
-                return withoutPrefix;
-            }
-            else
-            {
-                throw new BehaviourTestException("Cannot replace template not based on ID");
-            }
-        }
-
-        private interface UniquenessCheck
-        {
-            bool Check(IConcept concept);
-        }
-
-        public class LabelUniquenessCheck : UniquenessCheck
-        {
-            private Label _label { get; }
-
-            public LabelUniquenessCheck(string scopedLabel)
-            {
-                string[] tokens = scopedLabel.Split(":");
-                _label = tokens.Length > 1 ? new Label(tokens[0], tokens[1]) : new Label(tokens[0]);
-            }
-
-            public bool Check(IConcept concept)
-            {
-                if (concept.IsType())
-                {
-                    return _label.Equals(concept.AsType().Label);
-                }
-
-                throw new BehaviourTestException(
-                    "Concept was checked for label uniqueness, but it is not a Type");
-            }
-        }
-
-        public abstract class AttributeUniquenessCheck
-        {
-            protected Label _type { get; }
-            protected string _value { get; }
-
-            public AttributeUniquenessCheck(string typeAndValue)
-            {
-                string[] splittedTypeAndValue = typeAndValue.Split(":", 2);
-                Assert.Equal(2, splittedTypeAndValue.Length);
-
-                _type = new Label(splittedTypeAndValue[0]);
-                _value = splittedTypeAndValue[1];
-            }
-        }
-
-        public class AttributeValueUniquenessCheck : AttributeUniquenessCheck, UniquenessCheck
-        {
-            public AttributeValueUniquenessCheck(string typeAndValue)
-                : base(typeAndValue)
-            {
-            }
-
-            public bool Check(IConcept concept)
-            {
-                if (!concept.IsAttribute())
-                {
-                    return false;
-                }
-
-                IAttribute attribute = concept.AsAttribute();
-                IAttributeType attributeType = attribute.Type.AsAttributeType();
-
-                if (attribute.Value.IsDateTime())
-                {
-                    DateTime dateTime = DateTime.Parse(_value);
-
-                    return _type.Equals(attributeType.Label)
-                        && dateTime.Equals(attribute.Value.AsDateTime());
-                }
-
-                return _type.Equals(attributeType.Label)
-                    && _value.Equals(attribute.Value.ToString());
-            }
-        }
-
-        public class KeyUniquenessCheck : AttributeUniquenessCheck, UniquenessCheck
-        {
-            public KeyUniquenessCheck(string typeAndValue)
-                : base(typeAndValue)
-            {
-            }
-
-            public bool Check(IConcept concept)
-            {
-                if (!concept.IsThing())
-                {
-                    return false;
-                }
-
-                HashSet<IAttribute> keys = concept
-                    .AsThing()
-                    .GetHas(Tx, new HashSet<Annotation>(){NewKey()})
-                    .ToHashSet();
-
-                Dictionary<Label, string> keyMap = new Dictionary<Label, string>();
-
-                foreach (IAttribute key in keys)
-                {
-                    keyMap[key.Type.Label] = key.Value.ToString()!;
-                }
-
-                return _value.Equals(keyMap.ContainsKey(_type) ? keyMap[_type] : null);
-            }
-        }
-
-        public class ValueUniquenessCheck : UniquenessCheck
-        {
-            private string _valueType { get; }
-            private string _value { get; }
-
-            public ValueUniquenessCheck(string valueTypeAndValue)
-            {
-                string[] splittedValueTypeAndValue = valueTypeAndValue.Split(":", 2);
-                _valueType = splittedValueTypeAndValue[0].ToLower().Trim();
-                _value = splittedValueTypeAndValue[1].Trim();
-            }
-
-            public bool Check(IConcept concept)
-            {
-                if (!concept.IsValue())
-                {
-                    return false;
-                }
-
-                switch (concept.AsValue().Type)
-                {
-                    case IValue.ValueType.Bool:
-                        return bool.Parse(_value).Equals(concept.AsValue().AsBool());
-                    case IValue.ValueType.Long:
-                        return long.Parse(_value).Equals(concept.AsValue().AsLong());
-                    case IValue.ValueType.Double:
-                        return double.Parse(_value).Equals(concept.AsValue().AsDouble());
-                    case IValue.ValueType.String:
-                        return _value.Equals(concept.AsValue().AsString());
-                    case IValue.ValueType.DateTime:
-                    {
-                        DateTime dateTime = DateTime.Parse(_value);
-                        return dateTime.Equals(concept.AsValue().AsDateTime());
+                        exhausted = true;
+                        break;
                     }
-                    default:
-                        throw new BehaviourTestException(
-                            "Unrecognised value type specified in test " + _valueType);
                 }
+                Assert.True(exhausted,
+                    "Expected row processing to fail (stream exhausted), but it succeeded");
             }
         }
 
-        private bool MatchAnswerConcept(Dictionary<string, string> answerIdentifiers, IConceptMap answer)
-        {
-            foreach (var (variable, value) in answerIdentifiers)
-            {
-                string[] identifier = value.Split(":", 2);
-
-                switch (identifier[0])
-                {
-                    case "label":
-                        if (!new LabelUniquenessCheck(identifier[1]).Check(answer.Get(variable)))
-                        {
-                            return false;
-                        }
-                        break;
-                    case "key":
-                        if (!new KeyUniquenessCheck(identifier[1]).Check(answer.Get(variable)))
-                        {
-                            return false;
-                        }
-                        break;
-                    case "attr":
-                        if (!new AttributeValueUniquenessCheck(identifier[1]).Check(answer.Get(variable)))
-                        {
-                            return false;
-                        }
-                        break;
-                    case "value":
-                        if (!new ValueUniquenessCheck(identifier[1]).Check(answer.Get(variable)))
-                        {
-                            return false;
-                        }
-                        break;
-                }
-            }
-
-            return true;
-        }
-
-        private void ClearAnswers() 
-        {
-            if (_answers != null)
-            {
-                _answers.Clear();
-            }
-
-            _valueAnswer = null;
-
-            if (_answerGroups != null)
-            {
-                _answerGroups.Clear();
-            }
-
-            if (_valueAnswerGroups != null)
-            {
-                _valueAnswerGroups.Clear();
-            }
-        }
-
-        public static List<IConceptMap>? Answers
-        {
-            get { return _answers; }
-        }
-
-        private static List<IConceptMap>? _answers;
-        private static List<JObject>? _fetchAnswers;
-        private static IValue? _valueAnswer;
-        private static List<IConceptMapGroup>? _answerGroups;
-        private static List<IValueGroup>? _valueAnswerGroups;
+        #endregion
     }
 }

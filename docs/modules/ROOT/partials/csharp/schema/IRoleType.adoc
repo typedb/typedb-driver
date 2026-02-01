@@ -10,7 +10,7 @@
 
 
 
-Roles are special internal types used by relations. We can not create an instance of a role in a database. But we can set an instance of another type (role player) to play a role in a particular instance of a relation type. Roles allow a schema to enforce logical constraints on types of role players.
+Represents a role type in TypeDB. Roles are special internal types used by relations. In TypeDB 3.0, types are read-only data returned from queries.
 
 // tag::methods[]
 [#_IRoleType_IConcept_TypeDB_Driver_Api_IRoleType_AsRoleType_]
@@ -23,7 +23,26 @@ IRoleType IConcept. AsRoleType()
 
 
 
-Casts the concept to ``IRoleType``.
+Casts the concept to IRoleType.
+
+ 
+  Exceptions
+ 
+ 
+  
+   
+    
+     TypeDBDriverException
+     If the concept is not a role type.
+    
+   
+  
+ 
+
+
+ 
+  concept.AsRoleType()
+ 
 
 
 
@@ -33,229 +52,6 @@ Implements TypeDB.Driver.Api.IConcept.
 [caption=""]
 .Returns
 `IRoleType IConcept.`
-
-[caption=""]
-.Code examples
-[source,cs]
-----
-concept.AsRoleType();
-----
-
-[#_IEnumerable_IThing_TypeDB_Driver_Api_IRoleType_GetPlayerInstances_ITypeDBTransaction_transaction_]
-==== GetPlayerInstances
-
-[source,cs]
-----
-IEnumerable< IThing > GetPlayerInstances(ITypeDBTransaction transaction)
-----
-
-
-
-Retrieves the ``Thing`` instances that play this role.
-
- 
-
-See also
-[source,cs]
-----
- 
- 
-IRoleType::GetPlayerInstances(ITypeDBTransaction, IConcept.Transitivity)
----- 
-
-
-[caption=""]
-.Returns
-`IEnumerable< IThing >`
-
-[#_IEnumerable_IThing_TypeDB_Driver_Api_IRoleType_GetPlayerInstances_ITypeDBTransaction_transaction_IConcept_Transitivity_transitivity_]
-==== GetPlayerInstances
-
-[source,cs]
-----
-IEnumerable< IThing > GetPlayerInstances(ITypeDBTransaction transaction, IConcept.Transitivity transitivity)
-----
-
-
-
-Retrieves the ``Thing`` instances that play this role.
-
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `ITypeDBTransaction`
-a| `transitivity` a| ``Transitive`` for direct and indirect playing, ``Explicit`` for direct playing only a| `IConcept​.Transitivity`
-|===
-
-[caption=""]
-.Returns
-`IEnumerable< IThing >`
-
-[caption=""]
-.Code examples
-[source,cs]
-----
-roleType.GetPlayerInstances(transaction, transitivity);
-----
-
-[#_IEnumerable_IThingType_TypeDB_Driver_Api_IRoleType_GetPlayerTypes_ITypeDBTransaction_transaction_]
-==== GetPlayerTypes
-
-[source,cs]
-----
-IEnumerable< IThingType > GetPlayerTypes(ITypeDBTransaction transaction)
-----
-
-
-
-Retrieves the ``ThingType``s whose instances play this role. Equivalent to ``GetPlayerTypes(transaction, Transitive)``.
-
- 
-
-See also
-[source,cs]
-----
- 
- 
-IRoleType::GetPlayerTypes(ITypeDBTransaction, IConcept.Transitivity)
----- 
-
-
-[caption=""]
-.Returns
-`IEnumerable< IThingType >`
-
-[#_IEnumerable_IThingType_TypeDB_Driver_Api_IRoleType_GetPlayerTypes_ITypeDBTransaction_transaction_IConcept_Transitivity_transitivity_]
-==== GetPlayerTypes
-
-[source,cs]
-----
-IEnumerable< IThingType > GetPlayerTypes(ITypeDBTransaction transaction, IConcept.Transitivity transitivity)
-----
-
-
-
-Retrieves the ``ThingType``s whose instances play this role.
-
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `ITypeDBTransaction`
-a| `transitivity` a| ``Transitive`` for direct and indirect playing, ``Explicit`` for direct playing only a| `IConcept​.Transitivity`
-|===
-
-[caption=""]
-.Returns
-`IEnumerable< IThingType >`
-
-[caption=""]
-.Code examples
-[source,cs]
-----
-roleType.GetPlayerTypes(transaction, transitivity)
-----
-
-[#_IEnumerable_IRelation_TypeDB_Driver_Api_IRoleType_GetRelationInstances_ITypeDBTransaction_transaction_]
-==== GetRelationInstances
-
-[source,cs]
-----
-IEnumerable< IRelation > GetRelationInstances(ITypeDBTransaction transaction)
-----
-
-
-
-Retrieves the ``Relation`` instances that this role is related to. Equivalent to ``GetRelationInstances(transaction, Transitive)``
-
- 
-
-See also
-[source,cs]
-----
- 
- 
-IRoleType::GetRelationInstances(ITypeDBTransaction, IConcept.Transitivity)
----- 
-
-
-[caption=""]
-.Returns
-`IEnumerable< IRelation >`
-
-[#_IEnumerable_IRelation_TypeDB_Driver_Api_IRoleType_GetRelationInstances_ITypeDBTransaction_transaction_IConcept_Transitivity_transitivity_]
-==== GetRelationInstances
-
-[source,cs]
-----
-IEnumerable< IRelation > GetRelationInstances(ITypeDBTransaction transaction, IConcept.Transitivity transitivity)
-----
-
-
-
-Retrieves the ``Relation`` instances that this role is related to.
-
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `ITypeDBTransaction`
-a| `transitivity` a| ``Transitive`` for direct and indirect relation, ``Explicit`` for direct relation only a| `IConcept​.Transitivity`
-|===
-
-[caption=""]
-.Returns
-`IEnumerable< IRelation >`
-
-[caption=""]
-.Code examples
-[source,cs]
-----
-roleType.GetRelationInstances(transaction, transitivity)
-----
-
-[#_IEnumerable_IRelationType_TypeDB_Driver_Api_IRoleType_GetRelationTypes_ITypeDBTransaction_transaction_]
-==== GetRelationTypes
-
-[source,cs]
-----
-IEnumerable< IRelationType > GetRelationTypes(ITypeDBTransaction transaction)
-----
-
-
-
-Retrieves ``RelationType``s that this role is related to (directly or indirectly).
-
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `ITypeDBTransaction`
-|===
-
-[caption=""]
-.Returns
-`IEnumerable< IRelationType >`
-
-[caption=""]
-.Code examples
-[source,cs]
-----
-roleType.GetRelationTypes(transaction);
-----
 
 [#_bool_IConcept_TypeDB_Driver_Api_IRoleType_IsRoleType_]
 ==== IsRoleType
@@ -267,7 +63,11 @@ bool IConcept. IsRoleType()
 
 
 
-Checks if the concept is a ``IRoleType``.
+Checks if the concept is a IRoleType.
+
+ 
+  concept.IsRoleType()
+ 
 
 
 
@@ -277,13 +77,6 @@ Implements TypeDB.Driver.Api.IConcept.
 [caption=""]
 .Returns
 `bool IConcept.`
-
-[caption=""]
-.Code examples
-[source,cs]
-----
-concept.IsRoleType();
-----
 
 // end::methods[]
 

@@ -1,0 +1,89 @@
+[#_IConceptRowIterator]
+=== IConceptRowIterator
+
+*Package*: `TypeDB.Driver.Api.Answer`
+
+*Supertypes:*
+
+* `TypeDB.Driver.Api.Answer.IQueryAnswer`
+
+
+
+Represents an iterator over IConceptRows returned as a server answer.
+
+// tag::methods[]
+[#_IConceptRowIterator_IQueryAnswer_TypeDB_Driver_Api_Answer_IConceptRowIterator_AsConceptRows_]
+==== AsConceptRows
+
+[source,cs]
+----
+IConceptRowIterator IQueryAnswer. AsConceptRows()
+----
+
+
+
+Casts the query answer to IConceptRowIterator.
+
+ 
+  Returns
+ 
+ 
+  The IConceptRowIterator if this is a concept rows response.
+ 
+
+
+ 
+  Exceptions
+ 
+ 
+  
+   
+    
+     TypeDBDriverException
+     If the answer is not a concept rows response.
+    
+   
+  
+ 
+
+
+ 
+  queryAnswer.AsConceptRows()
+ 
+
+
+
+
+Implements TypeDB.Driver.Api.Answer.IQueryAnswer.
+
+[caption=""]
+.Returns
+`IConceptRowIterator IQueryAnswer.`
+
+[#_bool_IQueryAnswer_TypeDB_Driver_Api_Answer_IConceptRowIterator_IsConceptRows]
+==== IsConceptRows
+
+[source,cs]
+----
+bool IQueryAnswer. TypeDB.Driver.Api.Answer.IConceptRowIterator.IsConceptRows
+----
+
+
+
+Checks if the query answer is a IConceptRowIterator.
+
+ 
+  queryAnswer.IsConceptRows
+ 
+
+
+
+
+Implements TypeDB.Driver.Api.Answer.IQueryAnswer.
+
+[caption=""]
+.Returns
+`bool IQueryAnswer.`
+
+// end::methods[]
+
