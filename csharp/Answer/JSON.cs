@@ -188,7 +188,7 @@ namespace TypeDB.Driver.Answer
 
             public override int GetHashCode() => _number.GetHashCode();
 
-            public override string ToString() => _number.ToString("0.0#####");
+            public override string ToString() => _number.ToString("G17");
         }
 
         private class JSONString : JSON

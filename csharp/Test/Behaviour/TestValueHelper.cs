@@ -149,7 +149,7 @@ namespace TypeDB.Driver.Test.Behaviour
         /// Gets a specific typed value from an IValue (e.g., GetBoolean, GetInteger).
         /// Returns the unwrapped value as an object.
         /// </summary>
-        private static object GetValueAs(IValue value, string valueType)
+        public static object GetValueAs(IValue value, string valueType)
         {
             switch (valueType.ToLower().Trim())
             {
