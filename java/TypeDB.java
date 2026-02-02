@@ -26,7 +26,7 @@ import com.typedb.driver.common.exception.TypeDBDriverException;
 import com.typedb.driver.connection.DriverImpl;
 
 public class TypeDB {
-    public static final String DEFAULT_ADDRESS = "localhost:1729";
+    public static final String DEFAULT_ADDRESS = "localhost:1730";
 
     /**
      * Open a TypeDB Driver to a TypeDB server available at the provided address.

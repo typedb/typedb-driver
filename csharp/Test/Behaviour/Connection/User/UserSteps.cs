@@ -37,14 +37,19 @@ namespace TypeDB.Driver.Test.Behaviour
         [Then(@"connection opens with username '([^']*)', password '([^']*)'")]
         public void ConnectionOpensWithUsername(string username, string password)
         {
+            Console.WriteLine("Creating driver with username/password specified");
             if (Driver != null)
             {
+                Console.WriteLine("Closing existing driver");
                 Driver.Close();
+                Console.WriteLine("Closing existing driver - done");
             }
+            Console.WriteLine("Creating new driver - start");
             Driver = TypeDB.Driver(
                 TypeDB.DefaultAddress,
                 new Credentials(username, password),
                 new DriverOptions(false, null));
+            Console.WriteLine("Creating new driver - end");
         }
 
         [Then(@"connection opens with username '([^']*)', password '([^']*)'; fails with a message containing: ""(.*)""")]
@@ -120,8 +125,10 @@ namespace TypeDB.Driver.Test.Behaviour
         [Then(@"create user with username '([^']*)', password '([^']*)'")]
         public void CreateUserWithUsername(string username, string password)
         {
+            Console.WriteLine("Creating user with username start");
             Assert.NotNull(Driver);
             Driver!.Users.Create(username, password);
+            Console.WriteLine("Creating user with username success");
         }
 
         [When(@"create user with username '([^']*)', password '([^']*)'; fails with a message containing: ""(.*)""")]

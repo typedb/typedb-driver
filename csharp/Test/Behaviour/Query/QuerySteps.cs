@@ -997,9 +997,14 @@ namespace TypeDB.Driver.Test.Behaviour
         {
             CollectDocumentsAnswerIfNeeded();
             var expected = JSON.Parse(expectedDocument.Content);
-            bool found = _collectedDocuments!.Any(doc => Util.JsonDeepEqualsUnordered(
-                Newtonsoft.Json.Linq.JToken.Parse(doc.ToString()),
-                Newtonsoft.Json.Linq.JToken.Parse(expected.ToString())));
+            bool found = _collectedDocuments!.Any(doc => {
+                Console.WriteLine("Checking if this document is an expected document it could be:");
+                Console.WriteLine(doc);
+                return Util.JsonDeepEqualsUnordered(
+                    Newtonsoft.Json.Linq.JToken.Parse(doc.ToString()),
+                    Newtonsoft.Json.Linq.JToken.Parse(expected.ToString())
+                );
+            });
             Assert.True(found, $"Expected document not found: {expectedDocument.Content}");
         }
 
@@ -1008,9 +1013,19 @@ namespace TypeDB.Driver.Test.Behaviour
         {
             CollectDocumentsAnswerIfNeeded();
             var expected = JSON.Parse(expectedDocument.Content);
-            bool found = _collectedDocuments!.Any(doc => Util.JsonDeepEqualsUnordered(
-                Newtonsoft.Json.Linq.JToken.Parse(doc.ToString()),
-                Newtonsoft.Json.Linq.JToken.Parse(expected.ToString())));
+            bool found = _collectedDocuments!.Any(doc => {
+                Console.WriteLine("Checking if this document is an expected document it should not be:");
+                Console.WriteLine(doc.ToString());
+                Console.WriteLine("... comparing to expected doc:");
+                Console.WriteLine(expected.ToString());
+                var parsedDoc = Newtonsoft.Json.Linq.JToken.Parse(doc.ToString());
+                var parsedExpectedDoc = Newtonsoft.Json.Linq.JToken.Parse(expected.ToString());
+                Console.WriteLine("As parsed Linq docs...");
+
+                Console.WriteLine(parsedDoc);
+                Console.WriteLine(parsedExpectedDoc);
+                return Util.JsonDeepEqualsUnordered(parsedDoc, parsedExpectedDoc);
+            });
             Assert.False(found, $"Unexpected document found: {expectedDocument.Content}");
         }
 

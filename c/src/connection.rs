@@ -62,12 +62,22 @@ pub extern "C" fn driver_open_with_description(
     driver_options: *const DriverOptions,
     driver_lang: *const c_char,
 ) -> *mut TypeDBDriver {
-    try_release(TypeDBDriver::new_with_description(
-        string_view(address),
-        borrow(credentials).clone(),
-        borrow(driver_options).clone(),
-        string_view(driver_lang),
-    ))
+    dbg!("In rust - creating driver");
+    let addr = string_view(address);
+    let creds = borrow(credentials);
+    let options = borrow(driver_options);
+    let lang = string_view(driver_lang);
+    dbg!("In rust - borrowed objects");
+    let driver = TypeDBDriver::new_with_description(
+        addr,
+        creds.clone(),
+        options.clone(),
+        lang,
+    );
+    dbg!("Typedb driver with description: {:?}", &driver);
+    let released = try_release(driver);
+    dbg!("Released");
+    released
 }
 
 /// Closes the driver. Before instantiating a new driver, the driver that's currently open should first be closed.
