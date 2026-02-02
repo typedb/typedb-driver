@@ -39,9 +39,9 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
             "127.0.0.1:31729"
     );
     public static List<String> DEFAULT_CLUSTER_CLUSTERING_ADDRESSES = List.of(
-            "0.0.0.0:11730",
-            "0.0.0.0:21730",
-            "0.0.0.0:31730"
+            "127.0.0.1:11730",
+            "127.0.0.1:21730",
+            "127.0.0.1:31730"
     );
 
     @Override

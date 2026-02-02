@@ -41,7 +41,7 @@ def before_all(context: Context):
     context.setup_context_driver_fn = lambda address=None, username=None, password=None: \
         setup_context_driver(context, address, username, password)
     context.default_address = ["127.0.0.1:11729", "127.0.0.1:21729", "127.0.0.1:31729"]
-    context.default_clustering_addresses = ["0.0.0.0:11730", "0.0.0.0:21730", "0.0.0.0:31730"]
+    context.default_clustering_addresses = ["127.0.0.1:11730", "127.0.0.1:21730", "127.0.0.1:31730"]
     context.driver_options.tls_config = DriverTlsConfig.enabled_with_root_ca(context.tls_root_ca_path)
     setup_cluster(context)
 

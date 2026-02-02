@@ -154,7 +154,7 @@ impl Context {
     const DEFAULT_ADDRESS: &'static str = "127.0.0.1:1729";
     const DEFAULT_CLUSTER_ADDRESSES: [&'static str; 3] = ["127.0.0.1:11729", "127.0.0.1:21729", "127.0.0.1:31729"];
     // Used to register cluster peers
-    const DEFAULT_CLUSTER_CLUSTERING_ADDRESSES: [&'static str; 3] = ["0.0.0.0:11730", "0.0.0.0:21730", "0.0.0.0:31730"];
+    const DEFAULT_CLUSTER_CLUSTERING_ADDRESSES: [&'static str; 3] = ["127.0.0.1:11730", "127.0.0.1:21730", "127.0.0.1:31730"];
     const ADMIN_USERNAME: &'static str = "admin";
     const ADMIN_PASSWORD: &'static str = "password";
     const STEP_REATTEMPT_SLEEP: Duration = Duration::from_millis(250);

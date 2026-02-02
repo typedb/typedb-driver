@@ -33,9 +33,9 @@ use typedb_driver::{
     DriverOptions, DriverTlsConfig, Error, Replica, ServerReplica, TransactionOptions, TransactionType, TypeDBDriver,
 };
 // DO NOT commit changes to this test. Use it as playground for dev.
-const ADDRESSES: [&'static str; 3] = ["0.0.0.0:11729", "0.0.0.0:21729", "0.0.0.0:31729"];
+const ADDRESSES: [&'static str; 3] = ["127.0.0.1:11729", "127.0.0.1:21729", "127.0.0.1:31729"];
 const ADDRESS: &'static str = "127.0.0.1:11729";
-const CLUSTERING_ADDRESSES: [&'static str; 3] = ["0.0.0.0:11730", "0.0.0.0:21730", "0.0.0.0:31730"];
+const CLUSTERING_ADDRESSES: [&'static str; 3] = ["127.0.0.1:11730", "127.0.0.1:21730", "127.0.0.1:31730"];
 const USERNAME: &'static str = "admin";
 const PASSWORD: &'static str = "password";
 

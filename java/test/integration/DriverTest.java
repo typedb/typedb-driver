@@ -60,7 +60,7 @@ import static org.junit.Assert.assertTrue;
 @SuppressWarnings("Duplicates")
 public class DriverTest {
     private static final String DB_NAME = "typedb";
-    private static final String ADDRESS = "0.0.0.0:1729";
+    private static final String ADDRESS = "127.0.0.1:1729";
     private static Driver typedbDriver;
 
     @BeforeClass
