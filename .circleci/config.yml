@@ -124,11 +124,11 @@ commands:
       - run: |
           export DEPLOY_PIP_USERNAME=$REPO_TYPEDB_USERNAME
           export DEPLOY_PIP_PASSWORD=$REPO_TYPEDB_PASSWORD
-          bazel run --jobs=8 --define version=$(git rev-parse HEAD) //python:deploy-pip39 -- snapshot
-          bazel run --jobs=8 --define version=$(git rev-parse HEAD) //python:deploy-pip310 -- snapshot
-          bazel run --jobs=8 --define version=$(git rev-parse HEAD) //python:deploy-pip311 -- snapshot
-          bazel run --jobs=8 --define version=$(git rev-parse HEAD) //python:deploy-pip312 -- snapshot
-          bazel run --jobs=8 --define version=$(git rev-parse HEAD) //python:deploy-pip313 -- snapshot
+          bazel run --config=ci --jobs=8 --define version=$(git rev-parse HEAD) //python:deploy-pip39 -- snapshot
+          bazel run --config=ci --jobs=8 --define version=$(git rev-parse HEAD) //python:deploy-pip310 -- snapshot
+          bazel run --config=ci --jobs=8 --define version=$(git rev-parse HEAD) //python:deploy-pip311 -- snapshot
+          bazel run --config=ci --jobs=8 --define version=$(git rev-parse HEAD) //python:deploy-pip312 -- snapshot
+          bazel run --config=ci --jobs=8 --define version=$(git rev-parse HEAD) //python:deploy-pip313 -- snapshot
 
   test-pip-snapshot-unix:
     steps:
@@ -166,11 +166,11 @@ commands:
       - run: |
           export DEPLOY_PIP_USERNAME=$REPO_PYPI_USERNAME
           export DEPLOY_PIP_PASSWORD=$REPO_PYPI_PASSWORD
-          bazel run --jobs=8 --define version=$(cat VERSION) //python:deploy-pip39 --compilation_mode=opt -- release
-          bazel run --jobs=8 --define version=$(cat VERSION) //python:deploy-pip310 --compilation_mode=opt -- release
-          bazel run --jobs=8 --define version=$(cat VERSION) //python:deploy-pip311 --compilation_mode=opt -- release
-          bazel run --jobs=8 --define version=$(cat VERSION) //python:deploy-pip312 --compilation_mode=opt -- release
-          bazel run --jobs=8 --define version=$(cat VERSION) //python:deploy-pip313 --compilation_mode=opt -- release
+          bazel run --config=ci --jobs=8 --define version=$(cat VERSION) //python:deploy-pip39 --compilation_mode=opt -- release
+          bazel run --config=ci --jobs=8 --define version=$(cat VERSION) //python:deploy-pip310 --compilation_mode=opt -- release
+          bazel run --config=ci --jobs=8 --define version=$(cat VERSION) //python:deploy-pip311 --compilation_mode=opt -- release
+          bazel run --config=ci --jobs=8 --define version=$(cat VERSION) //python:deploy-pip312 --compilation_mode=opt -- release
+          bazel run --config=ci --jobs=8 --define version=$(cat VERSION) //python:deploy-pip313 --compilation_mode=opt -- release
 
 
   #########################
@@ -195,14 +195,14 @@ commands:
       - run: |
           export DEPLOY_MAVEN_USERNAME=$REPO_TYPEDB_USERNAME
           export DEPLOY_MAVEN_PASSWORD=$REPO_TYPEDB_PASSWORD
-          bazel run --jobs=8 --define version=$(git rev-parse HEAD) //java:deploy-maven-jni -- snapshot
+          bazel run --config=ci --jobs=8 --define version=$(git rev-parse HEAD) //java:deploy-maven-jni -- snapshot
 
   deploy-maven-snapshot-unix:
     steps:
       - run: |
           export DEPLOY_MAVEN_USERNAME=$REPO_TYPEDB_USERNAME
           export DEPLOY_MAVEN_PASSWORD=$REPO_TYPEDB_PASSWORD
-          bazel run --jobs=8 --define version=$(git rev-parse HEAD) //java:deploy-maven -- snapshot
+          bazel run --config=ci --jobs=8 --define version=$(git rev-parse HEAD) //java:deploy-maven -- snapshot
 
   test-maven-snapshot-unix:
     steps:
@@ -227,14 +227,14 @@ commands:
       - run: |
           export DEPLOY_MAVEN_USERNAME=$REPO_TYPEDB_USERNAME
           export DEPLOY_MAVEN_PASSWORD=$REPO_TYPEDB_PASSWORD
-          bazel run --jobs=8 --define version=$(cat VERSION) //java:deploy-maven-jni --compilation_mode=opt -- release
+          bazel run --config=ci --jobs=8 --define version=$(cat VERSION) //java:deploy-maven-jni --compilation_mode=opt -- release
 
   deploy-maven-release-unix:
     steps:
       - run: |
           export DEPLOY_MAVEN_USERNAME=$REPO_TYPEDB_USERNAME
           export DEPLOY_MAVEN_PASSWORD=$REPO_TYPEDB_PASSWORD
-          bazel run --jobs=8 --define version=$(cat VERSION) //java:deploy-maven --compilation_mode=opt -- release
+          bazel run --config=ci --jobs=8 --define version=$(cat VERSION) //java:deploy-maven --compilation_mode=opt -- release
 
   ######################
   # C deployment steps #
@@ -245,7 +245,7 @@ commands:
       - run: |
           export DEPLOY_ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
           export DEPLOY_ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-          bazel run --jobs=8 --define version=$(git rev-parse HEAD) //c:deploy-clib-driver --compilation_mode=opt -- snapshot
+          bazel run --config=ci --jobs=8 --define version=$(git rev-parse HEAD) //c:deploy-clib-driver --compilation_mode=opt -- snapshot
 
   test-clib-assembly-linux:
     parameters:
@@ -254,7 +254,7 @@ commands:
     steps:
       - run: |
           yum install -y cmake3 make
-          bazel build --jobs=8 //c:assemble-linux-<<parameters.target-arch>>-targz
+          bazel build --config=ci --jobs=8 //c:assemble-linux-<<parameters.target-arch>>-targz
           export ASSEMBLY=typedb-driver-clib-linux-<<parameters.target-arch>>
           mkdir -p test_assembly_clib
           tar -xf bazel-bin/c/$ASSEMBLY.tar.gz --directory test_assembly_clib
@@ -277,7 +277,7 @@ commands:
     steps:
       - run: |
           ulimit -n 100000
-          bazel build //c:assemble-mac-<<parameters.target-arch>>-zip
+          bazel build --config=ci //c:assemble-mac-<<parameters.target-arch>>-zip
           export ASSEMBLY=typedb-driver-clib-mac-<<parameters.target-arch>>
           mkdir -p test_assembly_clib
           tar -xf bazel-bin/c/$ASSEMBLY.zip --directory test_assembly_clib
@@ -298,7 +298,7 @@ commands:
       - run: |
           export DEPLOY_ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
           export DEPLOY_ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-          bazel run --jobs=8 --define version=$(cat VERSION) //c:deploy-clib-driver --compilation_mode=opt -- release
+          bazel run --config=ci --jobs=8 --define version=$(cat VERSION) //c:deploy-clib-driver --compilation_mode=opt -- release
 
   ########################
   # C++ deployment steps #
@@ -309,7 +309,7 @@ commands:
       - run: |
           export DEPLOY_ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
           export DEPLOY_ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-          bazel run --jobs=8 --define version=$(git rev-parse HEAD) //cpp:deploy-cpp-driver --compilation_mode=opt -- snapshot
+          bazel run --config=ci --jobs=8 --define version=$(git rev-parse HEAD) //cpp:deploy-cpp-driver --compilation_mode=opt -- snapshot
 
   test-cpp-assembly-linux:
     parameters:
@@ -318,7 +318,7 @@ commands:
     steps:
       - run: |
           yum install -y cmake3 make
-          bazel build --jobs=8 //cpp:assemble-linux-<<parameters.target-arch>>-targz
+          bazel build --config=ci --jobs=8 //cpp:assemble-linux-<<parameters.target-arch>>-targz
           export ASSEMBLY=typedb-driver-cpp-linux-<<parameters.target-arch>>
           mkdir -p test_assembly_cpp
           tar -xf bazel-bin/cpp/$ASSEMBLY.tar.gz --directory test_assembly_cpp
@@ -341,7 +341,7 @@ commands:
     steps:
       - run: |
           ulimit -n 100000
-          bazel build //cpp:assemble-mac-<<parameters.target-arch>>-zip
+          bazel build --config=ci //cpp:assemble-mac-<<parameters.target-arch>>-zip
           export ASSEMBLY=typedb-driver-cpp-mac-<<parameters.target-arch>>
           mkdir -p test_assembly_cpp
           tar -xf bazel-bin/cpp/$ASSEMBLY.zip --directory test_assembly_cpp
@@ -362,7 +362,7 @@ commands:
       - run: |
           export DEPLOY_ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
           export DEPLOY_ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-          bazel run --jobs=8 --define version=$(cat VERSION) //cpp:deploy-cpp-driver --compilation_mode=opt -- release
+          bazel run --config=ci --jobs=8 --define version=$(cat VERSION) //cpp:deploy-cpp-driver --compilation_mode=opt -- release
 
   #########################
   # C# deployment steps #
@@ -399,13 +399,13 @@ commands:
     steps:
       - run: |
           export DEPLOY_NUGET_API_KEY=$REPO_TYPEDB_PASSWORD
-          bazel run --jobs=8 --define version=0.0.0-$(git rev-parse HEAD) //csharp:driver-csharp-runtime-push -- snapshot
+          bazel run --config=ci --jobs=8 --define version=0.0.0-$(git rev-parse HEAD) //csharp:driver-csharp-runtime-push -- snapshot
 
   deploy-dotnet-snapshot-unix:
     steps:
       - run: |
           export DEPLOY_NUGET_API_KEY=$REPO_TYPEDB_PASSWORD
-          bazel run --jobs=8 --define version=0.0.0-$(git rev-parse HEAD) //csharp:driver-csharp-push -- snapshot
+          bazel run --config=ci --jobs=8 --define version=0.0.0-$(git rev-parse HEAD) //csharp:driver-csharp-push -- snapshot
 
   test-dotnet-snapshot-unix:
     steps:
@@ -431,13 +431,13 @@ commands:
     steps:
       - run: |
           export DEPLOY_NUGET_API_KEY=$REPO_NUGET_TOKEN
-          bazel run --jobs=8 --define version=$(cat VERSION) //csharp:driver-csharp-runtime-push --compilation_mode=opt -- release
+          bazel run --config=ci --jobs=8 --define version=$(cat VERSION) //csharp:driver-csharp-runtime-push --compilation_mode=opt -- release
 
   deploy-dotnet-release-unix:
     steps:
       - run: |
           export DEPLOY_NUGET_API_KEY=$REPO_NUGET_TOKEN
-          bazel run --jobs=8 --define version=$(cat VERSION) //csharp:driver-csharp-push --compilation_mode=opt -- release
+          bazel run --config=ci --jobs=8 --define version=$(cat VERSION) //csharp:driver-csharp-push --compilation_mode=opt -- release
 
   #########################
   # Rust deployment steps #
@@ -447,13 +447,13 @@ commands:
     steps:
       - run: |
           export DEPLOY_CRATE_TOKEN=$REPO_TYPEDB_CRATES_TOKEN
-          bazel run --jobs=8 --define version=$(git rev-parse HEAD) //rust:deploy_crate -- snapshot
+          bazel run --config=ci --jobs=8 --define version=$(git rev-parse HEAD) //rust:deploy_crate -- snapshot
 
   deploy-crate-release-unix:
     steps:
       - run: |
           export DEPLOY_CRATE_TOKEN=$REPO_CRATES_TOKEN
-          bazel run --jobs=8 --define version=$(cat VERSION) //rust:deploy_crate --compilation_mode=opt -- release
+          bazel run --config=ci --jobs=8 --define version=$(cat VERSION) //rust:deploy_crate --compilation_mode=opt -- release
 
   #########################
   # Node deployment steps #
@@ -473,7 +473,7 @@ commands:
       - run: |
           export DEPLOY_NPM_USERNAME=$REPO_TYPEDB_USERNAME
           export DEPLOY_NPM_PASSWORD=$REPO_TYPEDB_PASSWORD
-          bazel run --jobs=8 --define version=$(git rev-parse HEAD) //nodejs:deploy-npm -- snapshot
+          bazel run --config=ci --jobs=8 --define version=$(git rev-parse HEAD) //nodejs:deploy-npm -- snapshot
 
   deploy-http-ts-npm-snapshot-unix:
     steps:
@@ -481,7 +481,7 @@ commands:
           export DEPLOY_NPM_USERNAME=$REPO_TYPEDB_USERNAME
           export DEPLOY_NPM_PASSWORD=$REPO_TYPEDB_PASSWORD
           tool/http-ts/install-deps.sh
-          bazel run --define version=$(git rev-parse HEAD) //http-ts:deploy-npm -- snapshot
+          bazel run --config=ci --define version=$(git rev-parse HEAD) //http-ts:deploy-npm -- snapshot
 
   test-npm-snapshot-unix:
     steps:
@@ -501,7 +501,7 @@ commands:
           wget -q -O - https://cli-assets.heroku.com/apt/release.key | apt-key add -
           wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add -
           export DEPLOY_NPM_TOKEN=$REPO_NPM_TOKEN
-          bazel run --jobs=8 --define version=$(cat VERSION) //nodejs:deploy-npm --compilation_mode=opt -- release
+          bazel run --config=ci --jobs=8 --define version=$(cat VERSION) //nodejs:deploy-npm --compilation_mode=opt -- release
 
   deploy-http-ts-npm-release-unix:
     steps:
@@ -510,7 +510,7 @@ commands:
           wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add -
           export DEPLOY_NPM_TOKEN=$REPO_NPM_TOKEN
           tool/http-ts/install-deps.sh
-          bazel run --define version=$(cat VERSION) //http-ts:deploy-npm --compilation_mode=opt -- release
+          bazel run --config=ci --define version=$(cat VERSION) //http-ts:deploy-npm --compilation_mode=opt -- release
 
 jobs:
 
@@ -828,7 +828,7 @@ jobs:
       - run: |
           apt update -y && apt install -y software-properties-common
           export SYNC_DEPENDENCIES_TOKEN=$REPO_GITHUB_TOKEN
-          bazel run @typedb_dependencies//tool/sync:dependencies -- --source ${CIRCLE_PROJECT_REPONAME}@$(cat VERSION)
+          bazel run --config=ci @typedb_dependencies//tool/sync:dependencies -- --source ${CIRCLE_PROJECT_REPONAME}@$(cat VERSION)
 
   release-cleanup:
     executor: linux-x86_64-ubuntu-2204

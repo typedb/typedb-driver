@@ -27,14 +27,14 @@ python.exe -m pip install twine==3.3.0 importlib-metadata==3.4.0
 git rev-parse HEAD > version_temp.txt
 set /p VER=<version_temp.txt
 
-bazel --output_user_root=C:/tmp run --verbose_failures --define version=%VER% //python:deploy-pip39 -- snapshot
+bazel --output_user_root=C:/tmp run --config=ci --verbose_failures --define version=%VER% //python:deploy-pip39 -- snapshot
 IF %errorlevel% NEQ 0 EXIT /b %errorlevel%
 
-bazel --output_user_root=C:/tmp run --verbose_failures --define version=%VER% //python:deploy-pip310 -- snapshot
+bazel --output_user_root=C:/tmp run --config=ci --verbose_failures --define version=%VER% //python:deploy-pip310 -- snapshot
 IF %errorlevel% NEQ 0 EXIT /b %errorlevel%
 
-bazel --output_user_root=C:/tmp run --verbose_failures --define version=%VER% //python:deploy-pip311 -- snapshot
+bazel --output_user_root=C:/tmp run --config=ci --verbose_failures --define version=%VER% //python:deploy-pip311 -- snapshot
 IF %errorlevel% NEQ 0 EXIT /b %errorlevel%
 
-bazel --output_user_root=C:/tmp run --verbose_failures --define version=%VER% //python:deploy-pip312 -- snapshot
+bazel --output_user_root=C:/tmp run --config=ci --verbose_failures --define version=%VER% //python:deploy-pip312 -- snapshot
 IF %errorlevel% NEQ 0 EXIT /b %errorlevel%

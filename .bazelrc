@@ -19,7 +19,7 @@ try-import ./.bazel-remote-cache.rc
 
 common --enable_platform_specific_config
 
-build --incompatible_strict_action_env --java_language_version=11 --javacopt='--release 11' --java_runtime_version=remotejdk_11 --enable_runfiles  --remote_download_toplevel --disk_cache=~/.bazel_cache
+build --incompatible_strict_action_env --java_language_version=11 --javacopt='--release 11' --java_runtime_version=remotejdk_11 --enable_runfiles  --remote_download_toplevel --disk_cache=~/.cache/bazel
 
 # Don't depend on a JAVA_HOME pointing at a system JDK
 # see https://github.com/bazelbuild/rules_jvm_external/issues/445
@@ -37,3 +37,5 @@ build:macos --stamp --workspace_status_command=$PWD/workspace-status.sh
 build --@aspect_rules_ts//ts:skipLibCheck=always
 fetch --@aspect_rules_ts//ts:skipLibCheck=always
 query --@aspect_rules_ts//ts:skipLibCheck=always
+
+build:ci --disk_cache=

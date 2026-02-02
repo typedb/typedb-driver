@@ -24,5 +24,5 @@ ECHO Building and deploying windows package...
 SET DEPLOY_NUGET_API_KEY=%REPO_NUGET_TOKEN%
 
 SET /p VER=<VERSION
-bazel --output_user_root=C:/b run --verbose_failures --define version=%VER% //csharp:driver-csharp-runtime-push --compilation_mode=opt -- release
+bazel --output_user_root=C:/b run --config=ci --verbose_failures --define version=%VER% //csharp:driver-csharp-runtime-push --compilation_mode=opt -- release
 IF %errorlevel% NEQ 0 EXIT /b %errorlevel%
