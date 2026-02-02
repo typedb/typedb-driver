@@ -30,7 +30,7 @@ namespace TypeDB.Driver
         /// <summary>
         /// The default address for TypeDB Server.
         /// </summary>
-        public const string DefaultAddress = "localhost:1729";
+        public const string DefaultAddress = "localhost:1730";
 
         /// <summary>
         /// Open a TypeDB Driver to a TypeDB server available at the provided address.

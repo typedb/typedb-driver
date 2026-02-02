@@ -100,13 +100,16 @@ namespace TypeDB.Driver.Test.Behaviour
 
         public ConnectionStepsBase() // "Before"
         {
+            Console.WriteLine("Connection steps base before");
             Thread.Sleep(BeforeTimeoutMillis);
-            CleanInCaseOfPreviousFail();
+//            CleanupState();
+            clean();
             BackgroundDriver = CreateDefaultTypeDBDriver();
         }
 
         public static IDriver CreateDefaultTypeDBDriver()
         {
+            Console.WriteLine("Connection steps base - create default driver");
             return TypeDB.Driver(
                 TypeDB.DefaultAddress,
                 new Credentials(AdminUsername, AdminPassword),
@@ -115,6 +118,7 @@ namespace TypeDB.Driver.Test.Behaviour
 
         public static IDriver CreateBackgroundDriver()
         {
+            Console.WriteLine("Connection steps base - create default background driver");
             return TypeDB.Driver(
                 TypeDB.DefaultAddress,
                 new Credentials("admin", "password"),
@@ -123,6 +127,9 @@ namespace TypeDB.Driver.Test.Behaviour
 
         public virtual void Dispose() // "After"
         {
+            Console.WriteLine("Connection steps base - dispose");
+            Console.WriteLine(Environment.StackTrace);
+
             // Clean up temp directory
             if (_tempDir != null && Directory.Exists(_tempDir))
             {
@@ -130,6 +137,183 @@ namespace TypeDB.Driver.Test.Behaviour
                 _tempDir = null;
             }
 
+            clean();
+
+//            CleanupState();
+//            CleanupState();
+
+//            // Clean up transactions (matches Java's after() order)
+//            CleanupTransactions();
+//            CleanupBackgroundTransactions();
+//            CurrentTransactionOptions = null;
+//
+//            // Create a fresh driver to clean up state (like Java's after())
+//            try
+//            {
+//                var cleanupDriver = CreateDefaultTypeDBDriver();
+//
+//                // Delete non-admin users
+//                try
+//                {
+//                    foreach (var user in cleanupDriver.Users.GetAll())
+//                    {
+//                        if (user.Username != AdminUsername)
+//                        {
+//                            try { cleanupDriver.Users.Get(user.Username).Delete(); } catch { }
+//                        }
+//                    }
+//                }
+//                catch { }
+//
+//                // Reset admin password
+//                try
+//                {
+//                    cleanupDriver.Users.Get(AdminUsername).UpdatePassword(AdminPassword);
+//                }
+//                catch { }
+//
+//                // Delete all databases
+//                try
+//                {
+//                    foreach (var db in cleanupDriver.Databases.GetAll())
+//                    {
+//                        try { cleanupDriver.Databases.Get(db.Name).Delete(); } catch { }
+//                    }
+//                }
+//                catch { }
+//
+//                cleanupDriver.Close();
+//            }
+//            catch { }
+//
+//            // Close the background driver
+//            if (BackgroundDriver != null)
+//            {
+//                try { BackgroundDriver.Close(); } catch { }
+//                BackgroundDriver = null;
+//            }
+//
+//            // Close the main driver
+//            if (Driver != null)
+//            {
+//                try { Driver.Close(); } catch { }
+//                Driver = null;
+//            }
+        }
+
+        public abstract IDriver CreateTypeDBDriver(string address);
+
+        public abstract void TypeDBStarts();
+
+        public abstract void ConnectionOpensWithDefaultAuthentication();
+
+        public virtual void ConnectionHasBeenOpened()
+        {
+            if (_requiredConfiguration) return; // Skip tests with configuration
+
+            Assert.NotNull(Driver);
+            Assert.True(Driver.IsOpen());
+        }
+
+        public virtual void ConnectionCloses()
+        {
+//            if (_requiredConfiguration) return; // Skip tests with configuration
+
+            CleanupTransactions();
+            if (Driver != null)
+            {
+                Driver.Close();
+            }
+            Driver = null;
+        }
+
+        public static void CleanupTransactions()
+        {
+            foreach (var tx in Transactions)
+            {
+                try { tx.Close(); } catch { }
+            }
+            Transactions.Clear();
+
+            foreach (var futureTx in TransactionsParallel)
+            {
+                try { futureTx.Result.Close(); } catch { }
+            }
+            TransactionsParallel.Clear();
+        }
+
+        public static void CleanupBackgroundTransactions()
+        {
+            foreach (var tx in BackgroundTransactions)
+            {
+                try { tx.Close(); } catch { }
+            }
+            BackgroundTransactions.Clear();
+        }
+
+        public static ITypeDBTransaction OpenTransaction(
+            IDriver driver, string databaseName, TransactionType type, TransactionOptions? options = null)
+        {
+            if (options != null)
+                return driver.Transaction(databaseName, type, options);
+            return driver.Transaction(databaseName, type);
+        }
+//
+//        private void CleanupState()
+//        {
+//            try
+//            {
+//                CleanupTransactions();
+//                CleanupBackgroundTransactions();
+//                if (BackgroundDriver != null)
+//                {
+//                    try { BackgroundDriver.Close(); } catch { }
+//                    BackgroundDriver = null;
+//                }
+//                CurrentTransactionOptions = null;
+//
+//                if (Driver != null)
+//                {
+//                    try { Driver.Close(); } catch { }
+//                    Driver = null;
+//                }
+//
+//                try
+//                {
+//                    var cleanupDriver = CreateDefaultTypeDBDriver();
+//
+//                    foreach (var user in cleanupDriver.Users.GetAll())
+//                    {
+//                        if (user.Username != AdminUsername)
+//                        {
+//                            Console.WriteLine("Deleting user " + user.Username);
+//
+//                            try { cleanupDriver.Users.Get(user.Username).Delete(); } catch { }
+//                        }
+//                    }
+//
+//                    try {
+//                        var user = cleanupDriver!.Users.Get(AdminUsername);
+//                        Console.WriteLine("Got admin user");
+//                        Console.WriteLine(user);
+//                        user!.UpdatePassword(AdminPassword);
+//                    } catch { }
+//
+//
+//                    foreach (var db in cleanupDriver.Databases.GetAll())
+//                    {
+//                        try { cleanupDriver.Databases.Get(db.Name).Delete(); } catch { }
+//                    }
+//
+//                    cleanupDriver.Close();
+//                }
+//                catch { }
+//
+//            }
+//            catch { }
+//        }
+
+        private static void clean() {
             // Clean up transactions (matches Java's after() order)
             CleanupTransactions();
             CleanupBackgroundTransactions();
@@ -187,109 +371,6 @@ namespace TypeDB.Driver.Test.Behaviour
                 try { Driver.Close(); } catch { }
                 Driver = null;
             }
-        }
-
-        public abstract IDriver CreateTypeDBDriver(string address);
-
-        public abstract void TypeDBStarts();
-
-        public abstract void ConnectionOpensWithDefaultAuthentication();
-
-        public virtual void ConnectionHasBeenOpened()
-        {
-            if (_requiredConfiguration) return; // Skip tests with configuration
-
-            Assert.NotNull(Driver);
-            Assert.True(Driver.IsOpen());
-        }
-
-        public virtual void ConnectionCloses()
-        {
-            if (_requiredConfiguration) return; // Skip tests with configuration
-
-            CleanupTransactions();
-            if (Driver != null)
-            {
-                Driver.Close();
-            }
-            Driver = null;
-        }
-
-        public static void CleanupTransactions()
-        {
-            foreach (var tx in Transactions)
-            {
-                try { tx.Close(); } catch { }
-            }
-            Transactions.Clear();
-
-            foreach (var futureTx in TransactionsParallel)
-            {
-                try { futureTx.Result.Close(); } catch { }
-            }
-            TransactionsParallel.Clear();
-        }
-
-        public static void CleanupBackgroundTransactions()
-        {
-            foreach (var tx in BackgroundTransactions)
-            {
-                try { tx.Close(); } catch { }
-            }
-            BackgroundTransactions.Clear();
-        }
-
-        public static ITypeDBTransaction OpenTransaction(
-            IDriver driver, string databaseName, TransactionType type, TransactionOptions? options = null)
-        {
-            if (options != null)
-                return driver.Transaction(databaseName, type, options);
-            return driver.Transaction(databaseName, type);
-        }
-
-        private void CleanInCaseOfPreviousFail()
-        {
-            try
-            {
-                CleanupTransactions();
-                CleanupBackgroundTransactions();
-                if (BackgroundDriver != null)
-                {
-                    try { BackgroundDriver.Close(); } catch { }
-                    BackgroundDriver = null;
-                }
-                CurrentTransactionOptions = null;
-
-                try
-                {
-                    var cleanupDriver = CreateDefaultTypeDBDriver();
-
-                    foreach (var user in cleanupDriver.Users.GetAll())
-                    {
-                        if (user.Username != AdminUsername)
-                        {
-                            try { cleanupDriver.Users.Get(user.Username).Delete(); } catch { }
-                        }
-                    }
-
-                    try { cleanupDriver.Users.Get(AdminUsername).UpdatePassword(AdminPassword); } catch { }
-
-                    foreach (var db in cleanupDriver.Databases.GetAll())
-                    {
-                        try { cleanupDriver.Databases.Get(db.Name).Delete(); } catch { }
-                    }
-
-                    cleanupDriver.Close();
-                }
-                catch { }
-
-                if (Driver != null)
-                {
-                    try { Driver.Close(); } catch { }
-                    Driver = null;
-                }
-            }
-            catch { }
         }
     }
 }

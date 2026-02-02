@@ -17,6 +17,7 @@
  * under the License.
  */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -53,11 +54,13 @@ namespace TypeDB.Driver.Connection
         {
             try
             {
+                Console.WriteLine("Calling native ddriver open");
                 var result = Pinvoke.typedb_driver.driver_open_with_description(
                     address,
                     credentials.NativeObject,
                     driverOptions.NativeObject,
                     IDriver.Language);
+                Console.WriteLine("Calling native ddriver open - done");
 
                 return result;
             }

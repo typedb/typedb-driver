@@ -15,14 +15,22 @@
 # specific language governing permissions and limitations
 # under the License.
 
-Feature: Debugging Space
 
-  Background:
+#noinspection CucumberUndefinedStep
+Feature: Driver User
+
+  Background: Open connection, create driver, create database
     Given typedb starts
     Given connection is open: false
-    Given connection opens with default authentication
-    Given connection is open: true
 
-  # Do not commit any changes to this file.
+  Scenario: Test 2
+    Given connection opens with username 'admin', password 'password'
+    When create user with username 'user', password 'password'
+    When delete user: user
+    Then connection closes
 
-  Scenario: Paste your scenario here
+  Scenario: Test 1
+    Given connection opens with username 'admin', password 'password'
+    When create user with username 'user', password 'password'
+    When delete user: user
+    Then connection closes

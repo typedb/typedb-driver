@@ -91,6 +91,8 @@ namespace TypeDB.Driver.Test.Behaviour
             return result;
         }
 
+        // TODO: rewrite this to use our own JSON structure, or don't use the datetime support here since it only has 100ns of precision...
+        //       if we use our own JSON, we may want to parse back to Duration/Datetime, etc value types to compare not by string...?
         public static bool JsonDeepEqualsUnordered(JToken expectedToken, JToken checkedToken)
         {
             return JToken.DeepEquals(GetSortedJson(expectedToken), GetSortedJson(checkedToken));

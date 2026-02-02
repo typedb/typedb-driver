@@ -49,8 +49,6 @@ namespace TypeDB.Driver.Connection
         /// <inheritdoc/>
         public IDatabase Get(string name)
         {
-            Validator.NonEmptyString(name, DriverError.MISSING_DB_NAME);
-
             try
             {
                 return new TypeDBDatabase(Pinvoke.typedb_driver.databases_get(_nativeDriver, name));
@@ -64,8 +62,6 @@ namespace TypeDB.Driver.Connection
         /// <inheritdoc/>
         public bool Contains(string name)
         {
-            Validator.NonEmptyString(name, DriverError.MISSING_DB_NAME);
-
             try
             {
                 return Pinvoke.typedb_driver.databases_contains(_nativeDriver, name);
@@ -79,8 +75,6 @@ namespace TypeDB.Driver.Connection
         /// <inheritdoc/>
         public void Create(string name)
         {
-            Validator.NonEmptyString(name, DriverError.MISSING_DB_NAME);
-
             try
             {
                 Pinvoke.typedb_driver.databases_create(_nativeDriver, name);
@@ -110,8 +104,6 @@ namespace TypeDB.Driver.Connection
         /// <inheritdoc/>
         public void ImportFromFile(string name, string schema, string dataFile)
         {
-            Validator.NonEmptyString(name, DriverError.MISSING_DB_NAME);
-
             try
             {
                 Pinvoke.typedb_driver.databases_import_from_file(_nativeDriver, name, schema, dataFile);

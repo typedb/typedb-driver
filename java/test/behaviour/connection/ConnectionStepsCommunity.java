@@ -61,11 +61,13 @@ public class ConnectionStepsCommunity extends ConnectionStepsBase {
 
     @When("connection opens with default authentication")
     public void connection_opens_with_default_authentication() {
+        System.out.println("Creating driver with default auth");
         driver = createDefaultTypeDBDriver();
     }
 
     @When("connection opens with username '{non_semicolon}', password '{non_semicolon}'{may_error}")
     public void connection_opens_with_username_password(String username, String password, Parameters.MayError mayError) {
+        System.out.println("Creating driver with username " + username + " and password " + password);
         Credentials credentials = new Credentials(username, password);
         mayError.check(() -> driver = createTypeDBDriver(TypeDB.DEFAULT_ADDRESS, credentials, DEFAULT_CONNECTION_SETTINGS));
     }
