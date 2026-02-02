@@ -48,7 +48,7 @@ public interface DatabaseManager {
      *
      * <h3>Examples</h3>
      * <pre>
-     * driver.databases().all(ConsistencyLevel.Strong)
+     * driver.databases().all(new ConsistencyLevel.Strong())
      * </pre>
      *
      * @param consistencyLevel The consistency level to use for the operation
@@ -77,7 +77,7 @@ public interface DatabaseManager {
      *
      * <h3>Examples</h3>
      * <pre>
-     * driver.databases().contains(name, ConsistencyLevel.Strong)
+     * driver.databases().contains(name, new ConsistencyLevel.Strong())
      * </pre>
      *
      * @param name             The database name to be checked
@@ -107,7 +107,7 @@ public interface DatabaseManager {
      *
      * <h3>Examples</h3>
      * <pre>
-     * driver.databases().get(name, ConsistencyLevel.Strong)
+     * driver.databases().get(name, new ConsistencyLevel.Strong())
      * </pre>
      *
      * @param name             The name of the database to retrieve
@@ -136,7 +136,7 @@ public interface DatabaseManager {
      *
      * <h3>Examples</h3>
      * <pre>
-     * driver.databases().create(name, ConsistencyLevel.Strong)
+     * driver.databases().create(name, new ConsistencyLevel.Strong())
      * </pre>
      *
      * @param name             The name of the database to be created

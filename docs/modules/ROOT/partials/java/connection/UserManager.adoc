@@ -58,7 +58,7 @@ a| `consistencyLevel` a| The consistency level to use for the operation a| `Cons
 .Code examples
 [source,java]
 ----
-driver.users().all(ConsistencyLevel.Strong);
+driver.users().all(new ConsistencyLevel.Strong());
 ----
 
 [#_UserManager_contains_java_lang_String]
@@ -126,7 +126,7 @@ a| `consistencyLevel` a| The consistency level to use for the operation a| `Cons
 .Code examples
 [source,java]
 ----
-driver.users().contains(username, ConsistencyLevel.Strong);
+driver.users().contains(username, new ConsistencyLevel.Strong());
 ----
 
 [#_UserManager_create_java_lang_String_java_lang_String]
@@ -196,7 +196,7 @@ a| `consistencyLevel` a| The consistency level to use for the operation a| `Cons
 .Code examples
 [source,java]
 ----
-driver.users().create(username, password, ConsistencyLevel.Strong);
+driver.users().create(username, password, new ConsistencyLevel.Strong());
 ----
 
 [#_UserManager_get_java_lang_String]
@@ -264,7 +264,7 @@ a| `consistencyLevel` a| The consistency level to use for the operation a| `Cons
 .Code examples
 [source,java]
 ----
-driver.users().get(username, ConsistencyLevel.Strong);
+driver.users().get(username, new ConsistencyLevel.Strong());
 ----
 
 [#_UserManager_getCurrent_]
@@ -321,7 +321,7 @@ a| `consistencyLevel` a| The consistency level to use for the operation a| `Cons
 .Code examples
 [source,java]
 ----
-driver.users().getCurrent(ConsistencyLevel.Strong);
+driver.users().getCurrent(new ConsistencyLevel.Strong());
 ----
 
 // end::methods[]

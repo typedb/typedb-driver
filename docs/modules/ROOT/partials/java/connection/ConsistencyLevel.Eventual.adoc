@@ -6,6 +6,20 @@
 Eventual consistency level. Allow stale reads from any replica and execution orchestration through a non-primary replica. Does not guarantee latest writes, but is eventually faster compared to other consistency levels. Note that the target replica can redirect the request, if needed.
 
 // tag::methods[]
+[#_ConsistencyLevel_Eventual_Eventual_]
+==== Eventual
+
+[source,java]
+----
+public Eventual()
+----
+
+
+
+[caption=""]
+.Returns
+`public`
+
 [#_ConsistencyLevel_Eventual_nativeValue_]
 ==== nativeValue
 

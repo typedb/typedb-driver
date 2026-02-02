@@ -60,7 +60,7 @@ a| `consistencyLevel` a| The consistency level to use for the operation a| `Cons
 .Code examples
 [source,java]
 ----
-driver.databases().all(ConsistencyLevel.Strong)
+driver.databases().all(new ConsistencyLevel.Strong())
 ----
 
 [#_DatabaseManager_contains_java_lang_String]
@@ -128,7 +128,7 @@ a| `consistencyLevel` a| The consistency level to use for the operation a| `Cons
 .Code examples
 [source,java]
 ----
-driver.databases().contains(name, ConsistencyLevel.Strong)
+driver.databases().contains(name, new ConsistencyLevel.Strong())
 ----
 
 [#_DatabaseManager_create_java_lang_String]
@@ -194,7 +194,7 @@ a| `consistencyLevel` a| The consistency level to use for the operation a| `Cons
 .Code examples
 [source,java]
 ----
-driver.databases().create(name, ConsistencyLevel.Strong)
+driver.databases().create(name, new ConsistencyLevel.Strong())
 ----
 
 [#_DatabaseManager_get_java_lang_String]
@@ -262,7 +262,7 @@ a| `consistencyLevel` a| The consistency level to use for the operation a| `Cons
 .Code examples
 [source,java]
 ----
-driver.databases().get(name, ConsistencyLevel.Strong)
+driver.databases().get(name, new ConsistencyLevel.Strong())
 ----
 
 [#_DatabaseManager_importFromFile_java_lang_String_java_lang_String_java_lang_String]

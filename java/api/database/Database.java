@@ -56,7 +56,7 @@ public interface Database {
      *
      * <h3>Examples</h3>
      * <pre>
-     * database.schema(ConsistencyLevel.Strong)
+     * database.schema(new ConsistencyLevel.Strong())
      * </pre>
      *
      * @param consistencyLevel The consistency level to use for the operation
@@ -83,7 +83,7 @@ public interface Database {
      *
      * <h3>Examples</h3>
      * <pre>
-     * database.typeSchema(ConsistencyLevel.Strong)
+     * database.typeSchema(new ConsistencyLevel.Strong())
      * </pre>
      *
      * @param consistencyLevel The consistency level to use for the operation
@@ -114,7 +114,7 @@ public interface Database {
      *
      * <h3>Examples</h3>
      * <pre>
-     * database.exportToFile("schema.typeql", "data.typedb", ConsistencyLevel.Strong)
+     * database.exportToFile("schema.typeql", "data.typedb", new ConsistencyLevel.Strong())
      * </pre>
      *
      * @param schemaFilePath   The path to the schema definition file to be created
@@ -141,7 +141,7 @@ public interface Database {
      *
      * <h3>Examples</h3>
      * <pre>
-     * database.delete(ConsistencyLevel.Strong)
+     * database.delete(new ConsistencyLevel.Strong())
      * </pre>
      *
      * @param consistencyLevel The consistency level to use for the operation

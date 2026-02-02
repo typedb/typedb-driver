@@ -6,6 +6,20 @@
 Strong consistency level. Strongest consistency, always up-to-date due to the guarantee of the primary replica usage. May require more time for operation execution.
 
 // tag::methods[]
+[#_ConsistencyLevel_Strong_Strong_]
+==== Strong
+
+[source,java]
+----
+public Strong()
+----
+
+
+
+[caption=""]
+.Returns
+`public`
+
 [#_ConsistencyLevel_Strong_nativeValue_]
 ==== nativeValue
 

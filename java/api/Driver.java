@@ -141,7 +141,7 @@ public interface Driver extends AutoCloseable {
      *
      * <h3>Examples</h3>
      * <pre>
-     * driver.replicas(ConsistencyLevel.Strong);
+     * driver.replicas(new ConsistencyLevel.Strong());
      * </pre>
      *
      * @param consistencyLevel The consistency level to use for the operation
@@ -168,7 +168,7 @@ public interface Driver extends AutoCloseable {
      *
      * <h3>Examples</h3>
      * <pre>
-     * driver.primaryReplica(ConsistencyLevel.Strong);
+     * driver.primaryReplica(new ConsistencyLevel.Strong());
      * </pre>
      *
      * @param consistencyLevel The consistency level to use for the operation

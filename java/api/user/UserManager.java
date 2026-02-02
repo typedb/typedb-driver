@@ -47,7 +47,7 @@ public interface UserManager {
      *
      * <h3>Examples</h3>
      * <pre>
-     * driver.users().all(ConsistencyLevel.Strong);
+     * driver.users().all(new ConsistencyLevel.Strong());
      * </pre>
      *
      * @param consistencyLevel The consistency level to use for the operation
@@ -75,7 +75,7 @@ public interface UserManager {
      *
      * <h3>Examples</h3>
      * <pre>
-     * driver.users().contains(username, ConsistencyLevel.Strong);
+     * driver.users().contains(username, new ConsistencyLevel.Strong());
      * </pre>
      *
      * @param username         The username to be checked
@@ -105,7 +105,7 @@ public interface UserManager {
      *
      * <h3>Examples</h3>
      * <pre>
-     * driver.users().get(username, ConsistencyLevel.Strong);
+     * driver.users().get(username, new ConsistencyLevel.Strong());
      * </pre>
      *
      * @param username         The name of the user to retrieve
@@ -133,7 +133,7 @@ public interface UserManager {
      *
      * <h3>Examples</h3>
      * <pre>
-     * driver.users().getCurrent(ConsistencyLevel.Strong);
+     * driver.users().getCurrent(new ConsistencyLevel.Strong());
      * </pre>
      *
      * @param consistencyLevel The consistency level to use for the operation
@@ -162,7 +162,7 @@ public interface UserManager {
      *
      * <h3>Examples</h3>
      * <pre>
-     * driver.users().create(username, password, ConsistencyLevel.Strong);
+     * driver.users().create(username, password, new ConsistencyLevel.Strong());
      * </pre>
      *
      * @param username         The name of the user to be created

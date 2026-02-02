@@ -58,7 +58,7 @@ public abstract class ConsistencyLevel {
      * May require more time for operation execution.
      */
     public static final class Strong extends ConsistencyLevel {
-        Strong() {
+        public Strong() {
         }
 
         @Override
@@ -83,7 +83,7 @@ public abstract class ConsistencyLevel {
      * Note that the target replica can redirect the request, if needed.
      */
     public static final class Eventual extends ConsistencyLevel {
-        Eventual() {
+        public Eventual() {
         }
 
         @Override

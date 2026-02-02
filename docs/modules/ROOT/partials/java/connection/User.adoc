@@ -56,7 +56,7 @@ a| `consistencyLevel` a| The consistency level to use for the operation a| `Cons
 .Code examples
 [source,java]
 ----
-user.delete(ConsistencyLevel.Strong);
+user.delete(new ConsistencyLevel.Strong());
 ----
 
 [#_User_name_]
@@ -135,7 +135,7 @@ a| `consistencyLevel` a| The consistency level to use for the operation a| `Cons
 .Code examples
 [source,java]
 ----
-user.updatePassword("new-password", ConsistencyLevel.Strong);
+user.updatePassword("new-password", new ConsistencyLevel.Strong());
 ----
 
 // end::methods[]

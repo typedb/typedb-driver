@@ -54,7 +54,7 @@ public interface User {
      *
      * <h3>Examples</h3>
      * <pre>
-     * user.updatePassword("new-password", ConsistencyLevel.Strong);
+     * user.updatePassword("new-password", new ConsistencyLevel.Strong());
      * </pre>
      *
      * @param password         The new password
@@ -80,7 +80,7 @@ public interface User {
      *
      * <h3>Examples</h3>
      * <pre>
-     * user.delete(ConsistencyLevel.Strong);
+     * user.delete(new ConsistencyLevel.Strong());
      * </pre>
      *
      * @param consistencyLevel The consistency level to use for the operation

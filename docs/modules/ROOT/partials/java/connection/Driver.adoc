@@ -170,7 +170,7 @@ a| `consistencyLevel` a| The consistency level to use for the operation a| `Cons
 .Code examples
 [source,java]
 ----
-driver.primaryReplica(ConsistencyLevel.Strong);
+driver.primaryReplica(new ConsistencyLevel.Strong());
 ----
 
 [#_Driver_registerReplica_long_java_lang_String]
@@ -258,7 +258,7 @@ a| `consistencyLevel` a| The consistency level to use for the operation a| `Cons
 .Code examples
 [source,java]
 ----
-driver.replicas(ConsistencyLevel.Strong);
+driver.replicas(new ConsistencyLevel.Strong());
 ----
 
 [#_Driver_serverVersion_]
