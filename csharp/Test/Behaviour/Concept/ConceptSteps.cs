@@ -247,29 +247,6 @@ namespace TypeDB.Driver.Test.Behaviour
         }
 
         /// <summary>
-        /// Gets a specific value type from an IValue (e.g., getBoolean, getInteger).
-        /// Returns the unwrapped value as an object.
-        /// </summary>
-        private object GetValueAs(IValue value, string valueType)
-        {
-            switch (valueType.ToLower().Trim())
-            {
-                case "boolean": return value.GetBoolean();
-                case "integer": return value.GetInteger();
-                case "double": return value.GetDouble();
-                case "decimal": return value.GetDecimal();
-                case "string": return value.GetString();
-                case "date": return value.GetDate();
-                case "datetime": return value.GetDatetime();
-                case "datetime-tz": return value.GetDatetimeTZ();
-                case "duration": return value.GetDuration();
-                case "struct": return value.GetStruct().ToString()!;
-                default:
-                    throw new BehaviourTestException($"Unknown value type: {valueType}");
-            }
-        }
-
-        /// <summary>
         /// Try-gets a specific value type from a concept (via IConcept.TryGet*).
         /// Returns null if the concept doesn't have that value type.
         /// </summary>
@@ -687,7 +664,7 @@ namespace TypeDB.Driver.Test.Behaviour
         {
             CollectRowsAnswerIfNeeded();
             IValue value = GetRowGetValue(rowIndex, "attribute", variable);
-            var result = GetValueAs(value, valueType);
+            var result = TestValueHelper.GetValueAs(value, valueType);
             Assert.NotNull(result);
         }
 
@@ -700,7 +677,7 @@ namespace TypeDB.Driver.Test.Behaviour
             var exception = Assert.ThrowsAny<Exception>(() =>
             {
                 IValue value = GetRowGetValue(rowIndex, "attribute", variable);
-                GetValueAs(value, valueType);
+                TestValueHelper.GetValueAs(value, valueType);
             });
             Assert.Contains(expectedMessage, exception.Message);
         }

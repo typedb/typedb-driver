@@ -68,10 +68,8 @@ namespace TypeDB.Driver.Common
                 new Driver(5, "The database has been deleted and no further operation is allowed.");
             public static readonly Driver POSITIVE_VALUE_REQUIRED =
                 new Driver(6, "Value cannot be less than 1, was: {0}.");
-            public static readonly Driver MISSING_DB_NAME =
-                new Driver(7, "Database name cannot be null.");
             public static readonly Driver UNEXPECTED_NATIVE_VALUE =
-                new Driver(8, "Unexpected native value encountered!");
+                new Driver(7, "Unexpected native value encountered!");
         }
 
         public class Concept : ErrorMessage
@@ -105,7 +103,7 @@ namespace TypeDB.Driver.Common
             public static readonly Concept INVALID_QUERY_ANSWER_CASTING =
                 new Concept(10, "Invalid query answer conversion from {0} to {1}.");
             public static readonly Concept INVALID_VALUE_RETRIEVAL =
-                new Concept(11, "Invalid value retrieval for type: {0}.");
+                new Concept(11, "Could not retrieve a '{0}' value.");
         }
 
         public class Query : ErrorMessage
