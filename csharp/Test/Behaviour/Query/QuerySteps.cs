@@ -1000,9 +1000,14 @@ namespace TypeDB.Driver.Test.Behaviour
             bool found = _collectedDocuments!.Any(doc => {
                 Console.WriteLine("Checking if this document is an expected document it could be:");
                 Console.WriteLine(doc);
+                var settings = new Newtonsoft.Json.JsonSerializerSettings
+                {
+                    DateParseHandling = Newtonsoft.Json.DateParseHandling.None
+                };
+
                 return Util.JsonDeepEqualsUnordered(
-                    Newtonsoft.Json.Linq.JToken.Parse(doc.ToString()),
-                    Newtonsoft.Json.Linq.JToken.Parse(expected.ToString())
+                    Newtonsoft.Json.JsonConvert.DeserializeObject<Newtonsoft.Json.Linq.JToken>(doc.ToString(), settings),
+                    Newtonsoft.Json.JsonConvert.DeserializeObject<Newtonsoft.Json.Linq.JToken>(expected.ToString(), settings)
                 );
             });
             Assert.True(found, $"Expected document not found: {expectedDocument.Content}");
@@ -1018,8 +1023,12 @@ namespace TypeDB.Driver.Test.Behaviour
                 Console.WriteLine(doc.ToString());
                 Console.WriteLine("... comparing to expected doc:");
                 Console.WriteLine(expected.ToString());
-                var parsedDoc = Newtonsoft.Json.Linq.JToken.Parse(doc.ToString());
-                var parsedExpectedDoc = Newtonsoft.Json.Linq.JToken.Parse(expected.ToString());
+                var settings = new Newtonsoft.Json.JsonSerializerSettings
+                {
+                    DateParseHandling = Newtonsoft.Json.DateParseHandling.None
+                };
+                var parsedDoc = Newtonsoft.Json.JsonConvert.DeserializeObject<Newtonsoft.Json.Linq.JToken>(doc.ToString(), settings);
+                var parsedExpectedDoc = Newtonsoft.Json.JsonConvert.DeserializeObject<Newtonsoft.Json.Linq.JToken>(expected.ToString(), settings);
                 Console.WriteLine("As parsed Linq docs...");
 
                 Console.WriteLine(parsedDoc);
