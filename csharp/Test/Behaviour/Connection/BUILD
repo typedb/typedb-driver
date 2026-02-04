@@ -21,6 +21,11 @@ filegroup(
     srcs = ["ConnectionStepsBase.cs", "ConnectionStepsCommunity.cs"],
     visibility = ["//csharp/Test/Behaviour:__subpackages__"],
 )
+filegroup(
+    name = "steps-cluster",
+    srcs = ["ConnectionStepsBase.cs", "ConnectionStepsCluster.cs"],
+    visibility = ["//csharp/Test/Behaviour:__subpackages__"],
+)
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*"]),

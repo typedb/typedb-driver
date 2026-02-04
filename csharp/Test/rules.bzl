@@ -50,6 +50,45 @@ def csharp_behaviour_test(
     )
 
 
+def csharp_behaviour_test_all(
+        name,
+        test_files,
+        steps_files,
+        connection_steps_community,
+        connection_steps_cluster,
+        features,
+        deps,
+        target_frameworks,
+        targeting_packs,
+        add_certificates = False,
+        **kwargs):
+    """Creates both community and cluster test variants."""
+
+    csharp_behaviour_test(
+        name = name + "-community",
+        test_files = test_files,
+        steps_files = steps_files + [connection_steps_community],
+        features = features,
+        deps = deps,
+        target_frameworks = target_frameworks,
+        targeting_packs = targeting_packs,
+        add_certificates = add_certificates,
+        **kwargs,
+    )
+
+    csharp_behaviour_test(
+        name = name + "-cluster",
+        test_files = test_files,
+        steps_files = steps_files + [connection_steps_cluster],
+        features = features,
+        deps = deps,
+        target_frameworks = target_frameworks,
+        targeting_packs = targeting_packs,
+        add_certificates = True,  # Cluster needs TLS certificates
+        **kwargs,
+    )
+
+
 def csharp_integration_test(name, srcs, deps, target_frameworks, targeting_packs, **kwargs):
     csharp_nunit_test(
         name = name,

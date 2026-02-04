@@ -19,11 +19,11 @@ package(default_visibility = ["//csharp/Test/Behaviour:__subpackages__"])
 
 load("//csharp:build_opts.bzl", "nullable_context", "target_frameworks", "targeting_packs")
 load("//csharp/Test:build_opts.bzl", "behaviour_tests_deps")
-load("//csharp/Test:rules.bzl", "csharp_behaviour_test")
+load("//csharp/Test:rules.bzl", "csharp_behaviour_test_all")
 load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
-csharp_behaviour_test(
-    name = "test-community",
+csharp_behaviour_test_all(
+    name = "test",
     test_files = ["ConceptTest.cs"],
     steps_files = [
         "//csharp/Test/Behaviour/Util:steps",
@@ -31,8 +31,9 @@ csharp_behaviour_test(
         "//csharp/Test/Behaviour/Concept:steps",
         "//csharp/Test/Behaviour/Connection/Transaction:steps",
         "//csharp/Test/Behaviour/Connection/Database:steps",
-        "//csharp/Test/Behaviour/Connection:steps-community",
     ],
+    connection_steps_community = "//csharp/Test/Behaviour/Connection:steps-community",
+    connection_steps_cluster = "//csharp/Test/Behaviour/Connection:steps-cluster",
     features = ["@typedb_behaviour//driver:concept.feature"],
     deps = [
         "//csharp/Api:api",
