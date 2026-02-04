@@ -1,0 +1,45 @@
+[#_IReduceStage]
+[.doc-api-reference-driver]
+=== IReduceStage
+
+`interface`
+
+*Namespace*: `TypeDB.Driver.Api.Analyze`
+
+*Superinterfaces:*
+
+* `IPipelineStage`
+
+Represents a reduce stage in a pipeline.
+
+// tag::methods[]
+[#_IReduceStage_ReducerAssignments]
+==== property ``ReducerAssignments``
+
+[source,cs]
+----
+IEnumerable<IReduceAssignment> ReducerAssignments { get; }
+----
+
+Gets the reducer assignments.
+
+[caption=""]
+.Returns
+`IEnumerable<IReduceAssignment>`
+
+[#_IReduceStage_GroupBy]
+==== property ``GroupBy``
+
+[source,cs]
+----
+IEnumerable<IVariable> GroupBy { get; }
+----
+
+Gets the variables to group by.
+
+[caption=""]
+.Returns
+`IEnumerable<IVariable>`
+
+// end::methods[]
+

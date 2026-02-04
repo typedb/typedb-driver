@@ -1,0 +1,45 @@
+[#_IKind]
+[.doc-api-reference-driver]
+=== IKind
+
+`interface`
+
+*Namespace*: `TypeDB.Driver.Api.Analyze`
+
+*Superinterfaces:*
+
+* `IConstraint`
+
+Represents a kind constraint: kind type
+
+// tag::methods[]
+[#_IKind_Kind]
+==== property ``Kind``
+
+[source,cs]
+----
+Pinvoke.Kind Kind { get; }
+----
+
+Gets the kind (entity, relation, attribute).
+
+[caption=""]
+.Returns
+`Pinvoke.Kind`
+
+[#_IKind_Type]
+==== property ``Type``
+
+[source,cs]
+----
+IConstraintVertex Type { get; }
+----
+
+Gets the type in this kind constraint.
+
+[caption=""]
+.Returns
+`IConstraintVertex`
+
+// end::methods[]
+

@@ -1,0 +1,59 @@
+[#_IRelates]
+[.doc-api-reference-driver]
+=== IRelates
+
+`interface`
+
+*Namespace*: `TypeDB.Driver.Api.Analyze`
+
+*Superinterfaces:*
+
+* `IConstraint`
+
+Represents a "relates" constraint: relation relates role
+
+// tag::methods[]
+[#_IRelates_Relation]
+==== property ``Relation``
+
+[source,cs]
+----
+IConstraintVertex Relation { get; }
+----
+
+Gets the relation in this relates constraint.
+
+[caption=""]
+.Returns
+`IConstraintVertex`
+
+[#_IRelates_Role]
+==== property ``Role``
+
+[source,cs]
+----
+IConstraintVertex Role { get; }
+----
+
+Gets the role in this relates constraint.
+
+[caption=""]
+.Returns
+`IConstraintVertex`
+
+[#_IRelates_Exactness]
+==== property ``Exactness``
+
+[source,cs]
+----
+Pinvoke.ConstraintExactness Exactness { get; }
+----
+
+Gets the exactness of this relates constraint.
+
+[caption=""]
+.Returns
+`Pinvoke.ConstraintExactness`
+
+// end::methods[]
+

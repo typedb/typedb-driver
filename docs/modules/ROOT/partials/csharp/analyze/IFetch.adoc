@@ -1,0 +1,99 @@
+[#_IFetch]
+[.doc-api-reference-driver]
+=== IFetch
+
+`interface`
+
+*Namespace*: `TypeDB.Driver.Api.Analyze`
+
+A representation of a fetch clause structure.
+
+// tag::methods[]
+[#_IFetch_Variant]
+==== property ``Variant``
+
+[source,cs]
+----
+Pinvoke.FetchVariant Variant { get; }
+----
+
+Gets the variant of this fetch.
+
+[caption=""]
+.Returns
+`Pinvoke.FetchVariant`
+
+[#_IFetch_IsLeaf]
+==== property ``IsLeaf``
+
+[source,cs]
+----
+bool IsLeaf { get; }
+----
+
+[caption=""]
+.Returns
+`bool`
+
+[#_IFetch_IsList]
+==== property ``IsList``
+
+[source,cs]
+----
+bool IsList { get; }
+----
+
+[caption=""]
+.Returns
+`bool`
+
+[#_IFetch_IsObject]
+==== property ``IsObject``
+
+[source,cs]
+----
+bool IsObject { get; }
+----
+
+[caption=""]
+.Returns
+`bool`
+
+[#_IFetch_AsLeaf]
+==== method ``AsLeaf``
+
+[source,cs]
+----
+IFetchLeaf AsLeaf()
+----
+
+[caption=""]
+.Returns
+`IFetchLeaf`
+
+[#_IFetch_AsList]
+==== method ``AsList``
+
+[source,cs]
+----
+IFetchList AsList()
+----
+
+[caption=""]
+.Returns
+`IFetchList`
+
+[#_IFetch_AsObject]
+==== method ``AsObject``
+
+[source,cs]
+----
+IFetchObject AsObject()
+----
+
+[caption=""]
+.Returns
+`IFetchObject`
+
+// end::methods[]
+

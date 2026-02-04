@@ -1,0 +1,31 @@
+[#_ILimitStage]
+[.doc-api-reference-driver]
+=== ILimitStage
+
+`interface`
+
+*Namespace*: `TypeDB.Driver.Api.Analyze`
+
+*Superinterfaces:*
+
+* `IPipelineStage`
+
+Represents a limit stage in a pipeline.
+
+// tag::methods[]
+[#_ILimitStage_Limit]
+==== property ``Limit``
+
+[source,cs]
+----
+long Limit { get; }
+----
+
+Gets the limit value.
+
+[caption=""]
+.Returns
+`long`
+
+// end::methods[]
+

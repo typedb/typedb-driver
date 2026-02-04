@@ -1,0 +1,41 @@
+[#_ISortVariable]
+[.doc-api-reference-driver]
+=== ISortVariable
+
+`interface`
+
+*Namespace*: `TypeDB.Driver.Api.Analyze`
+
+A variable with sort ordering information.
+
+// tag::methods[]
+[#_ISortVariable_Variable]
+==== property ``Variable``
+
+[source,cs]
+----
+IVariable Variable { get; }
+----
+
+Gets the variable being sorted.
+
+[caption=""]
+.Returns
+`IVariable`
+
+[#_ISortVariable_Order]
+==== property ``Order``
+
+[source,cs]
+----
+Pinvoke.SortOrder Order { get; }
+----
+
+Gets the sort order (ascending or descending).
+
+[caption=""]
+.Returns
+`Pinvoke.SortOrder`
+
+// end::methods[]
+

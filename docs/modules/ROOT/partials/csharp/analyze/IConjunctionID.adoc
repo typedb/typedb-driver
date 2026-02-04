@@ -1,0 +1,13 @@
+[#_IConjunctionID]
+[.doc-api-reference-driver]
+=== IConjunctionID
+
+`interface`
+
+*Namespace*: `TypeDB.Driver.Api.Analyze`
+
+An identifier for a conjunction within a pipeline.
+
+// tag::methods[]
+// end::methods[]
+

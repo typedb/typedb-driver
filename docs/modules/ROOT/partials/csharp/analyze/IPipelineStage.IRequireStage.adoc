@@ -1,0 +1,31 @@
+[#_IRequireStage]
+[.doc-api-reference-driver]
+=== IRequireStage
+
+`interface`
+
+*Namespace*: `TypeDB.Driver.Api.Analyze`
+
+*Superinterfaces:*
+
+* `IPipelineStage`
+
+Represents a require stage in a pipeline.
+
+// tag::methods[]
+[#_IRequireStage_Variables]
+==== property ``Variables``
+
+[source,cs]
+----
+IEnumerable<IVariable> Variables { get; }
+----
+
+Gets the required variables.
+
+[caption=""]
+.Returns
+`IEnumerable<IVariable>`
+
+// end::methods[]
+

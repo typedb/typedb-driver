@@ -1,0 +1,41 @@
+[#_IReducer]
+[.doc-api-reference-driver]
+=== IReducer
+
+`interface`
+
+*Namespace*: `TypeDB.Driver.Api.Analyze`
+
+A reducer in a reduce stage or function return.
+
+// tag::methods[]
+[#_IReducer_Name]
+==== property ``Name``
+
+[source,cs]
+----
+string Name { get; }
+----
+
+Gets the name of this reducer (e.g., "count", "sum", "max").
+
+[caption=""]
+.Returns
+`string`
+
+[#_IReducer_Arguments]
+==== property ``Arguments``
+
+[source,cs]
+----
+IEnumerable<IConstraintVertex> Arguments { get; }
+----
+
+Gets the arguments to this reducer.
+
+[caption=""]
+.Returns
+`IEnumerable<IConstraintVertex>`
+
+// end::methods[]
+

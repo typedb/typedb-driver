@@ -1,0 +1,31 @@
+[#_ISortStage]
+[.doc-api-reference-driver]
+=== ISortStage
+
+`interface`
+
+*Namespace*: `TypeDB.Driver.Api.Analyze`
+
+*Superinterfaces:*
+
+* `IPipelineStage`
+
+Represents a sort stage in a pipeline.
+
+// tag::methods[]
+[#_ISortStage_Variables]
+==== property ``Variables``
+
+[source,cs]
+----
+IEnumerable<ISortVariable> Variables { get; }
+----
+
+Gets the sort variables with their ordering.
+
+[caption=""]
+.Returns
+`IEnumerable<ISortVariable>`
+
+// end::methods[]
+

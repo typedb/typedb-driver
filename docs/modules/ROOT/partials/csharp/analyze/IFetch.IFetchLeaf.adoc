@@ -1,0 +1,31 @@
+[#_IFetchLeaf]
+[.doc-api-reference-driver]
+=== IFetchLeaf
+
+`interface`
+
+*Namespace*: `TypeDB.Driver.Api.Analyze`
+
+*Superinterfaces:*
+
+* `IFetch`
+
+A leaf fetch element.
+
+// tag::methods[]
+[#_IFetchLeaf_Annotations]
+==== property ``Annotations``
+
+[source,cs]
+----
+IEnumerable<string> Annotations { get; }
+----
+
+Gets the annotations for this fetch leaf.
+
+[caption=""]
+.Returns
+`IEnumerable<string>`
+
+// end::methods[]
+

@@ -1,0 +1,31 @@
+[#_IOr]
+[.doc-api-reference-driver]
+=== IOr
+
+`interface`
+
+*Namespace*: `TypeDB.Driver.Api.Analyze`
+
+*Superinterfaces:*
+
+* `IConstraint`
+
+Represents an "or" constraint: { branches[0] } or { branches[1] } [or ...]
+
+// tag::methods[]
+[#_IOr_Branches]
+==== property ``Branches``
+
+[source,cs]
+----
+IEnumerable<IConjunctionID> Branches { get; }
+----
+
+Gets the conjunction IDs for each branch of this or constraint.
+
+[caption=""]
+.Returns
+`IEnumerable<IConjunctionID>`
+
+// end::methods[]
+

@@ -1,0 +1,31 @@
+[#_IOffsetStage]
+[.doc-api-reference-driver]
+=== IOffsetStage
+
+`interface`
+
+*Namespace*: `TypeDB.Driver.Api.Analyze`
+
+*Superinterfaces:*
+
+* `IPipelineStage`
+
+Represents an offset stage in a pipeline.
+
+// tag::methods[]
+[#_IOffsetStage_Offset]
+==== property ``Offset``
+
+[source,cs]
+----
+long Offset { get; }
+----
+
+Gets the offset value.
+
+[caption=""]
+.Returns
+`long`
+
+// end::methods[]
+

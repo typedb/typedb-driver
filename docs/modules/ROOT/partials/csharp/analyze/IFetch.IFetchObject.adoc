@@ -1,0 +1,54 @@
+[#_IFetchObject]
+[.doc-api-reference-driver]
+=== IFetchObject
+
+`interface`
+
+*Namespace*: `TypeDB.Driver.Api.Analyze`
+
+*Superinterfaces:*
+
+* `IFetch`
+
+An object fetch element.
+
+// tag::methods[]
+[#_IFetchObject_Keys]
+==== property ``Keys``
+
+[source,cs]
+----
+IEnumerable<string> Keys { get; }
+----
+
+Gets the field names in this object.
+
+[caption=""]
+.Returns
+`IEnumerable<string>`
+
+[#_IFetchObject_Get_string]
+==== method ``Get``
+
+[source,cs]
+----
+IFetch Get(string field)
+----
+
+Gets the fetch for a specific field.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `field` a| The field name a| `string`
+|===
+
+[caption=""]
+.Returns
+`IFetch`
+
+// end::methods[]
+

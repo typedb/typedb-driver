@@ -1,0 +1,73 @@
+[#_ILinks]
+[.doc-api-reference-driver]
+=== ILinks
+
+`interface`
+
+*Namespace*: `TypeDB.Driver.Api.Analyze`
+
+*Superinterfaces:*
+
+* `IConstraint`
+
+Represents a "links" constraint: relation links (role: player)
+
+// tag::methods[]
+[#_ILinks_Relation]
+==== property ``Relation``
+
+[source,cs]
+----
+IConstraintVertex Relation { get; }
+----
+
+Gets the relation in this links constraint.
+
+[caption=""]
+.Returns
+`IConstraintVertex`
+
+[#_ILinks_Player]
+==== property ``Player``
+
+[source,cs]
+----
+IConstraintVertex Player { get; }
+----
+
+Gets the player in this links constraint.
+
+[caption=""]
+.Returns
+`IConstraintVertex`
+
+[#_ILinks_Role]
+==== property ``Role``
+
+[source,cs]
+----
+IConstraintVertex Role { get; }
+----
+
+Gets the role in this links constraint.
+
+[caption=""]
+.Returns
+`IConstraintVertex`
+
+[#_ILinks_Exactness]
+==== property ``Exactness``
+
+[source,cs]
+----
+Pinvoke.ConstraintExactness Exactness { get; }
+----
+
+Gets the exactness of this links constraint.
+
+[caption=""]
+.Returns
+`Pinvoke.ConstraintExactness`
+
+// end::methods[]
+

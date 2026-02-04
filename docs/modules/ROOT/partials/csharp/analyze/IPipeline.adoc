@@ -1,0 +1,73 @@
+[#_IPipeline]
+[.doc-api-reference-driver]
+=== IPipeline
+
+`interface`
+
+*Namespace*: `TypeDB.Driver.Api.Analyze`
+
+A representation of a query pipeline.
+
+// tag::methods[]
+[#_IPipeline_Stages]
+==== property ``Stages``
+
+[source,cs]
+----
+IEnumerable<IPipelineStage> Stages { get; }
+----
+
+Gets the stages making up the pipeline.
+
+[caption=""]
+.Returns
+`IEnumerable<IPipelineStage>`
+
+[#_IPipeline_GetVariableName_IVariable]
+==== method ``GetVariableName``
+
+[source,cs]
+----
+string? GetVariableName(IVariable variable)
+----
+
+Gets the name of the specified variable, if it has one.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `variable` a| The variable to get the name for a| `IVariable`
+|===
+
+[caption=""]
+.Returns
+`string?`
+
+[#_IPipeline_GetConjunction_IConjunctionID]
+==== method ``GetConjunction``
+
+[source,cs]
+----
+IConjunction? GetConjunction(IConjunctionID conjunctionID)
+----
+
+Gets the conjunction for the specified conjunction ID.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `conjunctionID` a| The ConjunctionID of the conjunction to retrieve a| `IConjunctionID`
+|===
+
+[caption=""]
+.Returns
+`IConjunction?`
+
+// end::methods[]
+

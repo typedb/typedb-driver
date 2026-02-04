@@ -1,0 +1,41 @@
+[#_IReduceAssignment]
+[.doc-api-reference-driver]
+=== IReduceAssignment
+
+`interface`
+
+*Namespace*: `TypeDB.Driver.Api.Analyze`
+
+An assignment of a reducer result to a variable.
+
+// tag::methods[]
+[#_IReduceAssignment_Assigned]
+==== property ``Assigned``
+
+[source,cs]
+----
+IVariable Assigned { get; }
+----
+
+Gets the variable being assigned to.
+
+[caption=""]
+.Returns
+`IVariable`
+
+[#_IReduceAssignment_Reducer]
+==== property ``Reducer``
+
+[source,cs]
+----
+IReducer Reducer { get; }
+----
+
+Gets the reducer.
+
+[caption=""]
+.Returns
+`IReducer`
+
+// end::methods[]
+

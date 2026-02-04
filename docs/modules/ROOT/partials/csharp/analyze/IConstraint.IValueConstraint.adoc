@@ -1,0 +1,45 @@
+[#_IValueConstraint]
+[.doc-api-reference-driver]
+=== IValueConstraint
+
+`interface`
+
+*Namespace*: `TypeDB.Driver.Api.Analyze`
+
+*Superinterfaces:*
+
+* `IConstraint`
+
+Represents a value constraint: attribute_type value value_type
+
+// tag::methods[]
+[#_IValueConstraint_AttributeType]
+==== property ``AttributeType``
+
+[source,cs]
+----
+IConstraintVertex AttributeType { get; }
+----
+
+Gets the attribute type in this value constraint.
+
+[caption=""]
+.Returns
+`IConstraintVertex`
+
+[#_IValueConstraint_ValueType]
+==== property ``ValueType``
+
+[source,cs]
+----
+string ValueType { get; }
+----
+
+Gets the value type (e.g., "string", "long", "double").
+
+[caption=""]
+.Returns
+`string`
+
+// end::methods[]
+

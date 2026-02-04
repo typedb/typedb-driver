@@ -1,0 +1,13 @@
+[#_IVariable]
+[.doc-api-reference-driver]
+=== IVariable
+
+`interface`
+
+*Namespace*: `TypeDB.Driver.Api.Analyze`
+
+A representation of a variable in a query.
+
+// tag::methods[]
+// end::methods[]
+

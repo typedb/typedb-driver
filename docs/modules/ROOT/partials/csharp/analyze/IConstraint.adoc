@@ -1,0 +1,473 @@
+[#_IConstraint]
+[.doc-api-reference-driver]
+=== IConstraint
+
+`interface`
+
+*Namespace*: `TypeDB.Driver.Api.Analyze`
+
+A representation of a TypeQL constraint.
+
+// tag::methods[]
+[#_IConstraint_Variant]
+==== property ``Variant``
+
+[source,cs]
+----
+Pinvoke.ConstraintVariant Variant { get; }
+----
+
+Gets the variant of this constraint.
+
+[caption=""]
+.Returns
+`Pinvoke.ConstraintVariant`
+
+[#_IConstraint_Span]
+==== property ``Span``
+
+[source,cs]
+----
+ISpan Span { get; }
+----
+
+Gets the span of this constraint in the source query.
+
+[caption=""]
+.Returns
+`ISpan`
+
+[#_IConstraint_IsIsa]
+==== property ``IsIsa``
+
+[source,cs]
+----
+bool IsIsa { get; }
+----
+
+[caption=""]
+.Returns
+`bool`
+
+[#_IConstraint_IsHas]
+==== property ``IsHas``
+
+[source,cs]
+----
+bool IsHas { get; }
+----
+
+[caption=""]
+.Returns
+`bool`
+
+[#_IConstraint_IsLinks]
+==== property ``IsLinks``
+
+[source,cs]
+----
+bool IsLinks { get; }
+----
+
+[caption=""]
+.Returns
+`bool`
+
+[#_IConstraint_IsSub]
+==== property ``IsSub``
+
+[source,cs]
+----
+bool IsSub { get; }
+----
+
+[caption=""]
+.Returns
+`bool`
+
+[#_IConstraint_IsOwns]
+==== property ``IsOwns``
+
+[source,cs]
+----
+bool IsOwns { get; }
+----
+
+[caption=""]
+.Returns
+`bool`
+
+[#_IConstraint_IsRelates]
+==== property ``IsRelates``
+
+[source,cs]
+----
+bool IsRelates { get; }
+----
+
+[caption=""]
+.Returns
+`bool`
+
+[#_IConstraint_IsPlays]
+==== property ``IsPlays``
+
+[source,cs]
+----
+bool IsPlays { get; }
+----
+
+[caption=""]
+.Returns
+`bool`
+
+[#_IConstraint_IsFunctionCall]
+==== property ``IsFunctionCall``
+
+[source,cs]
+----
+bool IsFunctionCall { get; }
+----
+
+[caption=""]
+.Returns
+`bool`
+
+[#_IConstraint_IsExpression]
+==== property ``IsExpression``
+
+[source,cs]
+----
+bool IsExpression { get; }
+----
+
+[caption=""]
+.Returns
+`bool`
+
+[#_IConstraint_IsIs]
+==== property ``IsIs``
+
+[source,cs]
+----
+bool IsIs { get; }
+----
+
+[caption=""]
+.Returns
+`bool`
+
+[#_IConstraint_IsIid]
+==== property ``IsIid``
+
+[source,cs]
+----
+bool IsIid { get; }
+----
+
+[caption=""]
+.Returns
+`bool`
+
+[#_IConstraint_IsComparison]
+==== property ``IsComparison``
+
+[source,cs]
+----
+bool IsComparison { get; }
+----
+
+[caption=""]
+.Returns
+`bool`
+
+[#_IConstraint_IsKind]
+==== property ``IsKind``
+
+[source,cs]
+----
+bool IsKind { get; }
+----
+
+[caption=""]
+.Returns
+`bool`
+
+[#_IConstraint_IsLabel]
+==== property ``IsLabel``
+
+[source,cs]
+----
+bool IsLabel { get; }
+----
+
+[caption=""]
+.Returns
+`bool`
+
+[#_IConstraint_IsValue]
+==== property ``IsValue``
+
+[source,cs]
+----
+bool IsValue { get; }
+----
+
+[caption=""]
+.Returns
+`bool`
+
+[#_IConstraint_IsOr]
+==== property ``IsOr``
+
+[source,cs]
+----
+bool IsOr { get; }
+----
+
+[caption=""]
+.Returns
+`bool`
+
+[#_IConstraint_IsNot]
+==== property ``IsNot``
+
+[source,cs]
+----
+bool IsNot { get; }
+----
+
+[caption=""]
+.Returns
+`bool`
+
+[#_IConstraint_IsTry]
+==== property ``IsTry``
+
+[source,cs]
+----
+bool IsTry { get; }
+----
+
+[caption=""]
+.Returns
+`bool`
+
+[#_IConstraint_AsIsa]
+==== method ``AsIsa``
+
+[source,cs]
+----
+IIsa AsIsa()
+----
+
+[caption=""]
+.Returns
+`IIsa`
+
+[#_IConstraint_AsHas]
+==== method ``AsHas``
+
+[source,cs]
+----
+IHas AsHas()
+----
+
+[caption=""]
+.Returns
+`IHas`
+
+[#_IConstraint_AsLinks]
+==== method ``AsLinks``
+
+[source,cs]
+----
+ILinks AsLinks()
+----
+
+[caption=""]
+.Returns
+`ILinks`
+
+[#_IConstraint_AsSub]
+==== method ``AsSub``
+
+[source,cs]
+----
+ISub AsSub()
+----
+
+[caption=""]
+.Returns
+`ISub`
+
+[#_IConstraint_AsOwns]
+==== method ``AsOwns``
+
+[source,cs]
+----
+IOwns AsOwns()
+----
+
+[caption=""]
+.Returns
+`IOwns`
+
+[#_IConstraint_AsRelates]
+==== method ``AsRelates``
+
+[source,cs]
+----
+IRelates AsRelates()
+----
+
+[caption=""]
+.Returns
+`IRelates`
+
+[#_IConstraint_AsPlays]
+==== method ``AsPlays``
+
+[source,cs]
+----
+IPlays AsPlays()
+----
+
+[caption=""]
+.Returns
+`IPlays`
+
+[#_IConstraint_AsFunctionCall]
+==== method ``AsFunctionCall``
+
+[source,cs]
+----
+IFunctionCall AsFunctionCall()
+----
+
+[caption=""]
+.Returns
+`IFunctionCall`
+
+[#_IConstraint_AsExpression]
+==== method ``AsExpression``
+
+[source,cs]
+----
+IExpression AsExpression()
+----
+
+[caption=""]
+.Returns
+`IExpression`
+
+[#_IConstraint_AsIs]
+==== method ``AsIs``
+
+[source,cs]
+----
+IIs AsIs()
+----
+
+[caption=""]
+.Returns
+`IIs`
+
+[#_IConstraint_AsIid]
+==== method ``AsIid``
+
+[source,cs]
+----
+IIid AsIid()
+----
+
+[caption=""]
+.Returns
+`IIid`
+
+[#_IConstraint_AsComparison]
+==== method ``AsComparison``
+
+[source,cs]
+----
+IComparison AsComparison()
+----
+
+[caption=""]
+.Returns
+`IComparison`
+
+[#_IConstraint_AsKind]
+==== method ``AsKind``
+
+[source,cs]
+----
+IKind AsKind()
+----
+
+[caption=""]
+.Returns
+`IKind`
+
+[#_IConstraint_AsLabel]
+==== method ``AsLabel``
+
+[source,cs]
+----
+ILabelConstraint AsLabel()
+----
+
+[caption=""]
+.Returns
+`ILabelConstraint`
+
+[#_IConstraint_AsValue]
+==== method ``AsValue``
+
+[source,cs]
+----
+IValueConstraint AsValue()
+----
+
+[caption=""]
+.Returns
+`IValueConstraint`
+
+[#_IConstraint_AsOr]
+==== method ``AsOr``
+
+[source,cs]
+----
+IOr AsOr()
+----
+
+[caption=""]
+.Returns
+`IOr`
+
+[#_IConstraint_AsNot]
+==== method ``AsNot``
+
+[source,cs]
+----
+INot AsNot()
+----
+
+[caption=""]
+.Returns
+`INot`
+
+[#_IConstraint_AsTry]
+==== method ``AsTry``
+
+[source,cs]
+----
+ITry AsTry()
+----
+
+[caption=""]
+.Returns
+`ITry`
+
+// end::methods[]
+

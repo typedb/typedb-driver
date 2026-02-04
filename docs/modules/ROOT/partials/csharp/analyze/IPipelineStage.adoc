@@ -1,0 +1,315 @@
+[#_IPipelineStage]
+[.doc-api-reference-driver]
+=== IPipelineStage
+
+`interface`
+
+*Namespace*: `TypeDB.Driver.Api.Analyze`
+
+Representation of a stage in a ``Pipeline``.
+
+// tag::methods[]
+[#_IPipelineStage_Variant]
+==== property ``Variant``
+
+[source,cs]
+----
+Pinvoke.PipelineStageVariant Variant { get; }
+----
+
+Gets the variant of this pipeline stage.
+
+[caption=""]
+.Returns
+`Pinvoke.PipelineStageVariant`
+
+[#_IPipelineStage_IsMatch]
+==== property ``IsMatch``
+
+[source,cs]
+----
+bool IsMatch { get; }
+----
+
+[caption=""]
+.Returns
+`bool`
+
+[#_IPipelineStage_IsInsert]
+==== property ``IsInsert``
+
+[source,cs]
+----
+bool IsInsert { get; }
+----
+
+[caption=""]
+.Returns
+`bool`
+
+[#_IPipelineStage_IsPut]
+==== property ``IsPut``
+
+[source,cs]
+----
+bool IsPut { get; }
+----
+
+[caption=""]
+.Returns
+`bool`
+
+[#_IPipelineStage_IsUpdate]
+==== property ``IsUpdate``
+
+[source,cs]
+----
+bool IsUpdate { get; }
+----
+
+[caption=""]
+.Returns
+`bool`
+
+[#_IPipelineStage_IsDelete]
+==== property ``IsDelete``
+
+[source,cs]
+----
+bool IsDelete { get; }
+----
+
+[caption=""]
+.Returns
+`bool`
+
+[#_IPipelineStage_IsSelect]
+==== property ``IsSelect``
+
+[source,cs]
+----
+bool IsSelect { get; }
+----
+
+[caption=""]
+.Returns
+`bool`
+
+[#_IPipelineStage_IsSort]
+==== property ``IsSort``
+
+[source,cs]
+----
+bool IsSort { get; }
+----
+
+[caption=""]
+.Returns
+`bool`
+
+[#_IPipelineStage_IsRequire]
+==== property ``IsRequire``
+
+[source,cs]
+----
+bool IsRequire { get; }
+----
+
+[caption=""]
+.Returns
+`bool`
+
+[#_IPipelineStage_IsOffset]
+==== property ``IsOffset``
+
+[source,cs]
+----
+bool IsOffset { get; }
+----
+
+[caption=""]
+.Returns
+`bool`
+
+[#_IPipelineStage_IsLimit]
+==== property ``IsLimit``
+
+[source,cs]
+----
+bool IsLimit { get; }
+----
+
+[caption=""]
+.Returns
+`bool`
+
+[#_IPipelineStage_IsDistinct]
+==== property ``IsDistinct``
+
+[source,cs]
+----
+bool IsDistinct { get; }
+----
+
+[caption=""]
+.Returns
+`bool`
+
+[#_IPipelineStage_IsReduce]
+==== property ``IsReduce``
+
+[source,cs]
+----
+bool IsReduce { get; }
+----
+
+[caption=""]
+.Returns
+`bool`
+
+[#_IPipelineStage_AsMatch]
+==== method ``AsMatch``
+
+[source,cs]
+----
+IMatchStage AsMatch()
+----
+
+[caption=""]
+.Returns
+`IMatchStage`
+
+[#_IPipelineStage_AsInsert]
+==== method ``AsInsert``
+
+[source,cs]
+----
+IInsertStage AsInsert()
+----
+
+[caption=""]
+.Returns
+`IInsertStage`
+
+[#_IPipelineStage_AsPut]
+==== method ``AsPut``
+
+[source,cs]
+----
+IPutStage AsPut()
+----
+
+[caption=""]
+.Returns
+`IPutStage`
+
+[#_IPipelineStage_AsUpdate]
+==== method ``AsUpdate``
+
+[source,cs]
+----
+IUpdateStage AsUpdate()
+----
+
+[caption=""]
+.Returns
+`IUpdateStage`
+
+[#_IPipelineStage_AsDelete]
+==== method ``AsDelete``
+
+[source,cs]
+----
+IDeleteStage AsDelete()
+----
+
+[caption=""]
+.Returns
+`IDeleteStage`
+
+[#_IPipelineStage_AsSelect]
+==== method ``AsSelect``
+
+[source,cs]
+----
+ISelectStage AsSelect()
+----
+
+[caption=""]
+.Returns
+`ISelectStage`
+
+[#_IPipelineStage_AsSort]
+==== method ``AsSort``
+
+[source,cs]
+----
+ISortStage AsSort()
+----
+
+[caption=""]
+.Returns
+`ISortStage`
+
+[#_IPipelineStage_AsRequire]
+==== method ``AsRequire``
+
+[source,cs]
+----
+IRequireStage AsRequire()
+----
+
+[caption=""]
+.Returns
+`IRequireStage`
+
+[#_IPipelineStage_AsOffset]
+==== method ``AsOffset``
+
+[source,cs]
+----
+IOffsetStage AsOffset()
+----
+
+[caption=""]
+.Returns
+`IOffsetStage`
+
+[#_IPipelineStage_AsLimit]
+==== method ``AsLimit``
+
+[source,cs]
+----
+ILimitStage AsLimit()
+----
+
+[caption=""]
+.Returns
+`ILimitStage`
+
+[#_IPipelineStage_AsDistinct]
+==== method ``AsDistinct``
+
+[source,cs]
+----
+IDistinctStage AsDistinct()
+----
+
+[caption=""]
+.Returns
+`IDistinctStage`
+
+[#_IPipelineStage_AsReduce]
+==== method ``AsReduce``
+
+[source,cs]
+----
+IReduceStage AsReduce()
+----
+
+[caption=""]
+.Returns
+`IReduceStage`
+
+// end::methods[]
+

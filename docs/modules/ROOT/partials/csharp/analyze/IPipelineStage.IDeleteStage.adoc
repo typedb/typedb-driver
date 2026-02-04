@@ -1,0 +1,45 @@
+[#_IDeleteStage]
+[.doc-api-reference-driver]
+=== IDeleteStage
+
+`interface`
+
+*Namespace*: `TypeDB.Driver.Api.Analyze`
+
+*Superinterfaces:*
+
+* `IPipelineStage`
+
+Represents a delete stage in a pipeline.
+
+// tag::methods[]
+[#_IDeleteStage_Block]
+==== property ``Block``
+
+[source,cs]
+----
+IConjunctionID Block { get; }
+----
+
+Gets the conjunction ID for the delete block.
+
+[caption=""]
+.Returns
+`IConjunctionID`
+
+[#_IDeleteStage_DeletedVariables]
+==== property ``DeletedVariables``
+
+[source,cs]
+----
+IEnumerable<IVariable> DeletedVariables { get; }
+----
+
+Gets the variables being deleted.
+
+[caption=""]
+.Returns
+`IEnumerable<IVariable>`
+
+// end::methods[]
+
