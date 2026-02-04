@@ -40,6 +40,7 @@ csharp_behaviour_test_all(
         "//csharp/Common:common",
         "//csharp/Concept:concept",
         "//csharp:driver-csharp",
+        "//csharp:typedb_driver_pinvoke",
         "//csharp/Test/Behaviour/Util:util",
         "@paket.csharp_deps//newtonsoft.json",
     ],

@@ -22,7 +22,11 @@ load("//csharp/Test:build_opts.bzl", "behaviour_tests_deps")
 csharp_library(
     name = "util",
     srcs = glob(["*.cs"], exclude = ["UtilSteps.cs"]),
-    deps = behaviour_tests_deps + ["@paket.csharp_deps//newtonsoft.json"],
+    deps = behaviour_tests_deps + [
+        "@paket.csharp_deps//newtonsoft.json",
+        "//csharp:driver-csharp",
+        "//csharp:typedb_driver_pinvoke",
+    ],
     runtime_identifier = "any",
     nullable = nullable_context,
     target_frameworks = target_frameworks,

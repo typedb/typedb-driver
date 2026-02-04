@@ -191,8 +191,139 @@
 
 /* Concept row getters do not throw */
 %noexception concept_row_get_query_type;
+%noexception concept_row_get_query_structure;
 %noexception concept_row_equals;
 %noexception concept_row_to_string;
+
+/* Concept value getters do not throw - call concept_is_X before concept_get_X */
+%noexception concept_get_boolean;
+%noexception concept_get_date_as_seconds;
+%noexception concept_get_datetime;
+%noexception concept_get_datetime_tz;
+%noexception concept_get_decimal;
+%noexception concept_get_double;
+%noexception concept_get_duration;
+%noexception concept_get_integer;
+%noexception concept_get_string;
+%noexception concept_get_struct;
+
+/* Analyze field accessors do not throw */
+%noexception analyzed_query_pipeline;
+%noexception analyzed_preamble;
+%noexception analyzed_fetch;
+%noexception comparator_get_name;
+
+%noexception conjunction_id_as_u32;
+%noexception conjunction_id_string_repr;
+%noexception conjunction_get_constraints;
+%noexception conjunction_get_annotated_variables;
+%noexception conjunction_get_variable_annotations;
+
+%noexception constraint_span_begin;
+%noexception constraint_span_end;
+%noexception constraint_variant;
+%noexception constraint_isa_get_instance;
+%noexception constraint_isa_get_type;
+%noexception constraint_has_get_attribute;
+%noexception constraint_has_get_owner;
+%noexception constraint_links_get_relation;
+%noexception constraint_links_get_player;
+%noexception constraint_links_get_role;
+%noexception constraint_sub_get_subtype;
+%noexception constraint_sub_get_supertype;
+%noexception constraint_owns_get_owner;
+%noexception constraint_owns_get_attribute;
+%noexception constraint_relates_get_relation;
+%noexception constraint_relates_get_role;
+%noexception constraint_plays_get_player;
+%noexception constraint_plays_get_role;
+%noexception constraint_isa_get_exactness;
+%noexception constraint_has_get_exactness;
+%noexception constraint_links_get_exactness;
+%noexception constraint_sub_get_exactness;
+%noexception constraint_owns_get_exactness;
+%noexception constraint_relates_get_exactness;
+%noexception constraint_plays_get_exactness;
+%noexception constraint_function_call_get_name;
+%noexception constraint_function_call_get_arguments;
+%noexception constraint_function_call_get_assigned;
+%noexception constraint_expression_get_text;
+%noexception constraint_expression_get_arguments;
+%noexception constraint_expression_get_assigned;
+%noexception constraint_is_get_lhs;
+%noexception constraint_is_get_rhs;
+%noexception constraint_iid_get_variable;
+%noexception constraint_iid_get_iid;
+%noexception constraint_comparison_get_lhs;
+%noexception constraint_comparison_get_rhs;
+%noexception constraint_comparison_get_comparator;
+%noexception constraint_kind_get_kind;
+%noexception constraint_kind_get_type;
+%noexception constraint_label_get_variable;
+%noexception constraint_label_get_label;
+%noexception constraint_value_get_attribute_type;
+%noexception constraint_value_get_value_type;
+%noexception constraint_or_get_branches;
+%noexception constraint_not_get_conjunction;
+%noexception constraint_try_get_conjunction;
+%noexception constraint_string_repr;
+
+%noexception constraint_vertex_variant;
+%noexception constraint_vertex_as_variable;
+%noexception constraint_vertex_as_label;
+%noexception constraint_vertex_as_value;
+%noexception constraint_vertex_as_named_role;
+%noexception named_role_get_name;
+%noexception named_role_get_variable;
+%noexception named_role_as_u32;
+%noexception named_role_string_repr;
+
+%noexception fetch_variant;
+%noexception fetch_leaf_annotations;
+%noexception fetch_list_element;
+%noexception fetch_object_fields;
+%noexception fetch_object_get_field;
+
+%noexception function_body;
+%noexception function_argument_variables;
+%noexception function_return_operation;
+%noexception function_argument_annotations;
+%noexception function_return_annotations;
+
+%noexception pipeline_get_conjunction;
+%noexception pipeline_stages;
+%noexception pipeline_stage_variant;
+%noexception pipeline_stage_get_block;
+%noexception pipeline_stage_delete_get_deleted_variables;
+%noexception pipeline_stage_select_get_variables;
+%noexception pipeline_stage_require_get_variables;
+%noexception pipeline_stage_offset_get_offset;
+%noexception pipeline_stage_limit_get_limit;
+%noexception pipeline_stage_sort_get_sort_variables;
+%noexception pipeline_stage_reduce_get_groupby;
+%noexception pipeline_stage_reduce_get_reducer_assignments;
+%noexception pipeline_stage_string_repr;
+%noexception reduce_assignment_get_assigned;
+%noexception reduce_assignment_get_reducer;
+%noexception reducer_get_name;
+%noexception reducer_get_arguments;
+%noexception sort_variable_get_variable;
+%noexception sort_variable_get_order;
+
+%noexception return_operation_variant;
+%noexception return_operation_stream_variables;
+%noexception return_operation_single_selector;
+%noexception return_operation_single_variables;
+%noexception return_operation_reducers;
+
+%noexception variable_annotations_variant;
+%noexception variable_annotations_instance;
+%noexception variable_annotations_type;
+%noexception variable_annotations_value;
+
+%noexception variable_get_name;
+%noexception variable_id_as_u32;
+%noexception variable_string_repr;
 
 /* Director constructor does not throw */
 %noexception TransactionCallbackDirector;
@@ -218,6 +349,34 @@
 %noexception ~UserIterator;
 %noexception ~ReplicaInfo;
 %noexception ~ReplicaInfoIterator;
+
+/* Analyze destructors do not throw */
+%noexception ~AnalyzedQuery;
+%noexception ~Conjunction;
+%noexception ~ConjunctionID;
+%noexception ~ConstraintWithSpan;
+%noexception ~ConstraintVertex;
+%noexception ~Fetch;
+%noexception ~Function;
+%noexception ~NamedRole;
+%noexception ~PipelineStage;
+%noexception ~Pipeline;
+%noexception ~Reducer;
+%noexception ~ReduceAssignment;
+%noexception ~ReturnOperation;
+%noexception ~ConstraintWithSpanIterator;
+%noexception ~ConjunctionIDIterator;
+%noexception ~ConstraintVertexIterator;
+%noexception ~FunctionIterator;
+%noexception ~PipelineStageIterator;
+%noexception ~ReducerIterator;
+%noexception ~ReduceAssignmentIterator;
+%noexception ~SortVariable;
+%noexception ~SortVariableIterator;
+%noexception ~VariableAnnotations;
+%noexception ~VariableAnnotationsIterator;
+%noexception ~Variable;
+%noexception ~VariableIterator;
 
 /* Commit and rollback are non-throwing operations on construction */
 %noexception transaction_commit;
@@ -265,9 +424,10 @@
 }%}
 %enddef
 
-/* 3.0 API promises - only String and Bool are used */
+/* 3.0 API promises */
 %promise(String, string, string)
 %promise(Bool, bool, bool)
+%promise(AnalyzedQuery, AnalyzedQuery, analyzed_query)
 
 /* void promises require special handling */
 %typemap(csbody) VoidPromise %{
@@ -368,6 +528,18 @@
 %iterator(StringAndOptValue, StringAndOptValue, string_and_opt_value)
 %iterator(User, User, user)
 %iterator(Database, Database, database)
+
+/* Analyze API iterators */
+%iterator(Variable, Variable, variable)
+%iterator(PipelineStage, PipelineStage, pipeline_stage)
+%iterator(ConjunctionID, ConjunctionID, conjunction_id)
+%iterator(ConstraintWithSpan, ConstraintWithSpan, constraint_with_span)
+%iterator(ConstraintVertex, ConstraintVertex, constraint_vertex)
+%iterator(Function, Function, function)
+%iterator(SortVariable, SortVariable, sort_variable)
+%iterator(ReduceAssignment, ReduceAssignment, reduce_assignment)
+%iterator(Reducer, Reducer, reducer)
+%iterator(VariableAnnotations, VariableAnnotations, variable_annotations)
 
 
 %define %array(Type)
