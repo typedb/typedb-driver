@@ -36,7 +36,6 @@ csharp_behaviour_test_all(
     connection_steps_cluster = "//csharp/Test/Behaviour/Connection:steps-cluster",
     features = ["@typedb_behaviour//driver:concept.feature"],
     deps = [
-        "//csharp/Analyze:analyze",
         "//csharp/Api:api",
         "//csharp/Answer:answer",
         "//csharp/Common:common",
@@ -44,7 +43,6 @@ csharp_behaviour_test_all(
         "//csharp:driver-csharp",
         "//csharp:typedb_driver_pinvoke",
         "//csharp/Test/Behaviour/Util:util",
-        "//csharp/Test/Behaviour/Util:functor-encoder",
         "@paket.csharp_deps//newtonsoft.json",
     ],
     target_frameworks = target_frameworks,
