@@ -21,7 +21,7 @@ load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 java_library(
     name = "answer",
-    srcs = glob(["*.java", "*/*.java"], exclude=["test/**"]),
+    srcs = glob(["*.java", "*/*.java"], exclude=["test/**"], allow_empty = True),
     deps = [
         # Internal dependencies
         "//java/api:api",

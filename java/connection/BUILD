@@ -27,6 +27,7 @@ java_library(
             "*/*.java",
         ],
         exclude = ["test/**"],
+        allow_empty = True,
     ),
     runtime_deps = [
         "@maven//:ch_qos_logback_logback_classic",

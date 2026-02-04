@@ -35,6 +35,6 @@ checkstyle_test(
         "**/*.md",
         "tsconfig.json",
         "package.json",
-    ]),
+    ], allow_empty = True),
     license_type = "apache-header",
 )

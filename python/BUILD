@@ -15,7 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 
-load("@typedb_bazel_distribution//docs:python/rules.bzl", "sphinx_docs")
+load("@typedb_bazel_distribution//docs/python:rules.bzl", "sphinx_docs")
 load("@typedb_dependencies//builder/swig:python.bzl", "py_native_lib_rename")
 load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("//python:rules.bzl", "native_driver_versioned")
@@ -95,14 +95,14 @@ checkstyle_test(
         "WORKSPACE",
         "requirements*.txt",
         "typedb/**/*",
-    ]),
+    ], allow_empty = True),
     exclude = glob([
         "conf.py",
         "index.rst",
         "docs/**/*.adoc",
         "example.py",
         "cloud_example.py",
-    ]),
+    ], allow_empty = True),
     license_type = "apache-header",
     size = "small",
 )

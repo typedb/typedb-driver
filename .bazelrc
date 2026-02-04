@@ -37,3 +37,7 @@ build:macos --stamp --workspace_status_command=$PWD/workspace-status.sh
 build --@aspect_rules_ts//ts:skipLibCheck=always
 fetch --@aspect_rules_ts//ts:skipLibCheck=always
 query --@aspect_rules_ts//ts:skipLibCheck=always
+
+# Bazel 8 migration: Allow empty globs temporarily
+# TODO: Fix all BUILD files to use allow_empty=True explicitly, then remove this flag
+build --noincompatible_disallow_empty_glob

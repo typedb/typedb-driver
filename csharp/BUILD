@@ -16,7 +16,7 @@
 # under the License.
 
 load("@rules_dotnet//dotnet:defs.bzl", "csharp_binary", "csharp_library")
-load("@typedb_bazel_distribution//docs:doxygen/rules.bzl", "doxygen_docs")
+load("@typedb_bazel_distribution//docs/doxygen:rules.bzl", "doxygen_docs")
 load("@typedb_bazel_distribution//nuget:rules.bzl", "nuget_pack", "nuget_push")
 load("@typedb_dependencies//distribution:deployment.bzl", "deployment")
 load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")

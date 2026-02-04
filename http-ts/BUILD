@@ -122,7 +122,7 @@ checkstyle_test(
         "LICENSE",
         "docs/**/*",
         "dist/**/*",
-    ]),
+    ], allow_empty = True),
     license_type = "apache-header",
 )
 
