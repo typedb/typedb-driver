@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using TypeDB.Driver.Api;
+using TypeDB.Driver.Api.Analyze;
 using TypeDB.Driver.Api.Answer;
 using TypeDB.Driver.Common;
 
@@ -116,6 +117,20 @@ namespace TypeDB.Driver.Answer
                 {
                     throw new TypeDBDriverException(e);
                 }
+            }
+        }
+
+        /// <inheritdoc/>
+        public IPipeline? QueryStructure
+        {
+            get
+            {
+                var nativePipeline = Pinvoke.typedb_driver.concept_row_get_query_structure(NativeObject);
+                if (nativePipeline == null)
+                {
+                    return null;
+                }
+                return new Analyze.Pipeline(nativePipeline);
             }
         }
 
