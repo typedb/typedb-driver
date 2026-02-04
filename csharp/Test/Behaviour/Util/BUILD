@@ -36,7 +36,7 @@ csharp_library(
 csharp_library(
     name = "functor-encoder",
     srcs = ["FunctorEncoder.cs"],
-    deps = behaviour_tests_deps + [
+    deps = [
         "//csharp/Analyze:analyze",
         "//csharp/Api:api",
         "//csharp/Common:common",

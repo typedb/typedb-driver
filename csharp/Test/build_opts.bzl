@@ -20,6 +20,8 @@ integration_tests_deps = [
 ]
 
 behaviour_tests_deps = [
+    "//csharp/Analyze:analyze",
+    "//csharp/Test/Behaviour/Util:functor-encoder",
     "@paket.csharp_deps//gherkin",
     "@paket.csharp_deps//xunit.assert",
     "@paket.csharp_deps//xunit.gherkin.quick",
