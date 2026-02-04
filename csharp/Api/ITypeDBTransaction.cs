@@ -20,6 +20,7 @@
 using System;
 
 using TypeDB.Driver.Api;
+using TypeDB.Driver.Api.Analyze;
 using TypeDB.Driver.Api.Answer;
 using TypeDB.Driver.Common;
 
@@ -83,7 +84,7 @@ namespace TypeDB.Driver.Api
         /// </summary>
         /// <param name="query">The TypeQL query string to analyze.</param>
         /// <returns>The analyzed query containing structure and type information.</returns>
-        Pinvoke.AnalyzedQuery Analyze(string query);
+        IAnalyzedQuery Analyze(string query);
     }
 
     /// <summary>

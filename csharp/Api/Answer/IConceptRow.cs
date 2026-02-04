@@ -20,6 +20,7 @@
 using System.Collections.Generic;
 
 using TypeDB.Driver.Api;
+using TypeDB.Driver.Api.Analyze;
 
 namespace TypeDB.Driver.Api.Answer
 {
@@ -89,5 +90,16 @@ namespace TypeDB.Driver.Api.Answer
         /// </code>
         /// </example>
         IEnumerable<IConcept> Concepts { get; }
+
+        /// <summary>
+        /// Retrieves the query structure pipeline if available.
+        /// Only available if the query was executed with IncludeQueryStructure option enabled.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// conceptRow.QueryStructure
+        /// </code>
+        /// </example>
+        IPipeline? QueryStructure { get; }
     }
 }

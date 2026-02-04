@@ -17,28 +17,34 @@
 
 package(default_visibility = ["//visibility:public"])
 
+load("//csharp:build_opts.bzl", "nullable_context", "target_frameworks", "targeting_packs")
 load("@rules_dotnet//dotnet:defs.bzl", "csharp_library")
-load("//csharp:build_opts.bzl", "target_frameworks", "targeting_packs", "nullable_context")
 load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 csharp_library(
-    name = "answer",
+    name = "analyze",
     srcs = glob(["*.cs"]),
     deps = [
-        "//csharp/Analyze:analyze",
         "//csharp/Api:api",
         "//csharp/Common:common",
         "//csharp/Concept:concept",
         "//csharp:typedb_driver_pinvoke",
     ],
-    out = "TypeDB.Driver.Answer",
+    out = "TypeDB.Driver.Analyze",
     nullable = nullable_context,
     target_frameworks = target_frameworks,
     targeting_packs = targeting_packs,
+)
+
+filegroup(
+    name = "docs_source_files",
+    srcs = glob(["*.cs"]),
+    visibility = ["//csharp:__pkg__"],
 )
 
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*"]),
     license_type = "apache-header",
+    size = "small",
 )

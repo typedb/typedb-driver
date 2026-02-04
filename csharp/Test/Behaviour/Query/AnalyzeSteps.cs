@@ -24,13 +24,13 @@ using System.Linq;
 using Xunit;
 using Xunit.Gherkin.Quick;
 
-using Pinvoke = TypeDB.Driver.Pinvoke;
+using TypeDB.Driver.Api.Analyze;
 
 namespace TypeDB.Driver.Test.Behaviour
 {
     public partial class BehaviourSteps
     {
-        private static Pinvoke.AnalyzedQuery? _analyzedQuery;
+        private static IAnalyzedQuery? _analyzedQuery;
 
         private void ClearAnalyzedQuery()
         {
@@ -63,7 +63,7 @@ namespace TypeDB.Driver.Test.Behaviour
         public void AnalyzedQueryPipelineStructureIs(DocString expectedFunctor)
         {
             Assert.NotNull(_analyzedQuery);
-            var pipeline = Pinvoke.typedb_driver.analyzed_query_pipeline(_analyzedQuery);
+            var pipeline = _analyzedQuery!.Pipeline;
             var encoder = new FunctorEncoder.StructureEncoder(pipeline);
             var actualFunctor = encoder.Encode(pipeline);
             Assert.Equal(
@@ -77,14 +77,10 @@ namespace TypeDB.Driver.Test.Behaviour
             Assert.NotNull(_analyzedQuery);
             var expectedNormalized = FunctorEncoder.NormalizeForCompare(expectedFunctor.Content);
 
-            var preamble = Pinvoke.typedb_driver.analyzed_preamble(_analyzedQuery);
             var preambleFunctors = new List<string>();
-
-            while (preamble.MoveNext())
+            foreach (var func in _analyzedQuery!.Preamble)
             {
-                var func = preamble.Current;
-                var body = Pinvoke.typedb_driver.function_body(func);
-                var encoder = new FunctorEncoder.StructureEncoder(body);
+                var encoder = new FunctorEncoder.StructureEncoder(func.Body);
                 var actualFunctor = encoder.Encode(func);
                 preambleFunctors.Add(FunctorEncoder.NormalizeForCompare(actualFunctor));
             }
@@ -98,7 +94,7 @@ namespace TypeDB.Driver.Test.Behaviour
         public void AnalyzedQueryPipelineAnnotationsAre(DocString expectedFunctor)
         {
             Assert.NotNull(_analyzedQuery);
-            var pipeline = Pinvoke.typedb_driver.analyzed_query_pipeline(_analyzedQuery);
+            var pipeline = _analyzedQuery!.Pipeline;
             var encoder = new FunctorEncoder.AnnotationsEncoder(pipeline);
             var actualFunctor = encoder.Encode(pipeline);
             Assert.Equal(
@@ -112,14 +108,10 @@ namespace TypeDB.Driver.Test.Behaviour
             Assert.NotNull(_analyzedQuery);
             var expectedNormalized = FunctorEncoder.NormalizeForCompare(expectedFunctor.Content);
 
-            var preamble = Pinvoke.typedb_driver.analyzed_preamble(_analyzedQuery);
             var preambleFunctors = new List<string>();
-
-            while (preamble.MoveNext())
+            foreach (var func in _analyzedQuery!.Preamble)
             {
-                var func = preamble.Current;
-                var body = Pinvoke.typedb_driver.function_body(func);
-                var encoder = new FunctorEncoder.AnnotationsEncoder(body);
+                var encoder = new FunctorEncoder.AnnotationsEncoder(func.Body);
                 var actualFunctor = encoder.Encode(func);
                 preambleFunctors.Add(FunctorEncoder.NormalizeForCompare(actualFunctor));
             }
@@ -133,12 +125,12 @@ namespace TypeDB.Driver.Test.Behaviour
         public void AnalyzedFetchAnnotationsAre(DocString expectedFunctor)
         {
             Assert.NotNull(_analyzedQuery);
-            var pipeline = Pinvoke.typedb_driver.analyzed_query_pipeline(_analyzedQuery);
-            var fetch = Pinvoke.typedb_driver.analyzed_fetch(_analyzedQuery);
+            var pipeline = _analyzedQuery!.Pipeline;
+            var fetch = _analyzedQuery!.Fetch;
             Assert.NotNull(fetch);
 
             var encoder = new FunctorEncoder.AnnotationsEncoder(pipeline);
-            var actualFunctor = encoder.Encode(fetch);
+            var actualFunctor = encoder.Encode(fetch!);
             Assert.Equal(
                 FunctorEncoder.NormalizeForCompare(expectedFunctor.Content),
                 FunctorEncoder.NormalizeForCompare(actualFunctor));
@@ -151,24 +143,16 @@ namespace TypeDB.Driver.Test.Behaviour
             Assert.NotNull(_collectedRows);
             Assert.True(_collectedRows!.Count > 0, "Expected at least one answer row");
 
-            // Get the native ConceptRow from the first answer
+            // Get the query structure from the first answer
             var firstRow = _collectedRows![0];
-            if (firstRow is global::TypeDB.Driver.Answer.ConceptRow conceptRow)
-            {
-                var nativeRow = conceptRow.NativeObject;
-                var pipeline = Pinvoke.typedb_driver.concept_row_get_query_structure(nativeRow);
-                Assert.NotNull(pipeline);
+            var queryStructure = firstRow.QueryStructure;
+            Assert.NotNull(queryStructure);
 
-                var encoder = new FunctorEncoder.StructureEncoder(pipeline);
-                var actualFunctor = encoder.Encode(pipeline);
-                Assert.Equal(
-                    FunctorEncoder.NormalizeForCompare(expectedFunctor.Content),
-                    FunctorEncoder.NormalizeForCompare(actualFunctor));
-            }
-            else
-            {
-                Assert.Fail("Expected ConceptRow implementation");
-            }
+            var encoder = new FunctorEncoder.StructureEncoder(queryStructure!);
+            var actualFunctor = encoder.Encode(queryStructure!);
+            Assert.Equal(
+                FunctorEncoder.NormalizeForCompare(expectedFunctor.Content),
+                FunctorEncoder.NormalizeForCompare(actualFunctor));
         }
     }
 }

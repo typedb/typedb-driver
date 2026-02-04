@@ -90,6 +90,7 @@ nuget_pack(
     id = "TypeDB.Driver",
     libs = {
         ":driver-csharp": "TypeDB.Driver",
+        "//csharp/Analyze:analyze": "TypeDB.Driver.Analyze",
         "//csharp/Api:api": "TypeDB.Driver.Api",
         "//csharp/Common:common": "TypeDB.Driver.Common",
         "//csharp/Connection:connection": "TypeDB.Driver.Connection",
