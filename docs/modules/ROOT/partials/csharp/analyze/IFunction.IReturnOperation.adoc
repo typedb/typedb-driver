@@ -1,0 +1,111 @@
+[#_IReturnOperation]
+[.doc-api-reference-driver]
+=== IReturnOperation
+
+`interface`
+
+*Namespace*: `TypeDB.Driver.Api.Analyze`
+
+A return operation in a function.
+
+// tag::methods[]
+[#_IReturnOperation_Variant]
+==== property ``Variant``
+
+[source,cs]
+----
+Pinvoke.ReturnOperationVariant Variant { get; }
+----
+
+Gets the variant of this return operation.
+
+[caption=""]
+.Returns
+`Pinvoke.ReturnOperationVariant`
+
+[#_IReturnOperation_IsStream]
+==== property ``IsStream``
+
+[source,cs]
+----
+bool IsStream { get; }
+----
+
+[caption=""]
+.Returns
+`bool`
+
+[#_IReturnOperation_IsSingle]
+==== property ``IsSingle``
+
+[source,cs]
+----
+bool IsSingle { get; }
+----
+
+[caption=""]
+.Returns
+`bool`
+
+[#_IReturnOperation_IsCheck]
+==== property ``IsCheck``
+
+[source,cs]
+----
+bool IsCheck { get; }
+----
+
+[caption=""]
+.Returns
+`bool`
+
+[#_IReturnOperation_IsReduce]
+==== property ``IsReduce``
+
+[source,cs]
+----
+bool IsReduce { get; }
+----
+
+[caption=""]
+.Returns
+`bool`
+
+[#_IReturnOperation_AsStream]
+==== method ``AsStream``
+
+[source,cs]
+----
+IStreamReturn AsStream()
+----
+
+[caption=""]
+.Returns
+`IStreamReturn`
+
+[#_IReturnOperation_AsSingle]
+==== method ``AsSingle``
+
+[source,cs]
+----
+ISingleReturn AsSingle()
+----
+
+[caption=""]
+.Returns
+`ISingleReturn`
+
+[#_IReturnOperation_AsReduce]
+==== method ``AsReduce``
+
+[source,cs]
+----
+IReduceReturn AsReduce()
+----
+
+[caption=""]
+.Returns
+`IReduceReturn`
+
+// end::methods[]
+

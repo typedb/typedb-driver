@@ -1,0 +1,64 @@
+[#_IConjunction]
+[.doc-api-reference-driver]
+=== IConjunction
+
+`interface`
+
+*Namespace*: `TypeDB.Driver.Api.Analyze`
+
+A representation of a conjunction of constraints.
+
+// tag::methods[]
+[#_IConjunction_Constraints]
+==== property ``Constraints``
+
+[source,cs]
+----
+IEnumerable<IConstraint> Constraints { get; }
+----
+
+Gets the constraints in this conjunction.
+
+[caption=""]
+.Returns
+`IEnumerable<IConstraint>`
+
+[#_IConjunction_AnnotatedVariables]
+==== property ``AnnotatedVariables``
+
+[source,cs]
+----
+IEnumerable<IVariable> AnnotatedVariables { get; }
+----
+
+Gets the variables that have annotations in this conjunction.
+
+[caption=""]
+.Returns
+`IEnumerable<IVariable>`
+
+[#_IConjunction_GetVariableAnnotations_IVariable]
+==== method ``GetVariableAnnotations``
+
+[source,cs]
+----
+IVariableAnnotations GetVariableAnnotations(IVariable variable)
+----
+
+Gets the annotations for a specific variable.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `variable` a| The variable to get annotations for a| `IVariable`
+|===
+
+[caption=""]
+.Returns
+`IVariableAnnotations`
+
+// end::methods[]
+

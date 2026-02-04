@@ -1,0 +1,31 @@
+[#_ITry]
+[.doc-api-reference-driver]
+=== ITry
+
+`interface`
+
+*Namespace*: `TypeDB.Driver.Api.Analyze`
+
+*Superinterfaces:*
+
+* `IConstraint`
+
+Represents a "try" constraint: try { conjunction }
+
+// tag::methods[]
+[#_ITry_Conjunction]
+==== property ``Conjunction``
+
+[source,cs]
+----
+IConjunctionID Conjunction { get; }
+----
+
+Gets the conjunction ID for the try conjunction.
+
+[caption=""]
+.Returns
+`IConjunctionID`
+
+// end::methods[]
+

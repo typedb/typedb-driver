@@ -1,0 +1,31 @@
+[#_IStreamReturn]
+[.doc-api-reference-driver]
+=== IStreamReturn
+
+`interface`
+
+*Namespace*: `TypeDB.Driver.Api.Analyze`
+
+*Superinterfaces:*
+
+* `IReturnOperation`
+
+A stream return operation.
+
+// tag::methods[]
+[#_IStreamReturn_Variables]
+==== property ``Variables``
+
+[source,cs]
+----
+IEnumerable<IVariable> Variables { get; }
+----
+
+Gets the variables being streamed.
+
+[caption=""]
+.Returns
+`IEnumerable<IVariable>`
+
+// end::methods[]
+

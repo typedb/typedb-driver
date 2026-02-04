@@ -1,0 +1,83 @@
+[#_IFunction]
+[.doc-api-reference-driver]
+=== IFunction
+
+`interface`
+
+*Namespace*: `TypeDB.Driver.Api.Analyze`
+
+A representation of a function in the query preamble.
+
+// tag::methods[]
+[#_IFunction_ArgumentVariables]
+==== property ``ArgumentVariables``
+
+[source,cs]
+----
+IEnumerable<IVariable> ArgumentVariables { get; }
+----
+
+Gets the argument variables of this function.
+
+[caption=""]
+.Returns
+`IEnumerable<IVariable>`
+
+[#_IFunction_ArgumentAnnotations]
+==== property ``ArgumentAnnotations``
+
+[source,cs]
+----
+IEnumerable<IVariableAnnotations> ArgumentAnnotations { get; }
+----
+
+Gets the annotations for the argument variables.
+
+[caption=""]
+.Returns
+`IEnumerable<IVariableAnnotations>`
+
+[#_IFunction_ReturnAnnotations]
+==== property ``ReturnAnnotations``
+
+[source,cs]
+----
+IEnumerable<IVariableAnnotations> ReturnAnnotations { get; }
+----
+
+Gets the annotations for the return variables.
+
+[caption=""]
+.Returns
+`IEnumerable<IVariableAnnotations>`
+
+[#_IFunction_ReturnOperation]
+==== property ``ReturnOperation``
+
+[source,cs]
+----
+IReturnOperation ReturnOperation { get; }
+----
+
+Gets the return operation of this function.
+
+[caption=""]
+.Returns
+`IReturnOperation`
+
+[#_IFunction_Body]
+==== property ``Body``
+
+[source,cs]
+----
+IConjunctionID Body { get; }
+----
+
+Gets the conjunction ID for the function body.
+
+[caption=""]
+.Returns
+`IConjunctionID`
+
+// end::methods[]
+

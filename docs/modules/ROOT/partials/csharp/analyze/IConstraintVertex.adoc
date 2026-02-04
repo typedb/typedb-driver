@@ -1,0 +1,125 @@
+[#_IConstraintVertex]
+[.doc-api-reference-driver]
+=== IConstraintVertex
+
+`interface`
+
+*Namespace*: `TypeDB.Driver.Api.Analyze`
+
+A vertex in a constraint, which can be a variable, label, value, or named role.
+
+// tag::methods[]
+[#_IConstraintVertex_IsVariable]
+==== property ``IsVariable``
+
+[source,cs]
+----
+bool IsVariable { get; }
+----
+
+Returns true if this vertex is a variable.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_IConstraintVertex_IsLabel]
+==== property ``IsLabel``
+
+[source,cs]
+----
+bool IsLabel { get; }
+----
+
+Returns true if this vertex is a label.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_IConstraintVertex_IsValue]
+==== property ``IsValue``
+
+[source,cs]
+----
+bool IsValue { get; }
+----
+
+Returns true if this vertex is a value.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_IConstraintVertex_IsNamedRole]
+==== property ``IsNamedRole``
+
+[source,cs]
+----
+bool IsNamedRole { get; }
+----
+
+Returns true if this vertex is a named role.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_IConstraintVertex_AsVariable]
+==== method ``AsVariable``
+
+[source,cs]
+----
+IVariable AsVariable()
+----
+
+Casts this vertex to a variable.
+
+[caption=""]
+.Returns
+`IVariable`
+
+[#_IConstraintVertex_AsLabel]
+==== method ``AsLabel``
+
+[source,cs]
+----
+ILabelVertex AsLabel()
+----
+
+Casts this vertex to a label vertex.
+
+[caption=""]
+.Returns
+`ILabelVertex`
+
+[#_IConstraintVertex_AsValue]
+==== method ``AsValue``
+
+[source,cs]
+----
+IValue AsValue()
+----
+
+Casts this vertex to a value.
+
+[caption=""]
+.Returns
+`IValue`
+
+[#_IConstraintVertex_AsNamedRole]
+==== method ``AsNamedRole``
+
+[source,cs]
+----
+INamedRole AsNamedRole()
+----
+
+Casts this vertex to a named role.
+
+[caption=""]
+.Returns
+`INamedRole`
+
+// end::methods[]
+

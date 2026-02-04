@@ -1,0 +1,31 @@
+[#_IFetchList]
+[.doc-api-reference-driver]
+=== IFetchList
+
+`interface`
+
+*Namespace*: `TypeDB.Driver.Api.Analyze`
+
+*Superinterfaces:*
+
+* `IFetch`
+
+A list fetch element.
+
+// tag::methods[]
+[#_IFetchList_Element]
+==== property ``Element``
+
+[source,cs]
+----
+IFetch Element { get; }
+----
+
+Gets the element type of this list.
+
+[caption=""]
+.Returns
+`IFetch`
+
+// end::methods[]
+

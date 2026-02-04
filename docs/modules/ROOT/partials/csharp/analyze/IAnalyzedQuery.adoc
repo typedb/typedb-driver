@@ -1,0 +1,55 @@
+[#_IAnalyzedQuery]
+[.doc-api-reference-driver]
+=== IAnalyzedQuery
+
+`interface`
+
+*Namespace*: `TypeDB.Driver.Api.Analyze`
+
+A representation of an analyzed query.
+
+// tag::methods[]
+[#_IAnalyzedQuery_Fetch]
+==== property ``Fetch``
+
+[source,cs]
+----
+IFetch? Fetch { get; }
+----
+
+A representation of the ``Fetch`` stage of the query, if it has one.
+
+[caption=""]
+.Returns
+`IFetch?`
+
+[#_IAnalyzedQuery_Pipeline]
+==== property ``Pipeline``
+
+[source,cs]
+----
+IPipeline Pipeline { get; }
+----
+
+A representation of the query as a ``Pipeline``.
+
+[caption=""]
+.Returns
+`IPipeline`
+
+[#_IAnalyzedQuery_Preamble]
+==== property ``Preamble``
+
+[source,cs]
+----
+IEnumerable<IFunction> Preamble { get; }
+----
+
+A representation of the ``Function``s in the preamble of the query.
+
+[caption=""]
+.Returns
+`IEnumerable<IFunction>`
+
+// end::methods[]
+

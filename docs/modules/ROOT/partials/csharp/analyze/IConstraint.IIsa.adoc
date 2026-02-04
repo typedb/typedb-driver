@@ -1,0 +1,59 @@
+[#_IIsa]
+[.doc-api-reference-driver]
+=== IIsa
+
+`interface`
+
+*Namespace*: `TypeDB.Driver.Api.Analyze`
+
+*Superinterfaces:*
+
+* `IConstraint`
+
+Represents an "isa" constraint: instance isa(!) type
+
+// tag::methods[]
+[#_IIsa_Instance]
+==== property ``Instance``
+
+[source,cs]
+----
+IConstraintVertex Instance { get; }
+----
+
+Gets the instance in this isa constraint.
+
+[caption=""]
+.Returns
+`IConstraintVertex`
+
+[#_IIsa_Type]
+==== property ``Type``
+
+[source,cs]
+----
+IConstraintVertex Type { get; }
+----
+
+Gets the type in this isa constraint.
+
+[caption=""]
+.Returns
+`IConstraintVertex`
+
+[#_IIsa_Exactness]
+==== property ``Exactness``
+
+[source,cs]
+----
+Pinvoke.ConstraintExactness Exactness { get; }
+----
+
+Gets the exactness of this isa constraint (exact or inexact).
+
+[caption=""]
+.Returns
+`Pinvoke.ConstraintExactness`
+
+// end::methods[]
+

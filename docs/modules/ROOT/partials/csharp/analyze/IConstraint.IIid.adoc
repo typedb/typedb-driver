@@ -1,0 +1,45 @@
+[#_IIid]
+[.doc-api-reference-driver]
+=== IIid
+
+`interface`
+
+*Namespace*: `TypeDB.Driver.Api.Analyze`
+
+*Superinterfaces:*
+
+* `IConstraint`
+
+Represents an IID constraint: concept iid iid_value
+
+// tag::methods[]
+[#_IIid_Variable]
+==== property ``Variable``
+
+[source,cs]
+----
+IConstraintVertex Variable { get; }
+----
+
+Gets the variable in this IID constraint.
+
+[caption=""]
+.Returns
+`IConstraintVertex`
+
+[#_IIid_Iid]
+==== property ``Iid``
+
+[source,cs]
+----
+string Iid { get; }
+----
+
+Gets the IID value.
+
+[caption=""]
+.Returns
+`string`
+
+// end::methods[]
+

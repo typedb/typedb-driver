@@ -1,0 +1,41 @@
+[#_INamedRole]
+[.doc-api-reference-driver]
+=== INamedRole
+
+`interface`
+
+*Namespace*: `TypeDB.Driver.Api.Analyze`
+
+A named role in a constraint.
+
+// tag::methods[]
+[#_INamedRole_Variable]
+==== property ``Variable``
+
+[source,cs]
+----
+IVariable Variable { get; }
+----
+
+Gets the variable associated with this named role.
+
+[caption=""]
+.Returns
+`IVariable`
+
+[#_INamedRole_Name]
+==== property ``Name``
+
+[source,cs]
+----
+string Name { get; }
+----
+
+Gets the name of this role.
+
+[caption=""]
+.Returns
+`string`
+
+// end::methods[]
+
