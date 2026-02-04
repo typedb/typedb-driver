@@ -14,26 +14,15 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-# This Source Code Form is subject to the terms of the Mozilla Public
-# License, v. 2.0. If a copy of the MPL was not distributed with this
-# file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-#noinspection CucumberUndefinedStep
-Feature: Driver User
+Feature: Debugging Space
 
-  Background: Open connection, create driver, create database
+  Background:
     Given typedb starts
     Given connection is open: false
+    Given connection opens with default authentication
+    Given connection is open: true
 
-  Scenario: Test 2
-    Given connection opens with username 'admin', password 'password'
-    When create user with username 'user', password 'password'
-    When delete user: user
-    Then connection closes
+  # Do not commit any changes to this file.
 
-  Scenario: Test 1
-    Given connection opens with username 'admin', password 'password'
-    When create user with username 'user', password 'password'
-    When delete user: user
-    Then connection closes
-
+  Scenario: Paste your scenario here

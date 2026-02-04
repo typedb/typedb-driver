@@ -833,29 +833,13 @@ namespace TypeDB.Driver.Test.Behaviour
                     return false;
 
                 var value = concept.AsValue();
-                var actualType = value.GetValueType().ToLower();
-
-                // Map type names (some variations exist)
-                var expectedType = _valueType.ToLower();
-                if (expectedType == "long") expectedType = "integer";
-                if (actualType == "long") actualType = "integer";
+                var actualType = TestValueHelper.InferValueType(value.GetValueType());
+                var expectedType = TestValueHelper.InferValueType(_valueType);
 
                 if (actualType != expectedType)
                     return false;
 
-                switch (actualType)
-                {
-                    case "boolean":
-                        return value.GetBoolean() == bool.Parse(_value);
-                    case "integer":
-                        return value.GetInteger() == long.Parse(_value);
-                    case "double":
-                        return Math.Abs(value.GetDouble() - double.Parse(_value, System.Globalization.CultureInfo.InvariantCulture)) < 0.0001;
-                    case "string":
-                        return value.GetString() == _value;
-                    default:
-                        return false;
-                }
+                return TestValueHelper.CompareValues(value, _value, expectedType);
             }
         }
 
