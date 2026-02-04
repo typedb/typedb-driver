@@ -18,7 +18,10 @@ package(default_visibility = ["//csharp/Test/Behaviour:__subpackages__"])
 load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 filegroup(
     name = "steps",
-    srcs = ["QuerySteps.cs"],
+    srcs = [
+        "QuerySteps.cs",
+        "AnalyzeSteps.cs",
+    ],
     visibility = ["//csharp/Test/Behaviour:__subpackages__"],
 )
 checkstyle_test(

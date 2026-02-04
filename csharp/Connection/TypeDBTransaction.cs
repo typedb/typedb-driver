@@ -160,6 +160,27 @@ namespace TypeDB.Driver.Connection
         }
 
         /// <inheritdoc/>
+        public Pinvoke.AnalyzedQuery Analyze(string query)
+        {
+            Validator.ThrowIfFalse(NativeObject.IsOwned, DriverError.TRANSACTION_CLOSED);
+
+            try
+            {
+                // Execute analyze and wait for completion
+                var promise = Pinvoke.typedb_driver.transaction_analyze(NativeObject, query);
+
+                // analyzed_query_promise_resolve CONSUMES the native promise via take_ownership in Rust.
+                // We must release ownership on the C# wrapper BEFORE calling resolve.
+                var releasedPromise = promise.Released();
+                return Pinvoke.typedb_driver.analyzed_query_promise_resolve(releasedPromise);
+            }
+            catch (Pinvoke.Error e)
+            {
+                throw new TypeDBDriverException(e);
+            }
+        }
+
+        /// <inheritdoc/>
         public void Dispose()
         {
             Close();

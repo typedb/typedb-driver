@@ -77,6 +77,13 @@ namespace TypeDB.Driver.Api
         /// <param name="options">Query options.</param>
         /// <returns>The query answer containing the results.</returns>
         IQueryAnswer Query(string query, QueryOptions options);
+
+        /// <summary>
+        /// Analyzes a TypeQL query and returns information about its structure and type inference results.
+        /// </summary>
+        /// <param name="query">The TypeQL query string to analyze.</param>
+        /// <returns>The analyzed query containing structure and type information.</returns>
+        Pinvoke.AnalyzedQuery Analyze(string query);
     }
 
     /// <summary>
