@@ -990,8 +990,8 @@ namespace TypeDB.Driver.Test.Behaviour
                 };
 
                 return Util.JsonDeepEqualsUnordered(
-                    Newtonsoft.Json.JsonConvert.DeserializeObject<Newtonsoft.Json.Linq.JToken>(doc.ToString(), settings),
-                    Newtonsoft.Json.JsonConvert.DeserializeObject<Newtonsoft.Json.Linq.JToken>(expected.ToString(), settings)
+                    Newtonsoft.Json.JsonConvert.DeserializeObject<Newtonsoft.Json.Linq.JToken>(doc.ToString()!, settings)!,
+                    Newtonsoft.Json.JsonConvert.DeserializeObject<Newtonsoft.Json.Linq.JToken>(expected.ToString()!, settings)!
                 );
             });
             Assert.True(found, $"Expected document not found: {expectedDocument.Content}");
@@ -1011,8 +1011,8 @@ namespace TypeDB.Driver.Test.Behaviour
                 {
                     DateParseHandling = Newtonsoft.Json.DateParseHandling.None
                 };
-                var parsedDoc = Newtonsoft.Json.JsonConvert.DeserializeObject<Newtonsoft.Json.Linq.JToken>(doc.ToString(), settings);
-                var parsedExpectedDoc = Newtonsoft.Json.JsonConvert.DeserializeObject<Newtonsoft.Json.Linq.JToken>(expected.ToString(), settings);
+                var parsedDoc = Newtonsoft.Json.JsonConvert.DeserializeObject<Newtonsoft.Json.Linq.JToken>(doc.ToString()!, settings)!;
+                var parsedExpectedDoc = Newtonsoft.Json.JsonConvert.DeserializeObject<Newtonsoft.Json.Linq.JToken>(expected.ToString()!, settings)!;
                 Console.WriteLine("As parsed Linq docs...");
 
                 Console.WriteLine(parsedDoc);

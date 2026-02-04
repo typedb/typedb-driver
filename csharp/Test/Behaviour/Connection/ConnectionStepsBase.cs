@@ -145,12 +145,12 @@ namespace TypeDB.Driver.Test.Behaviour
                 {
                     if (user.Username != AdminUsername)
                     {
-                        try { cleanupDriver.Users.Get(user.Username).Delete(); } catch { }
+                        try { cleanupDriver.Users.Get(user.Username)?.Delete(); } catch { }
                     }
                 }
 
                 // Reset admin password
-                cleanupDriver.Users.Get(AdminUsername).UpdatePassword(AdminPassword);
+                cleanupDriver.Users.Get(AdminUsername)?.UpdatePassword(AdminPassword);
 
                 // Delete all databases
                 foreach (var db in cleanupDriver.Databases.GetAll())
