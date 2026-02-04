@@ -106,8 +106,6 @@ public abstract class ConnectionStepsBase {
             }
         }
 
-        after();
-
         backgroundDriver = createDefaultTypeDBDriver();
     }
 
@@ -125,9 +123,7 @@ public abstract class ConnectionStepsBase {
         driver.users().get(ADMIN_USERNAME).updatePassword(ADMIN_PASSWORD);
         driver.databases().all().forEach(database -> driver.databases().get(database.name()).delete());
         driver.close();
-        if (backgroundDriver != null ) {
-            backgroundDriver.close();
-        }
+        backgroundDriver.close();
     }
 
     void cleanupTransactions() {

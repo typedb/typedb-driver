@@ -64,7 +64,9 @@ namespace TypeDB.Driver.User
         {
             try
             {
-                Pinvoke.typedb_driver.user_delete(NativeObject);
+                // Released() transfers ownership to user_delete(), preventing double-free
+                // when GC later runs the destructor. This matches Java's pattern.
+                Pinvoke.typedb_driver.user_delete(NativeObject.Released());
             }
             catch (Pinvoke.Error e)
             {

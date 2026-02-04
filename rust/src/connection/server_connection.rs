@@ -68,13 +68,10 @@ impl ServerConnection {
         Self::validate_tls(&address, &driver_options)?;
 
         let username = credentials.username().to_string();
-        dbg!("ServerConnection::new open_connection starting request transmitter");
         let request_transmitter =
             Arc::new(RPCTransmitter::start(address, credentials.clone(), driver_options, &background_runtime)?);
-        dbg!("ServerConnection::new open_connection opening connection");
         let (connection_id, latency, database_info) =
             Self::open_connection(&request_transmitter, driver_lang, driver_version, credentials).await?;
-        dbg!("ServerConnection::new open_connection finished");
         let latency_tracker = LatencyTracker::new(latency);
         let server_connection = Self {
             background_runtime,
@@ -103,15 +100,11 @@ impl ServerConnection {
         let request_time = Instant::now();
         match request_transmitter.request(message).await? {
             Response::ConnectionOpen { connection_id, server_duration_millis, databases: database_info } => {
-                dbg!("SErverConnection::open_connection Received connection open response");
                 let latency =
                     Instant::now().duration_since(request_time) - Duration::from_millis(server_duration_millis);
                 Ok((connection_id, latency, database_info))
             }
-            other => {
-                dbg!("SErverConnection::open_connection Received error");
-                Err(ConnectionError::UnexpectedResponse { response: format!("{other:?}") }.into())
-            },
+            other => Err(ConnectionError::UnexpectedResponse { response: format!("{other:?}") }.into()),
         }
     }
 
@@ -312,7 +305,6 @@ impl ServerConnection {
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn update_password(&self, name: String, password: String) -> crate::Result {
-        dbg!("Tring to update password of {name}");
         match self
             .request(Request::UsersUpdate {
                 username: name,

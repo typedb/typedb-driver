@@ -50,7 +50,6 @@ namespace TypeDB.Driver.Test.Behaviour
 
         public override IDriver CreateTypeDBDriver(string address)
         {
-            Console.WriteLine("Creating community driver with address " + address);
             return TypeDB.Driver(
                 address,
                 new Credentials(DefaultUsername, DefaultPassword),
@@ -61,14 +60,13 @@ namespace TypeDB.Driver.Test.Behaviour
         [When(@"typedb starts")]
         public override void TypeDBStarts()
         {
-            Console.WriteLine("Typedb starts");
+            // TypeDB is assumed to be running externally for these tests
         }
 
         [Given(@"connection opens with default authentication")]
         [When(@"connection opens with default authentication")]
         public override void ConnectionOpensWithDefaultAuthentication()
         {
-            Console.WriteLine("Creating driver with default auth");
             Driver = CreateTypeDBDriver(TypeDB.DefaultAddress);
         }
 
@@ -76,7 +74,6 @@ namespace TypeDB.Driver.Test.Behaviour
         [When(@"connection opens with authentication: {}, {}")]
         public void ConnectionOpensWithAuthentication(string username, string password)
         {
-            Console.WriteLine("Creating driver with username " + username + " and password " + password);
             Driver = TypeDB.Driver(
                 TypeDB.DefaultAddress,
                 new Credentials(username, password),
