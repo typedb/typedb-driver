@@ -399,7 +399,8 @@ namespace TypeDB.Driver.Test.Behaviour
         public void AnswerColumnNamesAre(DataTable names)
         {
             CollectRowsAnswerIfNeeded();
-            var expectedNames = names.Rows.First().Cells.Select(c => c.Value).OrderBy(n => n).ToList();
+            // Each row in the DataTable contains one expected column name
+            var expectedNames = names.Rows.Select(r => r.Cells.First().Value).OrderBy(n => n).ToList();
             var actualNames = _collectedRows![0].ColumnNames.OrderBy(n => n).ToList();
             Assert.Equal(expectedNames, actualNames);
         }
