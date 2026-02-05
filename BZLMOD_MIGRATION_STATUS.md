@@ -88,25 +88,16 @@ The following fixes were made to `typedb_dependencies` repo to support Bzlmod:
 
 ## Verification Commands
 
-Build each driver component separately to verify the migration:
+Verification should be done by a subagent, building each language separately with the CI configuration:
 
 ```bash
 cd /opt/project/repositories/typedb-driver
 
-# 1. Rust core driver
-bazel build //rust:typedb_driver
-
-# 2. C FFI layer and headers
-bazel build //c:typedb_driver_clib //c:typedb_driver_clib_headers
-
-# 3. Java driver
-bazel build //java:driver-java
-
-# 4. Python driver (all versions)
-bazel build //python:driver_python39 //python:driver_python311
-
-# 5. TypeScript HTTP driver library
-bazel build //http-ts:driver-lib
+bazel build --config=ci //c/...
+bazel build --config=ci //rust/...
+bazel build --config=ci //java/...
+bazel build --config=ci //python/...
+bazel build --config=ci //http-ts/...
 ```
 
 ## MODULE.bazel Configuration
