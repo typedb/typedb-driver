@@ -19,6 +19,7 @@
 
 %module(directors="1") typedb_driver
 %{
+#include <cstdint>
 extern "C" {
 #include "typedb_driver.h"
 }
@@ -388,12 +389,13 @@ void transaction_on_close_register(const Transaction* transaction, TransactionCa
 
 %newobject concept_map_iterator_next;
 
-%newobject query_match;
+%newobject query_get;
+%newobject query_fetch;
 %newobject query_insert;
 %newobject query_update;
-%newobject query_match_aggregate;
-%newobject query_match_group;
-%newobject query_match_group_aggregate;
+%newobject query_get_aggregate;
+%newobject query_get_group;
+%newobject query_get_group_aggregate;
 %newobject query_explain;
 
 %newobject concept_map_group_iterator_next;

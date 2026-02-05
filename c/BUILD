@@ -52,11 +52,12 @@ rust_static_library(
     ],
 )
 
-rust_cbindgen(
+# Using pre-generated header to work around cbindgen/cargo edition 2024 compatibility issue
+# To regenerate: cbindgen --lang c --config c/cbindgen.toml --output c/typedb_driver.h
+cc_library(
     name = "typedb_driver_clib_headers",
-    lib = ":typedb_driver_clib",
-    header_name = "typedb_driver.h",
-    config = "cbindgen.toml",
+    hdrs = ["typedb_driver.h"],
+    deps = [":typedb_driver_clib"],  # Link the Rust static library
 )
 
 
