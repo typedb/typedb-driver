@@ -23,12 +23,12 @@ Migration of `typedb-driver` from WORKSPACE-based Bazel 6.2.0 to Bzlmod with Baz
 
 | Component | Target | Status | Notes |
 |-----------|--------|--------|-------|
-| Rust | `//rust:typedb_driver` | ✅ SUCCESS | Core library builds |
-| C FFI | `//c:typedb_driver_clib` | ✅ SUCCESS | Static library builds |
-| C Headers | `//c:typedb_driver_clib_headers` | ✅ SUCCESS | cbindgen generates headers |
-| Java | `//java:driver-java` | ✅ SUCCESS | SWIG bindings build |
-| Python | `//python:driver_python311` | ✅ SUCCESS | All Python versions build |
-| TypeScript HTTP | `//http-ts:driver-lib` | ⚠️ PARTIAL | Library builds, npm assembly has versioning issue |
+| Rust | `//rust/...` | ✅ SUCCESS | Full build works |
+| C FFI | `//c/...` | ✅ SUCCESS | Full build works |
+| Java | `//java/...` | ⚠️ PARTIAL | Core builds, `docs_html` fails (missing `unzip` - system env) |
+| Python | `//python/...` | ⚠️ PARTIAL | Core builds, `docs_html` fails (Sphinx timezone - system env) |
+| TypeScript HTTP | `//http-ts:driver-lib` | ✅ SUCCESS | Library builds |
+| TypeScript HTTP | `//http-ts/...` | ⚠️ PARTIAL | `npm-package` has jq stamping issue |
 
 ## Files Modified
 
@@ -36,9 +36,10 @@ Migration of `typedb-driver` from WORKSPACE-based Bazel 6.2.0 to Bzlmod with Baz
 |------|--------|
 | `.bazelversion` | `6.2.0` → `8.0.0` |
 | `.bazelrc` | Added `--noincompatible_disallow_empty_glob` workaround |
-| `MODULE.bazel` | **Created** - full Bzlmod configuration |
+| `MODULE.bazel` | **Created** - full Bzlmod configuration with TypeDB artifacts, npm_typescript, Python 3.11 default |
 | `WORKSPACE` | Emptied (kept workspace name for backward compat) |
 | `python/python_versions.bzl` | Updated repo refs `@python39` → `@python_3_9` etc. |
+| `http-ts/BUILD` | Added `directory_path` for tsup entry point (Bzlmod compatibility) |
 
 ### BUILD File Fixes - Load Paths
 
@@ -88,16 +89,16 @@ The following fixes were made to `typedb_dependencies` repo to support Bzlmod:
 
 ## Verification Commands
 
-Verification should be done by a subagent, building each language separately with the CI configuration:
+Verification should be done by a subagent, building each language separately:
 
 ```bash
 cd /opt/project/repositories/typedb-driver
 
-bazel build --config=ci //c/...
-bazel build --config=ci //rust/...
-bazel build --config=ci //java/...
-bazel build --config=ci //python/...
-bazel build --config=ci //http-ts/...
+bazel build //c/...
+bazel build //rust/...
+bazel build //java/...
+bazel build //python/...
+bazel build //http-ts/...
 ```
 
 ## MODULE.bazel Configuration

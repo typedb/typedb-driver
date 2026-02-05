@@ -27,6 +27,7 @@ load("@typedb_dependencies//distribution:deployment.bzl", "deployment")
 load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
 load("@aspect_rules_js//js:defs.bzl", "js_binary", "js_run_binary")
 load("@aspect_rules_js//npm:defs.bzl", "npm_package")
+load("@aspect_bazel_lib//lib:directory_path.bzl", "directory_path")
 load("@aspect_bazel_lib//lib:jq.bzl", "jq")
 load("@http-ts_npm//:defs.bzl", "npm_link_all_packages")
 load("//http-ts:tool/typedoc/rules.bzl", "typedoc_docs")
@@ -56,9 +57,15 @@ driver_lib_data = glob(["src/*.ts"]) + [
     ":node_modules/tsup",
 ]
 
+directory_path(
+    name = "tsup_entry",
+    directory = ":node_modules/tsup/dir",
+    path = "dist/cli-default.js",
+)
+
 js_binary(
     name = "tsup_bin",
-    entry_point = ":node_modules/tsup/dist/cli-default.js",
+    entry_point = ":tsup_entry",
     data = driver_lib_data,
     copy_data_to_bin = False,
 )

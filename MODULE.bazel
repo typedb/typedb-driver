@@ -74,13 +74,14 @@ local_path_override(
 
 # Python multi-version toolchains (3.9-3.13)
 # Order matters! First python toolchain that is registered is used by Bazel's py_binary.
+# Default is 3.11 to match typedb_bazel_distribution pip dependencies.
 python = use_extension("@rules_python//python/extensions:python.bzl", "python")
+python.toolchain(python_version = "3.9")
+python.toolchain(python_version = "3.10")
 python.toolchain(
     is_default = True,
-    python_version = "3.9",
+    python_version = "3.11",
 )
-python.toolchain(python_version = "3.10")
-python.toolchain(python_version = "3.11")
 python.toolchain(python_version = "3.12")
 python.toolchain(python_version = "3.13")
 use_repo(python, "python_3_9", "python_3_10", "python_3_11", "python_3_12", "python_3_13")
@@ -141,14 +142,19 @@ npm.npm_translate_lock(
 # TypeScript HTTP driver npm dependencies
 npm.npm_translate_lock(
     name = "http-ts_npm",
+    # Bzlmod format: list of "name=path" strings instead of dict-of-dicts
+    bins = {
+        "tsup": ["tsup=./dist/cli-default.js"],
+    },
     pnpm_lock = "//http-ts:pnpm-lock.yaml",
 )
 
 use_repo(npm, "typedb_protocol_npm", "nodejs_npm", "http-ts_npm")
 
-# Note: @npm_typescript is provided by typedb_protocol module via rules_ts_ext.deps()
-# In Bzlmod, repositories created by module extensions in dependencies are automatically
-# visible to modules that depend on them, so no additional configuration is needed here.
+# TypeScript toolchain - import @npm_typescript from typedb_protocol module
+# The repo is created by typedb_protocol's rules_ts extension usage
+rules_ts_ext = use_extension("@aspect_rules_ts//ts:extensions.bzl", "ext")
+use_repo(rules_ts_ext, "npm_typescript")
 
 # Maven dependencies - import from typedb_dependencies
 # The driver-specific artifacts extend the base artifacts from typedb_dependencies
@@ -174,4 +180,39 @@ workspace_refs(
     name = "typedb_driver_workspace_refs",
     workspace_commit_dict = {},
     workspace_tag_dict = {},
+)
+
+# TypeDB server artifacts for testing
+# These download the TypeDB server binary for integration/behaviour tests
+# Using release version 3.0.0 (snapshot artifacts may not be available)
+http_file = use_repo_rule("@bazel_tools//tools/build_defs/repo:http.bzl", "http_file")
+
+http_file(
+    name = "typedb_artifact_linux-arm64",
+    urls = ["https://repo.typedb.com/public/public-release/raw/names/typedb-all-linux-arm64/versions/3.0.0/typedb-all-linux-arm64-3.0.0.tar.gz"],
+    downloaded_file_path = "typedb-all-linux-arm64-3.0.0.tar.gz",
+)
+
+http_file(
+    name = "typedb_artifact_linux-x86_64",
+    urls = ["https://repo.typedb.com/public/public-release/raw/names/typedb-all-linux-x86_64/versions/3.0.0/typedb-all-linux-x86_64-3.0.0.tar.gz"],
+    downloaded_file_path = "typedb-all-linux-x86_64-3.0.0.tar.gz",
+)
+
+http_file(
+    name = "typedb_artifact_mac-arm64",
+    urls = ["https://repo.typedb.com/public/public-release/raw/names/typedb-all-mac-arm64/versions/3.0.0/typedb-all-mac-arm64-3.0.0.zip"],
+    downloaded_file_path = "typedb-all-mac-arm64-3.0.0.zip",
+)
+
+http_file(
+    name = "typedb_artifact_mac-x86_64",
+    urls = ["https://repo.typedb.com/public/public-release/raw/names/typedb-all-mac-x86_64/versions/3.0.0/typedb-all-mac-x86_64-3.0.0.zip"],
+    downloaded_file_path = "typedb-all-mac-x86_64-3.0.0.zip",
+)
+
+http_file(
+    name = "typedb_artifact_windows-x86_64",
+    urls = ["https://repo.typedb.com/public/public-release/raw/names/typedb-all-windows-x86_64/versions/3.0.0/typedb-all-windows-x86_64-3.0.0.zip"],
+    downloaded_file_path = "typedb-all-windows-x86_64-3.0.0.zip",
 )
