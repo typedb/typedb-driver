@@ -40,5 +40,5 @@ def vaticle_typedb_cloud_artifact():
 
 maven_artifacts = {
     'com.vaticle.typedb:typedb-runner': '2.29.1',
-    'com.vaticle.typedb:typedb-cloud-runner': '0.0.0-4a28b7a3228df1e656ddd655938114c726733a08',
+    # 'com.vaticle.typedb:typedb-cloud-runner': '0.0.0-4a28b7a3228df1e656ddd655938114c726733a08',  # Private
 }
