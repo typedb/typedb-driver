@@ -21,11 +21,7 @@ use std::{convert::Infallible, fmt, str::FromStr};
 
 use chrono::{FixedOffset, NaiveDate, NaiveDateTime, NaiveTime};
 use cucumber::Parameter;
-use typedb_driver::{
-    answer::QueryType as TypeDBQueryType,
-    concept::{Value as TypeDBValue, ValueType as TypeDBValueType},
-    TransactionType as TypeDBTransactionType,
-};
+use typedb_driver::{consistency_level::ConsistencyLevel as TypeDBConsistencyLevel, answer::QueryType as TypeDBQueryType, concept::{Value as TypeDBValue, ValueType as TypeDBValueType}, Address, TransactionType as TypeDBTransactionType};
 
 #[derive(Debug, Default, Parameter, Clone)]
 #[param(name = "value", regex = ".*?")]
@@ -516,6 +512,51 @@ impl fmt::Display for QueryAnswerType {
             QueryAnswerType::Ok => write!(f, "Ok"),
             QueryAnswerType::ConceptRows => write!(f, "ConceptRows"),
             QueryAnswerType::ConceptDocuments => write!(f, "ConceptTrees"),
+        }
+    }
+}
+
+#[derive(Debug, Clone, Parameter)]
+#[param(name = "consistency_level", regex = "(strong|eventual|replica(.*))")]
+pub enum ConsistencyLevel {
+    Strong,
+    Eventual,
+    ReplicaDependent { address: Address },
+}
+
+impl ConsistencyLevel {
+    pub fn into_typedb(self) -> TypeDBConsistencyLevel {
+        match self {
+            ConsistencyLevel::Strong => TypeDBConsistencyLevel::Strong,
+            ConsistencyLevel::Eventual => TypeDBConsistencyLevel::Eventual,
+            ConsistencyLevel::ReplicaDependent { address } => TypeDBConsistencyLevel::ReplicaDependent { address },
+        }
+    }
+}
+
+impl FromStr for ConsistencyLevel {
+    type Err = String;
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        if s == "strong" {
+            Ok(Self::Strong)
+        } else if s == "eventual" {
+            Ok(Self::Eventual)
+        } else if let Some(message) =
+            s.strip_prefix("replica(").and_then(|suffix| suffix.strip_suffix(")"))
+        {
+            Ok(Self::ReplicaDependent { address: message.parse().expect("Expected a valid address") })
+        } else {
+            Err(format!("Invalid `ConsistencyLevel`: {}", s))
+        }
+    }
+}
+
+impl fmt::Display for ConsistencyLevel {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::Strong => write!(f, "Strong"),
+            Self::Eventual => write!(f, "Eventual"),
+            Self::ReplicaDependent { address } => write!(f, "ReplicaDependent({address:?})"),
         }
     }
 }

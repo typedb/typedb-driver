@@ -21,7 +21,7 @@ from typing import Callable, Optional
 
 from behave import *
 from hamcrest import *
-from tests.behaviour.config.parameters import MayError, parse_list, parse_transaction_type
+from tests.behaviour.config.parameters import ConsistencyLevel, MayError, parse_list, parse_transaction_type
 from tests.behaviour.context import Context
 from typedb.api.connection.transaction import TransactionType
 from typedb.driver import *
@@ -154,6 +154,12 @@ def step_impl(context: Context, value: int):
 def step_impl(context: Context, value: int):
     context.init_transaction_options_if_needed_fn()
     context.transaction_options.schema_lock_acquire_timeout_millis = value
+
+
+@step("set transaction option read_consistency_level to: {consistency_level:ConsistencyLevel}")
+def step_impl(context: Context, consistency_level: ConsistencyLevel):
+    context.init_transaction_options_if_needed_fn()
+    context.transaction_options.read_consistency_level = consistency_level
 
 
 @step("schedule database creation on transaction close: {database_name:Words}")

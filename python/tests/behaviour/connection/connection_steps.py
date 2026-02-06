@@ -20,6 +20,9 @@ from hamcrest import *
 from tests.behaviour.config.parameters import MayError, check_is_none
 from tests.behaviour.context import Context
 
+from python.tests.behaviour.config.parameters import ConsistencyLevel, parse_list
+from python.typedb.api.server.replica_role import ReplicaRole
+
 
 def replace_host(address: str, new_host: str) -> str:
     return address.replace("127.0.0.1", new_host)
@@ -111,10 +114,53 @@ def step_impl(context: Context, count: int):
     assert_that(len(context.driver.replicas()), equal_to(count))
 
 
-@step(u'connection contains primary replica')
+@step(u'connection primary replica exists')
 def step_impl(context: Context):
     check_is_none(context.driver.primary_replica(), False)
 
+
+@step(u'connection get replica({address}) {exists_or_doesnt:ExistsOrDoesnt}')
+def step_impl(context: Context, address: str, exists_or_doesnt: bool):
+    replicas = context.driver.replicas()
+    exists = any(r.address == address for r in replicas)
+    assert_that(exists, equal_to(exists_or_doesnt), f"replica {address}")
+
+
+@step(u'connection get replica({address}) has term')
+def step_impl(context: Context, address: str):
+    replicas = context.driver.replicas()
+    replica = next((r for r in replicas if r.address == address), None)
+    check_is_none(replica, False)
+    check_is_none(replica.term, False)
+
+
+@step(u'connection replicas have roles:')
+def step_impl(context: Context):
+    replicas = context.driver.replicas()
+    expected_roles = parse_list(context)
+    expected_primary_count = 0
+    expected_secondary_count = 0
+    expected_candidate_count = 0
+    for role in expected_roles:
+        if role == 'primary':
+            expected_primary_count += 1
+        elif role == 'secondary':
+            expected_secondary_count += 1
+        elif role == 'candidate':
+            expected_candidate_count += 1
+        else:
+            raise ValueError(f"Unknown replica role: {role}")
+
+    actual_primary_count = sum(1 for r in replicas if r == ReplicaRole.PRIMARY)
+    actual_secondary_count = sum(1 for r in replicas if r == ReplicaRole.SECONDARY)
+    actual_candidate_count = sum(1 for r in replicas if r == ReplicaRole.CANDIDATE)
+
+    assert_that(actual_primary_count, equal_to(expected_primary_count),
+                f"Expected {expected_primary_count} primary replicas, found {actual_primary_count}")
+    assert_that(actual_secondary_count, equal_to(expected_secondary_count),
+                f"Expected {expected_secondary_count} secondary replicas, found {actual_secondary_count}")
+    assert_that(actual_candidate_count, equal_to(expected_candidate_count),
+                f"Expected {expected_candidate_count} candidate replicas, found {actual_candidate_count}")
 
 @step("connection has {count:Int} database")
 @step("connection has {count:Int} databases")
@@ -141,3 +187,8 @@ def step_impl(context: Context, value: int):
 @step("set driver option replica_discovery_attempts to: {value:Int}")
 def step_impl(context: Context, value: int):
     context.driver_options.replica_discovery_attempts = value
+
+
+@step("set database operation consistency to: {consistency_level:ConsistencyLevel}")
+def step_impl(context: Context, consistency_level: ConsistencyLevel):
+    context.database_operation_consistency = consistency_level

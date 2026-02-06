@@ -42,8 +42,8 @@ use tokio::{
 use typedb_driver::{
     analyze::AnalyzedQuery,
     answer::{ConceptDocument, ConceptRow, QueryAnswer, QueryType},
-    Addresses, BoxStream, Credentials, DriverOptions, DriverTlsConfig, QueryOptions, Result as TypeDBResult,
-    Transaction, TransactionOptions, TypeDBDriver,
+    Addresses, BoxStream, consistency_level::ConsistencyLevel, Credentials, DriverOptions, DriverTlsConfig, QueryOptions,
+    Result as TypeDBResult, Transaction, TransactionOptions, TypeDBDriver,
 };
 
 use crate::{
@@ -108,6 +108,7 @@ pub struct Context {
     pub driver_options: Option<DriverOptions>,
     pub transaction_options: Option<TransactionOptions>,
     pub query_options: Option<QueryOptions>,
+    pub database_operation_consistency: Option<ConsistencyLevel>,
     pub driver: Option<TypeDBDriver>,
     pub background_driver: Option<TypeDBDriver>,
     pub temp_dir: Option<TempDir>,
@@ -131,6 +132,7 @@ impl fmt::Debug for Context {
             .field("driver_options", &self.driver_options)
             .field("transaction_options", &self.transaction_options)
             .field("query_options", &self.query_options)
+            .field("database_operation_consistency", &self.database_operation_consistency)
             .field("driver", &self.driver)
             .field("background_driver", &self.background_driver)
             .field("transactions", &self.transactions)
@@ -476,6 +478,19 @@ impl Context {
         self.create_driver(Some(Self::ADMIN_USERNAME), Some(Self::ADMIN_PASSWORD)).await
     }
 
+    async fn create_default_single_driver(&self) -> TypeDBResult<TypeDBDriver> {
+        self.create_single_driver(Some(Self::ADMIN_USERNAME), Some(Self::ADMIN_PASSWORD)).await
+    }
+
+    async fn create_single_driver(&self, username: Option<&str>, password: Option<&str>) -> TypeDBResult<TypeDBDriver> {
+        let username = username.unwrap_or(Self::ADMIN_USERNAME);
+        let password = password.unwrap_or(Self::ADMIN_USERNAME);
+        match self.is_cluster {
+            false => self.create_driver_core(Self::DEFAULT_ADDRESS, username, password).await,
+            true => self.create_driver_cluster(&[Self::DEFAULT_CLUSTER_ADDRESSES[0]], username, password).await,
+        }
+    }
+
     async fn create_driver(&self, username: Option<&str>, password: Option<&str>) -> TypeDBResult<TypeDBDriver> {
         let username = username.unwrap_or(Self::ADMIN_USERNAME);
         let password = password.unwrap_or(Self::ADMIN_USERNAME);
@@ -552,6 +567,7 @@ impl Default for Context {
             driver_options: None,
             transaction_options: None,
             query_options: None,
+            database_operation_consistency: None,
             driver: None,
             background_driver: None,
             transactions: VecDeque::new(),

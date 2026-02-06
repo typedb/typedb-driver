@@ -24,6 +24,7 @@ import com.typedb.driver.api.Driver;
 import com.typedb.driver.api.DriverOptions;
 import com.typedb.driver.api.DriverTlsConfig;
 import com.typedb.driver.test.behaviour.config.Parameters;
+import io.cucumber.datatable.DataTable;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.Then;
@@ -157,9 +158,27 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
     }
 
     @Override
-    @Then("connection contains primary replica")
-    public void connection_contains_primary_replica() {
-        super.connection_contains_primary_replica();
+    @Then("connection primary replica exists")
+    public void connection_primary_replica_exists() {
+        super.connection_primary_replica_exists();
+    }
+
+    @Override
+    @Then("connection get replica({word}) {exists_or_doesnt}")
+    public void connection_get_replica_exists(String address, Parameters.ExistsOrDoesnt existsOrDoesnt) {
+        super.connection_get_replica_exists(address, existsOrDoesnt);
+    }
+
+    @Override
+    @Then("connection get replica({word}) has term")
+    public void connection_get_replica_has_term(String address) {
+        super.connection_get_replica_has_term(address);
+    }
+
+    @Override
+    @Then("connection replicas have roles:")
+    public void connection_replicas_have_roles(DataTable dataTable) {
+        super.connection_replicas_have_roles(dataTable);
     }
 
     @Override
@@ -190,5 +209,17 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
     @When("set driver option replica_discovery_attempts to: {integer}")
     public void set_driver_option_replica_discovery_attempts_to(int value) {
         super.set_driver_option_replica_discovery_attempts_to(value);
+    }
+
+    @Override
+    @When("set database operation consistency to: {word}")
+    public void set_database_operation_consistency_to(String consistency) {
+        super.set_database_operation_consistency_to(consistency);
+    }
+
+    @Override
+    @When("set database operation consistency to replica: {word}")
+    public void set_database_operation_consistency_to_replica(String address) {
+        super.set_database_operation_consistency_to_replica(address);
     }
 }

@@ -15,53 +15,33 @@
 # specific language governing permissions and limitations
 # under the License.
 
-package(default_visibility = ["//visibility:public"])
-
-load("//rust/tests/behaviour:rules.bzl", "rust_behaviour_test")
+package(default_visibility = ["//python/tests/behaviour:__subpackages__"])
+load("//python/tests/behaviour:behave_rule.bzl", "typedb_behaviour_py_test_cluster")
 load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
-rust_behaviour_test(
-    name = "test_cluster",
-    srcs = ["cluster.rs"],
-    data = ["@typedb_behaviour//driver:cluster.feature"],
-)
-
-rust_behaviour_test(
-    name = "test_concept",
-    srcs = ["concept.rs"],
-    data = ["@typedb_behaviour//driver:concept.feature"],
-)
-
-rust_behaviour_test(
-    name = "test_connection",
-    srcs = ["connection.rs"],
-    data = ["@typedb_behaviour//driver:connection.feature"],
-)
-
-rust_behaviour_test(
-    name = "test_migration",
-    srcs = ["migration.rs"],
-    data = ["@typedb_behaviour//driver:migration.feature"],
-)
-
-rust_behaviour_test(
-    name = "test_query",
-    srcs = ["query.rs"],
-    data = ["@typedb_behaviour//driver:query.feature"],
-)
-
-rust_behaviour_test(
-    name = "test_user",
-    srcs = ["user.rs"],
-    data = ["@typedb_behaviour//driver:user.feature"],
+typedb_behaviour_py_test_cluster(
+    name = "test-cluster",
+    feats = ["@typedb_behaviour//driver:cluster.feature"],
+    steps = [
+        "//python/tests/behaviour/connection:steps",
+        "//python/tests/behaviour/connection/database:steps",
+        "//python/tests/behaviour/connection/transaction:steps",
+        "//python/tests/behaviour/query:steps",
+        "//python/tests/behaviour/util:steps",
+    ],
+    deps = [
+        "//python:driver_python",
+        "//python/tests/behaviour:context",
+        "//python/tests/behaviour/util:util",
+        "//python/tests/behaviour/config:parameters",
+        "//python/tests/behaviour/background",
+    ],
+    data = ["//python:native-driver-binary-link", "//python:native-driver-wrapper-link"],
 )
 
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*"]),
-    exclude = glob([
-        "Cargo.*",
-    ]),
     license_type = "apache-header",
     size = "small",
 )

@@ -144,6 +144,7 @@ build:
           bazel test //rust/tests/behaviour/driver:test_connection --test_env=ROOT_CA=$ROOT_CA --//rust/tests/behaviour/config:mode=cluster --test_output=streamed --jobs=1 &&
           bazel test //rust/tests/behaviour/driver:test_query --test_env=ROOT_CA=$ROOT_CA --//rust/tests/behaviour/config:mode=cluster --test_output=streamed --jobs=1 &&
           bazel test //rust/tests/behaviour/driver:test_user --test_env=ROOT_CA=$ROOT_CA --//rust/tests/behaviour/config:mode=cluster --test_output=streamed --jobs=1 &&
+          bazel test //rust/tests/behaviour/driver:test_cluster --test_env=ROOT_CA=$ROOT_CA --//rust/tests/behaviour/config:mode=cluster --test_output=streamed --jobs=1 &&
           export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-cluster-servers.sh
         exit $TEST_SUCCESS
@@ -271,6 +272,7 @@ build:
           .factory/test-cluster.sh //python/tests/behaviour/driver/connection/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
           .factory/test-cluster.sh //python/tests/behaviour/driver/query/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
           .factory/test-cluster.sh //python/tests/behaviour/driver/user/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
+          .factory/test-cluster.sh //python/tests/behaviour/driver/cluster/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
           export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-cluster-servers.sh
         exit $TEST_SUCCESS

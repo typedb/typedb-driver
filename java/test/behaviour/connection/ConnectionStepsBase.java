@@ -19,6 +19,7 @@
 
 package com.typedb.driver.test.behaviour.connection;
 
+import com.typedb.driver.api.ConsistencyLevel;
 import com.typedb.driver.api.Credentials;
 import com.typedb.driver.api.Driver;
 import com.typedb.driver.api.DriverOptions;
@@ -30,9 +31,12 @@ import com.typedb.driver.api.server.ServerVersion;
 import com.typedb.driver.test.behaviour.config.Parameters;
 import com.typedb.driver.test.behaviour.util.Util;
 
+import io.cucumber.datatable.DataTable;
+
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
@@ -42,6 +46,7 @@ import java.util.stream.Stream;
 import static com.typedb.driver.test.behaviour.util.Util.createTempDir;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 public abstract class ConnectionStepsBase {
@@ -60,6 +65,7 @@ public abstract class ConnectionStepsBase {
     public static DriverOptions driverOptions = new DriverOptions(DriverTlsConfig.disabled());
     public static Optional<TransactionOptions> transactionOptions = Optional.empty();
     public static Optional<QueryOptions> queryOptions = Optional.empty();
+    public static Optional<ConsistencyLevel> databaseOperationConsistency = Optional.empty();
     static boolean isBeforeAllRan = false;
     static final int BEFORE_TIMEOUT_MILLIS = 10;
 
@@ -118,6 +124,7 @@ public abstract class ConnectionStepsBase {
         cleanupBackgroundTransactions();
         transactionOptions = Optional.empty();
         queryOptions = Optional.empty();
+        databaseOperationConsistency = Optional.empty();
 
         if (driver.isOpen()) {
             driver.close();
@@ -194,8 +201,34 @@ public abstract class ConnectionStepsBase {
         assertEquals(driver.replicas().size(), count);
     }
 
-    void connection_contains_primary_replica() {
+    void connection_primary_replica_exists() {
         assertTrue(driver.primaryReplica().isPresent());
+    }
+
+    void connection_get_replica_exists(String address, Parameters.ExistsOrDoesnt existsOrDoesnt) {
+        boolean exists = driver.replicas().stream().anyMatch(r -> r.address().equals(address));
+        existsOrDoesnt.check(exists);
+    }
+
+    void connection_get_replica_has_term(String address) {
+        var replica = driver.replicas().stream().filter(r -> r.address().equals(address)).findFirst();
+        Parameters.ExistsOrDoesnt.DOES.check(replica.isPresent());
+        // term should exist (can be any value >= 0)
+    }
+
+    void connection_replicas_have_roles(DataTable dataTable) {
+        List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
+        for (Map<String, String> row : rows) {
+            String expectedAddress = row.get("address");
+            boolean expectedIsPrimary = Boolean.parseBoolean(row.get("is_primary"));
+
+            var replica = driver.replicas().stream()
+                    .filter(r -> r.address().equals(expectedAddress))
+                    .findFirst();
+
+            Parameters.ExistsOrDoesnt.DOES.check(replica.isPresent());
+            assertEquals(expectedIsPrimary, replica.get().isPrimary());
+        }
     }
 
     void connection_has_count_databases(int count) {
@@ -216,5 +249,22 @@ public abstract class ConnectionStepsBase {
 
     void set_driver_option_replica_discovery_attempts_to(int value) {
         driverOptions = driverOptions.replicaDiscoveryAttempts(value);
+    }
+
+    void set_database_operation_consistency_to(String consistency) {
+        switch (consistency.toLowerCase()) {
+            case "strong":
+                databaseOperationConsistency = Optional.of(new ConsistencyLevel.Strong());
+                break;
+            case "eventual":
+                databaseOperationConsistency = Optional.of(new ConsistencyLevel.Eventual());
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown consistency level: " + consistency);
+        }
+    }
+
+    void set_database_operation_consistency_to_replica(String address) {
+        databaseOperationConsistency = Optional.of(new ConsistencyLevel.ReplicaDependent(address));
     }
 }

@@ -16,10 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+use cucumber::gherkin::Step;
 use macro_rules_attribute::apply;
 use typedb_driver::{ServerVersion, TypeDBDriver};
-
-use crate::{generic_step, params, params::check_boolean, Context};
+use typedb_driver::Replica;
+use crate::{assert_with_timeout, generic_step, params, params::check_boolean, Context};
+use crate::util::iter_table;
+use typedb_driver::ReplicaRole;
 
 mod database;
 mod transaction;
@@ -37,6 +40,14 @@ async fn typedb_starts(_: &mut Context) {}
 #[step("connection opens with default authentication")]
 async fn connection_opens_with_default_authentication(context: &mut Context) {
     context.set_driver(context.create_default_driver().await.unwrap());
+}
+
+#[apply(generic_step)]
+#[step(expr = "connection opens to single server with default authentication{may_error}")]
+async fn connection_opens_to_single_server_with_default_authentication(context: &mut Context, may_error: params::MayError) {
+    if let Some(driver) = may_error.check(context.create_default_single_driver().await) {
+        context.set_driver(driver)
+    }
 }
 
 #[apply(generic_step)]
@@ -134,9 +145,71 @@ async fn connection_has_count_replicas(context: &mut Context, count: usize) {
 }
 
 #[apply(generic_step)]
-#[step(expr = r"connection contains primary replica")]
-async fn connection_contains_primary_replica(context: &mut Context) {
+#[step(expr = r"connection primary replica exists")]
+async fn connection_primary_replica_exists(context: &mut Context) {
     assert!(context.driver.as_ref().unwrap().primary_replica().await.unwrap().is_some());
+}
+
+#[apply(generic_step)]
+#[step(expr = r"connection get replica\({word}\) {exists_or_doesnt}")]
+async fn connection_get_replica_exists(
+    context: &mut Context,
+    address: String,
+    exists_or_doesnt: params::ExistsOrDoesnt,
+) {
+    let replicas = context.driver.as_ref().unwrap().replicas().await.unwrap();
+    let exists = replicas.iter().any(|r| r.address().unwrap().to_string() == address);
+    exists_or_doesnt.check_bool(exists, &format!("replica {}", address));
+}
+
+#[apply(generic_step)]
+#[step(expr = r"connection get replica\({word}\) has term")]
+async fn connection_get_replica_has_term(context: &mut Context, address: String) {
+    let replicas = context.driver.as_ref().unwrap().replicas().await.unwrap();
+    let replica = replicas.iter().find(|r| r.address().unwrap().to_string() == address);
+    params::ExistsOrDoesnt::Exists.check(&replica, &format!("replica {}", address));
+    let term = replica.unwrap().term();
+    params::ExistsOrDoesnt::Exists.check(&term, &format!("term {:?}", term));
+    assert!(term.unwrap() > 0, "Term expected");
+}
+
+#[apply(generic_step)]
+#[step("connection replicas have roles:")]
+async fn connection_replicas_have_roles(context: &mut Context, step: &Step) {
+    let replicas = context.driver.as_ref().unwrap().replicas().await.unwrap();
+    let table = step.table.as_ref().expect("Expected a table with replica roles");
+
+    let mut expected_primary_count = 0;
+    let mut expected_secondary_count = 0;
+    let mut expected_candidate_count = 0;
+    for expected_role in iter_table(step) {
+        match expected_role {
+            "primary" => expected_primary_count += 1,
+            "secondary" => expected_secondary_count += 1,
+            "candidate" => expected_candidate_count += 1,
+            other => panic!("Unknown replica role: {}", other),
+        }
+    }
+
+    let actual_primary_count = replicas.iter().filter(|r| matches!(r.role(), Some(ReplicaRole::Primary))).count();
+    let actual_secondary_count = replicas.iter().filter(|r| matches!(r.role(), Some(ReplicaRole::Secondary))).count();
+    let actual_candidate_count = replicas.iter().filter(|r| matches!(r.role(), Some(ReplicaRole::Candidate))).count();
+
+    assert_eq!(
+        expected_primary_count, actual_primary_count,
+        "Expected {} primary replicas, found {}",
+        expected_primary_count, actual_primary_count
+    );
+    assert_eq!(
+        expected_secondary_count, actual_secondary_count,
+        "Expected {} secondary replicas, found {}",
+        expected_secondary_count, actual_secondary_count
+    );
+    assert_eq!(
+        expected_candidate_count, actual_candidate_count,
+        "Expected {} candidate replicas, found {}",
+        expected_candidate_count, actual_candidate_count
+    );
 }
 
 #[apply(generic_step)]
@@ -177,4 +250,10 @@ pub async fn set_transaction_option_primary_failover_retries(context: &mut Conte
 pub async fn set_transaction_option_replica_discovery_attempts(context: &mut Context, value: usize) {
     context.init_driver_options_if_needed();
     context.driver_options_mut().unwrap().replica_discovery_attempts = Some(value);
+}
+
+#[apply(generic_step)]
+#[step(expr = r"set database operation consistency to: {consistency_level}")]
+pub async fn set_database_operation_consistency(context: &mut Context, consistency_level: params::ConsistencyLevel) {
+    context.database_operation_consistency = Some(consistency_level.into_typedb());
 }
