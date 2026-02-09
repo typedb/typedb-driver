@@ -19,10 +19,10 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 if TYPE_CHECKING:
-    from typedb.api.server.role import ReplicaRole
+    from typedb.api.server.replica_role import ReplicaRole
 
 
 class ServerReplica(ABC):
@@ -60,7 +60,7 @@ class ServerReplica(ABC):
 
     @property
     @abstractmethod
-    def role(self) -> ReplicaRole:
+    def role(self) -> Optional[ReplicaRole]:
         """
         Returns whether this is the primary replica of the raft cluster or any of the supporting types.
 

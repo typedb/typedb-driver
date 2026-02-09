@@ -20,7 +20,7 @@ load("//python/tests/behaviour:behave_rule.bzl", "typedb_behaviour_py_test_clust
 load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 typedb_behaviour_py_test_cluster(
-    name = "test-cluster",
+    name = "test",
     feats = ["@typedb_behaviour//driver:cluster.feature"],
     steps = [
         "//python/tests/behaviour/connection:steps",

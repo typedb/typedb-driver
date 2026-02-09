@@ -106,4 +106,4 @@ class TransactionOptions(NativeWrapper[NativeOptions]):
 
     @read_consistency_level.setter
     def read_consistency_level(self, read_consistency_level: ConsistencyLevel):
-        transaction_options_set_read_consistency_level(self.native_object, read_consistency_level.native_object())
+        transaction_options_set_read_consistency_level(self.native_object, ConsistencyLevel.native_value(read_consistency_level))

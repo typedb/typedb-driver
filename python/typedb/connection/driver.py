@@ -21,7 +21,6 @@ from typing import TYPE_CHECKING, Optional, Tuple
 
 from typedb.api.connection.consistency_level import ConsistencyLevel
 from typedb.api.connection.driver import Driver
-from typedb.api.connection.transaction import Transaction
 from typedb.api.connection.transaction_options import TransactionOptions
 from typedb.api.server.server_version import ServerVersion
 from typedb.common.exception import TypeDBDriverException, DRIVER_CLOSED, INVALID_ADDRESS_FORMAT

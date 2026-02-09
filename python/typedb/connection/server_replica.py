@@ -19,6 +19,7 @@ from __future__ import annotations
 
 from typing import Optional
 
+from typedb.api.server.replica_role import ReplicaRole
 from typedb.api.server.server_replica import ServerReplica
 from typedb.common.exception import TypeDBDriverException, NULL_NATIVE_OBJECT, ILLEGAL_STATE
 from typedb.common.native_wrapper import NativeWrapper
@@ -48,17 +49,17 @@ class _ServerReplica(ServerReplica, NativeWrapper[NativeServerReplica]):
         return server_replica_get_address(self.native_object)
 
     @property
-    def role(self) -> Optional[str]:
-        return server_replica_has_role(self.native_object) \
-            if server_replica_get_role(self.native_object) else None
+    def role(self) -> Optional[ReplicaRole]:
+        return ReplicaRole(server_replica_get_role(self.native_object)) \
+            if server_replica_has_role(self.native_object) else None
 
     def is_primary(self) -> bool:
         return server_replica_is_primary(self.native_object)
 
     @property
     def term(self) -> int:
-        return server_replica_has_term(self.native_object) \
-            if server_replica_get_term(self.native_object) else None
+        return server_replica_get_term(self.native_object) \
+            if server_replica_has_term(self.native_object) else None
 
     def __str__(self):
         return self.address

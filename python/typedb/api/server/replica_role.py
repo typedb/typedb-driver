@@ -42,3 +42,13 @@ class ReplicaRole(enum.Enum):
 
     def is_secondary(self) -> bool:
         return self is ReplicaRole.SECONDARY
+
+    def __repr__(self):
+        if self.is_primary:
+            return "ReplicaRole.PRIMARY"
+        elif self.is_candidate:
+            return "ReplicaRole.CANDIDATE"
+        elif self.is_secondary:
+            return "ReplicaRole.SECONDARY"
+        else:
+            return "UNKNOWN"

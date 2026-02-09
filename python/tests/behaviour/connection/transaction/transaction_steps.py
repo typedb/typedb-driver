@@ -159,7 +159,7 @@ def step_impl(context: Context, value: int):
 @step("set transaction option read_consistency_level to: {consistency_level:ConsistencyLevel}")
 def step_impl(context: Context, consistency_level: ConsistencyLevel):
     context.init_transaction_options_if_needed_fn()
-    context.transaction_options.read_consistency_level = consistency_level
+    context.transaction_options.read_consistency_level = consistency_level.consistency_level
 
 
 @step("schedule database creation on transaction close: {database_name:Words}")

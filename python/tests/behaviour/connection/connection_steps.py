@@ -20,8 +20,8 @@ from hamcrest import *
 from tests.behaviour.config.parameters import MayError, check_is_none
 from tests.behaviour.context import Context
 
-from python.tests.behaviour.config.parameters import ConsistencyLevel, parse_list
-from python.typedb.api.server.replica_role import ReplicaRole
+from tests.behaviour.config.parameters import ConsistencyLevel, parse_list
+from typedb.api.server.replica_role import ReplicaRole
 
 
 def replace_host(address: str, new_host: str) -> str:
@@ -49,6 +49,11 @@ def step_impl(context: Context):
 @step(u'connection opens with default authentication')
 def step_impl(context: Context):
     context.setup_context_driver_fn()
+
+
+@step(u'connection opens to single server with default authentication')
+def step_impl(context: Context):
+    context.setup_context_driver_fn(address=[context.default_address[0]])
 
 
 @step(u'connection opens with a wrong host{may_error:MayError}')
@@ -134,7 +139,7 @@ def step_impl(context: Context, address: str):
     check_is_none(replica.term, False)
 
 
-@step(u'connection replicas have roles:')
+@step(u'connection replicas have roles')
 def step_impl(context: Context):
     replicas = context.driver.replicas()
     expected_roles = parse_list(context)
@@ -151,9 +156,9 @@ def step_impl(context: Context):
         else:
             raise ValueError(f"Unknown replica role: {role}")
 
-    actual_primary_count = sum(1 for r in replicas if r == ReplicaRole.PRIMARY)
-    actual_secondary_count = sum(1 for r in replicas if r == ReplicaRole.SECONDARY)
-    actual_candidate_count = sum(1 for r in replicas if r == ReplicaRole.CANDIDATE)
+    actual_primary_count = sum(1 for r in replicas if r.role.is_primary())
+    actual_secondary_count = sum(1 for r in replicas if r.role.is_secondary())
+    actual_candidate_count = sum(1 for r in replicas if r.role.is_candidate())
 
     assert_that(actual_primary_count, equal_to(expected_primary_count),
                 f"Expected {expected_primary_count} primary replicas, found {actual_primary_count}")
