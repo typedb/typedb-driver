@@ -46,7 +46,7 @@ jq(
         # This 'as' syntax results in $stamp being null in unstamped builds.
         "$ARGS.named.STAMP as $stamp",
         # Provide a default using the "alternative operator" in case $stamp is null.
-        ".version = ($stamp.STABLE_VERSION // \"0.0.0\")"
+        ".version = ($stamp[0].STABLE_VERSION // \"0.0.0\")"
     ]),
 )
 
