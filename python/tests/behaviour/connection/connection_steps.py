@@ -196,4 +196,4 @@ def step_impl(context: Context, value: int):
 
 @step("set database operation consistency to: {consistency_level:ConsistencyLevel}")
 def step_impl(context: Context, consistency_level: ConsistencyLevel):
-    context.database_operation_consistency = consistency_level
+    context.database_operation_consistency = consistency_level.consistency_level

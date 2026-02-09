@@ -342,13 +342,13 @@ class ConsistencyLevel:
 @parse.with_pattern("strong|eventual|replica\((?P<address>.*)\)")
 def parse_consistency_level(value: str) -> ConsistencyLevel:
     if value == "strong":
-        return ConsistencyLevel(TypeDBConsistencyLevel.Strong)
+        return ConsistencyLevel(TypeDBConsistencyLevel.Strong())
     elif value == "eventual":
-        return ConsistencyLevel(TypeDBConsistencyLevel.Eventual)
+        return ConsistencyLevel(TypeDBConsistencyLevel.Eventual())
     else:
         match = re.match(r'replica\((?P<address>.*)\)', value)
         if match:
-            return ConsistencyLevel(TypeDBConsistencyLevel.ReplicaDependent(re.escape(match.group("address"))))
+            return ConsistencyLevel(TypeDBConsistencyLevel.ReplicaDependent(match.group("address")))
         else:
             raise ValueError(f"Unrecognised ConsistencyLevel: {value}")
 

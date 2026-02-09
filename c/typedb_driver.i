@@ -271,6 +271,9 @@ VoidPromise* transaction_on_close_register(const Transaction* transaction, Trans
 %newobject concept_try_get_value_type;
 %newobject concept_try_get_value;
 %newobject credentials_new;
+%newobject consistency_level_strong;
+%newobject consistency_level_eventual;
+%newobject consistency_level_replica_dependent;
 
 %newobject driver_new_with_description;
 %newobject driver_new_with_addresses_with_description;
