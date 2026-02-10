@@ -33,6 +33,7 @@ server_start() {
   local server_port="${node_id}1729"
   local clustering_port="${node_id}1730"
   local monitoring_port="${node_id}1731"
+  local http_port="${node_id}8000"
 
   local node_dir="./${node_id}"
   local data_dir="${node_dir}/data"
@@ -43,7 +44,8 @@ server_start() {
     --diagnostics.deployment-id "${DEPLOYMENT_ID}" \
     --server.address="0.0.0.0:${server_port}" \
     --server.connection-address="127.0.0.1:${server_port}" \
-    --server.http.enabled=false \
+    --server.http.enabled=true \
+    --server.http.port="${http_port}" \
     --server.clustering.id="${node_id}" \
     --server.clustering.address="127.0.0.1:${clustering_port}" \
     --server.encryption.enabled="${ENCRYPTION_ENABLED}" \

@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import { Given, Then, When } from "@cucumber/cucumber";
+import { Given, Then, When, DataTable } from "@cucumber/cucumber";
 import { assertNotError, checkMayError, EXPECT_ERROR_CONTAINING, MayError } from "./params";
 import {
     closeConnection, DEFAULT_HOST,
@@ -28,6 +28,7 @@ import {
     openAndTestConnectionWithHostPort
 } from "./context";
 import assert from "assert";
+import { Server } from "../../../src/response";
 
 Given("typedb starts", () => {});
 Given("connection is open: {boolean}", (_) => {});
@@ -57,3 +58,57 @@ Then("connection has {int} user(s)", async (expectedUserCount: number) => {
 });
 
 When("connection closes", closeConnection);
+
+// Cluster/Replica steps
+let cachedServers: Server[] = [];
+
+async function getServers(): Promise<Server[]> {
+    const res = await driver.getServers().then(assertNotError);
+    cachedServers = res.ok.servers;
+    return cachedServers;
+}
+
+Then("connection has {int} replica(s)", async (expectedCount: number) => {
+    const servers = await getServers();
+    assert.equal(servers.length, expectedCount, `Expected ${expectedCount} replicas but got ${servers.length}`);
+});
+
+Then("connection primary replica exists", async () => {
+    const servers = await getServers();
+    const primary = servers.find(s => s.isPrimary);
+    assert.ok(primary, "No primary replica found");
+});
+
+Then("connection get replica\\({word}) exists", async (address: string) => {
+    const servers = await getServers();
+    const replica = servers.find(s => s.address === address);
+    assert.ok(replica, `Replica with address ${address} not found`);
+});
+
+Then("connection get replica\\({word}) does not exist", async (address: string) => {
+    const servers = await getServers();
+    const replica = servers.find(s => s.address === address);
+    assert.ok(!replica, `Replica with address ${address} should not exist`);
+});
+
+Then("connection get replica\\({word}) has term", async (address: string) => {
+    const servers = await getServers();
+    const replica = servers.find(s => s.address === address);
+    assert.ok(replica, `Replica with address ${address} not found`);
+    assert.ok(typeof replica.term === 'number', `Replica ${address} has no term`);
+});
+
+Then("connection replicas have roles:", async (dataTable: DataTable) => {
+    const servers = await getServers();
+    const rows = dataTable.hashes();
+
+    for (const row of rows) {
+        const expectedAddress = row['address'];
+        const expectedIsPrimary = row['is_primary'] === 'true';
+
+        const replica = servers.find(s => s.address === expectedAddress);
+        assert.ok(replica, `Replica with address ${expectedAddress} not found`);
+        assert.equal(replica.isPrimary, expectedIsPrimary,
+            `Replica ${expectedAddress} isPrimary: expected ${expectedIsPrimary}, got ${replica.isPrimary}`);
+    }
+});

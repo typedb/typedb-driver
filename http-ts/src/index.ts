@@ -25,6 +25,7 @@ import {
     DatabasesListResponse,
     isApiError,
     QueryResponse,
+    ServersListResponse,
     SignInResponse,
     TransactionOpenResponse,
     UsersListResponse,
@@ -129,6 +130,10 @@ export class TypeDBHttpDriver {
 
     version(): Promise<ApiResponse<VersionResponse>> {
         return this.apiGet(`/v1/version`);
+    }
+
+    getServers(): Promise<ApiResponse<ServersListResponse>> {
+        return this.apiGet<ServersListResponse>(`/v1/servers`);
     }
 
     private async apiGetString(path: string, options?: { headers?: Record<string, string> }): Promise<ApiResponse<string>> {

@@ -89,11 +89,31 @@ export function setConcurrentAnswers(answers: QueryResponse[]) {
 
 export const DEFAULT_USERNAME = "admin";
 export const DEFAULT_PASSWORD = "password";
-export const DEFAULT_HOST = "http://127.0.0.1";
-export const DEFAULT_PORT = 8000;
+export const DEFAULT_HOST = process.env.TYPEDB_HTTP_HOST || "http://127.0.0.1";
+export const DEFAULT_PORT = parseInt(process.env.TYPEDB_HTTP_PORT || "8000");
+
+// Cluster mode configuration
+export const isClusterMode = process.env.TYPEDB_CLUSTER_MODE === "true";
+export const CLUSTER_ADDRESSES = [
+    "http://127.0.0.1:18000",
+    "http://127.0.0.1:28000",
+    "http://127.0.0.1:38000"
+];
 
 export async function openAndTestConnection(username: string, password: string) {
+    if (isClusterMode) {
+        return openAndTestConnectionWithAddresses(username, password, CLUSTER_ADDRESSES);
+    }
     return openAndTestConnectionWithHostPort(username, password, DEFAULT_HOST, DEFAULT_PORT);
+}
+
+export async function openAndTestConnectionWithAddresses(username: string, password: string, addresses: string[]) {
+    const newDriver = new TypeDBHttpDriver({
+        username, password, addresses
+    });
+    const healthCheck = await newDriver.health();
+    if (isOkResponse(healthCheck)) driver = newDriver;
+    return healthCheck;
 }
 export async function openAndTestConnectionWithHostPort(username: string, password: string, host: string, port: number) {
     const newDriver = new TypeDBHttpDriver({
@@ -110,7 +130,11 @@ export function closeConnection() {
 }
 
 export function setDefaultDriver() {
-    driver = new TypeDBHttpDriver({username: DEFAULT_USERNAME, password: DEFAULT_PASSWORD, addresses: [`${DEFAULT_HOST}:${DEFAULT_PORT}`]});
+    if (isClusterMode) {
+        driver = new TypeDBHttpDriver({username: DEFAULT_USERNAME, password: DEFAULT_PASSWORD, addresses: CLUSTER_ADDRESSES});
+    } else {
+        driver = new TypeDBHttpDriver({username: DEFAULT_USERNAME, password: DEFAULT_PASSWORD, addresses: [`${DEFAULT_HOST}:${DEFAULT_PORT}`]});
+    }
 }
 
 Before(resetDB);

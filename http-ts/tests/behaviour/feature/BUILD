@@ -16,7 +16,7 @@
 # under the License.
 
 load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("//http-ts/tests/behaviour:rules.bzl", "typedb_behaviour_http_ts_test")
+load("//http-ts/tests/behaviour:rules.bzl", "typedb_behaviour_http_ts_test", "typedb_behaviour_http_ts_cluster_test")
 
 checkstyle_test(
     name = "checkstyle",
@@ -43,6 +43,37 @@ typedb_behaviour_http_ts_test(
 )
 
 typedb_behaviour_http_ts_test(
+    name = "concept",
+    features = ["@typedb_behaviour//driver:concept.feature"],
+    data = [],
+)
+
+# Cluster tests
+typedb_behaviour_http_ts_cluster_test(
+    name = "cluster",
+    features = ["@typedb_behaviour//driver:cluster.feature"],
+    data = [],
+)
+
+typedb_behaviour_http_ts_cluster_test(
+    name = "query",
+    features = ["@typedb_behaviour//driver:query.feature"],
+    data = [],
+)
+
+typedb_behaviour_http_ts_cluster_test(
+    name = "user",
+    features = ["@typedb_behaviour//driver:user.feature"],
+    data = [],
+)
+
+typedb_behaviour_http_ts_cluster_test(
+    name = "connection",
+    features = ["@typedb_behaviour//driver:connection.feature"],
+    data = [],
+)
+
+typedb_behaviour_http_ts_cluster_test(
     name = "concept",
     features = ["@typedb_behaviour//driver:concept.feature"],
     data = [],

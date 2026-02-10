@@ -50,3 +50,25 @@ def typedb_behaviour_http_ts_test(name, **kwargs):
         steps = "//http-ts/tests/behaviour/steps",
         **kwargs,
     )
+
+def http_ts_cucumber_cluster_test(name, features, data, steps, **kwargs):
+    cucumber_bin.cucumber_js_test(
+        name = name,
+        data = [
+            "//http-ts:node_modules/@cucumber/cucumber",
+        ] + data + features + [steps],
+        no_copy_to_bin = features,
+        fixed_args = [
+            "--publish-quiet", "--strict",
+            "--tags 'not @ignore and not @ignore-typedb-driver and not @ignore-typedb-driver-nodejs and not @ignore-typedb-http and not @ignore-typedb-http-driver and not @ignore-typedb-driver-cluster'",
+            "--require", "http-ts/tests/**/*.js",
+        ] + ["$(location {})".format(feature) for feature in features],
+        **kwargs,
+    )
+
+def typedb_behaviour_http_ts_cluster_test(name, **kwargs):
+    http_ts_cucumber_cluster_test(
+        name = name + "-cluster",
+        steps = "//http-ts/tests/behaviour/steps",
+        **kwargs,
+    )
