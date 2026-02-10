@@ -59,6 +59,17 @@ impl ConsistencyLevel {
     fn new_replica_dependent(address: *mut c_char) -> Self {
         ConsistencyLevel { tag: ConsistencyLevelTag::ReplicaDependent, address }
     }
+
+    fn to_native(&self) -> NativeConsistencyLevel {
+        match self.tag {
+            ConsistencyLevelTag::Strong => NativeConsistencyLevel::Strong,
+            ConsistencyLevelTag::Eventual => NativeConsistencyLevel::Eventual,
+            ConsistencyLevelTag::ReplicaDependent => {
+                let address = unwrap_or_default(string_view(self.address).parse());
+                NativeConsistencyLevel::ReplicaDependent { address }
+            }
+        }
+    }
 }
 
 impl Drop for ConsistencyLevel {
@@ -94,20 +105,12 @@ pub extern "C" fn consistency_level_drop(consistency_level: *mut ConsistencyLeve
 }
 
 pub(crate) fn native_consistency_level(consistency_level: *const ConsistencyLevel) -> Option<NativeConsistencyLevel> {
-    borrow_optional(consistency_level).cloned().map(|consistency_level| consistency_level.into())
+    borrow_optional(consistency_level).map(ConsistencyLevel::to_native)
 }
 
 impl Into<NativeConsistencyLevel> for ConsistencyLevel {
     fn into(self) -> NativeConsistencyLevel {
-        let ConsistencyLevel { tag, address } = self;
-        match tag {
-            ConsistencyLevelTag::Strong => NativeConsistencyLevel::Strong,
-            ConsistencyLevelTag::Eventual => NativeConsistencyLevel::Eventual,
-            ConsistencyLevelTag::ReplicaDependent => {
-                let address = unwrap_or_default(string_view(address).parse());
-                NativeConsistencyLevel::ReplicaDependent { address }
-            }
-        }
+        self.to_native()
     }
 }
 

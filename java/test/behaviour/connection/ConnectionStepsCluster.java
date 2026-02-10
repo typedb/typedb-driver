@@ -24,7 +24,6 @@ import com.typedb.driver.api.Driver;
 import com.typedb.driver.api.DriverOptions;
 import com.typedb.driver.api.DriverTlsConfig;
 import com.typedb.driver.test.behaviour.config.Parameters;
-import io.cucumber.datatable.DataTable;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.Then;
@@ -102,6 +101,11 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
         driver = createDefaultTypeDBDriver();
     }
 
+    @When("connection opens to single server with default authentication")
+    public void connection_opens_to_single_server_with_default_authentication() {
+        driver = createTypeDBDriver(Set.of(DEFAULT_CLUSTER_ADDRESSES.iterator().next()), DEFAULT_CREDENTIALS, driverOptions);
+    }
+
     @When("connection opens with username '{non_semicolon}', password '{non_semicolon}'{may_error}")
     public void connection_opens_with_username_password(String username, String password, Parameters.MayError mayError) {
         Credentials credentials = new Credentials(username, password);
@@ -177,8 +181,8 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
 
     @Override
     @Then("connection replicas have roles:")
-    public void connection_replicas_have_roles(DataTable dataTable) {
-        super.connection_replicas_have_roles(dataTable);
+    public void connection_replicas_have_roles(List<String> roles) {
+        super.connection_replicas_have_roles(roles);
     }
 
     @Override

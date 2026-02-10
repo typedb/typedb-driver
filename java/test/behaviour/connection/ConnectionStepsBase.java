@@ -27,16 +27,14 @@ import com.typedb.driver.api.DriverTlsConfig;
 import com.typedb.driver.api.QueryOptions;
 import com.typedb.driver.api.Transaction;
 import com.typedb.driver.api.TransactionOptions;
+import com.typedb.driver.api.server.ReplicaRole;
 import com.typedb.driver.api.server.ServerVersion;
 import com.typedb.driver.test.behaviour.config.Parameters;
 import com.typedb.driver.test.behaviour.util.Util;
 
-import io.cucumber.datatable.DataTable;
-
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
@@ -46,7 +44,6 @@ import java.util.stream.Stream;
 import static com.typedb.driver.test.behaviour.util.Util.createTempDir;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 public abstract class ConnectionStepsBase {
@@ -206,29 +203,48 @@ public abstract class ConnectionStepsBase {
     }
 
     void connection_get_replica_exists(String address, Parameters.ExistsOrDoesnt existsOrDoesnt) {
-        boolean exists = driver.replicas().stream().anyMatch(r -> r.address().equals(address));
+        boolean exists = driver.replicas().stream().anyMatch(r -> r.getAddress().equals(address));
         existsOrDoesnt.check(exists);
     }
 
     void connection_get_replica_has_term(String address) {
-        var replica = driver.replicas().stream().filter(r -> r.address().equals(address)).findFirst();
+        var replica = driver.replicas().stream().filter(r -> r.getAddress().equals(address)).findFirst();
         Parameters.ExistsOrDoesnt.DOES.check(replica.isPresent());
         // term should exist (can be any value >= 0)
     }
 
-    void connection_replicas_have_roles(DataTable dataTable) {
-        List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
-        for (Map<String, String> row : rows) {
-            String expectedAddress = row.get("address");
-            boolean expectedIsPrimary = Boolean.parseBoolean(row.get("is_primary"));
+    void connection_replicas_have_roles(List<String> roles) {
+        int expectedPrimaryCount = 0;
+        int expectedSecondaryCount = 0;
+        int expectedCandidateCount = 0;
 
-            var replica = driver.replicas().stream()
-                    .filter(r -> r.address().equals(expectedAddress))
-                    .findFirst();
-
-            Parameters.ExistsOrDoesnt.DOES.check(replica.isPresent());
-            assertEquals(expectedIsPrimary, replica.get().isPrimary());
+        for (String role : roles) {
+            switch (role.toLowerCase()) {
+                case "primary":
+                    expectedPrimaryCount++;
+                    break;
+                case "secondary":
+                    expectedSecondaryCount++;
+                    break;
+                case "candidate":
+                    expectedCandidateCount++;
+                    break;
+                default:
+                    throw new IllegalArgumentException("Unknown replica role: " + role);
+            }
         }
+
+        var replicas = driver.replicas();
+        int actualPrimaryCount = (int) replicas.stream()
+                .filter(r -> r.getRole().map(ReplicaRole::isPrimary).orElse(false)).count();
+        int actualSecondaryCount = (int) replicas.stream()
+                .filter(r -> r.getRole().map(ReplicaRole::isSecondary).orElse(false)).count();
+        int actualCandidateCount = (int) replicas.stream()
+                .filter(r -> r.getRole().map(ReplicaRole::isCandidate).orElse(false)).count();
+
+        assertEquals("Primary replica count mismatch", expectedPrimaryCount, actualPrimaryCount);
+        assertEquals("Secondary replica count mismatch", expectedSecondaryCount, actualSecondaryCount);
+        assertEquals("Candidate replica count mismatch", expectedCandidateCount, actualCandidateCount);
     }
 
     void connection_has_count_databases(int count) {

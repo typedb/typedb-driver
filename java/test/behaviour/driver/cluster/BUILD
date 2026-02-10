@@ -15,23 +15,20 @@
 # specific language governing permissions and limitations
 # under the License.
 
-package(default_visibility = ["//java/test/behaviour:__subpackages__"])
-
+package(default_visibility = ["//visibility:__subpackages__"])
 load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("//java/test/behaviour:rules.bzl", "typedb_behaviour_java_test")
+load("//java/test/behaviour:rules.bzl", "typedb_behaviour_java_cluster_test")
 
-typedb_behaviour_java_test(
+typedb_behaviour_java_cluster_test(
     name = "test",
     srcs = [
-        "UserTest.java",
+        "ClusterTest.java",
     ],
-    test_class = "com.typedb.driver.test.behaviour.driver.user.UserTest",
+    test_class = "com.typedb.driver.test.behaviour.driver.cluster.ClusterTest",
     data = [
-        "@typedb_behaviour//driver:user.feature",
+        "@typedb_behaviour//driver:cluster.feature",
     ],
     steps = [
-        "//java/test/behaviour/connection/transaction:steps",
-        "//java/test/behaviour/connection/user:steps",
         "//java/test/behaviour/query:steps",
         "//java/test/behaviour/util:steps",
     ],
