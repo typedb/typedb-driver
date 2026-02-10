@@ -123,6 +123,7 @@ class ReplicaDependent(ConsistencyLevel):
     def __str__(self):
         return f"ReplicaDependent({self._address})"
 
+
 ConsistencyLevel.Strong = Strong
 ConsistencyLevel.Eventual = Eventual
 ConsistencyLevel.ReplicaDependent = ReplicaDependent

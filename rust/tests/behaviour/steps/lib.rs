@@ -42,8 +42,9 @@ use tokio::{
 use typedb_driver::{
     analyze::AnalyzedQuery,
     answer::{ConceptDocument, ConceptRow, QueryAnswer, QueryType},
-    Addresses, BoxStream, consistency_level::ConsistencyLevel, Credentials, DriverOptions, DriverTlsConfig, QueryOptions,
-    Result as TypeDBResult, Transaction, TransactionOptions, TypeDBDriver,
+    consistency_level::ConsistencyLevel,
+    Addresses, BoxStream, Credentials, DriverOptions, DriverTlsConfig, QueryOptions, Result as TypeDBResult,
+    Transaction, TransactionOptions, TypeDBDriver,
 };
 
 use crate::{

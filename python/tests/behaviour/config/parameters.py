@@ -330,6 +330,7 @@ def parse_by_index_of_variable_or_not(value: str) -> bool:
 
 register_type(IsByVarIndex=parse_by_index_of_variable_or_not)
 
+
 class ConsistencyLevel:
 
     def __init__(self, consistency_level: TypeDBConsistencyLevel):

@@ -267,20 +267,7 @@ public abstract class ConnectionStepsBase {
         driverOptions = driverOptions.replicaDiscoveryAttempts(value);
     }
 
-    void set_database_operation_consistency_to(String consistency) {
-        switch (consistency.toLowerCase()) {
-            case "strong":
-                databaseOperationConsistency = Optional.of(new ConsistencyLevel.Strong());
-                break;
-            case "eventual":
-                databaseOperationConsistency = Optional.of(new ConsistencyLevel.Eventual());
-                break;
-            default:
-                throw new IllegalArgumentException("Unknown consistency level: " + consistency);
-        }
-    }
-
-    void set_database_operation_consistency_to_replica(String address) {
-        databaseOperationConsistency = Optional.of(new ConsistencyLevel.ReplicaDependent(address));
+    void set_database_operation_consistency_to(Parameters.Consistency consistency) {
+        databaseOperationConsistency = Optional.of(consistency.level());
     }
 }

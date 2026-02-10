@@ -102,7 +102,6 @@ public class DriverOptions extends NativeObject<com.typedb.driver.jni.DriverOpti
     }
 
     /**
-     *
      * Sets the maximum time (in milliseconds) to wait for a response to a unary RPC request.
      * This applies to operations like database creation, user management, and initial
      * transaction opening. It does NOT apply to operations within transactions (queries, commits).

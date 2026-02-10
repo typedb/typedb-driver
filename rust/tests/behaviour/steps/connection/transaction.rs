@@ -23,6 +23,7 @@ use cucumber::gherkin::Step;
 use futures::future::join_all;
 use macro_rules_attribute::apply;
 use typedb_driver::{Result as TypeDBResult, Transaction, TransactionOptions, TransactionType, TypeDBDriver};
+
 use crate::{generic_step, in_background, params, params::check_boolean, util::iter_table, Context};
 
 pub(crate) async fn open_transaction_for_database(
@@ -178,7 +179,10 @@ pub async fn set_transaction_option_schema_lock_acquire_timeout_millis(context: 
 
 #[apply(generic_step)]
 #[step(expr = "set transaction option read_consistency_level to: {consistency_level}")]
-pub async fn set_transaction_option_read_consistency_level(context: &mut Context, consistency_level: params::ConsistencyLevel) {
+pub async fn set_transaction_option_read_consistency_level(
+    context: &mut Context,
+    consistency_level: params::ConsistencyLevel,
+) {
     context.init_transaction_options_if_needed();
     context.transaction_options_mut().unwrap().read_consistency_level = Some(consistency_level.into_typedb());
 }

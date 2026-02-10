@@ -18,11 +18,9 @@
  */
 use cucumber::gherkin::Step;
 use macro_rules_attribute::apply;
-use typedb_driver::{ServerVersion, TypeDBDriver};
-use typedb_driver::Replica;
-use crate::{assert_with_timeout, generic_step, params, params::check_boolean, Context};
-use crate::util::iter_table;
-use typedb_driver::ReplicaRole;
+use typedb_driver::{Replica, ReplicaRole, ServerVersion, TypeDBDriver};
+
+use crate::{assert_with_timeout, generic_step, params, params::check_boolean, util::iter_table, Context};
 
 mod database;
 mod transaction;
@@ -44,7 +42,10 @@ async fn connection_opens_with_default_authentication(context: &mut Context) {
 
 #[apply(generic_step)]
 #[step(expr = "connection opens to single server with default authentication{may_error}")]
-async fn connection_opens_to_single_server_with_default_authentication(context: &mut Context, may_error: params::MayError) {
+async fn connection_opens_to_single_server_with_default_authentication(
+    context: &mut Context,
+    may_error: params::MayError,
+) {
     if let Some(driver) = may_error.check(context.create_default_single_driver().await) {
         context.set_driver(driver)
     }

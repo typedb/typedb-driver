@@ -21,7 +21,8 @@ from typedb.api.connection.driver_tls_config import DriverTlsConfig
 from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE
 from typedb.common.native_wrapper import NativeWrapper
 from typedb.common.validation import require_non_negative, require_non_null
-from typedb.native_driver_wrapper import driver_options_get_tls_config, driver_options_new, driver_options_set_tls_config, \
+from typedb.native_driver_wrapper import driver_options_get_tls_config, driver_options_new, \
+    driver_options_set_tls_config, \
     driver_options_get_use_replication, driver_options_set_use_replication, driver_options_get_primary_failover_retries, \
     driver_options_set_primary_failover_retries, driver_options_get_replica_discovery_attempts, \
     driver_options_set_replica_discovery_attempts, driver_options_has_replica_discovery_attempts, \

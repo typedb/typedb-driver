@@ -167,6 +167,7 @@ def step_impl(context: Context):
     assert_that(actual_candidate_count, equal_to(expected_candidate_count),
                 f"Expected {expected_candidate_count} candidate replicas, found {actual_candidate_count}")
 
+
 @step("connection has {count:Int} database")
 @step("connection has {count:Int} databases")
 def step_impl(context: Context, count: int):

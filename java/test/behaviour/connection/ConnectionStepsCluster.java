@@ -168,13 +168,13 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
     }
 
     @Override
-    @Then("connection get replica({word}) {exists_or_doesnt}")
+    @Then("connection get replica\\({word}) {exists_or_doesnt}")
     public void connection_get_replica_exists(String address, Parameters.ExistsOrDoesnt existsOrDoesnt) {
         super.connection_get_replica_exists(address, existsOrDoesnt);
     }
 
     @Override
-    @Then("connection get replica({word}) has term")
+    @Then("connection get replica\\({word}) has term")
     public void connection_get_replica_has_term(String address) {
         super.connection_get_replica_has_term(address);
     }
@@ -216,14 +216,8 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
     }
 
     @Override
-    @When("set database operation consistency to: {word}")
-    public void set_database_operation_consistency_to(String consistency) {
+    @When("set database operation consistency to: {consistency_level}")
+    public void set_database_operation_consistency_to(Parameters.Consistency consistency) {
         super.set_database_operation_consistency_to(consistency);
-    }
-
-    @Override
-    @When("set database operation consistency to replica: {word}")
-    public void set_database_operation_consistency_to_replica(String address) {
-        super.set_database_operation_consistency_to_replica(address);
     }
 }

@@ -19,6 +19,7 @@
 
 package com.typedb.driver.test.behaviour.config;
 
+import com.typedb.driver.api.ConsistencyLevel;
 import com.typedb.driver.api.QueryType;
 import com.typedb.driver.api.Transaction;
 import io.cucumber.java.DataTableType;
@@ -179,6 +180,11 @@ public class Parameters {
             return IsByVarIndex.IS_NOT;
         }
         return null;
+    }
+
+    @ParameterType("strong|eventual|replica\\(.*\\)")
+    public Consistency consistency_level(String value) {
+        return Consistency.parse(value);
     }
 
     public enum ConceptKind {
@@ -412,4 +418,34 @@ public class Parameters {
             DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS VV"),
             DateTimeFormatter.ISO_ZONED_DATE_TIME
     );
+
+    public static class Consistency {
+        private final ConsistencyLevel level;
+
+        public Consistency(ConsistencyLevel level) {
+            this.level = level;
+        }
+
+        public ConsistencyLevel level() {
+            return level;
+        }
+
+        public static Consistency parse(String value) {
+            if (value.equalsIgnoreCase("strong")) {
+                return new Consistency(new ConsistencyLevel.Strong());
+            } else if (value.equalsIgnoreCase("eventual")) {
+                return new Consistency(new ConsistencyLevel.Eventual());
+            } else if (value.toLowerCase().startsWith("replica(") && value.endsWith(")")) {
+                String address = value.substring("replica(".length(), value.length() - 1);
+                return new Consistency(new ConsistencyLevel.ReplicaDependent(address));
+            } else {
+                throw new IllegalArgumentException("Unknown consistency level: " + value);
+            }
+        }
+
+        @Override
+        public String toString() {
+            return "Consistency(" + level + ")";
+        }
+    }
 }

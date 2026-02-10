@@ -21,7 +21,12 @@ use std::{convert::Infallible, fmt, str::FromStr};
 
 use chrono::{FixedOffset, NaiveDate, NaiveDateTime, NaiveTime};
 use cucumber::Parameter;
-use typedb_driver::{consistency_level::ConsistencyLevel as TypeDBConsistencyLevel, answer::QueryType as TypeDBQueryType, concept::{Value as TypeDBValue, ValueType as TypeDBValueType}, Address, TransactionType as TypeDBTransactionType};
+use typedb_driver::{
+    answer::QueryType as TypeDBQueryType,
+    concept::{Value as TypeDBValue, ValueType as TypeDBValueType},
+    consistency_level::ConsistencyLevel as TypeDBConsistencyLevel,
+    Address, TransactionType as TypeDBTransactionType,
+};
 
 #[derive(Debug, Default, Parameter, Clone)]
 #[param(name = "value", regex = ".*?")]
@@ -541,9 +546,7 @@ impl FromStr for ConsistencyLevel {
             Ok(Self::Strong)
         } else if s == "eventual" {
             Ok(Self::Eventual)
-        } else if let Some(message) =
-            s.strip_prefix("replica(").and_then(|suffix| suffix.strip_suffix(")"))
-        {
+        } else if let Some(message) = s.strip_prefix("replica(").and_then(|suffix| suffix.strip_suffix(")")) {
             Ok(Self::ReplicaDependent { address: message.parse().expect("Expected a valid address") })
         } else {
             Err(format!("Invalid `ConsistencyLevel`: {}", s))
