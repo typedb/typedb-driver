@@ -45,7 +45,7 @@ server_start() {
     --server.address="0.0.0.0:${server_port}" \
     --server.connection-address="127.0.0.1:${server_port}" \
     --server.http.enabled=true \
-    --server.http.port="${http_port}" \
+    --server.http.address="0.0.0.0:${http_port}" \
     --server.clustering.id="${node_id}" \
     --server.clustering.address="127.0.0.1:${clustering_port}" \
     --server.encryption.enabled="${ENCRYPTION_ENABLED}" \

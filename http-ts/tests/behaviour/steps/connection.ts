@@ -28,7 +28,7 @@ import {
     openAndTestConnectionWithHostPort
 } from "./context";
 import assert from "assert";
-import { Server } from "../../../src/response";
+import { Server } from "../../../dist/index.cjs";
 
 Given("typedb starts", () => {});
 Given("connection is open: {boolean}", (_) => {});

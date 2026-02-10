@@ -24,57 +24,29 @@ checkstyle_test(
     license_type = "apache-header",
 )
 
+# Creates both -core and -cluster test targets
 typedb_behaviour_http_ts_test(
     name = "query",
     features = ["@typedb_behaviour//driver:query.feature"],
-    data = [],
 )
 
 typedb_behaviour_http_ts_test(
     name = "user",
     features = ["@typedb_behaviour//driver:user.feature"],
-    data = [],
 )
 
 typedb_behaviour_http_ts_test(
     name = "connection",
     features = ["@typedb_behaviour//driver:connection.feature"],
-    data = [],
 )
 
 typedb_behaviour_http_ts_test(
     name = "concept",
     features = ["@typedb_behaviour//driver:concept.feature"],
-    data = [],
 )
 
-# Cluster tests
+# Cluster-only test (no core equivalent)
 typedb_behaviour_http_ts_cluster_test(
     name = "cluster",
     features = ["@typedb_behaviour//driver:cluster.feature"],
-    data = [],
-)
-
-typedb_behaviour_http_ts_cluster_test(
-    name = "query",
-    features = ["@typedb_behaviour//driver:query.feature"],
-    data = [],
-)
-
-typedb_behaviour_http_ts_cluster_test(
-    name = "user",
-    features = ["@typedb_behaviour//driver:user.feature"],
-    data = [],
-)
-
-typedb_behaviour_http_ts_cluster_test(
-    name = "connection",
-    features = ["@typedb_behaviour//driver:connection.feature"],
-    data = [],
-)
-
-typedb_behaviour_http_ts_cluster_test(
-    name = "concept",
-    features = ["@typedb_behaviour//driver:concept.feature"],
-    data = [],
 )
