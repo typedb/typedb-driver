@@ -118,9 +118,9 @@ public class ConnectionStepsCore extends ConnectionStepsBase {
     }
 
     @Override
-    @Then("connection contains primary replica")
-    public void connection_contains_primary_replica() {
-        super.connection_contains_primary_replica();
+    @Then("connection primary replica exists")
+    public void connection_primary_replica_exists() {
+        super.connection_primary_replica_exists();
     }
 
     @Override

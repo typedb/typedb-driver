@@ -1,0 +1,14 @@
+[#_ServersListResponse]
+=== ServersListResponse
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `servers` a| `Server` a| 
+|===
+// end::properties[]
+

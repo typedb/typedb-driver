@@ -89,8 +89,8 @@ a| `tlsRootCAPath` a| Path to PEM-encoded root CA certificate bundle.
 Examples
 [source,java]
 ----
-                                           DriverTlsConfig tlsConfig = DriverTlsConfig.enabledWithRootCA("path/to/ca-certificate.pem");
-                                           
+                                                                                     DriverTlsConfig tlsConfig = DriverTlsConfig.enabledWithRootCA("path/to/ca-certificate.pem");
+                                                                                     
 ----
  a| `java.lang.String`
 |===

@@ -1,24 +1,11 @@
 [#_Eventual]
 === Eventual
 
-*Package*: `typedb.api.connection.consistency_level.ConsistencyLevel`
+*Package*: `typedb.api.connection.consistency_level`
+
+*Supertypes:*
+
+* `ConsistencyLevel`
 
 Eventual consistency level. Allow stale reads from any replica and execution orchestration through a non-primary replica. Does not guarantee latest writes, but is eventually faster compared to other consistency levels. Note that the target replica can redirect the request, if needed.
-
-// tag::methods[]
-[#_Eventual_native_object_]
-==== native_object
-
-[source,python]
-----
-native_object()
-----
-
-
-
-[caption=""]
-.Returns
-``
-
-// end::methods[]
 
