@@ -96,7 +96,6 @@ export const DEFAULT_PASSWORD = "password";
 export const DEFAULT_HOST = process.env.TYPEDB_HTTP_HOST || "http://127.0.0.1";
 export const DEFAULT_PORT = parseInt(process.env.TYPEDB_HTTP_PORT || "8000");
 
-// Cluster mode configuration
 export const isClusterMode = process.env.TYPEDB_CLUSTER_MODE === "true";
 export const CLUSTER_ADDRESSES = [
     "https://127.0.0.1:18000",
@@ -106,9 +105,13 @@ export const CLUSTER_ADDRESSES = [
 
 // For cluster mode tests, replace global fetch with one that handles mTLS
 if (isClusterMode) {
-    // Load TLS certificates for mTLS
-    const certDir = "tool/test/resources/encryption";
-    const ca = fs.readFileSync(path.join(certDir, "ext-grpc-root-ca.pem"));
+    // Load TLS certificates for mTLS - ROOT_CA env var points to the CA certificate
+    const rootCaPath = process.env.ROOT_CA;
+    if (!rootCaPath) {
+        throw new Error("ROOT_CA environment variable must be set for cluster mode tests");
+    }
+    const certDir = path.dirname(rootCaPath);
+    const ca = fs.readFileSync(rootCaPath);
     const cert = fs.readFileSync(path.join(certDir, "ext-grpc-certificate.pem"));
     const key = fs.readFileSync(path.join(certDir, "ext-grpc-private-key.pem"));
 
