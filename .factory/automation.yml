@@ -309,10 +309,10 @@ build:
         tool/http-ts/install-deps.sh
 
         # TODO: we cannot run them now because we cannot register replicas through HTTP. fix it later
-        # .factory/test-cluster.sh //http-ts/tests/behaviour/feature:concept-cluster --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
+        # .factory/test-cluster.sh //http-ts/tests/behaviour/feature:cluster-cluster --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
         
         source tool/test/start-cluster-servers.sh 3 &&
-          .factory/test-cluster.sh //http-ts/tests/behaviour/feature:cluster-cluster --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
+          .factory/test-cluster.sh //http-ts/tests/behaviour/feature:concept-cluster --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
           .factory/test-cluster.sh //http-ts/tests/behaviour/feature:query-cluster --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
           .factory/test-cluster.sh //http-ts/tests/behaviour/feature:user-cluster --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
           .factory/test-cluster.sh //http-ts/tests/behaviour/feature:connection-cluster --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
