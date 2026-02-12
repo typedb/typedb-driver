@@ -24,7 +24,7 @@ namespace TypeDB.Driver.Api
     /// Attribute types represent properties that other types can own.
     /// In TypeDB 3.0, types are read-only data returned from queries.
     /// </summary>
-    public interface IAttributeType : IThingType
+    public interface IAttributeType : IType
     {
         /// <inheritdoc/>
         bool IConcept.IsAttributeType()

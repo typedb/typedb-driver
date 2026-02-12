@@ -25,7 +25,7 @@ namespace TypeDB.Driver.Concept
     /// Represents a relation type in TypeDB.
     /// In TypeDB 3.0, types are read-only data returned from queries.
     /// </summary>
-    public class RelationType : ThingType, IRelationType
+    public class RelationType : Type, IRelationType
     {
         public RelationType(Pinvoke.Concept nativeConcept)
             : base(nativeConcept)

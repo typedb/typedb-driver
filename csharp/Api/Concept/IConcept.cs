@@ -49,16 +49,6 @@ namespace TypeDB.Driver.Api
         bool IsType() => false;
 
         /// <summary>
-        /// Checks if the concept is a <see cref="IThingType"/>.
-        /// </summary>
-        /// <example>
-        /// <code>
-        /// concept.IsThingType()
-        /// </code>
-        /// </example>
-        bool IsThingType() => false;
-
-        /// <summary>
         /// Checks if the concept is an <see cref="IEntityType"/>.
         /// </summary>
         /// <example>
@@ -100,7 +90,6 @@ namespace TypeDB.Driver.Api
 
         /// <summary>
         /// Checks if the concept is an instance (entity, relation, or attribute).
-        /// This is the 3.0 name for what was previously called "Thing".
         /// </summary>
         /// <example>
         /// <code>
@@ -108,17 +97,6 @@ namespace TypeDB.Driver.Api
         /// </code>
         /// </example>
         bool IsInstance() => false;
-
-        /// <summary>
-        /// Checks if the concept is a <see cref="IThing"/>.
-        /// Note: In 3.0, this is also known as IsInstance().
-        /// </summary>
-        /// <example>
-        /// <code>
-        /// concept.IsThing()
-        /// </code>
-        /// </example>
-        bool IsThing() => IsInstance();
 
         /// <summary>
         /// Checks if the concept is an <see cref="IEntity"/>.
@@ -294,21 +272,6 @@ namespace TypeDB.Driver.Api
         }
 
         /// <summary>
-        /// Casts the concept to <see cref="IThingType"/>.
-        /// </summary>
-        /// <exception cref="TypeDBDriverException">If the concept is not a thing type.</exception>
-        /// <example>
-        /// <code>
-        /// concept.AsThingType()
-        /// </code>
-        /// </example>
-        IThingType AsThingType()
-        {
-            throw new TypeDBDriverException(
-                ConceptError.INVALID_CONCEPT_CASTING, GetType().Name, nameof(IThingType));
-        }
-
-        /// <summary>
         /// Casts the concept to <see cref="IEntityType"/>.
         /// </summary>
         /// <exception cref="TypeDBDriverException">If the concept is not an entity type.</exception>
@@ -369,18 +332,18 @@ namespace TypeDB.Driver.Api
         }
 
         /// <summary>
-        /// Casts the concept to <see cref="IThing"/> (instance).
+        /// Casts the concept to <see cref="IInstance"/>.
         /// </summary>
-        /// <exception cref="TypeDBDriverException">If the concept is not a thing/instance.</exception>
+        /// <exception cref="TypeDBDriverException">If the concept is not an instance.</exception>
         /// <example>
         /// <code>
-        /// concept.AsThing()
+        /// concept.AsInstance()
         /// </code>
         /// </example>
-        IThing AsThing()
+        IInstance AsInstance()
         {
             throw new TypeDBDriverException(
-                ConceptError.INVALID_CONCEPT_CASTING, GetType().Name, nameof(IThing));
+                ConceptError.INVALID_CONCEPT_CASTING, GetType().Name, nameof(IInstance));
         }
 
         /// <summary>

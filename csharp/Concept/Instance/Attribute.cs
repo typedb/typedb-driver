@@ -21,36 +21,21 @@ using TypeDB.Driver.Api;
 
 namespace TypeDB.Driver.Concept
 {
-    /// <summary>
-    /// Represents a relation instance in TypeDB.
-    /// In TypeDB 3.0, relation instances are read-only data returned from queries.
-    /// </summary>
-    public class Relation : Thing, IRelation
+    public class Attribute : Instance, IAttribute
     {
-        private IRelationType? _type;
-
-        public Relation(Pinvoke.Concept nativeConcept)
+        public Attribute(Pinvoke.Concept nativeConcept)
             : base(nativeConcept)
         {
         }
 
-        /// <summary>
-        /// Gets the type of this relation.
-        /// </summary>
-        public override IRelationType Type
+        public override IType Type => ((IAttribute)this).Type;
+
+        IAttributeType IAttribute.Type
         {
-            get { return _type ?? (_type = new RelationType(Pinvoke.typedb_driver.relation_get_type(NativeObject))); }
+            get { return new AttributeType(Pinvoke.typedb_driver.attribute_get_type(NativeObject)); }
         }
 
-        /// <summary>
-        /// The base class Type property returns IThingType.
-        /// </summary>
-        IThingType IThing.Type => Type;
-
-        /// <summary>
-        /// Returns this relation as IRelation.
-        /// </summary>
-        public IRelation AsRelation()
+        public IAttribute AsAttribute()
         {
             return this;
         }

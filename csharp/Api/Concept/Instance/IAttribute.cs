@@ -17,24 +17,31 @@
  * under the License.
  */
 
-using TypeDB.Driver.Api;
-using TypeDB.Driver.Concept;
-
-namespace TypeDB.Driver.Concept
+namespace TypeDB.Driver.Api
 {
-    public class Entity : Thing, IEntity
+    /// <summary>
+    /// Represents an attribute instance in TypeDB.
+    /// Attribute instances represent properties with values that can be owned by other instances.
+    /// In TypeDB 3.0, instances are read-only data returned from queries.
+    /// </summary>
+    public interface IAttribute : IInstance
     {
-        public Entity(Pinvoke.Concept nativeConcept)
-            : base(nativeConcept)
+        /// <summary>
+        /// The attribute type which this attribute instance belongs to.
+        /// </summary>
+        new IAttributeType Type { get; }
+
+        /// <inheritdoc/>
+        IType IInstance.Type => Type;
+
+        /// <inheritdoc/>
+        bool IConcept.IsAttribute()
         {
+            return true;
         }
 
-        public override IEntityType Type
-        {
-            get { return new EntityType(Pinvoke.typedb_driver.entity_get_type(NativeObject)); }
-        }
-
-        public IEntity AsEntity()
+        /// <inheritdoc/>
+        IAttribute IConcept.AsAttribute()
         {
             return this;
         }

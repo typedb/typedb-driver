@@ -24,7 +24,7 @@ namespace TypeDB.Driver.Api
     /// Entity types represent the classification of independent objects in the data model.
     /// In TypeDB 3.0, types are read-only data returned from queries.
     /// </summary>
-    public interface IEntityType : IThingType
+    public interface IEntityType : IType
     {
         /// <inheritdoc/>
         bool IConcept.IsEntityType()

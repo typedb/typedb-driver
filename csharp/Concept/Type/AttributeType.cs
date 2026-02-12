@@ -25,7 +25,7 @@ namespace TypeDB.Driver.Concept
     /// Represents an attribute type in TypeDB.
     /// In TypeDB 3.0, types are read-only data returned from queries.
     /// </summary>
-    public class AttributeType : ThingType, IAttributeType
+    public class AttributeType : Type, IAttributeType
     {
         public AttributeType(Pinvoke.Concept nativeConcept)
             : base(nativeConcept)

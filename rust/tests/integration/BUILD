@@ -61,6 +61,18 @@ rust_test(
     ],
 )
 
+rust_test(
+    name = "test_values",
+    srcs = ["values.rs"],
+    deps = [
+        "//rust:typedb_driver",
+        "@crates//:async-std",
+        "@crates//:chrono",
+        "@crates//:futures",
+        "@crates//:serial_test",
+    ],
+)
+
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*"]),

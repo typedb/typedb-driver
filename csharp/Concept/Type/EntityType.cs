@@ -25,7 +25,7 @@ namespace TypeDB.Driver.Concept
     /// Represents an entity type in TypeDB.
     /// In TypeDB 3.0, types are read-only data returned from queries.
     /// </summary>
-    public class EntityType : ThingType, IEntityType
+    public class EntityType : Type, IEntityType
     {
         public EntityType(Pinvoke.Concept nativeConcept)
             : base(nativeConcept)

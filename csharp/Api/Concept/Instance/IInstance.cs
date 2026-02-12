@@ -20,20 +20,24 @@
 namespace TypeDB.Driver.Api
 {
     /// <summary>
-    /// Represents a relation type in TypeDB.
-    /// Relation types represent relationships between types and have roles.
-    /// In TypeDB 3.0, types are read-only data returned from queries.
+    /// Represents an instance (entity, relation, or attribute) in TypeDB.
+    /// In TypeDB 3.0, instances are read-only data returned from queries.
     /// </summary>
-    public interface IRelationType : IType
+    public interface IInstance : IConcept
     {
+        /// <summary>
+        /// The type which this instance belongs to.
+        /// </summary>
+        IType Type { get; }
+
         /// <inheritdoc/>
-        bool IConcept.IsRelationType()
+        bool IConcept.IsInstance()
         {
             return true;
         }
 
         /// <inheritdoc/>
-        IRelationType IConcept.AsRelationType()
+        IInstance IConcept.AsInstance()
         {
             return this;
         }

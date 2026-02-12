@@ -140,7 +140,7 @@ namespace TypeDB.Driver.Examples
                     Console.WriteLine($"As we expect an entity instance, we can try to get its IID (unique identification): {x?.TryGetIID()}. ");
                     if (x != null && x.IsEntity())
                     {
-                        Console.WriteLine("It can also be retrieved directly and safely after a cast: " + x.AsEntity().IID);
+                        Console.WriteLine("It can also be retrieved directly and safely after a cast: " + x.AsEntity().TryGetIID());
                     }
 
                     // Do not forget to commit if the changes should be persisted

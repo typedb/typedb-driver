@@ -42,7 +42,7 @@ namespace TypeDB.Driver.Common
         /// </summary>
         /// <param name="utcDateTime">The UTC datetime (Kind should be Utc or Unspecified).</param>
         /// <param name="zoneName">The IANA timezone name (e.g., "Europe/London").</param>
-        /// <param name="subsecNanos">Subsecond nanoseconds (0–999,999,999). Defaults to 0.</param>
+        /// <param name="subsecNanos">Subsecond nanoseconds (0–999,999,999), preserving TypeDB's full nanosecond precision. Defaults to 0.</param>
         public DatetimeTZ(DateTime utcDateTime, string zoneName, uint subsecNanos = 0)
         {
             ZoneName = zoneName;
@@ -57,7 +57,7 @@ namespace TypeDB.Driver.Common
         /// Creates a DatetimeTZ with a fixed UTC offset (no IANA zone).
         /// </summary>
         /// <param name="dateTimeOffset">The date, time, and UTC offset.</param>
-        /// <param name="subsecNanos">Subsecond nanoseconds (0–999,999,999). Defaults to 0.</param>
+        /// <param name="subsecNanos">Subsecond nanoseconds (0–999,999,999), preserving TypeDB's full nanosecond precision. Defaults to 0.</param>
         public DatetimeTZ(DateTimeOffset dateTimeOffset, uint subsecNanos = 0)
         {
             DateTimeOffset = dateTimeOffset;

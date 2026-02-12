@@ -17,22 +17,25 @@
  * under the License.
  */
 
-namespace TypeDB.Driver.Api
+using TypeDB.Driver.Api;
+
+namespace TypeDB.Driver.Concept
 {
-    /// <summary>
-    /// Represents a thing type (entity type, relation type, or attribute type) in TypeDB.
-    /// In TypeDB 3.0, types are read-only data returned from queries.
-    /// </summary>
-    public interface IThingType : IType
+    public class Entity : Instance, IEntity
     {
-        /// <inheritdoc/>
-        bool IConcept.IsThingType()
+        public Entity(Pinvoke.Concept nativeConcept)
+            : base(nativeConcept)
         {
-            return true;
         }
 
-        /// <inheritdoc/>
-        IThingType IConcept.AsThingType()
+        public override IType Type => ((IEntity)this).Type;
+
+        IEntityType IEntity.Type
+        {
+            get { return new EntityType(Pinvoke.typedb_driver.entity_get_type(NativeObject)); }
+        }
+
+        public IEntity AsEntity()
         {
             return this;
         }

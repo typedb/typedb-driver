@@ -17,34 +17,25 @@
  * under the License.
  */
 
-namespace TypeDB.Driver.Api
+using TypeDB.Driver.Api;
+
+namespace TypeDB.Driver.Concept
 {
-    /// <summary>
-    /// Instance of data of an entity type, representing a standalone object that exists in the data model independently.
-    /// Entity does not have a value. It is usually addressed by its ownership over attribute instances and/or roles
-    /// played in relation instances.
-    /// In TypeDB 3.0, instances are read-only data returned from queries.
-    /// </summary>
-    public interface IEntity : IThing
+    public class Relation : Instance, IRelation
     {
-        /// <summary>
-        /// The unique id of the entity.
-        /// </summary>
-        string IID { get; }
-
-        /// <summary>
-        /// The type which this entity belongs to.
-        /// </summary>
-        new IEntityType Type { get; }
-
-        /// <inheritdoc/>
-        bool IConcept.IsEntity()
+        public Relation(Pinvoke.Concept nativeConcept)
+            : base(nativeConcept)
         {
-            return true;
         }
 
-        /// <inheritdoc/>
-        IEntity IConcept.AsEntity()
+        public override IType Type => ((IRelation)this).Type;
+
+        IRelationType IRelation.Type
+        {
+            get { return new RelationType(Pinvoke.typedb_driver.relation_get_type(NativeObject)); }
+        }
+
+        public IRelation AsRelation()
         {
             return this;
         }

@@ -28,19 +28,19 @@ namespace TypeDB.Driver.Concept
     /// Base class for instance concepts (Entity, Relation, Attribute).
     /// In TypeDB 3.0, instances are read-only data returned from queries.
     /// </summary>
-    public abstract class Thing : Concept, IThing
+    public abstract class Instance : Concept, IInstance
     {
         protected int _hash = 0;
 
-        internal Thing(Pinvoke.Concept nativeConcept)
+        internal Instance(Pinvoke.Concept nativeConcept)
             : base(nativeConcept)
         {
         }
 
         /// <summary>
-        /// Creates the appropriate Thing subtype from a native concept.
+        /// Creates the appropriate Instance subtype from a native concept.
         /// </summary>
-        public static IThing ThingOf(Pinvoke.Concept nativeConcept)
+        public static IInstance InstanceOf(Pinvoke.Concept nativeConcept)
         {
             if (Pinvoke.typedb_driver.concept_is_entity(nativeConcept))
                 return new Entity(nativeConcept);
@@ -63,12 +63,12 @@ namespace TypeDB.Driver.Concept
         /// <summary>
         /// Gets the type of this instance.
         /// </summary>
-        public abstract IThingType Type { get; }
+        public abstract IType Type { get; }
 
         /// <summary>
-        /// Returns this instance as IThing.
+        /// Returns this instance as IInstance.
         /// </summary>
-        public IThing AsThing()
+        public IInstance AsInstance()
         {
             return this;
         }

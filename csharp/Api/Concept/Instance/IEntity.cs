@@ -20,30 +20,28 @@
 namespace TypeDB.Driver.Api
 {
     /// <summary>
-    /// Relation is an instance of a relation type and can be uniquely addressed
-    /// by a combination of its type, owned attributes and role players.
+    /// Represents an entity instance in TypeDB.
+    /// Entity instances are independent objects in the data model.
     /// In TypeDB 3.0, instances are read-only data returned from queries.
     /// </summary>
-    public interface IRelation : IThing
+    public interface IEntity : IInstance
     {
         /// <summary>
-        /// The unique id of the relation.
+        /// The entity type which this entity instance belongs to.
         /// </summary>
-        string IID { get; }
-
-        /// <summary>
-        /// The type which this relation belongs to.
-        /// </summary>
-        new IRelationType Type { get; }
+        new IEntityType Type { get; }
 
         /// <inheritdoc/>
-        bool IConcept.IsRelation()
+        IType IInstance.Type => Type;
+
+        /// <inheritdoc/>
+        bool IConcept.IsEntity()
         {
             return true;
         }
 
         /// <inheritdoc/>
-        IRelation IConcept.AsRelation()
+        IEntity IConcept.AsEntity()
         {
             return this;
         }

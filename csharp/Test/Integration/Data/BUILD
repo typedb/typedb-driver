@@ -32,6 +32,18 @@ csharp_xunit_integration_test(
     targeting_packs = targeting_packs,
 )
 
+csharp_xunit_integration_test(
+    name = "test-values",
+    srcs = ["ValuesTest.cs"],
+    deps = [
+        "//csharp:driver-csharp",
+        "//csharp/Api:api",
+        "//csharp/Common:common",
+    ],
+    target_frameworks = target_frameworks,
+    targeting_packs = targeting_packs,
+)
+
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*"]),

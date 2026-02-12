@@ -20,30 +20,28 @@
 namespace TypeDB.Driver.Api
 {
     /// <summary>
-    /// Represents an instance (entity, relation, or attribute) in TypeDB.
+    /// Represents a relation instance in TypeDB.
+    /// Relation instances connect multiple instances together through roles.
     /// In TypeDB 3.0, instances are read-only data returned from queries.
     /// </summary>
-    public interface IThing : IConcept
+    public interface IRelation : IInstance
     {
         /// <summary>
-        /// The type which this instance belongs to.
+        /// The relation type which this relation instance belongs to.
         /// </summary>
-        IThingType Type { get; }
+        new IRelationType Type { get; }
 
         /// <inheritdoc/>
-        bool IConcept.IsInstance()
+        IType IInstance.Type => Type;
+
+        /// <inheritdoc/>
+        bool IConcept.IsRelation()
         {
             return true;
         }
 
         /// <inheritdoc/>
-        bool IConcept.IsThing()
-        {
-            return true;
-        }
-
-        /// <inheritdoc/>
-        IThing IConcept.AsThing()
+        IRelation IConcept.AsRelation()
         {
             return this;
         }
