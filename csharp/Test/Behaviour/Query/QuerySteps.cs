@@ -109,7 +109,9 @@ namespace TypeDB.Driver.Test.Behaviour
             switch (conceptKind.ToLower())
             {
                 case "attribute":
-                    return concept!.AsAttribute().Value;
+                    var attrValue = concept!.AsAttribute().TryGetValue();
+                    Assert.NotNull(attrValue);
+                    return attrValue!;
                 case "value":
                     return concept!.AsValue();
                 default:
@@ -119,65 +121,23 @@ namespace TypeDB.Driver.Test.Behaviour
 
         #region Query Execution Steps
 
-        [Given(@"typeql schema query")]
-        [When(@"typeql schema query")]
-        [Then(@"typeql schema query")]
-        [Given(@"typeql write query")]
-        [When(@"typeql write query")]
-        [Then(@"typeql write query")]
-        [Given(@"typeql read query")]
-        [When(@"typeql read query")]
-        [Then(@"typeql read query")]
-        public void TypeqlQuery(DocString query)
-        {
-            ClearAnswers();
-            ExecuteQuery(query.Content);
-        }
+        // Regex pattern for optional error mode: matches "", "; fails", "; parsing fails",
+        // or "; fails with a message containing: "...""
+        private const string MayErrorPattern = @"(|; fails|; parsing fails|; fails with a message containing: ""(.*)"")";
 
-        [Given(@"typeql schema query; fails")]
-        [When(@"typeql schema query; fails")]
-        [Then(@"typeql schema query; fails")]
-        [Given(@"typeql write query; fails")]
-        [When(@"typeql write query; fails")]
-        [Then(@"typeql write query; fails")]
-        [Given(@"typeql read query; fails")]
-        [When(@"typeql read query; fails")]
-        [Then(@"typeql read query; fails")]
-        public void TypeqlQueryFails(DocString query)
+        [Given(@"typeql schema query" + MayErrorPattern)]
+        [When(@"typeql schema query" + MayErrorPattern)]
+        [Then(@"typeql schema query" + MayErrorPattern)]
+        [Given(@"typeql write query" + MayErrorPattern)]
+        [When(@"typeql write query" + MayErrorPattern)]
+        [Then(@"typeql write query" + MayErrorPattern)]
+        [Given(@"typeql read query" + MayErrorPattern)]
+        [When(@"typeql read query" + MayErrorPattern)]
+        [Then(@"typeql read query" + MayErrorPattern)]
+        public void TypeqlQuery(string errorMode, string? expectedMessage, DocString query)
         {
             ClearAnswers();
-            Assert.ThrowsAny<Exception>(() => ExecuteQuery(query.Content));
-        }
-
-        [Given(@"typeql schema query; fails with a message containing: ""(.*)""")]
-        [When(@"typeql schema query; fails with a message containing: ""(.*)""")]
-        [Then(@"typeql schema query; fails with a message containing: ""(.*)""")]
-        [Given(@"typeql write query; fails with a message containing: ""(.*)""")]
-        [When(@"typeql write query; fails with a message containing: ""(.*)""")]
-        [Then(@"typeql write query; fails with a message containing: ""(.*)""")]
-        [Given(@"typeql read query; fails with a message containing: ""(.*)""")]
-        [When(@"typeql read query; fails with a message containing: ""(.*)""")]
-        [Then(@"typeql read query; fails with a message containing: ""(.*)""")]
-        public void TypeqlQueryFailsWithMessage(string expectedMessage, DocString query)
-        {
-            ClearAnswers();
-            var exception = Assert.ThrowsAny<Exception>(() => ExecuteQuery(query.Content));
-            Assert.Contains(expectedMessage, exception.Message);
-        }
-
-        [Given(@"typeql schema query; parsing fails")]
-        [When(@"typeql schema query; parsing fails")]
-        [Then(@"typeql schema query; parsing fails")]
-        [Given(@"typeql write query; parsing fails")]
-        [When(@"typeql write query; parsing fails")]
-        [Then(@"typeql write query; parsing fails")]
-        [Given(@"typeql read query; parsing fails")]
-        [When(@"typeql read query; parsing fails")]
-        [Then(@"typeql read query; parsing fails")]
-        public void TypeqlQueryParsingFails(DocString query)
-        {
-            ClearAnswers();
-            Assert.ThrowsAny<Exception>(() => ExecuteQuery(query.Content));
+            MayError.Parse(errorMode, expectedMessage).Check(() => ExecuteQuery(query.Content));
         }
 
         private IQueryAnswer ExecuteQuery(string queryText)
@@ -187,56 +147,22 @@ namespace TypeDB.Driver.Test.Behaviour
             return Tx.Query(queryText);
         }
 
-        [Given(@"get answers of typeql schema query")]
-        [When(@"get answers of typeql schema query")]
-        [Then(@"get answers of typeql schema query")]
-        [Given(@"get answers of typeql write query")]
-        [When(@"get answers of typeql write query")]
-        [Then(@"get answers of typeql write query")]
-        [Given(@"get answers of typeql read query")]
-        [When(@"get answers of typeql read query")]
-        [Then(@"get answers of typeql read query")]
-        public void GetAnswersOfTypeqlQuery(DocString query)
+        [Given(@"get answers of typeql schema query" + MayErrorPattern)]
+        [When(@"get answers of typeql schema query" + MayErrorPattern)]
+        [Then(@"get answers of typeql schema query" + MayErrorPattern)]
+        [Given(@"get answers of typeql write query" + MayErrorPattern)]
+        [When(@"get answers of typeql write query" + MayErrorPattern)]
+        [Then(@"get answers of typeql write query" + MayErrorPattern)]
+        [Given(@"get answers of typeql read query" + MayErrorPattern)]
+        [When(@"get answers of typeql read query" + MayErrorPattern)]
+        [Then(@"get answers of typeql read query" + MayErrorPattern)]
+        public void GetAnswersOfTypeqlQuery(string errorMode, string? expectedMessage, DocString query)
         {
             ClearAnswers();
-            _queryAnswer = ExecuteQuery(query.Content);
-        }
-
-        [Given(@"get answers of typeql schema query; fails")]
-        [When(@"get answers of typeql schema query; fails")]
-        [Then(@"get answers of typeql schema query; fails")]
-        [Given(@"get answers of typeql write query; fails")]
-        [When(@"get answers of typeql write query; fails")]
-        [Then(@"get answers of typeql write query; fails")]
-        [Given(@"get answers of typeql read query; fails")]
-        [When(@"get answers of typeql read query; fails")]
-        [Then(@"get answers of typeql read query; fails")]
-        public void GetAnswersOfTypeqlQueryFails(DocString query)
-        {
-            ClearAnswers();
-            Assert.ThrowsAny<Exception>(() =>
+            MayError.Parse(errorMode, expectedMessage).Check(() =>
             {
                 _queryAnswer = ExecuteQuery(query.Content);
             });
-        }
-
-        [Given(@"get answers of typeql schema query; fails with a message containing: ""(.*)""")]
-        [When(@"get answers of typeql schema query; fails with a message containing: ""(.*)""")]
-        [Then(@"get answers of typeql schema query; fails with a message containing: ""(.*)""")]
-        [Given(@"get answers of typeql write query; fails with a message containing: ""(.*)""")]
-        [When(@"get answers of typeql write query; fails with a message containing: ""(.*)""")]
-        [Then(@"get answers of typeql write query; fails with a message containing: ""(.*)""")]
-        [Given(@"get answers of typeql read query; fails with a message containing: ""(.*)""")]
-        [When(@"get answers of typeql read query; fails with a message containing: ""(.*)""")]
-        [Then(@"get answers of typeql read query; fails with a message containing: ""(.*)""")]
-        public void GetAnswersOfTypeqlQueryFailsWithMessage(string expectedMessage, DocString query)
-        {
-            ClearAnswers();
-            var exception = Assert.ThrowsAny<Exception>(() =>
-            {
-                _queryAnswer = ExecuteQuery(query.Content);
-            });
-            Assert.Contains(expectedMessage, exception.Message);
         }
 
         #endregion
@@ -632,8 +558,9 @@ namespace TypeDB.Driver.Test.Behaviour
             IConcept? concept = GetRowGetConcept(rowIndex, variable);
             Assert.NotNull(concept);
             Assert.True(concept!.IsAttribute());
-            var value = concept.AsAttribute().Value;
-            Assert.Equal(expectedValue.Replace("\\\"", "\""), value.GetString());
+            var value = concept.AsAttribute().TryGetValue();
+            Assert.NotNull(value);
+            Assert.Equal(expectedValue.Replace("\\\"", "\""), value!.GetString());
         }
 
         [Then(@"answer get row\((\d+)\) get attribute by index of variable\(([^)]+)\) get value is: ""(.*)""")]
@@ -643,8 +570,9 @@ namespace TypeDB.Driver.Test.Behaviour
             IConcept? concept = GetRowGetConcept(rowIndex, variable, byIndex: true);
             Assert.NotNull(concept);
             Assert.True(concept!.IsAttribute());
-            var value = concept.AsAttribute().Value;
-            Assert.Equal(expectedValue.Replace("\\\"", "\""), value.GetString());
+            var value = concept.AsAttribute().TryGetValue();
+            Assert.NotNull(value);
+            Assert.Equal(expectedValue.Replace("\\\"", "\""), value!.GetString());
         }
 
         #endregion
@@ -714,7 +642,9 @@ namespace TypeDB.Driver.Test.Behaviour
 
             protected bool CheckValue(IAttribute attribute)
             {
-                return TestValueHelper.CompareValues(attribute.Value, Value, null);
+                var attrValue = attribute.TryGetValue();
+                if (attrValue == null) return false;
+                return TestValueHelper.CompareValues(attrValue, Value, null);
             }
 
             public abstract bool Matches(IConcept concept);
@@ -744,16 +674,16 @@ namespace TypeDB.Driver.Test.Behaviour
         /// Matches thing concepts (Entity/Relation/Attribute) by their key attribute (e.g., "key:ref:0").
         /// Uses a subquery approach since TypeDB 3.0's read-only concept API doesn't have GetHas().
         /// </summary>
-        private class ThingKeyMatcher : AttributeMatcherBase
+        private class InstanceKeyMatcher : AttributeMatcherBase
         {
-            public ThingKeyMatcher(string typeAndValue) : base(typeAndValue) { }
+            public InstanceKeyMatcher(string typeAndValue) : base(typeAndValue) { }
 
             public override bool Matches(IConcept concept)
             {
-                if (!concept.IsThing())
+                if (!concept.IsInstance())
                     return false;
 
-                var thing = concept.AsThing();
+                var thing = concept.AsInstance();
 
                 // Get the IID of this thing
                 var thingIid = thing.TryGetIID();
@@ -885,7 +815,7 @@ namespace TypeDB.Driver.Test.Behaviour
                 case "label":
                     return new TypeLabelMatcher(identifierBody);
                 case "key":
-                    return new ThingKeyMatcher(identifierBody);
+                    return new InstanceKeyMatcher(identifierBody);
                 case "attr":
                     return new AttributeValueMatcher(identifierBody);
                 case "value":

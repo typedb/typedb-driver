@@ -77,7 +77,7 @@ namespace TypeDB.Driver.Test.Behaviour
             switch (kind.ToLower().Trim())
             {
                 case "type": return concept.AsType();
-                case "instance": return concept.AsThing();
+                case "instance": return concept.AsInstance();
                 case "entity type": return concept.AsEntityType();
                 case "relation type": return concept.AsRelationType();
                 case "attribute type": return concept.AsAttributeType();
@@ -126,7 +126,7 @@ namespace TypeDB.Driver.Test.Behaviour
             {
                 case "variable": return concept.GetLabel();
                 case "type": return concept.AsType().GetLabel();
-                case "instance": return concept.AsThing().GetLabel();
+                case "instance": return concept.AsInstance().GetLabel();
                 case "entity type": return concept.AsEntityType().GetLabel();
                 case "relation type": return concept.AsRelationType().GetLabel();
                 case "attribute type": return concept.AsAttributeType().GetLabel();
@@ -149,7 +149,7 @@ namespace TypeDB.Driver.Test.Behaviour
             {
                 case "variable": return concept.TryGetLabel();
                 case "type": return concept.AsType().TryGetLabel();
-                case "instance": return concept.AsThing().TryGetLabel();
+                case "instance": return concept.AsInstance().TryGetLabel();
                 case "entity type": return concept.AsEntityType().TryGetLabel();
                 case "relation type": return concept.AsRelationType().TryGetLabel();
                 case "attribute type": return concept.AsAttributeType().TryGetLabel();
@@ -174,7 +174,7 @@ namespace TypeDB.Driver.Test.Behaviour
                 case "entity": return concept.AsEntity().TryGetIID();
                 case "relation": return concept.AsRelation().TryGetIID();
                 case "attribute": return concept.AsAttribute().TryGetIID();
-                case "instance": return concept.AsThing().TryGetIID();
+                case "instance": return concept.AsInstance().TryGetIID();
                 default:
                     return concept.TryGetIID();
             }
@@ -217,7 +217,7 @@ namespace TypeDB.Driver.Test.Behaviour
         {
             switch (conceptKind.ToLower().Trim())
             {
-                case "instance": return concept.AsThing().Type;
+                case "instance": return concept.AsInstance().Type;
                 case "entity": return concept.AsEntity().Type;
                 case "relation": return concept.AsRelation().Type;
                 case "attribute": return concept.AsAttribute().Type;
@@ -238,7 +238,10 @@ namespace TypeDB.Driver.Test.Behaviour
         {
             switch (conceptKind.ToLower().Trim())
             {
-                case "attribute": return concept.AsAttribute().Value;
+                case "attribute":
+                    var attrValue = concept.AsAttribute().TryGetValue();
+                    Assert.NotNull(attrValue);
+                    return attrValue!;
                 case "value": return concept.AsValue();
                 default:
                     throw new BehaviourTestException(
@@ -399,7 +402,7 @@ namespace TypeDB.Driver.Test.Behaviour
             CollectRowsAnswerIfNeeded();
             IConcept? concept = GetRowGetConcept(rowIndex, variable);
             Assert.NotNull(concept);
-            Assert.Equal(label, concept!.AsThing().Type.GetLabel());
+            Assert.Equal(label, concept!.AsInstance().Type.GetLabel());
         }
 
         #endregion
@@ -496,7 +499,7 @@ namespace TypeDB.Driver.Test.Behaviour
                     actualValueType = concept!.AsValue().GetValueType();
                     break;
                 case "attribute":
-                    actualValueType = concept!.AsAttribute().GetValueType();
+                    actualValueType = concept!.AsAttribute().TryGetValueType() ?? "none";
                     break;
                 default:
                     throw new BehaviourTestException(
@@ -617,8 +620,9 @@ namespace TypeDB.Driver.Test.Behaviour
             CollectRowsAnswerIfNeeded();
             IConcept? concept = GetRowGetConcept(rowIndex, variable);
             Assert.NotNull(concept);
-            IValue value = concept!.AsAttribute().Value;
-            Assert.True(TestValueHelper.CompareValues(value, expectedValue, null),
+            IValue? value = concept!.AsAttribute().TryGetValue();
+            Assert.NotNull(value);
+            Assert.True(TestValueHelper.CompareValues(value!, expectedValue, null),
                 $"Expected value '{expectedValue}' but got '{value}'");
         }
 
@@ -630,8 +634,9 @@ namespace TypeDB.Driver.Test.Behaviour
             CollectRowsAnswerIfNeeded();
             IConcept? concept = GetRowGetConcept(rowIndex, variable);
             Assert.NotNull(concept);
-            IValue value = concept!.AsAttribute().Value;
-            Assert.False(TestValueHelper.CompareValues(value, notExpectedValue, null),
+            IValue? value = concept!.AsAttribute().TryGetValue();
+            Assert.NotNull(value);
+            Assert.False(TestValueHelper.CompareValues(value!, notExpectedValue, null),
                 $"Value should not equal '{notExpectedValue}' but it does");
         }
 
