@@ -128,7 +128,6 @@ namespace TypeDB.Driver.Test.Behaviour
             return Tx.Query(queryText);
         }
 
-        // Success case - no error expected
         [Given(@"typeql schema query")]
         [When(@"typeql schema query")]
         [Then(@"typeql schema query")]
@@ -141,10 +140,9 @@ namespace TypeDB.Driver.Test.Behaviour
         public void TypeqlQuery(DocString query)
         {
             ClearAnswers();
-            MayError.No().Check(() => ExecuteQuery(query.Content));
+            ExecuteQuery(query.Content);
         }
 
-        // Simple failure case - any error expected
         [Given(@"typeql schema query; fails")]
         [When(@"typeql schema query; fails")]
         [Then(@"typeql schema query; fails")]
@@ -157,10 +155,9 @@ namespace TypeDB.Driver.Test.Behaviour
         public void TypeqlQueryFails(DocString query)
         {
             ClearAnswers();
-            MayError.Yes().Check(() => ExecuteQuery(query.Content));
+            Assert.ThrowsAny<Exception>(() => ExecuteQuery(query.Content));
         }
 
-        // Failure with specific message
         [Given(@"typeql schema query; fails with a message containing: ""(.*)""")]
         [When(@"typeql schema query; fails with a message containing: ""(.*)""")]
         [Then(@"typeql schema query; fails with a message containing: ""(.*)""")]
@@ -173,10 +170,10 @@ namespace TypeDB.Driver.Test.Behaviour
         public void TypeqlQueryFailsWithMessage(string expectedMessage, DocString query)
         {
             ClearAnswers();
-            MayError.WithMessage(expectedMessage).Check(() => ExecuteQuery(query.Content));
+            var exception = Assert.ThrowsAny<Exception>(() => ExecuteQuery(query.Content));
+            Assert.Contains(expectedMessage, exception.Message);
         }
 
-        // Parsing failure case
         [Given(@"typeql schema query; parsing fails")]
         [When(@"typeql schema query; parsing fails")]
         [Then(@"typeql schema query; parsing fails")]
@@ -189,10 +186,9 @@ namespace TypeDB.Driver.Test.Behaviour
         public void TypeqlQueryParsingFails(DocString query)
         {
             ClearAnswers();
-            MayError.Yes().Check(() => ExecuteQuery(query.Content));
+            Assert.ThrowsAny<Exception>(() => ExecuteQuery(query.Content));
         }
 
-        // Get answers - success case
         [Given(@"get answers of typeql schema query")]
         [When(@"get answers of typeql schema query")]
         [Then(@"get answers of typeql schema query")]
@@ -205,10 +201,9 @@ namespace TypeDB.Driver.Test.Behaviour
         public void GetAnswersOfTypeqlQuery(DocString query)
         {
             ClearAnswers();
-            MayError.No().Check(() => { _queryAnswer = ExecuteQuery(query.Content); });
+            _queryAnswer = ExecuteQuery(query.Content);
         }
 
-        // Get answers - failure case
         [Given(@"get answers of typeql schema query; fails")]
         [When(@"get answers of typeql schema query; fails")]
         [Then(@"get answers of typeql schema query; fails")]
@@ -221,10 +216,9 @@ namespace TypeDB.Driver.Test.Behaviour
         public void GetAnswersOfTypeqlQueryFails(DocString query)
         {
             ClearAnswers();
-            MayError.Yes().Check(() => { _queryAnswer = ExecuteQuery(query.Content); });
+            Assert.ThrowsAny<Exception>(() => { _queryAnswer = ExecuteQuery(query.Content); });
         }
 
-        // Get answers - failure with specific message
         [Given(@"get answers of typeql schema query; fails with a message containing: ""(.*)""")]
         [When(@"get answers of typeql schema query; fails with a message containing: ""(.*)""")]
         [Then(@"get answers of typeql schema query; fails with a message containing: ""(.*)""")]
@@ -237,7 +231,8 @@ namespace TypeDB.Driver.Test.Behaviour
         public void GetAnswersOfTypeqlQueryFailsWithMessage(string expectedMessage, DocString query)
         {
             ClearAnswers();
-            MayError.WithMessage(expectedMessage).Check(() => { _queryAnswer = ExecuteQuery(query.Content); });
+            var exception = Assert.ThrowsAny<Exception>(() => { _queryAnswer = ExecuteQuery(query.Content); });
+            Assert.Contains(expectedMessage, exception.Message);
         }
 
         #endregion
