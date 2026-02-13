@@ -1,5 +1,8 @@
 [#_QueryOptions]
+[.doc-api-reference-driver]
 === QueryOptions
+
+`class`
 
 *Package*: `TypeDB.Driver.Api`
 
@@ -9,7 +12,7 @@ Options for query execution.
 
 // tag::methods[]
 [#_bool_TypeDB_Driver_Api_QueryOptions_IncludeInstanceTypes]
-==== IncludeInstanceTypes
+==== method ``IncludeInstanceTypes``
 
 [source,cs]
 ----
@@ -25,7 +28,7 @@ Gets or sets whether to include instance types in query results.
 `bool?`
 
 [#_bool_TypeDB_Driver_Api_QueryOptions_IncludeQueryStructure]
-==== IncludeQueryStructure
+==== method ``IncludeQueryStructure``
 
 [source,cs]
 ----
@@ -41,7 +44,7 @@ Gets or sets whether to include query structure in query results.
 `bool?`
 
 [#_long_TypeDB_Driver_Api_QueryOptions_PrefetchSize]
-==== PrefetchSize
+==== method ``PrefetchSize``
 
 [source,cs]
 ----
@@ -57,7 +60,7 @@ Gets or sets the prefetch size for query results.
 `long?`
 
 [#_TypeDB_Driver_Api_QueryOptions_QueryOptions_]
-==== QueryOptions
+==== method ``QueryOptions``
 
 [source,cs]
 ----

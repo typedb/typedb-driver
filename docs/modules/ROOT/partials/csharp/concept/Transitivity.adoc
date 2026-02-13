@@ -1,5 +1,8 @@
 [#_Transitivity]
+[.doc-api-reference-driver]
 === Transitivity
+
+`class`
 
 *Package*: `TypeDB.Driver.Api.IConcept`
 

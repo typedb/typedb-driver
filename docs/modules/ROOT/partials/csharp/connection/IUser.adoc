@@ -1,5 +1,8 @@
 [#_IUser]
+[.doc-api-reference-driver]
 === IUser
+
+`class`
 
 *Package*: `TypeDB.Driver.Api`
 
@@ -9,7 +12,7 @@ TypeDB user information.
 
 // tag::methods[]
 [#_void_TypeDB_Driver_Api_IUser_Delete_]
-==== Delete
+==== method ``Delete``
 
 [source,cs]
 ----
@@ -25,7 +28,7 @@ Deletes this user.
 `void`
 
 [#_void_TypeDB_Driver_Api_IUser_UpdatePassword_string_password_]
-==== UpdatePassword
+==== method ``UpdatePassword``
 
 [source,cs]
 ----
@@ -51,7 +54,7 @@ a| `password` a| The new password. a| `string`
 `void`
 
 [#_string_TypeDB_Driver_Api_IUser_Username]
-==== Username
+==== method ``Username``
 
 [source,cs]
 ----

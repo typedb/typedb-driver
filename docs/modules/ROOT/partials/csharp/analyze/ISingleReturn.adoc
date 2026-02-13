@@ -1,0 +1,16 @@
+[#_ISingleReturn]
+[.doc-api-reference-driver]
+=== ISingleReturn
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+*Supertypes:*
+
+* `TypeDB.Driver.Api.Analyze.IReturnOperation`
+
+
+
+Indicates the function returns a single row of the specified variables.
+

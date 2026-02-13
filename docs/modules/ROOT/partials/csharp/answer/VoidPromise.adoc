@@ -1,5 +1,8 @@
 [#_VoidPromise]
+[.doc-api-reference-driver]
 === VoidPromise
+
+`class`
 
 *Package*: `TypeDB.Driver.Common`
 
@@ -20,7 +23,7 @@ Promise
 
 // tag::methods[]
 [#_void_TypeDB_Driver_Common_VoidPromise_Resolve_]
-==== Resolve
+==== method ``Resolve``
 
 [source,cs]
 ----
@@ -44,7 +47,7 @@ promise.Resolve();
 ----
 
 [#_TypeDB_Driver_Common_VoidPromise_VoidPromise_Action_resolver_]
-==== VoidPromise
+==== method ``VoidPromise``
 
 [source,cs]
 ----

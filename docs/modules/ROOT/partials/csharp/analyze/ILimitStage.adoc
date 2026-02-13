@@ -1,0 +1,16 @@
+[#_ILimitStage]
+[.doc-api-reference-driver]
+=== ILimitStage
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+*Supertypes:*
+
+* `TypeDB.Driver.Api.Analyze.IPipelineStage`
+
+
+
+Represents a "limit" stage: limit n.
+

@@ -1,0 +1,16 @@
+[#_IFunctionCall]
+[.doc-api-reference-driver]
+=== IFunctionCall
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+*Supertypes:*
+
+* `TypeDB.Driver.Api.Analyze.IConstraint`
+
+
+
+Represents a function call: let assigned = name(arguments)
+

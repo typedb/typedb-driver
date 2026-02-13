@@ -1,5 +1,8 @@
 [#_IConcept]
+[.doc-api-reference-driver]
 === IConcept
+
+`class`
 
 *Package*: `TypeDB.Driver.Api`
 
@@ -9,7 +12,7 @@ The base interface for all concepts in TypeDB.
 
 // tag::methods[]
 [#_IAttribute_TypeDB_Driver_Api_IConcept_AsAttribute_]
-==== AsAttribute
+==== method ``AsAttribute``
 
 [source,cs]
 ----
@@ -47,7 +50,7 @@ Implemented in TypeDB.Driver.Api.IAttribute.
 `IAttribute`
 
 [#_IAttributeType_TypeDB_Driver_Api_IConcept_AsAttributeType_]
-==== AsAttributeType
+==== method ``AsAttributeType``
 
 [source,cs]
 ----
@@ -85,7 +88,7 @@ Implemented in TypeDB.Driver.Api.IAttributeType.
 `IAttributeType`
 
 [#_IEntity_TypeDB_Driver_Api_IConcept_AsEntity_]
-==== AsEntity
+==== method ``AsEntity``
 
 [source,cs]
 ----
@@ -123,7 +126,7 @@ Implemented in TypeDB.Driver.Api.IEntity.
 `IEntity`
 
 [#_IEntityType_TypeDB_Driver_Api_IConcept_AsEntityType_]
-==== AsEntityType
+==== method ``AsEntityType``
 
 [source,cs]
 ----
@@ -161,7 +164,7 @@ Implemented in TypeDB.Driver.Api.IEntityType.
 `IEntityType`
 
 [#_IRelation_TypeDB_Driver_Api_IConcept_AsRelation_]
-==== AsRelation
+==== method ``AsRelation``
 
 [source,cs]
 ----
@@ -199,7 +202,7 @@ Implemented in TypeDB.Driver.Api.IRelation.
 `IRelation`
 
 [#_IRelationType_TypeDB_Driver_Api_IConcept_AsRelationType_]
-==== AsRelationType
+==== method ``AsRelationType``
 
 [source,cs]
 ----
@@ -237,7 +240,7 @@ Implemented in TypeDB.Driver.Api.IRelationType.
 `IRelationType`
 
 [#_IRoleType_TypeDB_Driver_Api_IConcept_AsRoleType_]
-==== AsRoleType
+==== method ``AsRoleType``
 
 [source,cs]
 ----
@@ -275,7 +278,7 @@ Implemented in TypeDB.Driver.Api.IRoleType.
 `IRoleType`
 
 [#_IThing_TypeDB_Driver_Api_IConcept_AsThing_]
-==== AsThing
+==== method ``AsThing``
 
 [source,cs]
 ----
@@ -313,7 +316,7 @@ Implemented in TypeDB.Driver.Api.IThing.
 `IThing`
 
 [#_IThingType_TypeDB_Driver_Api_IConcept_AsThingType_]
-==== AsThingType
+==== method ``AsThingType``
 
 [source,cs]
 ----
@@ -351,7 +354,7 @@ Implemented in TypeDB.Driver.Api.IThingType.
 `IThingType`
 
 [#_IType_TypeDB_Driver_Api_IConcept_AsType_]
-==== AsType
+==== method ``AsType``
 
 [source,cs]
 ----
@@ -389,7 +392,7 @@ Implemented in TypeDB.Driver.Api.IType.
 `IType`
 
 [#_IValue_TypeDB_Driver_Api_IConcept_AsValue_]
-==== AsValue
+==== method ``AsValue``
 
 [source,cs]
 ----
@@ -427,7 +430,7 @@ Implemented in TypeDB.Driver.Api.IValue.
 `IValue`
 
 [#_string_TypeDB_Driver_Api_IConcept_GetLabel_]
-==== GetLabel
+==== method ``GetLabel``
 
 [source,cs]
 ----
@@ -448,7 +451,7 @@ Retrieves the unique label of the concept. If this is an Instance, returns the l
 `string`
 
 [#_bool_TypeDB_Driver_Api_IConcept_IsAttribute_]
-==== IsAttribute
+==== method ``IsAttribute``
 
 [source,cs]
 ----
@@ -471,7 +474,7 @@ Implemented in TypeDB.Driver.Api.IAttribute.
 `bool`
 
 [#_bool_TypeDB_Driver_Api_IConcept_IsAttributeType_]
-==== IsAttributeType
+==== method ``IsAttributeType``
 
 [source,cs]
 ----
@@ -494,7 +497,7 @@ Implemented in TypeDB.Driver.Api.IAttributeType.
 `bool`
 
 [#_bool_TypeDB_Driver_Api_IConcept_IsBoolean_]
-==== IsBoolean
+==== method ``IsBoolean``
 
 [source,cs]
 ----
@@ -515,7 +518,7 @@ Returns true if the value which this Concept holds is of type boolean or if this
 `bool`
 
 [#_bool_TypeDB_Driver_Api_IConcept_IsDate_]
-==== IsDate
+==== method ``IsDate``
 
 [source,cs]
 ----
@@ -536,7 +539,7 @@ Returns true if the value which this Concept holds is of type date or if this Co
 `bool`
 
 [#_bool_TypeDB_Driver_Api_IConcept_IsDatetime_]
-==== IsDatetime
+==== method ``IsDatetime``
 
 [source,cs]
 ----
@@ -557,7 +560,7 @@ Returns true if the value which this Concept holds is of type datetime or if thi
 `bool`
 
 [#_bool_TypeDB_Driver_Api_IConcept_IsDatetimeTZ_]
-==== IsDatetimeTZ
+==== method ``IsDatetimeTZ``
 
 [source,cs]
 ----
@@ -578,7 +581,7 @@ Returns true if the value which this Concept holds is of type datetime-tz or if 
 `bool`
 
 [#_bool_TypeDB_Driver_Api_IConcept_IsDecimal_]
-==== IsDecimal
+==== method ``IsDecimal``
 
 [source,cs]
 ----
@@ -599,7 +602,7 @@ Returns true if the value which this Concept holds is of type decimal or if this
 `bool`
 
 [#_bool_TypeDB_Driver_Api_IConcept_IsDouble_]
-==== IsDouble
+==== method ``IsDouble``
 
 [source,cs]
 ----
@@ -620,7 +623,7 @@ Returns true if the value which this Concept holds is of type double or if this 
 `bool`
 
 [#_bool_TypeDB_Driver_Api_IConcept_IsDuration_]
-==== IsDuration
+==== method ``IsDuration``
 
 [source,cs]
 ----
@@ -641,7 +644,7 @@ Returns true if the value which this Concept holds is of type duration or if thi
 `bool`
 
 [#_bool_TypeDB_Driver_Api_IConcept_IsEntity_]
-==== IsEntity
+==== method ``IsEntity``
 
 [source,cs]
 ----
@@ -664,7 +667,7 @@ Implemented in TypeDB.Driver.Api.IEntity.
 `bool`
 
 [#_bool_TypeDB_Driver_Api_IConcept_IsEntityType_]
-==== IsEntityType
+==== method ``IsEntityType``
 
 [source,cs]
 ----
@@ -687,7 +690,7 @@ Implemented in TypeDB.Driver.Api.IEntityType.
 `bool`
 
 [#_bool_TypeDB_Driver_Api_IConcept_IsInstance_]
-==== IsInstance
+==== method ``IsInstance``
 
 [source,cs]
 ----
@@ -703,12 +706,14 @@ Checks if the concept is an instance (entity, relation, or attribute). This is t
  
 
 
+Implemented in TypeDB.Driver.Api.IThing.
+
 [caption=""]
 .Returns
 `bool`
 
 [#_bool_TypeDB_Driver_Api_IConcept_IsInteger_]
-==== IsInteger
+==== method ``IsInteger``
 
 [source,cs]
 ----
@@ -729,7 +734,7 @@ Returns true if the value which this Concept holds is of type integer or if this
 `bool`
 
 [#_bool_TypeDB_Driver_Api_IConcept_IsRelation_]
-==== IsRelation
+==== method ``IsRelation``
 
 [source,cs]
 ----
@@ -752,7 +757,7 @@ Implemented in TypeDB.Driver.Api.IRelation.
 `bool`
 
 [#_bool_TypeDB_Driver_Api_IConcept_IsRelationType_]
-==== IsRelationType
+==== method ``IsRelationType``
 
 [source,cs]
 ----
@@ -775,7 +780,7 @@ Implemented in TypeDB.Driver.Api.IRelationType.
 `bool`
 
 [#_bool_TypeDB_Driver_Api_IConcept_IsRoleType_]
-==== IsRoleType
+==== method ``IsRoleType``
 
 [source,cs]
 ----
@@ -798,7 +803,7 @@ Implemented in TypeDB.Driver.Api.IRoleType.
 `bool`
 
 [#_bool_TypeDB_Driver_Api_IConcept_IsString_]
-==== IsString
+==== method ``IsString``
 
 [source,cs]
 ----
@@ -819,7 +824,7 @@ Returns true if the value which this Concept holds is of type string or if this 
 `bool`
 
 [#_bool_TypeDB_Driver_Api_IConcept_IsStruct_]
-==== IsStruct
+==== method ``IsStruct``
 
 [source,cs]
 ----
@@ -840,7 +845,7 @@ Returns true if the value which this Concept holds is of type struct or if this 
 `bool`
 
 [#_bool_TypeDB_Driver_Api_IConcept_IsThing_]
-==== IsThing
+==== method ``IsThing``
 
 [source,cs]
 ----
@@ -863,7 +868,7 @@ Implemented in TypeDB.Driver.Api.IThing.
 `bool`
 
 [#_bool_TypeDB_Driver_Api_IConcept_IsThingType_]
-==== IsThingType
+==== method ``IsThingType``
 
 [source,cs]
 ----
@@ -886,7 +891,7 @@ Implemented in TypeDB.Driver.Api.IThingType.
 `bool`
 
 [#_bool_TypeDB_Driver_Api_IConcept_IsType_]
-==== IsType
+==== method ``IsType``
 
 [source,cs]
 ----
@@ -909,7 +914,7 @@ Implemented in TypeDB.Driver.Api.IType.
 `bool`
 
 [#_bool_TypeDB_Driver_Api_IConcept_IsValue_]
-==== IsValue
+==== method ``IsValue``
 
 [source,cs]
 ----
@@ -932,7 +937,7 @@ Implemented in TypeDB.Driver.Api.IValue.
 `bool`
 
 [#_bool_TypeDB_Driver_Api_IConcept_TryGetBoolean_]
-==== TryGetBoolean
+==== method ``TryGetBoolean``
 
 [source,cs]
 ----
@@ -953,7 +958,7 @@ Returns a boolean value of this Concept. If it's not a Value or it has another t
 `bool?`
 
 [#_DateOnly_TypeDB_Driver_Api_IConcept_TryGetDate_]
-==== TryGetDate
+==== method ``TryGetDate``
 
 [source,cs]
 ----
@@ -973,12 +978,12 @@ Returns a date value of this Concept. If it's not a Value or it has another type
 .Returns
 `DateOnly?`
 
-[#_DateTime_TypeDB_Driver_Api_IConcept_TryGetDatetime_]
-==== TryGetDatetime
+[#_Datetime_TypeDB_Driver_Api_IConcept_TryGetDatetime_]
+==== method ``TryGetDatetime``
 
 [source,cs]
 ----
-DateTime? TryGetDatetime()
+Datetime? TryGetDatetime()
 ----
 
 
@@ -992,14 +997,14 @@ Returns a datetime value of this Concept. If it's not a Value or it has another 
 
 [caption=""]
 .Returns
-`DateTime?`
+`Datetime?`
 
-[#_DateTimeOffset_TypeDB_Driver_Api_IConcept_TryGetDatetimeTZ_]
-==== TryGetDatetimeTZ
+[#_DatetimeTZ_TypeDB_Driver_Api_IConcept_TryGetDatetimeTZ_]
+==== method ``TryGetDatetimeTZ``
 
 [source,cs]
 ----
-DateTimeOffset? TryGetDatetimeTZ()
+DatetimeTZ? TryGetDatetimeTZ()
 ----
 
 
@@ -1013,10 +1018,10 @@ Returns a datetime-tz value of this Concept. If it's not a Value or it has anoth
 
 [caption=""]
 .Returns
-`DateTimeOffset?`
+`DatetimeTZ?`
 
 [#_decimal_TypeDB_Driver_Api_IConcept_TryGetDecimal_]
-==== TryGetDecimal
+==== method ``TryGetDecimal``
 
 [source,cs]
 ----
@@ -1037,7 +1042,7 @@ Returns a decimal value of this Concept. If it's not a Value or it has another t
 `decimal?`
 
 [#_double_TypeDB_Driver_Api_IConcept_TryGetDouble_]
-==== TryGetDouble
+==== method ``TryGetDouble``
 
 [source,cs]
 ----
@@ -1058,7 +1063,7 @@ Returns a double value of this Concept. If it's not a Value or it has another ty
 `double?`
 
 [#_Duration_TypeDB_Driver_Api_IConcept_TryGetDuration_]
-==== TryGetDuration
+==== method ``TryGetDuration``
 
 [source,cs]
 ----
@@ -1079,7 +1084,7 @@ Returns a duration value of this Concept. If it's not a Value or it has another 
 `Duration?`
 
 [#_string_TypeDB_Driver_Api_IConcept_TryGetIID_]
-==== TryGetIID
+==== method ``TryGetIID``
 
 [source,cs]
 ----
@@ -1100,7 +1105,7 @@ Retrieves the unique id (IID) of the Concept. Returns null if absent.
 `string?`
 
 [#_long_TypeDB_Driver_Api_IConcept_TryGetInteger_]
-==== TryGetInteger
+==== method ``TryGetInteger``
 
 [source,cs]
 ----
@@ -1121,7 +1126,7 @@ Returns an integer value of this Concept. If it's not a Value or it has another 
 `long?`
 
 [#_string_TypeDB_Driver_Api_IConcept_TryGetLabel_]
-==== TryGetLabel
+==== method ``TryGetLabel``
 
 [source,cs]
 ----
@@ -1142,7 +1147,7 @@ Retrieves the unique label of the concept, or null if type fetching is disabled 
 `string?`
 
 [#_string_TypeDB_Driver_Api_IConcept_TryGetString_]
-==== TryGetString
+==== method ``TryGetString``
 
 [source,cs]
 ----
@@ -1163,7 +1168,7 @@ Returns a string value of this Concept. If it's not a Value or it has another ty
 `string?`
 
 [#_IReadOnlyDictionary_string_IValue_TypeDB_Driver_Api_IConcept_TryGetStruct_]
-==== TryGetStruct
+==== method ``TryGetStruct``
 
 [source,cs]
 ----
@@ -1184,7 +1189,7 @@ Returns a struct value of this Concept. If it's not a Value or it has another ty
 `IReadOnlyDictionary< string, IValue? >?`
 
 [#_IValue_TypeDB_Driver_Api_IConcept_TryGetValue_]
-==== TryGetValue
+==== method ``TryGetValue``
 
 [source,cs]
 ----
@@ -1205,7 +1210,7 @@ Retrieves the value which this Concept holds. Returns null if this Concept does 
 `IValue?`
 
 [#_string_TypeDB_Driver_Api_IConcept_TryGetValueType_]
-==== TryGetValueType
+==== method ``TryGetValueType``
 
 [source,cs]
 ----

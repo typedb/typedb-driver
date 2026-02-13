@@ -1,0 +1,12 @@
+[#_IReduceAssignment]
+[.doc-api-reference-driver]
+=== IReduceAssignment
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+
+
+An assignment of a reducer to a variable.
+

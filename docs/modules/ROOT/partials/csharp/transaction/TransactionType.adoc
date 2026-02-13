@@ -1,5 +1,8 @@
 [#_TransactionType]
+[.doc-api-reference-driver]
 === TransactionType
+
+`class`
 
 *Package*: `TypeDB.Driver.Api`
 
@@ -21,7 +24,7 @@ Used to specify the type of transaction.
    Used to specify the type of transaction.
   
   
-   Definition ITypeDBTransaction.cs:91
+   Definition ITypeDBTransaction.cs:99
   
  
 

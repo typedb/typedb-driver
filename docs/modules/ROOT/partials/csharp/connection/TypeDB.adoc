@@ -1,5 +1,8 @@
 [#_TypeDB]
+[.doc-api-reference-driver]
 === TypeDB
+
+`class`
 
 *Package*: `TypeDB.Driver`
 
@@ -9,7 +12,7 @@ Entry point for creating TypeDB driver connections.
 
 // tag::methods[]
 [#_static_IDriver_TypeDB_Driver_TypeDB_Driver_string_address_Credentials_credentials_DriverOptions_driverOptions_]
-==== Driver
+==== method ``Driver``
 
 [source,cs]
 ----
@@ -37,7 +40,7 @@ a| `driverOptions` a| The DriverOptions to connect with. a| `DriverOptions`
 `IDriver`
 
 [#_static_IDriver_TypeDB_Driver_TypeDB_Driver_Credentials_credentials_DriverOptions_driverOptions_]
-==== Driver
+==== method ``Driver``
 
 [source,cs]
 ----
@@ -64,7 +67,7 @@ a| `driverOptions` a| The DriverOptions to connect with. a| `DriverOptions`
 `IDriver`
 
 [#_static_IDriver_TypeDB_Driver_TypeDB_Driver_string_address_Credentials_credentials_]
-==== Driver
+==== method ``Driver``
 
 [source,cs]
 ----
@@ -91,7 +94,7 @@ a| `credentials` a| The Credentials to connect with. a| `Credentials`
 `IDriver`
 
 [#_static_IDriver_TypeDB_Driver_TypeDB_Driver_Credentials_credentials_]
-==== Driver
+==== method ``Driver``
 
 [source,cs]
 ----

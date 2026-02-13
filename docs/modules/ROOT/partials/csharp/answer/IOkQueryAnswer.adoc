@@ -1,5 +1,8 @@
 [#_IOkQueryAnswer]
+[.doc-api-reference-driver]
 === IOkQueryAnswer
+
+`class`
 
 *Package*: `TypeDB.Driver.Api.Answer`
 
@@ -13,7 +16,7 @@ Represents a simple Ok message as a server answer. Doesn't contain concepts.
 
 // tag::methods[]
 [#_IOkQueryAnswer_IQueryAnswer_TypeDB_Driver_Api_Answer_IOkQueryAnswer_AsOk_]
-==== AsOk
+==== method ``AsOk``
 
 [source,cs]
 ----
@@ -61,7 +64,7 @@ Implements TypeDB.Driver.Api.Answer.IQueryAnswer.
 `IOkQueryAnswer IQueryAnswer.`
 
 [#_bool_IQueryAnswer_TypeDB_Driver_Api_Answer_IOkQueryAnswer_IsOk]
-==== IsOk
+==== method ``IsOk``
 
 [source,cs]
 ----

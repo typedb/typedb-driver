@@ -1,5 +1,8 @@
 [#_IRelation]
+[.doc-api-reference-driver]
 === IRelation
+
+`class`
 
 *Package*: `TypeDB.Driver.Api`
 
@@ -14,7 +17,7 @@ Relation is an instance of a relation type and can be uniquely addressed by a co
 
 // tag::methods[]
 [#_IRelation_IConcept_TypeDB_Driver_Api_IRelation_AsRelation_]
-==== AsRelation
+==== method ``AsRelation``
 
 [source,cs]
 ----
@@ -54,7 +57,7 @@ Implements TypeDB.Driver.Api.IConcept.
 `IRelation IConcept.`
 
 [#_string_TypeDB_Driver_Api_IRelation_IID]
-==== IID
+==== method ``IID``
 
 [source,cs]
 ----
@@ -70,7 +73,7 @@ The unique id of the relation.
 `string`
 
 [#_bool_IConcept_TypeDB_Driver_Api_IRelation_IsRelation_]
-==== IsRelation
+==== method ``IsRelation``
 
 [source,cs]
 ----
@@ -95,7 +98,7 @@ Implements TypeDB.Driver.Api.IConcept.
 `bool IConcept.`
 
 [#_new_IRelationType_TypeDB_Driver_Api_IRelation_Type]
-==== Type
+==== method ``Type``
 
 [source,cs]
 ----

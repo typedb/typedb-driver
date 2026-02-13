@@ -1,5 +1,8 @@
 [#_IRoleType]
+[.doc-api-reference-driver]
 === IRoleType
+
+`class`
 
 *Package*: `TypeDB.Driver.Api`
 
@@ -14,7 +17,7 @@ Represents a role type in TypeDB. Roles are special internal types used by relat
 
 // tag::methods[]
 [#_IRoleType_IConcept_TypeDB_Driver_Api_IRoleType_AsRoleType_]
-==== AsRoleType
+==== method ``AsRoleType``
 
 [source,cs]
 ----
@@ -54,7 +57,7 @@ Implements TypeDB.Driver.Api.IConcept.
 `IRoleType IConcept.`
 
 [#_bool_IConcept_TypeDB_Driver_Api_IRoleType_IsRoleType_]
-==== IsRoleType
+==== method ``IsRoleType``
 
 [source,cs]
 ----

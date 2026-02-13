@@ -1,5 +1,8 @@
 [#_IDatabaseManager]
+[.doc-api-reference-driver]
 === IDatabaseManager
+
+`class`
 
 *Package*: `TypeDB.Driver.Api`
 
@@ -9,7 +12,7 @@ Provides access to all database management methods.
 
 // tag::methods[]
 [#_bool_TypeDB_Driver_Api_IDatabaseManager_Contains_string_name_]
-==== Contains
+==== method ``Contains``
 
 [source,cs]
 ----
@@ -42,7 +45,7 @@ driver.Databases.Contains(name);
 ----
 
 [#_void_TypeDB_Driver_Api_IDatabaseManager_Create_string_name_]
-==== Create
+==== method ``Create``
 
 [source,cs]
 ----
@@ -75,7 +78,7 @@ driver.Databases.Create(name);
 ----
 
 [#_IDatabase_TypeDB_Driver_Api_IDatabaseManager_Get_string_name_]
-==== Get
+==== method ``Get``
 
 [source,cs]
 ----
@@ -108,7 +111,7 @@ driver.Databases.Get(name);
 ----
 
 [#_IList_IDatabase_TypeDB_Driver_Api_IDatabaseManager_GetAll_]
-==== GetAll
+==== method ``GetAll``
 
 [source,cs]
 ----
@@ -129,6 +132,41 @@ Retrieves all databases present on the TypeDB server.
 [source,cs]
 ----
 driver.Databases.GetAll();
+----
+
+[#_void_TypeDB_Driver_Api_IDatabaseManager_ImportFromFile_string_name_string_schema_string_dataFile_]
+==== method ``ImportFromFile``
+
+[source,cs]
+----
+void ImportFromFile(string name, string schema, string dataFile)
+----
+
+
+
+Creates a database with the given name based on previously exported data. This is a blocking operation and may take a significant amount of time depending on the database size.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `name` a| The name of the database to be created. a| `string`
+a| `schema` a| The schema definition query string for the database. a| `string`
+a| `dataFile` a| The exported database file path to import the data from. a| `string`
+|===
+
+[caption=""]
+.Returns
+`void`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+driver.Databases.ImportFromFile("mydb", schemaString, "/path/to/data.typedb");
 ----
 
 // end::methods[]

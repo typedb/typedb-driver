@@ -1,5 +1,8 @@
 [#_IThingType]
+[.doc-api-reference-driver]
 === IThingType
+
+`class`
 
 *Package*: `TypeDB.Driver.Api`
 
@@ -14,7 +17,7 @@ Represents a thing type (entity type, relation type, or attribute type) in TypeD
 
 // tag::methods[]
 [#_IThingType_IConcept_TypeDB_Driver_Api_IThingType_AsThingType_]
-==== AsThingType
+==== method ``AsThingType``
 
 [source,cs]
 ----
@@ -54,7 +57,7 @@ Implements TypeDB.Driver.Api.IConcept.
 `IThingType IConcept.`
 
 [#_bool_IConcept_TypeDB_Driver_Api_IThingType_IsThingType_]
-==== IsThingType
+==== method ``IsThingType``
 
 [source,cs]
 ----

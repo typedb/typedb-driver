@@ -1,5 +1,8 @@
 [#_IQueryAnswer]
+[.doc-api-reference-driver]
 === IQueryAnswer
+
+`class`
 
 *Package*: `TypeDB.Driver.Api.Answer`
 
@@ -9,7 +12,7 @@ General answer on a query returned by a server. Can be a simple Ok response or a
 
 // tag::methods[]
 [#_IConceptDocumentIterator_TypeDB_Driver_Api_Answer_IQueryAnswer_AsConceptDocuments_]
-==== AsConceptDocuments
+==== method ``AsConceptDocuments``
 
 [source,cs]
 ----
@@ -55,7 +58,7 @@ Implemented in TypeDB.Driver.Api.Answer.IConceptDocumentIterator.
 `IConceptDocumentIterator`
 
 [#_IConceptRowIterator_TypeDB_Driver_Api_Answer_IQueryAnswer_AsConceptRows_]
-==== AsConceptRows
+==== method ``AsConceptRows``
 
 [source,cs]
 ----
@@ -101,7 +104,7 @@ Implemented in TypeDB.Driver.Api.Answer.IConceptRowIterator.
 `IConceptRowIterator`
 
 [#_IOkQueryAnswer_TypeDB_Driver_Api_Answer_IQueryAnswer_AsOk_]
-==== AsOk
+==== method ``AsOk``
 
 [source,cs]
 ----
@@ -147,7 +150,7 @@ Implemented in TypeDB.Driver.Api.Answer.IOkQueryAnswer.
 `IOkQueryAnswer`
 
 [#_bool_TypeDB_Driver_Api_Answer_IQueryAnswer_IsConceptDocuments]
-==== IsConceptDocuments
+==== method ``IsConceptDocuments``
 
 [source,cs]
 ----
@@ -170,7 +173,7 @@ Implemented in TypeDB.Driver.Api.Answer.IConceptDocumentIterator.
 `bool`
 
 [#_bool_TypeDB_Driver_Api_Answer_IQueryAnswer_IsConceptRows]
-==== IsConceptRows
+==== method ``IsConceptRows``
 
 [source,cs]
 ----
@@ -193,7 +196,7 @@ Implemented in TypeDB.Driver.Api.Answer.IConceptRowIterator.
 `bool`
 
 [#_bool_TypeDB_Driver_Api_Answer_IQueryAnswer_IsOk]
-==== IsOk
+==== method ``IsOk``
 
 [source,cs]
 ----
@@ -216,7 +219,7 @@ Implemented in TypeDB.Driver.Api.Answer.IOkQueryAnswer.
 `bool`
 
 [#_QueryType_TypeDB_Driver_Api_Answer_IQueryAnswer_QueryType]
-==== QueryType
+==== method ``QueryType``
 
 [source,cs]
 ----

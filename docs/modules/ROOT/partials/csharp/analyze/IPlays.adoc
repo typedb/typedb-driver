@@ -1,0 +1,16 @@
+[#_IPlays]
+[.doc-api-reference-driver]
+=== IPlays
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+*Supertypes:*
+
+* `TypeDB.Driver.Api.Analyze.IConstraint`
+
+
+
+Represents a "plays" constraint: player plays role.
+

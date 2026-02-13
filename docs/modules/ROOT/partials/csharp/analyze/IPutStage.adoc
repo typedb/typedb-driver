@@ -1,0 +1,16 @@
+[#_IPutStage]
+[.doc-api-reference-driver]
+=== IPutStage
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+*Supertypes:*
+
+* `TypeDB.Driver.Api.Analyze.IPipelineStage`
+
+
+
+Represents a "put" stage: put block.
+

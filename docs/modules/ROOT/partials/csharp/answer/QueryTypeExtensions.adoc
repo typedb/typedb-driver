@@ -1,5 +1,8 @@
 [#_QueryTypeExtensions]
+[.doc-api-reference-driver]
 === QueryTypeExtensions
+
+`class`
 
 *Package*: `TypeDB.Driver.Api`
 
@@ -9,7 +12,7 @@ Extension methods for QueryType.
 
 // tag::methods[]
 [#_static_QueryType_TypeDB_Driver_Api_QueryTypeExtensions_FromNative_PinvokeQueryType_nativeType_]
-==== FromNative
+==== method ``FromNative``
 
 [source,cs]
 ----
@@ -25,7 +28,7 @@ Creates a QueryType from a native QueryType.
 `QueryType`
 
 [#_static_bool_TypeDB_Driver_Api_QueryTypeExtensions_IsRead_this_QueryType_type_]
-==== IsRead
+==== method ``IsRead``
 
 [source,cs]
 ----
@@ -41,7 +44,7 @@ Checks if this is a read query.
 `bool`
 
 [#_static_bool_TypeDB_Driver_Api_QueryTypeExtensions_IsSchema_this_QueryType_type_]
-==== IsSchema
+==== method ``IsSchema``
 
 [source,cs]
 ----
@@ -57,7 +60,7 @@ Checks if this is a schema query.
 `bool`
 
 [#_static_bool_TypeDB_Driver_Api_QueryTypeExtensions_IsWrite_this_QueryType_type_]
-==== IsWrite
+==== method ``IsWrite``
 
 [source,cs]
 ----

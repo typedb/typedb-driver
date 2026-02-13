@@ -1,5 +1,8 @@
 [#_IValue]
+[.doc-api-reference-driver]
 === IValue
+
+`class`
 
 *Package*: `TypeDB.Driver.Api`
 
@@ -13,7 +16,7 @@ Represents a value concept in TypeDB. In TypeDB 3.0, values are read-only data r
 
 // tag::methods[]
 [#_IValue_IConcept_TypeDB_Driver_Api_IValue_AsValue_]
-==== AsValue
+==== method ``AsValue``
 
 [source,cs]
 ----
@@ -53,7 +56,7 @@ Implements TypeDB.Driver.Api.IConcept.
 `IValue IConcept.`
 
 [#_object_TypeDB_Driver_Api_IValue_Get_]
-==== Get
+==== method ``Get``
 
 [source,cs]
 ----
@@ -69,7 +72,7 @@ Returns an untyped object value of this value concept. This is useful for value 
 `object`
 
 [#_bool_TypeDB_Driver_Api_IValue_GetBoolean_]
-==== GetBoolean
+==== method ``GetBoolean``
 
 [source,cs]
 ----
@@ -85,7 +88,7 @@ Returns a boolean value of this value concept. If the value has another type, ra
 `bool`
 
 [#_DateOnly_TypeDB_Driver_Api_IValue_GetDate_]
-==== GetDate
+==== method ``GetDate``
 
 [source,cs]
 ----
@@ -100,12 +103,12 @@ Returns a date value of this value concept. If the value has another type, raise
 .Returns
 `DateOnly`
 
-[#_DateTime_TypeDB_Driver_Api_IValue_GetDatetime_]
-==== GetDatetime
+[#_Datetime_TypeDB_Driver_Api_IValue_GetDatetime_]
+==== method ``GetDatetime``
 
 [source,cs]
 ----
-DateTime GetDatetime()
+Datetime GetDatetime()
 ----
 
 
@@ -114,14 +117,14 @@ Returns a datetime value of this value concept. If the value has another type, r
 
 [caption=""]
 .Returns
-`DateTime`
+`Datetime`
 
-[#_DateTimeOffset_TypeDB_Driver_Api_IValue_GetDatetimeTZ_]
-==== GetDatetimeTZ
+[#_DatetimeTZ_TypeDB_Driver_Api_IValue_GetDatetimeTZ_]
+==== method ``GetDatetimeTZ``
 
 [source,cs]
 ----
-DateTimeOffset GetDatetimeTZ()
+DatetimeTZ GetDatetimeTZ()
 ----
 
 
@@ -130,10 +133,10 @@ Returns a datetime with timezone value of this value concept. If the value has a
 
 [caption=""]
 .Returns
-`DateTimeOffset`
+`DatetimeTZ`
 
 [#_decimal_TypeDB_Driver_Api_IValue_GetDecimal_]
-==== GetDecimal
+==== method ``GetDecimal``
 
 [source,cs]
 ----
@@ -149,7 +152,7 @@ Returns a decimal value of this value concept. If the value has another type, ra
 `decimal`
 
 [#_double_TypeDB_Driver_Api_IValue_GetDouble_]
-==== GetDouble
+==== method ``GetDouble``
 
 [source,cs]
 ----
@@ -165,7 +168,7 @@ Returns a double value of this value concept. If the value has another type, rai
 `double`
 
 [#_Duration_TypeDB_Driver_Api_IValue_GetDuration_]
-==== GetDuration
+==== method ``GetDuration``
 
 [source,cs]
 ----
@@ -181,7 +184,7 @@ Returns a duration value of this value concept. If the value has another type, r
 `Duration`
 
 [#_long_TypeDB_Driver_Api_IValue_GetInteger_]
-==== GetInteger
+==== method ``GetInteger``
 
 [source,cs]
 ----
@@ -197,7 +200,7 @@ Returns an integer (long) value of this value concept. If the value has another 
 `long`
 
 [#_string_TypeDB_Driver_Api_IValue_GetString_]
-==== GetString
+==== method ``GetString``
 
 [source,cs]
 ----
@@ -213,7 +216,7 @@ Returns a string value of this value concept. If the value has another type, rai
 `string`
 
 [#_IReadOnlyDictionary_string_IValue_TypeDB_Driver_Api_IValue_GetStruct_]
-==== GetStruct
+==== method ``GetStruct``
 
 [source,cs]
 ----
@@ -229,7 +232,7 @@ Returns a struct value of this value concept represented as a dictionary from fi
 `IReadOnlyDictionary< string, IValue? >`
 
 [#_string_TypeDB_Driver_Api_IValue_GetValueType_]
-==== GetValueType
+==== method ``GetValueType``
 
 [source,cs]
 ----
@@ -245,7 +248,7 @@ Retrieves the value type of this value concept as a string.
 `string`
 
 [#_bool_IConcept_TypeDB_Driver_Api_IValue_IsValue_]
-==== IsValue
+==== method ``IsValue``
 
 [source,cs]
 ----

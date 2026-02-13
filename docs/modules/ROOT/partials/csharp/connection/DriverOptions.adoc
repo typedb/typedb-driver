@@ -1,5 +1,8 @@
 [#_DriverOptions]
+[.doc-api-reference-driver]
 === DriverOptions
+
+`class`
 
 *Package*: `TypeDB.Driver.Api`
 
@@ -36,7 +39,7 @@ User connection settings (TLS encryption, etc.) for connecting to TypeDB Server.
 
 // tag::methods[]
 [#_TypeDB_Driver_Api_DriverOptions_DriverOptions_bool_isTlsEnabled_string_tlsRootCAPath_null_]
-==== DriverOptions
+==== method ``DriverOptions``
 
 [source,cs]
 ----

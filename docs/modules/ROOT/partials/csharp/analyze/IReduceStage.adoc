@@ -1,0 +1,16 @@
+[#_IReduceStage]
+[.doc-api-reference-driver]
+=== IReduceStage
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+*Supertypes:*
+
+* `TypeDB.Driver.Api.Analyze.IPipelineStage`
+
+
+
+Represents a "reduce" stage: reduce reducers groupby groupby.
+

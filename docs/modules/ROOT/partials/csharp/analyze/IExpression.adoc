@@ -1,0 +1,16 @@
+[#_IExpression]
+[.doc-api-reference-driver]
+=== IExpression
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+*Supertypes:*
+
+* `TypeDB.Driver.Api.Analyze.IConstraint`
+
+
+
+Represents an expression: let assigned = expression.
+

@@ -1,5 +1,8 @@
 [#_IAttributeType]
+[.doc-api-reference-driver]
 === IAttributeType
+
+`class`
 
 *Package*: `TypeDB.Driver.Api`
 
@@ -15,7 +18,7 @@ Represents an attribute type in TypeDB. Attribute types represent properties tha
 
 // tag::methods[]
 [#_IAttributeType_IConcept_TypeDB_Driver_Api_IAttributeType_AsAttributeType_]
-==== AsAttributeType
+==== method ``AsAttributeType``
 
 [source,cs]
 ----
@@ -55,7 +58,7 @@ Implements TypeDB.Driver.Api.IConcept.
 `IAttributeType IConcept.`
 
 [#_bool_IConcept_TypeDB_Driver_Api_IAttributeType_IsAttributeType_]
-==== IsAttributeType
+==== method ``IsAttributeType``
 
 [source,cs]
 ----

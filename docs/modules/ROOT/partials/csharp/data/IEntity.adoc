@@ -1,5 +1,8 @@
 [#_IEntity]
+[.doc-api-reference-driver]
 === IEntity
+
+`class`
 
 *Package*: `TypeDB.Driver.Api`
 
@@ -14,7 +17,7 @@ Instance of data of an entity type, representing a standalone object that exists
 
 // tag::methods[]
 [#_IEntity_IConcept_TypeDB_Driver_Api_IEntity_AsEntity_]
-==== AsEntity
+==== method ``AsEntity``
 
 [source,cs]
 ----
@@ -54,7 +57,7 @@ Implements TypeDB.Driver.Api.IConcept.
 `IEntity IConcept.`
 
 [#_string_TypeDB_Driver_Api_IEntity_IID]
-==== IID
+==== method ``IID``
 
 [source,cs]
 ----
@@ -70,7 +73,7 @@ The unique id of the entity.
 `string`
 
 [#_bool_IConcept_TypeDB_Driver_Api_IEntity_IsEntity_]
-==== IsEntity
+==== method ``IsEntity``
 
 [source,cs]
 ----
@@ -95,7 +98,7 @@ Implements TypeDB.Driver.Api.IConcept.
 `bool IConcept.`
 
 [#_new_IEntityType_TypeDB_Driver_Api_IEntity_Type]
-==== Type
+==== method ``Type``
 
 [source,cs]
 ----

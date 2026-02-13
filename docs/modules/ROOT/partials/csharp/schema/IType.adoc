@@ -1,5 +1,8 @@
 [#_IType]
+[.doc-api-reference-driver]
 === IType
+
+`class`
 
 *Package*: `TypeDB.Driver.Api`
 
@@ -13,7 +16,7 @@ Represents a type in TypeDB. In TypeDB 3.0, types are read-only data returned fr
 
 // tag::methods[]
 [#_IType_IConcept_TypeDB_Driver_Api_IType_AsType_]
-==== AsType
+==== method ``AsType``
 
 [source,cs]
 ----
@@ -53,7 +56,7 @@ Implements TypeDB.Driver.Api.IConcept.
 `IType IConcept.`
 
 [#_bool_IConcept_TypeDB_Driver_Api_IType_IsType_]
-==== IsType
+==== method ``IsType``
 
 [source,cs]
 ----

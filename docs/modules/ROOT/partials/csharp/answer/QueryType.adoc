@@ -1,5 +1,8 @@
 [#_QueryType]
+[.doc-api-reference-driver]
 === QueryType
+
+`class`
 
 *Package*: `TypeDB.Driver.Api`
 

@@ -2,12 +2,11 @@
 [.doc-api-reference-driver]
 === IVariable
 
-`interface`
+`class`
 
-*Namespace*: `TypeDB.Driver.Api.Analyze`
+*Package*: `TypeDB.Driver.Api.Analyze`
 
-A representation of a variable in a query.
 
-// tag::methods[]
-// end::methods[]
+
+Represents a variable in a TypeQL query.
 

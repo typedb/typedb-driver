@@ -1,5 +1,8 @@
 [#_Promise_T_]
+[.doc-api-reference-driver]
 === Promise< T >
+
+`class`
 
 *Package*: `TypeDB.Driver.Common`
 
@@ -11,7 +14,7 @@ The request it represents is performed immediately. The response is only retriev
 
 // tag::methods[]
 [#_static_Promise_TTo_TypeDB_Driver_Common_Promise_T_Map_TFrom_TTo_Func_TFrom_resolver_Func_TFrom_TTo_selector_]
-==== Map< TFrom, TTo >
+==== method ``Map< TFrom, TTo >``
 
 [source,cs]
 ----
@@ -45,7 +48,7 @@ Promise<TFrom>.Map<TFrom, TTo>(resolver, selector);
 ----
 
 [#_TypeDB_Driver_Common_Promise_T_Promise_Func_T_resolver_]
-==== Promise
+==== method ``Promise``
 
 [source,cs]
 ----
@@ -78,7 +81,7 @@ new Promise(resolver);
 ----
 
 [#_T_TypeDB_Driver_Common_Promise_T_Resolve_]
-==== Resolve
+==== method ``Resolve``
 
 [source,cs]
 ----

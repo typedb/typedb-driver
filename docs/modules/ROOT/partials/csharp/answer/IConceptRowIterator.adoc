@@ -1,5 +1,8 @@
 [#_IConceptRowIterator]
+[.doc-api-reference-driver]
 === IConceptRowIterator
+
+`class`
 
 *Package*: `TypeDB.Driver.Api.Answer`
 
@@ -13,7 +16,7 @@ Represents an iterator over IConceptRows returned as a server answer.
 
 // tag::methods[]
 [#_IConceptRowIterator_IQueryAnswer_TypeDB_Driver_Api_Answer_IConceptRowIterator_AsConceptRows_]
-==== AsConceptRows
+==== method ``AsConceptRows``
 
 [source,cs]
 ----
@@ -61,7 +64,7 @@ Implements TypeDB.Driver.Api.Answer.IQueryAnswer.
 `IConceptRowIterator IQueryAnswer.`
 
 [#_bool_IQueryAnswer_TypeDB_Driver_Api_Answer_IConceptRowIterator_IsConceptRows]
-==== IsConceptRows
+==== method ``IsConceptRows``
 
 [source,cs]
 ----

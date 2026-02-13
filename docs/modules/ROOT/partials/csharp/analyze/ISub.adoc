@@ -1,0 +1,16 @@
+[#_ISub]
+[.doc-api-reference-driver]
+=== ISub
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+*Supertypes:*
+
+* `TypeDB.Driver.Api.Analyze.IConstraint`
+
+
+
+Represents a "sub" constraint: subtype sub(!) supertype.
+

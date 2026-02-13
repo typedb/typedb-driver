@@ -2,12 +2,11 @@
 [.doc-api-reference-driver]
 === IConjunctionID
 
-`interface`
+`class`
 
-*Namespace*: `TypeDB.Driver.Api.Analyze`
+*Package*: `TypeDB.Driver.Api.Analyze`
 
-An identifier for a conjunction within a pipeline.
 
-// tag::methods[]
-// end::methods[]
+
+Identifies a conjunction within a query pipeline.
 

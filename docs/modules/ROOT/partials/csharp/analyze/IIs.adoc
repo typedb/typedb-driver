@@ -1,0 +1,16 @@
+[#_IIs]
+[.doc-api-reference-driver]
+=== IIs
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+*Supertypes:*
+
+* `TypeDB.Driver.Api.Analyze.IConstraint`
+
+
+
+Represents an "is" constraint: lhs is rhs.
+

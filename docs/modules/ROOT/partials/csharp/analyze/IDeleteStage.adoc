@@ -1,0 +1,16 @@
+[#_IDeleteStage]
+[.doc-api-reference-driver]
+=== IDeleteStage
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+*Supertypes:*
+
+* `TypeDB.Driver.Api.Analyze.IPipelineStage`
+
+
+
+Represents a "delete" stage: delete block; deleted_variables;.
+

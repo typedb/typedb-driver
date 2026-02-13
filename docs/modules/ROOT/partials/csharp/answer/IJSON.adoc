@@ -1,5 +1,8 @@
 [#_IJSON]
+[.doc-api-reference-driver]
 === IJSON
+
+`class`
 
 *Package*: `TypeDB.Driver.Api.Answer`
 
@@ -9,7 +12,7 @@ Represents a JSON value returned from a fetch query.
 
 // tag::methods[]
 [#_IReadOnlyList_IJSON_TypeDB_Driver_Api_Answer_IJSON_AsArray_]
-==== AsArray
+==== method ``AsArray``
 
 [source,cs]
 ----
@@ -53,7 +56,7 @@ Casts this JSON value to an array.
 `IReadOnlyList< IJSON >`
 
 [#_bool_TypeDB_Driver_Api_Answer_IJSON_AsBoolean_]
-==== AsBoolean
+==== method ``AsBoolean``
 
 [source,cs]
 ----
@@ -97,7 +100,7 @@ Casts this JSON value to a boolean.
 `bool`
 
 [#_double_TypeDB_Driver_Api_Answer_IJSON_AsNumber_]
-==== AsNumber
+==== method ``AsNumber``
 
 [source,cs]
 ----
@@ -141,7 +144,7 @@ Casts this JSON value to a number.
 `double`
 
 [#_IReadOnlyDictionary_string_IJSON_TypeDB_Driver_Api_Answer_IJSON_AsObject_]
-==== AsObject
+==== method ``AsObject``
 
 [source,cs]
 ----
@@ -185,7 +188,7 @@ Casts this JSON value to an object (dictionary).
 `IReadOnlyDictionary< string, IJSON >`
 
 [#_string_TypeDB_Driver_Api_Answer_IJSON_AsString_]
-==== AsString
+==== method ``AsString``
 
 [source,cs]
 ----
@@ -229,7 +232,7 @@ Casts this JSON value to a string.
 `string`
 
 [#_bool_TypeDB_Driver_Api_Answer_IJSON_IsArray]
-==== IsArray
+==== method ``IsArray``
 
 [source,cs]
 ----
@@ -250,7 +253,7 @@ Checks if this JSON value is an array.
 `bool`
 
 [#_bool_TypeDB_Driver_Api_Answer_IJSON_IsBoolean]
-==== IsBoolean
+==== method ``IsBoolean``
 
 [source,cs]
 ----
@@ -271,7 +274,7 @@ Checks if this JSON value is a boolean.
 `bool`
 
 [#_bool_TypeDB_Driver_Api_Answer_IJSON_IsNull]
-==== IsNull
+==== method ``IsNull``
 
 [source,cs]
 ----
@@ -292,7 +295,7 @@ Checks if this JSON value is null.
 `bool`
 
 [#_bool_TypeDB_Driver_Api_Answer_IJSON_IsNumber]
-==== IsNumber
+==== method ``IsNumber``
 
 [source,cs]
 ----
@@ -313,7 +316,7 @@ Checks if this JSON value is a number.
 `bool`
 
 [#_bool_TypeDB_Driver_Api_Answer_IJSON_IsObject]
-==== IsObject
+==== method ``IsObject``
 
 [source,cs]
 ----
@@ -334,7 +337,7 @@ Checks if this JSON value is an object.
 `bool`
 
 [#_bool_TypeDB_Driver_Api_Answer_IJSON_IsString]
-==== IsString
+==== method ``IsString``
 
 [source,cs]
 ----

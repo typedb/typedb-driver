@@ -2,42 +2,48 @@
 [.doc-api-reference-driver]
 === IConjunction
 
-`interface`
+`class`
 
-*Namespace*: `TypeDB.Driver.Api.Analyze`
+*Package*: `TypeDB.Driver.Api.Analyze`
 
-A representation of a conjunction of constraints.
+
+
+A representation of the constraints involved in a query, and types inferred for each variable.
 
 // tag::methods[]
-[#_IConjunction_Constraints]
-==== property ``Constraints``
+[#_IEnumerable_IVariable_TypeDB_Driver_Api_Analyze_IConjunction_AnnotatedVariables]
+==== method ``AnnotatedVariables``
 
 [source,cs]
 ----
-IEnumerable<IConstraint> Constraints { get; }
+IEnumerable< IVariable > TypeDB.Driver.Api.Analyze.IConjunction.AnnotatedVariables
 ----
 
-Gets the constraints in this conjunction.
 
-[caption=""]
-.Returns
-`IEnumerable<IConstraint>`
-
-[#_IConjunction_AnnotatedVariables]
-==== property ``AnnotatedVariables``
-
-[source,cs]
-----
-IEnumerable<IVariable> AnnotatedVariables { get; }
-----
 
 Gets the variables that have annotations in this conjunction.
 
 [caption=""]
 .Returns
-`IEnumerable<IVariable>`
+`IEnumerable< IVariable >`
 
-[#_IConjunction_GetVariableAnnotations_IVariable]
+[#_IEnumerable_IConstraint_TypeDB_Driver_Api_Analyze_IConjunction_Constraints]
+==== method ``Constraints``
+
+[source,cs]
+----
+IEnumerable< IConstraint > TypeDB.Driver.Api.Analyze.IConjunction.Constraints
+----
+
+
+
+Gets the constraints in the conjunction.
+
+[caption=""]
+.Returns
+`IEnumerable< IConstraint >`
+
+[#_IVariableAnnotations_TypeDB_Driver_Api_Analyze_IConjunction_GetVariableAnnotations_IVariable_variable_]
 ==== method ``GetVariableAnnotations``
 
 [source,cs]
@@ -45,16 +51,9 @@ Gets the variables that have annotations in this conjunction.
 IVariableAnnotations GetVariableAnnotations(IVariable variable)
 ----
 
-Gets the annotations for a specific variable.
 
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `variable` a| The variable to get annotations for a| `IVariable`
-|===
+
+Gets the annotations for a specific variable in this conjunction.
 
 [caption=""]
 .Returns

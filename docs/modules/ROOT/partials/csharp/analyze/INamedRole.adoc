@@ -2,40 +2,46 @@
 [.doc-api-reference-driver]
 === INamedRole
 
-`interface`
+`class`
 
-*Namespace*: `TypeDB.Driver.Api.Analyze`
+*Package*: `TypeDB.Driver.Api.Analyze`
 
-A named role in a constraint.
+
+
+'links' and 'relates' constraints accept unscoped role names. Since an unscoped role-name does not uniquely identify a role-type, (different role-types belonging to different relation types may share the same name) an internal variable is introduced to handle the ambiguity.
 
 // tag::methods[]
-[#_INamedRole_Variable]
-==== property ``Variable``
+[#_string_TypeDB_Driver_Api_Analyze_INamedRole_Name]
+==== method ``Name``
 
 [source,cs]
 ----
-IVariable Variable { get; }
+string TypeDB.Driver.Api.Analyze.INamedRole.Name
 ----
 
-Gets the variable associated with this named role.
 
-[caption=""]
-.Returns
-`IVariable`
 
-[#_INamedRole_Name]
-==== property ``Name``
-
-[source,cs]
-----
-string Name { get; }
-----
-
-Gets the name of this role.
+Gets the unscoped role name specified in the query.
 
 [caption=""]
 .Returns
 `string`
+
+[#_IVariable_TypeDB_Driver_Api_Analyze_INamedRole_Variable]
+==== method ``Variable``
+
+[source,cs]
+----
+IVariable TypeDB.Driver.Api.Analyze.INamedRole.Variable
+----
+
+
+
+Gets the internal variable injected to handle ambiguity in unscoped role names.
+
+[caption=""]
+.Returns
+`IVariable`
 
 // end::methods[]
 

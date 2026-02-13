@@ -2,82 +2,94 @@
 [.doc-api-reference-driver]
 === IFunction
 
-`interface`
+`class`
 
-*Namespace*: `TypeDB.Driver.Api.Analyze`
+*Package*: `TypeDB.Driver.Api.Analyze`
 
-A representation of a function in the query preamble.
+
+
+Holds a representation of a function, and the result of type-inference for each variable.
 
 // tag::methods[]
-[#_IFunction_ArgumentVariables]
-==== property ``ArgumentVariables``
+[#_IEnumerable_IVariableAnnotations_TypeDB_Driver_Api_Analyze_IFunction_ArgumentAnnotations]
+==== method ``ArgumentAnnotations``
 
 [source,cs]
 ----
-IEnumerable<IVariable> ArgumentVariables { get; }
+IEnumerable< IVariableAnnotations > TypeDB.Driver.Api.Analyze.IFunction.ArgumentAnnotations
 ----
 
-Gets the argument variables of this function.
+
+
+Gets the type annotations for each argument of the function.
 
 [caption=""]
 .Returns
-`IEnumerable<IVariable>`
+`IEnumerable< IVariableAnnotations >`
 
-[#_IFunction_ArgumentAnnotations]
-==== property ``ArgumentAnnotations``
+[#_IEnumerable_IVariable_TypeDB_Driver_Api_Analyze_IFunction_ArgumentVariables]
+==== method ``ArgumentVariables``
 
 [source,cs]
 ----
-IEnumerable<IVariableAnnotations> ArgumentAnnotations { get; }
+IEnumerable< IVariable > TypeDB.Driver.Api.Analyze.IFunction.ArgumentVariables
 ----
 
-Gets the annotations for the argument variables.
+
+
+Gets the variables which are the arguments of the function.
 
 [caption=""]
 .Returns
-`IEnumerable<IVariableAnnotations>`
+`IEnumerable< IVariable >`
 
-[#_IFunction_ReturnAnnotations]
-==== property ``ReturnAnnotations``
+[#_IPipeline_TypeDB_Driver_Api_Analyze_IFunction_Body]
+==== method ``Body``
 
 [source,cs]
 ----
-IEnumerable<IVariableAnnotations> ReturnAnnotations { get; }
+IPipeline TypeDB.Driver.Api.Analyze.IFunction.Body
 ----
 
-Gets the annotations for the return variables.
+
+
+Gets the pipeline which forms the body of the function.
 
 [caption=""]
 .Returns
-`IEnumerable<IVariableAnnotations>`
+`IPipeline`
 
-[#_IFunction_ReturnOperation]
-==== property ``ReturnOperation``
+[#_IEnumerable_IVariableAnnotations_TypeDB_Driver_Api_Analyze_IFunction_ReturnAnnotations]
+==== method ``ReturnAnnotations``
 
 [source,cs]
 ----
-IReturnOperation ReturnOperation { get; }
+IEnumerable< IVariableAnnotations > TypeDB.Driver.Api.Analyze.IFunction.ReturnAnnotations
 ----
 
-Gets the return operation of this function.
+
+
+Gets the type annotations for each concept returned by the function.
+
+[caption=""]
+.Returns
+`IEnumerable< IVariableAnnotations >`
+
+[#_IReturnOperation_TypeDB_Driver_Api_Analyze_IFunction_ReturnOperation]
+==== method ``ReturnOperation``
+
+[source,cs]
+----
+IReturnOperation TypeDB.Driver.Api.Analyze.IFunction.ReturnOperation
+----
+
+
+
+Gets the return operation of the function.
 
 [caption=""]
 .Returns
 `IReturnOperation`
-
-[#_IFunction_Body]
-==== property ``Body``
-
-[source,cs]
-----
-IConjunctionID Body { get; }
-----
-
-Gets the conjunction ID for the function body.
-
-[caption=""]
-.Returns
-`IConjunctionID`
 
 // end::methods[]
 

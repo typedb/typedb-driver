@@ -1,0 +1,16 @@
+[#_IInsertStage]
+[.doc-api-reference-driver]
+=== IInsertStage
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+*Supertypes:*
+
+* `TypeDB.Driver.Api.Analyze.IPipelineStage`
+
+
+
+Represents an "insert" stage: insert block.
+

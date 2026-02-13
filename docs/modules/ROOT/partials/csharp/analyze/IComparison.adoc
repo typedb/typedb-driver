@@ -1,0 +1,16 @@
+[#_IComparison]
+[.doc-api-reference-driver]
+=== IComparison
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+*Supertypes:*
+
+* `TypeDB.Driver.Api.Analyze.IConstraint`
+
+
+
+Represents a comparison: lhs comparator rhs.
+

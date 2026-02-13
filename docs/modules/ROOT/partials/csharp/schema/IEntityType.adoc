@@ -1,5 +1,8 @@
 [#_IEntityType]
+[.doc-api-reference-driver]
 === IEntityType
+
+`class`
 
 *Package*: `TypeDB.Driver.Api`
 
@@ -15,7 +18,7 @@ Represents an entity type in TypeDB. Entity types represent the classification o
 
 // tag::methods[]
 [#_IEntityType_IConcept_TypeDB_Driver_Api_IEntityType_AsEntityType_]
-==== AsEntityType
+==== method ``AsEntityType``
 
 [source,cs]
 ----
@@ -55,7 +58,7 @@ Implements TypeDB.Driver.Api.IConcept.
 `IEntityType IConcept.`
 
 [#_bool_IConcept_TypeDB_Driver_Api_IEntityType_IsEntityType_]
-==== IsEntityType
+==== method ``IsEntityType``
 
 [source,cs]
 ----

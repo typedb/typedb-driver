@@ -1,5 +1,8 @@
 [#_IConceptDocumentIterator]
+[.doc-api-reference-driver]
 === IConceptDocumentIterator
+
+`class`
 
 *Package*: `TypeDB.Driver.Api.Answer`
 
@@ -13,7 +16,7 @@ Represents an iterator over concept documents (represented as IJSONs) returned a
 
 // tag::methods[]
 [#_IConceptDocumentIterator_IQueryAnswer_TypeDB_Driver_Api_Answer_IConceptDocumentIterator_AsConceptDocuments_]
-==== AsConceptDocuments
+==== method ``AsConceptDocuments``
 
 [source,cs]
 ----
@@ -61,7 +64,7 @@ Implements TypeDB.Driver.Api.Answer.IQueryAnswer.
 `IConceptDocumentIterator IQueryAnswer.`
 
 [#_bool_IQueryAnswer_TypeDB_Driver_Api_Answer_IConceptDocumentIterator_IsConceptDocuments]
-==== IsConceptDocuments
+==== method ``IsConceptDocuments``
 
 [source,cs]
 ----

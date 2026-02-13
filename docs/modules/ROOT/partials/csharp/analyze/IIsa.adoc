@@ -1,0 +1,16 @@
+[#_IIsa]
+[.doc-api-reference-driver]
+=== IIsa
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+*Supertypes:*
+
+* `TypeDB.Driver.Api.Analyze.IConstraint`
+
+
+
+Represents an "isa" constraint: instance isa(!) type.
+

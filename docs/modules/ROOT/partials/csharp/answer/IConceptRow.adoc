@@ -1,5 +1,8 @@
 [#_IConceptRow]
+[.doc-api-reference-driver]
 === IConceptRow
+
+`class`
 
 *Package*: `TypeDB.Driver.Api.Answer`
 
@@ -9,7 +12,7 @@ Contains a row of concepts with a header.
 
 // tag::methods[]
 [#_IEnumerable_string_TypeDB_Driver_Api_Answer_IConceptRow_ColumnNames]
-==== ColumnNames
+==== method ``ColumnNames``
 
 [source,cs]
 ----
@@ -30,7 +33,7 @@ Produces a collection of all column names (variables) in the header of this ICon
 `IEnumerable< string >`
 
 [#_IEnumerable_IConcept_TypeDB_Driver_Api_Answer_IConceptRow_Concepts]
-==== Concepts
+==== method ``Concepts``
 
 [source,cs]
 ----
@@ -51,7 +54,7 @@ Produces a collection over all concepts in this IConceptRow, skipping empty resu
 `IEnumerable< IConcept >`
 
 [#_IConcept_TypeDB_Driver_Api_Answer_IConceptRow_Get_string_columnName_]
-==== Get
+==== method ``Get``
 
 [source,cs]
 ----
@@ -77,7 +80,7 @@ a| `columnName` a| The variable (column name from ColumnNames) a| `string`
 `IConcept?`
 
 [#_IConcept_TypeDB_Driver_Api_Answer_IConceptRow_GetIndex_long_columnIndex_]
-==== GetIndex
+==== method ``GetIndex``
 
 [source,cs]
 ----
@@ -102,8 +105,29 @@ a| `columnIndex` a| The column index a| `long`
 .Returns
 `IConcept?`
 
+[#_IPipeline_TypeDB_Driver_Api_Answer_IConceptRow_QueryStructure]
+==== method ``QueryStructure``
+
+[source,cs]
+----
+IPipeline? TypeDB.Driver.Api.Answer.IConceptRow.QueryStructure
+----
+
+
+
+Retrieves the query structure pipeline if available. Only available if the query was executed with IncludeQueryStructure option enabled.
+
+ 
+  conceptRow.QueryStructure
+ 
+
+
+[caption=""]
+.Returns
+`IPipeline?`
+
 [#_QueryType_TypeDB_Driver_Api_Answer_IConceptRow_QueryType]
-==== QueryType
+==== method ``QueryType``
 
 [source,cs]
 ----

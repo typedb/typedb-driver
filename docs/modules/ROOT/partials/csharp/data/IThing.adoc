@@ -1,5 +1,8 @@
 [#_IThing]
+[.doc-api-reference-driver]
 === IThing
+
+`class`
 
 *Package*: `TypeDB.Driver.Api`
 
@@ -13,7 +16,7 @@ Represents an instance (entity, relation, or attribute) in TypeDB. In TypeDB 3.0
 
 // tag::methods[]
 [#_IThing_IConcept_TypeDB_Driver_Api_IThing_AsThing_]
-==== AsThing
+==== method ``AsThing``
 
 [source,cs]
 ----
@@ -52,8 +55,33 @@ Implements TypeDB.Driver.Api.IConcept.
 .Returns
 `IThing IConcept.`
 
+[#_bool_IConcept_TypeDB_Driver_Api_IThing_IsInstance_]
+==== method ``IsInstance``
+
+[source,cs]
+----
+bool IConcept. IsInstance()
+----
+
+
+
+Checks if the concept is an instance (entity, relation, or attribute). This is the 3.0 name for what was previously called "Thing".
+
+ 
+  concept.IsInstance()
+ 
+
+
+
+
+Implements TypeDB.Driver.Api.IConcept.
+
+[caption=""]
+.Returns
+`bool IConcept.`
+
 [#_bool_IConcept_TypeDB_Driver_Api_IThing_IsThing_]
-==== IsThing
+==== method ``IsThing``
 
 [source,cs]
 ----
@@ -78,7 +106,7 @@ Implements TypeDB.Driver.Api.IConcept.
 `bool IConcept.`
 
 [#_IThingType_TypeDB_Driver_Api_IThing_Type]
-==== Type
+==== method ``Type``
 
 [source,cs]
 ----

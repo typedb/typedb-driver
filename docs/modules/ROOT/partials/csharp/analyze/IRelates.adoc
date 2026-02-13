@@ -1,0 +1,16 @@
+[#_IRelates]
+[.doc-api-reference-driver]
+=== IRelates
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+*Supertypes:*
+
+* `TypeDB.Driver.Api.Analyze.IConstraint`
+
+
+
+Represents a "relates" constraint: relation relates role.
+

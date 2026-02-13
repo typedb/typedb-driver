@@ -1,0 +1,16 @@
+[#_IUpdateStage]
+[.doc-api-reference-driver]
+=== IUpdateStage
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+*Supertypes:*
+
+* `TypeDB.Driver.Api.Analyze.IPipelineStage`
+
+
+
+Represents an "update" stage: update block.
+

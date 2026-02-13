@@ -1,0 +1,16 @@
+[#_IValueConstraint]
+[.doc-api-reference-driver]
+=== IValueConstraint
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+*Supertypes:*
+
+* `TypeDB.Driver.Api.Analyze.IConstraint`
+
+
+
+Represents a value constraint: attribute_type value value_type.
+

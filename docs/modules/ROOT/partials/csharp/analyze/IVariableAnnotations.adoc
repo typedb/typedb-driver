@@ -2,110 +2,126 @@
 [.doc-api-reference-driver]
 === IVariableAnnotations
 
-`interface`
+`class`
 
-*Namespace*: `TypeDB.Driver.Api.Analyze`
+*Package*: `TypeDB.Driver.Api.Analyze`
 
-Annotations for a variable in a conjunction.
+
+
+Represents the type annotations inferred for a variable.
 
 // tag::methods[]
-[#_IVariableAnnotations_Variant]
-==== property ``Variant``
-
-[source,cs]
-----
-Pinvoke.VariableAnnotationsVariant Variant { get; }
-----
-
-Gets the variant of these annotations.
-
-[caption=""]
-.Returns
-`Pinvoke.VariableAnnotationsVariant`
-
-[#_IVariableAnnotations_IsInstance]
-==== property ``IsInstance``
-
-[source,cs]
-----
-bool IsInstance { get; }
-----
-
-Returns true if these annotations indicate the variable is an instance.
-
-[caption=""]
-.Returns
-`bool`
-
-[#_IVariableAnnotations_IsType]
-==== property ``IsType``
-
-[source,cs]
-----
-bool IsType { get; }
-----
-
-Returns true if these annotations indicate the variable is a type.
-
-[caption=""]
-.Returns
-`bool`
-
-[#_IVariableAnnotations_IsValue]
-==== property ``IsValue``
-
-[source,cs]
-----
-bool IsValue { get; }
-----
-
-Returns true if these annotations indicate the variable is a value.
-
-[caption=""]
-.Returns
-`bool`
-
-[#_IVariableAnnotations_AsInstance]
+[#_IEnumerable_IType_TypeDB_Driver_Api_Analyze_IVariableAnnotations_AsInstance_]
 ==== method ``AsInstance``
 
 [source,cs]
 ----
-IEnumerable<IType> AsInstance()
+IEnumerable< IType > AsInstance()
 ----
 
-Gets the possible types for this instance variable.
+
+
+Gets the possible types of instances this variable can hold. Only valid if IsInstance is true.
 
 [caption=""]
 .Returns
-`IEnumerable<IType>`
+`IEnumerable< IType >`
 
-[#_IVariableAnnotations_AsType]
+[#_IEnumerable_IType_TypeDB_Driver_Api_Analyze_IVariableAnnotations_AsType_]
 ==== method ``AsType``
 
 [source,cs]
 ----
-IEnumerable<IType> AsType()
+IEnumerable< IType > AsType()
 ----
 
-Gets the possible types for this type variable.
+
+
+Gets the possible types this variable can hold. Only valid if IsType is true.
 
 [caption=""]
 .Returns
-`IEnumerable<IType>`
+`IEnumerable< IType >`
 
-[#_IVariableAnnotations_AsValue]
+[#_IEnumerable_string_TypeDB_Driver_Api_Analyze_IVariableAnnotations_AsValue_]
 ==== method ``AsValue``
 
 [source,cs]
 ----
-IEnumerable<string> AsValue()
+IEnumerable< string > AsValue()
 ----
 
-Gets the possible value types for this value variable.
+
+
+Gets the possible value types this variable can hold. Only valid if IsValue is true.
 
 [caption=""]
 .Returns
-`IEnumerable<string>`
+`IEnumerable< string >`
+
+[#_bool_TypeDB_Driver_Api_Analyze_IVariableAnnotations_IsInstance]
+==== method ``IsInstance``
+
+[source,cs]
+----
+bool TypeDB.Driver.Api.Analyze.IVariableAnnotations.IsInstance
+----
+
+
+
+Checks if this variable is an instance variable.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_bool_TypeDB_Driver_Api_Analyze_IVariableAnnotations_IsType]
+==== method ``IsType``
+
+[source,cs]
+----
+bool TypeDB.Driver.Api.Analyze.IVariableAnnotations.IsType
+----
+
+
+
+Checks if this variable is a type variable.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_bool_TypeDB_Driver_Api_Analyze_IVariableAnnotations_IsValue]
+==== method ``IsValue``
+
+[source,cs]
+----
+bool TypeDB.Driver.Api.Analyze.IVariableAnnotations.IsValue
+----
+
+
+
+Checks if this variable is a value variable.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_Pinvoke_VariableAnnotationsVariant_TypeDB_Driver_Api_Analyze_IVariableAnnotations_Variant]
+==== method ``Variant``
+
+[source,cs]
+----
+Pinvoke.VariableAnnotationsVariant TypeDB.Driver.Api.Analyze.IVariableAnnotations.Variant
+----
+
+
+
+Gets the variant indicating whether this is an instance, type, or value variable.
+
+[caption=""]
+.Returns
+`Pinvoke.VariableAnnotationsVariant`
 
 // end::methods[]
 

@@ -1,5 +1,8 @@
 [#_IUserManager]
+[.doc-api-reference-driver]
 === IUserManager
+
+`class`
 
 *Package*: `TypeDB.Driver.Api`
 
@@ -9,7 +12,7 @@ Provides access to all user management methods.
 
 // tag::methods[]
 [#_bool_TypeDB_Driver_Api_IUserManager_Contains_string_username_]
-==== Contains
+==== method ``Contains``
 
 [source,cs]
 ----
@@ -35,7 +38,7 @@ a| `username` a| The user name to be checked. a| `string`
 `bool`
 
 [#_void_TypeDB_Driver_Api_IUserManager_Create_string_username_string_password_]
-==== Create
+==== method ``Create``
 
 [source,cs]
 ----
@@ -62,7 +65,7 @@ a| `password` a| The password of the user to be created. a| `string`
 `void`
 
 [#_IUser_TypeDB_Driver_Api_IUserManager_Get_string_username_]
-==== Get
+==== method ``Get``
 
 [source,cs]
 ----
@@ -88,7 +91,7 @@ a| `username` a| The name of the user to retrieve. a| `string`
 `IUser?`
 
 [#_ISet_IUser_TypeDB_Driver_Api_IUserManager_GetAll_]
-==== GetAll
+==== method ``GetAll``
 
 [source,cs]
 ----
@@ -117,7 +120,7 @@ Retrieves all users which exist on the TypeDB server.
 `ISet< IUser >`
 
 [#_IUser_TypeDB_Driver_Api_IUserManager_GetCurrentUser_]
-==== GetCurrentUser
+==== method ``GetCurrentUser``
 
 [source,cs]
 ----

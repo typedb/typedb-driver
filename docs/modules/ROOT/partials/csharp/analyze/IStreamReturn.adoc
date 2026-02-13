@@ -1,0 +1,16 @@
+[#_IStreamReturn]
+[.doc-api-reference-driver]
+=== IStreamReturn
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+*Supertypes:*
+
+* `TypeDB.Driver.Api.Analyze.IReturnOperation`
+
+
+
+Indicates the function returns a stream of concepts.
+

@@ -1,5 +1,8 @@
 [#_IAttribute]
+[.doc-api-reference-driver]
 === IAttribute
+
+`class`
 
 *Package*: `TypeDB.Driver.Api`
 
@@ -14,7 +17,7 @@ Attribute is an instance of the attribute type and has a value. This value is fi
 
 // tag::methods[]
 [#_IAttribute_IConcept_TypeDB_Driver_Api_IAttribute_AsAttribute_]
-==== AsAttribute
+==== method ``AsAttribute``
 
 [source,cs]
 ----
@@ -54,7 +57,7 @@ Implements TypeDB.Driver.Api.IConcept.
 `IAttribute IConcept.`
 
 [#_bool_TypeDB_Driver_Api_IAttribute_GetBoolean_]
-==== GetBoolean
+==== method ``GetBoolean``
 
 [source,cs]
 ----
@@ -70,7 +73,7 @@ Returns a boolean value of the value concept that this attribute holds. If the v
 `bool`
 
 [#_DateOnly_TypeDB_Driver_Api_IAttribute_GetDate_]
-==== GetDate
+==== method ``GetDate``
 
 [source,cs]
 ----
@@ -85,12 +88,12 @@ Returns a date value of the value concept that this attribute holds. If the valu
 .Returns
 `DateOnly`
 
-[#_DateTime_TypeDB_Driver_Api_IAttribute_GetDatetime_]
-==== GetDatetime
+[#_Datetime_TypeDB_Driver_Api_IAttribute_GetDatetime_]
+==== method ``GetDatetime``
 
 [source,cs]
 ----
-DateTime GetDatetime()
+Datetime GetDatetime()
 ----
 
 
@@ -99,14 +102,14 @@ Returns a datetime value of the value concept that this attribute holds. If the 
 
 [caption=""]
 .Returns
-`DateTime`
+`Datetime`
 
-[#_DateTimeOffset_TypeDB_Driver_Api_IAttribute_GetDatetimeTZ_]
-==== GetDatetimeTZ
+[#_DatetimeTZ_TypeDB_Driver_Api_IAttribute_GetDatetimeTZ_]
+==== method ``GetDatetimeTZ``
 
 [source,cs]
 ----
-DateTimeOffset GetDatetimeTZ()
+DatetimeTZ GetDatetimeTZ()
 ----
 
 
@@ -115,10 +118,10 @@ Returns a datetime with timezone value of the value concept that this attribute 
 
 [caption=""]
 .Returns
-`DateTimeOffset`
+`DatetimeTZ`
 
 [#_decimal_TypeDB_Driver_Api_IAttribute_GetDecimal_]
-==== GetDecimal
+==== method ``GetDecimal``
 
 [source,cs]
 ----
@@ -134,7 +137,7 @@ Returns a decimal value of the value concept that this attribute holds. If the v
 `decimal`
 
 [#_double_TypeDB_Driver_Api_IAttribute_GetDouble_]
-==== GetDouble
+==== method ``GetDouble``
 
 [source,cs]
 ----
@@ -150,7 +153,7 @@ Returns a double value of the value concept that this attribute holds. If the va
 `double`
 
 [#_Duration_TypeDB_Driver_Api_IAttribute_GetDuration_]
-==== GetDuration
+==== method ``GetDuration``
 
 [source,cs]
 ----
@@ -166,7 +169,7 @@ Returns a duration value of the value concept that this attribute holds. If the 
 `Duration`
 
 [#_long_TypeDB_Driver_Api_IAttribute_GetInteger_]
-==== GetInteger
+==== method ``GetInteger``
 
 [source,cs]
 ----
@@ -182,7 +185,7 @@ Returns an integer (long) value of the value concept that this attribute holds. 
 `long`
 
 [#_string_TypeDB_Driver_Api_IAttribute_GetString_]
-==== GetString
+==== method ``GetString``
 
 [source,cs]
 ----
@@ -198,7 +201,7 @@ Returns a string value of the value concept that this attribute holds. If the va
 `string`
 
 [#_IReadOnlyDictionary_string_IValue_TypeDB_Driver_Api_IAttribute_GetStruct_]
-==== GetStruct
+==== method ``GetStruct``
 
 [source,cs]
 ----
@@ -214,7 +217,7 @@ Returns a struct value of the value concept that this attribute holds represente
 `IReadOnlyDictionary< string, IValue? >`
 
 [#_string_TypeDB_Driver_Api_IAttribute_GetValueType_]
-==== GetValueType
+==== method ``GetValueType``
 
 [source,cs]
 ----
@@ -230,7 +233,7 @@ Retrieves the description of the value type of the value which the attribute ins
 `string`
 
 [#_bool_IConcept_TypeDB_Driver_Api_IAttribute_IsAttribute_]
-==== IsAttribute
+==== method ``IsAttribute``
 
 [source,cs]
 ----
@@ -255,7 +258,7 @@ Implements TypeDB.Driver.Api.IConcept.
 `bool IConcept.`
 
 [#_new_IAttributeType_TypeDB_Driver_Api_IAttribute_Type]
-==== Type
+==== method ``Type``
 
 [source,cs]
 ----
@@ -273,7 +276,7 @@ Implements TypeDB.Driver.Api.IThing.
 `new IAttributeType`
 
 [#_IValue_TypeDB_Driver_Api_IAttribute_Value]
-==== Value
+==== method ``Value``
 
 [source,cs]
 ----

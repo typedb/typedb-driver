@@ -1,5 +1,8 @@
 [#_IDriver]
+[.doc-api-reference-driver]
 === IDriver
+
+`class`
 
 *Package*: `TypeDB.Driver.Api`
 
@@ -9,7 +12,7 @@ A connection to a TypeDB server which serves as the starting point for all inter
 
 // tag::methods[]
 [#_void_TypeDB_Driver_Api_IDriver_Close_]
-==== Close
+==== method ``Close``
 
 [source,cs]
 ----
@@ -30,7 +33,7 @@ Closes the driver. Before instantiating a new driver, the driver that's currentl
 `void`
 
 [#_IDatabaseManager_TypeDB_Driver_Api_IDriver_Databases]
-==== Databases
+==== method ``Databases``
 
 [source,cs]
 ----
@@ -51,7 +54,7 @@ The IDatabaseManager for this connection, providing access to database managemen
 `IDatabaseManager`
 
 [#_bool_TypeDB_Driver_Api_IDriver_IsOpen_]
-==== IsOpen
+==== method ``IsOpen``
 
 [source,cs]
 ----
@@ -80,7 +83,7 @@ Checks whether this connection is presently open.
 `bool`
 
 [#_ITypeDBTransaction_TypeDB_Driver_Api_IDriver_Transaction_string_database_TransactionType_type_]
-==== Transaction
+==== method ``Transaction``
 
 [source,cs]
 ----
@@ -107,7 +110,7 @@ a| `type` a| The type of transaction to be created (Read, Write, or Schema). a| 
 `ITypeDBTransaction`
 
 [#_ITypeDBTransaction_TypeDB_Driver_Api_IDriver_Transaction_string_database_TransactionType_type_TransactionOptions_options_]
-==== Transaction
+==== method ``Transaction``
 
 [source,cs]
 ----
@@ -135,7 +138,7 @@ a| `options` a| Transaction options to configure the opened transaction. a| `Tra
 `ITypeDBTransaction`
 
 [#_IUserManager_TypeDB_Driver_Api_IDriver_Users]
-==== Users
+==== method ``Users``
 
 [source,cs]
 ----

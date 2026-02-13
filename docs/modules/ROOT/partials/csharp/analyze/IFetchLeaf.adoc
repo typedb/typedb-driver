@@ -1,0 +1,31 @@
+[#_IFetchLeaf]
+[.doc-api-reference-driver]
+=== IFetchLeaf
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+
+
+The leaf of a Fetch object. Holds information on the value it can hold.
+
+// tag::methods[]
+[#_IEnumerable_string_TypeDB_Driver_Api_Analyze_IFetchLeaf_Annotations]
+==== method ``Annotations``
+
+[source,cs]
+----
+IEnumerable< string > TypeDB.Driver.Api.Analyze.IFetchLeaf.Annotations
+----
+
+
+
+Gets the possible value types.
+
+[caption=""]
+.Returns
+`IEnumerable< string >`
+
+// end::methods[]
+

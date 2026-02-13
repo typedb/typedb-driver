@@ -1,0 +1,16 @@
+[#_ICheckReturn]
+[.doc-api-reference-driver]
+=== ICheckReturn
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+*Supertypes:*
+
+* `TypeDB.Driver.Api.Analyze.IReturnOperation`
+
+
+
+Indicates the function returns a boolean.
+
