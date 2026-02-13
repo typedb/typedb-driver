@@ -121,25 +121,6 @@ namespace TypeDB.Driver.Test.Behaviour
 
         #region Query Execution Steps
 
-        // Regex pattern for optional error mode: matches "", "; fails", "; parsing fails",
-        // or "; fails with a message containing: "...""
-        private const string MayErrorPattern = @"(|; fails|; parsing fails|; fails with a message containing: ""(.*)"")";
-
-        [Given(@"typeql schema query" + MayErrorPattern)]
-        [When(@"typeql schema query" + MayErrorPattern)]
-        [Then(@"typeql schema query" + MayErrorPattern)]
-        [Given(@"typeql write query" + MayErrorPattern)]
-        [When(@"typeql write query" + MayErrorPattern)]
-        [Then(@"typeql write query" + MayErrorPattern)]
-        [Given(@"typeql read query" + MayErrorPattern)]
-        [When(@"typeql read query" + MayErrorPattern)]
-        [Then(@"typeql read query" + MayErrorPattern)]
-        public void TypeqlQuery(string errorMode, string? expectedMessage, DocString query)
-        {
-            ClearAnswers();
-            MayError.Parse(errorMode, expectedMessage).Check(() => ExecuteQuery(query.Content));
-        }
-
         private IQueryAnswer ExecuteQuery(string queryText)
         {
             if (_queryOptions != null)
@@ -147,22 +128,116 @@ namespace TypeDB.Driver.Test.Behaviour
             return Tx.Query(queryText);
         }
 
-        [Given(@"get answers of typeql schema query" + MayErrorPattern)]
-        [When(@"get answers of typeql schema query" + MayErrorPattern)]
-        [Then(@"get answers of typeql schema query" + MayErrorPattern)]
-        [Given(@"get answers of typeql write query" + MayErrorPattern)]
-        [When(@"get answers of typeql write query" + MayErrorPattern)]
-        [Then(@"get answers of typeql write query" + MayErrorPattern)]
-        [Given(@"get answers of typeql read query" + MayErrorPattern)]
-        [When(@"get answers of typeql read query" + MayErrorPattern)]
-        [Then(@"get answers of typeql read query" + MayErrorPattern)]
-        public void GetAnswersOfTypeqlQuery(string errorMode, string? expectedMessage, DocString query)
+        // Success case - no error expected
+        [Given(@"typeql schema query")]
+        [When(@"typeql schema query")]
+        [Then(@"typeql schema query")]
+        [Given(@"typeql write query")]
+        [When(@"typeql write query")]
+        [Then(@"typeql write query")]
+        [Given(@"typeql read query")]
+        [When(@"typeql read query")]
+        [Then(@"typeql read query")]
+        public void TypeqlQuery(DocString query)
         {
             ClearAnswers();
-            MayError.Parse(errorMode, expectedMessage).Check(() =>
-            {
-                _queryAnswer = ExecuteQuery(query.Content);
-            });
+            MayError.No().Check(() => ExecuteQuery(query.Content));
+        }
+
+        // Simple failure case - any error expected
+        [Given(@"typeql schema query; fails")]
+        [When(@"typeql schema query; fails")]
+        [Then(@"typeql schema query; fails")]
+        [Given(@"typeql write query; fails")]
+        [When(@"typeql write query; fails")]
+        [Then(@"typeql write query; fails")]
+        [Given(@"typeql read query; fails")]
+        [When(@"typeql read query; fails")]
+        [Then(@"typeql read query; fails")]
+        public void TypeqlQueryFails(DocString query)
+        {
+            ClearAnswers();
+            MayError.Yes().Check(() => ExecuteQuery(query.Content));
+        }
+
+        // Failure with specific message
+        [Given(@"typeql schema query; fails with a message containing: ""(.*)""")]
+        [When(@"typeql schema query; fails with a message containing: ""(.*)""")]
+        [Then(@"typeql schema query; fails with a message containing: ""(.*)""")]
+        [Given(@"typeql write query; fails with a message containing: ""(.*)""")]
+        [When(@"typeql write query; fails with a message containing: ""(.*)""")]
+        [Then(@"typeql write query; fails with a message containing: ""(.*)""")]
+        [Given(@"typeql read query; fails with a message containing: ""(.*)""")]
+        [When(@"typeql read query; fails with a message containing: ""(.*)""")]
+        [Then(@"typeql read query; fails with a message containing: ""(.*)""")]
+        public void TypeqlQueryFailsWithMessage(string expectedMessage, DocString query)
+        {
+            ClearAnswers();
+            MayError.WithMessage(expectedMessage).Check(() => ExecuteQuery(query.Content));
+        }
+
+        // Parsing failure case
+        [Given(@"typeql schema query; parsing fails")]
+        [When(@"typeql schema query; parsing fails")]
+        [Then(@"typeql schema query; parsing fails")]
+        [Given(@"typeql write query; parsing fails")]
+        [When(@"typeql write query; parsing fails")]
+        [Then(@"typeql write query; parsing fails")]
+        [Given(@"typeql read query; parsing fails")]
+        [When(@"typeql read query; parsing fails")]
+        [Then(@"typeql read query; parsing fails")]
+        public void TypeqlQueryParsingFails(DocString query)
+        {
+            ClearAnswers();
+            MayError.Yes().Check(() => ExecuteQuery(query.Content));
+        }
+
+        // Get answers - success case
+        [Given(@"get answers of typeql schema query")]
+        [When(@"get answers of typeql schema query")]
+        [Then(@"get answers of typeql schema query")]
+        [Given(@"get answers of typeql write query")]
+        [When(@"get answers of typeql write query")]
+        [Then(@"get answers of typeql write query")]
+        [Given(@"get answers of typeql read query")]
+        [When(@"get answers of typeql read query")]
+        [Then(@"get answers of typeql read query")]
+        public void GetAnswersOfTypeqlQuery(DocString query)
+        {
+            ClearAnswers();
+            MayError.No().Check(() => { _queryAnswer = ExecuteQuery(query.Content); });
+        }
+
+        // Get answers - failure case
+        [Given(@"get answers of typeql schema query; fails")]
+        [When(@"get answers of typeql schema query; fails")]
+        [Then(@"get answers of typeql schema query; fails")]
+        [Given(@"get answers of typeql write query; fails")]
+        [When(@"get answers of typeql write query; fails")]
+        [Then(@"get answers of typeql write query; fails")]
+        [Given(@"get answers of typeql read query; fails")]
+        [When(@"get answers of typeql read query; fails")]
+        [Then(@"get answers of typeql read query; fails")]
+        public void GetAnswersOfTypeqlQueryFails(DocString query)
+        {
+            ClearAnswers();
+            MayError.Yes().Check(() => { _queryAnswer = ExecuteQuery(query.Content); });
+        }
+
+        // Get answers - failure with specific message
+        [Given(@"get answers of typeql schema query; fails with a message containing: ""(.*)""")]
+        [When(@"get answers of typeql schema query; fails with a message containing: ""(.*)""")]
+        [Then(@"get answers of typeql schema query; fails with a message containing: ""(.*)""")]
+        [Given(@"get answers of typeql write query; fails with a message containing: ""(.*)""")]
+        [When(@"get answers of typeql write query; fails with a message containing: ""(.*)""")]
+        [Then(@"get answers of typeql write query; fails with a message containing: ""(.*)""")]
+        [Given(@"get answers of typeql read query; fails with a message containing: ""(.*)""")]
+        [When(@"get answers of typeql read query; fails with a message containing: ""(.*)""")]
+        [Then(@"get answers of typeql read query; fails with a message containing: ""(.*)""")]
+        public void GetAnswersOfTypeqlQueryFailsWithMessage(string expectedMessage, DocString query)
+        {
+            ClearAnswers();
+            MayError.WithMessage(expectedMessage).Check(() => { _queryAnswer = ExecuteQuery(query.Content); });
         }
 
         #endregion
