@@ -15,8 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 
-load("@rules_dotnet//dotnet:defs.bzl", "csharp_library", "csharp_test")
-load("@rules_dotnet//dotnet:defs.bzl", "csharp_nunit_test")
+load("@rules_dotnet//dotnet:defs.bzl", "csharp_nunit_test", "csharp_test")
 load("//csharp:build_opts.bzl", "nullable_context")
 load("//csharp/Test:build_opts.bzl", "behaviour_tests_deps")
 
@@ -94,25 +93,6 @@ def csharp_integration_test(name, srcs, deps, target_frameworks, targeting_packs
         name = name,
         srcs = srcs,
         deps = deps,
-        target_frameworks = target_frameworks,
-        targeting_packs = targeting_packs,
-        runtime_identifier = "any",
-        nullable = nullable_context,
-        visibility = ["//visibility:public"],
-        **kwargs,
-    )
-
-
-def csharp_xunit_integration_test(name, srcs, deps, target_frameworks, targeting_packs, **kwargs):
-    csharp_test(
-        name = name,
-        srcs = srcs + ["//csharp/Test/Behaviour/Util:TestRunner.cs"],
-        deps = deps + [
-            "@paket.csharp_deps//xunit",
-            "@paket.csharp_deps//xunit.assert",
-            "@paket.csharp_deps//xunit.runner.utility",
-            "@paket.csharp_deps//xunit.extensibility.core",
-        ],
         target_frameworks = target_frameworks,
         targeting_packs = targeting_packs,
         runtime_identifier = "any",

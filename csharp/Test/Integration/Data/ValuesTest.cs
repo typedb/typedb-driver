@@ -21,7 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-using Xunit;
+using NUnit.Framework;
 
 using TypeDB.Driver;
 using TypeDB.Driver.Api;
@@ -29,17 +29,20 @@ using TypeDB.Driver.Common;
 
 namespace TypeDB.Driver.Test.Integration
 {
-    public class ValuesTest : IDisposable
+    [TestFixture]
+    public class ValuesTest
     {
         private const string ServerAddress = "127.0.0.1:1729";
         private const string DatabaseName = "typedb";
 
-        public ValuesTest()
+        [SetUp]
+        public void SetUp()
         {
             Cleanup();
         }
 
-        public void Dispose()
+        [TearDown]
+        public void TearDown()
         {
             Cleanup();
         }
@@ -64,240 +67,240 @@ namespace TypeDB.Driver.Test.Integration
         // Duration unit tests (no database required)
         // ============================================================================
 
-        [Fact]
+        [Test]
         public void DurationParseYears()
         {
             var duration = Duration.Parse("P1Y");
-            Assert.Equal(12, duration.Months);
-            Assert.Equal(0, duration.Days);
-            Assert.Equal(0, duration.Nanos);
+            Assert.AreEqual(12, duration.Months);
+            Assert.AreEqual(0, duration.Days);
+            Assert.AreEqual(0, duration.Nanos);
         }
 
-        [Fact]
+        [Test]
         public void DurationParseMonths()
         {
             var duration = Duration.Parse("P1M");
-            Assert.Equal(1, duration.Months);
-            Assert.Equal(0, duration.Days);
-            Assert.Equal(0, duration.Nanos);
+            Assert.AreEqual(1, duration.Months);
+            Assert.AreEqual(0, duration.Days);
+            Assert.AreEqual(0, duration.Nanos);
         }
 
-        [Fact]
+        [Test]
         public void DurationParseDays()
         {
             var duration = Duration.Parse("P1D");
-            Assert.Equal(0, duration.Months);
-            Assert.Equal(1, duration.Days);
-            Assert.Equal(0, duration.Nanos);
+            Assert.AreEqual(0, duration.Months);
+            Assert.AreEqual(1, duration.Days);
+            Assert.AreEqual(0, duration.Nanos);
         }
 
-        [Fact]
+        [Test]
         public void DurationParseWeeks()
         {
             var duration = Duration.Parse("P7W");
-            Assert.Equal(0, duration.Months);
-            Assert.Equal(49, duration.Days);
-            Assert.Equal(0, duration.Nanos);
+            Assert.AreEqual(0, duration.Months);
+            Assert.AreEqual(49, duration.Days);
+            Assert.AreEqual(0, duration.Nanos);
         }
 
-        [Fact]
+        [Test]
         public void DurationParseHours()
         {
             var duration = Duration.Parse("P0DT1H");
-            Assert.Equal(0, duration.Months);
-            Assert.Equal(0, duration.Days);
-            Assert.Equal(3_600_000_000_000L, duration.Nanos);
+            Assert.AreEqual(0, duration.Months);
+            Assert.AreEqual(0, duration.Days);
+            Assert.AreEqual(3_600_000_000_000L, duration.Nanos);
         }
 
-        [Fact]
+        [Test]
         public void DurationParseMinutes()
         {
             var duration = Duration.Parse("P0DT1M");
-            Assert.Equal(0, duration.Months);
-            Assert.Equal(0, duration.Days);
-            Assert.Equal(60_000_000_000L, duration.Nanos);
+            Assert.AreEqual(0, duration.Months);
+            Assert.AreEqual(0, duration.Days);
+            Assert.AreEqual(60_000_000_000L, duration.Nanos);
         }
 
-        [Fact]
+        [Test]
         public void DurationParseSeconds()
         {
             var duration = Duration.Parse("P0DT1S");
-            Assert.Equal(0, duration.Months);
-            Assert.Equal(0, duration.Days);
-            Assert.Equal(1_000_000_000L, duration.Nanos);
+            Assert.AreEqual(0, duration.Months);
+            Assert.AreEqual(0, duration.Days);
+            Assert.AreEqual(1_000_000_000L, duration.Nanos);
         }
 
-        [Fact]
+        [Test]
         public void DurationParseFractionalSeconds()
         {
             var duration = Duration.Parse("P0DT0.000000001S");
-            Assert.Equal(0, duration.Months);
-            Assert.Equal(0, duration.Days);
-            Assert.Equal(1L, duration.Nanos);
+            Assert.AreEqual(0, duration.Months);
+            Assert.AreEqual(0, duration.Days);
+            Assert.AreEqual(1L, duration.Nanos);
         }
 
-        [Fact]
+        [Test]
         public void DurationParseFractionalSeconds100Nanos()
         {
             var duration = Duration.Parse("P0DT0.0000001S");
-            Assert.Equal(0, duration.Months);
-            Assert.Equal(0, duration.Days);
-            Assert.Equal(100L, duration.Nanos);
+            Assert.AreEqual(0, duration.Months);
+            Assert.AreEqual(0, duration.Days);
+            Assert.AreEqual(100L, duration.Nanos);
         }
 
-        [Fact]
+        [Test]
         public void DurationParseZero()
         {
             var duration = Duration.Parse("P0DT0S");
-            Assert.Equal(0, duration.Months);
-            Assert.Equal(0, duration.Days);
-            Assert.Equal(0, duration.Nanos);
+            Assert.AreEqual(0, duration.Months);
+            Assert.AreEqual(0, duration.Days);
+            Assert.AreEqual(0, duration.Nanos);
         }
 
-        [Fact]
+        [Test]
         public void DurationParseComplex()
         {
             var duration = Duration.Parse("P1Y10M7DT15H44M5.00394892S");
-            Assert.Equal(22, duration.Months); // 1*12 + 10
-            Assert.Equal(7, duration.Days);
+            Assert.AreEqual(22, duration.Months); // 1*12 + 10
+            Assert.AreEqual(7, duration.Days);
             // 15H * 3600 * 10^9 + 44M * 60 * 10^9 + 5S * 10^9 + 3948920 nanos
             long expectedNanos = 15L * 3600 * 1_000_000_000 + 44L * 60 * 1_000_000_000 + 5L * 1_000_000_000 + 3_948_920;
-            Assert.Equal(expectedNanos, duration.Nanos);
+            Assert.AreEqual(expectedNanos, duration.Nanos);
         }
 
-        [Fact]
+        [Test]
         public void DurationParseMaxComplex()
         {
             var duration = Duration.Parse("P999Y12M31DT24H59M59.999999999S");
-            Assert.Equal(12000, duration.Months); // 999*12 + 12
-            Assert.Equal(31, duration.Days);
+            Assert.AreEqual(12000, duration.Months); // 999*12 + 12
+            Assert.AreEqual(31, duration.Days);
             long expectedNanos = 24L * 3600 * 1_000_000_000 + 59L * 60 * 1_000_000_000 + 59L * 1_000_000_000 + 999_999_999;
-            Assert.Equal(expectedNanos, duration.Nanos);
+            Assert.AreEqual(expectedNanos, duration.Nanos);
         }
 
-        [Fact]
+        [Test]
         public void DurationEquality()
         {
-            Assert.Equal(Duration.Parse("P1Y0M0DT0H0M0S"), Duration.Parse("P1Y"));
-            Assert.Equal(Duration.Parse("P0Y12M0DT0H0M0S"), Duration.Parse("P1Y"));
-            Assert.NotEqual(Duration.Parse("P0Y1M0DT0H0M0S"), Duration.Parse("P1Y"));
-            Assert.Equal(Duration.Parse("P0Y0M49DT0H0M0S"), Duration.Parse("P7W"));
+            Assert.AreEqual(Duration.Parse("P1Y0M0DT0H0M0S"), Duration.Parse("P1Y"));
+            Assert.AreEqual(Duration.Parse("P0Y12M0DT0H0M0S"), Duration.Parse("P1Y"));
+            Assert.AreNotEqual(Duration.Parse("P0Y1M0DT0H0M0S"), Duration.Parse("P1Y"));
+            Assert.AreEqual(Duration.Parse("P0Y0M49DT0H0M0S"), Duration.Parse("P7W"));
         }
 
-        [Fact]
+        [Test]
         public void DurationToString()
         {
             var duration = new Duration(12, 0, 0);
-            Assert.Equal("P1Y", duration.ToString());
+            Assert.AreEqual("P1Y", duration.ToString());
 
             var duration2 = new Duration(14, 0, 0); // 1 year 2 months
-            Assert.Equal("P1Y2M", duration2.ToString());
+            Assert.AreEqual("P1Y2M", duration2.ToString());
 
             var duration3 = new Duration(0, 7, 0);
-            Assert.Equal("P7D", duration3.ToString());
+            Assert.AreEqual("P7D", duration3.ToString());
 
             var duration4 = new Duration(0, 0, 3661_000_000_000L); // 1h 1m 1s
-            Assert.Equal("PT1H1M1S", duration4.ToString());
+            Assert.AreEqual("PT1H1M1S", duration4.ToString());
         }
 
         // ============================================================================
         // Datetime unit tests (no database required)
         // ============================================================================
 
-        [Fact]
+        [Test]
         public void DatetimeParse()
         {
             var datetime = Datetime.Parse("2024-10-09T13:07:38.123456789");
-            Assert.Equal(2024, datetime.DateTime.Year);
-            Assert.Equal(10, datetime.DateTime.Month);
-            Assert.Equal(9, datetime.DateTime.Day);
-            Assert.Equal(13, datetime.DateTime.Hour);
-            Assert.Equal(7, datetime.DateTime.Minute);
-            Assert.Equal(38, datetime.DateTime.Second);
-            Assert.Equal(123456789u, datetime.SubsecNanos);
+            Assert.AreEqual(2024, datetime.DateTime.Year);
+            Assert.AreEqual(10, datetime.DateTime.Month);
+            Assert.AreEqual(9, datetime.DateTime.Day);
+            Assert.AreEqual(13, datetime.DateTime.Hour);
+            Assert.AreEqual(7, datetime.DateTime.Minute);
+            Assert.AreEqual(38, datetime.DateTime.Second);
+            Assert.AreEqual(123456789u, datetime.SubsecNanos);
         }
 
-        [Fact]
+        [Test]
         public void DatetimeParseNoFractional()
         {
             var datetime = Datetime.Parse("1970-01-01T00:00:00");
-            Assert.Equal(1970, datetime.DateTime.Year);
-            Assert.Equal(1, datetime.DateTime.Month);
-            Assert.Equal(1, datetime.DateTime.Day);
-            Assert.Equal(0, datetime.DateTime.Hour);
-            Assert.Equal(0, datetime.DateTime.Minute);
-            Assert.Equal(0, datetime.DateTime.Second);
-            Assert.Equal(0u, datetime.SubsecNanos);
-            Assert.Equal(0, datetime.Seconds);
+            Assert.AreEqual(1970, datetime.DateTime.Year);
+            Assert.AreEqual(1, datetime.DateTime.Month);
+            Assert.AreEqual(1, datetime.DateTime.Day);
+            Assert.AreEqual(0, datetime.DateTime.Hour);
+            Assert.AreEqual(0, datetime.DateTime.Minute);
+            Assert.AreEqual(0, datetime.DateTime.Second);
+            Assert.AreEqual(0u, datetime.SubsecNanos);
+            Assert.AreEqual(0, datetime.Seconds);
         }
 
-        [Fact]
+        [Test]
         public void DatetimeEquality()
         {
             var dt1 = Datetime.Parse("2024-10-09T13:07:38.123456789");
             var dt2 = Datetime.Parse("2024-10-09T13:07:38.123456789");
             var dt3 = Datetime.Parse("2024-10-09T13:07:38.123456780");
-            Assert.Equal(dt1, dt2);
-            Assert.NotEqual(dt1, dt3);
+            Assert.AreEqual(dt1, dt2);
+            Assert.AreNotEqual(dt1, dt3);
         }
 
-        [Fact]
+        [Test]
         public void DatetimeToString()
         {
             var datetime = new Datetime(1728479258, 123456789);
-            Assert.Contains("123456789", datetime.ToString());
+            Assert.That(datetime.ToString(), Does.Contain("123456789"));
         }
 
         // ============================================================================
         // DatetimeTZ unit tests (no database required)
         // ============================================================================
 
-        [Fact]
+        [Test]
         public void DatetimeTZParseIana()
         {
             var datetimeTz = DatetimeTZ.Parse("2024-10-09T13:07:38.123456789 Europe/London");
-            Assert.Equal(2024, datetimeTz.DateTimeOffset.Year);
-            Assert.Equal(10, datetimeTz.DateTimeOffset.Month);
-            Assert.Equal(9, datetimeTz.DateTimeOffset.Day);
-            Assert.Equal(13, datetimeTz.DateTimeOffset.Hour);
-            Assert.Equal(7, datetimeTz.DateTimeOffset.Minute);
-            Assert.Equal(38, datetimeTz.DateTimeOffset.Second);
-            Assert.Equal(123456789u, datetimeTz.SubsecNanos);
-            Assert.Equal("Europe/London", datetimeTz.ZoneName);
-            Assert.False(datetimeTz.IsFixedOffset);
+            Assert.AreEqual(2024, datetimeTz.DateTimeOffset.Year);
+            Assert.AreEqual(10, datetimeTz.DateTimeOffset.Month);
+            Assert.AreEqual(9, datetimeTz.DateTimeOffset.Day);
+            Assert.AreEqual(13, datetimeTz.DateTimeOffset.Hour);
+            Assert.AreEqual(7, datetimeTz.DateTimeOffset.Minute);
+            Assert.AreEqual(38, datetimeTz.DateTimeOffset.Second);
+            Assert.AreEqual(123456789u, datetimeTz.SubsecNanos);
+            Assert.AreEqual("Europe/London", datetimeTz.ZoneName);
+            Assert.IsFalse(datetimeTz.IsFixedOffset);
         }
 
-        [Fact]
+        [Test]
         public void DatetimeTZParseFixedOffset()
         {
             var datetimeTz = DatetimeTZ.Parse("2024-09-20T16:40:05.028129323+0545");
-            Assert.Equal(2024, datetimeTz.DateTimeOffset.Year);
-            Assert.Equal(9, datetimeTz.DateTimeOffset.Month);
-            Assert.Equal(20, datetimeTz.DateTimeOffset.Day);
-            Assert.Equal(16, datetimeTz.DateTimeOffset.Hour);
-            Assert.Equal(40, datetimeTz.DateTimeOffset.Minute);
-            Assert.Equal(5, datetimeTz.DateTimeOffset.Second);
-            Assert.Equal(28129323u, datetimeTz.SubsecNanos);
-            Assert.Null(datetimeTz.ZoneName);
-            Assert.True(datetimeTz.IsFixedOffset);
-            Assert.Equal(TimeSpan.FromHours(5) + TimeSpan.FromMinutes(45), datetimeTz.DateTimeOffset.Offset);
+            Assert.AreEqual(2024, datetimeTz.DateTimeOffset.Year);
+            Assert.AreEqual(9, datetimeTz.DateTimeOffset.Month);
+            Assert.AreEqual(20, datetimeTz.DateTimeOffset.Day);
+            Assert.AreEqual(16, datetimeTz.DateTimeOffset.Hour);
+            Assert.AreEqual(40, datetimeTz.DateTimeOffset.Minute);
+            Assert.AreEqual(5, datetimeTz.DateTimeOffset.Second);
+            Assert.AreEqual(28129323u, datetimeTz.SubsecNanos);
+            Assert.IsNull(datetimeTz.ZoneName);
+            Assert.IsTrue(datetimeTz.IsFixedOffset);
+            Assert.AreEqual(TimeSpan.FromHours(5) + TimeSpan.FromMinutes(45), datetimeTz.DateTimeOffset.Offset);
         }
 
-        [Fact]
+        [Test]
         public void DatetimeTZEquality()
         {
             var dtz1 = DatetimeTZ.Parse("2024-10-09T13:07:38.123456789 Europe/London");
             var dtz2 = DatetimeTZ.Parse("2024-10-09T13:07:38.123456789 Europe/London");
             var dtz3 = DatetimeTZ.Parse("2024-10-09T13:07:38.123456780 Europe/London");
-            Assert.Equal(dtz1, dtz2);
-            Assert.NotEqual(dtz1, dtz3);
+            Assert.AreEqual(dtz1, dtz2);
+            Assert.AreNotEqual(dtz1, dtz3);
         }
 
         // ============================================================================
         // Integration tests (require running TypeDB server)
         // ============================================================================
 
-        [Fact]
+        [Test]
         public void TestAllValueTypes()
         {
             using var driver = TypeDB.Driver(ServerAddress, new Credentials("admin", "password"), new DriverOptions(false, null));
@@ -341,7 +344,7 @@ namespace TypeDB.Driver.Test.Integration
                         ? $"define attribute {attribute} @abstract;"
                         : $"define attribute {attribute}, value {valueType}; entity person owns {attribute};";
                     var answer = tx.Query(query);
-                    Assert.True(answer.IsOk);
+                    Assert.IsTrue(answer.IsOk);
                 }
                 tx.Commit();
             }
@@ -350,20 +353,20 @@ namespace TypeDB.Driver.Test.Integration
             using (var tx = driver.Transaction(DatabaseName, TransactionType.Read))
             {
                 var answer = tx.Query("match attribute $a;");
-                Assert.True(answer.IsConceptRows);
+                Assert.IsTrue(answer.IsConceptRows);
 
                 var rows = answer.AsConceptRows().ToList();
-                Assert.Equal(attributeValueTypes.Count, rows.Count);
+                Assert.AreEqual(attributeValueTypes.Count, rows.Count);
 
                 foreach (var row in rows)
                 {
                     var concept = row.Get("a");
-                    Assert.NotNull(concept);
-                    Assert.True(concept!.IsAttributeType());
+                    Assert.IsNotNull(concept);
+                    Assert.IsTrue(concept!.IsAttributeType());
                     var label = concept.GetLabel();
                     var expectedValueType = attributeValueTypes[label];
                     var actualValueType = concept.TryGetValueType() ?? "none";
-                    Assert.Equal(expectedValueType, actualValueType);
+                    Assert.AreEqual(expectedValueType, actualValueType);
                 }
             }
 
@@ -374,15 +377,15 @@ namespace TypeDB.Driver.Test.Integration
                 {
                     var query = $"insert $a isa person, has {attribute} {value};";
                     var answer = tx.Query(query);
-                    Assert.True(answer.IsConceptRows);
+                    Assert.IsTrue(answer.IsConceptRows);
 
                     var rows = answer.AsConceptRows().ToList();
-                    Assert.Single(rows);
+                    Assert.AreEqual(1, rows.Count);
 
                     var row = rows[0];
                     var columnNames = row.ColumnNames.ToList();
-                    Assert.Single(columnNames);
-                    Assert.True(row.GetIndex(0)?.IsEntity());
+                    Assert.AreEqual(1, columnNames.Count);
+                    Assert.IsTrue(row.GetIndex(0)?.IsEntity());
                 }
                 tx.Commit();
             }
@@ -391,78 +394,78 @@ namespace TypeDB.Driver.Test.Integration
             using (var tx = driver.Transaction(DatabaseName, TransactionType.Read))
             {
                 var answer = tx.Query("match attribute $t; $a isa! $t;");
-                Assert.True(answer.IsConceptRows);
+                Assert.IsTrue(answer.IsConceptRows);
 
                 var rows = answer.AsConceptRows().ToList();
-                Assert.Equal(attributeValues.Count, rows.Count);
+                Assert.AreEqual(attributeValues.Count, rows.Count);
 
                 int checkedCount = 0;
                 foreach (var row in rows)
                 {
                     var concept = row.Get("a");
-                    Assert.NotNull(concept);
-                    Assert.True(concept!.IsAttribute());
+                    Assert.IsNotNull(concept);
+                    Assert.IsTrue(concept!.IsAttribute());
                     var attributeName = concept.GetLabel();
                     var valueType = concept.TryGetValueType();
                     var expectedType = attributeValueTypes[attributeName];
-                    Assert.Equal(expectedType, valueType);
+                    Assert.AreEqual(expectedType, valueType);
 
                     var expectedStr = attributeValues[attributeName];
 
                     if (concept.IsInteger())
                     {
-                        Assert.Equal(long.Parse(expectedStr), concept.TryGetInteger());
+                        Assert.AreEqual(long.Parse(expectedStr), concept.TryGetInteger());
                         checkedCount++;
                     }
                     else if (concept.IsString())
                     {
-                        Assert.Equal(expectedStr.Trim('"'), concept.TryGetString());
+                        Assert.AreEqual(expectedStr.Trim('"'), concept.TryGetString());
                         checkedCount++;
                     }
                     else if (concept.IsBoolean())
                     {
-                        Assert.Equal(bool.Parse(expectedStr), concept.TryGetBoolean());
+                        Assert.AreEqual(bool.Parse(expectedStr), concept.TryGetBoolean());
                         checkedCount++;
                     }
                     else if (concept.IsDouble())
                     {
-                        Assert.True(Math.Abs(double.Parse(expectedStr) - concept.TryGetDouble()!.Value) < double.Epsilon);
+                        Assert.IsTrue(Math.Abs(double.Parse(expectedStr) - concept.TryGetDouble()!.Value) < double.Epsilon);
                         checkedCount++;
                     }
                     else if (concept.IsDecimal())
                     {
-                        Assert.NotNull(concept.TryGetDecimal());
+                        Assert.IsNotNull(concept.TryGetDecimal());
                         checkedCount++;
                     }
                     else if (concept.IsDate())
                     {
                         var expectedDate = DateOnly.Parse(expectedStr);
-                        Assert.Equal(expectedDate, concept.TryGetDate());
+                        Assert.AreEqual(expectedDate, concept.TryGetDate());
                         checkedCount++;
                     }
                     else if (concept.IsDatetime())
                     {
-                        Assert.NotNull(concept.TryGetDatetime());
+                        Assert.IsNotNull(concept.TryGetDatetime());
                         checkedCount++;
                     }
                     else if (concept.IsDatetimeTZ())
                     {
-                        Assert.NotNull(concept.TryGetDatetimeTZ());
+                        Assert.IsNotNull(concept.TryGetDatetimeTZ());
                         checkedCount++;
                     }
                     else if (concept.IsDuration())
                     {
                         var expected = Duration.Parse(expectedStr);
-                        Assert.Equal(expected, concept.TryGetDuration());
+                        Assert.AreEqual(expected, concept.TryGetDuration());
                         checkedCount++;
                     }
                 }
 
-                Assert.Equal(attributeValues.Count, checkedCount);
+                Assert.AreEqual(attributeValues.Count, checkedCount);
             }
         }
 
-        [Fact]
+        [Test]
         public void TestDatetimeNaive()
         {
             using var driver = TypeDB.Driver(ServerAddress, new Credentials("admin", "password"), new DriverOptions(false, null));
@@ -483,14 +486,14 @@ namespace TypeDB.Driver.Test.Integration
                 var concept = rows[0].Get("dt");
                 var datetime = concept?.TryGetDatetime();
 
-                Assert.NotNull(datetime);
-                Assert.Equal(2024, datetime!.DateTime.Year);
-                Assert.Equal(10, datetime.DateTime.Month);
-                Assert.Equal(9, datetime.DateTime.Day);
-                Assert.Equal(13, datetime.DateTime.Hour);
-                Assert.Equal(7, datetime.DateTime.Minute);
-                Assert.Equal(38, datetime.DateTime.Second);
-                Assert.Equal(123456789u, datetime.SubsecNanos);
+                Assert.IsNotNull(datetime);
+                Assert.AreEqual(2024, datetime!.DateTime.Year);
+                Assert.AreEqual(10, datetime.DateTime.Month);
+                Assert.AreEqual(9, datetime.DateTime.Day);
+                Assert.AreEqual(13, datetime.DateTime.Hour);
+                Assert.AreEqual(7, datetime.DateTime.Minute);
+                Assert.AreEqual(38, datetime.DateTime.Second);
+                Assert.AreEqual(123456789u, datetime.SubsecNanos);
             }
 
             // Test: Unix epoch 1970-01-01T00:00:00
@@ -501,15 +504,15 @@ namespace TypeDB.Driver.Test.Integration
                 var concept = rows[0].Get("dt");
                 var datetime = concept?.TryGetDatetime();
 
-                Assert.NotNull(datetime);
-                Assert.Equal(1970, datetime!.DateTime.Year);
-                Assert.Equal(1, datetime.DateTime.Month);
-                Assert.Equal(1, datetime.DateTime.Day);
-                Assert.Equal(0, datetime.DateTime.Hour);
-                Assert.Equal(0, datetime.DateTime.Minute);
-                Assert.Equal(0, datetime.DateTime.Second);
-                Assert.Equal(0u, datetime.SubsecNanos);
-                Assert.Equal(0, datetime.Seconds);
+                Assert.IsNotNull(datetime);
+                Assert.AreEqual(1970, datetime!.DateTime.Year);
+                Assert.AreEqual(1, datetime.DateTime.Month);
+                Assert.AreEqual(1, datetime.DateTime.Day);
+                Assert.AreEqual(0, datetime.DateTime.Hour);
+                Assert.AreEqual(0, datetime.DateTime.Minute);
+                Assert.AreEqual(0, datetime.DateTime.Second);
+                Assert.AreEqual(0u, datetime.SubsecNanos);
+                Assert.AreEqual(0, datetime.Seconds);
             }
 
             // Test: max value 9999-12-31T23:59:59.999999999
@@ -520,18 +523,18 @@ namespace TypeDB.Driver.Test.Integration
                 var concept = rows[0].Get("dt");
                 var datetime = concept?.TryGetDatetime();
 
-                Assert.NotNull(datetime);
-                Assert.Equal(9999, datetime!.DateTime.Year);
-                Assert.Equal(12, datetime.DateTime.Month);
-                Assert.Equal(31, datetime.DateTime.Day);
-                Assert.Equal(23, datetime.DateTime.Hour);
-                Assert.Equal(59, datetime.DateTime.Minute);
-                Assert.Equal(59, datetime.DateTime.Second);
-                Assert.Equal(999999999u, datetime.SubsecNanos);
+                Assert.IsNotNull(datetime);
+                Assert.AreEqual(9999, datetime!.DateTime.Year);
+                Assert.AreEqual(12, datetime.DateTime.Month);
+                Assert.AreEqual(31, datetime.DateTime.Day);
+                Assert.AreEqual(23, datetime.DateTime.Hour);
+                Assert.AreEqual(59, datetime.DateTime.Minute);
+                Assert.AreEqual(59, datetime.DateTime.Second);
+                Assert.AreEqual(999999999u, datetime.SubsecNanos);
             }
         }
 
-        [Fact]
+        [Test]
         public void TestDatetimeTZIana()
         {
             using var driver = TypeDB.Driver(ServerAddress, new Credentials("admin", "password"), new DriverOptions(false, null));
@@ -552,19 +555,19 @@ namespace TypeDB.Driver.Test.Integration
                 var concept = rows[0].Get("dtz");
                 var datetimeTz = concept?.TryGetDatetimeTZ();
 
-                Assert.NotNull(datetimeTz);
-                Assert.Equal(2024, datetimeTz!.DateTimeOffset.Year);
-                Assert.Equal(10, datetimeTz.DateTimeOffset.Month);
-                Assert.Equal(9, datetimeTz.DateTimeOffset.Day);
-                Assert.Equal(13, datetimeTz.DateTimeOffset.Hour);
-                Assert.Equal(7, datetimeTz.DateTimeOffset.Minute);
-                Assert.Equal(38, datetimeTz.DateTimeOffset.Second);
-                Assert.Equal(123456789u, datetimeTz.SubsecNanos);
-                Assert.False(datetimeTz.IsFixedOffset);
+                Assert.IsNotNull(datetimeTz);
+                Assert.AreEqual(2024, datetimeTz!.DateTimeOffset.Year);
+                Assert.AreEqual(10, datetimeTz.DateTimeOffset.Month);
+                Assert.AreEqual(9, datetimeTz.DateTimeOffset.Day);
+                Assert.AreEqual(13, datetimeTz.DateTimeOffset.Hour);
+                Assert.AreEqual(7, datetimeTz.DateTimeOffset.Minute);
+                Assert.AreEqual(38, datetimeTz.DateTimeOffset.Second);
+                Assert.AreEqual(123456789u, datetimeTz.SubsecNanos);
+                Assert.IsFalse(datetimeTz.IsFixedOffset);
             }
         }
 
-        [Fact]
+        [Test]
         public void TestDatetimeTZFixedOffset()
         {
             using var driver = TypeDB.Driver(ServerAddress, new Credentials("admin", "password"), new DriverOptions(false, null));
@@ -585,20 +588,20 @@ namespace TypeDB.Driver.Test.Integration
                 var concept = rows[0].Get("dtz");
                 var datetimeTz = concept?.TryGetDatetimeTZ();
 
-                Assert.NotNull(datetimeTz);
-                Assert.Equal(2024, datetimeTz!.DateTimeOffset.Year);
-                Assert.Equal(9, datetimeTz.DateTimeOffset.Month);
-                Assert.Equal(20, datetimeTz.DateTimeOffset.Day);
-                Assert.Equal(16, datetimeTz.DateTimeOffset.Hour);
-                Assert.Equal(40, datetimeTz.DateTimeOffset.Minute);
-                Assert.Equal(5, datetimeTz.DateTimeOffset.Second);
-                Assert.Equal(28129323u, datetimeTz.SubsecNanos);
-                Assert.True(datetimeTz.IsFixedOffset);
-                Assert.Equal(TimeSpan.FromHours(5) + TimeSpan.FromMinutes(45), datetimeTz.DateTimeOffset.Offset);
+                Assert.IsNotNull(datetimeTz);
+                Assert.AreEqual(2024, datetimeTz!.DateTimeOffset.Year);
+                Assert.AreEqual(9, datetimeTz.DateTimeOffset.Month);
+                Assert.AreEqual(20, datetimeTz.DateTimeOffset.Day);
+                Assert.AreEqual(16, datetimeTz.DateTimeOffset.Hour);
+                Assert.AreEqual(40, datetimeTz.DateTimeOffset.Minute);
+                Assert.AreEqual(5, datetimeTz.DateTimeOffset.Second);
+                Assert.AreEqual(28129323u, datetimeTz.SubsecNanos);
+                Assert.IsTrue(datetimeTz.IsFixedOffset);
+                Assert.AreEqual(TimeSpan.FromHours(5) + TimeSpan.FromMinutes(45), datetimeTz.DateTimeOffset.Offset);
             }
         }
 
-        [Fact]
+        [Test]
         public void TestDurationViaDatabase()
         {
             using var driver = TypeDB.Driver(ServerAddress, new Credentials("admin", "password"), new DriverOptions(false, null));
@@ -619,10 +622,10 @@ namespace TypeDB.Driver.Test.Integration
                 var concept = rows[0].Get("d");
                 var duration = concept?.TryGetDuration();
 
-                Assert.NotNull(duration);
-                Assert.Equal(12, duration!.Months);
-                Assert.Equal(0, duration.Days);
-                Assert.Equal(0, duration.Nanos);
+                Assert.IsNotNull(duration);
+                Assert.AreEqual(12, duration!.Months);
+                Assert.AreEqual(0, duration.Days);
+                Assert.AreEqual(0, duration.Nanos);
             }
 
             // Test: P1M
@@ -633,10 +636,10 @@ namespace TypeDB.Driver.Test.Integration
                 var concept = rows[0].Get("d");
                 var duration = concept?.TryGetDuration();
 
-                Assert.NotNull(duration);
-                Assert.Equal(1, duration!.Months);
-                Assert.Equal(0, duration.Days);
-                Assert.Equal(0, duration.Nanos);
+                Assert.IsNotNull(duration);
+                Assert.AreEqual(1, duration!.Months);
+                Assert.AreEqual(0, duration.Days);
+                Assert.AreEqual(0, duration.Nanos);
             }
 
             // Test: P1D
@@ -647,10 +650,10 @@ namespace TypeDB.Driver.Test.Integration
                 var concept = rows[0].Get("d");
                 var duration = concept?.TryGetDuration();
 
-                Assert.NotNull(duration);
-                Assert.Equal(0, duration!.Months);
-                Assert.Equal(1, duration.Days);
-                Assert.Equal(0, duration.Nanos);
+                Assert.IsNotNull(duration);
+                Assert.AreEqual(0, duration!.Months);
+                Assert.AreEqual(1, duration.Days);
+                Assert.AreEqual(0, duration.Nanos);
             }
 
             // Test: P0DT1H
@@ -661,10 +664,10 @@ namespace TypeDB.Driver.Test.Integration
                 var concept = rows[0].Get("d");
                 var duration = concept?.TryGetDuration();
 
-                Assert.NotNull(duration);
-                Assert.Equal(0, duration!.Months);
-                Assert.Equal(0, duration.Days);
-                Assert.Equal(3_600_000_000_000L, duration.Nanos);
+                Assert.IsNotNull(duration);
+                Assert.AreEqual(0, duration!.Months);
+                Assert.AreEqual(0, duration.Days);
+                Assert.AreEqual(3_600_000_000_000L, duration.Nanos);
             }
 
             // Test: P0DT1S
@@ -675,10 +678,10 @@ namespace TypeDB.Driver.Test.Integration
                 var concept = rows[0].Get("d");
                 var duration = concept?.TryGetDuration();
 
-                Assert.NotNull(duration);
-                Assert.Equal(0, duration!.Months);
-                Assert.Equal(0, duration.Days);
-                Assert.Equal(1_000_000_000L, duration.Nanos);
+                Assert.IsNotNull(duration);
+                Assert.AreEqual(0, duration!.Months);
+                Assert.AreEqual(0, duration.Days);
+                Assert.AreEqual(1_000_000_000L, duration.Nanos);
             }
 
             // Test: P0DT0.000000001S (1 nanosecond)
@@ -689,10 +692,10 @@ namespace TypeDB.Driver.Test.Integration
                 var concept = rows[0].Get("d");
                 var duration = concept?.TryGetDuration();
 
-                Assert.NotNull(duration);
-                Assert.Equal(0, duration!.Months);
-                Assert.Equal(0, duration.Days);
-                Assert.Equal(1L, duration.Nanos);
+                Assert.IsNotNull(duration);
+                Assert.AreEqual(0, duration!.Months);
+                Assert.AreEqual(0, duration.Days);
+                Assert.AreEqual(1L, duration.Nanos);
             }
 
             // Test: P7W (weeks)
@@ -703,10 +706,10 @@ namespace TypeDB.Driver.Test.Integration
                 var concept = rows[0].Get("d");
                 var duration = concept?.TryGetDuration();
 
-                Assert.NotNull(duration);
-                Assert.Equal(0, duration!.Months);
-                Assert.Equal(49, duration.Days);
-                Assert.Equal(0, duration.Nanos);
+                Assert.IsNotNull(duration);
+                Assert.AreEqual(0, duration!.Months);
+                Assert.AreEqual(49, duration.Days);
+                Assert.AreEqual(0, duration.Nanos);
             }
 
             // Test: P999Y12M31DT24H59M59.999999999S (complex)
@@ -717,10 +720,10 @@ namespace TypeDB.Driver.Test.Integration
                 var concept = rows[0].Get("d");
                 var duration = concept?.TryGetDuration();
 
-                Assert.NotNull(duration);
-                Assert.Equal(12000, duration!.Months);
-                Assert.Equal(31, duration.Days);
-                Assert.Equal(89999_999_999_999L, duration.Nanos);
+                Assert.IsNotNull(duration);
+                Assert.AreEqual(12000, duration!.Months);
+                Assert.AreEqual(31, duration.Days);
+                Assert.AreEqual(89999_999_999_999L, duration.Nanos);
             }
         }
     }

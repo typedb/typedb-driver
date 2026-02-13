@@ -16,10 +16,10 @@
 # under the License.
 
 load("//csharp:build_opts.bzl", "nullable_context", "target_frameworks", "targeting_packs")
-load("//csharp/Test:rules.bzl", "csharp_xunit_integration_test")
+load("//csharp/Test:rules.bzl", "csharp_integration_test")
 load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
-csharp_xunit_integration_test(
+csharp_integration_test(
     name = "test",
     srcs = ["DataTest.cs"],
     deps = [
@@ -32,7 +32,7 @@ csharp_xunit_integration_test(
     targeting_packs = targeting_packs,
 )
 
-csharp_xunit_integration_test(
+csharp_integration_test(
     name = "test-values",
     srcs = ["ValuesTest.cs"],
     deps = [

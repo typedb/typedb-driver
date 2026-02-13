@@ -17,14 +17,14 @@
 
 load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("//csharp:build_opts.bzl", "target_frameworks", "targeting_packs")
-load("//csharp/Test:rules.bzl", "csharp_xunit_integration_test")
+load("//csharp/Test:rules.bzl", "csharp_integration_test")
 
 exports_files(
     ["ExampleTest.cs"],
     visibility = ["//csharp:__subpackages__"],
 )
 
-csharp_xunit_integration_test(
+csharp_integration_test(
     name = "test-example",
     srcs = ["ExampleTest.cs"],
     deps = [
