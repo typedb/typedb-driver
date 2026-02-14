@@ -37,6 +37,18 @@ csharp_integration_test(
     targeting_packs = targeting_packs,
 )
 
+csharp_integration_test(
+    name = "test-onclose-callback",
+    srcs = ["OnCloseCallbackTest.cs"],
+    deps = [
+        "//csharp:driver-csharp",
+        "//csharp/Api:api",
+        "//csharp/Common:common",
+    ],
+    target_frameworks = target_frameworks,
+    targeting_packs = targeting_packs,
+)
+
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*"]),
