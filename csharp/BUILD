@@ -142,7 +142,7 @@ test_to_example(
     name = "example",
     input = "//csharp/Test/Integration:ExampleTest.cs",
     output = "csharp/TypeDBExample.cs",
-    removed_lines = ["Assert", "Fail(", "Xunit"],
+    removed_lines = ["Assert", "Fail(", "NUnit", "[TestFixture]", "[SetUp]"],
     changed_words = {
         "TypeDB.Driver.Test.Integration": "TypeDB.Driver.Examples",
         "ExampleTest": "TypeDBExample",
