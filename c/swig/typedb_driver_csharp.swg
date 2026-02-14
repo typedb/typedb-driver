@@ -182,18 +182,57 @@
 %noexception transaction_options_has_schema_lock_acquire_timeout_millis;
 %noexception transaction_options_set_transaction_timeout_millis;
 %noexception transaction_options_set_schema_lock_acquire_timeout_millis;
+%noexception transaction_options_get_parallel;
+%noexception transaction_options_set_parallel;
+%noexception transaction_options_has_parallel;
 
 /* Query answer getters do not throw */
 %noexception query_answer_get_query_type;
 %noexception query_answer_is_ok;
 %noexception query_answer_is_concept_row_stream;
 %noexception query_answer_is_concept_document_stream;
+%noexception query_answer_into_rows;
+%noexception query_answer_into_documents;
 
 /* Concept row getters do not throw */
 %noexception concept_row_get_query_type;
 %noexception concept_row_get_query_structure;
+%noexception concept_row_get_column_names;
+%noexception concept_row_get_concepts;
+%noexception concept_row_involved_conjunctions;
 %noexception concept_row_equals;
 %noexception concept_row_to_string;
+
+/* Concept type checks do not throw */
+%noexception concept_is_entity;
+%noexception concept_is_relation;
+%noexception concept_is_attribute;
+%noexception concept_is_value;
+%noexception concept_is_entity_type;
+%noexception concept_is_relation_type;
+%noexception concept_is_attribute_type;
+%noexception concept_is_role_type;
+
+/* Concept casts do not throw */
+%noexception concept_as_entity;
+%noexception concept_as_relation;
+%noexception concept_as_attribute;
+%noexception concept_as_value;
+%noexception concept_as_entity_type;
+%noexception concept_as_relation_type;
+%noexception concept_as_attribute_type;
+
+/* Concept value type checks do not throw */
+%noexception concept_is_boolean;
+%noexception concept_is_integer;
+%noexception concept_is_double;
+%noexception concept_is_decimal;
+%noexception concept_is_string;
+%noexception concept_is_date;
+%noexception concept_is_datetime;
+%noexception concept_is_datetime_tz;
+%noexception concept_is_duration;
+%noexception concept_is_struct;
 
 /* Concept value getters do not throw - call concept_is_X before concept_get_X */
 %noexception concept_get_boolean;
@@ -206,6 +245,37 @@
 %noexception concept_get_integer;
 %noexception concept_get_string;
 %noexception concept_get_struct;
+
+/* Concept metadata accessors do not throw */
+%noexception concept_get_label;
+%noexception concept_try_get_label;
+%noexception concept_try_get_iid;
+%noexception concept_try_get_value_type;
+%noexception concept_try_get_value;
+%noexception concept_to_string;
+%noexception concept_equals;
+
+/* Instance type getters do not throw */
+%noexception entity_get_type;
+%noexception relation_get_type;
+%noexception attribute_get_type;
+
+/* Struct field accessors do not throw */
+%noexception StringPair::_0;
+%noexception StringPair::_1;
+%noexception DatetimeAndTimeZone::datetime_in_nanos;
+%noexception DatetimeAndTimeZone::zone_name;
+%noexception DatetimeAndTimeZone::local_minus_utc_offset;
+%noexception DatetimeAndTimeZone::is_fixed_offset;
+%noexception DatetimeInNanos::seconds;
+%noexception DatetimeInNanos::subsec_nanos;
+%noexception StringAndOptValue::string;
+%noexception StringAndOptValue::value;
+%noexception Decimal::integer;
+%noexception Decimal::fractional;
+%noexception Duration::months;
+%noexception Duration::days;
+%noexception Duration::nanos;
 
 /* Analyze field accessors do not throw */
 %noexception analyzed_query_pipeline;
@@ -333,6 +403,7 @@
 %noexception ~Credentials;
 %noexception ~Database;
 %noexception ~DatabaseIterator;
+%noexception ~DriverOptions;
 %noexception ~Error;
 %noexception ~QueryAnswer;
 %noexception ~QueryOptions;
@@ -349,6 +420,17 @@
 %noexception ~UserIterator;
 %noexception ~ReplicaInfo;
 %noexception ~ReplicaInfoIterator;
+%noexception ~DatetimeAndTimeZone;
+%noexception ~DatetimeInNanos;
+%noexception ~Decimal;
+%noexception ~Duration;
+%noexception ~StringAndOptValue;
+%noexception ~Value;
+%noexception ~ValueType;
+%noexception ~BoolPromise;
+%noexception ~VoidPromise;
+%noexception ~StringPromise;
+%noexception ~AnalyzedQueryPromise;
 
 /* Analyze destructors do not throw */
 %noexception ~AnalyzedQuery;
