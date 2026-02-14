@@ -121,6 +121,11 @@ dir_mapping = {
     "VoidPromise.adoc": "answer",
     "Label.adoc": "schema",
 
+    # Value types
+    "Datetime.adoc": "value",
+    "DatetimeTZ.adoc": "value",
+    "Duration.adoc": "value",
+
     # Errors
     "TypeDBDriverException.adoc": "errors",
 }

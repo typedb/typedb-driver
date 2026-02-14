@@ -33,7 +33,7 @@ csharp_library(
 
 filegroup(
     name = "docs_source_files",
-    srcs = ["Label.cs", "Promise/Promise.cs", "Promise/VoidPromise.cs", "Exception/TypeDBDriverException.cs"],
+    srcs = ["Datetime.cs", "DatetimeTZ.cs", "Duration.cs", "Label.cs", "Promise/Promise.cs", "Promise/VoidPromise.cs", "Exception/TypeDBDriverException.cs"],
     visibility = ["//csharp:__pkg__"],
 )
 
