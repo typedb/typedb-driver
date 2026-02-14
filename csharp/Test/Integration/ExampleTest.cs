@@ -37,13 +37,11 @@ namespace TypeDB.Driver.Test.Integration
     public class ExampleTest
     {
         // EXAMPLE END MARKER
-        private const string ServerAddress = "127.0.0.1:1729";
-
         [SetUp]
         public void SetUp()
         {
             // Clean up any existing test database before each test
-            using var driver = TypeDB.Driver(ServerAddress, new Credentials("admin", "password"), new DriverOptions(false, null));
+            using var driver = TypeDB.Driver(TypeDB.DefaultAddress, new Credentials("admin", "password"), new DriverOptions(false, null));
             if (driver.Databases.Contains("typedb"))
             {
                 driver.Databases.Get("typedb").Delete();
@@ -55,7 +53,7 @@ namespace TypeDB.Driver.Test.Integration
         public void Example()
         {
             // Open a driver connection. Using statements can be used for automatic driver connection management
-            using (var driver = TypeDB.Driver(ServerAddress, new Credentials("admin", "password"), new DriverOptions(false, null)))
+            using (var driver = TypeDB.Driver(TypeDB.DefaultAddress, new Credentials("admin", "password"), new DriverOptions(false, null)))
             {
                 // Create a database
                 driver.Databases.Create("typedb");

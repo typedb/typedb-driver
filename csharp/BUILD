@@ -146,7 +146,6 @@ test_to_example(
     changed_words = {
         "TypeDB.Driver.Test.Integration": "TypeDB.Driver.Examples",
         "ExampleTest": "TypeDBExample",
-        "ServerAddress,": "TypeDB.DefaultAddress,",
     },
     header_comment_sign = "//",
 )
