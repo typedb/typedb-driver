@@ -92,14 +92,13 @@ commands:
           curl -OL "https://github.com/bazelbuild/bazelisk/releases/download/v1.17.0/bazelisk-linux-<<parameters.bazel-arch>>"
           mv "bazelisk-linux-<<parameters.bazel-arch>>" /usr/local/bin/bazel
           chmod a+x /usr/local/bin/bazel
-  
+
   install-bazel-brew:
     parameters:
       bazel-arch:
         type: string
     steps:
       - run: |
-          brew install python@3.9
           curl -OL "https://github.com/bazelbuild/bazelisk/releases/download/v1.17.0/bazelisk-darwin-<<parameters.bazel-arch>>"
           sudo mv "bazelisk-darwin-<<parameters.bazel-arch>>" /usr/local/bin/bazel
           chmod a+x /usr/local/bin/bazel
@@ -115,7 +114,7 @@ commands:
   install-pip-requirements:
     steps:
       - run: |
-          python3 -m pip install pip==21.3.1
+          python3 -m pip install pip
           python3 -m pip install -r python/requirements_dev.txt
 
   deploy-pip-snapshot-unix:
