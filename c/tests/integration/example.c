@@ -32,8 +32,8 @@
 int TYPEDB_EXAMPLE_FUNC() {
     // Open a driver connection
     Credentials* credentials = credentials_new("admin", "password");
-    DriverOptions* driver_options = driver_options_new(false, NULL);
-    TypeDBDriver* driver = driver_open("127.0.0.1:1729", credentials, driver_options);
+    DriverOptions* driver_options = driver_options_new(driver_tls_config_new_disabled());
+    TypeDBDriver* driver = driver_new("127.0.0.1:1729", credentials, driver_options);
     credentials_drop(credentials);
     driver_options_drop(driver_options);
 
@@ -54,14 +54,14 @@ int TYPEDB_EXAMPLE_FUNC() {
     delete_database_if_exists(driver, databaseName);
     if (FAILED()) goto cleanup;
     // EXAMPLE START MARKER
-    databases_create(driver, databaseName);
+    databases_create(driver, databaseName, NULL);
     if (check_error()) {
         printf("Failed to create database\n");
         goto cleanup;
     }
 
     // Check if the database exists
-    if (databases_contains(driver, databaseName)) {
+    if (databases_contains(driver, databaseName, NULL)) {
         printf("Database '%s' created successfully\n", databaseName);
     }
 

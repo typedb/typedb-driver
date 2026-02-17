@@ -17,14 +17,11 @@
  * under the License.
  */
 
-use std::{ffi::c_char, path::Path, time::Duration};
+use std::time::Duration;
 
 use typedb_driver::{DriverOptions, DriverTlsConfig};
 
-use crate::common::{
-    error::unwrap_void,
-    memory::{borrow, borrow_mut, borrow_optional, free, release, release_string, string_view},
-};
+use crate::common::memory::{borrow, borrow_mut, borrow_optional, free, release, release_string, string_view};
 
 /// Creates a new <code>DriverOptions</code> for connecting to TypeDB Server using custom TLS settings.
 /// WARNING: Disabled TLS settings will make the driver sending passwords as plaintext.
