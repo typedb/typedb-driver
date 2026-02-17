@@ -1,5 +1,8 @@
 [#_DriverTlsConfig]
+[.doc-api-reference-driver]
 === DriverTlsConfig
+
+`class`
 
 *Package*: `com.typedb.driver.api`
 
@@ -9,7 +12,7 @@ The driver defaults to using TLS with native system trust roots. This matches ty
 
 // tag::methods[]
 [#_DriverTlsConfig_DriverTlsConfig_com_typedb_driver_jni_DriverTlsConfig]
-==== DriverTlsConfig
+==== method ``DriverTlsConfig``
 
 [source,java]
 ----
@@ -23,7 +26,7 @@ protected DriverTlsConfig​(com.typedb.driver.jni.DriverTlsConfig nativeObject)
 `protected`
 
 [#_DriverTlsConfig_disabled_]
-==== disabled
+==== method ``disabled``
 
 [source,java]
 ----
@@ -46,7 +49,7 @@ DriverTlsConfig tlsConfig = DriverTlsConfig.disabled();
 ----
 
 [#_DriverTlsConfig_enabledWithNativeRootCA_]
-==== enabledWithNativeRootCA
+==== method ``enabledWithNativeRootCA``
 
 [source,java]
 ----
@@ -69,7 +72,7 @@ DriverTlsConfig tlsConfig = DriverTlsConfig.enabledWithNativeRootCA();
 ----
 
 [#_DriverTlsConfig_enabledWithRootCA_java_lang_String]
-==== enabledWithRootCA
+==== method ``enabledWithRootCA``
 
 [source,java]
 ----
@@ -100,7 +103,7 @@ Examples
 `public static DriverTlsConfig`
 
 [#_DriverTlsConfig_isEnabled_]
-==== isEnabled
+==== method ``isEnabled``
 
 [source,java]
 ----
@@ -123,7 +126,7 @@ tlsConfig.isEnabled();
 ----
 
 [#_DriverTlsConfig_rootCAPath_]
-==== rootCAPath
+==== method ``rootCAPath``
 
 [source,java]
 ----

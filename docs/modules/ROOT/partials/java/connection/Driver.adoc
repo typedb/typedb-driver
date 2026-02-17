@@ -68,7 +68,7 @@ driver.databases();
 ----
 
 [#_Driver_deregisterReplica_long]
-==== deregisterReplica
+==== method ``deregisterReplica``
 
 [source,java]
 ----
@@ -122,7 +122,7 @@ driver.isOpen();
 ----
 
 [#_Driver_primaryReplica_]
-==== primaryReplica
+==== method ``primaryReplica``
 
 [source,java]
 ----
@@ -145,7 +145,7 @@ driver.primaryReplica();
 ----
 
 [#_Driver_primaryReplica_ConsistencyLevel]
-==== primaryReplica
+==== method ``primaryReplica``
 
 [source,java]
 ----
@@ -177,7 +177,7 @@ driver.primaryReplica(new ConsistencyLevel.Strong());
 ----
 
 [#_Driver_registerReplica_long_java_lang_String]
-==== registerReplica
+==== method ``registerReplica``
 
 [source,java]
 ----
@@ -210,7 +210,7 @@ driver.registerReplica(2, "127.0.0.1:11729");
 ----
 
 [#_Driver_replicas_]
-==== replicas
+==== method ``replicas``
 
 [source,java]
 ----
@@ -233,7 +233,7 @@ driver.replicas();
 ----
 
 [#_Driver_replicas_ConsistencyLevel]
-==== replicas
+==== method ``replicas``
 
 [source,java]
 ----
@@ -265,7 +265,7 @@ driver.replicas(new ConsistencyLevel.Strong());
 ----
 
 [#_Driver_serverVersion_]
-==== serverVersion
+==== method ``serverVersion``
 
 [source,java]
 ----
@@ -288,7 +288,7 @@ driver.serverVersion();
 ----
 
 [#_Driver_serverVersion_ConsistencyLevel]
-==== serverVersion
+==== method ``serverVersion``
 
 [source,java]
 ----
@@ -391,7 +391,7 @@ driver.transaction(database, sessionType);
 ----
 
 [#_Driver_updateAddressTranslation_java_util_Map_java_lang_String_​java_lang_String_]
-==== updateAddressTranslation
+==== method ``updateAddressTranslation``
 
 [source,java]
 ----

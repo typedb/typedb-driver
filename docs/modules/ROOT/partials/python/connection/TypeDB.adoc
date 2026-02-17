@@ -1,11 +1,14 @@
 [#_TypeDB]
+[.doc-api-reference-driver]
 === TypeDB
+
+`class`
 
 *Package*: `typedb.driver`
 
 // tag::methods[]
 [#_TypeDB_driver_addresses_Mapping_str_str_Iterable_str_str]
-==== driver
+==== method ``driver``
 
 [source,python]
 ----

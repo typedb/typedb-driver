@@ -96,7 +96,7 @@ Returns the value of this datetime value concept as seconds and nanoseconds part
 
 [source,c]
 ----
-struct DatetimeAndTimeZone concept_get_datetime_tz(const struct Concept* concept)
+struct DatetimeAndTimeZone* concept_get_datetime_tz(const struct Concept* concept)
 ----
 
 
@@ -105,7 +105,7 @@ Returns the value of this datetime-tz value concept as seconds and nanoseconds p
 
 [caption=""]
 .Returns
-`struct DatetimeAndTimeZone`
+`struct DatetimeAndTimeZone*`
 
 [#_concept_get_decimal]
 ==== function ``concept_get_decimal``

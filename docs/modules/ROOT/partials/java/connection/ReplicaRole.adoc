@@ -1,5 +1,8 @@
 [#_ReplicaRole]
+[.doc-api-reference-driver]
 === ReplicaRole
+
+`class`
 
 *Package*: `com.typedb.driver.api.server`
 
@@ -27,7 +30,7 @@ a| `SECONDARY`
 
 // tag::methods[]
 [#_ReplicaRole_id_]
-==== id
+==== method ``id``
 
 [source,java]
 ----
@@ -41,7 +44,7 @@ public int id()
 `public int`
 
 [#_ReplicaRole_isCandidate_]
-==== isCandidate
+==== method ``isCandidate``
 
 [source,java]
 ----
@@ -55,7 +58,7 @@ Checks whether this is a candidate replica of the raft cluster.
 `public boolean`
 
 [#_ReplicaRole_isPrimary_]
-==== isPrimary
+==== method ``isPrimary``
 
 [source,java]
 ----
@@ -69,7 +72,7 @@ Checks whether this is the primary replica of the raft cluster.
 `public boolean`
 
 [#_ReplicaRole_isSecondary_]
-==== isSecondary
+==== method ``isSecondary``
 
 [source,java]
 ----
@@ -83,7 +86,7 @@ Checks whether this is a secondary replica of the raft cluster.
 `public boolean`
 
 [#_ReplicaRole_of_com_typedb_driver_jni_ReplicaRole]
-==== of
+==== method ``of``
 
 [source,java]
 ----
@@ -97,7 +100,7 @@ public static ReplicaRole of​(com.typedb.driver.jni.ReplicaRole nativeType)
 `public static ReplicaRole`
 
 [#_ReplicaRole_valueOf_java_lang_String]
-==== valueOf
+==== method ``valueOf``
 
 [source,java]
 ----
@@ -120,7 +123,7 @@ a| `name` a| the name of the enum constant to be returned. a| `java.lang.String`
 `public static ReplicaRole`
 
 [#_ReplicaRole_values_]
-==== values
+==== method ``values``
 
 [source,java]
 ----

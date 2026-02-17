@@ -1,5 +1,8 @@
 [#_Strong]
+[.doc-api-reference-driver]
 === Strong
+
+`class`
 
 *Package*: `typedb.api.connection.consistency_level`
 

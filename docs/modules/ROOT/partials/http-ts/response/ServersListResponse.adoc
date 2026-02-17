@@ -1,5 +1,8 @@
 [#_ServersListResponse]
+[.doc-api-reference-driver]
 === ServersListResponse
+
+`class`
 
 [caption=""]
 .Fields

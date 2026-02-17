@@ -34,7 +34,7 @@ driver.databases().all()
 ----
 
 [#_DatabaseManager_all_ConsistencyLevel]
-==== all
+==== method ``all``
 
 [source,java]
 ----
@@ -100,7 +100,7 @@ driver.databases().contains(name)
 ----
 
 [#_DatabaseManager_contains_java_lang_String_ConsistencyLevel]
-==== contains
+==== method ``contains``
 
 [source,java]
 ----
@@ -167,7 +167,7 @@ driver.databases().create(name)
 ----
 
 [#_DatabaseManager_create_java_lang_String_ConsistencyLevel]
-==== create
+==== method ``create``
 
 [source,java]
 ----
@@ -234,7 +234,7 @@ driver.databases().get(name)
 ----
 
 [#_DatabaseManager_get_java_lang_String_ConsistencyLevel]
-==== get
+==== method ``get``
 
 [source,java]
 ----

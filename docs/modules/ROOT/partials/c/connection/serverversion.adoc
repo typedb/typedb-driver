@@ -1,0 +1,29 @@
+[#_methods_connection_serverversion]
+=== serverversion
+
+[#_Struct_ServerVersion]
+[.doc-api-reference-driver]
+==== Struct ServerVersion
+
+`rust struct (pointer)`
+
+
+
+``ServerVersion`` is an FFI representation of a full server's version specification.
+
+[#_server_version_drop]
+==== function ``server_version_drop``
+
+[source,c]
+----
+void server_version_drop(struct ServerVersion* server_version)
+----
+
+
+
+Frees the native rust ``ServerVersion`` object
+
+[caption=""]
+.Returns
+`void`
+

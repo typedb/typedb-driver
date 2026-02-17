@@ -11,7 +11,7 @@ struct Concept* relation_get_type(const struct Concept* relation)
 
 
 
-Retrieves the type which this ``Relation`` belongs to.
+Retrieves the type which this Relation belongs to.
 
 [caption=""]
 .Returns

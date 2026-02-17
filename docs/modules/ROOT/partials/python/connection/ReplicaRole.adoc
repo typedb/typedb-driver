@@ -1,5 +1,8 @@
 [#_ReplicaRole]
+[.doc-api-reference-driver]
 === ReplicaRole
+
+`class`
 
 *Package*: `typedb.api.server.replica_role`
 
@@ -27,7 +30,7 @@ a| `SECONDARY` a| `2`
 
 // tag::methods[]
 [#_ReplicaRole_is_candidate_]
-==== is_candidate
+==== method ``is_candidate``
 
 [source,python]
 ----
@@ -41,7 +44,7 @@ is_candidate() -> bool
 `bool`
 
 [#_ReplicaRole_is_primary_]
-==== is_primary
+==== method ``is_primary``
 
 [source,python]
 ----
@@ -55,7 +58,7 @@ is_primary() -> bool
 `bool`
 
 [#_ReplicaRole_is_secondary_]
-==== is_secondary
+==== method ``is_secondary``
 
 [source,python]
 ----

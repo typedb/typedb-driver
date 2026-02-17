@@ -11,7 +11,7 @@ struct Concept* attribute_get_type(const struct Concept* attribute)
 
 
 
-Retrieves the type which this ``Attribute`` belongs to.
+Retrieves the type which this Attribute belongs to.
 
 [caption=""]
 .Returns

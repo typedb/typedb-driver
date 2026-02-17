@@ -1,5 +1,8 @@
 [#_ConsistencyLevel]
+[.doc-api-reference-driver]
 === ConsistencyLevel
+
+`class`
 
 *Package*: `com.typedb.driver.api`
 
@@ -7,7 +10,7 @@ Consistency levels of operations against a distributed server. All driver method
 
 // tag::methods[]
 [#_ConsistencyLevel_ConsistencyLevel_]
-==== ConsistencyLevel
+==== method ``ConsistencyLevel``
 
 [source,java]
 ----
@@ -21,7 +24,7 @@ public ConsistencyLevel()
 `public`
 
 [#_ConsistencyLevel_nativeValue_]
-==== nativeValue
+==== method ``nativeValue``
 
 [source,java]
 ----
@@ -35,7 +38,7 @@ public abstract com.typedb.driver.jni.ConsistencyLevel nativeValue()
 `public abstract com.typedb.driver.jni.ConsistencyLevel`
 
 [#_ConsistencyLevel_nativeValue_ConsistencyLevel]
-==== nativeValue
+==== method ``nativeValue``
 
 [source,java]
 ----
@@ -49,7 +52,7 @@ public static com.typedb.driver.jni.ConsistencyLevel nativeValue​(ConsistencyL
 `public static com.typedb.driver.jni.ConsistencyLevel`
 
 [#_ConsistencyLevel_of_com_typedb_driver_jni_ConsistencyLevel]
-==== of
+==== method ``of``
 
 [source,java]
 ----
