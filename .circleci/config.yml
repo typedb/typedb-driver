@@ -25,19 +25,19 @@ executors:
   linux-arm64-amazonlinux-2:
     docker:
       - image: amazonlinux:2
-    resource_class: arm.large
+    resource_class: arm.xlarge
     working_directory: ~/typedb-driver
 
   linux-x86_64-amazonlinux-2:
     docker:
       - image: amazonlinux:2
-    resource_class: large
+    resource_class: xlarge
     working_directory: ~/typedb-driver
 
   linux-x86_64-ubuntu-2204:
     docker:
       - image: ubuntu:22.04
-    resource_class: large
+    resource_class: xlarge
     working_directory: ~/typedb-driver
 
   mac-arm64:
