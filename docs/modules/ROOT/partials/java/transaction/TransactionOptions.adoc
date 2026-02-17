@@ -32,7 +32,7 @@ TransactionOptions options = TransactionOptions();
 ----
 
 [#_TransactionOptions_readConsistencyLevel_]
-==== readConsistencyLevel
+==== method ``readConsistencyLevel``
 
 [source,java]
 ----
@@ -54,7 +54,7 @@ options.readConsistencyLevel();
 ----
 
 [#_TransactionOptions_readConsistencyLevel_ConsistencyLevel]
-==== readConsistencyLevel
+==== method ``readConsistencyLevel``
 
 [source,java]
 ----

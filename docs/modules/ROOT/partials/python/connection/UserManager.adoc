@@ -1,5 +1,8 @@
 [#_UserManager]
+[.doc-api-reference-driver]
 === UserManager
+
+`class`
 
 *Package*: `typedb.api.user.user_manager`
 
@@ -7,7 +10,7 @@ Provides access to all user management methods.
 
 // tag::methods[]
 [#_UserManager_all_consistency_level_ConsistencyLevel_None]
-==== all
+==== method ``all``
 
 [source,python]
 ----
@@ -38,7 +41,7 @@ driver.users.all(ConsistencyLevel.Strong())
 ----
 
 [#_UserManager_contains_username_str_consistency_level_ConsistencyLevel_None]
-==== contains
+==== method ``contains``
 
 [source,python]
 ----
@@ -70,7 +73,7 @@ driver.users.contains(username, ConsistencyLevel.Strong())
 ----
 
 [#_UserManager_create_username_str_password_str_consistency_level_ConsistencyLevel_None]
-==== create
+==== method ``create``
 
 [source,python]
 ----
@@ -103,7 +106,7 @@ driver.users.create(username, password, ConsistencyLevel.Strong())
 ----
 
 [#_UserManager_get_username_str_consistency_level_ConsistencyLevel_None]
-==== get
+==== method ``get``
 
 [source,python]
 ----
@@ -135,7 +138,7 @@ driver.users.get(username, ConsistencyLevel.Strong())
 ----
 
 [#_UserManager_get_current_consistency_level_ConsistencyLevel_None]
-==== get_current
+==== method ``get_current``
 
 [source,python]
 ----

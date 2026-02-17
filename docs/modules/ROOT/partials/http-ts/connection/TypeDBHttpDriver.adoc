@@ -290,7 +290,7 @@ getDatabases(): Promise<ApiResponse<DatabasesListResponse>>
 `Promise<ApiResponse<DatabasesListResponse>>`
 
 [#_TypeDBHttpDriver_getServers_]
-==== getServers
+==== method ``getServers``
 
 [source,typescript]
 ----

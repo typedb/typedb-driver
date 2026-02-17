@@ -27,7 +27,7 @@ use std::{
 };
 
 use itertools::{enumerate, Itertools};
-use log::debug;
+use tracing::debug;
 
 use crate::{
     common::{

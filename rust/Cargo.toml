@@ -74,11 +74,6 @@
 		tag = "3.7.0-alpha-0"
 		default-features = false
 
-	[dependencies.log]
-		features = ["kv", "kv_unstable", "std", "value-bag"]
-		version = "0.4.28"
-		default-features = false
-
 	[dependencies.serde]
 		features = ["alloc", "default", "derive", "rc", "serde_derive", "std"]
 		version = "1.0.228"
@@ -188,6 +183,10 @@
 [[test]]
 	path = "tests/behaviour/driver/user.rs"
 	name = "test_user"
+
+[[test]]
+	path = "tests/behaviour/driver/cluster.rs"
+	name = "test_cluster"
 
 [[test]]
 	path = "tests/behaviour/driver/migration.rs"

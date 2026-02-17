@@ -1,5 +1,8 @@
 [#_ReplicaDependent]
+[.doc-api-reference-driver]
 === ReplicaDependent
+
+`class`
 
 *Package*: `typedb.api.connection.consistency_level`
 

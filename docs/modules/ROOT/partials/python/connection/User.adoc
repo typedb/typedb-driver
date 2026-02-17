@@ -1,5 +1,8 @@
 [#_User]
+[.doc-api-reference-driver]
 === User
+
+`class`
 
 *Package*: `typedb.api.user.user`
 
@@ -18,7 +21,7 @@ a| `name` a| `str` a| Returns the name of this user.
 
 // tag::methods[]
 [#_User_delete_consistency_level_ConsistencyLevel_None]
-==== delete
+==== method ``delete``
 
 [source,python]
 ----
@@ -49,7 +52,7 @@ user.delete(ConsistencyLevel.Strong())
 ----
 
 [#_User_update_password_password_str_consistency_level_ConsistencyLevel_None]
-==== update_password
+==== method ``update_password``
 
 [source,python]
 ----

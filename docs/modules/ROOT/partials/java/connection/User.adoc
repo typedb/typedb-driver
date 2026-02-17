@@ -32,7 +32,7 @@ user.delete();
 ----
 
 [#_User_delete_ConsistencyLevel]
-==== delete
+==== method ``delete``
 
 [source,java]
 ----
@@ -109,7 +109,7 @@ user.updatePassword("new-password");
 ----
 
 [#_User_updatePassword_java_lang_String_ConsistencyLevel]
-==== updatePassword
+==== method ``updatePassword``
 
 [source,java]
 ----

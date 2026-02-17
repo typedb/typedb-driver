@@ -1,5 +1,8 @@
 [#_ServerReplica]
+[.doc-api-reference-driver]
 === ServerReplica
+
+`class`
 
 *Package*: `com.typedb.driver.api.server`
 
@@ -7,7 +10,7 @@ The metadata and state of an individual raft replica of a driver connection.
 
 // tag::methods[]
 [#_ServerReplica_getAddress_]
-==== getAddress
+==== method ``getAddress``
 
 [source,java]
 ----
@@ -22,7 +25,7 @@ Returns the address this replica is hosted at.
 `java.lang.String`
 
 [#_ServerReplica_getID_]
-==== getID
+==== method ``getID``
 
 [source,java]
 ----
@@ -37,7 +40,7 @@ Returns the id of this replica.
 `long`
 
 [#_ServerReplica_getRole_]
-==== getRole
+==== method ``getRole``
 
 [source,java]
 ----
@@ -52,7 +55,7 @@ Returns whether this is the primary replica of the raft cluster or any of the su
 `java.util.Optional<ReplicaRole>`
 
 [#_ServerReplica_getTerm_]
-==== getTerm
+==== method ``getTerm``
 
 [source,java]
 ----
@@ -67,7 +70,7 @@ Returns the raft protocol ‘term’ of this replica.
 `java.util.Optional<java.lang.Long>`
 
 [#_ServerReplica_isPrimary_]
-==== isPrimary
+==== method ``isPrimary``
 
 [source,java]
 ----

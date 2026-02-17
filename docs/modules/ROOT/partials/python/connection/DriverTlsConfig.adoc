@@ -1,5 +1,8 @@
 [#_DriverTlsConfig]
+[.doc-api-reference-driver]
 === DriverTlsConfig
+
+`class`
 
 *Package*: `typedb.api.connection.driver_tls_config`
 
@@ -23,7 +26,7 @@ a| `root_ca_path` a| `str \| None` a| Returns the configured custom root CA path
 
 // tag::methods[]
 [#_DriverTlsConfig_disabled_]
-==== disabled
+==== method ``disabled``
 
 [source,python]
 ----
@@ -44,7 +47,7 @@ tls_config = DriverTlsConfig.disabled()
 ----
 
 [#_DriverTlsConfig_enabled_with_native_root_ca_]
-==== enabled_with_native_root_ca
+==== method ``enabled_with_native_root_ca``
 
 [source,python]
 ----
@@ -65,7 +68,7 @@ tls_config = DriverTlsConfig.enabled_with_native_root_ca()
 ----
 
 [#_DriverTlsConfig_enabled_with_root_ca_tls_root_ca_path_str]
-==== enabled_with_root_ca
+==== method ``enabled_with_root_ca``
 
 [source,python]
 ----

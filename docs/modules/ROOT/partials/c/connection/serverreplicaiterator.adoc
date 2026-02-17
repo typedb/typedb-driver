@@ -1,0 +1,45 @@
+[#_methods_connection_serverreplicaiterator]
+=== serverreplicaiterator
+
+[#_Struct_ServerReplicaIterator]
+[.doc-api-reference-driver]
+==== Struct ServerReplicaIterator
+
+`rust struct (pointer)`
+
+
+
+Iterator over the ``ServerReplica`` corresponding to each replica of a TypeDB cluster.
+
+[#_server_replica_iterator_drop]
+==== function ``server_replica_iterator_drop``
+
+[source,c]
+----
+void server_replica_iterator_drop(struct ServerReplicaIterator* it)
+----
+
+
+
+Frees the native rust ``ServerReplicaIterator`` object.
+
+[caption=""]
+.Returns
+`void`
+
+[#_server_replica_iterator_next]
+==== function ``server_replica_iterator_next``
+
+[source,c]
+----
+struct ServerReplica* server_replica_iterator_next(struct ServerReplicaIterator* it)
+----
+
+
+
+Forwards the ``ServerReplicaIterator`` and returns the next ``ServerReplica`` if it exists, or null if there are no more elements.
+
+[caption=""]
+.Returns
+`struct ServerReplica*`
+

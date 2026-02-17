@@ -1,5 +1,8 @@
 [#_struct_AvailableServerReplica]
+[.doc-api-reference-driver]
 === AvailableServerReplica
+
+`struct`
 
 *Implements traits:*
 

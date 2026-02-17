@@ -1,5 +1,8 @@
 [#_UserManager]
+[.doc-api-reference-driver]
 === UserManager
+
+`class`
 
 *Package*: `com.typedb.driver.api.user`
 
@@ -7,7 +10,7 @@ Provides access to all user management methods.
 
 // tag::methods[]
 [#_UserManager_all_]
-==== all
+==== method ``all``
 
 [source,java]
 ----
@@ -30,7 +33,7 @@ driver.users().all();
 ----
 
 [#_UserManager_all_ConsistencyLevel]
-==== all
+==== method ``all``
 
 [source,java]
 ----
@@ -62,7 +65,7 @@ driver.users().all(new ConsistencyLevel.Strong());
 ----
 
 [#_UserManager_contains_java_lang_String]
-==== contains
+==== method ``contains``
 
 [source,java]
 ----
@@ -95,7 +98,7 @@ driver.users().contains(username);
 ----
 
 [#_UserManager_contains_java_lang_String_ConsistencyLevel]
-==== contains
+==== method ``contains``
 
 [source,java]
 ----
@@ -130,7 +133,7 @@ driver.users().contains(username, new ConsistencyLevel.Strong());
 ----
 
 [#_UserManager_create_java_lang_String_java_lang_String]
-==== create
+==== method ``create``
 
 [source,java]
 ----
@@ -164,7 +167,7 @@ driver.users().create(username, password);
 ----
 
 [#_UserManager_create_java_lang_String_java_lang_String_ConsistencyLevel]
-==== create
+==== method ``create``
 
 [source,java]
 ----
@@ -200,7 +203,7 @@ driver.users().create(username, password, new ConsistencyLevel.Strong());
 ----
 
 [#_UserManager_get_java_lang_String]
-==== get
+==== method ``get``
 
 [source,java]
 ----
@@ -233,7 +236,7 @@ driver.users().get(username);
 ----
 
 [#_UserManager_get_java_lang_String_ConsistencyLevel]
-==== get
+==== method ``get``
 
 [source,java]
 ----
@@ -268,7 +271,7 @@ driver.users().get(username, new ConsistencyLevel.Strong());
 ----
 
 [#_UserManager_getCurrent_]
-==== getCurrent
+==== method ``getCurrent``
 
 [source,java]
 ----
@@ -292,7 +295,7 @@ driver.users().getCurrent();
 ----
 
 [#_UserManager_getCurrent_ConsistencyLevel]
-==== getCurrent
+==== method ``getCurrent``
 
 [source,java]
 ----

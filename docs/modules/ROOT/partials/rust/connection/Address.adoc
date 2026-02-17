@@ -1,5 +1,8 @@
 [#_struct_Address]
+[.doc-api-reference-driver]
 === Address
+
+`struct`
 
 *Implements traits:*
 

@@ -1,0 +1,36 @@
+[#_methods_connection_consistencyleveltag]
+=== consistencyleveltag
+
+[#_Struct_ConsistencyLevelTag]
+[.doc-api-reference-driver]
+==== Struct ConsistencyLevelTag
+
+`rust struct (pointer)`
+
+
+
+``ConsistencyLevelTag`` is used to represent consistency levels in FFI. It is the tag part, which is combined with optional fields to form an instance of the original enum.
+
+[#_Enum_ConsistencyLevelTag]
+[.doc-api-reference-driver]
+==== Enum ConsistencyLevelTag
+
+`rust enum (pointer)`
+
+
+
+``ConsistencyLevelTag`` is used to represent consistency levels in FFI. It is the tag part, which is combined with optional fields to form an instance of the original enum.
+
+[caption=""]
+.Enum constants
+// tag::enum_constants[]
+[cols=""]
+[options="header"]
+|===
+|Name
+a| `Eventual`
+a| `ReplicaDependent`
+a| `Strong`
+|===
+// end::enum_constants[]
+
