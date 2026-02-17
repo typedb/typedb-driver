@@ -94,9 +94,25 @@ load("//go:deps.bzl", "go_repositories")
 go_repositories()
 gazelle_dependencies()
 
+
 # Load //builder/proto_grpc
 load("@vaticle_dependencies//builder/proto_grpc:deps.bzl", grpc_deps = "deps")
 grpc_deps()
+
+# Override zlib before grpc_deps loads its own (zlib 1.2.x fails on macOS with Xcode 16+ / SDK 15.5
+# due to TARGET_OS_MAC fdopen macro conflict in zutil.h — fixed in zlib 1.3+)
+# This must come first to win over the transitive one
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+http_archive(
+    name = "zlib",
+    build_file = "@com_github_grpc_grpc//third_party:zlib.BUILD",
+    sha256 = "9a93b2b7dfdac77ceba5a558a580e74667dd6fede4585b91eefb60f03b72df23",
+    strip_prefix = "zlib-1.3.1",
+    urls = [
+        "https://github.com/madler/zlib/releases/download/v1.3.1/zlib-1.3.1.tar.gz",
+        "https://zlib.net/zlib-1.3.1.tar.gz",
+    ],
+)
 
 load("@com_github_grpc_grpc//bazel:grpc_deps.bzl", com_github_grpc_grpc_deps = "grpc_deps")
 com_github_grpc_grpc_deps()
@@ -119,13 +135,13 @@ rust_register_toolchains(
         "x86_64-pc-windows-msvc",
         "x86_64-unknown-linux-gnu",
     ],
-    rust_analyzer_version = "1.78.0",
-    versions = ["1.78.0"]
+    rust_analyzer_version = "1.74.0",
+    versions = ["1.74.0"]
 )
 
 rust_analyzer_toolchain_tools_repository(
     name = "rust_analyzer_toolchain_tools",
-    version = "1.78.0"
+    version = "1.74.0"
 )
 
 load("@vaticle_dependencies//library/crates:crates.bzl", "fetch_crates")
