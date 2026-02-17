@@ -1,5 +1,8 @@
 [#_enum_ReplicaRole]
+[.doc-api-reference-driver]
 === ReplicaRole
+
+`enum`
 
 This enum is used to specify the type of replica.
 

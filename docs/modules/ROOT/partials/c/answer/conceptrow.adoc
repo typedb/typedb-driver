@@ -117,7 +117,7 @@ struct Pipeline* concept_row_get_query_structure(const struct ConceptRow* concep
 
 
 
-Retrieve the executed query's structure from the ``ConceptRow``'s header, if set. It must be requested via "include query structure" in ``QueryOptions``
+Retrieves the executed query's structure from the ``ConceptRow``'s header, if set. It must be requested via "include query structure" in ``QueryOptions``
 
 [caption=""]
 .Returns
@@ -133,7 +133,7 @@ enum QueryType concept_row_get_query_type(const struct ConceptRow* concept_row)
 
 
 
-Retrieve the executed query's type of the ``ConceptRow``'s header.
+Retrieves the executed query's type of the ``ConceptRow``'s header.
 
 [caption=""]
 .Returns

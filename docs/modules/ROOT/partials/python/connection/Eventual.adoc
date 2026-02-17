@@ -1,5 +1,8 @@
 [#_Eventual]
+[.doc-api-reference-driver]
 === Eventual
+
+`class`
 
 *Package*: `typedb.api.connection.consistency_level`
 

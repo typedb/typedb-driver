@@ -37,7 +37,7 @@ struct VariableIterator* reducer_get_arguments(const struct Reducer* reducer)
 
 
 
-The arguments to this Reducer. e.g. ``$x`` in ``sum($x)``
+The arguments to this Reducer. e.g. $x in ``sum($x)``
 
 [caption=""]
 .Returns
@@ -53,7 +53,7 @@ char* reducer_get_name(const struct Reducer* reducer)
 
 
 
-The name of the operation applied by this Reducer. e.g. ``sum`` in ``sum($x)``
+The name of the operation applied by this Reducer. e.g. sum in ``sum($x)``
 
 [caption=""]
 .Returns

@@ -1,5 +1,8 @@
 [#_ConsistencyLevel]
+[.doc-api-reference-driver]
 === ConsistencyLevel
+
+`class`
 
 *Package*: `typedb.api.connection.consistency_level`
 
@@ -7,7 +10,7 @@ Consistency levels of operations against a distributed server. All driver method
 
 // tag::methods[]
 [#_ConsistencyLevel_is_eventual_]
-==== is_eventual
+==== method ``is_eventual``
 
 [source,python]
 ----
@@ -21,7 +24,7 @@ is_eventual() -> bool
 `bool`
 
 [#_ConsistencyLevel_is_replica_dependent_]
-==== is_replica_dependent
+==== method ``is_replica_dependent``
 
 [source,python]
 ----
@@ -35,7 +38,7 @@ is_replica_dependent() -> bool
 `bool`
 
 [#_ConsistencyLevel_is_strong_]
-==== is_strong
+==== method ``is_strong``
 
 [source,python]
 ----
@@ -49,7 +52,7 @@ is_strong() -> bool
 `bool`
 
 [#_ConsistencyLevel_native_value_]
-==== native_value
+==== method ``native_value``
 
 [source,python]
 ----
@@ -63,7 +66,7 @@ static native_value(consistency_level: ConsistencyLevel | None) -> ConsistencyLe
 `ConsistencyLevel`
 
 [#_ConsistencyLevel_of_]
-==== of
+==== method ``of``
 
 [source,python]
 ----

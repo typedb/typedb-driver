@@ -41,7 +41,7 @@ driver.close()
 ----
 
 [#_Driver_deregister_replica_replica_id_int]
-==== deregister_replica
+==== method ``deregister_replica``
 
 [source,python]
 ----
@@ -92,7 +92,7 @@ driver.is_open()
 ----
 
 [#_Driver_primary_replica_consistency_level_ConsistencyLevel_None]
-==== primary_replica
+==== method ``primary_replica``
 
 [source,python]
 ----
@@ -123,7 +123,7 @@ driver.primary_replica(ConsistencyLevel.Strong())
 ----
 
 [#_Driver_register_replica_replica_id_int_address_str]
-==== register_replica
+==== method ``register_replica``
 
 [source,python]
 ----
@@ -154,7 +154,7 @@ driver.register_replica(2, "127.0.0.1:11729")
 ----
 
 [#_Driver_replicas_consistency_level_ConsistencyLevel_None]
-==== replicas
+==== method ``replicas``
 
 [source,python]
 ----
@@ -185,7 +185,7 @@ driver.replicas(ConsistencyLevel.Strong())
 ----
 
 [#_Driver_server_version_consistency_level_ConsistencyLevel_None]
-==== server_version
+==== method ``server_version``
 
 [source,python]
 ----
@@ -248,7 +248,7 @@ driver.transaction(database, transaction_type, options)
 ----
 
 [#_Driver_update_address_translation_address_translation_Mapping_str_str_]
-==== update_address_translation
+==== method ``update_address_translation``
 
 [source,python]
 ----

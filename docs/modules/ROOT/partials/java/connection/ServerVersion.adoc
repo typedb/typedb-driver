@@ -1,5 +1,8 @@
 [#_ServerVersion]
+[.doc-api-reference-driver]
 === ServerVersion
+
+`class`
 
 *Package*: `com.typedb.driver.api.server`
 
@@ -15,7 +18,7 @@ driver.serverVersion();
 
 // tag::methods[]
 [#_ServerVersion_getDistribution_]
-==== getDistribution
+==== method ``getDistribution``
 
 [source,java]
 ----
@@ -37,7 +40,7 @@ serverVersion.getDistribution();
 ----
 
 [#_ServerVersion_getVersion_]
-==== getVersion
+==== method ``getVersion``
 
 [source,java]
 ----

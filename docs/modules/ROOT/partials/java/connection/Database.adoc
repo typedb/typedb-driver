@@ -31,7 +31,7 @@ database.delete()
 ----
 
 [#_Database_delete_ConsistencyLevel]
-==== delete
+==== method ``delete``
 
 [source,java]
 ----
@@ -97,7 +97,7 @@ database.exportToFile("schema.typeql", "data.typedb")
 ----
 
 [#_Database_exportToFile_java_lang_String_java_lang_String_ConsistencyLevel]
-==== exportToFile
+==== method ``exportToFile``
 
 [source,java]
 ----
@@ -180,7 +180,7 @@ database.schema()
 ----
 
 [#_Database_schema_ConsistencyLevel]
-==== schema
+==== method ``schema``
 
 [source,java]
 ----
@@ -237,7 +237,7 @@ database.typeSchema()
 ----
 
 [#_Database_typeSchema_ConsistencyLevel]
-==== typeSchema
+==== method ``typeSchema``
 
 [source,java]
 ----

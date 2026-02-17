@@ -1,5 +1,8 @@
 [#_enum_ServerReplica]
+[.doc-api-reference-driver]
 === ServerReplica
+
+`enum`
 
 The metadata and state of an individual raft replica of a driver connection.
 

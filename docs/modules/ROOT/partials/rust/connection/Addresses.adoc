@@ -1,5 +1,8 @@
 [#_enum_Addresses]
+[.doc-api-reference-driver]
 === Addresses
+
+`enum`
 
 A collection of server addresses used for connection.
 

@@ -1,5 +1,8 @@
 [#_trait_Replica]
+[.doc-api-reference-driver]
 === Trait Replica
+
+`struct`
 
 *Implementors:*
 

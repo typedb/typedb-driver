@@ -1,5 +1,8 @@
 [#_DriverOptions]
+[.doc-api-reference-driver]
 === DriverOptions
+
+`class`
 
 *Package*: `com.typedb.driver.api`
 
@@ -7,7 +10,7 @@ TypeDB driver options. ``DriverOptions`` are used to specify the driver's connec
 
 // tag::methods[]
 [#_DriverOptions_DriverOptions_DriverTlsConfig]
-==== DriverOptions
+==== method ``DriverOptions``
 
 [source,java]
 ----
@@ -29,7 +32,7 @@ DriverOptions options = new DriverOptions(DriverTlsConfig.enabledWithNativeRootC
 ----
 
 [#_DriverOptions_primaryFailoverRetries_]
-==== primaryFailoverRetries
+==== method ``primaryFailoverRetries``
 
 [source,java]
 ----
@@ -52,7 +55,7 @@ options.primaryFailoverRetries();
 ----
 
 [#_DriverOptions_primaryFailoverRetries_int]
-==== primaryFailoverRetries
+==== method ``primaryFailoverRetries``
 
 [source,java]
 ----
@@ -83,7 +86,7 @@ options.primaryFailoverRetries(1);
 ----
 
 [#_DriverOptions_replicaDiscoveryAttempts_]
-==== replicaDiscoveryAttempts
+==== method ``replicaDiscoveryAttempts``
 
 [source,java]
 ----
@@ -106,7 +109,7 @@ options.replicaDiscoveryAttempts();
 ----
 
 [#_DriverOptions_replicaDiscoveryAttempts_int]
-==== replicaDiscoveryAttempts
+==== method ``replicaDiscoveryAttempts``
 
 [source,java]
 ----
@@ -137,7 +140,7 @@ options.primaryFailoverRetries(1);
 ----
 
 [#_DriverOptions_requestTimeoutMillis_]
-==== requestTimeoutMillis
+==== method ``requestTimeoutMillis``
 
 [source,java]
 ----
@@ -160,7 +163,7 @@ options.requestTimeoutMillis();
 ----
 
 [#_DriverOptions_requestTimeoutMillis_long]
-==== requestTimeoutMillis
+==== method ``requestTimeoutMillis``
 
 [source,java]
 ----
@@ -191,7 +194,7 @@ options.requestTimeoutMillis(30000); // 30 seconds
 ----
 
 [#_DriverOptions_tlsConfig_]
-==== tlsConfig
+==== method ``tlsConfig``
 
 [source,java]
 ----
@@ -214,7 +217,7 @@ options.tlsConfig();
 ----
 
 [#_DriverOptions_tlsConfig_DriverTlsConfig]
-==== tlsConfig
+==== method ``tlsConfig``
 
 [source,java]
 ----
@@ -236,7 +239,7 @@ options.tlsConfig(DriverTlsConfig.enabledWithNativeRootCA());
 ----
 
 [#_DriverOptions_useReplication_]
-==== useReplication
+==== method ``useReplication``
 
 [source,java]
 ----
@@ -259,7 +262,7 @@ options.useReplication();
 ----
 
 [#_DriverOptions_useReplication_boolean]
-==== useReplication
+==== method ``useReplication``
 
 [source,java]
 ----
