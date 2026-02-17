@@ -17,7 +17,7 @@
 
 try-import ./.bazel-remote-cache.rc
 
-common --enable_platform_specific_config
+common --enable_platform_specific_config --experimental_repository_downloader_retries=3
 
 build --incompatible_strict_action_env --java_language_version=11 --javacopt='--release 11' --java_runtime_version=remotejdk_11 --enable_runfiles
 
