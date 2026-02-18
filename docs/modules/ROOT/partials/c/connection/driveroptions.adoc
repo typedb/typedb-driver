@@ -9,7 +9,7 @@
 
 
 
-TypeDB driver connection options. DriverOptions object can be used to override the default driver behavior while connecting to TypeDB.
+TypeDB driver connection options. ``DriverOptions`` object can be used to override the default driver behavior while connecting to TypeDB.
 
 
 [#_driver_options_drop]
