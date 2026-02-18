@@ -350,7 +350,7 @@ impl Error {
 
     fn try_extracting_connection_error_code(code: &str) -> Option<ConnectionError> {
         match code {
-            "AUT2" | "AUT3" => Some(ConnectionError::TokenCredentialInvalid {}),
+            "AUT1" | "AUT2" | "AUT3" => Some(ConnectionError::TokenCredentialInvalid {}),
             "SRV14" | "RFT1" | "CSV7" => Some(ConnectionError::ServerIsNotInitialised {}),
             "CSV8" => Some(ConnectionError::ClusterReplicaNotPrimary {}),
             _ => None,
