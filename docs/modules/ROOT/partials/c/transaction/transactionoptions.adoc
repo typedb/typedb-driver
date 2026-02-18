@@ -9,7 +9,7 @@
 
 
 
-TypeDB transaction options. TransactionOptions object can be used to override the default behaviour for opened transactions.
+TypeDB transaction options. ``TransactionOptions`` object can be used to override the default behaviour for opened transactions.
 
 
 [#_transaction_options_drop]

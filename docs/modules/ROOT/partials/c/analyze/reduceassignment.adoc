@@ -37,7 +37,7 @@ struct Variable* reduce_assignment_get_assigned(const struct ReduceAssignment* r
 
 
 
-The variable being assigned to in this ReduceAssignment. e.g. $c in ``$c = sum($x)``
+The variable being assigned to in this ReduceAssignment. e.g. ``$c`` in ``$c = sum($x)``
 
 [caption=""]
 .Returns
@@ -53,7 +53,7 @@ struct Reducer* reduce_assignment_get_reducer(const struct ReduceAssignment* red
 
 
 
-The reducer applied in this ReduceAssignment. e.g. sum($x) in ``$c = sum($x)``
+The reducer applied in this ReduceAssignment. e.g. ``sum($x)`` in ``$c = sum($x)``
 
 [caption=""]
 .Returns

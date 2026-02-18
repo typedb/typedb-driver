@@ -11,7 +11,7 @@
 
 TLS configuration for the TypeDB driver.
 
-DriverTlsConfig represents a fully constructed and validated TLS configuration. If TLS is enabled, the underlying TLS config is built eagerly at construction time, ensuring that no connection attempt can observe a partially-configured TLS state.
+``DriverTlsConfig`` represents a fully constructed and validated TLS configuration. If TLS is enabled, the underlying TLS config is built eagerly at construction time, ensuring that no connection attempt can observe a partially-configured TLS state.
 
 The driver defaults to using TLS with native system trust roots. This matches typical system and container deployments while still allowing explicit opt-out or custom PKI configuration.
 
@@ -556,8 +556,8 @@ Enables logging in the TypeDB driver.
 
 This function sets up tracing with two environment variables:
 
- TYPEDB_DRIVER_LOG: Fine-grained control using the same syntax as RUST_LOG. Example: TYPEDB_DRIVER_LOG=typedb_driver=debug,typedb_driver_clib=trace
- TYPEDB_DRIVER_LOG_LEVEL: Simple log level that applies to both typedb_driver and typedb_driver_clib crates. Overrides any settings from TYPEDB_DRIVER_LOG. Example: TYPEDB_DRIVER_LOG_LEVEL=debug
+ ``TYPEDB_DRIVER_LOG``: Fine-grained control using the same syntax as ``RUST_LOG``. Example: ``TYPEDB_DRIVER_LOG=typedb_driver=debug,typedb_driver_clib=trace``
+ ``TYPEDB_DRIVER_LOG_LEVEL``: Simple log level that applies to both ``typedb_driver`` and ``typedb_driver_clib`` crates. Overrides any settings from ``TYPEDB_DRIVER_LOG``. Example: ``TYPEDB_DRIVER_LOG_LEVEL=debug``
 
 
 If neither is set, the default level is INFO for driver crates.
