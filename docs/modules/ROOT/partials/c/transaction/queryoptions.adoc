@@ -9,7 +9,7 @@
 
 
 
-TypeDB query options. QueryOptions object can be used to override the default server behaviour for executed queries.
+TypeDB query options. ``QueryOptions`` object can be used to override the default server behaviour for executed queries.
 
 
 [#_query_options_drop]
