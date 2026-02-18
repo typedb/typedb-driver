@@ -25,19 +25,19 @@ executors:
   linux-arm64-amazonlinux-2:
     docker:
       - image: amazonlinux:2
-    resource_class: arm.large
+    resource_class: arm.xlarge
     working_directory: ~/typedb-driver
 
   linux-x86_64-amazonlinux-2:
     docker:
       - image: amazonlinux:2
-    resource_class: large
+    resource_class: xlarge
     working_directory: ~/typedb-driver
 
   linux-x86_64-ubuntu-2204:
     docker:
       - image: ubuntu:22.04
-    resource_class: large
+    resource_class: xlarge
     working_directory: ~/typedb-driver
 
   mac-arm64:
@@ -92,14 +92,13 @@ commands:
           curl -OL "https://github.com/bazelbuild/bazelisk/releases/download/v1.17.0/bazelisk-linux-<<parameters.bazel-arch>>"
           mv "bazelisk-linux-<<parameters.bazel-arch>>" /usr/local/bin/bazel
           chmod a+x /usr/local/bin/bazel
-  
+
   install-bazel-brew:
     parameters:
       bazel-arch:
         type: string
     steps:
       - run: |
-          brew install python@3.9
           curl -OL "https://github.com/bazelbuild/bazelisk/releases/download/v1.17.0/bazelisk-darwin-<<parameters.bazel-arch>>"
           sudo mv "bazelisk-darwin-<<parameters.bazel-arch>>" /usr/local/bin/bazel
           chmod a+x /usr/local/bin/bazel
@@ -115,7 +114,7 @@ commands:
   install-pip-requirements:
     steps:
       - run: |
-          python3 -m pip install pip==21.3.1
+          python3 -m pip install pip
           python3 -m pip install -r python/requirements_dev.txt
 
   deploy-pip-snapshot-unix:
@@ -493,7 +492,7 @@ commands:
       - run: |
           wget -q -O - https://cli-assets.heroku.com/apt/release.key | apt-key add -
           wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add -
-          export DEPLOY_NPM_TOKEN=$REPO_NPM_TOKEN
+          export DEPLOY_NPM_TOKEN=$REPO_NPM_TOKEN_VATICLE_BOT
           bazel run --jobs=8 --define version=$(cat VERSION) //nodejs:deploy-npm --compilation_mode=opt -- release
 
 jobs:
@@ -801,20 +800,6 @@ jobs:
               -r ${CIRCLE_PROJECT_REPONAME} -n "TypeDB Driver $(cat VERSION)" -b "$(cat ./RELEASE_NOTES_LATEST.md)" \
               -c ${CIRCLE_SHA1} -delete $(cat VERSION)
 
-  sync-dependencies:
-    executor: linux-x86_64-ubuntu-2204
-    steps:
-      - checkout
-      - install-bazel-apt:
-          bazel-arch: amd64
-      - run: |
-          apt update -y && apt install -y software-properties-common
-          add-apt-repository -y ppa:deadsnakes/ppa
-          apt update -y && apt install -y python3.9 python3.9-distutils python3-pip software-properties-common
-          python3.9 -m pip install -U cffi
-          export SYNC_DEPENDENCIES_TOKEN=$REPO_GITHUB_TOKEN
-          bazel run @vaticle_dependencies//tool/sync:dependencies -- --source ${CIRCLE_PROJECT_REPONAME}@$(cat VERSION)
-
   release-cleanup:
     executor: linux-x86_64-ubuntu-2204
     steps:
@@ -984,15 +969,9 @@ workflows:
             - deploy-release-any
             - deploy-release-dotnet-any
 
-      - sync-dependencies:
-          filters:
-            branches:
-              only: [release]
-          requires:
-            - deploy-github
       - release-cleanup:
           filters:
             branches:
               only: [release]
           requires:
-            - sync-dependencies
+            - deploy-github
