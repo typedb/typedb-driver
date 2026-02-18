@@ -44,8 +44,8 @@ import static org.junit.Assert.assertNotNull;
 public class Parameters {
 
     private static boolean clusterMode = false;
-    private static final int RETRY_ATTEMPTS = 3;
-    private static final int RETRY_DELAY_MS = 500;
+    private static final int RETRY_ATTEMPTS = 10;
+    private static final int RETRY_DELAY_MS = 1000;
 
     public static void setClusterMode(boolean isCluster) {
         clusterMode = isCluster;
