@@ -289,6 +289,20 @@ getDatabases(): Promise<ApiResponse<DatabasesListResponse>>
 .Returns
 `Promise<ApiResponse<DatabasesListResponse>>`
 
+[#_TypeDBHttpDriver_getServers_]
+==== method ``getServers``
+
+[source,typescript]
+----
+getServers(): Promise<ApiResponse<ServersListResponse>>
+----
+
+
+
+[caption=""]
+.Returns
+`Promise<ApiResponse<ServersListResponse>>`
+
 [#_TypeDBHttpDriver_getUser_username_string]
 ==== method ``getUser``
 

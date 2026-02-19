@@ -28,6 +28,10 @@ from typedb.api.connection.transaction import TransactionType
 from typedb.driver import *
 
 
+def get_database_consistency(context: Context):
+    return getattr(context, 'database_operation_consistency', None)
+
+
 def create_databases(driver: Driver, names: list[str]):
     for name in names:
         driver.databases.create(name)
@@ -64,7 +68,8 @@ def import_database(context: Context, name: str, schema: str, data_file: str, ma
 
 @step("connection create database: {name:NonSemicolon}{may_error:MayError}")
 def step_impl(context: Context, name: str, may_error: MayError):
-    may_error.check(lambda: create_databases(context.driver, [name]))
+    consistency = get_database_consistency(context)
+    may_error.check(lambda: context.driver.databases.create(name, consistency))
 
 
 @step("connection create database with empty name{may_error:MayError}")
@@ -96,7 +101,8 @@ def step_impl(context: Context, name: str, may_error: MayError):
 
 @step("connection delete database: {name:NonSemicolon}{may_error:MayError}")
 def step_impl(context: Context, name: str, may_error: MayError):
-    may_error.check(lambda: delete_databases(context.driver, [name]))
+    consistency = get_database_consistency(context)
+    may_error.check(lambda: context.driver.databases.get(name, consistency).delete())
 
 
 @step("connection delete databases")
@@ -122,16 +128,23 @@ def step_impl(context: Context, name: str, may_error: MayError):
 
 @step("connection has database: {name:NonSemicolon}")
 def step_impl(context: Context, name: str):
-    has_databases(context, [name])
+    consistency = get_database_consistency(context)
+    assert_that(context.driver.databases.contains(name, consistency), equal_to(True),
+                f"Expected database {name} to exist")
 
 
 @step("connection has databases")
 def step_impl(context: Context):
-    has_databases(context, names=parse_list(context))
+    consistency = get_database_consistency(context)
+    names = parse_list(context)
+    for name in names:
+        assert_that(context.driver.databases.contains(name, consistency), equal_to(True),
+                    f"Expected database {name} to exist")
 
 
 def does_not_have_databases(context: Context, names: list[str]):
-    databases = [db.name for db in context.driver.databases.all()]
+    consistency = get_database_consistency(context)
+    databases = [db.name for db in context.driver.databases.all(consistency)]
     for name in names:
         assert_that(name, not_(is_in(databases)))
 

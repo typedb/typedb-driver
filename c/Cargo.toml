@@ -20,8 +20,8 @@ features = {}
 		default-features = false
 
 	[dependencies.tracing-subscriber]
-		features = ["alloc", "ansi", "default", "env-filter", "fmt", "matchers", "nu-ansi-term", "once_cell", "regex", "registry", "sharded-slab", "smallvec", "std", "thread_local", "tracing", "tracing-log"]
-		version = "0.3.19"
+		features = ["alloc", "ansi", "default", "env-filter", "fmt", "matchers", "nu-ansi-term", "once_cell", "registry", "sharded-slab", "smallvec", "std", "thread_local", "tracing", "tracing-log"]
+		version = "0.3.20"
 		default-features = false
 
 	[dependencies.typedb-driver]
@@ -30,8 +30,8 @@ features = {}
 		default-features = false
 
 	[dependencies.chrono]
-		features = ["alloc", "android-tzdata", "clock", "default", "iana-time-zone", "js-sys", "now", "oldtime", "serde", "std", "wasm-bindgen", "wasmbind", "winapi", "windows-link"]
-		version = "0.4.41"
+		features = ["alloc", "clock", "default", "iana-time-zone", "js-sys", "now", "oldtime", "serde", "std", "wasm-bindgen", "wasmbind", "winapi", "windows-link"]
+		version = "0.4.43"
 		default-features = false
 
 	[dependencies.itertools]

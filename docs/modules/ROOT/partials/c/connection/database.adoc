@@ -9,7 +9,7 @@
 
 
 
-A TypeDB database
+A TypeDB database.
 
 [#_database_close]
 ==== function ``database_close``
@@ -21,7 +21,7 @@ void database_close(const struct Database* database)
 
 
 
-Frees the native rust ``Database`` object
+Frees the native rust ``Database`` object.
 
 [caption=""]
 .Returns
@@ -32,12 +32,23 @@ Frees the native rust ``Database`` object
 
 [source,c]
 ----
-void database_delete(const struct Database* database)
+void database_delete(const struct Database* database, const struct ConsistencyLevel* consistency_level)
 ----
 
 
 
 Deletes this database.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `database` a| The ``Database`` to delete. a| `const struct Database*`
+a| `consistency_level` a| The consistency level to use for the operation. Strongest possible if null. a| `const struct ConsistencyLevel*`
+|===
 
 [caption=""]
 .Returns
@@ -48,7 +59,7 @@ Deletes this database.
 
 [source,c]
 ----
-void database_export_to_file(const struct Database* database, const char* schema_file, const char* data_file)
+void database_export_to_file(const struct Database* database, const char* schema_file, const char* data_file, const struct ConsistencyLevel* consistency_level)
 ----
 
 
@@ -65,6 +76,7 @@ Export a database into a schema definition and a data files saved to the disk. T
 a| `database` a| The ``Database`` object to export from. a| `const struct Database*`
 a| `schema_file` a| The path to the schema definition file to be created. a| `const char*`
 a| `data_file` a| The path to the data file to be created. a| `const char*`
+a| `consistency_level` a| The consistency level to use for the operation. Strongest possible if null. a| `const struct ConsistencyLevel*`
 |===
 
 [caption=""]
@@ -81,7 +93,7 @@ char* database_get_name(const struct Database* database)
 
 
 
-The database name as a string.
+The ``Database`` name as a string.
 
 [caption=""]
 .Returns
@@ -92,12 +104,23 @@ The database name as a string.
 
 [source,c]
 ----
-char* database_type_schema(const struct Database* database)
+char* database_type_schema(const struct Database* database, const struct ConsistencyLevel* consistency_level)
 ----
 
 
 
 The types in the schema as a valid TypeQL define query string.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `database` a| The ``Database`` to get the type schema from. a| `const struct Database*`
+a| `consistency_level` a| The consistency level to use for the operation. Strongest possible if null. a| `const struct ConsistencyLevel*`
+|===
 
 [caption=""]
 .Returns

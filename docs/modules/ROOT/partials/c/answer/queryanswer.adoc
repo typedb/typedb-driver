@@ -27,7 +27,7 @@ enum QueryType query_answer_get_query_type(const struct QueryAnswer* query_answe
 
 
 
-Retrieve the executed query's type of the ``QueryAnswer``.
+Retrieves the executed query's type of the ``QueryAnswer``.
 
 [caption=""]
 .Returns

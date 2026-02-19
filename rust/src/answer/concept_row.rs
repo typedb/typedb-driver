@@ -65,7 +65,7 @@ impl ConceptRow {
         Self { header, involved_conjunctions, row }
     }
 
-    /// Retrieve the row column names (shared by all elements in this stream).
+    /// Retrieves the row column names (shared by all elements in this stream).
     ///
     /// # Examples
     ///
@@ -76,7 +76,7 @@ impl ConceptRow {
         &self.header.column_names
     }
 
-    /// Retrieve the executed query's type (shared by all elements in this stream).
+    /// Retrieves the executed query's type (shared by all elements in this stream).
     ///
     /// # Examples
     ///

@@ -36,8 +36,6 @@ class EntityType(Type, ABC):
         """
         Checks if the concept is an ``EntityType``.
 
-        :return:
-
         Examples
         --------
         ::
@@ -49,8 +47,6 @@ class EntityType(Type, ABC):
     def as_entity_type(self) -> EntityType:
         """
         Casts the concept to ``EntityType``.
-
-        :return:
 
         Examples
         --------

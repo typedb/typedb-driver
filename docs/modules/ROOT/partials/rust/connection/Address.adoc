@@ -1,0 +1,18 @@
+[#_struct_Address]
+[.doc-api-reference-driver]
+=== Address
+
+`struct`
+
+*Implements traits:*
+
+* `Clone`
+* `Debug`
+* `Default`
+* `Display`
+* `Eq`
+* `FromStr`
+* `Hash`
+* `PartialEq`
+* `StructuralPartialEq`
+

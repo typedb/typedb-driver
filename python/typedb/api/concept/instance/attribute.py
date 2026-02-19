@@ -45,8 +45,6 @@ class Attribute(Instance, ABC):
         """
         Retrieves the type which this ``Attribute`` belongs to.
 
-        :return:
-
         Examples
         --------
         ::
@@ -60,8 +58,6 @@ class Attribute(Instance, ABC):
         """
         Retrieves the value which the ``Attribute`` instance holds.
 
-        :return:
-
         Examples
         --------
         ::
@@ -74,8 +70,6 @@ class Attribute(Instance, ABC):
     def get_value_type(self) -> str:
         """
         Retrieves the description of the value type of the value which the ``Attribute`` instance holds.
-
-        :return:
 
         Examples
         --------
@@ -91,8 +85,6 @@ class Attribute(Instance, ABC):
         Returns a ``boolean`` value of the value concept that this attribute holds. If the value has
         another type, raises an exception.
 
-        :return:
-
         Examples
         --------
         ::
@@ -106,8 +98,6 @@ class Attribute(Instance, ABC):
         """
         Returns a ``integer`` value of the value concept that this attribute holds. If the value has
         another type, raises an exception.
-
-        :return:
 
         Examples
         --------
@@ -123,8 +113,6 @@ class Attribute(Instance, ABC):
         Returns a ``double`` value of the value concept that this attribute holds. If the value has
         another type, raises an exception.
 
-        :return:
-
         Examples
         --------
         ::
@@ -138,8 +126,6 @@ class Attribute(Instance, ABC):
         """
         Returns a ``decimal`` value of the value concept that this attribute holds. If the value has
         another type, raises an exception.
-
-        :return:
 
         Examples
         --------
@@ -155,8 +141,6 @@ class Attribute(Instance, ABC):
         Returns a ``string`` value of the value concept that this attribute holds. If the value has
         another type, raises an exception.
 
-        :return:
-
         Examples
         --------
         ::
@@ -170,8 +154,6 @@ class Attribute(Instance, ABC):
         """
         Returns a timezone naive ``date`` value of the value concept that this attribute holds. If the value has
         another type, raises an exception.
-
-        :return:
 
         Examples
         --------
@@ -187,8 +169,6 @@ class Attribute(Instance, ABC):
         Returns a timezone naive ``datetime`` value of the value concept that this attribute holds. If the value has
         another type, raises an exception.
 
-        :return:
-
         Examples
         --------
         ::
@@ -202,8 +182,6 @@ class Attribute(Instance, ABC):
         """
         Returns a timezone naive ``datetime_tz`` value of the value concept that this attribute holds. If the value has
         another type, raises an exception.
-
-        :return:
 
         Examples
         --------
@@ -219,8 +197,6 @@ class Attribute(Instance, ABC):
         Returns a timezone naive ``duration`` value of the value concept that this attribute holds. If the value has
         another type, raises an exception.
 
-        :return:
-
         Examples
         --------
         ::
@@ -235,8 +211,6 @@ class Attribute(Instance, ABC):
         Returns a ``struct`` value of the value concept that this attribute holds represented as a map from field names
         to values. If the value has another type, raises an exception.
 
-        :return:
-
         Examples
         --------
         ::
@@ -249,8 +223,6 @@ class Attribute(Instance, ABC):
         """
         Checks if the concept is an ``Attribute``.
 
-        :return:
-
         Examples
         --------
         ::
@@ -262,8 +234,6 @@ class Attribute(Instance, ABC):
     def as_attribute(self) -> Attribute:
         """
         Casts the concept to ``Attribute``.
-
-        :return:
 
         Examples
         --------

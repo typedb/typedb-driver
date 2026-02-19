@@ -11,12 +11,11 @@
 [options="header"]
 |===
 |Variant
-a| `EnumOutOfBounds`
 a| `RecvError`
 a| `SendError`
 a| `UnexpectedRequestType`
 a| `UnexpectedResponseType`
-a| `UnknownServer`
+a| `Unimplemented`
 |===
 // end::enum_constants[]
 

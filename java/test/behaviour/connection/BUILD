@@ -33,13 +33,14 @@ java_library(
         # External dependencies from Maven
         "@maven//:junit_junit",
 #        "@maven//:com_typedb_typedb_runner",
+        "@maven//:io_cucumber_cucumber_java",
     ],
 )
 
 java_library(
-    name = "steps-community",
+    name = "steps-core",
     srcs = [
-        "ConnectionStepsCommunity.java",
+        "ConnectionStepsCore.java",
     ],
     visibility = ["//visibility:public"],
     deps = [

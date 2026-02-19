@@ -25,20 +25,15 @@ def typedb_artifact():
         artifact_name = "typedb-all-{platform}-{version}.{ext}",
         tag_source = deployment["artifact"]["release"]["download"],
         commit_source = deployment["artifact"]["snapshot"]["download"],
-        tag = "3.7.3"
+        commit = "360da2d0739fbd2edd8c597a62996ece360b68b0"
     )
 
-#def typedb_cloud_artifact():
-#    native_artifact_files(
-#        name = "typedb_cloud_artifact",
-#        group_name = "typedb-cloud-server-{platform}",
-#        artifact_name = "typedb-cloud-server-{platform}-{version}.{ext}",
-#        tag_source = deployment_private["artifact"]["release"]["download"],
-#        commit_source = deployment_private["artifact"]["snapshot"]["download"],
-#        tag = "e4e4fee9d488e2a6e89e29716b98e3213d228809",
-#    )
-
-#maven_artifacts = {
-#    'com.typedb:typedb-runner': '2.28.3',
-#    'com.typedb:typedb-cloud-runner': '2.28.3',
-#}
+def typedb_cluster_artifact():
+    native_artifact_files(
+        name = "typedb_cluster_artifact",
+        group_name = "typedb-cluster-all-{platform}",
+        artifact_name = "typedb-cluster-all-{platform}-{version}.tar.gz", # TODO: Make {ext} instead of tar.gz
+        tag_source = deployment_private["artifact"]["release"]["download"],
+        commit_source = deployment_private["artifact"]["snapshot"]["download"],
+        commit = "350eed289eb9b357d7ca7da0416de31f897744c6",
+    )

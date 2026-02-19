@@ -1,6 +1,20 @@
 [#_methods_connection_driver]
 === driver
 
+[#_Struct_DriverTlsConfig]
+[.doc-api-reference-driver]
+==== Struct DriverTlsConfig
+
+`rust struct (pointer)`
+
+
+
+TLS configuration for the TypeDB driver.
+
+``DriverTlsConfig`` represents a fully constructed and validated TLS configuration. If TLS is enabled, the underlying TLS config is built eagerly at construction time, ensuring that no connection attempt can observe a partially-configured TLS state.
+
+The driver defaults to using TLS with native system trust roots. This matches typical system and container deployments while still allowing explicit opt-out or custom PKI configuration.
+
 [#_driver_close]
 ==== function ``driver_close``
 
@@ -11,7 +25,44 @@ void driver_close(struct TypeDBDriver* driver)
 
 
 
-Closes the driver. Before instantiating a new driver, the driver that’s currently open should first be closed. Closing a driver frees the underlying Rust object.
+Closes the ``TypeDBDriver``. Before instantiating a new driver, the driver that’s currently open should first be closed. Closing a driver frees the underlying Rust object.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `driver` a| The ``TypeDBDriver`` object. a| `struct TypeDBDriver*`
+|===
+
+[caption=""]
+.Returns
+`void`
+
+[#_driver_deregister_replica]
+==== function ``driver_deregister_replica``
+
+[source,c]
+----
+void driver_deregister_replica(const struct TypeDBDriver* driver, int64_t replica_id)
+----
+
+
+
+Deregisters a replica from the cluster the driver is currently connected to. This replica will no longer play a raft role in this cluster.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `driver` a| The ``TypeDBDriver`` object. a| `const struct TypeDBDriver*`
+a| `replica_id` a| The numeric identifier of the deregistered replica a| `int64_t`
+|===
 
 [caption=""]
 .Returns
@@ -27,7 +78,17 @@ void driver_force_close(struct TypeDBDriver* driver)
 
 
 
-Forcibly closes the driver. To be used in exceptional cases.
+Forcibly closes the ``TypeDBDriver``. To be used in exceptional cases.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `driver` a| The ``TypeDBDriver`` object. a| `struct TypeDBDriver*`
+|===
 
 [caption=""]
 .Returns
@@ -45,16 +106,26 @@ bool driver_is_open(const struct TypeDBDriver* driver)
 
 Checks whether this connection is presently open.
 
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `driver` a| The ``TypeDBDriver`` object. a| `const struct TypeDBDriver*`
+|===
+
 [caption=""]
 .Returns
 `bool`
 
-[#_driver_open]
-==== function ``driver_open``
+[#_driver_new]
+==== function ``driver_new``
 
 [source,c]
 ----
-struct TypeDBDriver* driver_open(const char* address, const struct Credentials* credentials, const struct DriverOptions* driver_options)
+struct TypeDBDriver* driver_new(const char* address, const struct Credentials* credentials, const struct DriverOptions* driver_options)
 ----
 
 
@@ -68,7 +139,7 @@ Open a TypeDB C Driver to a TypeDB server available at the provided address.
 [options="header"]
 |===
 |Name |Description |Type
-a| `address` a| The address (host:port) on which the TypeDB Server is running a| `const char*`
+a| `address` a| The address on which the TypeDB Server is running a| `const char*`
 a| `credentials` a| The ``Credentials`` to connect with a| `const struct Credentials*`
 a| `driver_options` a| The ``DriverOptions`` to connect with a| `const struct DriverOptions*`
 |===
@@ -77,12 +148,128 @@ a| `driver_options` a| The ``DriverOptions`` to connect with a| `const struct Dr
 .Returns
 `struct TypeDBDriver*`
 
-[#_driver_open_with_description]
-==== function ``driver_open_with_description``
+[#_driver_new_with_address_translation]
+==== function ``driver_new_with_address_translation``
 
 [source,c]
 ----
-struct TypeDBDriver* driver_open_with_description(const char* address, const struct Credentials* credentials, const struct DriverOptions* driver_options, const char* driver_lang)
+struct TypeDBDriver* driver_new_with_address_translation(const char*const* public_addresses, const char*const* private_addresses, const struct Credentials* credentials, const struct DriverOptions* driver_options)
+----
+
+
+
+Open a TypeDB C Driver to a TypeDB cluster, using the provided address translation.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `public_addresses` a| A null-terminated array holding the replica addresses on for connection. a| `const char*const*`
+a| `private_addresses` a| A null-terminated array holding the private replica addresses, configured on the server side. This array _must_ have the same length as ``public_addresses``. a| `const char*const*`
+a| `credentials` a| The ``Credentials`` to connect with a| `const struct Credentials*`
+a| `driver_options` a| The ``DriverOptions`` to connect with a| `const struct DriverOptions*`
+|===
+
+[caption=""]
+.Returns
+`struct TypeDBDriver*`
+
+[#_driver_new_with_address_translation_with_description]
+==== function ``driver_new_with_address_translation_with_description``
+
+[source,c]
+----
+struct TypeDBDriver* driver_new_with_address_translation_with_description(const char*const* public_addresses, const char*const* private_addresses, const struct Credentials* credentials, const struct DriverOptions* driver_options, const char* driver_lang)
+----
+
+
+
+Open a TypeDB Driver to a TypeDB cluster, using the provided address translation. This method allows driver language specification for drivers built on top of the native C layer.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `public_addresses` a| A null-terminated array holding the replica addresses on for connection. a| `const char*const*`
+a| `private_addresses` a| A null-terminated array holding the private replica addresses, configured on the server side. This array _must_ have the same length as ``public_addresses``. a| `const char*const*`
+a| `credentials` a| The ``Credentials`` to connect with a| `const struct Credentials*`
+a| `driver_options` a| The ``DriverOptions`` to connect with a| `const struct DriverOptions*`
+a| `driver_lang` a| The language of the driver connecting to the server a| `const char*`
+|===
+
+[caption=""]
+.Returns
+`struct TypeDBDriver*`
+
+[#_driver_new_with_addresses]
+==== function ``driver_new_with_addresses``
+
+[source,c]
+----
+struct TypeDBDriver* driver_new_with_addresses(const char*const* addresses, const struct Credentials* credentials, const struct DriverOptions* driver_options)
+----
+
+
+
+Open a TypeDB C Driver to a TypeDB cluster available at the provided addresses.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `addresses` a| A null-terminated array holding the server addresses on for connection a| `const char*const*`
+a| `credentials` a| The ``Credentials`` to connect with a| `const struct Credentials*`
+a| `driver_options` a| The ``DriverOptions`` to connect with a| `const struct DriverOptions*`
+|===
+
+[caption=""]
+.Returns
+`struct TypeDBDriver*`
+
+[#_driver_new_with_addresses_with_description]
+==== function ``driver_new_with_addresses_with_description``
+
+[source,c]
+----
+struct TypeDBDriver* driver_new_with_addresses_with_description(const char*const* addresses, const struct Credentials* credentials, const struct DriverOptions* driver_options, const char* driver_lang)
+----
+
+
+
+Open a TypeDB Driver to a TypeDB cluster available at the provided addresses. This method allows driver language specification for drivers built on top of the native C layer.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `addresses` a| A null-terminated array holding the TypeDB cluster replica addresses on for connection a| `const char*const*`
+a| `credentials` a| The ``Credentials`` to connect with a| `const struct Credentials*`
+a| `driver_options` a| The ``DriverOptions`` to connect with a| `const struct DriverOptions*`
+a| `driver_lang` a| The language of the driver connecting to the server a| `const char*`
+|===
+
+[caption=""]
+.Returns
+`struct TypeDBDriver*`
+
+[#_driver_new_with_description]
+==== function ``driver_new_with_description``
+
+[source,c]
+----
+struct TypeDBDriver* driver_new_with_description(const char* address, const struct Credentials* credentials, const struct DriverOptions* driver_options, const char* driver_lang)
 ----
 
 
@@ -96,7 +283,7 @@ Open a TypeDB Driver to a TypeDB server available at the provided address. This 
 [options="header"]
 |===
 |Name |Description |Type
-a| `address` a| The address (host:port) on which the TypeDB Server is running a| `const char*`
+a| `address` a| The address on which the TypeDB Server is running a| `const char*`
 a| `credentials` a| The ``Credentials`` to connect with a| `const struct Credentials*`
 a| `driver_options` a| The ``DriverOptions`` to connect with a| `const struct DriverOptions*`
 a| `driver_lang` a| The language of the driver connecting to the server a| `const char*`
@@ -105,6 +292,255 @@ a| `driver_lang` a| The language of the driver connecting to the server a| `cons
 [caption=""]
 .Returns
 `struct TypeDBDriver*`
+
+[#_driver_primary_replica]
+==== function ``driver_primary_replica``
+
+[source,c]
+----
+struct ServerReplica* driver_primary_replica(const struct TypeDBDriver* driver, const struct ConsistencyLevel* consistency_level)
+----
+
+
+
+Retrieves the server's primary replica, if exists.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `driver` a| The ``TypeDBDriver`` object. a| `const struct TypeDBDriver*`
+a| `consistency_level` a| The consistency level to use for the operation. Strongest possible if null. a| `const struct ConsistencyLevel*`
+|===
+
+[caption=""]
+.Returns
+`struct ServerReplica*`
+
+[#_driver_register_replica]
+==== function ``driver_register_replica``
+
+[source,c]
+----
+void driver_register_replica(const struct TypeDBDriver* driver, int64_t replica_id, const char* address)
+----
+
+
+
+Registers a new replica in the cluster the driver is currently connected to. The registered replica will become available eventually, depending on the behavior of the whole cluster. To register a replica, its clustering address should be passed, not the connection address.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `driver` a| The ``TypeDBDriver`` object. a| `const struct TypeDBDriver*`
+a| `replica_id` a| The numeric identifier of the new replica a| `int64_t`
+a| `address` a| The address(es) of the TypeDB replica as a string a| `const char*`
+|===
+
+[caption=""]
+.Returns
+`void`
+
+[#_driver_replicas]
+==== function ``driver_replicas``
+
+[source,c]
+----
+struct ServerReplicaIterator* driver_replicas(const struct TypeDBDriver* driver, const struct ConsistencyLevel* consistency_level)
+----
+
+
+
+Retrieves the server's replicas.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `driver` a| The ``TypeDBDriver`` object. a| `const struct TypeDBDriver*`
+a| `consistency_level` a| The consistency level to use for the operation. Strongest possible if null. a| `const struct ConsistencyLevel*`
+|===
+
+[caption=""]
+.Returns
+`struct ServerReplicaIterator*`
+
+[#_driver_server_version]
+==== function ``driver_server_version``
+
+[source,c]
+----
+struct ServerVersion* driver_server_version(const struct TypeDBDriver* driver, const struct ConsistencyLevel* consistency_level)
+----
+
+
+
+Retrieves the server version and distribution information.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `driver` a| The ``TypeDBDriver`` object. a| `const struct TypeDBDriver*`
+a| `consistency_level` a| The consistency level to use for the operation. Strongest possible if null. a| `const struct ConsistencyLevel*`
+|===
+
+[caption=""]
+.Returns
+`struct ServerVersion*`
+
+[#_driver_tls_config_drop]
+==== function ``driver_tls_config_drop``
+
+[source,c]
+----
+void driver_tls_config_drop(struct DriverTlsConfig* tls_config)
+----
+
+
+
+Frees the native rust ``DriverTlsConfig`` object.
+
+[caption=""]
+.Returns
+`void`
+
+[#_driver_tls_config_get_root_ca_path]
+==== function ``driver_tls_config_get_root_ca_path``
+
+[source,c]
+----
+char* driver_tls_config_get_root_ca_path(const struct DriverTlsConfig* tls_config)
+----
+
+
+
+Returns the TLS root CA set in this ``DriverTlsConfig`` object. Panics if a custom root CA is absent.
+
+[caption=""]
+.Returns
+`char*`
+
+[#_driver_tls_config_has_root_ca_path]
+==== function ``driver_tls_config_has_root_ca_path``
+
+[source,c]
+----
+bool driver_tls_config_has_root_ca_path(const struct DriverTlsConfig* tls_config)
+----
+
+
+
+Returns whether a custom root CA path is set.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_driver_tls_config_is_enabled]
+==== function ``driver_tls_config_is_enabled``
+
+[source,c]
+----
+bool driver_tls_config_is_enabled(const struct DriverTlsConfig* tls_config)
+----
+
+
+
+Returns whether TLS is enabled.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_driver_tls_config_new_disabled]
+==== function ``driver_tls_config_new_disabled``
+
+[source,c]
+----
+struct DriverTlsConfig* driver_tls_config_new_disabled(void)
+----
+
+
+
+Creates a new ``DriverTlsConfig`` with TLS disabled.
+
+[caption=""]
+.Returns
+`struct DriverTlsConfig*`
+
+[#_driver_tls_config_new_enabled_with_native_root_ca]
+==== function ``driver_tls_config_new_enabled_with_native_root_ca``
+
+[source,c]
+----
+struct DriverTlsConfig* driver_tls_config_new_enabled_with_native_root_ca(void)
+----
+
+
+
+Creates a new ``DriverTlsConfig`` with TLS enabled using system native trust roots.
+
+[caption=""]
+.Returns
+`struct DriverTlsConfig*`
+
+[#_driver_tls_config_new_enabled_with_root_ca_path]
+==== function ``driver_tls_config_new_enabled_with_root_ca_path``
+
+[source,c]
+----
+struct DriverTlsConfig* driver_tls_config_new_enabled_with_root_ca_path(const char* tls_root_ca)
+----
+
+
+
+Creates a new ``DriverTlsConfig`` with TLS enabled using a custom root CA certificate (PEM).
+
+[caption=""]
+.Returns
+`struct DriverTlsConfig*`
+
+[#_driver_update_address_translation]
+==== function ``driver_update_address_translation``
+
+[source,c]
+----
+void driver_update_address_translation(const struct TypeDBDriver* driver, const char*const* public_addresses, const char*const* private_addresses)
+----
+
+
+
+Updates address translation of the driver. This lets you actualize new translation information without recreating the driver from scratch. Useful after registering new replicas requiring address translation. This operation will update existing connections using the provided addresses.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `driver` a| The ``TypeDBDriver`` object. a| `const struct TypeDBDriver*`
+a| `public_addresses` a| A null-terminated array holding the replica addresses on for connection. a| `const char*const*`
+a| `private_addresses` a| A null-terminated array holding the private replica addresses, configured on the server side. This array _must_ have the same length as ``public_addresses``. a| `const char*const*`
+|===
+
+[caption=""]
+.Returns
+`void`
 
 [#_init_logging]
 ==== function ``init_logging``

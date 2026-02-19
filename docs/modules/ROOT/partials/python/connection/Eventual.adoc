@@ -1,0 +1,14 @@
+[#_Eventual]
+[.doc-api-reference-driver]
+=== Eventual
+
+`class`
+
+*Package*: `typedb.api.connection.consistency_level`
+
+*Supertypes:*
+
+* `ConsistencyLevel`
+
+Eventual consistency level. Allow stale reads from any replica and execution orchestration through a non-primary replica. Does not guarantee latest writes, but is eventually faster compared to other consistency levels. Note that the target replica can redirect the request, if needed.
+

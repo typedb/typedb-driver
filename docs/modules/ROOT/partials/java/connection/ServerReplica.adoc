@@ -1,0 +1,88 @@
+[#_ServerReplica]
+[.doc-api-reference-driver]
+=== ServerReplica
+
+`class`
+
+*Package*: `com.typedb.driver.api.server`
+
+The metadata and state of an individual raft replica of a driver connection.
+
+// tag::methods[]
+[#_ServerReplica_getAddress_]
+==== method ``getAddress``
+
+[source,java]
+----
+@CheckReturnValue
+java.lang.String getAddress()
+----
+
+Returns the address this replica is hosted at.
+
+[caption=""]
+.Returns
+`java.lang.String`
+
+[#_ServerReplica_getID_]
+==== method ``getID``
+
+[source,java]
+----
+@CheckReturnValue
+long getID()
+----
+
+Returns the id of this replica.
+
+[caption=""]
+.Returns
+`long`
+
+[#_ServerReplica_getRole_]
+==== method ``getRole``
+
+[source,java]
+----
+@CheckReturnValue
+java.util.Optional<ReplicaRole> getRole()
+----
+
+Returns whether this is the primary replica of the raft cluster or any of the supporting types.
+
+[caption=""]
+.Returns
+`java.util.Optional<ReplicaRole>`
+
+[#_ServerReplica_getTerm_]
+==== method ``getTerm``
+
+[source,java]
+----
+@CheckReturnValue
+java.util.Optional<java.lang.Long> getTerm()
+----
+
+Returns the raft protocol ‘term’ of this replica.
+
+[caption=""]
+.Returns
+`java.util.Optional<java.lang.Long>`
+
+[#_ServerReplica_isPrimary_]
+==== method ``isPrimary``
+
+[source,java]
+----
+@CheckReturnValue
+java.lang.Boolean isPrimary()
+----
+
+Checks whether this is the primary replica of the raft cluster.
+
+[caption=""]
+.Returns
+`java.lang.Boolean`
+
+// end::methods[]
+

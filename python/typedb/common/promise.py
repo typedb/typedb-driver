@@ -48,8 +48,6 @@ class Promise(Generic[T]):
         """
         Retrieves the result of the Promise.
 
-        :return:
-
         Examples
         --------
 

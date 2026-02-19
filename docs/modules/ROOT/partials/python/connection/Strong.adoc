@@ -1,0 +1,14 @@
+[#_Strong]
+[.doc-api-reference-driver]
+=== Strong
+
+`class`
+
+*Package*: `typedb.api.connection.consistency_level`
+
+*Supertypes:*
+
+* `ConsistencyLevel`
+
+Strong consistency level. Strongest consistency, always up-to-date due to the guarantee of the primary replica usage. May require more time for operation execution.
+

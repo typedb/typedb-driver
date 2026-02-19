@@ -6,12 +6,23 @@
 
 [source,c]
 ----
-void user_delete(struct User* user)
+void user_delete(struct User* user, const struct ConsistencyLevel* consistency_level)
 ----
 
 
 
-Deletes this database.
+Deletes this user.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `user` a| The ``User`` to delete. a| `struct User*`
+a| `consistency_level` a| The consistency level to use for the operation. Strongest possible if null. a| `const struct ConsistencyLevel*`
+|===
 
 [caption=""]
 .Returns
@@ -54,7 +65,7 @@ Returns the name of this user.
 
 [source,c]
 ----
-void user_update_password(struct User* user, const char* password)
+void user_update_password(struct User* user, const char* password, const struct ConsistencyLevel* consistency_level)
 ----
 
 
@@ -70,8 +81,9 @@ Updates the password for the current authenticated user.
 |Name |Description |Type
 a| `user` a| The user to update the password of - must be the current user. a| `struct User*`
 a| `user_manager` a| The ``UserManager`` object on this connection. a| 
-a| `password_old` a| The current password of this user a| 
-a| `password_new` a| The new password a| 
+a| `password_old` a| The current password of this user. a| 
+a| `password_new` a| The new password. a| 
+a| `consistency_level` a| The consistency level to use for the operation. Strongest possible if null. a| `const struct ConsistencyLevel*`
 |===
 
 [caption=""]

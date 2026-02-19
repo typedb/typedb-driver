@@ -4,20 +4,29 @@
 
 `class`
 
-*Package*: `typedb.api.user.user`
+*Package*: `typedb.api.user.user_manager`
 
 Provides access to all user management methods.
 
 // tag::methods[]
-[#_UserManager_all_]
+[#_UserManager_all_consistency_level_ConsistencyLevel_None]
 ==== method ``all``
 
 [source,python]
 ----
-all() -> List[User]
+all(consistency_level: ConsistencyLevel | None = None) -> List[User]
 ----
 
 Retrieves all users which exist on the TypeDB server.
+
+[caption=""]
+.Input parameters
+[cols=",,,"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `consistency_level` a| The consistency level to use for the operation. Strongest possible by default a| `ConsistencyLevel \| None` a| `None`
+|===
 
 [caption=""]
 .Returns
@@ -28,14 +37,15 @@ Retrieves all users which exist on the TypeDB server.
 [source,python]
 ----
 driver.users.all()
+driver.users.all(ConsistencyLevel.Strong())
 ----
 
-[#_UserManager_contains_username_str]
+[#_UserManager_contains_username_str_consistency_level_ConsistencyLevel_None]
 ==== method ``contains``
 
 [source,python]
 ----
-contains(username: str) -> bool
+contains(username: str, consistency_level: ConsistencyLevel | None = None) -> bool
 ----
 
 Checks if a user with the given name exists.
@@ -46,7 +56,8 @@ Checks if a user with the given name exists.
 [options="header"]
 |===
 |Name |Description |Type |Default Value
-a| `username` a| The user name to be checked a| `str` a| 
+a| `username` a| The username to be checked a| `str` a| 
+a| `consistency_level` a| The consistency level to use for the operation. Strongest possible by default a| `ConsistencyLevel \| None` a| `None`
 |===
 
 [caption=""]
@@ -58,17 +69,18 @@ a| `username` a| The user name to be checked a| `str` a|
 [source,python]
 ----
 driver.users.contains(username)
+driver.users.contains(username, ConsistencyLevel.Strong())
 ----
 
-[#_UserManager_create_username_str_password_str]
+[#_UserManager_create_username_str_password_str_consistency_level_ConsistencyLevel_None]
 ==== method ``create``
 
 [source,python]
 ----
-create(username: str, password: str) -> None
+create(username: str, password: str, consistency_level: ConsistencyLevel | None = None) -> None
 ----
 
-Create a user with the given name and password.
+Creates a user with the given name and password.
 
 [caption=""]
 .Input parameters
@@ -78,6 +90,7 @@ Create a user with the given name and password.
 |Name |Description |Type |Default Value
 a| `username` a| The name of the user to be created a| `str` a| 
 a| `password` a| The password of the user to be created a| `str` a| 
+a| `consistency_level` a| The consistency level to use for the operation. Strongest possible by default a| `ConsistencyLevel \| None` a| `None`
 |===
 
 [caption=""]
@@ -89,17 +102,18 @@ a| `password` a| The password of the user to be created a| `str` a|
 [source,python]
 ----
 driver.users.create(username, password)
+driver.users.create(username, password, ConsistencyLevel.Strong())
 ----
 
-[#_UserManager_get_username_str]
+[#_UserManager_get_username_str_consistency_level_ConsistencyLevel_None]
 ==== method ``get``
 
 [source,python]
 ----
-get(username: str) -> User | None
+get(username: str, consistency_level: ConsistencyLevel | None = None) -> User | None
 ----
 
-Retrieve a user with the given name.
+Retrieves a user with the given name.
 
 [caption=""]
 .Input parameters
@@ -108,6 +122,7 @@ Retrieve a user with the given name.
 |===
 |Name |Description |Type |Default Value
 a| `username` a| The name of the user to retrieve a| `str` a| 
+a| `consistency_level` a| The consistency level to use for the operation. Strongest possible by default a| `ConsistencyLevel \| None` a| `None`
 |===
 
 [caption=""]
@@ -119,17 +134,27 @@ a| `username` a| The name of the user to retrieve a| `str` a|
 [source,python]
 ----
 driver.users.get(username)
+driver.users.get(username, ConsistencyLevel.Strong())
 ----
 
-[#_UserManager_get_current_user_]
-==== method ``get_current_user``
+[#_UserManager_get_current_consistency_level_ConsistencyLevel_None]
+==== method ``get_current``
 
 [source,python]
 ----
-get_current_user() -> User | None
+get_current(consistency_level: ConsistencyLevel | None = None) -> User | None
 ----
 
-Retrieve the name of the user who opened the current connection.
+Retrieves the name of the user who opened the current connection.
+
+[caption=""]
+.Input parameters
+[cols=",,,"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `consistency_level` a| The consistency level to use for the operation. Strongest possible by default a| `ConsistencyLevel \| None` a| `None`
+|===
 
 [caption=""]
 .Returns
@@ -139,7 +164,8 @@ Retrieve the name of the user who opened the current connection.
 .Code examples
 [source,python]
 ----
-driver.users.get_current_user()
+driver.users.get_current()
+driver.users.get_current(ConsistencyLevel.Strong())
 ----
 
 // end::methods[]
