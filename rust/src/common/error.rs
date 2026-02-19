@@ -157,7 +157,7 @@ error_messages! { ConnectionError
     UnknownDirectReplica { address: Address, configured_addresses: Addresses } =
         16: "Could not execute operation against '{address}' since it's not a known replica of configured addresses ({configured_addresses}).",
     TokenCredentialInvalid =
-        17: "Invalid token credentials.",
+        17: "Invalid credential supplied.",
     EncryptionSettingsMismatch =
         18: "Unable to connect to TypeDB: possible encryption settings mismatch.",
     SslCertificateNotValidated =
@@ -354,7 +354,7 @@ impl Error {
 
     fn try_extracting_connection_error_code(code: &str) -> Option<ConnectionError> {
         match code {
-            "AUT2" | "AUT3" => Some(ConnectionError::TokenCredentialInvalid {}),
+            "AUT1" | "AUT2" | "AUT3" => Some(ConnectionError::TokenCredentialInvalid {}),
             "SRV14" | "RFT1" | "CSV7" => Some(ConnectionError::ServerIsNotInitialised {}),
             "CSV8" => Some(ConnectionError::ClusterReplicaNotPrimary {}),
             _ => None,
