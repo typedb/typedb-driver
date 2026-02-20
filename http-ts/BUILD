@@ -153,6 +153,7 @@ js_binary(
     name = "typedoc_runner_bin",
     data = [
         ":typedoc_runner",
+        "package.json",
     ],
     entry_point = ":typedoc_runner",
     chdir = package_name(),
