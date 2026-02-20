@@ -137,7 +137,7 @@ checkstyle_test(
 # when typedoc script is placed below the modules being documented.
 ts_project(
     name = "typedoc_runner",
-    srcs = glob(["tool/typedoc/TypeDocRunner.ts",]),
+    srcs = ["tool/typedoc/TypeDocRunner.mts"],
     tsconfig = "tool/typedoc/tsconfig.json",
     declaration = True,
     deps = [
@@ -153,9 +153,9 @@ js_binary(
     name = "typedoc_runner_bin",
     data = [
         ":typedoc_runner",
-        "package.json",
+        ":package",
     ],
-    entry_point = ":typedoc_runner",
+    entry_point = "tool/typedoc/TypeDocRunner.mjs",
     chdir = package_name(),
 )
 
