@@ -17,14 +17,16 @@
  * under the License.
  */
 
-use std::collections::HashMap;
-use std::str::FromStr;
+use std::{collections::HashMap, str::FromStr};
 
 use chrono::{Datelike, NaiveDate, NaiveDateTime, Timelike};
 use futures::TryStreamExt;
 use serial_test::serial;
 use typedb_driver::{
-    concept::{value::Decimal, value::Duration, value::TimeZone, Concept, Value, ValueType},
+    concept::{
+        value::{Decimal, Duration, TimeZone},
+        Concept, Value, ValueType,
+    },
     Credentials, DriverOptions, TransactionType, TypeDBDriver,
 };
 
@@ -146,8 +148,7 @@ fn duration_parse_complex() {
     assert_eq!(duration.months(), 22); // 1*12 + 10
     assert_eq!(duration.days(), 7);
     // 15H * 3600 * 10^9 + 44M * 60 * 10^9 + 5S * 10^9 + 3948920 nanos
-    let expected_nanos: u64 =
-        15 * 3600 * 1_000_000_000 + 44 * 60 * 1_000_000_000 + 5 * 1_000_000_000 + 3_948_920;
+    let expected_nanos: u64 = 15 * 3600 * 1_000_000_000 + 44 * 60 * 1_000_000_000 + 5 * 1_000_000_000 + 3_948_920;
     assert_eq!(duration.nanos(), expected_nanos);
 }
 
@@ -156,8 +157,7 @@ fn duration_parse_max_complex() {
     let duration = Duration::from_str("P999Y12M31DT24H59M59.999999999S").unwrap();
     assert_eq!(duration.months(), 12000); // 999*12 + 12
     assert_eq!(duration.days(), 31);
-    let expected_nanos: u64 =
-        24 * 3600 * 1_000_000_000 + 59 * 60 * 1_000_000_000 + 59 * 1_000_000_000 + 999_999_999;
+    let expected_nanos: u64 = 24 * 3600 * 1_000_000_000 + 59 * 60 * 1_000_000_000 + 59 * 1_000_000_000 + 999_999_999;
     assert_eq!(duration.nanos(), expected_nanos);
 }
 
