@@ -343,7 +343,7 @@ namespace TypeDB.Driver.Test.Integration
                     var query = valueType == "none"
                         ? $"define attribute {attribute} @abstract;"
                         : $"define attribute {attribute}, value {valueType}; entity person owns {attribute};";
-                    var answer = tx.Query(query);
+                    var answer = tx.Query(query).Resolve();
                     Assert.IsTrue(answer.IsOk);
                 }
                 tx.Commit();
@@ -352,7 +352,7 @@ namespace TypeDB.Driver.Test.Integration
             // Read transaction: verify attribute types
             using (var tx = driver.Transaction(DatabaseName, TransactionType.Read))
             {
-                var answer = tx.Query("match attribute $a;");
+                var answer = tx.Query("match attribute $a;").Resolve();
                 Assert.IsTrue(answer.IsConceptRows);
 
                 var rows = answer.AsConceptRows().ToList();
@@ -376,7 +376,7 @@ namespace TypeDB.Driver.Test.Integration
                 foreach (var (attribute, value) in attributeValues)
                 {
                     var query = $"insert $a isa person, has {attribute} {value};";
-                    var answer = tx.Query(query);
+                    var answer = tx.Query(query).Resolve();
                     Assert.IsTrue(answer.IsConceptRows);
 
                     var rows = answer.AsConceptRows().ToList();
@@ -393,7 +393,7 @@ namespace TypeDB.Driver.Test.Integration
             // Read transaction: verify attribute values
             using (var tx = driver.Transaction(DatabaseName, TransactionType.Read))
             {
-                var answer = tx.Query("match attribute $t; $a isa! $t;");
+                var answer = tx.Query("match attribute $t; $a isa! $t;").Resolve();
                 Assert.IsTrue(answer.IsConceptRows);
 
                 var rows = answer.AsConceptRows().ToList();
@@ -474,14 +474,14 @@ namespace TypeDB.Driver.Test.Integration
             // Define datetime attribute
             using (var tx = driver.Transaction(DatabaseName, TransactionType.Schema))
             {
-                tx.Query("define attribute dt, value datetime;");
+                tx.Query("define attribute dt, value datetime;").Resolve();
                 tx.Commit();
             }
 
             // Test: 2024-10-09T13:07:38.123456789
             using (var tx = driver.Transaction(DatabaseName, TransactionType.Write))
             {
-                var answer = tx.Query("insert $dt isa dt 2024-10-09T13:07:38.123456789;");
+                var answer = tx.Query("insert $dt isa dt 2024-10-09T13:07:38.123456789;").Resolve();
                 var rows = answer.AsConceptRows().ToList();
                 var concept = rows[0].Get("dt");
                 var datetime = concept?.TryGetDatetime();
@@ -499,7 +499,7 @@ namespace TypeDB.Driver.Test.Integration
             // Test: Unix epoch 1970-01-01T00:00:00
             using (var tx = driver.Transaction(DatabaseName, TransactionType.Write))
             {
-                var answer = tx.Query("insert $dt isa dt 1970-01-01T00:00:00;");
+                var answer = tx.Query("insert $dt isa dt 1970-01-01T00:00:00;").Resolve();
                 var rows = answer.AsConceptRows().ToList();
                 var concept = rows[0].Get("dt");
                 var datetime = concept?.TryGetDatetime();
@@ -518,7 +518,7 @@ namespace TypeDB.Driver.Test.Integration
             // Test: max value 9999-12-31T23:59:59.999999999
             using (var tx = driver.Transaction(DatabaseName, TransactionType.Write))
             {
-                var answer = tx.Query("insert $dt isa dt 9999-12-31T23:59:59.999999999;");
+                var answer = tx.Query("insert $dt isa dt 9999-12-31T23:59:59.999999999;").Resolve();
                 var rows = answer.AsConceptRows().ToList();
                 var concept = rows[0].Get("dt");
                 var datetime = concept?.TryGetDatetime();
@@ -543,14 +543,14 @@ namespace TypeDB.Driver.Test.Integration
             // Define datetime-tz attribute
             using (var tx = driver.Transaction(DatabaseName, TransactionType.Schema))
             {
-                tx.Query("define attribute dtz, value datetime-tz;");
+                tx.Query("define attribute dtz, value datetime-tz;").Resolve();
                 tx.Commit();
             }
 
             // Test: IANA timezone
             using (var tx = driver.Transaction(DatabaseName, TransactionType.Write))
             {
-                var answer = tx.Query("insert $dtz isa dtz 2024-10-09T13:07:38.123456789 Europe/London;");
+                var answer = tx.Query("insert $dtz isa dtz 2024-10-09T13:07:38.123456789 Europe/London;").Resolve();
                 var rows = answer.AsConceptRows().ToList();
                 var concept = rows[0].Get("dtz");
                 var datetimeTz = concept?.TryGetDatetimeTZ();
@@ -576,14 +576,14 @@ namespace TypeDB.Driver.Test.Integration
             // Define datetime-tz attribute
             using (var tx = driver.Transaction(DatabaseName, TransactionType.Schema))
             {
-                tx.Query("define attribute dtz, value datetime-tz;");
+                tx.Query("define attribute dtz, value datetime-tz;").Resolve();
                 tx.Commit();
             }
 
             // Test: Fixed offset timezone
             using (var tx = driver.Transaction(DatabaseName, TransactionType.Write))
             {
-                var answer = tx.Query("insert $dtz isa dtz 2024-09-20T16:40:05.028129323+0545;");
+                var answer = tx.Query("insert $dtz isa dtz 2024-09-20T16:40:05.028129323+0545;").Resolve();
                 var rows = answer.AsConceptRows().ToList();
                 var concept = rows[0].Get("dtz");
                 var datetimeTz = concept?.TryGetDatetimeTZ();
@@ -610,14 +610,14 @@ namespace TypeDB.Driver.Test.Integration
             // Define duration attribute
             using (var tx = driver.Transaction(DatabaseName, TransactionType.Schema))
             {
-                tx.Query("define attribute d, value duration;");
+                tx.Query("define attribute d, value duration;").Resolve();
                 tx.Commit();
             }
 
             // Test: P1Y
             using (var tx = driver.Transaction(DatabaseName, TransactionType.Write))
             {
-                var answer = tx.Query("insert $d isa d P1Y;");
+                var answer = tx.Query("insert $d isa d P1Y;").Resolve();
                 var rows = answer.AsConceptRows().ToList();
                 var concept = rows[0].Get("d");
                 var duration = concept?.TryGetDuration();
@@ -631,7 +631,7 @@ namespace TypeDB.Driver.Test.Integration
             // Test: P1M
             using (var tx = driver.Transaction(DatabaseName, TransactionType.Write))
             {
-                var answer = tx.Query("insert $d isa d P1M;");
+                var answer = tx.Query("insert $d isa d P1M;").Resolve();
                 var rows = answer.AsConceptRows().ToList();
                 var concept = rows[0].Get("d");
                 var duration = concept?.TryGetDuration();
@@ -645,7 +645,7 @@ namespace TypeDB.Driver.Test.Integration
             // Test: P1D
             using (var tx = driver.Transaction(DatabaseName, TransactionType.Write))
             {
-                var answer = tx.Query("insert $d isa d P1D;");
+                var answer = tx.Query("insert $d isa d P1D;").Resolve();
                 var rows = answer.AsConceptRows().ToList();
                 var concept = rows[0].Get("d");
                 var duration = concept?.TryGetDuration();
@@ -659,7 +659,7 @@ namespace TypeDB.Driver.Test.Integration
             // Test: P0DT1H
             using (var tx = driver.Transaction(DatabaseName, TransactionType.Write))
             {
-                var answer = tx.Query("insert $d isa d P0DT1H;");
+                var answer = tx.Query("insert $d isa d P0DT1H;").Resolve();
                 var rows = answer.AsConceptRows().ToList();
                 var concept = rows[0].Get("d");
                 var duration = concept?.TryGetDuration();
@@ -673,7 +673,7 @@ namespace TypeDB.Driver.Test.Integration
             // Test: P0DT1S
             using (var tx = driver.Transaction(DatabaseName, TransactionType.Write))
             {
-                var answer = tx.Query("insert $d isa d P0DT1S;");
+                var answer = tx.Query("insert $d isa d P0DT1S;").Resolve();
                 var rows = answer.AsConceptRows().ToList();
                 var concept = rows[0].Get("d");
                 var duration = concept?.TryGetDuration();
@@ -687,7 +687,7 @@ namespace TypeDB.Driver.Test.Integration
             // Test: P0DT0.000000001S (1 nanosecond)
             using (var tx = driver.Transaction(DatabaseName, TransactionType.Write))
             {
-                var answer = tx.Query("insert $d isa d P0DT0.000000001S;");
+                var answer = tx.Query("insert $d isa d P0DT0.000000001S;").Resolve();
                 var rows = answer.AsConceptRows().ToList();
                 var concept = rows[0].Get("d");
                 var duration = concept?.TryGetDuration();
@@ -701,7 +701,7 @@ namespace TypeDB.Driver.Test.Integration
             // Test: P7W (weeks)
             using (var tx = driver.Transaction(DatabaseName, TransactionType.Write))
             {
-                var answer = tx.Query("insert $d isa d P7W;");
+                var answer = tx.Query("insert $d isa d P7W;").Resolve();
                 var rows = answer.AsConceptRows().ToList();
                 var concept = rows[0].Get("d");
                 var duration = concept?.TryGetDuration();
@@ -715,7 +715,7 @@ namespace TypeDB.Driver.Test.Integration
             // Test: P999Y12M31DT24H59M59.999999999S (complex)
             using (var tx = driver.Transaction(DatabaseName, TransactionType.Write))
             {
-                var answer = tx.Query("insert $d isa d P999Y12M31DT24H59M59.999999999S;");
+                var answer = tx.Query("insert $d isa d P999Y12M31DT24H59M59.999999999S;").Resolve();
                 var rows = answer.AsConceptRows().ToList();
                 var concept = rows[0].Get("d");
                 var duration = concept?.TryGetDuration();

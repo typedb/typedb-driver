@@ -68,23 +68,23 @@ namespace TypeDB.Driver.Api
         /// Executes a TypeQL query in this transaction.
         /// </summary>
         /// <param name="query">The TypeQL query string to execute.</param>
-        /// <returns>The query answer containing the results.</returns>
-        IQueryAnswer Query(string query);
+        /// <returns>A promise that resolves to the query answer containing the results.</returns>
+        Promise<IQueryAnswer> Query(string query);
 
         /// <summary>
         /// Executes a TypeQL query in this transaction with custom options.
         /// </summary>
         /// <param name="query">The TypeQL query string to execute.</param>
         /// <param name="options">Query options.</param>
-        /// <returns>The query answer containing the results.</returns>
-        IQueryAnswer Query(string query, QueryOptions options);
+        /// <returns>A promise that resolves to the query answer containing the results.</returns>
+        Promise<IQueryAnswer> Query(string query, QueryOptions options);
 
         /// <summary>
         /// Analyzes a TypeQL query and returns information about its structure and type inference results.
         /// </summary>
         /// <param name="query">The TypeQL query string to analyze.</param>
-        /// <returns>The analyzed query containing structure and type information.</returns>
-        IAnalyzedQuery Analyze(string query);
+        /// <returns>A promise that resolves to the analyzed query containing structure and type information.</returns>
+        Promise<IAnalyzedQuery> Analyze(string query);
     }
 
     /// <summary>

@@ -140,7 +140,7 @@ namespace TypeDB.Driver.Test.Behaviour
             try
             {
                 var tx = Driver.Transaction(tempName, TransactionType.Schema);
-                tx.Query(schemaQuery);
+                tx.Query(schemaQuery).Resolve();
                 tx.Commit();
                 return Driver.Databases.Get(tempName).GetSchema();
             }

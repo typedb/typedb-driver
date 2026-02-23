@@ -30,6 +30,7 @@ using TypeDB.Driver.Common;
 using TypeDB.Driver.Common.Validation;
 
 using DriverError = TypeDB.Driver.Common.Error.Driver;
+using QueryError = TypeDB.Driver.Common.Error.Query;
 
 namespace TypeDB.Driver.Connection
 {
@@ -115,38 +116,36 @@ namespace TypeDB.Driver.Connection
 
             try
             {
-                // Call transaction_close and wait for it to complete.
-                // IMPORTANT: We must wait for close to complete BEFORE clearing callbacks.
-                // The native close process invokes OnClose callbacks, which go through
-                // the SWIG director mechanism. If we clear _callbacks first, the GC can
-                // finalize TransactionOnClose objects and release their SWIG directors
-                // while native code is still trying to invoke them, causing use-after-free.
                 Pinvoke.typedb_driver.transaction_close(NativeObject).Resolve();
-
-                // Now safe to clear callbacks - all native callbacks have been invoked
-                _callbacks.Clear();
             }
             catch (Pinvoke.Error e)
             {
                 throw new TypeDBDriverException(e);
             }
+            finally
+            {
+                _callbacks.Clear();
+            }
         }
 
         /// <inheritdoc/>
-        public IQueryAnswer Query(string query)
+        public Promise<IQueryAnswer> Query(string query)
         {
             return Query(query, new QueryOptions());
         }
 
         /// <inheritdoc/>
-        public IQueryAnswer Query(string query, QueryOptions options)
+        public Promise<IQueryAnswer> Query(string query, QueryOptions options)
         {
+            Validator.NonEmptyString(query, QueryError.MISSING_QUERY);
             Validator.ThrowIfFalse(NativeObject.IsOwned, DriverError.TRANSACTION_CLOSED);
 
             try
             {
                 var promise = Pinvoke.typedb_driver.transaction_query(NativeObject, query, options.NativeObject);
-                return QueryAnswer.Of(promise.Resolve());
+                return Promise<IQueryAnswer>.Map<Pinvoke.QueryAnswer, IQueryAnswer>(
+                    () => promise.Resolve(),
+                    QueryAnswer.Of);
             }
             catch (Pinvoke.Error e)
             {
@@ -155,14 +154,17 @@ namespace TypeDB.Driver.Connection
         }
 
         /// <inheritdoc/>
-        public IAnalyzedQuery Analyze(string query)
+        public Promise<IAnalyzedQuery> Analyze(string query)
         {
+            Validator.NonEmptyString(query, QueryError.MISSING_QUERY);
             Validator.ThrowIfFalse(NativeObject.IsOwned, DriverError.TRANSACTION_CLOSED);
 
             try
             {
                 var promise = Pinvoke.typedb_driver.transaction_analyze(NativeObject, query);
-                return new AnalyzedQuery(promise.Resolve());
+                return Promise<IAnalyzedQuery>.Map<Pinvoke.AnalyzedQuery, IAnalyzedQuery>(
+                    () => promise.Resolve(),
+                    nativeAnalyzed => new AnalyzedQuery(nativeAnalyzed));
             }
             catch (Pinvoke.Error e)
             {

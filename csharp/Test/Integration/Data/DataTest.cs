@@ -89,7 +89,7 @@ namespace TypeDB.Driver.Test.Integration
                 using (var tx = driver.Transaction(dbName, TransactionType.Read))
                 {
                     Assert.AreEqual(TransactionType.Read, tx.Type);
-                    var answer = tx.Query("match entity $x;");
+                    var answer = tx.Query("match entity $x;").Resolve();
                     Assert.AreEqual(QueryType.Read, answer.QueryType);
                 }
 
@@ -97,7 +97,7 @@ namespace TypeDB.Driver.Test.Integration
                 using (var tx = driver.Transaction(dbName, TransactionType.Schema))
                 {
                     Assert.AreEqual(TransactionType.Schema, tx.Type);
-                    var answer = tx.Query("define entity test-entity;");
+                    var answer = tx.Query("define entity test-entity;").Resolve();
                     Assert.AreEqual(QueryType.Schema, answer.QueryType);
                     tx.Commit();
                 }
@@ -106,7 +106,7 @@ namespace TypeDB.Driver.Test.Integration
                 using (var tx = driver.Transaction(dbName, TransactionType.Write))
                 {
                     Assert.AreEqual(TransactionType.Write, tx.Type);
-                    var answer = tx.Query("insert $x isa test-entity;");
+                    var answer = tx.Query("insert $x isa test-entity;").Resolve();
                     Assert.AreEqual(QueryType.Write, answer.QueryType);
                     tx.Commit();
                 }

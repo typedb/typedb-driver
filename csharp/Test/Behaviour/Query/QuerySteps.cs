@@ -124,8 +124,8 @@ namespace TypeDB.Driver.Test.Behaviour
         private IQueryAnswer ExecuteQuery(string queryText)
         {
             if (_queryOptions != null)
-                return Tx.Query(queryText, _queryOptions);
-            return Tx.Query(queryText);
+                return Tx.Query(queryText, _queryOptions).Resolve();
+            return Tx.Query(queryText).Resolve();
         }
 
         [Given(@"typeql schema query")]
@@ -792,7 +792,7 @@ namespace TypeDB.Driver.Test.Behaviour
 
                 try
                 {
-                    var answer = tx.Query(query);
+                    var answer = tx.Query(query).Resolve();
                     if (answer.IsConceptRows)
                     {
                         // Check if any rows are returned - if so, the thing has this key
@@ -1068,9 +1068,9 @@ namespace TypeDB.Driver.Test.Behaviour
                 tasks[i] = Task.Run(() =>
                 {
                     if (_queryOptions != null)
-                        return Tx.Query(query.Content, _queryOptions);
+                        return Tx.Query(query.Content, _queryOptions).Resolve();
                     else
-                        return Tx.Query(query.Content);
+                        return Tx.Query(query.Content).Resolve();
                 });
             }
 

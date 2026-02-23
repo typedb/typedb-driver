@@ -41,21 +41,21 @@ namespace TypeDB.Driver.Test.Behaviour
         public void GetAnswersOfTypeqlAnalyze(DocString query)
         {
             ClearAnalyzedQuery();
-            _analyzedQuery = Tx.Analyze(query.Content);
+            _analyzedQuery = Tx.Analyze(query.Content).Resolve();
         }
 
         [Then(@"typeql analyze; parsing fails")]
         public void TypeqlAnalyzeParsingFails(DocString query)
         {
             ClearAnalyzedQuery();
-            Assert.ThrowsAny<Exception>(() => Tx.Analyze(query.Content));
+            Assert.ThrowsAny<Exception>(() => Tx.Analyze(query.Content).Resolve());
         }
 
         [Then(@"typeql analyze; fails with a message containing: ""(.*)""")]
         public void TypeqlAnalyzeFailsWithMessage(string expectedMessage, DocString query)
         {
             ClearAnalyzedQuery();
-            var exception = Assert.ThrowsAny<Exception>(() => Tx.Analyze(query.Content));
+            var exception = Assert.ThrowsAny<Exception>(() => Tx.Analyze(query.Content).Resolve());
             Assert.Contains(expectedMessage, exception.Message);
         }
 

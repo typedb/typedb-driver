@@ -59,7 +59,7 @@ namespace TypeDB.Driver.Test.Deployment
                             attribute name, value string;
                             attribute age, value integer;";
 
-                        var answer = transaction.Query(defineQuery);
+                        var answer = transaction.Query(defineQuery).Resolve();
                         Assert.True(answer.IsOk);
                         Assert.Equal(QueryType.Schema, answer.QueryType);
 
@@ -70,7 +70,7 @@ namespace TypeDB.Driver.Test.Deployment
                     using (var transaction = driver.Transaction(dbName, TransactionType.Write))
                     {
                         var insertQuery = "insert $p isa person, has name \"Alice\", has age 30;";
-                        var answer = transaction.Query(insertQuery);
+                        var answer = transaction.Query(insertQuery).Resolve();
 
                         Assert.True(answer.IsConceptRows);
                         Assert.Equal(QueryType.Write, answer.QueryType);
@@ -90,7 +90,7 @@ namespace TypeDB.Driver.Test.Deployment
                     using (var transaction = driver.Transaction(dbName, TransactionType.Read))
                     {
                         var matchQuery = "match $p isa person, has name $n;";
-                        var matchAnswer = transaction.Query(matchQuery);
+                        var matchAnswer = transaction.Query(matchQuery).Resolve();
 
                         Assert.True(matchAnswer.IsConceptRows);
                         Assert.Equal(QueryType.Read, matchAnswer.QueryType);
@@ -113,7 +113,7 @@ namespace TypeDB.Driver.Test.Deployment
                                 ""person_name"": $n
                             };";
 
-                        var fetchAnswer = transaction.Query(fetchQuery);
+                        var fetchAnswer = transaction.Query(fetchQuery).Resolve();
 
                         Assert.True(fetchAnswer.IsConceptDocuments);
                         Assert.Equal(QueryType.Read, fetchAnswer.QueryType);

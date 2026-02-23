@@ -295,7 +295,7 @@ namespace TypeDB.Driver.Test.Behaviour
             try
             {
                 var tx = Driver.Transaction(tempName, TransactionType.Schema);
-                tx.Query(expectedText);
+                tx.Query(expectedText).Resolve();
                 tx.Commit();
                 var expectedNormalized = Driver.Databases.Get(tempName).GetTypeSchema();
                 Assert.Equal(expectedNormalized, actualSchema);
