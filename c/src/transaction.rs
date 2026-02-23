@@ -96,7 +96,7 @@ pub extern "C" fn transaction_close_sync(txn: *mut Transaction) {
     free(txn);
 }
 
-/// Forcibly closes this transaction. To be used in exceptional cases.
+/// Forcibly closes this transaction. Returns a resolvable promise.
 #[no_mangle]
 pub extern "C" fn transaction_close(txn: *mut Transaction) -> *mut VoidPromise {
     release(VoidPromise(Box::new(borrow_mut(txn).close())))
