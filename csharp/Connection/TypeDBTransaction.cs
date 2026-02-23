@@ -145,15 +145,8 @@ namespace TypeDB.Driver.Connection
 
             try
             {
-                // Execute query and wait for completion
                 var promise = Pinvoke.typedb_driver.transaction_query(NativeObject, query, options.NativeObject);
-
-                // query_answer_promise_resolve CONSUMES the native promise via take_ownership in Rust.
-                // We must release ownership on the C# wrapper BEFORE calling resolve to prevent
-                // the wrapper's finalizer from trying to free an already-freed pointer.
-                var releasedPromise = promise.Released();
-                var nativeAnswer = Pinvoke.typedb_driver.query_answer_promise_resolve(releasedPromise);
-                return QueryAnswer.Of(nativeAnswer);
+                return QueryAnswer.Of(promise.Resolve());
             }
             catch (Pinvoke.Error e)
             {
@@ -168,14 +161,8 @@ namespace TypeDB.Driver.Connection
 
             try
             {
-                // Execute analyze and wait for completion
                 var promise = Pinvoke.typedb_driver.transaction_analyze(NativeObject, query);
-
-                // analyzed_query_promise_resolve CONSUMES the native promise via take_ownership in Rust.
-                // We must release ownership on the C# wrapper BEFORE calling resolve.
-                var releasedPromise = promise.Released();
-                var nativeAnalyzed = Pinvoke.typedb_driver.analyzed_query_promise_resolve(releasedPromise);
-                return new AnalyzedQuery(nativeAnalyzed);
+                return new AnalyzedQuery(promise.Resolve());
             }
             catch (Pinvoke.Error e)
             {

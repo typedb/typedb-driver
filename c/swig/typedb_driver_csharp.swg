@@ -510,6 +510,7 @@
 %promise(String, string, string)
 %promise(Bool, bool, bool)
 %promise(AnalyzedQuery, AnalyzedQuery, analyzed_query)
+%promise(QueryAnswer, QueryAnswer, query_answer)
 
 /* void promises require special handling */
 %typemap(csbody) VoidPromise %{
