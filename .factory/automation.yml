@@ -320,7 +320,7 @@ build:
         tool/test/stop-community-server.sh
         if [[ -n "$COMMUNITY_FAILED" ]]; then exit 1; fi
 
-# TODO: Re-enable these tests when Node.js/C++/C# drivers are updated for 3.x
+# TODO: Re-enable these tests when Node.js/C++ drivers are updated for 3.x
 #    test-nodejs-integration:
 #      image: typedb-ubuntu-22.04
 #      dependencies:
