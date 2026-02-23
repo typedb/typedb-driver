@@ -24,7 +24,7 @@ Used to specify whether we need explicit or transitive subtyping, instances, etc
    Used to specify whether we need explicit or transitive subtyping, instances, etc.
   
   
-   Definition IConcept.cs:630
+   Definition IConcept.cs:593
   
  
 

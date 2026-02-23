@@ -48,7 +48,7 @@ struct VoidPromise* transaction_close(struct Transaction* txn)
 
 
 
-Forcibly closes this transaction. To be used in exceptional cases.
+Forcibly closes this transaction. Returns a resolvable promise.
 
 [caption=""]
 .Returns
@@ -69,6 +69,22 @@ Commits the changes made via this transaction to the TypeDB database. Whether or
 [caption=""]
 .Returns
 `struct VoidPromise*`
+
+[#_transaction_drop_sync]
+==== function ``transaction_drop_sync``
+
+[source,c]
+----
+void transaction_drop_sync(struct Transaction* txn)
+----
+
+
+
+Closes the transaction, waits for all callbacks to complete, then frees the memory.
+
+[caption=""]
+.Returns
+`void`
 
 [#_transaction_is_open]
 ==== function ``transaction_is_open``
@@ -186,20 +202,4 @@ Rolls back the uncommitted changes made via this transaction.
 [caption=""]
 .Returns
 `struct VoidPromise*`
-
-[#_transaction_drop_sync]
-==== function ``transaction_drop_sync``
-
-[source,c]
-----
-void transaction_drop_sync(struct Transaction* txn)
-----
-
-
-
-Closes the transaction, waits for all callbacks to complete, then frees the memory.
-
-[caption=""]
-.Returns
-`void`
 

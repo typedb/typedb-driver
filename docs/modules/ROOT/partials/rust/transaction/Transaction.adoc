@@ -139,7 +139,7 @@ transaction.commit()
 pub fn is_open(&self) -> bool
 ----
 
-Closes the transaction.
+Check if the transaction is open.
 
 [caption=""]
 .Returns
@@ -152,7 +152,7 @@ bool
 .Code examples
 [source,rust]
 ----
-transaction.close()
+transaction.is_open()
 ----
 
 [#_struct_Transaction_on_close_function]

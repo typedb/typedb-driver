@@ -163,6 +163,44 @@ Implemented in TypeDB.Driver.Api.IEntityType.
 .Returns
 `IEntityType`
 
+[#_IInstance_TypeDB_Driver_Api_IConcept_AsInstance_]
+==== method ``AsInstance``
+
+[source,cs]
+----
+IInstance AsInstance()
+----
+
+
+
+Casts the concept to IInstance.
+
+ 
+  Exceptions
+ 
+ 
+  
+   
+    
+     TypeDBDriverException
+     If the concept is not an instance.
+    
+   
+  
+ 
+
+
+ 
+  concept.AsInstance()
+ 
+
+
+Implemented in TypeDB.Driver.Api.IInstance.
+
+[caption=""]
+.Returns
+`IInstance`
+
 [#_IRelation_TypeDB_Driver_Api_IConcept_AsRelation_]
 ==== method ``AsRelation``
 
@@ -276,82 +314,6 @@ Implemented in TypeDB.Driver.Api.IRoleType.
 [caption=""]
 .Returns
 `IRoleType`
-
-[#_IThing_TypeDB_Driver_Api_IConcept_AsThing_]
-==== method ``AsThing``
-
-[source,cs]
-----
-IThing AsThing()
-----
-
-
-
-Casts the concept to IThing (instance).
-
- 
-  Exceptions
- 
- 
-  
-   
-    
-     TypeDBDriverException
-     If the concept is not a thing/instance.
-    
-   
-  
- 
-
-
- 
-  concept.AsThing()
- 
-
-
-Implemented in TypeDB.Driver.Api.IThing.
-
-[caption=""]
-.Returns
-`IThing`
-
-[#_IThingType_TypeDB_Driver_Api_IConcept_AsThingType_]
-==== method ``AsThingType``
-
-[source,cs]
-----
-IThingType AsThingType()
-----
-
-
-
-Casts the concept to IThingType.
-
- 
-  Exceptions
- 
- 
-  
-   
-    
-     TypeDBDriverException
-     If the concept is not a thing type.
-    
-   
-  
- 
-
-
- 
-  concept.AsThingType()
- 
-
-
-Implemented in TypeDB.Driver.Api.IThingType.
-
-[caption=""]
-.Returns
-`IThingType`
 
 [#_IType_TypeDB_Driver_Api_IConcept_AsType_]
 ==== method ``AsType``
@@ -699,14 +661,14 @@ bool IsInstance()
 
 
 
-Checks if the concept is an instance (entity, relation, or attribute). This is the 3.0 name for what was previously called "Thing".
+Checks if the concept is an instance (entity, relation, or attribute).
 
  
   concept.IsInstance()
  
 
 
-Implemented in TypeDB.Driver.Api.IThing.
+Implemented in TypeDB.Driver.Api.IInstance.
 
 [caption=""]
 .Returns
@@ -839,52 +801,6 @@ Returns true if the value which this Concept holds is of type struct or if this 
   concept.IsStruct()
  
 
-
-[caption=""]
-.Returns
-`bool`
-
-[#_bool_TypeDB_Driver_Api_IConcept_IsThing_]
-==== method ``IsThing``
-
-[source,cs]
-----
-bool IsThing()
-----
-
-
-
-Checks if the concept is a IThing. Note: In 3.0, this is also known as IsInstance().
-
- 
-  concept.IsThing()
- 
-
-
-Implemented in TypeDB.Driver.Api.IThing.
-
-[caption=""]
-.Returns
-`bool`
-
-[#_bool_TypeDB_Driver_Api_IConcept_IsThingType_]
-==== method ``IsThingType``
-
-[source,cs]
-----
-bool IsThingType()
-----
-
-
-
-Checks if the concept is a IThingType.
-
- 
-  concept.IsThingType()
- 
-
-
-Implemented in TypeDB.Driver.Api.IThingType.
 
 [caption=""]
 .Returns

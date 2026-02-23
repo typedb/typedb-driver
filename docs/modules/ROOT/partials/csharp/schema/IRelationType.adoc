@@ -8,7 +8,6 @@
 
 *Supertypes:*
 
-* `TypeDB.Driver.Api.IThingType`
 * `TypeDB.Driver.Api.IType`
 * `TypeDB.Driver.Api.IConcept`
 

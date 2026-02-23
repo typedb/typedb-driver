@@ -1,0 +1,262 @@
+[#_DatetimeTZ]
+[.doc-api-reference-driver]
+=== DatetimeTZ
+
+`class`
+
+*Package*: `TypeDB.Driver.Common`
+
+
+
+Represents a datetime with timezone information and nanosecond precision. C#'s DateTimeOffset cannot carry IANA timezone names (e.g., "Europe/London"), so this class wraps a DateTimeOffset alongside the resolved TimeZoneInfo. Additionally, DateTimeOffset only has tick precision (100ns), so this class stores subsecond nanoseconds separately to preserve TypeDB's full 9-digit precision. This mirrors Java's ``ZonedDateTime`` which preserves both zone ID and nanosecond precision.
+
+// tag::methods[]
+[#_DateTimeOffset_TypeDB_Driver_Common_DatetimeTZ_DateTimeOffset]
+==== method ``DateTimeOffset``
+
+[source,cs]
+----
+DateTimeOffset TypeDB.Driver.Common.DatetimeTZ.DateTimeOffset
+----
+
+
+
+Gets the local date and time with its UTC offset. For IANA zones, the offset is derived from the zone's rules at the stored instant. Note: this has only tick precision (100ns) and may lose the last 2 nanosecond digits.
+
+[caption=""]
+.Returns
+`DateTimeOffset`
+
+[#_TypeDB_Driver_Common_DatetimeTZ_DatetimeTZ_DateTime_utcDateTime_string_zoneName_uint_subsecNanos_0_]
+==== method ``DatetimeTZ``
+
+[source,cs]
+----
+DatetimeTZ(DateTime utcDateTime, string zoneName, uint subsecNanos = 0)
+----
+
+
+
+Creates a DatetimeTZ with an IANA timezone from a UTC datetime. The local time and offset are computed from the zone's rules at the given UTC instant. This mirrors Java's ``ZonedDateTime.ofInstant(Instant, ZoneId)``.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `utcDateTime` a| The UTC datetime (Kind should be Utc or Unspecified). a| `DateTime`
+a| `zoneName` a| The IANA timezone name (e.g., "Europe/London"). a| `string`
+a| `subsecNanos` a| Subsecond nanoseconds (0–999,999,999), preserving TypeDB's full nanosecond precision. Defaults to 0. a| 
+|===
+
+[caption=""]
+.Returns
+`DatetimeTZ`
+
+[#_TypeDB_Driver_Common_DatetimeTZ_DatetimeTZ_DateTimeOffset_dateTimeOffset_uint_subsecNanos_0_]
+==== method ``DatetimeTZ``
+
+[source,cs]
+----
+DatetimeTZ(DateTimeOffset dateTimeOffset, uint subsecNanos = 0)
+----
+
+
+
+Creates a DatetimeTZ with a fixed UTC offset (no IANA zone).
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `dateTimeOffset` a| The date, time, and UTC offset. a| `DateTimeOffset`
+a| `subsecNanos` a| Subsecond nanoseconds (0–999,999,999), preserving TypeDB's full nanosecond precision. Defaults to 0. a| 
+|===
+
+[caption=""]
+.Returns
+`DatetimeTZ`
+
+[#_bool_TypeDB_Driver_Common_DatetimeTZ_Equals_DatetimeTZ_other_]
+==== method ``Equals``
+
+[source,cs]
+----
+bool Equals(DatetimeTZ? other)
+----
+
+
+
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_override_bool_TypeDB_Driver_Common_DatetimeTZ_Equals_object_obj_]
+==== method ``Equals``
+
+[source,cs]
+----
+override bool Equals(object? obj)
+----
+
+
+
+
+
+[caption=""]
+.Returns
+`override bool`
+
+[#_override_int_TypeDB_Driver_Common_DatetimeTZ_GetHashCode_]
+==== method ``GetHashCode``
+
+[source,cs]
+----
+override int GetHashCode()
+----
+
+
+
+
+
+[caption=""]
+.Returns
+`override int`
+
+[#_bool_TypeDB_Driver_Common_DatetimeTZ_IsFixedOffset]
+==== method ``IsFixedOffset``
+
+[source,cs]
+----
+bool TypeDB.Driver.Common.DatetimeTZ.IsFixedOffset
+----
+
+
+
+Gets whether this datetime-tz uses a fixed UTC offset (true) or an IANA zone (false).
+
+[caption=""]
+.Returns
+`bool`
+
+[#_static_DatetimeTZ_TypeDB_Driver_Common_DatetimeTZ_Parse_string_value_]
+==== method ``Parse``
+
+[source,cs]
+----
+static DatetimeTZ Parse(string value)
+----
+
+
+
+Parses a datetime-tz string in TypeDB format, preserving all 9 fractional digits. IANA zones: "2024-09-20T16:40:05.000000001 Europe/London" (local time + zone name) Fixed offsets: "2024-09-20T16:40:05.000000001+0100" (local time + offset without colon) UTC shorthand: "2024-09-20T16:40:05Z".
+
+[caption=""]
+.Returns
+`DatetimeTZ`
+
+[#_uint_TypeDB_Driver_Common_DatetimeTZ_SubsecNanos]
+==== method ``SubsecNanos``
+
+[source,cs]
+----
+uint TypeDB.Driver.Common.DatetimeTZ.SubsecNanos
+----
+
+
+
+Gets the subsecond nanoseconds component (0–999,999,999). This preserves TypeDB's full nanosecond precision beyond what DateTimeOffset can represent.
+
+[caption=""]
+.Returns
+`uint`
+
+[#_override_string_TypeDB_Driver_Common_DatetimeTZ_ToString_]
+==== method ``ToString``
+
+[source,cs]
+----
+override string ToString()
+----
+
+
+
+Formats the datetime-tz as an ISO-8601 string with nanosecond precision. Fixed offsets produce: "2024-09-20T16:40:05.123456789+01:00" IANA zones produce: "2024-09-20T16:40:05.123456789+01:00 Europe/London" Subsecond precision is omitted if zero, otherwise trailing zeros are trimmed.
+
+[caption=""]
+.Returns
+`override string`
+
+[#_TimeZoneInfo_TypeDB_Driver_Common_DatetimeTZ_ZoneInfo]
+==== method ``ZoneInfo``
+
+[source,cs]
+----
+TimeZoneInfo? TypeDB.Driver.Common.DatetimeTZ.ZoneInfo
+----
+
+
+
+Gets the resolved TimeZoneInfo, or null for fixed offsets.
+
+[caption=""]
+.Returns
+`TimeZoneInfo?`
+
+[#_string_TypeDB_Driver_Common_DatetimeTZ_ZoneName]
+==== method ``ZoneName``
+
+[source,cs]
+----
+string? TypeDB.Driver.Common.DatetimeTZ.ZoneName
+----
+
+
+
+Gets the IANA timezone name (e.g., "Europe/London"), or null for fixed offsets. This is the original name from the database, independent of platform timezone ID conventions.
+
+[caption=""]
+.Returns
+`string?`
+
+[#_static_bool_TypeDB_Driver_Common_DatetimeTZ_operator!_DatetimeTZ_left_DatetimeTZ_right_]
+==== method ``operator!=``
+
+[source,cs]
+----
+static bool operator!=(DatetimeTZ? left, DatetimeTZ? right)
+----
+
+
+
+Inequality operator.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_static_bool_TypeDB_Driver_Common_DatetimeTZ_operator_DatetimeTZ_left_DatetimeTZ_right_]
+==== method ``operator==``
+
+[source,cs]
+----
+static bool operator==(DatetimeTZ? left, DatetimeTZ? right)
+----
+
+
+
+Equality operator.
+
+[caption=""]
+.Returns
+`bool`
+
+// end::methods[]
+

@@ -4,42 +4,21 @@
 
 `class`
 
-*Package*: `typedb.api.analyze.constraint`
+*Package*: `typedb.common.enums`
 
-*Supertypes:*
-
-* `Constraint`
-
-Represents a kind constraint: &lt;kind&gt; &lt;type&gt;
-
-// tag::methods[]
-[#_Kind_kind_]
-==== method ``kind``
-
-[source,python]
-----
-kind() -> typedb.common.enums.Kind
-----
-
-
+An enumeration.
 
 [caption=""]
-.Returns
-`typedb.common.enums.Kind`
-
-[#_Kind_type_]
-==== method ``type``
-
-[source,python]
-----
-type() -> ConstraintVertex
-----
-
-
-
-[caption=""]
-.Returns
-`ConstraintVertex`
-
-// end::methods[]
+.Enum constants
+// tag::enum_constants[]
+[cols=","]
+[options="header"]
+|===
+|Name |Value
+a| `Attribute` a| `1`
+a| `Entity` a| `0`
+a| `Relation` a| `2`
+a| `Role` a| `3`
+|===
+// end::enum_constants[]
 

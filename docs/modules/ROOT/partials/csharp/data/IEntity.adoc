@@ -8,12 +8,12 @@
 
 *Supertypes:*
 
-* `TypeDB.Driver.Api.IThing`
+* `TypeDB.Driver.Api.IInstance`
 * `TypeDB.Driver.Api.IConcept`
 
 
 
-Instance of data of an entity type, representing a standalone object that exists in the data model independently. Entity does not have a value. It is usually addressed by its ownership over attribute instances and/or roles played in relation instances. In TypeDB 3.0, instances are read-only data returned from queries.
+Represents an entity instance in TypeDB. Entity instances are independent objects in the data model. In TypeDB 3.0, instances are read-only data returned from queries.
 
 // tag::methods[]
 [#_IEntity_IConcept_TypeDB_Driver_Api_IEntity_AsEntity_]
@@ -56,22 +56,6 @@ Implements TypeDB.Driver.Api.IConcept.
 .Returns
 `IEntity IConcept.`
 
-[#_string_TypeDB_Driver_Api_IEntity_IID]
-==== method ``IID``
-
-[source,cs]
-----
-string TypeDB.Driver.Api.IEntity.IID
-----
-
-
-
-The unique id of the entity.
-
-[caption=""]
-.Returns
-`string`
-
 [#_bool_IConcept_TypeDB_Driver_Api_IEntity_IsEntity_]
 ==== method ``IsEntity``
 
@@ -98,7 +82,7 @@ Implements TypeDB.Driver.Api.IConcept.
 `bool IConcept.`
 
 [#_new_IEntityType_TypeDB_Driver_Api_IEntity_Type]
-==== method ``Type``
+==== method ``Type [1/2]``
 
 [source,cs]
 ----
@@ -107,13 +91,31 @@ new IEntityType TypeDB.Driver.Api.IEntity.Type
 
 
 
-The type which this entity belongs to.
+The entity type which this entity instance belongs to.
 
-Implements TypeDB.Driver.Api.IThing.
+Implements TypeDB.Driver.Api.IInstance.
 
 [caption=""]
 .Returns
 `new IEntityType`
+
+[#_IType_IInstance_TypeDB_Driver_Api_IEntity_Type]
+==== method ``Type [2/2]``
+
+[source,cs]
+----
+IType IInstance. TypeDB.Driver.Api.IEntity.Type
+----
+
+
+
+The type which this instance belongs to.
+
+Implements TypeDB.Driver.Api.IInstance.
+
+[caption=""]
+.Returns
+`IType IInstance.`
 
 // end::methods[]
 

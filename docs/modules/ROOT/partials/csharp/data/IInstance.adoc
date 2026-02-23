@@ -1,0 +1,102 @@
+[#_IInstance]
+[.doc-api-reference-driver]
+=== IInstance
+
+`class`
+
+*Package*: `TypeDB.Driver.Api`
+
+*Supertypes:*
+
+* `TypeDB.Driver.Api.IConcept`
+
+
+
+Represents an instance (entity, relation, or attribute) in TypeDB. In TypeDB 3.0, instances are read-only data returned from queries.
+
+// tag::methods[]
+[#_IInstance_IConcept_TypeDB_Driver_Api_IInstance_AsInstance_]
+==== method ``AsInstance``
+
+[source,cs]
+----
+IInstance IConcept. AsInstance()
+----
+
+
+
+Casts the concept to IInstance.
+
+ 
+  Exceptions
+ 
+ 
+  
+   
+    
+     TypeDBDriverException
+     If the concept is not an instance.
+    
+   
+  
+ 
+
+
+ 
+  concept.AsInstance()
+ 
+
+
+
+
+Implements TypeDB.Driver.Api.IConcept.
+
+[caption=""]
+.Returns
+`IInstance IConcept.`
+
+[#_bool_IConcept_TypeDB_Driver_Api_IInstance_IsInstance_]
+==== method ``IsInstance``
+
+[source,cs]
+----
+bool IConcept. IsInstance()
+----
+
+
+
+Checks if the concept is an instance (entity, relation, or attribute).
+
+ 
+  concept.IsInstance()
+ 
+
+
+
+
+Implements TypeDB.Driver.Api.IConcept.
+
+[caption=""]
+.Returns
+`bool IConcept.`
+
+[#_IType_TypeDB_Driver_Api_IInstance_Type]
+==== method ``Type``
+
+[source,cs]
+----
+IType TypeDB.Driver.Api.IInstance.Type
+----
+
+
+
+The type which this instance belongs to.
+
+Implemented in TypeDB.Driver.Api.IAttribute, TypeDB.Driver.Api.IAttribute, TypeDB.Driver.Api.IEntity, TypeDB.Driver.Api.IEntity, TypeDB.Driver.Api.IRelation, and TypeDB.Driver.Api.IRelation.
+
+[caption=""]
+.Returns
+`IType`
+
+// end::methods[]
+

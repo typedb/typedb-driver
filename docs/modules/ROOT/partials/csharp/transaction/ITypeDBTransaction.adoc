@@ -11,12 +11,12 @@
 A transaction with a TypeDB database.
 
 // tag::methods[]
-[#_IAnalyzedQuery_TypeDB_Driver_Api_ITypeDBTransaction_Analyze_string_query_]
+[#_Promise_IAnalyzedQuery_TypeDB_Driver_Api_ITypeDBTransaction_Analyze_string_query_]
 ==== method ``Analyze``
 
 [source,cs]
 ----
-IAnalyzedQuery Analyze(string query)
+Promise< IAnalyzedQuery > Analyze(string query)
 ----
 
 
@@ -35,7 +35,7 @@ a| `query` a| The TypeQL query string to analyze. a| `string`
 
 [caption=""]
 .Returns
-`IAnalyzedQuery`
+`Promise< IAnalyzedQuery >`
 
 [#_void_TypeDB_Driver_Api_ITypeDBTransaction_Close_]
 ==== method ``Close``
@@ -119,12 +119,12 @@ a| `function` a| The callback function. a| `Action< Exception? >`
 .Returns
 `void`
 
-[#_IQueryAnswer_TypeDB_Driver_Api_ITypeDBTransaction_Query_string_query_]
+[#_Promise_IQueryAnswer_TypeDB_Driver_Api_ITypeDBTransaction_Query_string_query_]
 ==== method ``Query``
 
 [source,cs]
 ----
-IQueryAnswer Query(string query)
+Promise< IQueryAnswer > Query(string query)
 ----
 
 
@@ -143,14 +143,14 @@ a| `query` a| The TypeQL query string to execute. a| `string`
 
 [caption=""]
 .Returns
-`IQueryAnswer`
+`Promise< IQueryAnswer >`
 
-[#_IQueryAnswer_TypeDB_Driver_Api_ITypeDBTransaction_Query_string_query_QueryOptions_options_]
+[#_Promise_IQueryAnswer_TypeDB_Driver_Api_ITypeDBTransaction_Query_string_query_QueryOptions_options_]
 ==== method ``Query``
 
 [source,cs]
 ----
-IQueryAnswer Query(string query, QueryOptions options)
+Promise< IQueryAnswer > Query(string query, QueryOptions options)
 ----
 
 
@@ -170,7 +170,7 @@ a| `options` a| Query options. a| `QueryOptions`
 
 [caption=""]
 .Returns
-`IQueryAnswer`
+`Promise< IQueryAnswer >`
 
 [#_void_TypeDB_Driver_Api_ITypeDBTransaction_Rollback_]
 ==== method ``Rollback``

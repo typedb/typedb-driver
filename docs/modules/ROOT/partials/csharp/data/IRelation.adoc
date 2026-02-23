@@ -8,12 +8,12 @@
 
 *Supertypes:*
 
-* `TypeDB.Driver.Api.IThing`
+* `TypeDB.Driver.Api.IInstance`
 * `TypeDB.Driver.Api.IConcept`
 
 
 
-Relation is an instance of a relation type and can be uniquely addressed by a combination of its type, owned attributes and role players. In TypeDB 3.0, instances are read-only data returned from queries.
+Represents a relation instance in TypeDB. Relation instances connect multiple instances together through roles. In TypeDB 3.0, instances are read-only data returned from queries.
 
 // tag::methods[]
 [#_IRelation_IConcept_TypeDB_Driver_Api_IRelation_AsRelation_]
@@ -56,22 +56,6 @@ Implements TypeDB.Driver.Api.IConcept.
 .Returns
 `IRelation IConcept.`
 
-[#_string_TypeDB_Driver_Api_IRelation_IID]
-==== method ``IID``
-
-[source,cs]
-----
-string TypeDB.Driver.Api.IRelation.IID
-----
-
-
-
-The unique id of the relation.
-
-[caption=""]
-.Returns
-`string`
-
 [#_bool_IConcept_TypeDB_Driver_Api_IRelation_IsRelation_]
 ==== method ``IsRelation``
 
@@ -98,7 +82,7 @@ Implements TypeDB.Driver.Api.IConcept.
 `bool IConcept.`
 
 [#_new_IRelationType_TypeDB_Driver_Api_IRelation_Type]
-==== method ``Type``
+==== method ``Type [1/2]``
 
 [source,cs]
 ----
@@ -107,13 +91,31 @@ new IRelationType TypeDB.Driver.Api.IRelation.Type
 
 
 
-The type which this relation belongs to.
+The relation type which this relation instance belongs to.
 
-Implements TypeDB.Driver.Api.IThing.
+Implements TypeDB.Driver.Api.IInstance.
 
 [caption=""]
 .Returns
 `new IRelationType`
+
+[#_IType_IInstance_TypeDB_Driver_Api_IRelation_Type]
+==== method ``Type [2/2]``
+
+[source,cs]
+----
+IType IInstance. TypeDB.Driver.Api.IRelation.Type
+----
+
+
+
+The type which this instance belongs to.
+
+Implements TypeDB.Driver.Api.IInstance.
+
+[caption=""]
+.Returns
+`IType IInstance.`
 
 // end::methods[]
 
