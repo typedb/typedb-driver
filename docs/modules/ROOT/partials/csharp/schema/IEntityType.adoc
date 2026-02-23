@@ -28,26 +28,6 @@ IEntityType IConcept. AsEntityType()
 
 Casts the concept to IEntityType.
 
- 
-  Exceptions
- 
- 
-  
-   
-    
-     TypeDBDriverException
-     If the concept is not an entity type.
-    
-   
-  
- 
-
-
- 
-  concept.AsEntityType()
- 
-
-
 
 
 Implements TypeDB.Driver.Api.IConcept.
@@ -55,6 +35,13 @@ Implements TypeDB.Driver.Api.IConcept.
 [caption=""]
 .Returns
 `IEntityType IConcept.`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.AsEntityType()
+----
 
 [#_bool_IConcept_TypeDB_Driver_Api_IEntityType_IsEntityType_]
 ==== method ``IsEntityType``
@@ -68,11 +55,6 @@ bool IConcept. IsEntityType()
 
 Checks if the concept is an IEntityType.
 
- 
-  concept.IsEntityType()
- 
-
-
 
 
 Implements TypeDB.Driver.Api.IConcept.
@@ -80,6 +62,13 @@ Implements TypeDB.Driver.Api.IConcept.
 [caption=""]
 .Returns
 `bool IConcept.`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.IsEntityType()
+----
 
 // end::methods[]
 

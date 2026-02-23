@@ -27,26 +27,6 @@ IValue IConcept. AsValue()
 
 Casts the concept to IValue.
 
- 
-  Exceptions
- 
- 
-  
-   
-    
-     TypeDBDriverException
-     If the concept is not a value.
-    
-   
-  
- 
-
-
- 
-  concept.AsValue()
- 
-
-
 
 
 Implements TypeDB.Driver.Api.IConcept.
@@ -54,6 +34,13 @@ Implements TypeDB.Driver.Api.IConcept.
 [caption=""]
 .Returns
 `IValue IConcept.`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.AsValue()
+----
 
 [#_object_TypeDB_Driver_Api_IValue_Get_]
 ==== method ``Get``
@@ -259,11 +246,6 @@ bool IConcept. IsValue()
 
 Checks if the concept is a IValue.
 
- 
-  concept.IsValue()
- 
-
-
 
 
 Implements TypeDB.Driver.Api.IConcept.
@@ -271,6 +253,13 @@ Implements TypeDB.Driver.Api.IConcept.
 [caption=""]
 .Returns
 `bool IConcept.`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.IsValue()
+----
 
 // end::methods[]
 

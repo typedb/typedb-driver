@@ -23,31 +23,18 @@ IAttribute AsAttribute()
 
 Casts the concept to IAttribute.
 
- 
-  Exceptions
- 
- 
-  
-   
-    
-     TypeDBDriverException
-     If the concept is not an attribute.
-    
-   
-  
- 
-
-
- 
-  concept.AsAttribute()
- 
-
-
 Implemented in TypeDB.Driver.Api.IAttribute.
 
 [caption=""]
 .Returns
 `IAttribute`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.AsAttribute()
+----
 
 [#_IAttributeType_TypeDB_Driver_Api_IConcept_AsAttributeType_]
 ==== method ``AsAttributeType``
@@ -61,31 +48,18 @@ IAttributeType AsAttributeType()
 
 Casts the concept to IAttributeType.
 
- 
-  Exceptions
- 
- 
-  
-   
-    
-     TypeDBDriverException
-     If the concept is not an attribute type.
-    
-   
-  
- 
-
-
- 
-  concept.AsAttributeType()
- 
-
-
 Implemented in TypeDB.Driver.Api.IAttributeType.
 
 [caption=""]
 .Returns
 `IAttributeType`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.AsAttributeType()
+----
 
 [#_IEntity_TypeDB_Driver_Api_IConcept_AsEntity_]
 ==== method ``AsEntity``
@@ -99,31 +73,18 @@ IEntity AsEntity()
 
 Casts the concept to IEntity.
 
- 
-  Exceptions
- 
- 
-  
-   
-    
-     TypeDBDriverException
-     If the concept is not an entity.
-    
-   
-  
- 
-
-
- 
-  concept.AsEntity()
- 
-
-
 Implemented in TypeDB.Driver.Api.IEntity.
 
 [caption=""]
 .Returns
 `IEntity`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.AsEntity()
+----
 
 [#_IEntityType_TypeDB_Driver_Api_IConcept_AsEntityType_]
 ==== method ``AsEntityType``
@@ -137,31 +98,18 @@ IEntityType AsEntityType()
 
 Casts the concept to IEntityType.
 
- 
-  Exceptions
- 
- 
-  
-   
-    
-     TypeDBDriverException
-     If the concept is not an entity type.
-    
-   
-  
- 
-
-
- 
-  concept.AsEntityType()
- 
-
-
 Implemented in TypeDB.Driver.Api.IEntityType.
 
 [caption=""]
 .Returns
 `IEntityType`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.AsEntityType()
+----
 
 [#_IInstance_TypeDB_Driver_Api_IConcept_AsInstance_]
 ==== method ``AsInstance``
@@ -175,31 +123,18 @@ IInstance AsInstance()
 
 Casts the concept to IInstance.
 
- 
-  Exceptions
- 
- 
-  
-   
-    
-     TypeDBDriverException
-     If the concept is not an instance.
-    
-   
-  
- 
-
-
- 
-  concept.AsInstance()
- 
-
-
 Implemented in TypeDB.Driver.Api.IInstance.
 
 [caption=""]
 .Returns
 `IInstance`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.AsInstance()
+----
 
 [#_IRelation_TypeDB_Driver_Api_IConcept_AsRelation_]
 ==== method ``AsRelation``
@@ -213,31 +148,18 @@ IRelation AsRelation()
 
 Casts the concept to IRelation.
 
- 
-  Exceptions
- 
- 
-  
-   
-    
-     TypeDBDriverException
-     If the concept is not a relation.
-    
-   
-  
- 
-
-
- 
-  concept.AsRelation()
- 
-
-
 Implemented in TypeDB.Driver.Api.IRelation.
 
 [caption=""]
 .Returns
 `IRelation`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.AsRelation()
+----
 
 [#_IRelationType_TypeDB_Driver_Api_IConcept_AsRelationType_]
 ==== method ``AsRelationType``
@@ -251,31 +173,18 @@ IRelationType AsRelationType()
 
 Casts the concept to IRelationType.
 
- 
-  Exceptions
- 
- 
-  
-   
-    
-     TypeDBDriverException
-     If the concept is not a relation type.
-    
-   
-  
- 
-
-
- 
-  concept.AsRelationType()
- 
-
-
 Implemented in TypeDB.Driver.Api.IRelationType.
 
 [caption=""]
 .Returns
 `IRelationType`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.AsRelationType()
+----
 
 [#_IRoleType_TypeDB_Driver_Api_IConcept_AsRoleType_]
 ==== method ``AsRoleType``
@@ -289,31 +198,18 @@ IRoleType AsRoleType()
 
 Casts the concept to IRoleType.
 
- 
-  Exceptions
- 
- 
-  
-   
-    
-     TypeDBDriverException
-     If the concept is not a role type.
-    
-   
-  
- 
-
-
- 
-  concept.AsRoleType()
- 
-
-
 Implemented in TypeDB.Driver.Api.IRoleType.
 
 [caption=""]
 .Returns
 `IRoleType`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.AsRoleType()
+----
 
 [#_IType_TypeDB_Driver_Api_IConcept_AsType_]
 ==== method ``AsType``
@@ -327,31 +223,18 @@ IType AsType()
 
 Casts the concept to IType.
 
- 
-  Exceptions
- 
- 
-  
-   
-    
-     TypeDBDriverException
-     If the concept is not a type.
-    
-   
-  
- 
-
-
- 
-  concept.AsType()
- 
-
-
 Implemented in TypeDB.Driver.Api.IType.
 
 [caption=""]
 .Returns
 `IType`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.AsType()
+----
 
 [#_IValue_TypeDB_Driver_Api_IConcept_AsValue_]
 ==== method ``AsValue``
@@ -365,31 +248,18 @@ IValue AsValue()
 
 Casts the concept to IValue.
 
- 
-  Exceptions
- 
- 
-  
-   
-    
-     TypeDBDriverException
-     If the concept is not a value.
-    
-   
-  
- 
-
-
- 
-  concept.AsValue()
- 
-
-
 Implemented in TypeDB.Driver.Api.IValue.
 
 [caption=""]
 .Returns
 `IValue`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.AsValue()
+----
 
 [#_string_TypeDB_Driver_Api_IConcept_GetLabel_]
 ==== method ``GetLabel``
@@ -403,14 +273,16 @@ string GetLabel()
 
 Retrieves the unique label of the concept. If this is an Instance, returns the label of the type of this instance ("unknown" if type fetching is disabled). If this is a Value, returns the label of the value type. If this is a Type, returns the label of the type.
 
- 
-  concept.GetLabel()
- 
-
-
 [caption=""]
 .Returns
 `string`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.GetLabel()
+----
 
 [#_bool_TypeDB_Driver_Api_IConcept_IsAttribute_]
 ==== method ``IsAttribute``
@@ -424,16 +296,18 @@ bool IsAttribute()
 
 Checks if the concept is an IAttribute.
 
- 
-  concept.IsAttribute()
- 
-
-
 Implemented in TypeDB.Driver.Api.IAttribute.
 
 [caption=""]
 .Returns
 `bool`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.IsAttribute()
+----
 
 [#_bool_TypeDB_Driver_Api_IConcept_IsAttributeType_]
 ==== method ``IsAttributeType``
@@ -447,16 +321,18 @@ bool IsAttributeType()
 
 Checks if the concept is an IAttributeType.
 
- 
-  concept.IsAttributeType()
- 
-
-
 Implemented in TypeDB.Driver.Api.IAttributeType.
 
 [caption=""]
 .Returns
 `bool`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.IsAttributeType()
+----
 
 [#_bool_TypeDB_Driver_Api_IConcept_IsBoolean_]
 ==== method ``IsBoolean``
@@ -470,14 +346,16 @@ bool IsBoolean()
 
 Returns true if the value which this Concept holds is of type boolean or if this Concept is an AttributeType of type boolean.
 
- 
-  concept.IsBoolean()
- 
-
-
 [caption=""]
 .Returns
 `bool`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.IsBoolean()
+----
 
 [#_bool_TypeDB_Driver_Api_IConcept_IsDate_]
 ==== method ``IsDate``
@@ -491,14 +369,16 @@ bool IsDate()
 
 Returns true if the value which this Concept holds is of type date or if this Concept is an AttributeType of type date.
 
- 
-  concept.IsDate()
- 
-
-
 [caption=""]
 .Returns
 `bool`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.IsDate()
+----
 
 [#_bool_TypeDB_Driver_Api_IConcept_IsDatetime_]
 ==== method ``IsDatetime``
@@ -512,14 +392,16 @@ bool IsDatetime()
 
 Returns true if the value which this Concept holds is of type datetime or if this Concept is an AttributeType of type datetime.
 
- 
-  concept.IsDatetime()
- 
-
-
 [caption=""]
 .Returns
 `bool`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.IsDatetime()
+----
 
 [#_bool_TypeDB_Driver_Api_IConcept_IsDatetimeTZ_]
 ==== method ``IsDatetimeTZ``
@@ -533,14 +415,16 @@ bool IsDatetimeTZ()
 
 Returns true if the value which this Concept holds is of type datetime-tz or if this Concept is an AttributeType of type datetime-tz.
 
- 
-  concept.IsDatetimeTZ()
- 
-
-
 [caption=""]
 .Returns
 `bool`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.IsDatetimeTZ()
+----
 
 [#_bool_TypeDB_Driver_Api_IConcept_IsDecimal_]
 ==== method ``IsDecimal``
@@ -554,14 +438,16 @@ bool IsDecimal()
 
 Returns true if the value which this Concept holds is of type decimal or if this Concept is an AttributeType of type decimal.
 
- 
-  concept.IsDecimal()
- 
-
-
 [caption=""]
 .Returns
 `bool`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.IsDecimal()
+----
 
 [#_bool_TypeDB_Driver_Api_IConcept_IsDouble_]
 ==== method ``IsDouble``
@@ -575,14 +461,16 @@ bool IsDouble()
 
 Returns true if the value which this Concept holds is of type double or if this Concept is an AttributeType of type double.
 
- 
-  concept.IsDouble()
- 
-
-
 [caption=""]
 .Returns
 `bool`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.IsDouble()
+----
 
 [#_bool_TypeDB_Driver_Api_IConcept_IsDuration_]
 ==== method ``IsDuration``
@@ -596,14 +484,16 @@ bool IsDuration()
 
 Returns true if the value which this Concept holds is of type duration or if this Concept is an AttributeType of type duration.
 
- 
-  concept.IsDuration()
- 
-
-
 [caption=""]
 .Returns
 `bool`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.IsDuration()
+----
 
 [#_bool_TypeDB_Driver_Api_IConcept_IsEntity_]
 ==== method ``IsEntity``
@@ -617,16 +507,18 @@ bool IsEntity()
 
 Checks if the concept is an IEntity.
 
- 
-  concept.IsEntity()
- 
-
-
 Implemented in TypeDB.Driver.Api.IEntity.
 
 [caption=""]
 .Returns
 `bool`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.IsEntity()
+----
 
 [#_bool_TypeDB_Driver_Api_IConcept_IsEntityType_]
 ==== method ``IsEntityType``
@@ -640,16 +532,18 @@ bool IsEntityType()
 
 Checks if the concept is an IEntityType.
 
- 
-  concept.IsEntityType()
- 
-
-
 Implemented in TypeDB.Driver.Api.IEntityType.
 
 [caption=""]
 .Returns
 `bool`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.IsEntityType()
+----
 
 [#_bool_TypeDB_Driver_Api_IConcept_IsInstance_]
 ==== method ``IsInstance``
@@ -663,16 +557,18 @@ bool IsInstance()
 
 Checks if the concept is an instance (entity, relation, or attribute).
 
- 
-  concept.IsInstance()
- 
-
-
 Implemented in TypeDB.Driver.Api.IInstance.
 
 [caption=""]
 .Returns
 `bool`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.IsInstance()
+----
 
 [#_bool_TypeDB_Driver_Api_IConcept_IsInteger_]
 ==== method ``IsInteger``
@@ -686,14 +582,16 @@ bool IsInteger()
 
 Returns true if the value which this Concept holds is of type integer or if this Concept is an AttributeType of type integer.
 
- 
-  concept.IsInteger()
- 
-
-
 [caption=""]
 .Returns
 `bool`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.IsInteger()
+----
 
 [#_bool_TypeDB_Driver_Api_IConcept_IsRelation_]
 ==== method ``IsRelation``
@@ -707,16 +605,18 @@ bool IsRelation()
 
 Checks if the concept is a IRelation.
 
- 
-  concept.IsRelation()
- 
-
-
 Implemented in TypeDB.Driver.Api.IRelation.
 
 [caption=""]
 .Returns
 `bool`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.IsRelation()
+----
 
 [#_bool_TypeDB_Driver_Api_IConcept_IsRelationType_]
 ==== method ``IsRelationType``
@@ -730,16 +630,18 @@ bool IsRelationType()
 
 Checks if the concept is a IRelationType.
 
- 
-  concept.IsRelationType()
- 
-
-
 Implemented in TypeDB.Driver.Api.IRelationType.
 
 [caption=""]
 .Returns
 `bool`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.IsRelationType()
+----
 
 [#_bool_TypeDB_Driver_Api_IConcept_IsRoleType_]
 ==== method ``IsRoleType``
@@ -753,16 +655,18 @@ bool IsRoleType()
 
 Checks if the concept is a IRoleType.
 
- 
-  concept.IsRoleType()
- 
-
-
 Implemented in TypeDB.Driver.Api.IRoleType.
 
 [caption=""]
 .Returns
 `bool`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.IsRoleType()
+----
 
 [#_bool_TypeDB_Driver_Api_IConcept_IsString_]
 ==== method ``IsString``
@@ -776,14 +680,16 @@ bool IsString()
 
 Returns true if the value which this Concept holds is of type string or if this Concept is an AttributeType of type string.
 
- 
-  concept.IsString()
- 
-
-
 [caption=""]
 .Returns
 `bool`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.IsString()
+----
 
 [#_bool_TypeDB_Driver_Api_IConcept_IsStruct_]
 ==== method ``IsStruct``
@@ -797,14 +703,16 @@ bool IsStruct()
 
 Returns true if the value which this Concept holds is of type struct or if this Concept is an AttributeType of type struct.
 
- 
-  concept.IsStruct()
- 
-
-
 [caption=""]
 .Returns
 `bool`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.IsStruct()
+----
 
 [#_bool_TypeDB_Driver_Api_IConcept_IsType_]
 ==== method ``IsType``
@@ -818,16 +726,18 @@ bool IsType()
 
 Checks if the concept is a IType.
 
- 
-  concept.IsType()
- 
-
-
 Implemented in TypeDB.Driver.Api.IType.
 
 [caption=""]
 .Returns
 `bool`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.IsType()
+----
 
 [#_bool_TypeDB_Driver_Api_IConcept_IsValue_]
 ==== method ``IsValue``
@@ -841,16 +751,18 @@ bool IsValue()
 
 Checks if the concept is a IValue.
 
- 
-  concept.IsValue()
- 
-
-
 Implemented in TypeDB.Driver.Api.IValue.
 
 [caption=""]
 .Returns
 `bool`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.IsValue()
+----
 
 [#_bool_TypeDB_Driver_Api_IConcept_TryGetBoolean_]
 ==== method ``TryGetBoolean``
@@ -864,14 +776,16 @@ bool? TryGetBoolean()
 
 Returns a boolean value of this Concept. If it's not a Value or it has another type, returns null.
 
- 
-  concept.TryGetBoolean()
- 
-
-
 [caption=""]
 .Returns
 `bool?`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.TryGetBoolean()
+----
 
 [#_DateOnly_TypeDB_Driver_Api_IConcept_TryGetDate_]
 ==== method ``TryGetDate``
@@ -885,14 +799,16 @@ DateOnly? TryGetDate()
 
 Returns a date value of this Concept. If it's not a Value or it has another type, returns null.
 
- 
-  concept.TryGetDate()
- 
-
-
 [caption=""]
 .Returns
 `DateOnly?`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.TryGetDate()
+----
 
 [#_Datetime_TypeDB_Driver_Api_IConcept_TryGetDatetime_]
 ==== method ``TryGetDatetime``
@@ -906,14 +822,16 @@ Datetime? TryGetDatetime()
 
 Returns a datetime value of this Concept. If it's not a Value or it has another type, returns null.
 
- 
-  concept.TryGetDatetime()
- 
-
-
 [caption=""]
 .Returns
 `Datetime?`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.TryGetDatetime()
+----
 
 [#_DatetimeTZ_TypeDB_Driver_Api_IConcept_TryGetDatetimeTZ_]
 ==== method ``TryGetDatetimeTZ``
@@ -927,14 +845,16 @@ DatetimeTZ? TryGetDatetimeTZ()
 
 Returns a datetime-tz value of this Concept. If it's not a Value or it has another type, returns null.
 
- 
-  concept.TryGetDatetimeTZ()
- 
-
-
 [caption=""]
 .Returns
 `DatetimeTZ?`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.TryGetDatetimeTZ()
+----
 
 [#_decimal_TypeDB_Driver_Api_IConcept_TryGetDecimal_]
 ==== method ``TryGetDecimal``
@@ -948,14 +868,16 @@ decimal? TryGetDecimal()
 
 Returns a decimal value of this Concept. If it's not a Value or it has another type, returns null.
 
- 
-  concept.TryGetDecimal()
- 
-
-
 [caption=""]
 .Returns
 `decimal?`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.TryGetDecimal()
+----
 
 [#_double_TypeDB_Driver_Api_IConcept_TryGetDouble_]
 ==== method ``TryGetDouble``
@@ -969,14 +891,16 @@ double? TryGetDouble()
 
 Returns a double value of this Concept. If it's not a Value or it has another type, returns null.
 
- 
-  concept.TryGetDouble()
- 
-
-
 [caption=""]
 .Returns
 `double?`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.TryGetDouble()
+----
 
 [#_Duration_TypeDB_Driver_Api_IConcept_TryGetDuration_]
 ==== method ``TryGetDuration``
@@ -990,14 +914,16 @@ Duration? TryGetDuration()
 
 Returns a duration value of this Concept. If it's not a Value or it has another type, returns null.
 
- 
-  concept.TryGetDuration()
- 
-
-
 [caption=""]
 .Returns
 `Duration?`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.TryGetDuration()
+----
 
 [#_string_TypeDB_Driver_Api_IConcept_TryGetIID_]
 ==== method ``TryGetIID``
@@ -1011,14 +937,16 @@ string? TryGetIID()
 
 Retrieves the unique id (IID) of the Concept. Returns null if absent.
 
- 
-  concept.TryGetIID()
- 
-
-
 [caption=""]
 .Returns
 `string?`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.TryGetIID()
+----
 
 [#_long_TypeDB_Driver_Api_IConcept_TryGetInteger_]
 ==== method ``TryGetInteger``
@@ -1032,14 +960,16 @@ long? TryGetInteger()
 
 Returns an integer value of this Concept. If it's not a Value or it has another type, returns null.
 
- 
-  concept.TryGetInteger()
- 
-
-
 [caption=""]
 .Returns
 `long?`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.TryGetInteger()
+----
 
 [#_string_TypeDB_Driver_Api_IConcept_TryGetLabel_]
 ==== method ``TryGetLabel``
@@ -1053,14 +983,16 @@ string? TryGetLabel()
 
 Retrieves the unique label of the concept, or null if type fetching is disabled for instances.
 
- 
-  concept.TryGetLabel()
- 
-
-
 [caption=""]
 .Returns
 `string?`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.TryGetLabel()
+----
 
 [#_string_TypeDB_Driver_Api_IConcept_TryGetString_]
 ==== method ``TryGetString``
@@ -1074,14 +1006,16 @@ string? TryGetString()
 
 Returns a string value of this Concept. If it's not a Value or it has another type, returns null.
 
- 
-  concept.TryGetString()
- 
-
-
 [caption=""]
 .Returns
 `string?`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.TryGetString()
+----
 
 [#_IReadOnlyDictionary_string_IValue_TypeDB_Driver_Api_IConcept_TryGetStruct_]
 ==== method ``TryGetStruct``
@@ -1095,14 +1029,16 @@ IReadOnlyDictionary< string, IValue? >? TryGetStruct()
 
 Returns a struct value of this Concept. If it's not a Value or it has another type, returns null.
 
- 
-  concept.TryGetStruct()
- 
-
-
 [caption=""]
 .Returns
 `IReadOnlyDictionary< string, IValue? >?`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.TryGetStruct()
+----
 
 [#_IValue_TypeDB_Driver_Api_IConcept_TryGetValue_]
 ==== method ``TryGetValue``
@@ -1116,14 +1052,16 @@ IValue? TryGetValue()
 
 Retrieves the value which this Concept holds. Returns null if this Concept does not hold any value.
 
- 
-  concept.TryGetValue()
- 
-
-
 [caption=""]
 .Returns
 `IValue?`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.TryGetValue()
+----
 
 [#_string_TypeDB_Driver_Api_IConcept_TryGetValueType_]
 ==== method ``TryGetValueType``
@@ -1137,14 +1075,16 @@ string? TryGetValueType()
 
 Retrieves the string describing the value type of this Concept. Returns null if absent.
 
- 
-  concept.TryGetValueType()
- 
-
-
 [caption=""]
 .Returns
 `string?`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.TryGetValueType()
+----
 
 // end::methods[]
 

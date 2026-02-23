@@ -39,6 +39,13 @@ a| `driverOptions` a| The DriverOptions to connect with. a| `DriverOptions`
 .Returns
 `IDriver`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+using var driver = TypeDB.Driver( "localhost:1729", new Credentials("admin", "password"), new DriverOptions(false, null)); TypeDB.Driver.Api.Credentials User credentials for connecting to TypeDB Server. Definition Credentials.cs:33 TypeDB.Driver.Api.DriverOptions User connection settings (TLS encryption, etc.) for connecting to TypeDB Server. Definition DriverOptions.cs:37 TypeDB.Driver Definition TypeDB.cs:24 TypeDB Definition TypeDB.cs:24
+----
+
 [#_static_IDriver_TypeDB_Driver_TypeDB_Driver_Credentials_credentials_DriverOptions_driverOptions_]
 ==== method ``Driver``
 

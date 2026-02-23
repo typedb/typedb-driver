@@ -37,6 +37,13 @@ a| `username` a| The user name to be checked. a| `string`
 .Returns
 `bool`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+driver.Users.Contains(username);
+----
+
 [#_void_TypeDB_Driver_Api_IUserManager_Create_string_username_string_password_]
 ==== method ``Create``
 
@@ -64,6 +71,13 @@ a| `password` a| The password of the user to be created. a| `string`
 .Returns
 `void`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+driver.Users.Create(username, password);
+----
+
 [#_IUser_TypeDB_Driver_Api_IUserManager_Get_string_username_]
 ==== method ``Get``
 
@@ -90,6 +104,13 @@ a| `username` a| The name of the user to retrieve. a| `string`
 .Returns
 `IUser?`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+driver.Users.Get(username);
+----
+
 [#_ISet_IUser_TypeDB_Driver_Api_IUserManager_GetAll_]
 ==== method ``GetAll``
 
@@ -102,22 +123,16 @@ ISet< IUser > GetAll()
 
 Retrieves all users which exist on the TypeDB server.
 
- 
-  Returns
- 
- 
-  A set of all users.
- 
-
-
- 
-  driver.Users.GetAll();
- 
-
-
 [caption=""]
 .Returns
 `ISet< IUser >`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+driver.Users.GetAll();
+----
 
 [#_IUser_TypeDB_Driver_Api_IUserManager_GetCurrentUser_]
 ==== method ``GetCurrentUser``
@@ -131,22 +146,16 @@ IUser GetCurrentUser()
 
 Retrieves the currently logged in user.
 
- 
-  Returns
- 
- 
-  The current user.
- 
-
-
- 
-  driver.Users.GetCurrentUser();
- 
-
-
 [caption=""]
 .Returns
 `IUser`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+driver.Users.GetCurrentUser();
+----
 
 // end::methods[]
 

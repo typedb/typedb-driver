@@ -23,14 +23,16 @@ void Close()
 
 Closes the driver. Before instantiating a new driver, the driver that's currently open should first be closed.
 
- 
-  driver.Close();
- 
-
-
 [caption=""]
 .Returns
 `void`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+driver.Close();
+----
 
 [#_IDatabaseManager_TypeDB_Driver_Api_IDriver_Databases]
 ==== method ``Databases``
@@ -44,14 +46,16 @@ IDatabaseManager TypeDB.Driver.Api.IDriver.Databases
 
 The IDatabaseManager for this connection, providing access to database management methods.
 
- 
-  driver.Databases
- 
-
-
 [caption=""]
 .Returns
 `IDatabaseManager`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+driver.Databases
+----
 
 [#_bool_TypeDB_Driver_Api_IDriver_IsOpen_]
 ==== method ``IsOpen``
@@ -65,22 +69,16 @@ bool IsOpen()
 
 Checks whether this connection is presently open.
 
- 
-  Returns
- 
- 
-  ``true`` if the connection is open, ``false`` otherwise.
- 
-
-
- 
-  driver.IsOpen();
- 
-
-
 [caption=""]
 .Returns
 `bool`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+driver.IsOpen();
+----
 
 [#_ITypeDBTransaction_TypeDB_Driver_Api_IDriver_Transaction_string_database_TransactionType_type_]
 ==== method ``Transaction``
@@ -108,6 +106,13 @@ a| `type` a| The type of transaction to be created (Read, Write, or Schema). a| 
 [caption=""]
 .Returns
 `ITypeDBTransaction`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+driver.Transaction(database, TransactionType.Read); TypeDB.Driver.Api.TransactionType TransactionType Used to specify the type of transaction. Definition ITypeDBTransaction.cs:99
+----
 
 [#_ITypeDBTransaction_TypeDB_Driver_Api_IDriver_Transaction_string_database_TransactionType_type_TransactionOptions_options_]
 ==== method ``Transaction``
@@ -137,6 +142,13 @@ a| `options` a| Transaction options to configure the opened transaction. a| `Tra
 .Returns
 `ITypeDBTransaction`
 
+[caption=""]
+.Code examples
+[source,cs]
+----
+driver.Transaction(database, TransactionType.Read, options);
+----
+
 [#_IUserManager_TypeDB_Driver_Api_IDriver_Users]
 ==== method ``Users``
 
@@ -149,14 +161,16 @@ IUserManager TypeDB.Driver.Api.IDriver.Users
 
 The IUserManager instance for this connection, providing access to user management methods.
 
- 
-  driver.Users
- 
-
-
 [caption=""]
 .Returns
 `IUserManager`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+driver.Users
+----
 
 // end::methods[]
 

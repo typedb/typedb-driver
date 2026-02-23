@@ -28,26 +28,6 @@ IRoleType IConcept. AsRoleType()
 
 Casts the concept to IRoleType.
 
- 
-  Exceptions
- 
- 
-  
-   
-    
-     TypeDBDriverException
-     If the concept is not a role type.
-    
-   
-  
- 
-
-
- 
-  concept.AsRoleType()
- 
-
-
 
 
 Implements TypeDB.Driver.Api.IConcept.
@@ -55,6 +35,13 @@ Implements TypeDB.Driver.Api.IConcept.
 [caption=""]
 .Returns
 `IRoleType IConcept.`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.AsRoleType()
+----
 
 [#_bool_IConcept_TypeDB_Driver_Api_IRoleType_IsRoleType_]
 ==== method ``IsRoleType``
@@ -68,11 +55,6 @@ bool IConcept. IsRoleType()
 
 Checks if the concept is a IRoleType.
 
- 
-  concept.IsRoleType()
- 
-
-
 
 
 Implements TypeDB.Driver.Api.IConcept.
@@ -80,6 +62,13 @@ Implements TypeDB.Driver.Api.IConcept.
 [caption=""]
 .Returns
 `bool IConcept.`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.IsRoleType()
+----
 
 // end::methods[]
 

@@ -23,37 +23,16 @@ IReadOnlyList< IJSON > AsArray()
 
 Casts this JSON value to an array.
 
- 
-  Returns
- 
- 
-  The JSON value as a list.
- 
-
-
- 
-  Exceptions
- 
- 
-  
-   
-    
-     TypeDBDriverException
-     If the value is not an array.
-    
-   
-  
- 
-
-
- 
-  json.AsArray()
- 
-
-
 [caption=""]
 .Returns
 `IReadOnlyList< IJSON >`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+json.AsArray()
+----
 
 [#_bool_TypeDB_Driver_Api_Answer_IJSON_AsBoolean_]
 ==== method ``AsBoolean``
@@ -67,37 +46,16 @@ bool AsBoolean()
 
 Casts this JSON value to a boolean.
 
- 
-  Returns
- 
- 
-  The JSON value as a boolean.
- 
-
-
- 
-  Exceptions
- 
- 
-  
-   
-    
-     TypeDBDriverException
-     If the value is not a boolean.
-    
-   
-  
- 
-
-
- 
-  json.AsBoolean()
- 
-
-
 [caption=""]
 .Returns
 `bool`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+json.AsBoolean()
+----
 
 [#_double_TypeDB_Driver_Api_Answer_IJSON_AsNumber_]
 ==== method ``AsNumber``
@@ -111,37 +69,16 @@ double AsNumber()
 
 Casts this JSON value to a number.
 
- 
-  Returns
- 
- 
-  The JSON value as a double.
- 
-
-
- 
-  Exceptions
- 
- 
-  
-   
-    
-     TypeDBDriverException
-     If the value is not a number.
-    
-   
-  
- 
-
-
- 
-  json.AsNumber()
- 
-
-
 [caption=""]
 .Returns
 `double`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+json.AsNumber()
+----
 
 [#_IReadOnlyDictionary_string_IJSON_TypeDB_Driver_Api_Answer_IJSON_AsObject_]
 ==== method ``AsObject``
@@ -155,37 +92,16 @@ IReadOnlyDictionary< string, IJSON > AsObject()
 
 Casts this JSON value to an object (dictionary).
 
- 
-  Returns
- 
- 
-  The JSON value as a dictionary.
- 
-
-
- 
-  Exceptions
- 
- 
-  
-   
-    
-     TypeDBDriverException
-     If the value is not an object.
-    
-   
-  
- 
-
-
- 
-  json.AsObject()
- 
-
-
 [caption=""]
 .Returns
 `IReadOnlyDictionary< string, IJSON >`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+json.AsObject()
+----
 
 [#_string_TypeDB_Driver_Api_Answer_IJSON_AsString_]
 ==== method ``AsString``
@@ -199,37 +115,16 @@ string AsString()
 
 Casts this JSON value to a string.
 
- 
-  Returns
- 
- 
-  The JSON value as a string.
- 
-
-
- 
-  Exceptions
- 
- 
-  
-   
-    
-     TypeDBDriverException
-     If the value is not a string.
-    
-   
-  
- 
-
-
- 
-  json.AsString()
- 
-
-
 [caption=""]
 .Returns
 `string`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+json.AsString()
+----
 
 [#_bool_TypeDB_Driver_Api_Answer_IJSON_IsArray]
 ==== method ``IsArray``
@@ -243,14 +138,16 @@ bool TypeDB.Driver.Api.Answer.IJSON.IsArray
 
 Checks if this JSON value is an array.
 
- 
-  json.IsArray
- 
-
-
 [caption=""]
 .Returns
 `bool`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+json.IsArray
+----
 
 [#_bool_TypeDB_Driver_Api_Answer_IJSON_IsBoolean]
 ==== method ``IsBoolean``
@@ -264,14 +161,16 @@ bool TypeDB.Driver.Api.Answer.IJSON.IsBoolean
 
 Checks if this JSON value is a boolean.
 
- 
-  json.IsBoolean
- 
-
-
 [caption=""]
 .Returns
 `bool`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+json.IsBoolean
+----
 
 [#_bool_TypeDB_Driver_Api_Answer_IJSON_IsNull]
 ==== method ``IsNull``
@@ -285,14 +184,16 @@ bool TypeDB.Driver.Api.Answer.IJSON.IsNull
 
 Checks if this JSON value is null.
 
- 
-  json.IsNull
- 
-
-
 [caption=""]
 .Returns
 `bool`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+json.IsNull
+----
 
 [#_bool_TypeDB_Driver_Api_Answer_IJSON_IsNumber]
 ==== method ``IsNumber``
@@ -306,14 +207,16 @@ bool TypeDB.Driver.Api.Answer.IJSON.IsNumber
 
 Checks if this JSON value is a number.
 
- 
-  json.IsNumber
- 
-
-
 [caption=""]
 .Returns
 `bool`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+json.IsNumber
+----
 
 [#_bool_TypeDB_Driver_Api_Answer_IJSON_IsObject]
 ==== method ``IsObject``
@@ -327,14 +230,16 @@ bool TypeDB.Driver.Api.Answer.IJSON.IsObject
 
 Checks if this JSON value is an object.
 
- 
-  json.IsObject
- 
-
-
 [caption=""]
 .Returns
 `bool`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+json.IsObject
+----
 
 [#_bool_TypeDB_Driver_Api_Answer_IJSON_IsString]
 ==== method ``IsString``
@@ -348,14 +253,16 @@ bool TypeDB.Driver.Api.Answer.IJSON.IsString
 
 Checks if this JSON value is a string.
 
- 
-  json.IsString
- 
-
-
 [caption=""]
 .Returns
 `bool`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+json.IsString
+----
 
 // end::methods[]
 

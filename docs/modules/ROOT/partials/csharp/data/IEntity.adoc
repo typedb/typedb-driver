@@ -28,26 +28,6 @@ IEntity IConcept. AsEntity()
 
 Casts the concept to IEntity.
 
- 
-  Exceptions
- 
- 
-  
-   
-    
-     TypeDBDriverException
-     If the concept is not an entity.
-    
-   
-  
- 
-
-
- 
-  concept.AsEntity()
- 
-
-
 
 
 Implements TypeDB.Driver.Api.IConcept.
@@ -55,6 +35,13 @@ Implements TypeDB.Driver.Api.IConcept.
 [caption=""]
 .Returns
 `IEntity IConcept.`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.AsEntity()
+----
 
 [#_bool_IConcept_TypeDB_Driver_Api_IEntity_IsEntity_]
 ==== method ``IsEntity``
@@ -68,11 +55,6 @@ bool IConcept. IsEntity()
 
 Checks if the concept is an IEntity.
 
- 
-  concept.IsEntity()
- 
-
-
 
 
 Implements TypeDB.Driver.Api.IConcept.
@@ -80,6 +62,13 @@ Implements TypeDB.Driver.Api.IConcept.
 [caption=""]
 .Returns
 `bool IConcept.`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.IsEntity()
+----
 
 [#_new_IEntityType_TypeDB_Driver_Api_IEntity_Type]
 ==== method ``Type [1/2]``

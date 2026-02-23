@@ -28,26 +28,6 @@ IRelation IConcept. AsRelation()
 
 Casts the concept to IRelation.
 
- 
-  Exceptions
- 
- 
-  
-   
-    
-     TypeDBDriverException
-     If the concept is not a relation.
-    
-   
-  
- 
-
-
- 
-  concept.AsRelation()
- 
-
-
 
 
 Implements TypeDB.Driver.Api.IConcept.
@@ -55,6 +35,13 @@ Implements TypeDB.Driver.Api.IConcept.
 [caption=""]
 .Returns
 `IRelation IConcept.`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.AsRelation()
+----
 
 [#_bool_IConcept_TypeDB_Driver_Api_IRelation_IsRelation_]
 ==== method ``IsRelation``
@@ -68,11 +55,6 @@ bool IConcept. IsRelation()
 
 Checks if the concept is a IRelation.
 
- 
-  concept.IsRelation()
- 
-
-
 
 
 Implements TypeDB.Driver.Api.IConcept.
@@ -80,6 +62,13 @@ Implements TypeDB.Driver.Api.IConcept.
 [caption=""]
 .Returns
 `bool IConcept.`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.IsRelation()
+----
 
 [#_new_IRelationType_TypeDB_Driver_Api_IRelation_Type]
 ==== method ``Type [1/2]``

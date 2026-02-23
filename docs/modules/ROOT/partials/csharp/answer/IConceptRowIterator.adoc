@@ -27,34 +27,6 @@ IConceptRowIterator IQueryAnswer. AsConceptRows()
 
 Casts the query answer to IConceptRowIterator.
 
- 
-  Returns
- 
- 
-  The IConceptRowIterator if this is a concept rows response.
- 
-
-
- 
-  Exceptions
- 
- 
-  
-   
-    
-     TypeDBDriverException
-     If the answer is not a concept rows response.
-    
-   
-  
- 
-
-
- 
-  queryAnswer.AsConceptRows()
- 
-
-
 
 
 Implements TypeDB.Driver.Api.Answer.IQueryAnswer.
@@ -62,6 +34,13 @@ Implements TypeDB.Driver.Api.Answer.IQueryAnswer.
 [caption=""]
 .Returns
 `IConceptRowIterator IQueryAnswer.`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+queryAnswer.AsConceptRows()
+----
 
 [#_bool_IQueryAnswer_TypeDB_Driver_Api_Answer_IConceptRowIterator_IsConceptRows]
 ==== method ``IsConceptRows``
@@ -75,11 +54,6 @@ bool IQueryAnswer. TypeDB.Driver.Api.Answer.IConceptRowIterator.IsConceptRows
 
 Checks if the query answer is a IConceptRowIterator.
 
- 
-  queryAnswer.IsConceptRows
- 
-
-
 
 
 Implements TypeDB.Driver.Api.Answer.IQueryAnswer.
@@ -87,6 +61,13 @@ Implements TypeDB.Driver.Api.Answer.IQueryAnswer.
 [caption=""]
 .Returns
 `bool IQueryAnswer.`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+queryAnswer.IsConceptRows
+----
 
 // end::methods[]
 

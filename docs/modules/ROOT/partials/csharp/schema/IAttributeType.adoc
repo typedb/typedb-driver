@@ -28,26 +28,6 @@ IAttributeType IConcept. AsAttributeType()
 
 Casts the concept to IAttributeType.
 
- 
-  Exceptions
- 
- 
-  
-   
-    
-     TypeDBDriverException
-     If the concept is not an attribute type.
-    
-   
-  
- 
-
-
- 
-  concept.AsAttributeType()
- 
-
-
 
 
 Implements TypeDB.Driver.Api.IConcept.
@@ -55,6 +35,13 @@ Implements TypeDB.Driver.Api.IConcept.
 [caption=""]
 .Returns
 `IAttributeType IConcept.`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.AsAttributeType()
+----
 
 [#_bool_IConcept_TypeDB_Driver_Api_IAttributeType_IsAttributeType_]
 ==== method ``IsAttributeType``
@@ -68,11 +55,6 @@ bool IConcept. IsAttributeType()
 
 Checks if the concept is an IAttributeType.
 
- 
-  concept.IsAttributeType()
- 
-
-
 
 
 Implements TypeDB.Driver.Api.IConcept.
@@ -80,6 +62,13 @@ Implements TypeDB.Driver.Api.IConcept.
 [caption=""]
 .Returns
 `bool IConcept.`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.IsAttributeType()
+----
 
 // end::methods[]
 

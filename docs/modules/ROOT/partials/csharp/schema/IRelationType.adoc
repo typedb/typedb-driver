@@ -28,26 +28,6 @@ IRelationType IConcept. AsRelationType()
 
 Casts the concept to IRelationType.
 
- 
-  Exceptions
- 
- 
-  
-   
-    
-     TypeDBDriverException
-     If the concept is not a relation type.
-    
-   
-  
- 
-
-
- 
-  concept.AsRelationType()
- 
-
-
 
 
 Implements TypeDB.Driver.Api.IConcept.
@@ -55,6 +35,13 @@ Implements TypeDB.Driver.Api.IConcept.
 [caption=""]
 .Returns
 `IRelationType IConcept.`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.AsRelationType()
+----
 
 [#_bool_IConcept_TypeDB_Driver_Api_IRelationType_IsRelationType_]
 ==== method ``IsRelationType``
@@ -68,11 +55,6 @@ bool IConcept. IsRelationType()
 
 Checks if the concept is a IRelationType.
 
- 
-  concept.IsRelationType()
- 
-
-
 
 
 Implements TypeDB.Driver.Api.IConcept.
@@ -80,6 +62,13 @@ Implements TypeDB.Driver.Api.IConcept.
 [caption=""]
 .Returns
 `bool IConcept.`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.IsRelationType()
+----
 
 // end::methods[]
 

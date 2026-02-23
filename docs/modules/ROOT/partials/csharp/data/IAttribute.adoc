@@ -28,26 +28,6 @@ IAttribute IConcept. AsAttribute()
 
 Casts the concept to IAttribute.
 
- 
-  Exceptions
- 
- 
-  
-   
-    
-     TypeDBDriverException
-     If the concept is not an attribute.
-    
-   
-  
- 
-
-
- 
-  concept.AsAttribute()
- 
-
-
 
 
 Implements TypeDB.Driver.Api.IConcept.
@@ -55,6 +35,13 @@ Implements TypeDB.Driver.Api.IConcept.
 [caption=""]
 .Returns
 `IAttribute IConcept.`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.AsAttribute()
+----
 
 [#_bool_IConcept_TypeDB_Driver_Api_IAttribute_IsAttribute_]
 ==== method ``IsAttribute``
@@ -68,11 +55,6 @@ bool IConcept. IsAttribute()
 
 Checks if the concept is an IAttribute.
 
- 
-  concept.IsAttribute()
- 
-
-
 
 
 Implements TypeDB.Driver.Api.IConcept.
@@ -80,6 +62,13 @@ Implements TypeDB.Driver.Api.IConcept.
 [caption=""]
 .Returns
 `bool IConcept.`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.IsAttribute()
+----
 
 [#_new_IAttributeType_TypeDB_Driver_Api_IAttribute_Type]
 ==== method ``Type [1/2]``

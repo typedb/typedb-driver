@@ -27,26 +27,6 @@ IType IConcept. AsType()
 
 Casts the concept to IType.
 
- 
-  Exceptions
- 
- 
-  
-   
-    
-     TypeDBDriverException
-     If the concept is not a type.
-    
-   
-  
- 
-
-
- 
-  concept.AsType()
- 
-
-
 
 
 Implements TypeDB.Driver.Api.IConcept.
@@ -54,6 +34,13 @@ Implements TypeDB.Driver.Api.IConcept.
 [caption=""]
 .Returns
 `IType IConcept.`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.AsType()
+----
 
 [#_bool_IConcept_TypeDB_Driver_Api_IType_IsType_]
 ==== method ``IsType``
@@ -67,11 +54,6 @@ bool IConcept. IsType()
 
 Checks if the concept is a IType.
 
- 
-  concept.IsType()
- 
-
-
 
 
 Implements TypeDB.Driver.Api.IConcept.
@@ -79,6 +61,13 @@ Implements TypeDB.Driver.Api.IConcept.
 [caption=""]
 .Returns
 `bool IConcept.`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.IsType()
+----
 
 // end::methods[]
 

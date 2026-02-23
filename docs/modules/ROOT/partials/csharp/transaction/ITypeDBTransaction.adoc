@@ -81,14 +81,6 @@ bool IsOpen()
 
 Checks whether this transaction is open.
 
- 
-  Returns
- 
- 
-  ``true`` if the transaction is open, ``false`` otherwise.
- 
-
-
 [caption=""]
 .Returns
 `bool`

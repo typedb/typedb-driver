@@ -27,26 +27,6 @@ IInstance IConcept. AsInstance()
 
 Casts the concept to IInstance.
 
- 
-  Exceptions
- 
- 
-  
-   
-    
-     TypeDBDriverException
-     If the concept is not an instance.
-    
-   
-  
- 
-
-
- 
-  concept.AsInstance()
- 
-
-
 
 
 Implements TypeDB.Driver.Api.IConcept.
@@ -54,6 +34,13 @@ Implements TypeDB.Driver.Api.IConcept.
 [caption=""]
 .Returns
 `IInstance IConcept.`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.AsInstance()
+----
 
 [#_bool_IConcept_TypeDB_Driver_Api_IInstance_IsInstance_]
 ==== method ``IsInstance``
@@ -67,11 +54,6 @@ bool IConcept. IsInstance()
 
 Checks if the concept is an instance (entity, relation, or attribute).
 
- 
-  concept.IsInstance()
- 
-
-
 
 
 Implements TypeDB.Driver.Api.IConcept.
@@ -79,6 +61,13 @@ Implements TypeDB.Driver.Api.IConcept.
 [caption=""]
 .Returns
 `bool IConcept.`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.IsInstance()
+----
 
 [#_IType_TypeDB_Driver_Api_IInstance_Type]
 ==== method ``Type``
