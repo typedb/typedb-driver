@@ -187,17 +187,17 @@ Rolls back the uncommitted changes made via this transaction.
 .Returns
 `struct VoidPromise*`
 
-[#_transaction_submit_close]
-==== function ``transaction_submit_close``
+[#_transaction_drop_sync]
+==== function ``transaction_drop_sync``
 
 [source,c]
 ----
-void transaction_submit_close(struct Transaction* txn)
+void transaction_drop_sync(struct Transaction* txn)
 ----
 
 
 
-Closes the transaction and frees the native rust object.
+Closes the transaction, waits for all callbacks to complete, then frees the memory.
 
 [caption=""]
 .Returns

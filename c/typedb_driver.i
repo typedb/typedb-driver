@@ -62,10 +62,7 @@ struct Type {};
 %dropproxy(TransactionOptions, transaction_options)
 %dropproxy(QueryOptions, query_options)
 
-// Use transaction_close_sync for the destructor to ensure callbacks are invoked
-// before SWIG directors are finalized by the managed runtime's GC.
-// transaction_submit_close is kept for explicit async close.
-#define transaction_drop transaction_close_sync
+#define transaction_drop transaction_drop_sync
 #define database_drop database_close
 
 #define typedb_driver_drop driver_close

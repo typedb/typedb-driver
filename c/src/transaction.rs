@@ -71,19 +71,9 @@ pub extern "C" fn transaction_analyze(
     release(AnalyzedQueryPromise::new(Box::new(borrow(transaction).analyze(string_view(query)))))
 }
 
-/// Closes the transaction and frees the native rust object.
-/// This is an async fire-and-forget close - use transaction_close_sync for synchronous close
-/// that waits for callbacks to complete.
+/// Closes the transaction, waits for all callbacks to complete, then frees the memory.
 #[no_mangle]
-pub extern "C" fn transaction_submit_close(txn: *mut Transaction) {
-    free(txn);
-}
-
-/// Synchronously closes the transaction, waits for all callbacks to complete, then frees the memory.
-/// This should be used in finalizers/destructors to ensure callbacks are invoked before
-/// their handler objects (like SWIG directors) are freed.
-#[no_mangle]
-pub extern "C" fn transaction_close_sync(txn: *mut Transaction) {
+pub extern "C" fn transaction_drop_sync(txn: *mut Transaction) {
     if txn.is_null() {
         return;
     }
