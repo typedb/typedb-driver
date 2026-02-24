@@ -129,6 +129,14 @@ public class ValueImpl extends ConceptImpl implements Value {
     }
 
     @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        ValueImpl other = (ValueImpl) obj;
+        return tryGetValueType().equals(other.tryGetValueType()) && get().equals(other.get());
+    }
+
+    @Override
     public int hashCode() {
         if (hash == 0) hash = computeHash();
         return hash;
