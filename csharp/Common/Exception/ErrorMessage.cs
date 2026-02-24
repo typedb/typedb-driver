@@ -70,6 +70,8 @@ namespace TypeDB.Driver.Common
                 new Driver(6, "Value cannot be less than 1, was: {0}.");
             public static readonly Driver UNEXPECTED_NATIVE_VALUE =
                 new Driver(7, "Unexpected native value encountered!");
+            public static readonly Driver NON_NULL_VALUE_REQUIRED =
+                new Driver(8, "Value of '{0}' should not be null.");
         }
 
         public class Concept : ErrorMessage

@@ -30,7 +30,6 @@ using TypeDB.Driver.Common;
 using TypeDB.Driver.Common.Validation;
 
 using DriverError = TypeDB.Driver.Common.Error.Driver;
-using QueryError = TypeDB.Driver.Common.Error.Query;
 
 namespace TypeDB.Driver.Connection
 {
@@ -137,7 +136,7 @@ namespace TypeDB.Driver.Connection
         /// <inheritdoc/>
         public Promise<IQueryAnswer> Query(string query, QueryOptions options)
         {
-            Validator.NonEmptyString(query, QueryError.MISSING_QUERY);
+            Validator.NonNull(query, DriverError.NON_NULL_VALUE_REQUIRED, "query");
             Validator.ThrowIfFalse(NativeObject.IsOwned, DriverError.TRANSACTION_CLOSED);
 
             try
@@ -156,7 +155,7 @@ namespace TypeDB.Driver.Connection
         /// <inheritdoc/>
         public Promise<IAnalyzedQuery> Analyze(string query)
         {
-            Validator.NonEmptyString(query, QueryError.MISSING_QUERY);
+            Validator.NonNull(query, DriverError.NON_NULL_VALUE_REQUIRED, "query");
             Validator.ThrowIfFalse(NativeObject.IsOwned, DriverError.TRANSACTION_CLOSED);
 
             try
