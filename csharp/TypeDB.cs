@@ -51,37 +51,5 @@ namespace TypeDB.Driver
         {
             return new TypeDBDriver(address, credentials, driverOptions);
         }
-
-        /// <summary>
-        /// Open a TypeDB Driver to a TypeDB server available at the default address (localhost:1729).
-        /// </summary>
-        /// <param name="credentials">The <see cref="Credentials"/> to connect with.</param>
-        /// <param name="driverOptions">The <see cref="DriverOptions"/> to connect with.</param>
-        /// <returns>An open <see cref="IDriver"/> connection to the TypeDB server.</returns>
-        public static IDriver Driver(Credentials credentials, DriverOptions driverOptions)
-        {
-            return Driver(DefaultAddress, credentials, driverOptions);
-        }
-
-        /// <summary>
-        /// Open a TypeDB Driver to a TypeDB server available at the provided address with no TLS.
-        /// </summary>
-        /// <param name="address">The address (host:port) on which the TypeDB Server is running.</param>
-        /// <param name="credentials">The <see cref="Credentials"/> to connect with.</param>
-        /// <returns>An open <see cref="IDriver"/> connection to the TypeDB server.</returns>
-        public static IDriver Driver(string address, Credentials credentials)
-        {
-            return Driver(address, credentials, new DriverOptions(false, null));
-        }
-
-        /// <summary>
-        /// Open a TypeDB Driver to a TypeDB server available at the default address with no TLS.
-        /// </summary>
-        /// <param name="credentials">The <see cref="Credentials"/> to connect with.</param>
-        /// <returns>An open <see cref="IDriver"/> connection to the TypeDB server.</returns>
-        public static IDriver Driver(Credentials credentials)
-        {
-            return Driver(DefaultAddress, credentials, new DriverOptions(false, null));
-        }
     }
 }

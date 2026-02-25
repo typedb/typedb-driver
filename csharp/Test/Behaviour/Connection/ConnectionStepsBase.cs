@@ -36,9 +36,9 @@ namespace TypeDB.Driver.Test.Behaviour
         public static IDriver? Driver;
         public static IDriver? BackgroundDriver;
 
-        public static List<ITypeDBTransaction> Transactions = new List<ITypeDBTransaction>();
-        public static List<ITypeDBTransaction> BackgroundTransactions = new List<ITypeDBTransaction>();
-        public static List<Task<ITypeDBTransaction>> TransactionsParallel = new List<Task<ITypeDBTransaction>>();
+        public static List<ITransaction> Transactions = new List<ITransaction>();
+        public static List<ITransaction> BackgroundTransactions = new List<ITransaction>();
+        public static List<Task<ITransaction>> TransactionsParallel = new List<Task<ITransaction>>();
 
         public static TransactionOptions? CurrentTransactionOptions;
 
@@ -54,7 +54,7 @@ namespace TypeDB.Driver.Test.Behaviour
         // TODO: implement configuration and remove skips when @ignore-typedb-driver is removed from .feature.
         protected bool _requiredConfiguration = false;
 
-        public static ITypeDBTransaction Tx => Transactions[0];
+        public static ITransaction Tx => Transactions[0];
 
         public static string TempDir
         {
@@ -71,7 +71,7 @@ namespace TypeDB.Driver.Test.Behaviour
 
         public static string FullPath(string fileName) => Path.Combine(TempDir, fileName);
 
-        public static ITypeDBTransaction TxPop()
+        public static ITransaction TxPop()
         {
             var tx = Transactions[0];
             Transactions.RemoveAt(0);
@@ -121,7 +121,7 @@ namespace TypeDB.Driver.Test.Behaviour
             Driver = null;
         }
 
-        public static ITypeDBTransaction OpenTransaction(
+        public static ITransaction OpenTransaction(
             IDriver driver, string databaseName, TransactionType type, TransactionOptions? options = null)
         {
             return options != null

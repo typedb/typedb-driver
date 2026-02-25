@@ -24,7 +24,7 @@ Used to specify the type of transaction.
    Used to specify the type of transaction.
   
   
-   Definition ITypeDBTransaction.cs:99
+   Definition ITransaction.cs:99
   
  
 

@@ -31,7 +31,7 @@ class TestDriver(TestCase):
                 driver.databases.get("typedb").delete()
 
 
-    def test_on_close_callback(self):
+    def test_transaction_on_close_callback(self):
         with TypeDB.driver(TypeDB.DEFAULT_ADDRESS, Credentials("admin", "password"), DriverOptions(is_tls_enabled=False)) as driver:
             driver.databases.create("typedb")
             database = driver.databases.get("typedb")

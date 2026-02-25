@@ -29,7 +29,7 @@ namespace TypeDB.Driver.Api
     /// <summary>
     /// A transaction with a TypeDB database.
     /// </summary>
-    public interface ITypeDBTransaction : IDisposable
+    public interface ITransaction : IDisposable
     {
         /// <summary>
         /// The transaction's type (Read, Write, or Schema).

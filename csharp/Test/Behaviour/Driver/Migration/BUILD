@@ -46,7 +46,7 @@ csharp_behaviour_test_all(
     ],
     target_frameworks = target_frameworks,
     targeting_packs = targeting_packs,
-    size = "enormous",
+    size = "medium",
 )
 
 checkstyle_test(

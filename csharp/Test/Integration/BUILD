@@ -38,8 +38,8 @@ csharp_integration_test(
 )
 
 csharp_integration_test(
-    name = "test-onclose-callback",
-    srcs = ["OnCloseCallbackTest.cs"],
+    name = "test-transaction-onclose-callback",
+    srcs = ["TransactionOnCloseCallbackTest.cs"],
     deps = [
         "//csharp:driver-csharp",
         "//csharp/Api:api",

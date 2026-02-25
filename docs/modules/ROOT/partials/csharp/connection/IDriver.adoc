@@ -80,12 +80,12 @@ Checks whether this connection is presently open.
 driver.IsOpen();
 ----
 
-[#_ITypeDBTransaction_TypeDB_Driver_Api_IDriver_Transaction_string_database_TransactionType_type_]
+[#_ITransaction_TypeDB_Driver_Api_IDriver_Transaction_string_database_TransactionType_type_]
 ==== method ``Transaction``
 
 [source,cs]
 ----
-ITypeDBTransaction Transaction(string database, TransactionType type)
+ITransaction Transaction(string database, TransactionType type)
 ----
 
 
@@ -105,21 +105,21 @@ a| `type` a| The type of transaction to be created (Read, Write, or Schema). a| 
 
 [caption=""]
 .Returns
-`ITypeDBTransaction`
+`ITransaction`
 
 [caption=""]
 .Code examples
 [source,cs]
 ----
-driver.Transaction(database, TransactionType.Read); TypeDB.Driver.Api.TransactionType TransactionType Used to specify the type of transaction. Definition ITypeDBTransaction.cs:99
+driver.Transaction(database, TransactionType.Read); TypeDB.Driver.Api.TransactionType TransactionType Used to specify the type of transaction. Definition ITransaction.cs:99
 ----
 
-[#_ITypeDBTransaction_TypeDB_Driver_Api_IDriver_Transaction_string_database_TransactionType_type_TransactionOptions_options_]
+[#_ITransaction_TypeDB_Driver_Api_IDriver_Transaction_string_database_TransactionType_type_TransactionOptions_options_]
 ==== method ``Transaction``
 
 [source,cs]
 ----
-ITypeDBTransaction Transaction(string database, TransactionType type, TransactionOptions options)
+ITransaction Transaction(string database, TransactionType type, TransactionOptions options)
 ----
 
 
@@ -140,7 +140,7 @@ a| `options` a| Transaction options to configure the opened transaction. a| `Tra
 
 [caption=""]
 .Returns
-`ITypeDBTransaction`
+`ITransaction`
 
 [caption=""]
 .Code examples

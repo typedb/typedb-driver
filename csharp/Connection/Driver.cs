@@ -46,7 +46,7 @@ namespace TypeDB.Driver.Connection
         public TypeDBDriver(string address, Credentials credentials, DriverOptions driverOptions)
             : base(Open(address, credentials, driverOptions))
         {
-            _databaseManager = new TypeDBDatabaseManager(NativeObject);
+            _databaseManager = new DatabaseManager(NativeObject);
             _userManager = new UserManager(NativeObject);
         }
 
@@ -90,13 +90,13 @@ namespace TypeDB.Driver.Connection
         }
 
         /// <inheritdoc/>
-        public ITypeDBTransaction Transaction(string database, TransactionType type)
+        public ITransaction Transaction(string database, TransactionType type)
         {
             return Transaction(database, type, new TransactionOptions());
         }
 
         /// <inheritdoc/>
-        public ITypeDBTransaction Transaction(string database, TransactionType type, TransactionOptions options)
+        public ITransaction Transaction(string database, TransactionType type, TransactionOptions options)
         {
             try
             {
@@ -106,7 +106,7 @@ namespace TypeDB.Driver.Connection
                     (Pinvoke.TransactionType)type,
                     options.NativeObject);
 
-                return new TypeDBTransaction(this, nativeTransaction, type, options);
+                return new Transaction(this, nativeTransaction, type, options);
             }
             catch (Pinvoke.Error e)
             {

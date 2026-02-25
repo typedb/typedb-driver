@@ -73,7 +73,7 @@ namespace TypeDB.Driver.Api
         /// driver.Transaction(database, TransactionType.Read);
         /// </code>
         /// </example>
-        ITypeDBTransaction Transaction(string database, TransactionType type);
+        ITransaction Transaction(string database, TransactionType type);
 
         /// <summary>
         /// Opens a transaction to perform read or write queries on the database with custom options.
@@ -87,7 +87,7 @@ namespace TypeDB.Driver.Api
         /// driver.Transaction(database, TransactionType.Read, options);
         /// </code>
         /// </example>
-        ITypeDBTransaction Transaction(string database, TransactionType type, TransactionOptions options);
+        ITransaction Transaction(string database, TransactionType type, TransactionOptions options);
 
         /// <summary>
         /// Closes the driver. Before instantiating a new driver, the driver that's currently open should first be closed.

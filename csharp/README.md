@@ -52,7 +52,7 @@ The SWIG-generated wrapper classes (`Credentials`, `DriverOptions`, `Transaction
 
 1. **No `GC.KeepAlive()` needed for FFI calls.** The Rust FFI layer (`c/src/`) clones or copies all parameters at the boundary — `Credentials` and `DriverOptions` are `.clone()`'d, while `TransactionOptions` and `QueryOptions` derive `Copy` and are bitwise-copied. This means the original SWIG wrapper can be safely collected after the FFI call returns without causing use-after-free.
 
-2. **No manual `IDisposable` on high-level classes.** The higher-level C# classes (`TypeDBDriver`, `TypeDBTransaction`, etc.) do not need to implement `IDisposable` for memory safety. The SWIG finalizers on the underlying `Pinvoke.*` objects handle cleanup automatically. The `Close()` methods on `TypeDBDriver` and `TypeDBTransaction` exist for semantic correctness (graceful shutdown, callback cleanup) rather than memory management.
+2. **No manual `IDisposable` on high-level classes.** The higher-level C# classes (`TypeDBDriver`, `Transaction`, etc.) do not need to implement `IDisposable` for memory safety. The SWIG finalizers on the underlying `Pinvoke.*` objects handle cleanup automatically. The `Close()` methods on `TypeDBDriver` and `Transaction` exist for semantic correctness (graceful shutdown, callback cleanup) rather than memory management.
 
 3. **`NativeObjectWrapper<T>`** is the base class used by high-level C# classes to hold a SWIG-generated native object. It exposes `NativeObject` (the underlying SWIG wrapper) but does not itself implement `IDisposable` — it delegates lifecycle to the SWIG finalizer.
 

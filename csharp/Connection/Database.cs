@@ -17,7 +17,6 @@
  * under the License.
  */
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -30,28 +29,32 @@ using DriverError = TypeDB.Driver.Common.Error.Driver;
 
 namespace TypeDB.Driver.Connection
 {
-    /// <summary>
-    /// Provides access to database management operations.
-    /// </summary>
-    public class TypeDBDatabaseManager : IDatabaseManager
+    public class Database : NativeObjectWrapper<Pinvoke.Database>, IDatabase
     {
-        private readonly Pinvoke.TypeDBDriver _nativeDriver;
+        private string? _name;
 
-        /// <summary>
-        /// Creates a new database manager for the given driver.
-        /// </summary>
-        /// <param name="nativeDriver">The native driver object.</param>
-        public TypeDBDatabaseManager(Pinvoke.TypeDBDriver nativeDriver)
+        public Database(Pinvoke.Database database)
+            : base(database)
+        {}
+
+        /// <inheritdoc/>
+        public string Name
         {
-            _nativeDriver = nativeDriver;
+            get
+            {
+                Validator.ThrowIfFalse(NativeObject.IsOwned, DriverError.DATABASE_DELETED);
+                return _name ?? (_name = Pinvoke.typedb_driver.database_get_name(NativeObject));
+            }
         }
 
         /// <inheritdoc/>
-        public IDatabase Get(string name)
+        public string GetSchema()
         {
+            Validator.ThrowIfFalse(NativeObject.IsOwned, DriverError.DATABASE_DELETED);
+
             try
             {
-                return new TypeDBDatabase(Pinvoke.typedb_driver.databases_get(_nativeDriver, name));
+                return Pinvoke.typedb_driver.database_schema(NativeObject);
             }
             catch (Pinvoke.Error e)
             {
@@ -60,11 +63,27 @@ namespace TypeDB.Driver.Connection
         }
 
         /// <inheritdoc/>
-        public bool Contains(string name)
+        public string GetTypeSchema()
         {
+            Validator.ThrowIfFalse(NativeObject.IsOwned, DriverError.DATABASE_DELETED);
+
             try
             {
-                return Pinvoke.typedb_driver.databases_contains(_nativeDriver, name);
+                return Pinvoke.typedb_driver.database_type_schema(NativeObject);
+            }
+            catch (Pinvoke.Error e)
+            {
+                throw new TypeDBDriverException(e);
+            }
+        }
+
+        public void Delete()
+        {
+            Validator.ThrowIfFalse(NativeObject.IsOwned, DriverError.DATABASE_DELETED);
+
+            try
+            {
+                Pinvoke.typedb_driver.database_delete(NativeObject.Released());
             }
             catch (Pinvoke.Error e)
             {
@@ -73,11 +92,13 @@ namespace TypeDB.Driver.Connection
         }
 
         /// <inheritdoc/>
-        public void Create(string name)
+        public void ExportToFile(string schemaFile, string dataFile)
         {
+            Validator.ThrowIfFalse(NativeObject.IsOwned, DriverError.DATABASE_DELETED);
+
             try
             {
-                Pinvoke.typedb_driver.databases_create(_nativeDriver, name);
+                Pinvoke.typedb_driver.database_export_to_file(NativeObject, schemaFile, dataFile);
             }
             catch (Pinvoke.Error e)
             {
@@ -85,33 +106,9 @@ namespace TypeDB.Driver.Connection
             }
         }
 
-        /// <inheritdoc/>
-        public IList<IDatabase> GetAll()
+        public override string ToString()
         {
-            try
-            {
-                return new NativeEnumerable<Pinvoke.Database>(
-                    Pinvoke.typedb_driver.databases_all(_nativeDriver))
-                    .Select(obj => new TypeDBDatabase(obj))
-                    .ToList<IDatabase>();
-            }
-            catch (Pinvoke.Error e)
-            {
-                throw new TypeDBDriverException(e);
-            }
-        }
-
-        /// <inheritdoc/>
-        public void ImportFromFile(string name, string schema, string dataFile)
-        {
-            try
-            {
-                Pinvoke.typedb_driver.databases_import_from_file(_nativeDriver, name, schema, dataFile);
-            }
-            catch (Pinvoke.Error e)
-            {
-                throw new TypeDBDriverException(e);
-            }
+            return Name;
         }
     }
 }

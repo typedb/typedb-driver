@@ -36,11 +36,11 @@ namespace TypeDB.Driver.Connection
     /// <summary>
     /// A transaction with a TypeDB database.
     /// </summary>
-    public class TypeDBTransaction : NativeObjectWrapper<Pinvoke.Transaction>, ITypeDBTransaction
+    public class Transaction : NativeObjectWrapper<Pinvoke.Transaction>, ITransaction
     {
         private readonly List<TransactionOnClose> _callbacks;
 
-        internal TypeDBTransaction(IDriver driver, Pinvoke.Transaction transaction, TransactionType type, TransactionOptions options)
+        internal Transaction(IDriver driver, Pinvoke.Transaction transaction, TransactionType type, TransactionOptions options)
             : base(transaction)
         {
             Type = type;

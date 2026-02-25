@@ -34,7 +34,7 @@ namespace TypeDB.Driver.Test.Integration
     /// in both explicit close and GC finalization scenarios.
     /// </summary>
     [TestFixture]
-    public class OnCloseCallbackTest
+    public class TransactionOnCloseCallbackTest
     {
         private IDriver? _driver;
 

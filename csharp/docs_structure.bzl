@@ -83,7 +83,7 @@ dir_mapping = {
     "IUser.adoc": "connection",
 
     # Transaction
-    "ITypeDBTransaction.adoc": "transaction",
+    "ITransaction.adoc": "transaction",
     "TransactionType.adoc": "transaction",
     "TransactionOptions.adoc": "transaction",
     "QueryOptions.adoc": "transaction",
