@@ -347,7 +347,8 @@ fn test_all_value_types() {
                 assert!(concept.is_attribute_type());
                 let label = concept.get_label();
                 let expected_value_type = attribute_value_types.get(label).unwrap();
-                let actual_value_type = concept.try_get_value_type().map(|vt| vt.name()).unwrap_or("none");
+                let actual_value_type = concept.try_get_value_type().map(|vt| vt.name().to_owned());
+                let actual_value_type = actual_value_type.as_deref().unwrap_or("none");
                 assert_eq!(actual_value_type, *expected_value_type, "Mismatch for attribute {}", label);
             }
         }
@@ -385,7 +386,7 @@ fn test_all_value_types() {
                 let concept = row.get("a").unwrap().unwrap();
                 assert!(concept.is_attribute());
                 let attribute_name = concept.get_label();
-                let value_type_name = concept.try_get_value_type().map(|vt| vt.name()).unwrap();
+                let value_type_name = concept.try_get_value_type().map(|vt| vt.name().to_owned()).unwrap();
                 let expected_type = attribute_value_types.get(attribute_name).unwrap();
                 assert_eq!(value_type_name, *expected_type);
 
