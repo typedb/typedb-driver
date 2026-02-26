@@ -565,10 +565,14 @@ fn test_datetime_tz_iana() {
             assert_eq!(datetime_tz.second(), 38);
             assert_eq!(datetime_tz.nanosecond(), 123456789);
 
-            // Verify it's an IANA timezone
+            // Verify it's an IANA timezone (Asia/Calcutta is a legacy alias for Asia/Kolkata)
             match datetime_tz.timezone() {
                 TimeZone::IANA(tz) => {
-                    assert_eq!(tz.name(), "Asia/Kolkata"); // Asia/Calcutta is an alias for Asia/Kolkata
+                    assert!(
+                        tz.name() == "Asia/Kolkata" || tz.name() == "Asia/Calcutta",
+                        "Expected Asia/Kolkata or Asia/Calcutta, got {}",
+                        tz.name()
+                    );
                 }
                 TimeZone::Fixed(_) => panic!("Expected IANA timezone"),
             }
