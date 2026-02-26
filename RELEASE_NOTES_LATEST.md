@@ -9,13 +9,13 @@ Documentation: https://typedb.com/docs/drivers/rust/overview
 
 
 ```sh
-cargo add typedb-driver@3.8.0
+cargo add typedb-driver@3.8.1
 ```
 
 
 ### Java driver
 
-Available through [https://repo.typedb.com](https://cloudsmith.io/~typedb/repos/public-release/packages/detail/maven/typedb-driver/3.8.0/a=noarch;xg=com.typedb/)
+Available through [https://repo.typedb.com](https://cloudsmith.io/~typedb/repos/public-release/packages/detail/maven/typedb-driver/3.8.1/a=noarch;xg=com.typedb/)
 Documentation: https://typedb.com/docs/drivers/java/overview
 
 ```xml
@@ -29,7 +29,7 @@ Documentation: https://typedb.com/docs/drivers/java/overview
     <dependency>
         <groupid>com.typedb</groupid>
         <artifactid>typedb-driver</artifactid>
-        <version>3.8.0</version>
+        <version>3.8.1</version>
     </dependency>
 </dependencies>
 ```
@@ -43,7 +43,23 @@ Available through https://pypi.org
 
 [//]: # (TODO: Python's RC/Alpha/Beta versions are formatted differently. Don't foget to update manually until we make an automation)
 ```
-pip install typedb-driver==3.8.0
+pip install typedb-driver==3.8.1
+```
+
+### C# driver
+
+NuGet package: https://www.nuget.org/packages/TypeDB.Driver
+Documentation: https://typedb.com/docs/drivers/csharp/overview
+
+```xml
+<ItemGroup>
+    <PackageReference Include="TypeDB.Driver" Version="3.8.1" />
+    <PackageReference Include="TypeDB.Driver.Pinvoke.osx-x64" Version="3.8.1" />
+    <PackageReference Include="TypeDB.Driver.Pinvoke.linux-x64" Version="3.8.1" />
+    <PackageReference Include="TypeDB.Driver.Pinvoke.win-x64" Version="3.8.1" />
+    <PackageReference Include="TypeDB.Driver.Pinvoke.osx-arm64" Version="3.8.1" />
+    <PackageReference Include="TypeDB.Driver.Pinvoke.linux-arm64" Version="3.8.1" />
+</ItemGroup>
 ```
 
 ### HTTP Typescript driver
@@ -54,97 +70,46 @@ NPM package: https://www.npmjs.com/package/@typedb/driver-http
 Documentation: https://typedb.com/docs/drivers/
 
 ```
-npm install @typedb/driver-http@3.8.0
+npm install @typedb/driver-http@3.8.1
 ```
 
 ### C driver
 
-Compiled distributions comprising headers and shared libraries available at: https://cloudsmith.io/~typedb/repos/public-release/packages/?q=name:^typedb-driver-clib+version:3.8.0
+Compiled distributions comprising headers and shared libraries available at: https://cloudsmith.io/~typedb/repos/public-release/packages/?q=name:^typedb-driver-clib+version:3.8.1
 
 
 ## New Features
-
+- **Csharp driver 3.0**
+  
+  This PR ports the C# driver to the TypeDB 3.0 API, aligning it with the Java and Rust drivers. The driver now uses the simplified 3.0 architecture where sessions are removed and transactions are opened directly from the driver. Query execution returns `IQueryAnswer` with streaming `IConceptRow` results instead of the previous `IConceptMap` model.
+  
+  Key API changes include:
+  - `ITypeDBDriver` renamed to `IDriver` with direct transaction access via `Transaction(database, type, options)`
+  - New `IQueryAnswer` and `IConceptRow` types replace `IConceptMap` for query results
+  - Promise-based query submission
+  - New `IJSON` type for fetch query results with document iteration
+  - Query analysis via `ITypeDBTransaction.Analyze()` returning `IAnalyzedQuery` with full pipeline introspection
+  - `DatetimeTZ` and `Duration` types for temporal values with nanosecond precision
+  - Simplified concept API removing manager classes—operations are now methods directly on concepts
+  - `QueryOptions` and `TransactionOptions` replace the monolithic `TypeDBOptions`
+  
+  
 
 ## Bugs Fixed
-- **Fix memory leaks in C integration test example**
-  
-  We fix an issue in the c driver tests and examples which used the wrong transaction close method, causing memory leaks.
-  
-  
-  
+
 
 ## Code Refactors
 
 
 ## Other Improvements
-- **Update typedb artifact**
+- **Fix build**
 
-- **Create Bazel CI config**
+- **Fix tests and add missing CSharp docs**
   
-  We create a separate Bazel CI config, which disables the disk cache. Disk cache is most useful on machines where we do many different builds on different branches and the standard bazel cache might be clobbered unnecessarily. In CI, where we do mostly one build per machine and also have a remote cache, this is not useful and on top of that hits the disk size limits.
+  We fix one broken Rust test and add missing CSharp docs
   
-  
-- **Add bazel disk cache to speed up local builds when switching branches**
-
-- **Improve readability of reference docs**
-  
-  Add `function` before the method name (or `method` in Java/Python/Rust), to help readability of the generated docs page.
+- **Handle output directory differently in python sphinx_docs rule**
+  Update dependencies after merging https://github.com/typedb/typedb-dependencies/pull/599 to fix the Python Driver build.
   
   
-- **Regenerate docs with new css classes**
-
-- **Add doc-api-reference-driver class to classes in driver API reference pages**
-
-- **Improve driver docs reference formatting**
-  
-  We improve the driver reference formatting by including a `class` or `enum` or `struct` description to help delineate these constructs from methods in very long documentation pages.
-  
-  
-- **Update READMEs**
-
-- **Update C driver documentation to TypeDB 3.x API**
-    - Update C driver documentation to TypeDB 3.x API structure matching Rust/Java/Python
-    - Add C driver example with full integration test coverage
-    - Add example compile verification targets for Java, Rust, and C drivers
-    - Fix Java Value API Javadoc to correctly describe return types
-    - Add TransactionOptions and QueryOptions includes to Java/Python/Rust api-reference
-  
-  
-  
-- **Fix formatting**
-
-- **Set up configurable FFI/Rust driver logging**
-  
-  Rather than having Python/Java/other wrappers invoke logging initialization explicitly, we now just do it on open of the Rust driver automatically.
-  
-  This should fix warnings in Python:
-  ```
-  Failed to initialize logging: attempted to set a logger after the logging system was already initialized
-  ```
-  
-  We also remove uses of the `log` create in the `//c` layer, and use `tracing` instead.
-  
-  We can now configure logging in the Rust-driver component with the following variables: `TYPEDB_DRIVER_LOG=info|debug|warn|trace` or using the usual `RUST_LOG` variable. By default, ffi-based drivers calling `init_logging` will use INFO logging.
-  
-  Rust applications should continue set up their own logging subscriber, as usual.
-  
-  
-- **Add banner to readme, fix link**
-
-- **Add contributing guidelines to CONTRIBUTING.md**
-
-- **Handle output directories properly for python BDD and docs rules (#831)**
-  This enables the bazel `remote_download_toplevel` flag, which broke build due to badly declared outputs.
-  
-  
-- **Update README.md by removing outdated links**
-
-- **Handle output directories properly for python BDD and docs rules**
-  This enables the bazel `remote_download_toplevel` flag, which broke build due to badly declared outputs.
-  
-  
-- **Remove --remote_download_toplevel since not all bazel targets have predeclared outputs (docs)**
-
-- **Improve bazel cache performance in CI with --remote_download_toplevel**
-
     
