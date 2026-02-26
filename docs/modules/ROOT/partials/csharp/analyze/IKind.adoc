@@ -1,0 +1,16 @@
+[#_IKind]
+[.doc-api-reference-driver]
+=== IKind
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+*Supertypes:*
+
+* `TypeDB.Driver.Api.Analyze.IConstraint`
+
+
+
+Represents a kind constraint: kind type.
+

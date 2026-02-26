@@ -14,9 +14,7 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-
 package(default_visibility = ["//csharp/Test/Behaviour:__subpackages__"])
-
 load("//csharp:build_opts.bzl", "nullable_context", "target_frameworks", "targeting_packs")
 load("@rules_dotnet//dotnet:defs.bzl", "csharp_library")
 load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
@@ -24,8 +22,27 @@ load("//csharp/Test:build_opts.bzl", "behaviour_tests_deps")
 
 csharp_library(
     name = "util",
-    srcs = glob(["*.cs"]),
-    deps = behaviour_tests_deps + ["@paket.csharp_deps//newtonsoft.json"],
+    srcs = glob(["*.cs"], exclude = ["UtilSteps.cs", "FunctorEncoder.cs"]),
+    deps = behaviour_tests_deps + [
+        "@paket.csharp_deps//newtonsoft.json",
+        "//csharp:driver-csharp",
+    ],
+    runtime_identifier = "any",
+    nullable = nullable_context,
+    target_frameworks = target_frameworks,
+    targeting_packs = targeting_packs,
+)
+
+csharp_library(
+    name = "functor-encoder",
+    srcs = ["FunctorEncoder.cs"],
+    deps = [
+        "//csharp/Analyze:analyze",
+        "//csharp/Api:api",
+        "//csharp/Common:common",
+        "//csharp:typedb_driver_pinvoke",
+    ],
+    visibility = ["//visibility:public"],
     runtime_identifier = "any",
     nullable = nullable_context,
     target_frameworks = target_frameworks,
@@ -34,7 +51,7 @@ csharp_library(
 
 exports_files(
     ["TestRunner.cs"],
-    visibility = ["//csharp/Test/Behaviour:__subpackages__"],
+    visibility = ["//csharp/Test:__subpackages__"],
 )
 
 filegroup(

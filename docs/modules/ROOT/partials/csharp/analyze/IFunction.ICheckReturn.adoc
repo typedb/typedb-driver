@@ -1,0 +1,17 @@
+[#_ICheckReturn]
+[.doc-api-reference-driver]
+=== ICheckReturn
+
+`interface`
+
+*Namespace*: `TypeDB.Driver.Api.Analyze`
+
+*Superinterfaces:*
+
+* `IReturnOperation`
+
+A check return operation.
+
+// tag::methods[]
+// end::methods[]
+

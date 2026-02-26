@@ -1,0 +1,16 @@
+[#_ILabelConstraint]
+[.doc-api-reference-driver]
+=== ILabelConstraint
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+*Supertypes:*
+
+* `TypeDB.Driver.Api.Analyze.IConstraint`
+
+
+
+Represents a label constraint: type label label_value.
+

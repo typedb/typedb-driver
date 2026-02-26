@@ -1,20 +1,23 @@
 [#_IEntity]
+[.doc-api-reference-driver]
 === IEntity
+
+`class`
 
 *Package*: `TypeDB.Driver.Api`
 
 *Supertypes:*
 
-* `TypeDB.Driver.Api.IThing`
+* `TypeDB.Driver.Api.IInstance`
 * `TypeDB.Driver.Api.IConcept`
 
 
 
-Instance of data of an entity type, representing a standalone object that exists in the data model independently. Entity does not have a value. It is usually addressed by its ownership over attribute instances and/or roles played in relation instances.
+Represents an entity instance in TypeDB. Entity instances are independent objects in the data model. In TypeDB 3.0, instances are read-only data returned from queries.
 
 // tag::methods[]
 [#_IEntity_IConcept_TypeDB_Driver_Api_IEntity_AsEntity_]
-==== AsEntity
+==== method ``AsEntity``
 
 [source,cs]
 ----
@@ -23,7 +26,8 @@ IEntity IConcept. AsEntity()
 
 
 
-Casts the concept to ``IEntity``.
+Casts the concept to IEntity.
+
 
 
 Implements TypeDB.Driver.Api.IConcept.
@@ -36,11 +40,11 @@ Implements TypeDB.Driver.Api.IConcept.
 .Code examples
 [source,cs]
 ----
-entity.AsEntity();
+concept.AsEntity()
 ----
 
 [#_bool_IConcept_TypeDB_Driver_Api_IEntity_IsEntity_]
-==== IsEntity
+==== method ``IsEntity``
 
 [source,cs]
 ----
@@ -49,7 +53,8 @@ bool IConcept. IsEntity()
 
 
 
-Checks if the concept is an ``IEntity``.
+Checks if the concept is an IEntity.
+
 
 
 Implements TypeDB.Driver.Api.IConcept.
@@ -62,8 +67,44 @@ Implements TypeDB.Driver.Api.IConcept.
 .Code examples
 [source,cs]
 ----
-entity.IsEntity();
+concept.IsEntity()
 ----
+
+[#_new_IEntityType_TypeDB_Driver_Api_IEntity_Type]
+==== method ``Type [1/2]``
+
+[source,cs]
+----
+new IEntityType TypeDB.Driver.Api.IEntity.Type
+----
+
+
+
+The entity type which this entity instance belongs to.
+
+Implements TypeDB.Driver.Api.IInstance.
+
+[caption=""]
+.Returns
+`new IEntityType`
+
+[#_IType_IInstance_TypeDB_Driver_Api_IEntity_Type]
+==== method ``Type [2/2]``
+
+[source,cs]
+----
+IType IInstance. TypeDB.Driver.Api.IEntity.Type
+----
+
+
+
+The type which this instance belongs to.
+
+Implements TypeDB.Driver.Api.IInstance.
+
+[caption=""]
+.Returns
+`IType IInstance.`
 
 // end::methods[]
 

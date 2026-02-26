@@ -1,0 +1,59 @@
+[#_IPlays]
+[.doc-api-reference-driver]
+=== IPlays
+
+`interface`
+
+*Namespace*: `TypeDB.Driver.Api.Analyze`
+
+*Superinterfaces:*
+
+* `IConstraint`
+
+Represents a "plays" constraint: player plays role
+
+// tag::methods[]
+[#_IPlays_Player]
+==== property ``Player``
+
+[source,cs]
+----
+IConstraintVertex Player { get; }
+----
+
+Gets the player in this plays constraint.
+
+[caption=""]
+.Returns
+`IConstraintVertex`
+
+[#_IPlays_Role]
+==== property ``Role``
+
+[source,cs]
+----
+IConstraintVertex Role { get; }
+----
+
+Gets the role in this plays constraint.
+
+[caption=""]
+.Returns
+`IConstraintVertex`
+
+[#_IPlays_Exactness]
+==== property ``Exactness``
+
+[source,cs]
+----
+Pinvoke.ConstraintExactness Exactness { get; }
+----
+
+Gets the exactness of this plays constraint.
+
+[caption=""]
+.Returns
+`Pinvoke.ConstraintExactness`
+
+// end::methods[]
+

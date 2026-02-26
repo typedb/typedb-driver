@@ -40,7 +40,7 @@ async fn cleanup() {
 
 #[test]
 #[serial]
-fn transaction_callback() {
+fn transaction_on_close_callback() {
     async_std::task::block_on(async {
         cleanup().await;
         let driver = TypeDBDriver::new(

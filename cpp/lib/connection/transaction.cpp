@@ -78,7 +78,7 @@ bool Transaction::isOpen() const {
 }
 
 void Transaction::submitClose() {
-    if (transactionNative != nullptr) _native::transaction_submit_close(transactionNative.release());
+    if (transactionNative != nullptr) _native::transaction_drop_sync(transactionNative.release());
 }
 
 void Transaction::close() {

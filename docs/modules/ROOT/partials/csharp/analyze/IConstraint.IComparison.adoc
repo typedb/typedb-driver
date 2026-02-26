@@ -1,0 +1,73 @@
+[#_IComparison]
+[.doc-api-reference-driver]
+=== IComparison
+
+`interface`
+
+*Namespace*: `TypeDB.Driver.Api.Analyze`
+
+*Superinterfaces:*
+
+* `IConstraint`
+
+Represents a comparison: lhs comparator rhs
+
+// tag::methods[]
+[#_IComparison_Lhs]
+==== property ``Lhs``
+
+[source,cs]
+----
+IConstraintVertex Lhs { get; }
+----
+
+Gets the left-hand side of this comparison.
+
+[caption=""]
+.Returns
+`IConstraintVertex`
+
+[#_IComparison_Rhs]
+==== property ``Rhs``
+
+[source,cs]
+----
+IConstraintVertex Rhs { get; }
+----
+
+Gets the right-hand side of this comparison.
+
+[caption=""]
+.Returns
+`IConstraintVertex`
+
+[#_IComparison_Comparator]
+==== property ``Comparator``
+
+[source,cs]
+----
+Pinvoke.Comparator Comparator { get; }
+----
+
+Gets the comparator used in this comparison.
+
+[caption=""]
+.Returns
+`Pinvoke.Comparator`
+
+[#_IComparison_ComparatorSymbol]
+==== property ``ComparatorSymbol``
+
+[source,cs]
+----
+string ComparatorSymbol { get; }
+----
+
+Gets the symbol representation of the comparator (e.g., "<", ">=").
+
+[caption=""]
+.Returns
+`string`
+
+// end::methods[]
+

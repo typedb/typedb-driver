@@ -1,0 +1,16 @@
+[#_IOr]
+[.doc-api-reference-driver]
+=== IOr
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+*Supertypes:*
+
+* `TypeDB.Driver.Api.Analyze.IConstraint`
+
+
+
+Represents an "or" constraint: { branches[0] } or { branches[1] } [or ...].
+

@@ -1,0 +1,59 @@
+[#_IOwns]
+[.doc-api-reference-driver]
+=== IOwns
+
+`interface`
+
+*Namespace*: `TypeDB.Driver.Api.Analyze`
+
+*Superinterfaces:*
+
+* `IConstraint`
+
+Represents an "owns" constraint: owner owns attribute
+
+// tag::methods[]
+[#_IOwns_Owner]
+==== property ``Owner``
+
+[source,cs]
+----
+IConstraintVertex Owner { get; }
+----
+
+Gets the owner in this owns constraint.
+
+[caption=""]
+.Returns
+`IConstraintVertex`
+
+[#_IOwns_Attribute]
+==== property ``Attribute``
+
+[source,cs]
+----
+IConstraintVertex Attribute { get; }
+----
+
+Gets the attribute in this owns constraint.
+
+[caption=""]
+.Returns
+`IConstraintVertex`
+
+[#_IOwns_Exactness]
+==== property ``Exactness``
+
+[source,cs]
+----
+Pinvoke.ConstraintExactness Exactness { get; }
+----
+
+Gets the exactness of this owns constraint.
+
+[caption=""]
+.Returns
+`Pinvoke.ConstraintExactness`
+
+// end::methods[]
+

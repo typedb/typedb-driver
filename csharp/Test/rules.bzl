@@ -15,8 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 
-load("@rules_dotnet//dotnet:defs.bzl", "csharp_library", "csharp_test")
-load("@rules_dotnet//dotnet:defs.bzl", "csharp_nunit_test")
+load("@rules_dotnet//dotnet:defs.bzl", "csharp_nunit_test", "csharp_test")
 load("//csharp:build_opts.bzl", "nullable_context")
 load("//csharp/Test:build_opts.bzl", "behaviour_tests_deps")
 
@@ -35,7 +34,10 @@ def csharp_behaviour_test(
 
     csharp_test(
         name = name,
-        srcs = test_files + steps_files + ["//csharp/Test/Behaviour/Util:TestRunner.cs"],
+        srcs = test_files + steps_files + [
+            "//csharp/Test/Behaviour/Util:TestRunner.cs",
+            "//csharp/Test/Behaviour:TestValueHelper.cs",
+        ],
         data = features + certificates,
         deps = deps + behaviour_tests_deps,
         target_frameworks = target_frameworks,
@@ -43,6 +45,45 @@ def csharp_behaviour_test(
         runtime_identifier = "any",
         nullable = nullable_context,
         visibility = ["//visibility:public"],
+        **kwargs,
+    )
+
+
+def csharp_behaviour_test_all(
+        name,
+        test_files,
+        steps_files,
+        connection_steps_community,
+        connection_steps_cluster,
+        features,
+        deps,
+        target_frameworks,
+        targeting_packs,
+        add_certificates = False,
+        **kwargs):
+    """Creates both community and cluster test variants."""
+
+    csharp_behaviour_test(
+        name = name + "-community",
+        test_files = test_files,
+        steps_files = steps_files + [connection_steps_community],
+        features = features,
+        deps = deps,
+        target_frameworks = target_frameworks,
+        targeting_packs = targeting_packs,
+        add_certificates = add_certificates,
+        **kwargs,
+    )
+
+    csharp_behaviour_test(
+        name = name + "-cluster",
+        test_files = test_files,
+        steps_files = steps_files + [connection_steps_cluster],
+        features = features,
+        deps = deps,
+        target_frameworks = target_frameworks,
+        targeting_packs = targeting_packs,
+        add_certificates = True,  # Cluster needs TLS certificates
         **kwargs,
     )
 

@@ -66,12 +66,9 @@ under the License.
     <file src="lib/$target_framework$/TypeDB.Driver.Concept.dll" target="lib/$target_framework$" />
     <file src="lib/$target_framework$/TypeDB.Driver.Concept.pdb" target="lib/$target_framework$" />
     <file src="lib/$target_framework$/TypeDB.Driver.Concept.xml" target="lib/$target_framework$" />
-    <file src="lib/$target_framework$/TypeDB.Driver.Logic.dll" target="lib/$target_framework$" />
-    <file src="lib/$target_framework$/TypeDB.Driver.Logic.pdb" target="lib/$target_framework$" />
-    <file src="lib/$target_framework$/TypeDB.Driver.Logic.xml" target="lib/$target_framework$" />
-    <file src="lib/$target_framework$/TypeDB.Driver.Query.dll" target="lib/$target_framework$" />
-    <file src="lib/$target_framework$/TypeDB.Driver.Query.pdb" target="lib/$target_framework$" />
-    <file src="lib/$target_framework$/TypeDB.Driver.Query.xml" target="lib/$target_framework$" />
+    <file src="lib/$target_framework$/TypeDB.Driver.Analyze.dll" target="lib/$target_framework$" />
+    <file src="lib/$target_framework$/TypeDB.Driver.Analyze.pdb" target="lib/$target_framework$" />
+    <file src="lib/$target_framework$/TypeDB.Driver.Analyze.xml" target="lib/$target_framework$" />
     <file src="lib/$target_framework$/TypeDB.Driver.User.dll" target="lib/$target_framework$" />
     <file src="lib/$target_framework$/TypeDB.Driver.User.pdb" target="lib/$target_framework$" />
     <file src="lib/$target_framework$/TypeDB.Driver.User.xml" target="lib/$target_framework$" />

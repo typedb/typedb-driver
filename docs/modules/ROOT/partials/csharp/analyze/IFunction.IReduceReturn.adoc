@@ -1,0 +1,31 @@
+[#_IReduceReturn]
+[.doc-api-reference-driver]
+=== IReduceReturn
+
+`interface`
+
+*Namespace*: `TypeDB.Driver.Api.Analyze`
+
+*Superinterfaces:*
+
+* `IReturnOperation`
+
+A reduce return operation.
+
+// tag::methods[]
+[#_IReduceReturn_Reducers]
+==== property ``Reducers``
+
+[source,cs]
+----
+IEnumerable<IReducer> Reducers { get; }
+----
+
+Gets the reducers in this reduce return.
+
+[caption=""]
+.Returns
+`IEnumerable<IReducer>`
+
+// end::methods[]
+

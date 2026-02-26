@@ -1,0 +1,31 @@
+[#_IFetch]
+[.doc-api-reference-driver]
+=== IFetch
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+
+
+A representation of the 'fetch' stage of a query.
+
+// tag::methods[]
+[#_Pinvoke_FetchVariant_TypeDB_Driver_Api_Analyze_IFetch_Variant]
+==== method ``Variant``
+
+[source,cs]
+----
+Pinvoke.FetchVariant TypeDB.Driver.Api.Analyze.IFetch.Variant
+----
+
+
+
+Gets the variant. One of: Leaf, List, Object.
+
+[caption=""]
+.Returns
+`Pinvoke.FetchVariant`
+
+// end::methods[]
+

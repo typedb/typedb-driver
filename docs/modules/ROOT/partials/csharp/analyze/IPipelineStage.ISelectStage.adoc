@@ -1,0 +1,31 @@
+[#_ISelectStage]
+[.doc-api-reference-driver]
+=== ISelectStage
+
+`interface`
+
+*Namespace*: `TypeDB.Driver.Api.Analyze`
+
+*Superinterfaces:*
+
+* `IPipelineStage`
+
+Represents a select stage in a pipeline.
+
+// tag::methods[]
+[#_ISelectStage_Variables]
+==== property ``Variables``
+
+[source,cs]
+----
+IEnumerable<IVariable> Variables { get; }
+----
+
+Gets the variables being selected.
+
+[caption=""]
+.Returns
+`IEnumerable<IVariable>`
+
+// end::methods[]
+

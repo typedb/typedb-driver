@@ -18,17 +18,21 @@
  */
 
 using System;
+using System.Collections.Generic;
+using System.Globalization;
 
 using TypeDB.Driver.Api;
 using TypeDB.Driver.Common;
-using TypeDB.Driver.Common.Validation;
-using TypeDB.Driver.Concept;
 
 using ConceptError = TypeDB.Driver.Common.Error.Concept;
 using InternalError = TypeDB.Driver.Common.Error.Internal;
 
 namespace TypeDB.Driver.Concept
 {
+    /// <summary>
+    /// Represents a value concept in TypeDB.
+    /// In TypeDB 3.0, values are read-only data returned from queries.
+    /// </summary>
     public class Value : Concept, IValue
     {
         private int _hash = 0;
@@ -38,163 +42,143 @@ namespace TypeDB.Driver.Concept
         {
         }
 
-        public Value(bool value)
-            : this(Pinvoke.typedb_driver.value_new_boolean(value))
+        /// <inheritdoc/>
+        public string GetValueType()
         {
+            return TryGetValueType()
+                ?? throw new TypeDBDriverException(InternalError.NULL_NATIVE_VALUE);
         }
 
-        public Value(long value)
-            : this(Pinvoke.typedb_driver.value_new_long(value))
+        /// <inheritdoc/>
+        public object Get()
         {
-        }
+            if (IsBoolean()) return GetBoolean();
+            if (IsInteger()) return GetInteger();
+            if (IsDouble()) return GetDouble();
+            if (IsDecimal()) return GetDecimal();
+            if (IsString()) return GetString();
+            if (IsDate()) return GetDate();
+            if (IsDatetime()) return GetDatetime();
+            if (IsDatetimeTZ()) return GetDatetimeTZ();
+            if (IsDuration()) return GetDuration();
+            if (IsStruct()) return GetStruct();
 
-        public Value(double value) 
-            : this(Pinvoke.typedb_driver.value_new_double(value))
-        {
-        }
-
-        public Value(string value)
-            : this(Pinvoke.typedb_driver.value_new_string(value))
-        {
-        }
-
-        public Value(System.DateTime value)
-            : this(Pinvoke.typedb_driver.value_new_date_time_from_millis(
-                new System.DateTimeOffset(
-                    System.DateTime.SpecifyKind(value, DateTimeKind.Unspecified)).ToUnixTimeMilliseconds()))
-        {
-        }
-
-        public IValue.ValueType Type
-        {
-            get
-            {
-                if (IsBool()) return IValue.ValueType.Bool;
-                if (IsLong()) return IValue.ValueType.Long;
-                if (IsDouble()) return IValue.ValueType.Double;
-                if (IsString()) return IValue.ValueType.String;
-                if (IsDateTime()) return IValue.ValueType.DateTime;
-                
-                throw new TypeDBDriverException(InternalError.ILLEGAL_STATE);
-            }
-        }
-
-        public bool IsBool()
-        {
-            return Pinvoke.typedb_driver.value_is_boolean(NativeObject);
-        }
-
-        public bool IsLong() 
-        {
-            return Pinvoke.typedb_driver.value_is_long(NativeObject);
-        }
-
-        public bool IsDouble() 
-        {
-            return Pinvoke.typedb_driver.value_is_double(NativeObject);
-        }
-
-        public bool IsString() 
-        {
-            return Pinvoke.typedb_driver.value_is_string(NativeObject);
-        }
-
-        public bool IsDateTime() 
-        {
-            return Pinvoke.typedb_driver.value_is_date_time(NativeObject);
-        }
-
-        public object AsUntyped() 
-        {
-            if (IsBool()) return AsBool();
-            if (IsLong()) return AsLong();
-            if (IsDouble()) return AsDouble();
-            if (IsString()) return AsString();
-            if (IsDateTime()) return AsDateTime();
-            
             throw new TypeDBDriverException(InternalError.UNEXPECTED_NATIVE_VALUE);
         }
 
-        public bool AsBool() 
+        /// <inheritdoc/>
+        public bool GetBoolean()
         {
-            Validator.ThrowIfFalse(IsBool, InternalError.ILLEGAL_CAST, "bool");
-
-            return Pinvoke.typedb_driver.value_get_boolean(NativeObject);
+            return TryGetBoolean()
+                ?? throw new TypeDBDriverException(ConceptError.INVALID_VALUE_RETRIEVAL, "boolean");
         }
 
-        public long AsLong() 
+        /// <inheritdoc/>
+        public long GetInteger()
         {
-            Validator.ThrowIfFalse(IsLong, InternalError.ILLEGAL_CAST, "long");
-
-            return Pinvoke.typedb_driver.value_get_long(NativeObject);
+            return TryGetInteger()
+                ?? throw new TypeDBDriverException(ConceptError.INVALID_VALUE_RETRIEVAL, "integer");
         }
 
-        public double AsDouble() 
+        /// <inheritdoc/>
+        public double GetDouble()
         {
-            Validator.ThrowIfFalse(IsDouble, InternalError.ILLEGAL_CAST, "double");
-
-            return Pinvoke.typedb_driver.value_get_double(NativeObject);
+            return TryGetDouble()
+                ?? throw new TypeDBDriverException(ConceptError.INVALID_VALUE_RETRIEVAL, "double");
         }
 
-        public string AsString() 
+        /// <inheritdoc/>
+        public decimal GetDecimal()
         {
-            Validator.ThrowIfFalse(IsString, InternalError.ILLEGAL_CAST, "string");
-
-            return Pinvoke.typedb_driver.value_get_string(NativeObject);
+            return TryGetDecimal()
+                ?? throw new TypeDBDriverException(ConceptError.INVALID_VALUE_RETRIEVAL, "decimal");
         }
 
-        public System.DateTime AsDateTime()
+        /// <inheritdoc/>
+        public string GetString()
         {
-            Validator.ThrowIfFalse(IsDateTime, InternalError.ILLEGAL_CAST, "DateTime");
+            return TryGetString()
+                ?? throw new TypeDBDriverException(ConceptError.INVALID_VALUE_RETRIEVAL, "string");
+        }
 
-            return System.DateTimeOffset.FromUnixTimeMilliseconds(
-                Pinvoke.typedb_driver.value_get_date_time_as_millis(NativeObject)).DateTime;
+        /// <inheritdoc/>
+        public DateOnly GetDate()
+        {
+            return TryGetDate()
+                ?? throw new TypeDBDriverException(ConceptError.INVALID_VALUE_RETRIEVAL, "date");
+        }
+
+        /// <inheritdoc/>
+        public Datetime GetDatetime()
+        {
+            return TryGetDatetime()
+                ?? throw new TypeDBDriverException(ConceptError.INVALID_VALUE_RETRIEVAL, "datetime");
+        }
+
+        /// <inheritdoc/>
+        public DatetimeTZ GetDatetimeTZ()
+        {
+            return TryGetDatetimeTZ()
+                ?? throw new TypeDBDriverException(ConceptError.INVALID_VALUE_RETRIEVAL, "datetime-tz");
+        }
+
+        /// <inheritdoc/>
+        public Duration GetDuration()
+        {
+            return TryGetDuration()
+                ?? throw new TypeDBDriverException(ConceptError.INVALID_VALUE_RETRIEVAL, "duration");
+        }
+
+        /// <inheritdoc/>
+        public IReadOnlyDictionary<string, IValue?> GetStruct()
+        {
+            return TryGetStruct()
+                ?? throw new TypeDBDriverException(ConceptError.INVALID_VALUE_RETRIEVAL, "struct");
         }
 
         public override string ToString()
         {
-            if (IsBool())
-            {
-                var str = AsBool().ToString();
-                return str[0].ToString().ToLower() + str.Substring(1);
-            }
-
-            if (IsLong())
-            {
-                return AsLong().ToString();
-            }
-
+            if (IsBoolean()) return GetBoolean().ToString().ToLower();
+            if (IsInteger()) return GetInteger().ToString();
             if (IsDouble())
             {
-                return AsDouble().ToString("0.0#####");
+                var d = GetDouble();
+                // Format doubles to show at least one decimal place
+                return d.ToString("G17", CultureInfo.InvariantCulture);
             }
-
-            if (IsString())
+            if (IsDecimal())
             {
-                return AsString();
+                var dec = GetDecimal();
+                // Format with 19 decimal places and remove trailing zeros
+                var formatted = dec.ToString("0.0000000000000000000", CultureInfo.InvariantCulture).TrimEnd('0');
+                if (formatted.EndsWith(".")) formatted += "0";
+                return formatted + "dec";
             }
-
-            if (IsDateTime())
-            {
-                return AsDateTime().ToString();
-            }
+            if (IsString()) return GetString();
+            if (IsDate()) return GetDate().ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
+            if (IsDatetime()) return GetDatetime().ToString();
+            if (IsDatetimeTZ()) return GetDatetimeTZ().ToString();
+            if (IsDuration()) return GetDuration().ToString();
+            if (IsStruct()) return GetStruct().ToString() ?? "{}";
 
             throw new TypeDBDriverException(InternalError.UNEXPECTED_NATIVE_VALUE);
+        }
+
+        public override bool Equals(object? obj)
+        {
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj is not Value other) return false;
+            return GetValueType() == other.GetValueType() && Get().Equals(other.Get());
         }
 
         public override int GetHashCode()
         {
             if (_hash == 0)
             {
-                _hash = ComputeHash();
+                _hash = Get().GetHashCode();
             }
 
             return _hash;
-        }
-
-        private int ComputeHash()
-        {
-            return AsUntyped().GetHashCode();
         }
     }
 }

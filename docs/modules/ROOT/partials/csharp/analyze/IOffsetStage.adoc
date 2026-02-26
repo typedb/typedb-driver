@@ -1,0 +1,16 @@
+[#_IOffsetStage]
+[.doc-api-reference-driver]
+=== IOffsetStage
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+*Supertypes:*
+
+* `TypeDB.Driver.Api.Analyze.IPipelineStage`
+
+
+
+Represents an "offset" stage: offset n.
+

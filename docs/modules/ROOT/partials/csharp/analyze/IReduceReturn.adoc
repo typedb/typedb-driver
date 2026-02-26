@@ -1,0 +1,16 @@
+[#_IReduceReturn]
+[.doc-api-reference-driver]
+=== IReduceReturn
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+*Supertypes:*
+
+* `TypeDB.Driver.Api.Analyze.IReturnOperation`
+
+
+
+Indicates the function returns an aggregation over the rows in the body.
+

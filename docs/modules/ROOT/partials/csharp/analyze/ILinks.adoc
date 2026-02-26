@@ -1,0 +1,16 @@
+[#_ILinks]
+[.doc-api-reference-driver]
+=== ILinks
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+*Supertypes:*
+
+* `TypeDB.Driver.Api.Analyze.IConstraint`
+
+
+
+Represents a "links" constraint: relation links (role: player)
+

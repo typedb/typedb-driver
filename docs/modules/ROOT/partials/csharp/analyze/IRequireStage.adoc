@@ -1,0 +1,16 @@
+[#_IRequireStage]
+[.doc-api-reference-driver]
+=== IRequireStage
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+*Supertypes:*
+
+* `TypeDB.Driver.Api.Analyze.IPipelineStage`
+
+
+
+Represents a "require" stage: require variables.
+

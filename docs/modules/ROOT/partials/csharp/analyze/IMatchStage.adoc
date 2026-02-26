@@ -1,0 +1,16 @@
+[#_IMatchStage]
+[.doc-api-reference-driver]
+=== IMatchStage
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+*Supertypes:*
+
+* `TypeDB.Driver.Api.Analyze.IPipelineStage`
+
+
+
+Represents a "match" stage: match block.
+

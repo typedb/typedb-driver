@@ -1,0 +1,17 @@
+[#_IDistinctStage]
+[.doc-api-reference-driver]
+=== IDistinctStage
+
+`interface`
+
+*Namespace*: `TypeDB.Driver.Api.Analyze`
+
+*Superinterfaces:*
+
+* `IPipelineStage`
+
+Represents a distinct stage in a pipeline.
+
+// tag::methods[]
+// end::methods[]
+

@@ -1,0 +1,16 @@
+[#_INot]
+[.doc-api-reference-driver]
+=== INot
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+*Supertypes:*
+
+* `TypeDB.Driver.Api.Analyze.IConstraint`
+
+
+
+Represents a "not" constraint: not { conjunction }.
+

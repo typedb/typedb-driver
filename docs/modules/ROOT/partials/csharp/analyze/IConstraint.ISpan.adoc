@@ -1,0 +1,41 @@
+[#_ISpan]
+[.doc-api-reference-driver]
+=== ISpan
+
+`interface`
+
+*Namespace*: `TypeDB.Driver.Api.Analyze`
+
+The span of a constraint in the source query.
+
+// tag::methods[]
+[#_ISpan_Begin]
+==== property ``Begin``
+
+[source,cs]
+----
+long Begin { get; }
+----
+
+Gets the offset of the first character.
+
+[caption=""]
+.Returns
+`long`
+
+[#_ISpan_End]
+==== property ``End``
+
+[source,cs]
+----
+long End { get; }
+----
+
+Gets the offset after the last character.
+
+[caption=""]
+.Returns
+`long`
+
+// end::methods[]
+

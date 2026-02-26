@@ -1,0 +1,59 @@
+[#_IExpression]
+[.doc-api-reference-driver]
+=== IExpression
+
+`interface`
+
+*Namespace*: `TypeDB.Driver.Api.Analyze`
+
+*Superinterfaces:*
+
+* `IConstraint`
+
+Represents an expression: let assigned = expression
+
+// tag::methods[]
+[#_IExpression_Text]
+==== property ``Text``
+
+[source,cs]
+----
+string Text { get; }
+----
+
+Gets the text representation of the expression.
+
+[caption=""]
+.Returns
+`string`
+
+[#_IExpression_Arguments]
+==== property ``Arguments``
+
+[source,cs]
+----
+IEnumerable<IConstraintVertex> Arguments { get; }
+----
+
+Gets the arguments (variables) used in this expression.
+
+[caption=""]
+.Returns
+`IEnumerable<IConstraintVertex>`
+
+[#_IExpression_Assigned]
+==== property ``Assigned``
+
+[source,cs]
+----
+IConstraintVertex Assigned { get; }
+----
+
+Gets the variable assigned by this expression.
+
+[caption=""]
+.Returns
+`IConstraintVertex`
+
+// end::methods[]
+

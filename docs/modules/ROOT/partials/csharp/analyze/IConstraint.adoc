@@ -1,0 +1,47 @@
+[#_IConstraint]
+[.doc-api-reference-driver]
+=== IConstraint
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+
+
+A representation of a TypeQL constraint.
+
+// tag::methods[]
+[#_ISpan_TypeDB_Driver_Api_Analyze_IConstraint_Span]
+==== method ``Span``
+
+[source,cs]
+----
+ISpan TypeDB.Driver.Api.Analyze.IConstraint.Span
+----
+
+
+
+Gets the span of this constraint in the source query.
+
+[caption=""]
+.Returns
+`ISpan`
+
+[#_Pinvoke_ConstraintVariant_TypeDB_Driver_Api_Analyze_IConstraint_Variant]
+==== method ``Variant``
+
+[source,cs]
+----
+Pinvoke.ConstraintVariant TypeDB.Driver.Api.Analyze.IConstraint.Variant
+----
+
+
+
+Gets the variant of this constraint.
+
+[caption=""]
+.Returns
+`Pinvoke.ConstraintVariant`
+
+// end::methods[]
+

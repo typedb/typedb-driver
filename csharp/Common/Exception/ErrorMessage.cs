@@ -68,8 +68,10 @@ namespace TypeDB.Driver.Common
                 new Driver(5, "The database has been deleted and no further operation is allowed.");
             public static readonly Driver POSITIVE_VALUE_REQUIRED =
                 new Driver(6, "Value cannot be less than 1, was: {0}.");
-            public static readonly Driver MISSING_DB_NAME =
-                new Driver(7, "Database name cannot be null.");
+            public static readonly Driver UNEXPECTED_NATIVE_VALUE =
+                new Driver(7, "Unexpected native value encountered!");
+            public static readonly Driver NON_NULL_VALUE_REQUIRED =
+                new Driver(8, "Value of '{0}' should not be null.");
         }
 
         public class Concept : ErrorMessage
@@ -100,6 +102,10 @@ namespace TypeDB.Driver.Common
                 new Concept(8, "The ownership by owner {0} of attribute {1} is not explainable.");
             public static readonly Concept UNRECOGNISED_ANNOTATION =
                 new Concept(9, "The annotation {0} is not recognised.");
+            public static readonly Concept INVALID_QUERY_ANSWER_CASTING =
+                new Concept(10, "Invalid query answer conversion from {0} to {1}.");
+            public static readonly Concept INVALID_VALUE_RETRIEVAL =
+                new Concept(11, "Could not retrieve a '{0}' value.");
         }
 
         public class Query : ErrorMessage

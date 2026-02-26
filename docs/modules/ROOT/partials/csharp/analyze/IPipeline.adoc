@@ -1,0 +1,63 @@
+[#_IPipeline]
+[.doc-api-reference-driver]
+=== IPipeline
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+
+
+A representation of a query pipeline.
+
+// tag::methods[]
+[#_IConjunction_TypeDB_Driver_Api_Analyze_IPipeline_GetConjunction_IConjunctionID_conjunctionID_]
+==== method ``GetConjunction``
+
+[source,cs]
+----
+IConjunction? GetConjunction(IConjunctionID conjunctionID)
+----
+
+
+
+Gets the conjunction for the specified conjunction ID.
+
+[caption=""]
+.Returns
+`IConjunction?`
+
+[#_string_TypeDB_Driver_Api_Analyze_IPipeline_GetVariableName_IVariable_variable_]
+==== method ``GetVariableName``
+
+[source,cs]
+----
+string? GetVariableName(IVariable variable)
+----
+
+
+
+Gets the name of the specified variable, if it has one.
+
+[caption=""]
+.Returns
+`string?`
+
+[#_IEnumerable_IPipelineStage_TypeDB_Driver_Api_Analyze_IPipeline_Stages]
+==== method ``Stages``
+
+[source,cs]
+----
+IEnumerable< IPipelineStage > TypeDB.Driver.Api.Analyze.IPipeline.Stages
+----
+
+
+
+Gets the stages making up the pipeline.
+
+[caption=""]
+.Returns
+`IEnumerable< IPipelineStage >`
+
+// end::methods[]
+

@@ -44,12 +44,12 @@ impl Transaction {
         Transaction { type_: transaction_stream.type_(), options: transaction_stream.options(), transaction_stream }
     }
 
-    /// Closes the transaction.
+    /// Check if the transaction is open.
     ///
     /// # Examples
     ///
     /// ```rust
-    /// transaction.close()
+    /// transaction.is_open()
     /// ```
     pub fn is_open(&self) -> bool {
         self.transaction_stream.is_open()

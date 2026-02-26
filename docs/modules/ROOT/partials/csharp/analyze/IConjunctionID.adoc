@@ -1,0 +1,12 @@
+[#_IConjunctionID]
+[.doc-api-reference-driver]
+=== IConjunctionID
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+
+
+Identifies a conjunction within a query pipeline.
+

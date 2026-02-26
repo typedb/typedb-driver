@@ -1,0 +1,16 @@
+[#_ISortStage]
+[.doc-api-reference-driver]
+=== ISortStage
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+*Supertypes:*
+
+* `TypeDB.Driver.Api.Analyze.IPipelineStage`
+
+
+
+Represents a "sort" stage: sort variables-and-order.
+

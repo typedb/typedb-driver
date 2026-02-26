@@ -1,0 +1,31 @@
+[#_IPipelineStage]
+[.doc-api-reference-driver]
+=== IPipelineStage
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+
+
+Representation of a stage in a pipeline.
+
+// tag::methods[]
+[#_Pinvoke_PipelineStageVariant_TypeDB_Driver_Api_Analyze_IPipelineStage_Variant]
+==== method ``Variant``
+
+[source,cs]
+----
+Pinvoke.PipelineStageVariant TypeDB.Driver.Api.Analyze.IPipelineStage.Variant
+----
+
+
+
+Gets the pipeline stage variant.
+
+[caption=""]
+.Returns
+`Pinvoke.PipelineStageVariant`
+
+// end::methods[]
+

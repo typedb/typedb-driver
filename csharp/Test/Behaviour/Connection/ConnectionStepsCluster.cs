@@ -1,0 +1,177 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+using DataTable = Gherkin.Ast.DataTable;
+using System;
+using Xunit;
+using Xunit.Gherkin.Quick;
+
+using TypeDB.Driver;
+using TypeDB.Driver.Api;
+using TypeDB.Driver.Common;
+using TypeDB.Driver.Test.Behaviour;
+
+namespace TypeDB.Driver.Test.Behaviour
+{
+    public partial class BehaviourSteps : ConnectionStepsBase
+    {
+        // Default test credentials
+        private const string DefaultUsername = "admin";
+        private const string DefaultPassword = "password";
+
+        // TODO: Add cluster-specific fields:
+        // - TLS configuration (DriverTlsConfig)
+        // - Multi-node address list
+        // - Consistency level settings
+
+        public BehaviourSteps()
+            : base()
+        {
+            // Reset query-level state between scenarios.
+            // These static fields persist across scenarios and must be cleared.
+            _queryOptions = null;
+            _queryAnswer = null;
+            _collectedRows = null;
+            _collectedDocuments = null;
+            _concurrentAnswers = null;
+            _concurrentRowStreams = null;
+        }
+
+        public override IDriver CreateTypeDBDriver(string address)
+        {
+            // TODO: Implement cluster driver creation with:
+            // - TLS/encryption support
+            // - Multi-node address handling
+            // - Cluster-specific DriverOptions
+            return TypeDB.Driver(
+                address,
+                new Credentials(DefaultUsername, DefaultPassword),
+                new DriverOptions(false, null));
+        }
+
+        [Given(@"typedb starts")]
+        [When(@"typedb starts")]
+        public override void TypeDBStarts()
+        {
+            // TypeDB cluster is assumed to be running externally for these tests
+        }
+
+        [Given(@"connection opens with default authentication")]
+        [When(@"connection opens with default authentication")]
+        public override void ConnectionOpensWithDefaultAuthentication()
+        {
+            // TODO: Use cluster-specific connection with encryption
+            Driver = CreateTypeDBDriver(TypeDB.DefaultAddress);
+        }
+
+        [Given(@"connection opens with authentication: {}, {}")]
+        [When(@"connection opens with authentication: {}, {}")]
+        public void ConnectionOpensWithAuthentication(string username, string password)
+        {
+            // TODO: Use cluster-specific connection with encryption
+            Driver = TypeDB.Driver(
+                TypeDB.DefaultAddress,
+                new Credentials(username, password),
+                new DriverOptions(false, null));
+        }
+
+        [Given(@"typedb has configuration")]
+        public void TypeDBHasConfiguration(DataTable data)
+        {
+            // TODO: Implement cluster configuration handling
+            // This method should parse the DataTable and configure cluster settings
+            // such as node addresses, TLS certificates, consistency levels, etc.
+            throw new NotImplementedException("Cluster configuration not yet implemented");
+        }
+
+        // Connection-level steps (from Base)
+
+        [Given(@"connection has been opened")]
+        public override void ConnectionHasBeenOpened()
+        {
+            base.ConnectionHasBeenOpened();
+        }
+
+        [When(@"connection closes")]
+        [Then(@"connection closes")]
+        public override void ConnectionCloses()
+        {
+            base.ConnectionCloses();
+        }
+
+        [Given(@"connection is open: (.*)")]
+        [Then(@"connection is open: (.*)")]
+        public void ConnectionIsOpen(string expectedState)
+        {
+            if (_requiredConfiguration) return;
+
+            bool expected = bool.Parse(expectedState);
+            if (expected)
+            {
+                Assert.NotNull(Driver);
+                Assert.True(Driver.IsOpen());
+            }
+            else
+            {
+                Assert.True(Driver == null || !Driver.IsOpen());
+            }
+        }
+
+        [Given(@"connection has (\d+) databases?")]
+        [Then(@"connection has (\d+) databases?")]
+        public void ConnectionHasDatabaseCount(int expectedCount)
+        {
+            if (_requiredConfiguration) return;
+
+            Assert.NotNull(Driver);
+            Assert.Equal(expectedCount, Driver.Databases.GetAll().Count);
+        }
+
+        // Connection: wrong host/port (from DriverSteps)
+
+        [When(@"connection opens with a wrong port; fails")]
+        [Then(@"connection opens with a wrong port; fails")]
+        public void ConnectionOpensWithWrongPortFails()
+        {
+            Assert.ThrowsAny<Exception>(() =>
+            {
+                // TODO: Use cluster-specific connection with encryption
+                var wrongPortDriver = TypeDB.Driver(
+                    "localhost:9999",
+                    new Credentials("admin", "password"),
+                    new DriverOptions(false, null));
+            });
+        }
+
+        [When(@"connection opens with a wrong host; fails with a message containing: ""(.*)""")]
+        [Then(@"connection opens with a wrong host; fails with a message containing: ""(.*)""")]
+        public void ConnectionOpensWithWrongHostFailsWithMessage(string expectedMessage)
+        {
+            var exception = Assert.ThrowsAny<Exception>(() =>
+            {
+                // TODO: Use cluster-specific connection with encryption
+                var wrongHostDriver = TypeDB.Driver(
+                    "nonexistent-host.invalid:1729",
+                    new Credentials("admin", "password"),
+                    new DriverOptions(false, null));
+            });
+            Assert.Contains(expectedMessage, exception.Message);
+        }
+    }
+}

@@ -1,0 +1,31 @@
+[#_IUpdateStage]
+[.doc-api-reference-driver]
+=== IUpdateStage
+
+`interface`
+
+*Namespace*: `TypeDB.Driver.Api.Analyze`
+
+*Superinterfaces:*
+
+* `IPipelineStage`
+
+Represents an update stage in a pipeline.
+
+// tag::methods[]
+[#_IUpdateStage_Block]
+==== property ``Block``
+
+[source,cs]
+----
+IConjunctionID Block { get; }
+----
+
+Gets the conjunction ID for the update block.
+
+[caption=""]
+.Returns
+`IConjunctionID`
+
+// end::methods[]
+

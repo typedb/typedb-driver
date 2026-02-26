@@ -1,0 +1,12 @@
+[#_ISortVariable]
+[.doc-api-reference-driver]
+=== ISortVariable
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+
+
+A variable and its sort order.
+

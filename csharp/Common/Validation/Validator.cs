@@ -40,6 +40,11 @@ namespace TypeDB.Driver.Common.Validation
             ThrowIfTrue(() => string.IsNullOrEmpty(input), errorMessage, exceptionArgs);
         }
 
+        public static void NonNull(object? input, ErrorMessage errorMessage, params object?[] exceptionArgs)
+        {
+            ThrowIfTrue(() => input == null, errorMessage, exceptionArgs);
+        }
+
         private static void ThrowIf(
             bool expectedResult,
             Func<bool> checker,

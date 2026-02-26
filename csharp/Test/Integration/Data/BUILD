@@ -20,13 +20,12 @@ load("//csharp/Test:rules.bzl", "csharp_integration_test")
 load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 csharp_integration_test(
-    name = "test",
-    srcs = ["DataTest.cs"],
+    name = "test-values",
+    srcs = ["ValuesTest.cs"],
     deps = [
         "//csharp:driver-csharp",
         "//csharp/Api:api",
         "//csharp/Common:common",
-        "//csharp:typedb_driver_pinvoke",
     ],
     target_frameworks = target_frameworks,
     targeting_packs = targeting_packs,

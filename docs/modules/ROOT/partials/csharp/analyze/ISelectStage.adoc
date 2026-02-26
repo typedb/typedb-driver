@@ -1,0 +1,16 @@
+[#_ISelectStage]
+[.doc-api-reference-driver]
+=== ISelectStage
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+*Supertypes:*
+
+* `TypeDB.Driver.Api.Analyze.IPipelineStage`
+
+
+
+Represents a "select" stage: select variables.
+

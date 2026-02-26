@@ -1,0 +1,45 @@
+[#_IIs]
+[.doc-api-reference-driver]
+=== IIs
+
+`interface`
+
+*Namespace*: `TypeDB.Driver.Api.Analyze`
+
+*Superinterfaces:*
+
+* `IConstraint`
+
+Represents an "is" constraint: lhs is rhs
+
+// tag::methods[]
+[#_IIs_Lhs]
+==== property ``Lhs``
+
+[source,cs]
+----
+IConstraintVertex Lhs { get; }
+----
+
+Gets the left-hand side of this is constraint.
+
+[caption=""]
+.Returns
+`IConstraintVertex`
+
+[#_IIs_Rhs]
+==== property ``Rhs``
+
+[source,cs]
+----
+IConstraintVertex Rhs { get; }
+----
+
+Gets the right-hand side of this is constraint.
+
+[caption=""]
+.Returns
+`IConstraintVertex`
+
+// end::methods[]
+

@@ -1,0 +1,45 @@
+[#_ISingleReturn]
+[.doc-api-reference-driver]
+=== ISingleReturn
+
+`interface`
+
+*Namespace*: `TypeDB.Driver.Api.Analyze`
+
+*Superinterfaces:*
+
+* `IReturnOperation`
+
+A single return operation.
+
+// tag::methods[]
+[#_ISingleReturn_Selector]
+==== property ``Selector``
+
+[source,cs]
+----
+string Selector { get; }
+----
+
+Gets the selector (e.g., "first", "last").
+
+[caption=""]
+.Returns
+`string`
+
+[#_ISingleReturn_Variables]
+==== property ``Variables``
+
+[source,cs]
+----
+IEnumerable<IVariable> Variables { get; }
+----
+
+Gets the variables being returned.
+
+[caption=""]
+.Returns
+`IEnumerable<IVariable>`
+
+// end::methods[]
+

@@ -1,0 +1,31 @@
+[#_IReturnOperation]
+[.doc-api-reference-driver]
+=== IReturnOperation
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+
+
+A representation of the return operation of a function.
+
+// tag::methods[]
+[#_Pinvoke_ReturnOperationVariant_TypeDB_Driver_Api_Analyze_IReturnOperation_Variant]
+==== method ``Variant``
+
+[source,cs]
+----
+Pinvoke.ReturnOperationVariant TypeDB.Driver.Api.Analyze.IReturnOperation.Variant
+----
+
+
+
+Gets the variant. One of: StreamReturn, SingleReturn, CheckReturn, ReduceReturn.
+
+[caption=""]
+.Returns
+`Pinvoke.ReturnOperationVariant`
+
+// end::methods[]
+

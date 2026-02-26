@@ -1,0 +1,45 @@
+[#_ILabelConstraint]
+[.doc-api-reference-driver]
+=== ILabelConstraint
+
+`interface`
+
+*Namespace*: `TypeDB.Driver.Api.Analyze`
+
+*Superinterfaces:*
+
+* `IConstraint`
+
+Represents a label constraint: type label label_value
+
+// tag::methods[]
+[#_ILabelConstraint_Variable]
+==== property ``Variable``
+
+[source,cs]
+----
+IConstraintVertex Variable { get; }
+----
+
+Gets the variable in this label constraint.
+
+[caption=""]
+.Returns
+`IConstraintVertex`
+
+[#_ILabelConstraint_LabelValue]
+==== property ``LabelValue``
+
+[source,cs]
+----
+string LabelValue { get; }
+----
+
+Gets the label value.
+
+[caption=""]
+.Returns
+`string`
+
+// end::methods[]
+

@@ -1,0 +1,173 @@
+[#_IConceptRow]
+[.doc-api-reference-driver]
+=== IConceptRow
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Answer`
+
+
+
+Contains a row of concepts with a header.
+
+// tag::methods[]
+[#_IEnumerable_string_TypeDB_Driver_Api_Answer_IConceptRow_ColumnNames]
+==== method ``ColumnNames``
+
+[source,cs]
+----
+IEnumerable< string > TypeDB.Driver.Api.Answer.IConceptRow.ColumnNames
+----
+
+
+
+Produces a collection of all column names (variables) in the header of this IConceptRow. Shared between all the rows in a QueryAnswer.
+
+[caption=""]
+.Returns
+`IEnumerable< string >`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+conceptRow.ColumnNames
+----
+
+[#_IEnumerable_IConcept_TypeDB_Driver_Api_Answer_IConceptRow_Concepts]
+==== method ``Concepts``
+
+[source,cs]
+----
+IEnumerable< IConcept > TypeDB.Driver.Api.Answer.IConceptRow.Concepts
+----
+
+
+
+Produces a collection over all concepts in this IConceptRow, skipping empty results.
+
+[caption=""]
+.Returns
+`IEnumerable< IConcept >`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+conceptRow.Concepts
+----
+
+[#_IConcept_TypeDB_Driver_Api_Answer_IConceptRow_Get_string_columnName_]
+==== method ``Get``
+
+[source,cs]
+----
+IConcept? Get(string columnName)
+----
+
+
+
+Retrieves a concept for a given column name (variable). Returns null if the variable has an empty answer. Throws an exception if the variable is not present.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `columnName` a| The variable (column name from ColumnNames) a| `string`
+|===
+
+[caption=""]
+.Returns
+`IConcept?`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+conceptRow.Get(columnName)
+----
+
+[#_IConcept_TypeDB_Driver_Api_Answer_IConceptRow_GetIndex_long_columnIndex_]
+==== method ``GetIndex``
+
+[source,cs]
+----
+IConcept? GetIndex(long columnIndex)
+----
+
+
+
+Retrieves a concept for a given index of the header (ColumnNames). Returns null if the index points to an empty answer. Throws an exception if the index is not in the row's range.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `columnIndex` a| The column index a| `long`
+|===
+
+[caption=""]
+.Returns
+`IConcept?`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+conceptRow.GetIndex(columnIndex)
+----
+
+[#_IPipeline_TypeDB_Driver_Api_Answer_IConceptRow_QueryStructure]
+==== method ``QueryStructure``
+
+[source,cs]
+----
+IPipeline? TypeDB.Driver.Api.Answer.IConceptRow.QueryStructure
+----
+
+
+
+Retrieves the query structure pipeline if available. Only available if the query was executed with IncludeQueryStructure option enabled.
+
+[caption=""]
+.Returns
+`IPipeline?`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+conceptRow.QueryStructure
+----
+
+[#_QueryType_TypeDB_Driver_Api_Answer_IConceptRow_QueryType]
+==== method ``QueryType``
+
+[source,cs]
+----
+QueryType TypeDB.Driver.Api.Answer.IConceptRow.QueryType
+----
+
+
+
+Retrieves the executed query's type of this IConceptRow. Shared between all the rows in a QueryAnswer.
+
+[caption=""]
+.Returns
+`QueryType`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+conceptRow.QueryType
+----
+
+// end::methods[]
+

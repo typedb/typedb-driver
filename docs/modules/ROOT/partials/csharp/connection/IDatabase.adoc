@@ -1,11 +1,18 @@
 [#_IDatabase]
+[.doc-api-reference-driver]
 === IDatabase
+
+`class`
 
 *Package*: `TypeDB.Driver.Api`
 
+
+
+A TypeDB database.
+
 // tag::methods[]
 [#_void_TypeDB_Driver_Api_IDatabase_Delete_]
-==== Delete
+==== method ``Delete``
 
 [source,cs]
 ----
@@ -15,7 +22,6 @@ void Delete()
 
 
 Deletes this database.
-
 
 [caption=""]
 .Returns
@@ -28,56 +34,42 @@ Deletes this database.
 database.Delete();
 ----
 
-[#_ISet_IReplica_TypeDB_Driver_Api_IDatabase_GetReplicas_]
-==== GetReplicas
+[#_void_TypeDB_Driver_Api_IDatabase_ExportToFile_string_schemaFile_string_dataFile_]
+==== method ``ExportToFile``
 
 [source,cs]
 ----
-ISet< IReplica > GetReplicas()
+void ExportToFile(string schemaFile, string dataFile)
 ----
 
 
 
-Set of ``Replica`` instances for this database. Only works in TypeDB Cloud
+Exports this database to a schema definition file and a data file on disk. This is a blocking operation and may take a significant amount of time depending on the database size.
 
 
 [caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `schemaFile` a| The path to the schema definition file to be created. a| `string`
+a| `dataFile` a| The path to the data file to be created. a| `string`
+|===
+
+[caption=""]
 .Returns
-`ISet< IReplica >`
+`void`
 
 [caption=""]
 .Code examples
 [source,cs]
 ----
-database.GetReplicas();
-----
-
-[#_string_TypeDB_Driver_Api_IDatabase_GetRuleSchema_]
-==== GetRuleSchema
-
-[source,cs]
-----
-string GetRuleSchema()
-----
-
-
-
-The rules in the schema as a valid TypeQL define query string.
-
-
-[caption=""]
-.Returns
-`string`
-
-[caption=""]
-.Code examples
-[source,cs]
-----
-database.GetRuleSchema();
+database.ExportToFile("schema.tql", "data.typedb");
 ----
 
 [#_string_TypeDB_Driver_Api_IDatabase_GetSchema_]
-==== GetSchema
+==== method ``GetSchema``
 
 [source,cs]
 ----
@@ -86,8 +78,7 @@ string GetSchema()
 
 
 
-A full schema text as a valid TypeQL define query string.
-
+Returns the full schema text as a valid TypeQL define query string.
 
 [caption=""]
 .Returns
@@ -101,7 +92,7 @@ database.GetSchema();
 ----
 
 [#_string_TypeDB_Driver_Api_IDatabase_GetTypeSchema_]
-==== GetTypeSchema
+==== method ``GetTypeSchema``
 
 [source,cs]
 ----
@@ -110,8 +101,7 @@ string GetTypeSchema()
 
 
 
-The types in the schema as a valid TypeQL define query string.
-
+Returns the types in the schema as a valid TypeQL define query string.
 
 [caption=""]
 .Returns
@@ -125,7 +115,7 @@ database.GetTypeSchema();
 ----
 
 [#_string_TypeDB_Driver_Api_IDatabase_Name]
-==== Name
+==== method ``Name``
 
 [source,cs]
 ----
@@ -136,7 +126,6 @@ string TypeDB.Driver.Api.IDatabase.Name
 
 The database name as a string.
 
-
 [caption=""]
 .Returns
 `string`
@@ -146,54 +135,6 @@ The database name as a string.
 [source,cs]
 ----
 database.Name;
-----
-
-[#_IReplica_TypeDB_Driver_Api_IDatabase_PreferredReplica]
-==== PreferredReplica
-
-[source,cs]
-----
-IReplica? TypeDB.Driver.Api.IDatabase.PreferredReplica
-----
-
-
-
-Returns the preferred replica for this database. Operations which can be run on any replica will prefer to use this replica. _Only works in TypeDB Cloud_
-
-
-[caption=""]
-.Returns
-`IReplica?`
-
-[caption=""]
-.Code examples
-[source,cs]
-----
-database.PreferredReplica;
-----
-
-[#_IReplica_TypeDB_Driver_Api_IDatabase_PrimaryReplica]
-==== PrimaryReplica
-
-[source,cs]
-----
-IReplica? TypeDB.Driver.Api.IDatabase.PrimaryReplica
-----
-
-
-
-Returns the primary replica for this database. _Only works in TypeDB Cloud_
-
-
-[caption=""]
-.Returns
-`IReplica?`
-
-[caption=""]
-.Code examples
-[source,cs]
-----
-database.PrimaryReplica;
 ----
 
 // end::methods[]

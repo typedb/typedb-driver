@@ -24,33 +24,13 @@ import com.typedb.driver.api.Credentials;
 import com.typedb.driver.api.Driver;
 import com.typedb.driver.api.DriverOptions;
 import com.typedb.driver.api.Transaction;
-import com.typedb.driver.api.answer.ConceptRow;
-import com.typedb.driver.api.answer.QueryAnswer;
-import com.typedb.driver.api.concept.Concept;
-import com.typedb.driver.api.concept.instance.Attribute;
-import com.typedb.driver.api.concept.type.AttributeType;
-import com.typedb.driver.api.concept.value.Value;
 import com.typedb.driver.api.database.Database;
-import com.typedb.driver.common.Duration;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -75,7 +55,7 @@ public class DriverTest {
     }
 
     @Test
-    public void transaction_on_close() {
+    public void transaction_on_close_callback() {
         Database db = typedbDriver.databases().get(DB_NAME);
         db.delete();
         typedbDriver.databases().create(DB_NAME);

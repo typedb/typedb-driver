@@ -73,5 +73,21 @@ namespace TypeDB.Driver.Api
          * </pre>
          */
         IList<IDatabase> GetAll();
+
+        /**
+         * Creates a database with the given name based on previously exported data.
+         * This is a blocking operation and may take a significant amount of time
+         * depending on the database size.
+         *
+         * <h3>Examples</h3>
+         * <pre>
+         * driver.Databases.ImportFromFile("mydb", schemaString, "/path/to/data.typedb");
+         * </pre>
+         *
+         * @param name The name of the database to be created.
+         * @param schema The schema definition query string for the database.
+         * @param dataFile The exported database file path to import the data from.
+         */
+        void ImportFromFile(string name, string schema, string dataFile);
     }
 }

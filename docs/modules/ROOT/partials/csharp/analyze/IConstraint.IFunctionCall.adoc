@@ -1,0 +1,59 @@
+[#_IFunctionCall]
+[.doc-api-reference-driver]
+=== IFunctionCall
+
+`interface`
+
+*Namespace*: `TypeDB.Driver.Api.Analyze`
+
+*Superinterfaces:*
+
+* `IConstraint`
+
+Represents a function call: let assigned = name(arguments)
+
+// tag::methods[]
+[#_IFunctionCall_Name]
+==== property ``Name``
+
+[source,cs]
+----
+string Name { get; }
+----
+
+Gets the name of the function being called.
+
+[caption=""]
+.Returns
+`string`
+
+[#_IFunctionCall_Arguments]
+==== property ``Arguments``
+
+[source,cs]
+----
+IEnumerable<IConstraintVertex> Arguments { get; }
+----
+
+Gets the arguments to this function call.
+
+[caption=""]
+.Returns
+`IEnumerable<IConstraintVertex>`
+
+[#_IFunctionCall_Assigned]
+==== property ``Assigned``
+
+[source,cs]
+----
+IEnumerable<IConstraintVertex> Assigned { get; }
+----
+
+Gets the variables assigned by this function call.
+
+[caption=""]
+.Returns
+`IEnumerable<IConstraintVertex>`
+
+// end::methods[]
+
