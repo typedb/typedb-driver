@@ -14,3 +14,38 @@
 
 Represents a "reduce" stage: reduce reducers groupby groupby.
 
+// tag::methods[]
+[#_IEnumerable_IVariable_TypeDB_Driver_Api_Analyze_IReduceStage_GroupBy]
+==== method ``GroupBy``
+
+[source,cs]
+----
+IEnumerable< IVariable > TypeDB.Driver.Api.Analyze.IReduceStage.GroupBy
+----
+
+
+
+The variables to group by.
+
+[caption=""]
+.Returns
+`IEnumerable< IVariable >`
+
+[#_IEnumerable_IReduceAssignment_TypeDB_Driver_Api_Analyze_IReduceStage_ReducerAssignments]
+==== method ``ReducerAssignments``
+
+[source,cs]
+----
+IEnumerable< IReduceAssignment > TypeDB.Driver.Api.Analyze.IReduceStage.ReducerAssignments
+----
+
+
+
+The reducer assignments.
+
+[caption=""]
+.Returns
+`IEnumerable< IReduceAssignment >`
+
+// end::methods[]
+

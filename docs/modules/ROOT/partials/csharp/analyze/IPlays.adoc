@@ -14,3 +14,54 @@
 
 Represents a "plays" constraint: player plays role.
 
+// tag::methods[]
+[#_Pinvoke_ConstraintExactness_TypeDB_Driver_Api_Analyze_IPlays_Exactness]
+==== method ``Exactness``
+
+[source,cs]
+----
+Pinvoke.ConstraintExactness TypeDB.Driver.Api.Analyze.IPlays.Exactness
+----
+
+
+
+The exactness of the constraint.
+
+[caption=""]
+.Returns
+`Pinvoke.ConstraintExactness`
+
+[#_IConstraintVertex_TypeDB_Driver_Api_Analyze_IPlays_Player]
+==== method ``Player``
+
+[source,cs]
+----
+IConstraintVertex TypeDB.Driver.Api.Analyze.IPlays.Player
+----
+
+
+
+The player vertex of the constraint.
+
+[caption=""]
+.Returns
+`IConstraintVertex`
+
+[#_IConstraintVertex_TypeDB_Driver_Api_Analyze_IPlays_Role]
+==== method ``Role``
+
+[source,cs]
+----
+IConstraintVertex TypeDB.Driver.Api.Analyze.IPlays.Role
+----
+
+
+
+The role vertex of the constraint.
+
+[caption=""]
+.Returns
+`IConstraintVertex`
+
+// end::methods[]
+

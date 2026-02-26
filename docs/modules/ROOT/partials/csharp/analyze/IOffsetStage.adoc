@@ -14,3 +14,22 @@
 
 Represents an "offset" stage: offset n.
 
+// tag::methods[]
+[#_long_TypeDB_Driver_Api_Analyze_IOffsetStage_Offset]
+==== method ``Offset``
+
+[source,cs]
+----
+long TypeDB.Driver.Api.Analyze.IOffsetStage.Offset
+----
+
+
+
+The number of results to skip.
+
+[caption=""]
+.Returns
+`long`
+
+// end::methods[]
+

@@ -14,3 +14,22 @@
 
 Represents an "or" constraint: { branches[0] } or { branches[1] } [or ...].
 
+// tag::methods[]
+[#_IEnumerable_IConjunctionID_TypeDB_Driver_Api_Analyze_IOr_Branches]
+==== method ``Branches``
+
+[source,cs]
+----
+IEnumerable< IConjunctionID > TypeDB.Driver.Api.Analyze.IOr.Branches
+----
+
+
+
+The conjunction branches, as indices into the pipeline's conjunctions.
+
+[caption=""]
+.Returns
+`IEnumerable< IConjunctionID >`
+
+// end::methods[]
+

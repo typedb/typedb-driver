@@ -14,3 +14,54 @@
 
 Represents an "isa" constraint: instance isa(!) type.
 
+// tag::methods[]
+[#_Pinvoke_ConstraintExactness_TypeDB_Driver_Api_Analyze_IIsa_Exactness]
+==== method ``Exactness``
+
+[source,cs]
+----
+Pinvoke.ConstraintExactness TypeDB.Driver.Api.Analyze.IIsa.Exactness
+----
+
+
+
+The exactness of the constraint.
+
+[caption=""]
+.Returns
+`Pinvoke.ConstraintExactness`
+
+[#_IConstraintVertex_TypeDB_Driver_Api_Analyze_IIsa_Instance]
+==== method ``Instance``
+
+[source,cs]
+----
+IConstraintVertex TypeDB.Driver.Api.Analyze.IIsa.Instance
+----
+
+
+
+The instance vertex of the constraint.
+
+[caption=""]
+.Returns
+`IConstraintVertex`
+
+[#_IConstraintVertex_TypeDB_Driver_Api_Analyze_IIsa_Type]
+==== method ``Type``
+
+[source,cs]
+----
+IConstraintVertex TypeDB.Driver.Api.Analyze.IIsa.Type
+----
+
+
+
+The type vertex of the constraint.
+
+[caption=""]
+.Returns
+`IConstraintVertex`
+
+// end::methods[]
+

@@ -11,6 +11,102 @@
 A representation of the 'fetch' stage of a query.
 
 // tag::methods[]
+[#_IFetchLeaf_TypeDB_Driver_Api_Analyze_IFetch_AsLeaf_]
+==== method ``AsLeaf``
+
+[source,cs]
+----
+IFetchLeaf AsLeaf()
+----
+
+
+
+Casts this fetch to a leaf.
+
+[caption=""]
+.Returns
+`IFetchLeaf`
+
+[#_IFetchList_TypeDB_Driver_Api_Analyze_IFetch_AsList_]
+==== method ``AsList``
+
+[source,cs]
+----
+IFetchList AsList()
+----
+
+
+
+Casts this fetch to a list.
+
+[caption=""]
+.Returns
+`IFetchList`
+
+[#_IFetchObject_TypeDB_Driver_Api_Analyze_IFetch_AsObject_]
+==== method ``AsObject``
+
+[source,cs]
+----
+IFetchObject AsObject()
+----
+
+
+
+Casts this fetch to an object.
+
+[caption=""]
+.Returns
+`IFetchObject`
+
+[#_bool_TypeDB_Driver_Api_Analyze_IFetch_IsLeaf]
+==== method ``IsLeaf``
+
+[source,cs]
+----
+bool TypeDB.Driver.Api.Analyze.IFetch.IsLeaf
+----
+
+
+
+Checks if this fetch is a leaf.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_bool_TypeDB_Driver_Api_Analyze_IFetch_IsList]
+==== method ``IsList``
+
+[source,cs]
+----
+bool TypeDB.Driver.Api.Analyze.IFetch.IsList
+----
+
+
+
+Checks if this fetch is a list.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_bool_TypeDB_Driver_Api_Analyze_IFetch_IsObject]
+==== method ``IsObject``
+
+[source,cs]
+----
+bool TypeDB.Driver.Api.Analyze.IFetch.IsObject
+----
+
+
+
+Checks if this fetch is an object.
+
+[caption=""]
+.Returns
+`bool`
+
 [#_Pinvoke_FetchVariant_TypeDB_Driver_Api_Analyze_IFetch_Variant]
 ==== method ``Variant``
 

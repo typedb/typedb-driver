@@ -62,14 +62,44 @@ namespace TypeDB.Driver.Api.Analyze
         /// </summary>
         Pinvoke.ReturnOperationVariant Variant { get; }
 
+        /// <summary>
+        /// Checks if this is a stream return.
+        /// </summary>
         bool IsStream { get; }
+
+        /// <summary>
+        /// Checks if this is a single return.
+        /// </summary>
         bool IsSingle { get; }
+
+        /// <summary>
+        /// Checks if this is a check return.
+        /// </summary>
         bool IsCheck { get; }
+
+        /// <summary>
+        /// Checks if this is a reduce return.
+        /// </summary>
         bool IsReduce { get; }
 
+        /// <summary>
+        /// Casts this return operation to a stream return.
+        /// </summary>
         IStreamReturn AsStream();
+
+        /// <summary>
+        /// Casts this return operation to a single return.
+        /// </summary>
         ISingleReturn AsSingle();
+
+        /// <summary>
+        /// Casts this return operation to a check return.
+        /// </summary>
         ICheckReturn AsCheck();
+
+        /// <summary>
+        /// Casts this return operation to a reduce return.
+        /// </summary>
         IReduceReturn AsReduce();
     }
 
@@ -78,6 +108,9 @@ namespace TypeDB.Driver.Api.Analyze
     /// </summary>
     public interface IStreamReturn : IReturnOperation
     {
+        /// <summary>
+        /// The variables in the returned row.
+        /// </summary>
         IEnumerable<IVariable> Variables { get; }
     }
 
@@ -86,7 +119,14 @@ namespace TypeDB.Driver.Api.Analyze
     /// </summary>
     public interface ISingleReturn : IReturnOperation
     {
+        /// <summary>
+        /// The variables in the returned row.
+        /// </summary>
         IEnumerable<IVariable> Variables { get; }
+
+        /// <summary>
+        /// The selector that determines how the row is selected.
+        /// </summary>
         string Selector { get; }
     }
 
@@ -102,6 +142,9 @@ namespace TypeDB.Driver.Api.Analyze
     /// </summary>
     public interface IReduceReturn : IReturnOperation
     {
+        /// <summary>
+        /// The reducers used to compute the aggregations.
+        /// </summary>
         IEnumerable<IReducer> Reducers { get; }
     }
 }
