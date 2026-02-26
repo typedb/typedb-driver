@@ -14,3 +14,38 @@
 
 Indicates the function returns a single row of the specified variables.
 
+// tag::methods[]
+[#_string_TypeDB_Driver_Api_Analyze_ISingleReturn_Selector]
+==== method ``Selector``
+
+[source,cs]
+----
+string TypeDB.Driver.Api.Analyze.ISingleReturn.Selector
+----
+
+
+
+The selector that determines how the row is selected.
+
+[caption=""]
+.Returns
+`string`
+
+[#_IEnumerable_IVariable_TypeDB_Driver_Api_Analyze_ISingleReturn_Variables]
+==== method ``Variables``
+
+[source,cs]
+----
+IEnumerable< IVariable > TypeDB.Driver.Api.Analyze.ISingleReturn.Variables
+----
+
+
+
+The variables in the returned row.
+
+[caption=""]
+.Returns
+`IEnumerable< IVariable >`
+
+// end::methods[]
+

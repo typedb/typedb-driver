@@ -14,3 +14,22 @@
 
 Represents a "limit" stage: limit n.
 
+// tag::methods[]
+[#_long_TypeDB_Driver_Api_Analyze_ILimitStage_Limit]
+==== method ``Limit``
+
+[source,cs]
+----
+long TypeDB.Driver.Api.Analyze.ILimitStage.Limit
+----
+
+
+
+The maximum number of results to return.
+
+[caption=""]
+.Returns
+`long`
+
+// end::methods[]
+

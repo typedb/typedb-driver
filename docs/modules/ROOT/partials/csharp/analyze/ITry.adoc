@@ -14,3 +14,22 @@
 
 Represents a "try" constraint: try { conjunction }.
 
+// tag::methods[]
+[#_IConjunctionID_TypeDB_Driver_Api_Analyze_ITry_Conjunction]
+==== method ``Conjunction``
+
+[source,cs]
+----
+IConjunctionID TypeDB.Driver.Api.Analyze.ITry.Conjunction
+----
+
+
+
+The index into the pipeline's conjunctions.
+
+[caption=""]
+.Returns
+`IConjunctionID`
+
+// end::methods[]
+

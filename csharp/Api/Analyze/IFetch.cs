@@ -31,12 +31,34 @@ namespace TypeDB.Driver.Api.Analyze
         /// </summary>
         Pinvoke.FetchVariant Variant { get; }
 
+        /// <summary>
+        /// Checks if this fetch is a leaf.
+        /// </summary>
         bool IsLeaf { get; }
+
+        /// <summary>
+        /// Checks if this fetch is a list.
+        /// </summary>
         bool IsList { get; }
+
+        /// <summary>
+        /// Checks if this fetch is an object.
+        /// </summary>
         bool IsObject { get; }
 
+        /// <summary>
+        /// Casts this fetch to a leaf.
+        /// </summary>
         IFetchLeaf AsLeaf();
+
+        /// <summary>
+        /// Casts this fetch to a list.
+        /// </summary>
         IFetchList AsList();
+
+        /// <summary>
+        /// Casts this fetch to an object.
+        /// </summary>
         IFetchObject AsObject();
     }
 

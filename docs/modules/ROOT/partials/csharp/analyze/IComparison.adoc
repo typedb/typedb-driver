@@ -14,3 +14,70 @@
 
 Represents a comparison: lhs comparator rhs.
 
+// tag::methods[]
+[#_Pinvoke_Comparator_TypeDB_Driver_Api_Analyze_IComparison_Comparator]
+==== method ``Comparator``
+
+[source,cs]
+----
+Pinvoke.Comparator TypeDB.Driver.Api.Analyze.IComparison.Comparator
+----
+
+
+
+The comparator operator.
+
+[caption=""]
+.Returns
+`Pinvoke.Comparator`
+
+[#_string_TypeDB_Driver_Api_Analyze_IComparison_ComparatorSymbol]
+==== method ``ComparatorSymbol``
+
+[source,cs]
+----
+string TypeDB.Driver.Api.Analyze.IComparison.ComparatorSymbol
+----
+
+
+
+The symbol representation of the comparator.
+
+[caption=""]
+.Returns
+`string`
+
+[#_IConstraintVertex_TypeDB_Driver_Api_Analyze_IComparison_Lhs]
+==== method ``Lhs``
+
+[source,cs]
+----
+IConstraintVertex TypeDB.Driver.Api.Analyze.IComparison.Lhs
+----
+
+
+
+The left-hand side of the comparison.
+
+[caption=""]
+.Returns
+`IConstraintVertex`
+
+[#_IConstraintVertex_TypeDB_Driver_Api_Analyze_IComparison_Rhs]
+==== method ``Rhs``
+
+[source,cs]
+----
+IConstraintVertex TypeDB.Driver.Api.Analyze.IComparison.Rhs
+----
+
+
+
+The right-hand side of the comparison.
+
+[caption=""]
+.Returns
+`IConstraintVertex`
+
+// end::methods[]
+

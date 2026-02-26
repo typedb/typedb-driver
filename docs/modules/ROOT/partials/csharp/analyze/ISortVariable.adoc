@@ -10,3 +10,38 @@
 
 A variable and its sort order.
 
+// tag::methods[]
+[#_Pinvoke_SortOrder_TypeDB_Driver_Api_Analyze_ISortVariable_Order]
+==== method ``Order``
+
+[source,cs]
+----
+Pinvoke.SortOrder TypeDB.Driver.Api.Analyze.ISortVariable.Order
+----
+
+
+
+The sort order (ascending or descending).
+
+[caption=""]
+.Returns
+`Pinvoke.SortOrder`
+
+[#_IVariable_TypeDB_Driver_Api_Analyze_ISortVariable_Variable]
+==== method ``Variable``
+
+[source,cs]
+----
+IVariable TypeDB.Driver.Api.Analyze.ISortVariable.Variable
+----
+
+
+
+The variable to sort by.
+
+[caption=""]
+.Returns
+`IVariable`
+
+// end::methods[]
+

@@ -14,3 +14,38 @@
 
 Represents a label constraint: type label label_value.
 
+// tag::methods[]
+[#_string_TypeDB_Driver_Api_Analyze_ILabelConstraint_LabelValue]
+==== method ``LabelValue``
+
+[source,cs]
+----
+string TypeDB.Driver.Api.Analyze.ILabelConstraint.LabelValue
+----
+
+
+
+The label value.
+
+[caption=""]
+.Returns
+`string`
+
+[#_IConstraintVertex_TypeDB_Driver_Api_Analyze_ILabelConstraint_Variable]
+==== method ``Variable``
+
+[source,cs]
+----
+IConstraintVertex TypeDB.Driver.Api.Analyze.ILabelConstraint.Variable
+----
+
+
+
+The variable being constrained.
+
+[caption=""]
+.Returns
+`IConstraintVertex`
+
+// end::methods[]
+

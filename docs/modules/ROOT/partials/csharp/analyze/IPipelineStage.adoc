@@ -11,6 +11,390 @@
 Representation of a stage in a pipeline.
 
 // tag::methods[]
+[#_IDeleteStage_TypeDB_Driver_Api_Analyze_IPipelineStage_AsDelete_]
+==== method ``AsDelete``
+
+[source,cs]
+----
+IDeleteStage AsDelete()
+----
+
+
+
+Casts this stage to a delete stage.
+
+[caption=""]
+.Returns
+`IDeleteStage`
+
+[#_IDistinctStage_TypeDB_Driver_Api_Analyze_IPipelineStage_AsDistinct_]
+==== method ``AsDistinct``
+
+[source,cs]
+----
+IDistinctStage AsDistinct()
+----
+
+
+
+Casts this stage to a distinct stage.
+
+[caption=""]
+.Returns
+`IDistinctStage`
+
+[#_IInsertStage_TypeDB_Driver_Api_Analyze_IPipelineStage_AsInsert_]
+==== method ``AsInsert``
+
+[source,cs]
+----
+IInsertStage AsInsert()
+----
+
+
+
+Casts this stage to an insert stage.
+
+[caption=""]
+.Returns
+`IInsertStage`
+
+[#_ILimitStage_TypeDB_Driver_Api_Analyze_IPipelineStage_AsLimit_]
+==== method ``AsLimit``
+
+[source,cs]
+----
+ILimitStage AsLimit()
+----
+
+
+
+Casts this stage to a limit stage.
+
+[caption=""]
+.Returns
+`ILimitStage`
+
+[#_IMatchStage_TypeDB_Driver_Api_Analyze_IPipelineStage_AsMatch_]
+==== method ``AsMatch``
+
+[source,cs]
+----
+IMatchStage AsMatch()
+----
+
+
+
+Casts this stage to a match stage.
+
+[caption=""]
+.Returns
+`IMatchStage`
+
+[#_IOffsetStage_TypeDB_Driver_Api_Analyze_IPipelineStage_AsOffset_]
+==== method ``AsOffset``
+
+[source,cs]
+----
+IOffsetStage AsOffset()
+----
+
+
+
+Casts this stage to an offset stage.
+
+[caption=""]
+.Returns
+`IOffsetStage`
+
+[#_IPutStage_TypeDB_Driver_Api_Analyze_IPipelineStage_AsPut_]
+==== method ``AsPut``
+
+[source,cs]
+----
+IPutStage AsPut()
+----
+
+
+
+Casts this stage to a put stage.
+
+[caption=""]
+.Returns
+`IPutStage`
+
+[#_IReduceStage_TypeDB_Driver_Api_Analyze_IPipelineStage_AsReduce_]
+==== method ``AsReduce``
+
+[source,cs]
+----
+IReduceStage AsReduce()
+----
+
+
+
+Casts this stage to a reduce stage.
+
+[caption=""]
+.Returns
+`IReduceStage`
+
+[#_IRequireStage_TypeDB_Driver_Api_Analyze_IPipelineStage_AsRequire_]
+==== method ``AsRequire``
+
+[source,cs]
+----
+IRequireStage AsRequire()
+----
+
+
+
+Casts this stage to a require stage.
+
+[caption=""]
+.Returns
+`IRequireStage`
+
+[#_ISelectStage_TypeDB_Driver_Api_Analyze_IPipelineStage_AsSelect_]
+==== method ``AsSelect``
+
+[source,cs]
+----
+ISelectStage AsSelect()
+----
+
+
+
+Casts this stage to a select stage.
+
+[caption=""]
+.Returns
+`ISelectStage`
+
+[#_ISortStage_TypeDB_Driver_Api_Analyze_IPipelineStage_AsSort_]
+==== method ``AsSort``
+
+[source,cs]
+----
+ISortStage AsSort()
+----
+
+
+
+Casts this stage to a sort stage.
+
+[caption=""]
+.Returns
+`ISortStage`
+
+[#_IUpdateStage_TypeDB_Driver_Api_Analyze_IPipelineStage_AsUpdate_]
+==== method ``AsUpdate``
+
+[source,cs]
+----
+IUpdateStage AsUpdate()
+----
+
+
+
+Casts this stage to an update stage.
+
+[caption=""]
+.Returns
+`IUpdateStage`
+
+[#_bool_TypeDB_Driver_Api_Analyze_IPipelineStage_IsDelete]
+==== method ``IsDelete``
+
+[source,cs]
+----
+bool TypeDB.Driver.Api.Analyze.IPipelineStage.IsDelete
+----
+
+
+
+Checks if this stage is a delete stage.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_bool_TypeDB_Driver_Api_Analyze_IPipelineStage_IsDistinct]
+==== method ``IsDistinct``
+
+[source,cs]
+----
+bool TypeDB.Driver.Api.Analyze.IPipelineStage.IsDistinct
+----
+
+
+
+Checks if this stage is a distinct stage.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_bool_TypeDB_Driver_Api_Analyze_IPipelineStage_IsInsert]
+==== method ``IsInsert``
+
+[source,cs]
+----
+bool TypeDB.Driver.Api.Analyze.IPipelineStage.IsInsert
+----
+
+
+
+Checks if this stage is an insert stage.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_bool_TypeDB_Driver_Api_Analyze_IPipelineStage_IsLimit]
+==== method ``IsLimit``
+
+[source,cs]
+----
+bool TypeDB.Driver.Api.Analyze.IPipelineStage.IsLimit
+----
+
+
+
+Checks if this stage is a limit stage.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_bool_TypeDB_Driver_Api_Analyze_IPipelineStage_IsMatch]
+==== method ``IsMatch``
+
+[source,cs]
+----
+bool TypeDB.Driver.Api.Analyze.IPipelineStage.IsMatch
+----
+
+
+
+Checks if this stage is a match stage.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_bool_TypeDB_Driver_Api_Analyze_IPipelineStage_IsOffset]
+==== method ``IsOffset``
+
+[source,cs]
+----
+bool TypeDB.Driver.Api.Analyze.IPipelineStage.IsOffset
+----
+
+
+
+Checks if this stage is an offset stage.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_bool_TypeDB_Driver_Api_Analyze_IPipelineStage_IsPut]
+==== method ``IsPut``
+
+[source,cs]
+----
+bool TypeDB.Driver.Api.Analyze.IPipelineStage.IsPut
+----
+
+
+
+Checks if this stage is a put stage.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_bool_TypeDB_Driver_Api_Analyze_IPipelineStage_IsReduce]
+==== method ``IsReduce``
+
+[source,cs]
+----
+bool TypeDB.Driver.Api.Analyze.IPipelineStage.IsReduce
+----
+
+
+
+Checks if this stage is a reduce stage.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_bool_TypeDB_Driver_Api_Analyze_IPipelineStage_IsRequire]
+==== method ``IsRequire``
+
+[source,cs]
+----
+bool TypeDB.Driver.Api.Analyze.IPipelineStage.IsRequire
+----
+
+
+
+Checks if this stage is a require stage.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_bool_TypeDB_Driver_Api_Analyze_IPipelineStage_IsSelect]
+==== method ``IsSelect``
+
+[source,cs]
+----
+bool TypeDB.Driver.Api.Analyze.IPipelineStage.IsSelect
+----
+
+
+
+Checks if this stage is a select stage.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_bool_TypeDB_Driver_Api_Analyze_IPipelineStage_IsSort]
+==== method ``IsSort``
+
+[source,cs]
+----
+bool TypeDB.Driver.Api.Analyze.IPipelineStage.IsSort
+----
+
+
+
+Checks if this stage is a sort stage.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_bool_TypeDB_Driver_Api_Analyze_IPipelineStage_IsUpdate]
+==== method ``IsUpdate``
+
+[source,cs]
+----
+bool TypeDB.Driver.Api.Analyze.IPipelineStage.IsUpdate
+----
+
+
+
+Checks if this stage is an update stage.
+
+[caption=""]
+.Returns
+`bool`
+
 [#_Pinvoke_PipelineStageVariant_TypeDB_Driver_Api_Analyze_IPipelineStage_Variant]
 ==== method ``Variant``
 

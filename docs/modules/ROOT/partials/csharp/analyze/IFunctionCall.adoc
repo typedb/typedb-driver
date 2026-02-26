@@ -14,3 +14,54 @@
 
 Represents a function call: let assigned = name(arguments)
 
+// tag::methods[]
+[#_IEnumerable_IConstraintVertex_TypeDB_Driver_Api_Analyze_IFunctionCall_Arguments]
+==== method ``Arguments``
+
+[source,cs]
+----
+IEnumerable< IConstraintVertex > TypeDB.Driver.Api.Analyze.IFunctionCall.Arguments
+----
+
+
+
+The arguments to the function call.
+
+[caption=""]
+.Returns
+`IEnumerable< IConstraintVertex >`
+
+[#_IEnumerable_IConstraintVertex_TypeDB_Driver_Api_Analyze_IFunctionCall_Assigned]
+==== method ``Assigned``
+
+[source,cs]
+----
+IEnumerable< IConstraintVertex > TypeDB.Driver.Api.Analyze.IFunctionCall.Assigned
+----
+
+
+
+The variables being assigned to.
+
+[caption=""]
+.Returns
+`IEnumerable< IConstraintVertex >`
+
+[#_string_TypeDB_Driver_Api_Analyze_IFunctionCall_Name]
+==== method ``Name``
+
+[source,cs]
+----
+string TypeDB.Driver.Api.Analyze.IFunctionCall.Name
+----
+
+
+
+The name of the function being called.
+
+[caption=""]
+.Returns
+`string`
+
+// end::methods[]
+

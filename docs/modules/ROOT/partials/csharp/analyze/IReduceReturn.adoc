@@ -14,3 +14,22 @@
 
 Indicates the function returns an aggregation over the rows in the body.
 
+// tag::methods[]
+[#_IEnumerable_IReducer_TypeDB_Driver_Api_Analyze_IReduceReturn_Reducers]
+==== method ``Reducers``
+
+[source,cs]
+----
+IEnumerable< IReducer > TypeDB.Driver.Api.Analyze.IReduceReturn.Reducers
+----
+
+
+
+The reducers used to compute the aggregations.
+
+[caption=""]
+.Returns
+`IEnumerable< IReducer >`
+
+// end::methods[]
+

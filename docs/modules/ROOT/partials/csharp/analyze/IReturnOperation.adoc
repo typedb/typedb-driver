@@ -11,6 +11,134 @@
 A representation of the return operation of a function.
 
 // tag::methods[]
+[#_ICheckReturn_TypeDB_Driver_Api_Analyze_IReturnOperation_AsCheck_]
+==== method ``AsCheck``
+
+[source,cs]
+----
+ICheckReturn AsCheck()
+----
+
+
+
+Casts this return operation to a check return.
+
+[caption=""]
+.Returns
+`ICheckReturn`
+
+[#_IReduceReturn_TypeDB_Driver_Api_Analyze_IReturnOperation_AsReduce_]
+==== method ``AsReduce``
+
+[source,cs]
+----
+IReduceReturn AsReduce()
+----
+
+
+
+Casts this return operation to a reduce return.
+
+[caption=""]
+.Returns
+`IReduceReturn`
+
+[#_ISingleReturn_TypeDB_Driver_Api_Analyze_IReturnOperation_AsSingle_]
+==== method ``AsSingle``
+
+[source,cs]
+----
+ISingleReturn AsSingle()
+----
+
+
+
+Casts this return operation to a single return.
+
+[caption=""]
+.Returns
+`ISingleReturn`
+
+[#_IStreamReturn_TypeDB_Driver_Api_Analyze_IReturnOperation_AsStream_]
+==== method ``AsStream``
+
+[source,cs]
+----
+IStreamReturn AsStream()
+----
+
+
+
+Casts this return operation to a stream return.
+
+[caption=""]
+.Returns
+`IStreamReturn`
+
+[#_bool_TypeDB_Driver_Api_Analyze_IReturnOperation_IsCheck]
+==== method ``IsCheck``
+
+[source,cs]
+----
+bool TypeDB.Driver.Api.Analyze.IReturnOperation.IsCheck
+----
+
+
+
+Checks if this is a check return.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_bool_TypeDB_Driver_Api_Analyze_IReturnOperation_IsReduce]
+==== method ``IsReduce``
+
+[source,cs]
+----
+bool TypeDB.Driver.Api.Analyze.IReturnOperation.IsReduce
+----
+
+
+
+Checks if this is a reduce return.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_bool_TypeDB_Driver_Api_Analyze_IReturnOperation_IsSingle]
+==== method ``IsSingle``
+
+[source,cs]
+----
+bool TypeDB.Driver.Api.Analyze.IReturnOperation.IsSingle
+----
+
+
+
+Checks if this is a single return.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_bool_TypeDB_Driver_Api_Analyze_IReturnOperation_IsStream]
+==== method ``IsStream``
+
+[source,cs]
+----
+bool TypeDB.Driver.Api.Analyze.IReturnOperation.IsStream
+----
+
+
+
+Checks if this is a stream return.
+
+[caption=""]
+.Returns
+`bool`
+
 [#_Pinvoke_ReturnOperationVariant_TypeDB_Driver_Api_Analyze_IReturnOperation_Variant]
 ==== method ``Variant``
 
