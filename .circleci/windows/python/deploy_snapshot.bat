@@ -38,3 +38,6 @@ IF %errorlevel% NEQ 0 EXIT /b %errorlevel%
 
 bazel --output_user_root=C:/tmp run --config=ci --verbose_failures --define version=%VER% //python:deploy-pip312 -- snapshot
 IF %errorlevel% NEQ 0 EXIT /b %errorlevel%
+
+bazel --output_user_root=C:/tmp run --config=ci --verbose_failures --define version=%VER% //python:deploy-pip313 -- snapshot
+IF %errorlevel% NEQ 0 EXIT /b %errorlevel%
