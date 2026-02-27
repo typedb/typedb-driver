@@ -69,6 +69,9 @@ under the License.
     <file src="lib/$target_framework$/TypeDB.Driver.Analyze.dll" target="lib/$target_framework$" />
     <file src="lib/$target_framework$/TypeDB.Driver.Analyze.pdb" target="lib/$target_framework$" />
     <file src="lib/$target_framework$/TypeDB.Driver.Analyze.xml" target="lib/$target_framework$" />
+    <file src="lib/$target_framework$/TypeDB.Driver.Answer.dll" target="lib/$target_framework$" />
+    <file src="lib/$target_framework$/TypeDB.Driver.Answer.pdb" target="lib/$target_framework$" />
+    <file src="lib/$target_framework$/TypeDB.Driver.Answer.xml" target="lib/$target_framework$" />
     <file src="lib/$target_framework$/TypeDB.Driver.User.dll" target="lib/$target_framework$" />
     <file src="lib/$target_framework$/TypeDB.Driver.User.pdb" target="lib/$target_framework$" />
     <file src="lib/$target_framework$/TypeDB.Driver.User.xml" target="lib/$target_framework$" />
