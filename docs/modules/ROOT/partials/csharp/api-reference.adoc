@@ -20,7 +20,7 @@ include::{page-version}@external-typedb-driver::partial$csharp/connection/IUser.
 [#_transaction_header]
 == Transaction
 
-include::{page-version}@external-typedb-driver::partial$csharp/transaction/ITypeDBTransaction.adoc[]
+include::{page-version}@external-typedb-driver::partial$csharp/transaction/ITransaction.adoc[]
 
 include::{page-version}@external-typedb-driver::partial$csharp/transaction/TransactionType.adoc[]
 
@@ -61,8 +61,6 @@ include::{page-version}@external-typedb-driver::partial$csharp/concept/Transitiv
 
 include::{page-version}@external-typedb-driver::partial$csharp/schema/IType.adoc[]
 
-include::{page-version}@external-typedb-driver::partial$csharp/schema/IThingType.adoc[]
-
 include::{page-version}@external-typedb-driver::partial$csharp/schema/IEntityType.adoc[]
 
 include::{page-version}@external-typedb-driver::partial$csharp/schema/IRelationType.adoc[]
@@ -76,7 +74,7 @@ include::{page-version}@external-typedb-driver::partial$csharp/schema/Label.adoc
 [#_data_header]
 == Data
 
-include::{page-version}@external-typedb-driver::partial$csharp/data/IThing.adoc[]
+include::{page-version}@external-typedb-driver::partial$csharp/data/IInstance.adoc[]
 
 include::{page-version}@external-typedb-driver::partial$csharp/data/IEntity.adoc[]
 
