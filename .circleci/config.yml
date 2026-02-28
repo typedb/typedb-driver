@@ -740,9 +740,9 @@ jobs:
       - checkout
       - install-bazel-yum:
           bazel-arch: amd64
-      - deploy-pip-release-unix
-      - deploy-maven-jni-release-unix
-      - deploy-clib-release-unix
+#      - deploy-pip-release-unix
+#      - deploy-maven-jni-release-unix
+#      - deploy-clib-release-unix
 #      - deploy-cpp-release-unix
 
       - install-libicu-linux
@@ -944,59 +944,59 @@ workflows:
 
   release:
     jobs:
-      - deploy-release-linux-arm64:
-          filters:
-            branches:
-              only: [release]
+#      - deploy-release-linux-arm64:
+#          filters:
+#            branches:
+#              only: [release]
       - deploy-release-linux-x86_64:
           filters:
             branches:
               only: [release]
-      - deploy-release-mac-arm64:
-          filters:
-            branches:
-              only: [release]
-      - deploy-release-mac-x86_64:
-          filters:
-            branches:
-              only: [release]
-      - deploy-release-windows-x86_64:
-          filters:
-            branches:
-              only: [release]
+#      - deploy-release-mac-arm64:
+#          filters:
+#            branches:
+#              only: [release]
+#      - deploy-release-mac-x86_64:
+#          filters:
+#            branches:
+#              only: [release]
+#      - deploy-release-windows-x86_64:
+#          filters:
+#            branches:
+#              only: [release]
 
       - deploy-release-any:
           filters:
             branches:
               only: [release]
           requires:
-            - deploy-release-linux-arm64
+#            - deploy-release-linux-arm64
             - deploy-release-linux-x86_64
-            - deploy-release-mac-arm64
-            - deploy-release-mac-x86_64
-            - deploy-release-windows-x86_64
+#            - deploy-release-mac-arm64
+#            - deploy-release-mac-x86_64
+#            - deploy-release-windows-x86_64
 
       - deploy-release-dotnet-any:
           filters:
             branches:
               only: [release]
           requires:
-            - deploy-release-linux-arm64
+#            - deploy-release-linux-arm64
             - deploy-release-linux-x86_64
-            - deploy-release-mac-arm64
-            - deploy-release-mac-x86_64
-            - deploy-release-windows-x86_64
+#            - deploy-release-mac-arm64
+#            - deploy-release-mac-x86_64
+#            - deploy-release-windows-x86_64
 
       - deploy-github:
           filters:
             branches:
               only: [release]
           requires:
-            - deploy-release-mac-arm64
-            - deploy-release-mac-x86_64
-            - deploy-release-linux-arm64
+#            - deploy-release-mac-arm64
+#            - deploy-release-mac-x86_64
+#            - deploy-release-linux-arm64
             - deploy-release-linux-x86_64
-            - deploy-release-windows-x86_64
+#            - deploy-release-windows-x86_64
             - deploy-release-any
             - deploy-release-dotnet-any
 
