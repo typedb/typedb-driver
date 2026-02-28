@@ -45,6 +45,8 @@ include::{page-version}@external-typedb-driver::partial$csharp/answer/IJSON.adoc
 
 include::{page-version}@external-typedb-driver::partial$csharp/answer/QueryType.adoc[]
 
+include::{page-version}@external-typedb-driver::partial$csharp/answer/QueryTypeExtensions.adoc[]
+
 include::{page-version}@external-typedb-driver::partial$csharp/answer/Promise__T__.adoc[]
 
 include::{page-version}@external-typedb-driver::partial$csharp/answer/VoidPromise.adoc[]
@@ -84,12 +86,21 @@ include::{page-version}@external-typedb-driver::partial$csharp/data/IAttribute.a
 
 include::{page-version}@external-typedb-driver::partial$csharp/data/IValue.adoc[]
 
+[#_value_header]
+== Value
+
+include::{page-version}@external-typedb-driver::partial$csharp/value/Datetime.adoc[]
+
+include::{page-version}@external-typedb-driver::partial$csharp/value/DatetimeTZ.adoc[]
+
 [#_analyze_header]
 == Analyze
 
 include::{page-version}@external-typedb-driver::partial$csharp/analyze/IAnalyzedQuery.adoc[]
 
 include::{page-version}@external-typedb-driver::partial$csharp/analyze/IConjunction.adoc[]
+
+include::{page-version}@external-typedb-driver::partial$csharp/analyze/IConjunctionID.adoc[]
 
 include::{page-version}@external-typedb-driver::partial$csharp/analyze/IConstraint.adoc[]
 include::{page-version}@external-typedb-driver::partial$csharp/analyze/IComparison.adoc[]
