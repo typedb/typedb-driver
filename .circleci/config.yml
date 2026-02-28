@@ -1010,5 +1010,6 @@ workflows:
           filters:
             branches:
               only: [release]
-#          requires:
+          requires:
+            - deploy-github
 #            - sync-dependencies
