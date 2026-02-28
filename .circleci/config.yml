@@ -969,7 +969,7 @@ workflows:
           filters:
             branches:
               only: [release]
-          requires:
+#          requires:
 #            - deploy-release-linux-arm64
 #            - deploy-release-linux-x86_64
 #            - deploy-release-mac-arm64
@@ -980,7 +980,7 @@ workflows:
           filters:
             branches:
               only: [release]
-          requires:
+#          requires:
 #            - deploy-release-linux-arm64
 #            - deploy-release-linux-x86_64
 #            - deploy-release-mac-arm64
