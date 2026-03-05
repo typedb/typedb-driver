@@ -130,7 +130,6 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
         ));
     }
 
-
     @Override
     @When("connection closes")
     public void connection_closes() {

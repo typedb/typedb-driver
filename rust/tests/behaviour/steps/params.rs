@@ -521,7 +521,7 @@ impl fmt::Display for QueryAnswerType {
 }
 
 #[derive(Debug, Clone, Parameter)]
-#[param(name = "server_routing", regex = "(auto|server(.*))")]
+#[param(name = "server_routing", regex = "(auto|direct(.*))")]
 pub enum ServerRouting {
     Auto,
     Direct { address: Address },
@@ -541,7 +541,7 @@ impl FromStr for ServerRouting {
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         if s == "auto" {
             Ok(Self::Auto)
-        } else if let Some(message) = s.strip_prefix("server(").and_then(|suffix| suffix.strip_suffix(")")) {
+        } else if let Some(message) = s.strip_prefix("direct(").and_then(|suffix| suffix.strip_suffix(")")) {
             Ok(Self::Direct { address: message.parse().expect("Expected a valid address") })
         } else {
             Err(format!("Invalid `ServerRouting`: {}", s))

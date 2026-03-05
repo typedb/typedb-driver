@@ -369,10 +369,7 @@ impl TypeDBDriver {
         self.transaction_with_options(database_name, transaction_type, TransactionOptions::new()).await
     }
 
-    /// Opens a new transaction with the following server routing:
-    /// * read transaction - auto routing, can be overridden through `options`;
-    /// * write transaction - auto routing, cannot be overridden;
-    /// * schema transaction - auto routing, cannot be overridden.
+    /// Opens a new transaction with custom transaction options.
     ///
     /// # Arguments
     ///

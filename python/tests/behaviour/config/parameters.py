@@ -367,12 +367,12 @@ class ServerRouting:
         return f"ServerRouting({self.server_routing})"
 
 
-@parse.with_pattern("auto|server\((?P<address>.*)\)")
+@parse.with_pattern("auto|direct\((?P<address>.*)\)")
 def parse_server_routing(value: str) -> ServerRouting:
     if value == "auto":
         return ServerRouting(TypeDBServerRouting.Auto())
     else:
-        match = re.match(r'server\((?P<address>.*)\)', value)
+        match = re.match(r'direct\((?P<address>.*)\)', value)
         if match:
             return ServerRouting(TypeDBServerRouting.Direct(match.group("address")))
         else:

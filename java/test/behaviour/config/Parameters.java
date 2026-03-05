@@ -182,7 +182,7 @@ public class Parameters {
         return null;
     }
 
-    @ParameterType("auto|server\\(.*\\)")
+    @ParameterType("auto|direct\\(.*\\)")
     public Routing server_routing(String value) {
         return Routing.parse(value);
     }
@@ -433,8 +433,8 @@ public class Parameters {
         public static Routing parse(String value) {
             if (value.equalsIgnoreCase("auto")) {
                 return new Routing(new ServerRouting.Auto());
-            } else if (value.toLowerCase().startsWith("server(") && value.endsWith(")")) {
-                String address = value.substring("server(".length(), value.length() - 1);
+            } else if (value.toLowerCase().startsWith("direct(") && value.endsWith(")")) {
+                String address = value.substring("direct(".length(), value.length() - 1);
                 return new Routing(new ServerRouting.Direct(address));
             } else {
                 throw new IllegalArgumentException("Unknown server routing: " + value);
