@@ -30,12 +30,12 @@ use itertools::{enumerate, Itertools};
 use tracing::debug;
 
 use crate::{
-    common::{
-        address::{address_translation::AddressTranslation, Address, Addresses},
-    },
+    common::address::{address_translation::AddressTranslation, Address, Addresses},
     connection::{
         runtime::BackgroundRuntime,
-        server::{AvailableServer, Replica, server_routing::ServerRouting, Server, server_connection::ServerConnection},
+        server::{
+            server_connection::ServerConnection, server_routing::ServerRouting, AvailableServer, Replica, Server,
+        },
     },
     error::ConnectionError,
     Credentials, DriverOptions, Error, Result,
@@ -318,11 +318,7 @@ impl ServerManager {
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    async fn execute_on_any<F, P, R>(
-        &self,
-        replicas: impl IntoIterator<Item = AvailableServer>,
-        task: F,
-    ) -> Result<R>
+    async fn execute_on_any<F, P, R>(&self, replicas: impl IntoIterator<Item = AvailableServer>, task: F) -> Result<R>
     where
         F: Fn(ServerConnection) -> P,
         P: Future<Output = Result<R>>,
@@ -502,10 +498,7 @@ impl ServerManager {
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn fetch_primary_server(
-        &self,
-        server_routing: ServerRouting,
-    ) -> Result<Option<AvailableServer>> {
+    pub(crate) async fn fetch_primary_server(&self, server_routing: ServerRouting) -> Result<Option<AvailableServer>> {
         let replicas = self.fetch_servers(server_routing).await?;
         Ok(find_primary_replica!(filter_available_replicas!(replicas.iter())).cloned())
     }

@@ -193,8 +193,10 @@ async fn connection_servers_have_roles(context: &mut Context, step: &Step) {
     }
 
     let actual_primary_count = servers.iter().filter(|r| matches!(r.role(), Some(ReplicationRole::Primary))).count();
-    let actual_secondary_count = servers.iter().filter(|r| matches!(r.role(), Some(ReplicationRole::Secondary))).count();
-    let actual_candidate_count = servers.iter().filter(|r| matches!(r.role(), Some(ReplicationRole::Candidate))).count();
+    let actual_secondary_count =
+        servers.iter().filter(|r| matches!(r.role(), Some(ReplicationRole::Secondary))).count();
+    let actual_candidate_count =
+        servers.iter().filter(|r| matches!(r.role(), Some(ReplicationRole::Candidate))).count();
 
     assert_eq!(
         expected_primary_count, actual_primary_count,
@@ -252,4 +254,3 @@ pub async fn set_transaction_option_server_discovery_attempts(context: &mut Cont
     context.init_driver_options_if_needed();
     context.driver_options_mut().unwrap().server_discovery_attempts = Some(value);
 }
-

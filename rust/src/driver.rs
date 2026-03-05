@@ -26,10 +26,9 @@ use crate::{
     connection::{
         runtime::BackgroundRuntime,
         server::{
-            server_routing::ServerRouting, Server, server_connection::ServerConnection, server_manager::ServerManager,
-            server_version::ServerVersion,
+            server_connection::ServerConnection, server_manager::ServerManager, server_routing::ServerRouting,
+            server_version::ServerVersion, AvailableServer, Server,
         },
-        server::AvailableServer,
     },
     Credentials, DatabaseManager, DriverOptions, Transaction, TransactionOptions, TransactionType, UserManager,
 };
@@ -227,10 +226,7 @@ impl TypeDBDriver {
     #[cfg_attr(not(feature = "sync"), doc = "driver.servers_with_routing(ServerRouting::Auto).await;")]
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn servers_with_routing(
-        &self,
-        server_routing: ServerRouting,
-    ) -> Result<HashSet<Server>> {
+    pub async fn servers_with_routing(&self, server_routing: ServerRouting) -> Result<HashSet<Server>> {
         self.server_manager.fetch_servers(server_routing).await
     }
 
@@ -264,10 +260,7 @@ impl TypeDBDriver {
     #[cfg_attr(not(feature = "sync"), doc = "driver.primary_server_with_routing(ServerRouting::Auto).await;")]
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn primary_server_with_routing(
-        &self,
-        server_routing: ServerRouting,
-    ) -> Result<Option<AvailableServer>> {
+    pub async fn primary_server_with_routing(&self, server_routing: ServerRouting) -> Result<Option<AvailableServer>> {
         self.server_manager.fetch_primary_server(server_routing).await
     }
 

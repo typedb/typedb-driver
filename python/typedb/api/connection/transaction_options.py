@@ -89,4 +89,3 @@ class TransactionOptions(NativeWrapper[NativeOptions]):
         require_positive(schema_lock_acquire_timeout_millis, "schema_lock_acquire_timeout_millis")
         transaction_options_set_schema_lock_acquire_timeout_millis(self.native_object,
                                                                    schema_lock_acquire_timeout_millis)
-

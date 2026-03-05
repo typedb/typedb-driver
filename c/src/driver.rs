@@ -29,8 +29,8 @@ use crate::{
         memory::{borrow, free, release, string_array_view, string_view},
     },
     server::{
-        server_routing::{native_server_routing, ServerRouting},
         server::ServerIterator,
+        server_routing::{native_server_routing, ServerRouting},
         server_version::ServerVersion,
     },
 };

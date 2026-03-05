@@ -33,7 +33,7 @@ use crate::{
     },
     common::{info::DatabaseInfo, RequestID},
     concept::Concept,
-    connection::{server::{Server, server_version::ServerVersion}},
+    connection::server::{server_version::ServerVersion, Server},
     error::ServerError,
     info::UserInfo,
     Credentials, QueryOptions, TransactionOptions, TransactionType,

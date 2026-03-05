@@ -28,8 +28,8 @@ use async_std::task::sleep;
 use futures::{StreamExt, TryStreamExt};
 use serial_test::serial;
 use typedb_driver::{
-    answer::ConceptRow, Addresses, Credentials, DriverOptions, DriverTlsConfig, Error, Server,
-    TransactionOptions, TransactionType, TypeDBDriver,
+    answer::ConceptRow, Addresses, Credentials, DriverOptions, DriverTlsConfig, Error, Server, TransactionOptions,
+    TransactionType, TypeDBDriver,
 };
 
 const ADDRESSES: [&'static str; 3] = ["127.0.0.1:11729", "127.0.0.1:21729", "127.0.0.1:31729"];

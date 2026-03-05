@@ -30,7 +30,7 @@ use crate::{
     connection::server::{server_manager::ServerManager, server_routing::ServerRouting},
     database::migration::{try_create_export_file, try_open_existing_export_file, DatabaseExportAnswer},
     error::MigrationError,
-    resolve
+    resolve,
 };
 
 /// A TypeDB database.

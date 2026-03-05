@@ -38,7 +38,7 @@ use crate::{
             DatabaseExportTransmitter, DatabaseImportTransmitter, RPCTransmitter, TransactionTransmitter,
         },
         runtime::BackgroundRuntime,
-        server::{Server, server_version::ServerVersion},
+        server::{server_version::ServerVersion, Server},
         TransactionStream,
     },
     error::{ConnectionError, InternalError},

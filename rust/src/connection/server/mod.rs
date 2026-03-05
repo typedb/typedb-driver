@@ -48,7 +48,10 @@ pub enum Server {
 }
 
 impl Server {
-    pub(crate) fn available_from_private(private_address: Address, replication_status: Option<ReplicationStatus>) -> Self {
+    pub(crate) fn available_from_private(
+        private_address: Address,
+        replication_status: Option<ReplicationStatus>,
+    ) -> Self {
         Self::Available(AvailableServer::from_private(private_address, replication_status))
     }
 

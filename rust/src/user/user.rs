@@ -18,7 +18,11 @@
  */
 use std::sync::Arc;
 
-use crate::{common::Result, connection::server::{server_manager::ServerManager, server_routing::ServerRouting}, info::UserInfo};
+use crate::{
+    common::Result,
+    connection::server::{server_manager::ServerManager, server_routing::ServerRouting},
+    info::UserInfo,
+};
 
 #[derive(Clone, Debug)]
 pub struct User {

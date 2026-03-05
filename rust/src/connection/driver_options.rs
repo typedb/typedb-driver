@@ -17,9 +17,7 @@
  * under the License.
  */
 
-use std::{
-    time::Duration,
-};
+use std::time::Duration;
 
 use crate::connection::driver_tls_config::DriverTlsConfig;
 

@@ -25,9 +25,7 @@ use typedb_protocol::{
 use super::TryFromProto;
 use crate::{
     common::Result,
-    connection::{
-        server::{ReplicationRole, ReplicationStatus, Server, server_version::ServerVersion},
-    },
+    connection::server::{server_version::ServerVersion, ReplicationRole, ReplicationStatus, Server},
     error::ConnectionError,
 };
 
