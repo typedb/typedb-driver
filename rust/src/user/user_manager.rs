@@ -18,7 +18,7 @@
  */
 use std::sync::Arc;
 
-use crate::{common::Result, connection::server::server_manager::ServerManager, ServerRouting, User};
+use crate::{common::Result, connection::server::{server_manager::ServerManager, server_routing::ServerRouting}, User};
 
 /// Provides access to all user management methods.
 #[derive(Debug)]

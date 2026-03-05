@@ -1,15 +1,15 @@
-[#_ServerReplica]
+[#_Server]
 [.doc-api-reference-driver]
-=== ServerReplica
+=== Server
 
 `class`
 
 *Package*: `com.typedb.driver.api.server`
 
-The metadata and state of an individual raft replica of a driver connection.
+The metadata and state of an individual raft server of a driver connection.
 
 // tag::methods[]
-[#_ServerReplica_getAddress_]
+[#_Server_getAddress_]
 ==== method ``getAddress``
 
 [source,java]
@@ -18,13 +18,13 @@ The metadata and state of an individual raft replica of a driver connection.
 java.lang.String getAddress()
 ----
 
-Returns the address this replica is hosted at.
+Returns the address this server is hosted at.
 
 [caption=""]
 .Returns
 `java.lang.String`
 
-[#_ServerReplica_getID_]
+[#_Server_getID_]
 ==== method ``getID``
 
 [source,java]
@@ -33,28 +33,28 @@ Returns the address this replica is hosted at.
 long getID()
 ----
 
-Returns the id of this replica.
+Returns the id of this server.
 
 [caption=""]
 .Returns
 `long`
 
-[#_ServerReplica_getRole_]
+[#_Server_getRole_]
 ==== method ``getRole``
 
 [source,java]
 ----
 @CheckReturnValue
-java.util.Optional<ReplicaRole> getRole()
+java.util.Optional<ReplicationRole> getRole()
 ----
 
-Returns whether this is the primary replica of the raft cluster or any of the supporting types.
+Returns whether this is the primary server of the raft cluster or any of the supporting types.
 
 [caption=""]
 .Returns
-`java.util.Optional<ReplicaRole>`
+`java.util.Optional<ReplicationRole>`
 
-[#_ServerReplica_getTerm_]
+[#_Server_getTerm_]
 ==== method ``getTerm``
 
 [source,java]
@@ -63,13 +63,13 @@ Returns whether this is the primary replica of the raft cluster or any of the su
 java.util.Optional<java.lang.Long> getTerm()
 ----
 
-Returns the raft protocol ‘term’ of this replica.
+Returns the raft protocol 'term' of this server.
 
 [caption=""]
 .Returns
 `java.util.Optional<java.lang.Long>`
 
-[#_ServerReplica_isPrimary_]
+[#_Server_isPrimary_]
 ==== method ``isPrimary``
 
 [source,java]
@@ -78,7 +78,7 @@ Returns the raft protocol ‘term’ of this replica.
 java.lang.Boolean isPrimary()
 ----
 
-Checks whether this is the primary replica of the raft cluster.
+Checks whether this is the primary server of the raft cluster.
 
 [caption=""]
 .Returns

@@ -20,7 +20,7 @@ TypeDB driver connection options. ``DriverOptions`` object can be used to overri
 |===
 |Name |Type |Description
 a| `primary_failover_retries` a| `usize` a| Limits the number of attempts to redirect a strongly consistent request to another primary replica in case of a failure due to the change of replica roles. Defaults to 1.
-a| `replica_discovery_attempts` a| `Option<usize>` a| Limits the number of driver attempts to discover a single working replica to perform an operation in case of a replica unavailability. Every replica is tested once, which means that at most:
+a| `server_discovery_attempts` a| `Option<usize>` a| Limits the number of driver attempts to discover a single working replica to perform an operation in case of a replica unavailability. Every replica is tested once, which means that at most:
 
  {limit} operations are performed if the limit &lt;= the number of replicas.
  {number of replicas} operations are performed if the limit &gt; the number of replicas.
@@ -67,14 +67,14 @@ Limits the number of attempts to redirect a strongly consistent request to anoth
 Self
 ----
 
-[#_struct_DriverOptions_replica_discovery_attempts_]
-==== replica_discovery_attempts
+[#_struct_DriverOptions_server_discovery_attempts_]
+==== server_discovery_attempts
 
 [source,rust]
 ----
-pub fn replica_discovery_attempts(
+pub fn server_discovery_attempts(
     self,
-    replica_discovery_attempts: Option<usize>,
+    server_discovery_attempts: Option<usize>,
 ) -> Self
 ----
 

@@ -1,25 +1,25 @@
-[#_methods_connection_replicarole]
-=== replicarole
+[#_methods_connection_replicationrole]
+=== replicationrole
 
-[#_Struct_ReplicaRole]
+[#_Struct_ReplicationRole]
 [.doc-api-reference-driver]
-==== Struct ReplicaRole
+==== Struct ReplicationRole
 
 `rust struct (pointer)`
 
 
 
-This enum is used to specify the type of replica.
+This enum is used to specify the type of server.
 
-[#_Enum_ReplicaRole]
+[#_Enum_ReplicationRole]
 [.doc-api-reference-driver]
-==== Enum ReplicaRole
+==== Enum ReplicationRole
 
 `rust enum (pointer)`
 
 
 
-This enum is used to specify the type of replica.
+This enum is used to specify the type of server.
 
 [caption=""]
 .Enum constants

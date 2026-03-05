@@ -26,7 +26,7 @@ import com.typedb.driver.api.ServerRouting;
 import com.typedb.driver.api.Transaction;
 import com.typedb.driver.api.TransactionOptions;
 import com.typedb.driver.api.database.DatabaseManager;
-import com.typedb.driver.api.server.ServerReplica;
+import com.typedb.driver.api.server.Server;
 import com.typedb.driver.api.server.ServerVersion;
 import com.typedb.driver.api.user.UserManager;
 import com.typedb.driver.common.NativeIterator;
@@ -42,14 +42,14 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import static com.typedb.driver.jni.typedb_driver.driver_deregister_replica;
+import static com.typedb.driver.jni.typedb_driver.driver_deregister_server;
 import static com.typedb.driver.jni.typedb_driver.driver_force_close;
 import static com.typedb.driver.jni.typedb_driver.driver_is_open;
 import static com.typedb.driver.jni.typedb_driver.driver_new_with_address_translation_with_description;
 import static com.typedb.driver.jni.typedb_driver.driver_new_with_addresses_with_description;
 import static com.typedb.driver.jni.typedb_driver.driver_new_with_description;
-import static com.typedb.driver.jni.typedb_driver.driver_primary_replica;
-import static com.typedb.driver.jni.typedb_driver.driver_register_replica;
+import static com.typedb.driver.jni.typedb_driver.driver_primary_server;
+import static com.typedb.driver.jni.typedb_driver.driver_register_server;
 import static com.typedb.driver.jni.typedb_driver.driver_servers;
 import static com.typedb.driver.jni.typedb_driver.driver_server_version;
 import static com.typedb.driver.jni.typedb_driver.driver_update_address_translation;
@@ -144,38 +144,38 @@ public class DriverImpl extends NativeObject<com.typedb.driver.jni.TypeDBDriver>
     }
 
     @Override
-    public Set<? extends ServerReplica> servers(ServerRouting serverRouting) {
+    public Set<? extends Server> servers(ServerRouting serverRouting) {
         try {
 
             return new NativeIterator<>(driver_servers(nativeObject, ServerRouting.nativeValue(serverRouting)))
-                    .stream().map(ServerReplicaImpl::new).collect(toSet());
+                    .stream().map(ServerImpl::new).collect(toSet());
         } catch (com.typedb.driver.jni.Error error) {
             throw new TypeDBDriverException(error);
         }
     }
 
     @Override
-    public Optional<? extends ServerReplica> primaryReplica(ServerRouting serverRouting) {
-        com.typedb.driver.jni.ServerReplica nativeReplica = driver_primary_replica(nativeObject, ServerRouting.nativeValue(serverRouting));
-        if (nativeReplica != null) {
-            return Optional.of(new ServerReplicaImpl(nativeReplica));
+    public Optional<? extends Server> primaryServer(ServerRouting serverRouting) {
+        com.typedb.driver.jni.Server nativeServer = driver_primary_server(nativeObject, ServerRouting.nativeValue(serverRouting));
+        if (nativeServer != null) {
+            return Optional.of(new ServerImpl(nativeServer));
         }
         return Optional.empty();
     }
 
     @Override
-    public void registerReplica(long replicaID, String address) {
+    public void registerServer(long serverID, String address) {
         try {
-            driver_register_replica(nativeObject, replicaID, address);
+            driver_register_server(nativeObject, serverID, address);
         } catch (com.typedb.driver.jni.Error error) {
             throw new TypeDBDriverException(error);
         }
     }
 
     @Override
-    public void deregisterReplica(long replicaID) {
+    public void deregisterServer(long serverID) {
         try {
-            driver_deregister_replica(nativeObject, replicaID);
+            driver_deregister_server(nativeObject, serverID);
         } catch (com.typedb.driver.jni.Error error) {
             throw new TypeDBDriverException(error);
         }

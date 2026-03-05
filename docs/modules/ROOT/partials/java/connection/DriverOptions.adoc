@@ -85,16 +85,16 @@ a| `primaryFailoverRetries` a| The limit of primary failover retries. a| `int`
 options.primaryFailoverRetries(1);
 ----
 
-[#_DriverOptions_replicaDiscoveryAttempts_]
-==== method ``replicaDiscoveryAttempts``
+[#_DriverOptions_serverDiscoveryAttempts_]
+==== method ``serverDiscoveryAttempts``
 
 [source,java]
 ----
 @CheckReturnValue
-public java.util.Optional<java.lang.Integer> replicaDiscoveryAttempts()
+public java.util.Optional<java.lang.Integer> serverDiscoveryAttempts()
 ----
 
-Returns the value set for the replica discovery attempts limit in this ``DriverOptions`` object. Limits the number of driver attempts to discover a single working replica to perform an operation in case of a replica unavailability. Every replica is tested once, which means that at most: - {limit} operations are performed if the limit &lt;= the number of replicas. - {number of replicas} operations are performed if the limit &gt; the number of replicas. - {number of replicas} operations are performed if the limit is None. Affects every eventually consistent operation, including redirect failover, when the new primary replica is unknown. 
+Returns the value set for the server discovery attempts limit in this ``DriverOptions`` object. Limits the number of driver attempts to discover a single working replica to perform an operation in case of a replica unavailability. Every replica is tested once, which means that at most: - {limit} operations are performed if the limit &lt;= the number of replicas. - {number of replicas} operations are performed if the limit &gt; the number of replicas. - {number of replicas} operations are performed if the limit is None. Affects every eventually consistent operation, including redirect failover, when the new primary replica is unknown. 
 
 
 [caption=""]
@@ -105,15 +105,15 @@ Returns the value set for the replica discovery attempts limit in this ``DriverO
 .Code examples
 [source,java]
 ----
-options.replicaDiscoveryAttempts();
+options.serverDiscoveryAttempts();
 ----
 
-[#_DriverOptions_replicaDiscoveryAttempts_int]
-==== method ``replicaDiscoveryAttempts``
+[#_DriverOptions_serverDiscoveryAttempts_int]
+==== method ``serverDiscoveryAttempts``
 
 [source,java]
 ----
-public DriverOptions replicaDiscoveryAttempts​(int replicaDiscoveryAttempts)
+public DriverOptions serverDiscoveryAttempts​(int serverDiscoveryAttempts)
 ----
 
 Limits the number of driver attempts to discover a single working replica to perform an operation in case of a replica unavailability. Every replica is tested once, which means that at most: - {limit} operations are performed if the limit &lt;= the number of replicas. - {number of replicas} operations are performed if the limit &gt; the number of replicas. - {number of replicas} operations are performed if the limit is None. Affects every eventually consistent operation, including redirect failover, when the new primary replica is unknown. If not set, the maximum (practically unlimited) value is used. 
@@ -125,7 +125,7 @@ Limits the number of driver attempts to discover a single working replica to per
 [options="header"]
 |===
 |Name |Description |Type
-a| `replicaDiscoveryAttempts` a| The limit of replica discovery attempts. a| `int`
+a| `serverDiscoveryAttempts` a| The limit of server discovery attempts. a| `int`
 |===
 
 [caption=""]

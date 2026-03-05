@@ -19,19 +19,19 @@
 use std::{collections::HashSet, fmt, sync::Arc};
 
 use tracing::{debug, error};
+use tracing_subscriber::{fmt as tracing_fmt, EnvFilter};
 
 use crate::{
     common::{Addresses, Result},
     connection::{
         runtime::BackgroundRuntime,
         server::{
-            server_connection::ServerConnection, server_manager::ServerManager, server_replica::ServerReplica,
+            server_routing::ServerRouting, Server, server_connection::ServerConnection, server_manager::ServerManager,
             server_version::ServerVersion,
         },
-        server_replica::AvailableServerReplica,
+        server::AvailableServer,
     },
-    Credentials, DatabaseManager, DriverOptions, ServerRouting, Transaction, TransactionOptions, TransactionType,
-    UserManager,
+    Credentials, DatabaseManager, DriverOptions, Transaction, TransactionOptions, TransactionType, UserManager,
 };
 
 /// A connection to a TypeDB server which serves as the starting point for all interaction.
@@ -210,7 +210,7 @@ impl TypeDBDriver {
     #[cfg_attr(not(feature = "sync"), doc = "driver.servers().await;")]
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn servers(&self) -> Result<HashSet<ServerReplica>> {
+    pub async fn servers(&self) -> Result<HashSet<Server>> {
         self.servers_with_routing(ServerRouting::Auto).await
     }
 
@@ -227,26 +227,31 @@ impl TypeDBDriver {
     #[cfg_attr(not(feature = "sync"), doc = "driver.servers_with_routing(ServerRouting::Auto).await;")]
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn servers_with_routing(&self, server_routing: ServerRouting) -> Result<HashSet<ServerReplica>> {
-        self.server_manager.fetch_replicas(server_routing).await
+    pub async fn servers_with_routing(
+        &self,
+        server_routing: ServerRouting,
+    ) -> Result<HashSet<Server>> {
+        self.server_manager.fetch_servers(server_routing).await
     }
 
-    /// Retrieves the server's primary replica, if exists, using default automatic server routing.
+    // TODO: Add servers_get call for a specific server. How to design it?
+
+    /// Retrieves the primary server, if exists, using default automatic server routing.
     ///
-    /// See [`Self::primary_replica_with_routing`] for more details and options.
+    /// See [`Self::primary_server_with_routing`] for more details and options.
     ///
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "driver.primary_replica();")]
-    #[cfg_attr(not(feature = "sync"), doc = "driver.primary_replica().await;")]
+    #[cfg_attr(feature = "sync", doc = "driver.primary_server();")]
+    #[cfg_attr(not(feature = "sync"), doc = "driver.primary_server().await;")]
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn primary_replica(&self) -> Result<Option<AvailableServerReplica>> {
-        self.primary_replica_with_routing(ServerRouting::Auto).await
+    pub async fn primary_server(&self) -> Result<Option<AvailableServer>> {
+        self.primary_server_with_routing(ServerRouting::Auto).await
     }
 
-    /// Retrieves the server's primary replica, if exists.
+    /// Retrieves the primary server, if exists.
     ///
     /// # Arguments
     ///
@@ -255,55 +260,53 @@ impl TypeDBDriver {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "driver.primary_replica_with_routing(ServerRouting::Auto);")]
-    #[cfg_attr(not(feature = "sync"), doc = "driver.primary_replica_with_routing(ServerRouting::Auto).await;")]
+    #[cfg_attr(feature = "sync", doc = "driver.primary_server_with_routing(ServerRouting::Auto);")]
+    #[cfg_attr(not(feature = "sync"), doc = "driver.primary_server_with_routing(ServerRouting::Auto).await;")]
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn primary_replica_with_routing(
+    pub async fn primary_server_with_routing(
         &self,
         server_routing: ServerRouting,
-    ) -> Result<Option<AvailableServerReplica>> {
-        self.server_manager.fetch_primary_replica(server_routing).await
+    ) -> Result<Option<AvailableServer>> {
+        self.server_manager.fetch_primary_server(server_routing).await
     }
 
-    // TODO: Remove these methods after beta
-
-    /// Registers a new replica in the cluster the driver is currently connected to. The registered
-    /// replica will become available eventually, depending on the behavior of the whole cluster.
-    /// To register a replica, its clustering address should be passed, not the connection address.
+    /// Registers a new server in the cluster the driver is currently connected to. The registered
+    /// server will become available eventually, depending on the behavior of the whole cluster.
+    /// To register a server, its clustering address should be passed, not the connection address.
     ///
     /// # Arguments
     ///
-    /// * `replica_id` — The numeric identifier of the new replica
-    /// * `address` — The clustering address of the TypeDB replica as a string
+    /// * `replica_id` — The numeric identifier of the new server
+    /// * `address` — The clustering address of the TypeDB server as a string
     ///
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "driver.register_replica(2, \"127.0.0.1:2729\")")]
-    #[cfg_attr(not(feature = "sync"), doc = "driver.register_replica(2, \"127.0.0.1:2729\").await")]
+    #[cfg_attr(feature = "sync", doc = "driver.register_server(2, \"127.0.0.1:2729\")")]
+    #[cfg_attr(not(feature = "sync"), doc = "driver.register_server(2, \"127.0.0.1:2729\").await")]
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn register_replica(&self, replica_id: u64, address: String) -> Result {
-        self.server_manager.register_replica(replica_id, address).await
+    pub async fn register_server(&self, replica_id: u64, address: String) -> Result {
+        self.server_manager.register_server(replica_id, address).await
     }
 
-    /// Deregisters a replica from the cluster the driver is currently connected to. This replica
+    /// Deregisters a server from the cluster the driver is currently connected to. This server
     /// will no longer play a raft role in this cluster.
     ///
     /// # Arguments
     ///
-    /// * `replica_id` — The numeric identifier of the deregistered replica
+    /// * `replica_id` — The numeric identifier of the deregistered server
     ///
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "driver.deregister_replica(2)")]
-    #[cfg_attr(not(feature = "sync"), doc = "driver.deregister_replica(2).await")]
+    #[cfg_attr(feature = "sync", doc = "driver.deregister_server(2)")]
+    #[cfg_attr(not(feature = "sync"), doc = "driver.deregister_server(2).await")]
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn deregister_replica(&self, replica_id: u64) -> Result {
-        self.server_manager.deregister_replica(replica_id).await
+    pub async fn deregister_server(&self, replica_id: u64) -> Result {
+        self.server_manager.deregister_server(replica_id).await
     }
 
     /// Updates address translation of the driver. This lets you actualize new translation
@@ -373,7 +376,10 @@ impl TypeDBDriver {
         self.transaction_with_options(database_name, transaction_type, TransactionOptions::new()).await
     }
 
-    /// Opens a new transaction with the provided transaction options.
+    /// Opens a new transaction with the following server routing:
+    /// * read transaction - auto routing, can be overridden through `options`;
+    /// * write transaction - auto routing, cannot be overridden;
+    /// * schema transaction - auto routing, cannot be overridden.
     ///
     /// # Arguments
     ///
@@ -401,8 +407,9 @@ impl TypeDBDriver {
         options: TransactionOptions,
     ) -> Result<Transaction> {
         let database_name = database_name.as_ref();
-        let open_fn = |server_connection: ServerConnection| async move {
-            server_connection.open_transaction(database_name, transaction_type, options).await
+        let open_fn = |server_connection: ServerConnection| {
+            let options = options.clone();
+            async move { server_connection.open_transaction(database_name, transaction_type, options).await }
         };
 
         debug!("Opening transaction for database: {} with type: {:?}", database_name, transaction_type);

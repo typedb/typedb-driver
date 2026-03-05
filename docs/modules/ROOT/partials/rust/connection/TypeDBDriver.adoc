@@ -59,8 +59,8 @@ The ``DatabaseManager`` for this connection, providing access to database manage
 driver.databases()
 ----
 
-[#_struct_TypeDBDriver_deregister_replica_replica_id_u64]
-==== deregister_replica
+[#_struct_TypeDBDriver_deregister_server_server_id_u64]
+==== deregister_server
 
 [tabs]
 ====
@@ -69,7 +69,7 @@ async::
 --
 [source,rust]
 ----
-pub async fn deregister_replica(&self, replica_id: u64) -> Result
+pub async fn deregister_server(&self, server_id: u64) -> Result
 ----
 
 --
@@ -79,13 +79,13 @@ sync::
 --
 [source,rust]
 ----
-pub fn deregister_replica(&self, replica_id: u64) -> Result
+pub fn deregister_server(&self, server_id: u64) -> Result
 ----
 
 --
 ====
 
-Deregisters a replica from the cluster the driver is currently connected to. This replica will no longer play a raft role in this cluster.
+Deregisters a server from the cluster the driver is currently connected to. This server will no longer play a raft role in this cluster.
 
 [caption=""]
 .Input parameters
@@ -93,7 +93,7 @@ Deregisters a replica from the cluster the driver is currently connected to. Thi
 [options="header"]
 |===
 |Name |Description |Type
-a| `replica_id` a|  — The numeric identifier of the deregistered replica a| `u64`
+a| `server_id` a|  — The numeric identifier of the deregistered server a| `u64`
 |===
 
 [caption=""]
@@ -112,7 +112,7 @@ async::
 --
 [source,rust]
 ----
-driver.deregister_replica(2).await
+driver.deregister_server(2).await
 ----
 
 --
@@ -122,7 +122,7 @@ sync::
 --
 [source,rust]
 ----
-driver.deregister_replica(2)
+driver.deregister_server(2)
 ----
 
 --
@@ -361,8 +361,8 @@ The ``DriverOptions`` for this connection.
 driver.options()
 ----
 
-[#_struct_TypeDBDriver_primary_replica_]
-==== primary_replica
+[#_struct_TypeDBDriver_primary_server_]
+==== primary_server
 
 [tabs]
 ====
@@ -371,7 +371,7 @@ async::
 --
 [source,rust]
 ----
-pub async fn primary_replica(&self) -> Result<Option<AvailableServerReplica>>
+pub async fn primary_server(&self) -> Result<Option<AvailableServer>>
 ----
 
 --
@@ -381,21 +381,21 @@ sync::
 --
 [source,rust]
 ----
-pub fn primary_replica(&self) -> Result<Option<AvailableServerReplica>>
+pub fn primary_server(&self) -> Result<Option<AvailableServer>>
 ----
 
 --
 ====
 
-Retrieves the server’s primary replica, if exists, using default automatic server routing.
+Retrieves the server’s primary server, if exists, using default strong consistency.
 
-See <<#_struct_TypeDBDriver_method_primary_replica_with_routing,`Self::primary_replica_with_routing`>> for more details and options.
+See <<#_struct_TypeDBDriver_method_primary_server_with_consistency,`Self::primary_server_with_consistency`>> for more details and options.
 
 [caption=""]
 .Returns
 [source,rust]
 ----
-Result<Option<AvailableServerReplica>>
+Result<Option<AvailableServer>>
 ----
 
 [caption=""]
@@ -407,7 +407,7 @@ async::
 --
 [source,rust]
 ----
-driver.primary_replica().await;
+driver.primary_server().await;
 ----
 
 --
@@ -417,14 +417,14 @@ sync::
 --
 [source,rust]
 ----
-driver.primary_replica();
+driver.primary_server();
 ----
 
 --
 ====
 
-[#_struct_TypeDBDriver_primary_replica_with_routing_server_routing_ServerRouting]
-==== primary_replica_with_routing
+[#_struct_TypeDBDriver_primary_server_with_consistency_consistency_level_ConsistencyLevel]
+==== primary_server_with_consistency
 
 [tabs]
 ====
@@ -433,10 +433,10 @@ async::
 --
 [source,rust]
 ----
-pub async fn primary_replica_with_routing(
+pub async fn primary_server_with_consistency(
     &self,
-    server_routing: ServerRouting,
-) -> Result<Option<AvailableServerReplica>>
+    consistency_level: ConsistencyLevel,
+) -> Result<Option<AvailableServer>>
 ----
 
 --
@@ -446,16 +446,16 @@ sync::
 --
 [source,rust]
 ----
-pub fn primary_replica_with_routing(
+pub fn primary_server_with_consistency(
     &self,
-    server_routing: ServerRouting,
-) -> Result<Option<AvailableServerReplica>>
+    consistency_level: ConsistencyLevel,
+) -> Result<Option<AvailableServer>>
 ----
 
 --
 ====
 
-Retrieves the server’s primary replica, if exists.
+Retrieves the server’s primary server, if exists.
 
 [caption=""]
 .Input parameters
@@ -463,14 +463,14 @@ Retrieves the server’s primary replica, if exists.
 [options="header"]
 |===
 |Name |Description |Type
-a| `server_routing` a|  — The server routing directive to use for the operation a| `ServerRouting`
+a| `consistency_level` a|  — The consistency level to use for the operation a| `ConsistencyLevel`
 |===
 
 [caption=""]
 .Returns
 [source,rust]
 ----
-Result<Option<AvailableServerReplica>>
+Result<Option<AvailableServer>>
 ----
 
 [caption=""]
@@ -482,7 +482,7 @@ async::
 --
 [source,rust]
 ----
-driver.primary_replica_with_routing(ServerRouting::Auto).await;
+driver.primary_server_with_consistency(ConsistencyLevel::Strong).await;
 ----
 
 --
@@ -492,14 +492,14 @@ sync::
 --
 [source,rust]
 ----
-driver.primary_replica_with_routing(ServerRouting::Auto);
+driver.primary_server_with_consistency(ConsistencyLevel::Strong);
 ----
 
 --
 ====
 
-[#_struct_TypeDBDriver_register_replica_replica_id_u64_address_String]
-==== register_replica
+[#_struct_TypeDBDriver_register_server_server_id_u64_address_String]
+==== register_server
 
 [tabs]
 ====
@@ -508,7 +508,7 @@ async::
 --
 [source,rust]
 ----
-pub async fn register_replica(&self, replica_id: u64, address: String) -> Result
+pub async fn register_server(&self, server_id: u64, address: String) -> Result
 ----
 
 --
@@ -518,13 +518,13 @@ sync::
 --
 [source,rust]
 ----
-pub fn register_replica(&self, replica_id: u64, address: String) -> Result
+pub fn register_server(&self, server_id: u64, address: String) -> Result
 ----
 
 --
 ====
 
-Registers a new replica in the cluster the driver is currently connected to. The registered replica will become available eventually, depending on the behavior of the whole cluster. To register a replica, its clustering address should be passed, not the connection address.
+Registers a new server in the cluster the driver is currently connected to. The registered server will become available eventually, depending on the behavior of the whole cluster. To register a server, its clustering address should be passed, not the connection address.
 
 [caption=""]
 .Input parameters
@@ -532,8 +532,8 @@ Registers a new replica in the cluster the driver is currently connected to. The
 [options="header"]
 |===
 |Name |Description |Type
-a| `replica_id` a|  — The numeric identifier of the new replica a| `u64`
-a| `address` a|  — The clustering address of the TypeDB replica as a string a| `String`
+a| `server_id` a|  — The numeric identifier of the new server a| `u64`
+a| `address` a|  — The clustering address of the TypeDB server as a string a| `String`
 |===
 
 [caption=""]
@@ -552,7 +552,7 @@ async::
 --
 [source,rust]
 ----
-driver.register_replica(2, "127.0.0.1:2729").await
+driver.register_server(2, "127.0.0.1:2729").await
 ----
 
 --
@@ -562,7 +562,144 @@ sync::
 --
 [source,rust]
 ----
-driver.register_replica(2, "127.0.0.1:2729")
+driver.register_server(2, "127.0.0.1:2729")
+----
+
+--
+====
+
+[#_struct_TypeDBDriver_replicas_]
+==== replicas
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn replicas(&self) -> Result<HashSet<Server>>
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn replicas(&self) -> Result<HashSet<Server>>
+----
+
+--
+====
+
+Retrieves the server’s replicas, using default strong consistency.
+
+See <<#_struct_TypeDBDriver_method_replicas_with_consistency,`Self::replicas_with_consistency`>> for more details and options.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<HashSet<Server>>
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+driver.replicas().await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+driver.replicas();
+----
+
+--
+====
+
+[#_struct_TypeDBDriver_replicas_with_consistency_consistency_level_ConsistencyLevel]
+==== replicas_with_consistency
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn replicas_with_consistency(
+    &self,
+    consistency_level: ConsistencyLevel,
+) -> Result<HashSet<Server>>
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn replicas_with_consistency(
+    &self,
+    consistency_level: ConsistencyLevel,
+) -> Result<HashSet<Server>>
+----
+
+--
+====
+
+Retrieves the server’s replicas, using default strong consistency.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `consistency_level` a|  — The consistency level to use for the operation a| `ConsistencyLevel`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<HashSet<Server>>
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+driver.replicas_with_consistency(ConsistencyLevel::Strong).await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+driver.replicas_with_consistency();
 ----
 
 --
@@ -594,9 +731,9 @@ pub fn server_version(&self) -> Result<ServerVersion>
 --
 ====
 
-Retrieves the server’s version, using default automatic server routing.
+Retrieves the server’s version, using default strong consistency.
 
-See <<#_struct_TypeDBDriver_method_server_version_with_routing,`Self::server_version_with_routing`>> for more details and options.
+See <<#_struct_TypeDBDriver_method_server_version_with_consistency,`Self::server_version_with_consistency`>> for more details and options.
 
 [caption=""]
 .Returns
@@ -630,8 +767,8 @@ driver.server_version()
 --
 ====
 
-[#_struct_TypeDBDriver_server_version_with_routing_server_routing_ServerRouting]
-==== server_version_with_routing
+[#_struct_TypeDBDriver_server_version_with_consistency_consistency_level_ConsistencyLevel]
+==== server_version_with_consistency
 
 [tabs]
 ====
@@ -640,9 +777,9 @@ async::
 --
 [source,rust]
 ----
-pub async fn server_version_with_routing(
+pub async fn server_version_with_consistency(
     &self,
-    server_routing: ServerRouting,
+    consistency_level: ConsistencyLevel,
 ) -> Result<ServerVersion>
 ----
 
@@ -653,16 +790,16 @@ sync::
 --
 [source,rust]
 ----
-pub fn server_version_with_routing(
+pub fn server_version_with_consistency(
     &self,
-    server_routing: ServerRouting,
+    consistency_level: ConsistencyLevel,
 ) -> Result<ServerVersion>
 ----
 
 --
 ====
 
-Retrieves the server’s version.
+Retrieves the server’s version, using default strong consistency.
 
 [caption=""]
 .Input parameters
@@ -670,7 +807,7 @@ Retrieves the server’s version.
 [options="header"]
 |===
 |Name |Description |Type
-a| `server_routing` a|  — The server routing directive to use for the operation a| `ServerRouting`
+a| `consistency_level` a|  — The consistency level to use for the operation a| `ConsistencyLevel`
 |===
 
 [caption=""]
@@ -689,7 +826,7 @@ async::
 --
 [source,rust]
 ----
-driver.server_version_with_routing(ServerRouting::Auto).await;
+driver.server_version_with_consistency(ConsistencyLevel::Strong).await;
 ----
 
 --
@@ -699,144 +836,7 @@ sync::
 --
 [source,rust]
 ----
-driver.server_version_with_routing(ServerRouting::Auto);
-----
-
---
-====
-
-[#_struct_TypeDBDriver_servers_]
-==== servers
-
-[tabs]
-====
-async::
-+
---
-[source,rust]
-----
-pub async fn servers(&self) -> Result<HashSet<ServerReplica>>
-----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-pub fn servers(&self) -> Result<HashSet<ServerReplica>>
-----
-
---
-====
-
-Retrieves the servers, using default automatic server routing.
-
-See <<#_struct_TypeDBDriver_method_servers_with_routing,`Self::servers_with_routing`>> for more details and options.
-
-[caption=""]
-.Returns
-[source,rust]
-----
-Result<HashSet<ServerReplica>>
-----
-
-[caption=""]
-.Code examples
-[tabs]
-====
-async::
-+
---
-[source,rust]
-----
-driver.servers().await;
-----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-driver.servers();
-----
-
---
-====
-
-[#_struct_TypeDBDriver_servers_with_routing_server_routing_ServerRouting]
-==== servers_with_routing
-
-[tabs]
-====
-async::
-+
---
-[source,rust]
-----
-pub async fn servers_with_routing(
-    &self,
-    server_routing: ServerRouting,
-) -> Result<HashSet<ServerReplica>>
-----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-pub fn servers_with_routing(
-    &self,
-    server_routing: ServerRouting,
-) -> Result<HashSet<ServerReplica>>
-----
-
---
-====
-
-Retrieves the servers.
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `server_routing` a|  — The server routing directive to use for the operation a| `ServerRouting`
-|===
-
-[caption=""]
-.Returns
-[source,rust]
-----
-Result<HashSet<ServerReplica>>
-----
-
-[caption=""]
-.Code examples
-[tabs]
-====
-async::
-+
---
-[source,rust]
-----
-driver.servers_with_routing(ServerRouting::Auto).await;
-----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-driver.servers_with_routing(ServerRouting::Auto);
+driver.server_version_with_consistency(ConsistencyLevel::Strong);
 ----
 
 --
@@ -896,7 +896,7 @@ async::
 --
 [source,rust]
 ----
-driver.transaction(database_name, TransactionType::Read).await;
+driver.users().all_with_consistency(ConsistencyLevel::Strong).await;
 ----
 
 --
@@ -906,13 +906,13 @@ sync::
 --
 [source,rust]
 ----
-driver.transaction(database_name, TransactionType::Read);
+driver.users().all_with_consistency(ConsistencyLevel::Strong);
 ----
 
 --
 ====
 
-[#_struct_TypeDBDriver_transaction_with_options_database_name_impl_AsRef_str_transaction_type_TransactionType_options_TransactionOptions]
+[#_struct_TypeDBDriver_transaction_with_options_options_TransactionOptions_database_name_impl_AsRef_str_transaction_type_TransactionType_options_TransactionOptions]
 ==== transaction_with_options
 
 [tabs]
@@ -948,7 +948,7 @@ pub fn transaction_with_options(
 --
 ====
 
-Opens a new transaction with the provided transaction options.
+Opens a new transaction with the following consistency level:
 
 [caption=""]
 .Input parameters
@@ -956,6 +956,7 @@ Opens a new transaction with the provided transaction options.
 [options="header"]
 |===
 |Name |Description |Type
+a| `options` a| read transaction - strong consistency, can be overridden through ; a| `TransactionOptions`
 a| `database_name` a|  — The name of the database to connect to a| `impl AsRef<str>`
 a| `transaction_type` a|  — The TransactionType to open the transaction with a| `TransactionType`
 a| `options` a|  — The TransactionOptions to open the transaction with a| `TransactionOptions`
@@ -1019,7 +1020,7 @@ pub fn update_address_translation(&self, addresses: Addresses) -> Result
 --
 ====
 
-Updates address translation of the driver. This lets you actualize new translation information without recreating the driver from scratch. Useful after registering new replicas requiring address translation. This operation will update existing connections using the provided addresses.
+Updates address translation of the driver. This lets you actualize new translation information without recreating the driver from scratch. Useful after registering new servers requiring address translation. This operation will update existing connections using the provided addresses.
 
 [caption=""]
 .Input parameters

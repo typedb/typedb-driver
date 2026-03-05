@@ -26,7 +26,7 @@ if TYPE_CHECKING:
     from typedb.api.connection.transaction_options import TransactionOptions
     from typedb.api.connection.transaction import Transaction, TransactionType
     from typedb.api.user.user_manager import UserManager
-    from typedb.api.server.server_replica import ServerReplica
+    from typedb.api.server.server import Server
     from typedb.api.server.server_version import ServerVersion
 
 
@@ -97,7 +97,7 @@ class Driver(ABC):
         pass
 
     @abstractmethod
-    def servers(self, server_routing: Optional[ServerRouting] = None) -> Set[ServerReplica]:
+    def servers(self, server_routing: Optional[ServerRouting] = None) -> Set[Server]:
         """
         Set of servers for this driver connection.
 
@@ -113,9 +113,9 @@ class Driver(ABC):
         pass
 
     @abstractmethod
-    def primary_replica(self, server_routing: Optional[ServerRouting] = None) -> Optional[ServerReplica]:
+    def primary_server(self, server_routing: Optional[ServerRouting] = None) -> Optional[Server]:
         """
-        Returns the primary replica for this driver connection.
+        Returns the primary server for this driver connection.
 
         :param server_routing: The server routing to use for the operation. Auto by default
 
@@ -123,42 +123,42 @@ class Driver(ABC):
         ---------
         ::
 
-            driver.primary_replica()
-            driver.primary_replica(ServerRouting.Auto())
+            driver.primary_server()
+            driver.primary_server(ServerRouting.Auto())
         """
         pass
 
     @abstractmethod
-    def register_replica(self, replica_id: int, address: str) -> None:
+    def register_server(self, server_id: int, address: str) -> None:
         """
-        Registers a new replica in the cluster the driver is currently connected to. The registered
-        replica will become available eventually, depending on the behavior of the whole cluster.
-        To register a replica, its clustering address should be passed, not the connection address.
+        Registers a new server in the cluster the driver is currently connected to. The registered
+        server will become available eventually, depending on the behavior of the whole cluster.
+        To register a server, its clustering address should be passed, not the connection address.
 
-        :param replica_id: The numeric identifier of the new replica
-        :param address: The address(es) of the TypeDB replica as a string
+        :param server_id: The numeric identifier of the new server
+        :param address: The address(es) of the TypeDB server as a string
 
         Examples:
         ---------
         ::
 
-            driver.register_replica(2, "127.0.0.1:11729")
+            driver.register_server(2, "127.0.0.1:11729")
         """
         pass
 
     @abstractmethod
-    def deregister_replica(self, replica_id: int) -> None:
+    def deregister_server(self, server_id: int) -> None:
         """
-        Deregisters a replica from the cluster the driver is currently connected to. This replica
+        Deregisters a server from the cluster the driver is currently connected to. This server
         will no longer play a raft role in this cluster.
 
-        :param replica_id: The numeric identifier of the deregistered replica
+        :param server_id: The numeric identifier of the deregistered server
 
         Examples:
         ---------
         ::
 
-            driver.deregister_replica(2)
+            driver.deregister_server(2)
         """
         pass
 
@@ -167,10 +167,10 @@ class Driver(ABC):
         """
         Updates address translation of the driver. This lets you actualize new translation
         information without recreating the driver from scratch. Useful after registering new
-        replicas requiring address translation.
+        servers requiring address translation.
         This operation will update existing connections using the provided addresses.
 
-        :param address_translation: The translation of public TypeDB cluster replica addresses (keys) to server-side private addresses (values)
+        :param address_translation: The translation of public TypeDB cluster server addresses (keys) to server-side private addresses (values)
 
         Examples:
         ---------

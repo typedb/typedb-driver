@@ -28,7 +28,7 @@ use async_std::task::sleep;
 use futures::{StreamExt, TryStreamExt};
 use serial_test::serial;
 use typedb_driver::{
-    answer::ConceptRow, Addresses, Credentials, DriverOptions, DriverTlsConfig, Error, ServerReplica,
+    answer::ConceptRow, Addresses, Credentials, DriverOptions, DriverTlsConfig, Error, Server,
     TransactionOptions, TransactionType, TypeDBDriver,
 };
 
@@ -45,7 +45,7 @@ fn primary_reelection_read_query() {
 
         for (i, address) in ADDRESSES.iter().enumerate() {
             let (_, port) = address.rsplit_once(':').unwrap();
-            start_server_replica_from_parts(&(i + 1).to_string(), port).await;
+            start_server_node_from_parts(&(i + 1).to_string(), port).await;
         }
         sleep(Duration::from_secs(10)).await;
 
@@ -61,12 +61,12 @@ fn primary_reelection_read_query() {
         .unwrap();
 
         for (i, address) in CLUSTERING_ADDRESSES[1..].iter().enumerate() {
-            driver.register_replica((i + 2) as u64, address.to_string()).await.unwrap();
+            driver.register_server((i + 2) as u64, address.to_string()).await.unwrap();
         }
 
         // TODO: Temp, resolve it somehow!!!
         sleep(Duration::from_secs(6)).await;
-        println!("Recreating the driver to fetch new replicas");
+        println!("Recreating the driver to fetch new servers");
         drop(driver);
         let driver = TypeDBDriver::new(
             Addresses::try_from_address_str(ADDRESSES[0]).unwrap(),
@@ -77,27 +77,27 @@ fn primary_reelection_read_query() {
         .unwrap();
 
         // sleep(Duration::from_secs(5)).await;
-        // TODO: Does it need to return all the current replicas? Or is it not needed?
-        // It's currently handled automatically, so we won't see the new replicas now after registering them!!!
-        let replicas = driver.servers().await;
-        println!("Replicas: {replicas:?}");
+        // TODO: Does it need to return all the current servers? Or is it not needed?
+        // It's currently handled automatically, so we won't see the new servers now after registering them!!!
+        let servers = driver.servers().await;
+        println!("Servers: {servers:?}");
 
         let database_name = "typedb";
-        println!("Registered replicas. Creating the database");
+        println!("Registered servers. Creating the database");
         driver.databases().create(database_name).await.unwrap();
         println!("Retrieving the database...");
 
         verify_created_database(&driver, database_name).await;
 
         for iteration in 0..10 {
-            let primary_replica = get_primary_replica(&driver).await;
-            println!("Stopping primary replica (iteration {}). Testing retrieval from other replicas", iteration);
-            kill_server_replica(&primary_replica).await.unwrap();
+            let primary_server = get_primary_server(&driver).await;
+            println!("Stopping primary server (iteration {}). Testing retrieval from other servers", iteration);
+            kill_server_node(&primary_server).await.unwrap();
 
             sleep(Duration::from_secs(5)).await;
             verify_created_database(&driver, database_name).await;
 
-            start_server_replica(&primary_replica).await;
+            start_server_node(&primary_server).await;
         }
 
         println!("Done!");
@@ -119,7 +119,7 @@ fn primary_reelection_read_query() {
 //
 //         for (i, address) in ADDRESSES.iter().enumerate() {
 //             let (_, port) = address.rsplit_once(':').unwrap();
-//             start_server_replica_from_parts(&(i + 1).to_string(), port).await;
+//             start_server_node_from_parts(&(i + 1).to_string(), port).await;
 //         }
 //         sleep(Duration::from_secs(10)).await;
 //
@@ -135,7 +135,7 @@ fn primary_reelection_read_query() {
 //             .unwrap();
 //
 //         for (i, address) in CLUSTERING_ADDRESSES[1..].iter().enumerate() {
-//             driver.register_replica((i + 2) as u64, address.to_string()).await.unwrap();
+//             driver.register_server((i + 2) as u64, address.to_string()).await.unwrap();
 //         }
 //
 //         // sleep(Duration::from_secs(5)).await;
@@ -162,14 +162,14 @@ fn primary_reelection_read_query() {
 //         verify_defined(&driver, database.name()).await;
 //
 //         for iteration in 0..10 {
-//             let primary_replica = get_primary_replica(&driver).await;
+//             let primary_replica = get_primary_server(&driver).await;
 //             println!("Stopping primary replica (iteration {}). Testing retrieval from other replicas", iteration);
-//             kill_server_replica(&primary_replica).await.unwrap();
+//             kill_server_node(&primary_replica).await.unwrap();
 //
 //             sleep(Duration::from_secs(5)).await;
 //             verify_defined(&driver, database.name()).await;
 //
-//             start_server_replica(&primary_replica).await;
+//             start_server_node(&primary_replica).await;
 //         }
 //
 //         println!("Done!");
@@ -199,7 +199,7 @@ async fn remove_test_database() {
 async fn kill_servers() -> Result<(), TestError> {
     for address in &ADDRESSES {
         let (_, port) = address.rsplit_once(':').unwrap();
-        kill_server_replica_from_parts(port).await?;
+        kill_server_node_from_parts(port).await?;
     }
     Ok(())
 }
@@ -242,15 +242,15 @@ fn start_server(index: &str) -> Child {
         .expect("Failed to start TypeDB server")
 }
 
-async fn get_primary_replica(driver: &TypeDBDriver) -> ServerReplica {
+async fn get_primary_server(driver: &TypeDBDriver) -> Server {
     for _ in 0..10 {
-        if let Some(replica) = driver.primary_replica().await.unwrap() {
-            return ServerReplica::Available(replica);
+        if let Some(server) = driver.primary_server().await.unwrap() {
+            return Server::Available(server);
         }
-        println!("No primary replica yet. Retrying in 2s...");
+        println!("No primary server yet. Retrying in 2s...");
         sleep(Duration::from_secs(2)).await;
     }
-    panic!("Retry limit exceeded while seeking a primary replica.");
+    panic!("Retry limit exceeded while seeking a primary server.");
 }
 
 async fn verify_defined_type(driver: &TypeDBDriver, database_name: impl AsRef<str>) {
@@ -272,14 +272,14 @@ async fn verify_created_database(driver: &TypeDBDriver, database_name: impl AsRe
     assert!(driver.databases().contains(database_name.as_ref()).await.unwrap());
 }
 
-async fn start_server_replica(server_replica: &ServerReplica) {
-    let address_parts = ServerReplicaAddressParts::from_str(&server_replica.address().unwrap().to_string()).unwrap();
-    start_server_replica_from_parts(&address_parts.replica_id, &address_parts.port).await
+async fn start_server_node(server: &Server) {
+    let address_parts = ServerAddressParts::from_str(&server.address().unwrap().to_string()).unwrap();
+    start_server_node_from_parts(&address_parts.server_id, &address_parts.port).await
 }
 
-async fn start_server_replica_from_parts(replica_id: &str, port: &str) {
-    println!("Starting server replica from parts: {replica_id}, port: {port}");
-    let _child = start_server(replica_id);
+async fn start_server_node_from_parts(server_id: &str, port: &str) {
+    println!("Starting server from parts: {server_id}, port: {port}");
+    let _child = start_server(server_id);
     let mut attempts = 0;
     while attempts < 60 {
         sleep(Duration::from_secs(1)).await;
@@ -291,12 +291,12 @@ async fn start_server_replica_from_parts(replica_id: &str, port: &str) {
     }
 }
 
-async fn kill_server_replica(server_replica: &ServerReplica) -> Result<(), TestError> {
-    let address_parts = ServerReplicaAddressParts::from_str(&server_replica.address().unwrap().to_string()).unwrap();
-    kill_server_replica_from_parts(&address_parts.port).await
+async fn kill_server_node(server: &Server) -> Result<(), TestError> {
+    let address_parts = ServerAddressParts::from_str(&server.address().unwrap().to_string()).unwrap();
+    kill_server_node_from_parts(&address_parts.port).await
 }
 
-async fn kill_server_replica_from_parts(port: &str) -> Result<(), TestError> {
+async fn kill_server_node_from_parts(port: &str) -> Result<(), TestError> {
     let lsof = Command::new("lsof").args(["-i", &format!(":{}", port)]).output().expect("Failed to run lsof");
 
     let stdout = String::from_utf8_lossy(&lsof.stdout);
@@ -307,22 +307,22 @@ async fn kill_server_replica_from_parts(port: &str) -> Result<(), TestError> {
         .ok_or(TestError::NoServerPid)?;
 
     let res = Command::new("kill").args(["-9", pid]).status();
-    println!("Replica on port {port} killed");
+    println!("Server on port {port} killed");
     res.map(|_| ()).map_err(|_| TestError::NoServerProcess)
 }
 
-struct ServerReplicaAddressParts {
-    replica_id: String,
+struct ServerAddressParts {
+    server_id: String,
     port: String,
 }
 
-impl FromStr for ServerReplicaAddressParts {
+impl FromStr for ServerAddressParts {
     type Err = Error;
 
     fn from_str(address: &str) -> typedb_driver::Result<Self> {
         let port = address.rsplit_once(':').map(|(_, port)| port.to_string()).unwrap();
-        let replica_id = port[0..1].to_string();
-        Ok(Self { replica_id, port })
+        let server_id = port[0..1].to_string();
+        Ok(Self { server_id, port })
     }
 }
 

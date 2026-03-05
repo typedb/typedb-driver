@@ -29,8 +29,8 @@ use async_std::task::sleep;
 use futures::{StreamExt, TryStreamExt};
 use serial_test::serial;
 use typedb_driver::{
-    answer::ConceptRow, Address, Addresses, AvailableServerReplica, Credentials, DriverOptions, DriverTlsConfig, Error,
-    Replica, ServerReplica, TransactionOptions, TransactionType, TypeDBDriver,
+    answer::ConceptRow, Address, Addresses, AvailableServer, Credentials, DriverOptions, DriverTlsConfig, Error,
+    Replica, Server, TransactionOptions, TransactionType, TypeDBDriver,
 };
 // DO NOT commit changes to this test. Use it as playground for dev.
 const ADDRESSES: [&'static str; 3] = ["127.0.0.1:11729", "127.0.0.1:21729", "127.0.0.1:31729"];
@@ -95,6 +95,6 @@ fn playground_test() {
 
 async fn setup_cluster(driver: &TypeDBDriver) {
     for (i, address) in CLUSTERING_ADDRESSES[1..].iter().enumerate() {
-        driver.register_replica((i + 2) as u64, address.to_string()).await.unwrap();
+        driver.register_server((i + 2) as u64, address.to_string()).await.unwrap();
     }
 }

@@ -26,41 +26,41 @@ use super::TryFromProto;
 use crate::{
     common::Result,
     connection::{
-        server_replica::{ReplicaRole, ReplicaStatus, ServerReplica},
-        server_version::ServerVersion,
+        server::{ReplicationRole, ReplicationStatus, Server, server_version::ServerVersion},
     },
     error::ConnectionError,
 };
 
-impl TryFromProto<ServerProto> for ServerReplica {
-    fn try_from_proto(proto: ServerProto) -> Result<ServerReplica> {
-        let replica_status = proto.replica_status.map(|status| ReplicaStatus::try_from_proto(status)).transpose()?;
+impl TryFromProto<ServerProto> for Server {
+    fn try_from_proto(proto: ServerProto) -> Result<Server> {
+        let replication_status =
+            proto.replica_status.map(|status| ReplicationStatus::try_from_proto(status)).transpose()?;
         match proto.connection_address {
-            Some(address) => Ok(ServerReplica::available_from_private(address.parse()?, replica_status)),
-            None => Ok(ServerReplica::Unavailable { replica_status }),
+            Some(address) => Ok(Server::available_from_private(address.parse()?, replication_status)),
+            None => Ok(Server::Unavailable { replication_status }),
         }
     }
 }
 
-impl TryFromProto<ReplicaStatusProto> for ReplicaStatus {
+impl TryFromProto<ReplicaStatusProto> for ReplicationStatus {
     fn try_from_proto(proto: ReplicaStatusProto) -> Result<Self> {
         Ok(Self {
             id: proto.replica_id,
-            role: Option::<ReplicaRole>::try_from_proto(proto.replica_role)?,
+            role: Option::<ReplicationRole>::try_from_proto(proto.replica_role)?,
             term: proto.term,
         })
     }
 }
 
-impl TryFromProto<Option<i32>> for Option<ReplicaRole> {
-    fn try_from_proto(replica_role: Option<i32>) -> Result<Option<ReplicaRole>> {
+impl TryFromProto<Option<i32>> for Option<ReplicationRole> {
+    fn try_from_proto(replica_role: Option<i32>) -> Result<Option<ReplicationRole>> {
         let Some(replica_role) = replica_role else {
             return Ok(None);
         };
         match replica_role {
-            0 => Ok(Some(ReplicaRole::Primary)),
-            1 => Ok(Some(ReplicaRole::Candidate)),
-            2 => Ok(Some(ReplicaRole::Secondary)),
+            0 => Ok(Some(ReplicationRole::Primary)),
+            1 => Ok(Some(ReplicationRole::Candidate)),
+            2 => Ok(Some(ReplicationRole::Secondary)),
             _ => Err(ConnectionError::UnexpectedReplicaRole { replica_role }.into()),
         }
     }

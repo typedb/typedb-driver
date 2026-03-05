@@ -27,10 +27,10 @@ use prost::Message;
 
 use crate::{
     common::{info::DatabaseInfo, Error, Result},
-    connection::server::server_manager::ServerManager,
+    connection::server::{server_manager::ServerManager, server_routing::ServerRouting},
     database::migration::{try_create_export_file, try_open_existing_export_file, DatabaseExportAnswer},
     error::MigrationError,
-    resolve, ServerRouting,
+    resolve
 };
 
 /// A TypeDB database.

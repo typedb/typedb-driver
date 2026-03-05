@@ -1,18 +1,18 @@
-[#_ReplicaRole]
+[#_ReplicationRole]
 [.doc-api-reference-driver]
-=== ReplicaRole
+=== ReplicationRole
 
 `class`
 
-*Package*: `typedb.api.server.replica_role`
+*Package*: `typedb.api.server.replication_role`
 
-This class is used to specify the type of replica.
+This class is used to specify the type of server.
 
 [caption=""]
 .Examples
 [source,python]
 ----
-server_replica.role
+server.role
 ----
 
 [caption=""]
@@ -29,7 +29,7 @@ a| `SECONDARY` a| `2`
 // end::enum_constants[]
 
 // tag::methods[]
-[#_ReplicaRole_is_candidate_]
+[#_ReplicationRole_is_candidate_]
 ==== method ``is_candidate``
 
 [source,python]
@@ -43,7 +43,7 @@ is_candidate() -> bool
 .Returns
 `bool`
 
-[#_ReplicaRole_is_primary_]
+[#_ReplicationRole_is_primary_]
 ==== method ``is_primary``
 
 [source,python]
@@ -57,7 +57,7 @@ is_primary() -> bool
 .Returns
 `bool`
 
-[#_ReplicaRole_is_secondary_]
+[#_ReplicationRole_is_secondary_]
 ==== method ``is_secondary``
 
 [source,python]

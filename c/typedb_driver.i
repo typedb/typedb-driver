@@ -75,8 +75,8 @@ struct Type {};
 
 %dropproxy(Database, database)
 %dropproxy(DatabaseIterator, database_iterator)
-%dropproxy(ServerReplica, server_replica)
-%dropproxy(ServerReplicaIterator, server_replica_iterator)
+%dropproxy(Server, server)
+%dropproxy(ServerIterator, server_iterator)
 
 %dropproxy(User, user)
 %dropproxy(UserIterator, user_iterator)
@@ -278,7 +278,7 @@ VoidPromise* transaction_on_close_register(const Transaction* transaction, Trans
 %newobject driver_new_with_addresses_with_description;
 %newobject driver_new_with_address_translation_with_description;
 %newobject driver_server_version;
-%newobject driver_primary_replica;
+%newobject driver_primary_server;
 %newobject driver_servers;
 
 %newobject driver_options_new;
@@ -292,7 +292,7 @@ VoidPromise* transaction_on_close_register(const Transaction* transaction, Trans
 %newobject database_type_schema;
 %delobject database_delete;
 
-%newobject server_replica_get_address;
+%newobject server_get_address;
 
 %newobject databases_all;
 %newobject databases_get;
@@ -413,7 +413,7 @@ VoidPromise* transaction_on_close_register(const Transaction* transaction, Trans
 %newobject concept_iterator_next;
 %newobject concept_row_iterator_next;
 %newobject database_iterator_next;
-%newobject server_replica_iterator_next;
+%newobject server_iterator_next;
 %newobject string_iterator_next;
 %newobject string_and_opt_value_iterator_next;
 %newobject user_iterator_next;

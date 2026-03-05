@@ -1,10 +1,10 @@
-[#_enum_ReplicaRole]
+[#_enum_ReplicationRole]
 [.doc-api-reference-driver]
-=== ReplicaRole
+=== ReplicationRole
 
 `enum`
 
-This enum is used to specify the type of replica.
+This enum is used to specify the type of server.
 
 [caption=""]
 .Enum variants

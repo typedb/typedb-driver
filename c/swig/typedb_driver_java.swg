@@ -104,7 +104,7 @@
 
 %nojavaexception driver_is_open;
 // TODO: Remove from this list if we start making network calls to retrieve this
-%nojavaexception driver_primary_replica;
+%nojavaexception driver_primary_server;
 
 %nojavaexception driver_options_new;
 %nojavaexception driver_options_set_tls_config;
@@ -115,9 +115,9 @@
 %nojavaexception driver_options_get_use_replication;
 %nojavaexception driver_options_set_primary_failover_retries;
 %nojavaexception driver_options_get_primary_failover_retries;
-%nojavaexception driver_options_set_replica_discovery_attempts;
-%nojavaexception driver_options_get_replica_discovery_attempts;
-%nojavaexception driver_options_has_replica_discovery_attempts;
+%nojavaexception driver_options_set_server_discovery_attempts;
+%nojavaexception driver_options_get_server_discovery_attempts;
+%nojavaexception driver_options_has_server_discovery_attempts;
 
 %nojavaexception driver_tls_config_new_disabled;
 %nojavaexception driver_tls_config_new_enabled_with_native_root_ca;
@@ -130,13 +130,13 @@
 %nojavaexception user_get_name;
 %nojavaexception user_get_password_expiry_seconds;
 
-%nojavaexception server_replica_get_address;
-%nojavaexception server_replica_is_primary;
-%nojavaexception server_replica_get_id;
-%nojavaexception server_replica_get_role;
-%nojavaexception server_replica_has_role;
-%nojavaexception server_replica_get_term;
-%nojavaexception server_replica_has_term;
+%nojavaexception server_get_address;
+%nojavaexception server_is_primary;
+%nojavaexception server_get_id;
+%nojavaexception server_get_role;
+%nojavaexception server_has_role;
+%nojavaexception server_get_term;
+%nojavaexception server_has_term;
 
 %nojavaexception database_get_name;
 
@@ -375,8 +375,8 @@
 %nojavaexception ~Decimal;
 %nojavaexception ~Duration;
 %nojavaexception ~Error;
-%nojavaexception ~ServerReplica;
-%nojavaexception ~ServerReplicaIterator;
+%nojavaexception ~Server;
+%nojavaexception ~ServerIterator;
 %nojavaexception ~ServerVersion;
 %nojavaexception ~StringIterator;
 %nojavaexception ~StringAndOptValue;
@@ -566,7 +566,7 @@
 %iterator(StringAndOptValue, string_and_opt_value)
 %iterator(User, user)
 %iterator(Database, database)
-%iterator(ServerReplica, server_replica)
+%iterator(Server, server)
 
 %iterator(ConjunctionID, conjunction_id)
 %iterator(ConstraintWithSpan, constraint_with_span)

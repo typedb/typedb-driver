@@ -9,7 +9,7 @@
 
 
 
-TypeDB driver connection options. ``DriverOptions`` object can be used to override the default driver behavior while connecting to TypeDB.
+TypeDB driver connection options. DriverOptions object can be used to override the default driver behavior while connecting to TypeDB.
 
 
 [#_driver_options_drop]
@@ -44,17 +44,17 @@ Returns the value set for the primary failover retries limit in this ``DriverOpt
 .Returns
 `int64_t`
 
-[#_driver_options_get_replica_discovery_attempts]
-==== function ``driver_options_get_replica_discovery_attempts``
+[#_driver_options_get_server_discovery_attempts]
+==== function ``driver_options_get_server_discovery_attempts``
 
 [source,c]
 ----
-int64_t driver_options_get_replica_discovery_attempts(const struct DriverOptions* options)
+int64_t driver_options_get_server_discovery_attempts(const struct DriverOptions* options)
 ----
 
 
 
-Returns the value set for the replica discovery attempts limit in this ``DriverOptions`` object. Limits the number of driver attempts to discover a single working replica to perform an operation in case of a replica unavailability. Every replica is tested once, which means that at most:
+Returns the value set for the server discovery attempts limit in this ``DriverOptions`` object. Limits the number of driver attempts to discover a single working replica to perform an operation in case of a replica unavailability. Every replica is tested once, which means that at most:
 
  {limit} operations are performed if the limit &lt;= the number of replicas.
  {number of replicas} operations are performed if the limit &gt; the number of replicas.
@@ -113,17 +113,17 @@ Returns the value set for the replication usage flag in this ``DriverOptions`` o
 .Returns
 `bool`
 
-[#_driver_options_has_replica_discovery_attempts]
-==== function ``driver_options_has_replica_discovery_attempts``
+[#_driver_options_has_server_discovery_attempts]
+==== function ``driver_options_has_server_discovery_attempts``
 
 [source,c]
 ----
-bool driver_options_has_replica_discovery_attempts(const struct DriverOptions* options)
+bool driver_options_has_server_discovery_attempts(const struct DriverOptions* options)
 ----
 
 
 
-Checks whether the replica discovery attempts limit was explicitly set for this ``DriverOptions`` object.
+Checks whether the server discovery attempts limit was explicitly set for this ``DriverOptions`` object.
 
 [caption=""]
 .Returns
@@ -161,12 +161,12 @@ Limits the number of attempts to redirect a strongly consistent request to anoth
 .Returns
 `void`
 
-[#_driver_options_set_replica_discovery_attempts]
-==== function ``driver_options_set_replica_discovery_attempts``
+[#_driver_options_set_server_discovery_attempts]
+==== function ``driver_options_set_server_discovery_attempts``
 
 [source,c]
 ----
-void driver_options_set_replica_discovery_attempts(struct DriverOptions* options, int64_t replica_discovery_attempts)
+void driver_options_set_server_discovery_attempts(struct DriverOptions* options, int64_t server_discovery_attempts)
 ----
 
 

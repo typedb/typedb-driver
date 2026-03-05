@@ -1,0 +1,45 @@
+[#_methods_connection_serveriterator]
+=== serveriterator
+
+[#_Struct_ServerIterator]
+[.doc-api-reference-driver]
+==== Struct ServerIterator
+
+`rust struct (pointer)`
+
+
+
+Iterator over the ``Server`` corresponding to each server of a TypeDB cluster.
+
+[#_server_iterator_drop]
+==== function ``server_iterator_drop``
+
+[source,c]
+----
+void server_iterator_drop(struct ServerIterator* it)
+----
+
+
+
+Frees the native rust ``ServerIterator`` object.
+
+[caption=""]
+.Returns
+`void`
+
+[#_server_iterator_next]
+==== function ``server_iterator_next``
+
+[source,c]
+----
+struct Server* server_iterator_next(struct ServerIterator* it)
+----
+
+
+
+Forwards the ``ServerIterator`` and returns the next ``Server`` if it exists, or null if there are no more elements.
+
+[caption=""]
+.Returns
+`struct Server*`
+

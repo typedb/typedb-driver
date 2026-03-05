@@ -25,10 +25,10 @@ use typedb_protocol::migration::Item;
 use super::Database;
 use crate::{
     common::Result,
-    connection::server::server_manager::ServerManager,
+    connection::server::{server_manager::ServerManager, server_routing::ServerRouting},
     database::migration::{try_open_import_file, ProtoMessageIterator},
     info::DatabaseInfo,
-    resolve, ServerRouting,
+    resolve,
 };
 
 /// Provides access to all database management methods.

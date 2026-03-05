@@ -25,12 +25,12 @@ dir_mapping = {
     "driver": "connection",
     "credential": "connection",
     "driveroptions": "connection",
-    "serverrouting": "connection",
-    "serverroutingtag": "connection",
-    "serverreplica": "connection",
-    "serverreplicaiterator": "connection",
+    "consistencylevel": "connection",
+    "consistencyleveltag": "connection",
+    "server": "connection",
+    "serveriterator": "connection",
     "serverversion": "connection",
-    "replicarole": "connection",
+    "replicationrole": "connection",
 
     # Database
     "database": "connection",

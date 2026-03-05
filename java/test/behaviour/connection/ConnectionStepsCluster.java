@@ -78,9 +78,9 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
                     long id = i + 1L;
                     String address = clusteringAddresses.get(i);
 
-                    // 1 is the default registered replica
+                    // 1 is the default registered server
                     if (id != 1) {
-                        driver.registerReplica(id, address);
+                        driver.registerServer(id, address);
                     }
                 }
             }
@@ -195,12 +195,6 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
     @Then("connection has {integer} user(s)")
     public void connection_has_count_users(int count) {
         super.connection_has_count_users(count);
-    }
-
-    @Override
-    @When("set operation server routing to: {server_routing}")
-    public void set_operation_server_routing(Parameters.Routing serverRouting) {
-        super.set_operation_server_routing(serverRouting);
     }
 
     @Override

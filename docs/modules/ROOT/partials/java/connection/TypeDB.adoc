@@ -88,7 +88,7 @@ Open a TypeDB Driver to a TypeDB cluster available at the provided addresses.
 [options="header"]
 |===
 |Name |Description |Type
-a| `addresses` a| The addresses of TypeDB cluster replicas for connection a| `java.util.Set<java.lang.String>`
+a| `addresses` a| The addresses of TypeDB cluster servers for connection a| `java.util.Set<java.lang.String>`
 a| `credentials` a| The credentials to connect with a| `Credentials`
 a| `driverOptions` a| The driver connection options to connect with a| `DriverOptions`
 |===
@@ -124,7 +124,7 @@ Open a TypeDB Driver to a TypeDB cluster, using the provided address translation
 [options="header"]
 |===
 |Name |Description |Type
-a| `addressTranslation` a| The translation of public TypeDB cluster replica addresses (keys) to server-side private addresses (values) a| `java.util.Map<java.lang.String,​java.lang.String>`
+a| `addressTranslation` a| The translation of public TypeDB cluster server addresses (keys) to server-side private addresses (values) a| `java.util.Map<java.lang.String,​java.lang.String>`
 a| `credentials` a| The credentials to connect with a| `Credentials`
 a| `driverOptions` a| The driver connection options to connect with a| `DriverOptions`
 |===

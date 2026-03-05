@@ -30,7 +30,7 @@ a| `LANGUAGE` a| `static java.lang.String` a|
 void close()
 ----
 
-Closes the driver. Before instantiating a new driver, the driver that's currently open should first be closed. 
+Closes the driver. Before instantiating a new driver, the driver that’s currently open should first be closed. 
 
 
 [caption=""]
@@ -67,15 +67,15 @@ The ``DatabaseManager`` for this connection, providing access to database manage
 driver.databases();
 ----
 
-[#_Driver_deregisterReplica_long]
-==== method ``deregisterReplica``
+[#_Driver_deregisterServer_long]
+==== method ``deregisterServer``
 
 [source,java]
 ----
-void deregisterReplica​(long replicaID)
+void deregisterServer​(long serverID)
 ----
 
-Deregisters a replica from the cluster the driver is currently connected to. This replica will no longer play a raft role in this cluster. 
+Deregisters a server from the cluster the driver is currently connected to. This server will no longer play a raft role in this cluster.
 
 
 [caption=""]
@@ -84,7 +84,7 @@ Deregisters a replica from the cluster the driver is currently connected to. Thi
 [options="header"]
 |===
 |Name |Description |Type
-a| `replicaID` a| The numeric identifier of the deregistered replica a| `long`
+a| `serverID` a| The numeric identifier of the deregistered server a| `long`
 |===
 
 [caption=""]
@@ -95,7 +95,7 @@ a| `replicaID` a| The numeric identifier of the deregistered replica a| `long`
 .Code examples
 [source,java]
 ----
-driver.deregisterReplica(2);
+driver.deregisterServer(2);
 ----
 
 [#_Driver_isOpen_]
@@ -121,39 +121,39 @@ Checks whether this connection is presently open.
 driver.isOpen();
 ----
 
-[#_Driver_primaryReplica_]
-==== method ``primaryReplica``
+[#_Driver_primaryServer_]
+==== method ``primaryServer``
 
 [source,java]
 ----
 @CheckReturnValue
-default java.util.Optional<? extends ServerReplica> primaryReplica()
+default java.util.Optional<? extends Server> primaryServer()
 ----
 
-Returns the primary replica for this driver connection, using default automatic routing. See <<#_primaryReplica_com_typedb_driver_api_ServerRouting,``primaryReplica(ServerRouting)``>> for more details and options. 
+Returns the primary server for this driver connection, using default strong consistency. See <<#_primaryServer_com_typedb_driver_api_ConsistencyLevel,``primaryServer(ConsistencyLevel)``>> for more details and options.
 
 
 [caption=""]
 .Returns
-`java.util.Optional<? extends ServerReplica>`
+`java.util.Optional<? extends Server>`
 
 [caption=""]
 .Code examples
 [source,java]
 ----
-driver.primaryReplica();
+driver.primaryServer();
 ----
 
-[#_Driver_primaryReplica_ServerRouting]
-==== method ``primaryReplica``
+[#_Driver_primaryServer_ConsistencyLevel]
+==== method ``primaryServer``
 
 [source,java]
 ----
 @CheckReturnValue
-java.util.Optional<? extends ServerReplica> primaryReplica​(ServerRouting serverRouting)
+java.util.Optional<? extends Server> primaryServer​(ConsistencyLevel consistencyLevel)
 ----
 
-Returns the primary replica for this driver connection. 
+Returns the primary server for this driver connection.
 
 
 [caption=""]
@@ -162,30 +162,30 @@ Returns the primary replica for this driver connection.
 [options="header"]
 |===
 |Name |Description |Type
-a| `serverRouting` a| The server routing to use for the operation a| `ServerRouting`
+a| `consistencyLevel` a| The consistency level to use for the operation a| `ConsistencyLevel`
 |===
 
 [caption=""]
 .Returns
-`java.util.Optional<? extends ServerReplica>`
+`java.util.Optional<? extends Server>`
 
 [caption=""]
 .Code examples
 [source,java]
 ----
-driver.primaryReplica(new ServerRouting.Auto());
+driver.primaryServer(new ConsistencyLevel.Strong());
 ----
 
-[#_Driver_registerReplica_long_java_lang_String]
-==== method ``registerReplica``
+[#_Driver_registerServer_long_java_lang_String]
+==== method ``registerServer``
 
 [source,java]
 ----
-void registerReplica​(long replicaID,
+void registerServer​(long serverID,
                      java.lang.String address)
 ----
 
-Registers a new replica in the cluster the driver is currently connected to. The registered replica will become available eventually, depending on the behavior of the whole cluster. To register a replica, its clustering address should be passed, not the connection address. 
+Registers a new server in the cluster the driver is currently connected to. The registered server will become available eventually, depending on the behavior of the whole cluster. To register a server, its clustering address should be passed, not the connection address.
 
 
 [caption=""]
@@ -194,8 +194,8 @@ Registers a new replica in the cluster the driver is currently connected to. The
 [options="header"]
 |===
 |Name |Description |Type
-a| `replicaID` a| The numeric identifier of the new replica a| `long`
-a| `address` a| The address(es) of the TypeDB replica as a string a| `java.lang.String`
+a| `serverID` a| The numeric identifier of the new server a| `long`
+a| `address` a| The address(es) of the TypeDB server as a string a| `java.lang.String`
 |===
 
 [caption=""]
@@ -206,7 +206,62 @@ a| `address` a| The address(es) of the TypeDB replica as a string a| `java.lang.
 .Code examples
 [source,java]
 ----
-driver.registerReplica(2, "127.0.0.1:11729");
+driver.registerServer(2, "127.0.0.1:11729");
+----
+
+[#_Driver_servers_]
+==== method ``servers``
+
+[source,java]
+----
+@CheckReturnValue
+default java.util.Set<? extends Server> servers()
+----
+
+Set of ``Server`` instances for this driver connection, using default strong consistency. See <<#_servers_com_typedb_driver_api_ConsistencyLevel,``servers(ConsistencyLevel)``>> for more details and options.
+
+
+[caption=""]
+.Returns
+`java.util.Set<? extends Server>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+driver.servers();
+----
+
+[#_Driver_servers_ConsistencyLevel]
+==== method ``servers``
+
+[source,java]
+----
+@CheckReturnValue
+java.util.Set<? extends Server> servers​(ConsistencyLevel consistencyLevel)
+----
+
+Set of ``Server`` instances for this driver connection.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `consistencyLevel` a| The consistency level to use for the operation a| `ConsistencyLevel`
+|===
+
+[caption=""]
+.Returns
+`java.util.Set<? extends Server>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+driver.servers(new ConsistencyLevel.Strong());
 ----
 
 [#_Driver_serverVersion_]
@@ -218,7 +273,7 @@ driver.registerReplica(2, "127.0.0.1:11729");
 default ServerVersion serverVersion()
 ----
 
-Retrieves the server's version, using default automatic routing. See <<#_serverVersion_com_typedb_driver_api_ServerRouting,``serverVersion(ServerRouting)``>> for more details and options. 
+Retrieves the server's version, using default strong consistency. See <<#_serverVersion_com_typedb_driver_api_ConsistencyLevel,``serverVersion(ConsistencyLevel)``>> for more details and options. 
 
 
 [caption=""]
@@ -232,13 +287,13 @@ Retrieves the server's version, using default automatic routing. See <<#_serverV
 driver.serverVersion();
 ----
 
-[#_Driver_serverVersion_ServerRouting]
+[#_Driver_serverVersion_ConsistencyLevel]
 ==== method ``serverVersion``
 
 [source,java]
 ----
 @CheckReturnValue
-ServerVersion serverVersion​(ServerRouting serverRouting)
+ServerVersion serverVersion​(ConsistencyLevel consistencyLevel)
 ----
 
 Retrieves the server's version. 
@@ -250,7 +305,7 @@ Retrieves the server's version.
 [options="header"]
 |===
 |Name |Description |Type
-a| `serverRouting` a| The server routing to use for the operation a| `ServerRouting`
+a| `consistencyLevel` a| The consistency level to use for the operation a| `ConsistencyLevel`
 |===
 
 [caption=""]
@@ -262,61 +317,6 @@ a| `serverRouting` a| The server routing to use for the operation a| `ServerRout
 [source,java]
 ----
 driver.serverVersion();
-----
-
-[#_Driver_servers_]
-==== method ``servers``
-
-[source,java]
-----
-@CheckReturnValue
-default java.util.Set<? extends ServerReplica> servers()
-----
-
-Set of servers for this driver connection, using default automatic routing. See <<#_servers_com_typedb_driver_api_ServerRouting,``servers(ServerRouting)``>> for more details and options. 
-
-
-[caption=""]
-.Returns
-`java.util.Set<? extends ServerReplica>`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-driver.servers();
-----
-
-[#_Driver_servers_ServerRouting]
-==== method ``servers``
-
-[source,java]
-----
-@CheckReturnValue
-java.util.Set<? extends ServerReplica> servers​(ServerRouting serverRouting)
-----
-
-Set of servers for this driver connection. 
-
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `serverRouting` a| The server routing to use for the operation a| `ServerRouting`
-|===
-
-[caption=""]
-.Returns
-`java.util.Set<? extends ServerReplica>`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-driver.servers(new ServerRouting.Auto());
 ----
 
 [#_Driver_transaction_java_lang_String_Transaction_Type]
@@ -398,7 +398,7 @@ driver.transaction(database, sessionType);
 void updateAddressTranslation​(java.util.Map<java.lang.String,​java.lang.String> addressTranslation)
 ----
 
-Updates address translation of the driver. This lets you actualize new translation information without recreating the driver from scratch. Useful after registering new replicas requiring address translation. This operation will update existing connections using the provided addresses. 
+Updates address translation of the driver. This lets you actualize new translation information without recreating the driver from scratch. Useful after registering new servers requiring address translation. This operation will update existing connections using the provided addresses. 
 
 
 [caption=""]
@@ -407,7 +407,7 @@ Updates address translation of the driver. This lets you actualize new translati
 [options="header"]
 |===
 |Name |Description |Type
-a| `addressTranslation` a| The translation of public TypeDB cluster replica addresses (keys) to server-side private addresses (values) a| `java.util.Map<java.lang.String,​java.lang.String>`
+a| `addressTranslation` a| The translation of public TypeDB cluster server addresses (keys) to server-side private addresses (values) a| `java.util.Map<java.lang.String,​java.lang.String>`
 |===
 
 [caption=""]
