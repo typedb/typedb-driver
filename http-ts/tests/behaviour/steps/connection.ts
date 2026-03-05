@@ -41,9 +41,9 @@ Given(`connection opens with username '{word}', password {string}${EXPECT_ERROR_
 Given("connection opens with default authentication", () => connectionOpens(DEFAULT_USERNAME, DEFAULT_PASSWORD, false))
 
 async function connectionOpensSingle(username: string, password: string, mayError: MayError) {
-    await openAndTestSingleConnection(username, password, ).then(checkMayError(mayError));
+    await openAndTestSingleConnection(username, password).then(checkMayError(mayError));
 }
-Given("connection opens to single server with default authentication{may_error}", () => connectionOpensSingle(DEFAULT_USERNAME, DEFAULT_PASSWORD))
+Given("connection opens to single server with default authentication{may_error}", (mayError: MayError) => connectionOpensSingle(DEFAULT_USERNAME, DEFAULT_PASSWORD, mayError))
 
 When(`connection opens with a wrong host${EXPECT_ERROR_CONTAINING}`, (_: string) => {
     assert.rejects(async () => {
