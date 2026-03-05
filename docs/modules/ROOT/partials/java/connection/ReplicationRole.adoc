@@ -6,14 +6,14 @@
 
 *Package*: `com.typedb.driver.api.server`
 
-This enum is used to specify the type of server.
+This enum is used to specify the replication role of a server. 
 
 
 [caption=""]
 .Examples
 [source,java]
 ----
-server.getType();
+server.getRole();
 ----
 
 [caption=""]
@@ -41,7 +41,7 @@ public int id()
 
 [caption=""]
 .Returns
-`public int`
+`public int`
 
 [#_ReplicationRole_isCandidate_]
 ==== method ``isCandidate``
@@ -55,7 +55,7 @@ Checks whether this is a candidate server of the raft cluster.
 
 [caption=""]
 .Returns
-`public boolean`
+`public boolean`
 
 [#_ReplicationRole_isPrimary_]
 ==== method ``isPrimary``
@@ -69,7 +69,7 @@ Checks whether this is the primary server of the raft cluster.
 
 [caption=""]
 .Returns
-`public boolean`
+`public boolean`
 
 [#_ReplicationRole_isSecondary_]
 ==== method ``isSecondary``
@@ -83,7 +83,7 @@ Checks whether this is a secondary server of the raft cluster.
 
 [caption=""]
 .Returns
-`public boolean`
+`public boolean`
 
 [#_ReplicationRole_of_com_typedb_driver_jni_ReplicationRole]
 ==== method ``of``
@@ -97,7 +97,7 @@ public static ReplicationRole of​(com.typedb.driver.jni.ReplicationRole native
 
 [caption=""]
 .Returns
-`public static ReplicationRole`
+`public static ReplicationRole`
 
 [#_ReplicationRole_valueOf_java_lang_String]
 ==== method ``valueOf``
@@ -120,7 +120,7 @@ a| `name` a| the name of the enum constant to be returned. a| `java.lang.String`
 
 [caption=""]
 .Returns
-`public static ReplicationRole`
+`public static ReplicationRole`
 
 [#_ReplicationRole_values_]
 ==== method ``values``
@@ -130,7 +130,7 @@ a| `name` a| the name of the enum constant to be returned. a| `java.lang.String`
 public static ReplicationRole[] values()
 ----
 
-Returns an array containing the constants of this enum type, in the order they are declared. This method may be used to iterate over the constants as follows:
+Returns an array containing the constants of this enum type, in the order they are declared. This method may be used to iterate over the constants as follows: 
 [source,java]
 ----
 for (ReplicationRole c : ReplicationRole.values())
@@ -141,7 +141,7 @@ for (ReplicationRole c : ReplicationRole.values())
 
 [caption=""]
 .Returns
-`public static ReplicationRole[]`
+`public static ReplicationRole[]`
 
 [caption=""]
 .Code examples

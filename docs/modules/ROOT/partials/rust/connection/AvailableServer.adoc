@@ -42,7 +42,7 @@ Returns the address this server is hosted at.
 fn id(&self) -> u64
 ----
 
-Returns the id of this server. 0 (default) if it's not a part of a cluster.
+Returns the id of this replica. 0 (default) if it’s not a part of a cluster.
 
 [caption=""]
 .Returns
@@ -59,7 +59,7 @@ u64
 fn is_primary(&self) -> bool
 ----
 
-Checks whether this is the primary server of the raft cluster.
+Checks whether this is the primary replica of the raft cluster.
 
 [caption=""]
 .Returns
@@ -76,7 +76,7 @@ bool
 fn role(&self) -> Option<ReplicationRole>
 ----
 
-Returns whether this is the primary server of the raft cluster or any of the supporting roles.
+Returns whether this is the primary replica of the raft cluster or any of the supporting roles.
 
 [caption=""]
 .Returns
@@ -93,7 +93,7 @@ Option<ReplicationRole>
 fn term(&self) -> Option<u64>
 ----
 
-Returns the raft protocol 'term' of this server.
+Returns the raft protocol ‘term’ of this replica.
 
 [caption=""]
 .Returns

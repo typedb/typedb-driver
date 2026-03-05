@@ -87,7 +87,7 @@ dir_mapping = {
     "Credentials.adoc": "connection",
     "ServerRouting.adoc": "connection",
     "ServerRouting.Auto.adoc": "connection",
-    "ServerRouting.Server.adoc": "connection",
+    "ServerRouting.Direct.adoc": "connection",
     "ReplicationRole.adoc": "connection",
     "Server.adoc": "connection",
     "ServerVersion.adoc": "connection",

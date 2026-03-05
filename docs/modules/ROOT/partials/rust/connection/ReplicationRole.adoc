@@ -4,7 +4,7 @@
 
 `enum`
 
-This enum is used to specify the type of server.
+This enum is used to specify the replication role of a server.
 
 [caption=""]
 .Enum variants

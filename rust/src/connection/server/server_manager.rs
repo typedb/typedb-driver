@@ -239,7 +239,7 @@ impl ServerManager {
     {
         match server_routing {
             ServerRouting::Auto => self.execute_strongly_consistent(task).await,
-            ServerRouting::Server { address } => {
+            ServerRouting::Direct { address } => {
                 if self.read_replicas().iter().find(|replica| replica.address() == &address).is_none() {
                     return Err(ConnectionError::UnknownDirectReplica {
                         address,

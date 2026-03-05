@@ -524,14 +524,14 @@ impl fmt::Display for QueryAnswerType {
 #[param(name = "server_routing", regex = "(auto|server(.*))")]
 pub enum ServerRouting {
     Auto,
-    Server { address: Address },
+    Direct { address: Address },
 }
 
 impl ServerRouting {
     pub fn into_typedb(self) -> TypeDBServerRouting {
         match self {
             ServerRouting::Auto => TypeDBServerRouting::Auto,
-            ServerRouting::Server { address } => TypeDBServerRouting::Server { address },
+            ServerRouting::Direct { address } => TypeDBServerRouting::Direct { address },
         }
     }
 }
@@ -542,7 +542,7 @@ impl FromStr for ServerRouting {
         if s == "auto" {
             Ok(Self::Auto)
         } else if let Some(message) = s.strip_prefix("server(").and_then(|suffix| suffix.strip_suffix(")")) {
-            Ok(Self::Server { address: message.parse().expect("Expected a valid address") })
+            Ok(Self::Direct { address: message.parse().expect("Expected a valid address") })
         } else {
             Err(format!("Invalid `ServerRouting`: {}", s))
         }
@@ -553,7 +553,7 @@ impl fmt::Display for ServerRouting {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::Auto => write!(f, "Auto"),
-            Self::Server { address } => write!(f, "Server({address:?})"),
+            Self::Direct { address } => write!(f, "Direct({address:?})"),
         }
     }
 }

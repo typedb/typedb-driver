@@ -272,7 +272,7 @@ VoidPromise* transaction_on_close_register(const Transaction* transaction, Trans
 %newobject concept_try_get_value;
 %newobject credentials_new;
 %newobject server_routing_auto;
-%newobject server_routing_server;
+%newobject server_routing_direct;
 
 %newobject driver_new_with_description;
 %newobject driver_new_with_addresses_with_description;

@@ -9,7 +9,7 @@
 
 
 
-This enum is used to specify the type of server.
+This enum is used to specify the replication role of a server.
 
 [#_Enum_ReplicationRole]
 [.doc-api-reference-driver]
@@ -19,7 +19,7 @@ This enum is used to specify the type of server.
 
 
 
-This enum is used to specify the type of server.
+This enum is used to specify the replication role of a server.
 
 [caption=""]
 .Enum constants

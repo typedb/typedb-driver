@@ -32,13 +32,13 @@ use crate::common::{
 #[derive(Debug, Clone, Copy)]
 pub enum ServerRoutingTag {
     Auto,
-    Server,
+    Direct,
 }
 
 /// <code>ServerRouting</code> is used to represent server routing directives in FFI.
 /// It combines <code>ServerRoutingTag</code> and optional fields to form an instance of the
 /// original enum.
-/// <code>address</code> is not null only when tag is <code>Server</code>.
+/// <code>address</code> is not null only when tag is <code>Direct</code>.
 #[repr(C)]
 #[derive(Debug, Clone)]
 pub struct ServerRouting {
@@ -52,15 +52,15 @@ impl ServerRouting {
     }
 
     fn new_server(address: *mut c_char) -> Self {
-        ServerRouting { tag: ServerRoutingTag::Server, address }
+        ServerRouting { tag: ServerRoutingTag::Direct, address }
     }
 
     fn to_native(&self) -> NativeServerRouting {
         match self.tag {
             ServerRoutingTag::Auto => NativeServerRouting::Auto,
-            ServerRoutingTag::Server => {
+            ServerRoutingTag::Direct => {
                 let address = unwrap_or_default(string_view(self.address).parse());
-                NativeServerRouting::Server { address }
+                NativeServerRouting::Direct { address }
             }
         }
     }
@@ -82,7 +82,7 @@ pub extern "C" fn server_routing_auto() -> *mut ServerRouting {
 ///
 /// @param address The address of the server to route to.
 #[no_mangle]
-pub extern "C" fn server_routing_server(address: *const c_char) -> *mut ServerRouting {
+pub extern "C" fn server_routing_direct(address: *const c_char) -> *mut ServerRouting {
     release(ServerRouting::new_server(release_string(string_view(address.clone()).to_string())))
 }
 
@@ -106,7 +106,7 @@ impl From<NativeServerRouting> for ServerRouting {
     fn from(value: NativeServerRouting) -> Self {
         match value {
             NativeServerRouting::Auto => ServerRouting::new_auto(),
-            NativeServerRouting::Server { address } => ServerRouting::new_server(release_string(address.to_string())),
+            NativeServerRouting::Direct { address } => ServerRouting::new_server(release_string(address.to_string())),
         }
     }
 }

@@ -21,8 +21,8 @@ from typing import Optional, Union
 from typedb.common.exception import TypeDBDriverException, UNEXPECTED_NATIVE_VALUE, ILLEGAL_STATE
 from typedb.common.native_wrapper import NativeWrapper
 from typedb.native_driver_wrapper import server_routing_auto, \
-    server_routing_server, ServerRouting as NativeServerRouting, \
-    Auto as NativeAuto, Server as NativeServer
+    server_routing_direct, ServerRouting as NativeServerRouting, \
+    Auto as NativeAuto, Direct as NativeDirect
 
 
 class ServerRouting(NativeWrapper[NativeServerRouting], ABC):
@@ -33,14 +33,14 @@ class ServerRouting(NativeWrapper[NativeServerRouting], ABC):
     """
 
     @staticmethod
-    def of(native_value: NativeServerRouting) -> Union[None, "Auto", "Server"]:
+    def of(native_value: NativeServerRouting) -> Union[None, "Auto", "Direct"]:
         if native_value is None:
             return None
 
         if native_value.tag == NativeAuto:
             return Auto()
-        elif native_value.tag == NativeServer:
-            return Server(native_value.address)
+        elif native_value.tag == NativeDirect:
+            return Direct(native_value.address)
         else:
             raise TypeDBDriverException(UNEXPECTED_NATIVE_VALUE)
 
@@ -51,8 +51,8 @@ class ServerRouting(NativeWrapper[NativeServerRouting], ABC):
     def is_auto(self) -> bool:
         return isinstance(self, Auto)
 
-    def is_server(self) -> bool:
-        return isinstance(self, Server)
+    def is_direct(self) -> bool:
+        return isinstance(self, Direct)
 
 
 class Auto(ServerRouting):
@@ -71,13 +71,13 @@ class Auto(ServerRouting):
         return "Auto"
 
 
-class Server(ServerRouting):
+class Direct(ServerRouting):
     """
     Route to a specific known server at the given address. Mostly used for debugging purposes.
     """
 
     def __init__(self, address: str):
-        super().__init__(server_routing_server(address))
+        super().__init__(server_routing_direct(address))
         self._address = address
 
     @property
@@ -92,8 +92,8 @@ class Server(ServerRouting):
         return self._address
 
     def __str__(self):
-        return f"Server({self._address})"
+        return f"Direct({self._address})"
 
 
 ServerRouting.Auto = Auto
-ServerRouting.Server = Server
+ServerRouting.Direct = Direct

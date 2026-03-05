@@ -4,7 +4,7 @@
 
 `enum`
 
-The metadata and state of an individual raft server of a driver connection.
+The metadata and state of an individual server of a driver connection.
 
 [caption=""]
 .Enum variants

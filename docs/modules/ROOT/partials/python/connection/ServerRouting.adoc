@@ -23,12 +23,12 @@ is_auto() -> bool
 .Returns
 `bool`
 
-[#_ServerRouting_is_server_]
-==== method ``is_server``
+[#_ServerRouting_is_direct_]
+==== method ``is_direct``
 
 [source,python]
 ----
-is_server() -> bool
+is_direct() -> bool
 ----
 
 
@@ -56,14 +56,14 @@ static native_value(server_routing: ServerRouting | None) -> ServerRouting
 
 [source,python]
 ----
-static of(native_value: ServerRouting) -> None | Auto | Server
+static of(native_value: ServerRouting) -> None | Auto | Direct
 ----
 
 
 
 [caption=""]
 .Returns
-`None | Auto | Server`
+`None | Auto | Direct`
 
 // end::methods[]
 

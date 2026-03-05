@@ -113,35 +113,35 @@ def step_impl(context: Context, may_error: MayError):
     may_error.check(lambda: assert_that(len(context.driver.server_version().version), greater_than(0)))
 
 
-@step("connection has {count:Int} replica")
-@step("connection has {count:Int} replicas")
+@step("connection has {count:Int} server")
+@step("connection has {count:Int} servers")
 def step_impl(context: Context, count: int):
     assert_that(len(context.driver.servers()), equal_to(count))
 
 
-@step(u'connection primary replica exists')
+@step(u'connection primary server exists')
 def step_impl(context: Context):
     check_is_none(context.driver.primary_server(), False)
 
 
-@step(u'connection get replica({address}) {exists_or_doesnt:ExistsOrDoesnt}')
+@step(u'connection get server({address}) {exists_or_doesnt:ExistsOrDoesnt}')
 def step_impl(context: Context, address: str, exists_or_doesnt: bool):
-    replicas = context.driver.servers()
-    exists = any(r.address == address for r in replicas)
-    assert_that(exists, equal_to(exists_or_doesnt), f"replica {address}")
+    servers = context.driver.servers()
+    exists = any(r.address == address for r in servers)
+    assert_that(exists, equal_to(exists_or_doesnt), f"server {address}")
 
 
-@step(u'connection get replica({address}) has term')
+@step(u'connection get server({address}) has term')
 def step_impl(context: Context, address: str):
-    replicas = context.driver.servers()
-    replica = next((r for r in replicas if r.address == address), None)
-    check_is_none(replica, False)
-    check_is_none(replica.term, False)
+    servers = context.driver.servers()
+    server = next((r for r in servers if r.address == address), None)
+    check_is_none(server, False)
+    check_is_none(server.term, False)
 
 
-@step(u'connection replicas have roles')
+@step(u'connection servers have roles')
 def step_impl(context: Context):
-    replicas = context.driver.servers()
+    servers = context.driver.servers()
     expected_roles = parse_list(context)
     expected_primary_count = 0
     expected_secondary_count = 0
@@ -154,18 +154,18 @@ def step_impl(context: Context):
         elif role == 'candidate':
             expected_candidate_count += 1
         else:
-            raise ValueError(f"Unknown replica role: {role}")
+            raise ValueError(f"Unknown server replication role: {role}")
 
-    actual_primary_count = sum(1 for r in replicas if r.role.is_primary())
-    actual_secondary_count = sum(1 for r in replicas if r.role.is_secondary())
-    actual_candidate_count = sum(1 for r in replicas if r.role.is_candidate())
+    actual_primary_count = sum(1 for r in servers if r.role.is_primary())
+    actual_secondary_count = sum(1 for r in servers if r.role.is_secondary())
+    actual_candidate_count = sum(1 for r in servers if r.role.is_candidate())
 
     assert_that(actual_primary_count, equal_to(expected_primary_count),
-                f"Expected {expected_primary_count} primary replicas, found {actual_primary_count}")
+                f"Expected {expected_primary_count} primary servers, found {actual_primary_count}")
     assert_that(actual_secondary_count, equal_to(expected_secondary_count),
-                f"Expected {expected_secondary_count} secondary replicas, found {actual_secondary_count}")
+                f"Expected {expected_secondary_count} secondary servers, found {actual_secondary_count}")
     assert_that(actual_candidate_count, equal_to(expected_candidate_count),
-                f"Expected {expected_candidate_count} candidate replicas, found {actual_candidate_count}")
+                f"Expected {expected_candidate_count} candidate servers, found {actual_candidate_count}")
 
 
 @step("connection has {count:Int} database")
@@ -190,7 +190,7 @@ def step_impl(context: Context, value: int):
     context.driver_options.primary_failover_retries = value
 
 
-@step("set driver option replica_discovery_attempts to: {value:Int}")
+@step("set driver option server_discovery_attempts to: {value:Int}")
 def step_impl(context: Context, value: int):
     context.driver_options.server_discovery_attempts = value
 

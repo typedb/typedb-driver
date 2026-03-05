@@ -29,7 +29,7 @@
 |===
 |Name
 a| `Auto`
-a| `Server`
+a| `Direct`
 |===
 // end::enum_constants[]
 

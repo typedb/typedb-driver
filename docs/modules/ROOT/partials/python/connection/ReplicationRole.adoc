@@ -6,7 +6,7 @@
 
 *Package*: `typedb.api.server.replication_role`
 
-This class is used to specify the type of server.
+This class is used to specify the replication role of a server.
 
 [caption=""]
 .Examples

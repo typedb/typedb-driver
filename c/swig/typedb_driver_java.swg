@@ -141,7 +141,7 @@
 %nojavaexception database_get_name;
 
 %nojavaexception server_routing_auto;
-%nojavaexception server_routing_server;
+%nojavaexception server_routing_direct;
 
 %nojavaexception concept_is_entity;
 %nojavaexception concept_is_relation;

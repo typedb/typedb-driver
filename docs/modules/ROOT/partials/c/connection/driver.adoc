@@ -11,7 +11,7 @@
 
 TLS configuration for the TypeDB driver.
 
-DriverTlsConfig represents a fully constructed and validated TLS configuration. If TLS is enabled, the underlying TLS config is built eagerly at construction time, ensuring that no connection attempt can observe a partially-configured TLS state.
+``DriverTlsConfig`` represents a fully constructed and validated TLS configuration. If TLS is enabled, the underlying TLS config is built eagerly at construction time, ensuring that no connection attempt can observe a partially-configured TLS state.
 
 The driver defaults to using TLS with native system trust roots. This matches typical system and container deployments while still allowing explicit opt-out or custom PKI configuration.
 
@@ -167,8 +167,8 @@ Open a TypeDB C Driver to a TypeDB cluster, using the provided address translati
 [options="header"]
 |===
 |Name |Description |Type
-a| `public_addresses` a| A null-terminated array holding the server addresses on for connection. a| `const char*const*`
-a| `private_addresses` a| A null-terminated array holding the private server addresses, configured on the server side. This array _must_ have the same length as ``public_addresses``. a| `const char*const*`
+a| `public_addresses` a| A null-terminated array holding the replica addresses on for connection. a| `const char*const*`
+a| `private_addresses` a| A null-terminated array holding the private replica addresses, configured on the server side. This array _must_ have the same length as ``public_addresses``. a| `const char*const*`
 a| `credentials` a| The ``Credentials`` to connect with a| `const struct Credentials*`
 a| `driver_options` a| The ``DriverOptions`` to connect with a| `const struct DriverOptions*`
 |===
@@ -196,8 +196,8 @@ Open a TypeDB Driver to a TypeDB cluster, using the provided address translation
 [options="header"]
 |===
 |Name |Description |Type
-a| `public_addresses` a| A null-terminated array holding the server addresses on for connection. a| `const char*const*`
-a| `private_addresses` a| A null-terminated array holding the private server addresses, configured on the server side. This array _must_ have the same length as ``public_addresses``. a| `const char*const*`
+a| `public_addresses` a| A null-terminated array holding the replica addresses on for connection. a| `const char*const*`
+a| `private_addresses` a| A null-terminated array holding the private replica addresses, configured on the server side. This array _must_ have the same length as ``public_addresses``. a| `const char*const*`
 a| `credentials` a| The ``Credentials`` to connect with a| `const struct Credentials*`
 a| `driver_options` a| The ``DriverOptions`` to connect with a| `const struct DriverOptions*`
 a| `driver_lang` a| The language of the driver connecting to the server a| `const char*`
@@ -254,7 +254,7 @@ Open a TypeDB Driver to a TypeDB cluster available at the provided addresses. Th
 [options="header"]
 |===
 |Name |Description |Type
-a| `addresses` a| A null-terminated array holding the TypeDB cluster server addresses on for connection a| `const char*const*`
+a| `addresses` a| A null-terminated array holding the TypeDB cluster replica addresses on for connection a| `const char*const*`
 a| `credentials` a| The ``Credentials`` to connect with a| `const struct Credentials*`
 a| `driver_options` a| The ``DriverOptions`` to connect with a| `const struct DriverOptions*`
 a| `driver_lang` a| The language of the driver connecting to the server a| `const char*`
@@ -298,7 +298,7 @@ a| `driver_lang` a| The language of the driver connecting to the server a| `cons
 
 [source,c]
 ----
-struct Server* driver_primary_server(const struct TypeDBDriver* driver, const struct ConsistencyLevel* consistency_level)
+struct Server* driver_primary_server(const struct TypeDBDriver* driver, const struct ServerRouting* server_routing)
 ----
 
 
@@ -313,7 +313,7 @@ Retrieves the server's primary server, if exists.
 |===
 |Name |Description |Type
 a| `driver` a| The ``TypeDBDriver`` object. a| `const struct TypeDBDriver*`
-a| `consistency_level` a| The consistency level to use for the operation. Strongest possible if null. a| `const struct ConsistencyLevel*`
+a| `server_routing` a| The server routing directive to use for the operation. Auto if null. a| `const struct ServerRouting*`
 |===
 
 [caption=""]
@@ -348,39 +348,12 @@ a| `address` a| The address(es) of the TypeDB server as a string a| `const char*
 .Returns
 `void`
 
-[#_driver_servers]
-==== function ``driver_servers``
-
-[source,c]
-----
-struct ServerIterator* driver_servers(const struct TypeDBDriver* driver, const struct ConsistencyLevel* consistency_level)
-----
-
-
-
-Retrieves the cluster's servers.
-
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `driver` a| The ``TypeDBDriver`` object. a| `const struct TypeDBDriver*`
-a| `consistency_level` a| The consistency level to use for the operation. Strongest possible if null. a| `const struct ConsistencyLevel*`
-|===
-
-[caption=""]
-.Returns
-`struct ServerIterator*`
-
 [#_driver_server_version]
 ==== function ``driver_server_version``
 
 [source,c]
 ----
-struct ServerVersion* driver_server_version(const struct TypeDBDriver* driver, const struct ConsistencyLevel* consistency_level)
+struct ServerVersion* driver_server_version(const struct TypeDBDriver* driver, const struct ServerRouting* server_routing)
 ----
 
 
@@ -395,12 +368,39 @@ Retrieves the server version and distribution information.
 |===
 |Name |Description |Type
 a| `driver` a| The ``TypeDBDriver`` object. a| `const struct TypeDBDriver*`
-a| `consistency_level` a| The consistency level to use for the operation. Strongest possible if null. a| `const struct ConsistencyLevel*`
+a| `server_routing` a| The server routing directive to use for the operation. Auto if null. a| `const struct ServerRouting*`
 |===
 
 [caption=""]
 .Returns
 `struct ServerVersion*`
+
+[#_driver_servers]
+==== function ``driver_servers``
+
+[source,c]
+----
+struct ServerIterator* driver_servers(const struct TypeDBDriver* driver, const struct ServerRouting* server_routing)
+----
+
+
+
+Retrieves the servers.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `driver` a| The ``TypeDBDriver`` object. a| `const struct TypeDBDriver*`
+a| `server_routing` a| The server routing directive to use for the operation. Auto if null. a| `const struct ServerRouting*`
+|===
+
+[caption=""]
+.Returns
+`struct ServerIterator*`
 
 [#_driver_tls_config_drop]
 ==== function ``driver_tls_config_drop``
@@ -534,7 +534,7 @@ Updates address translation of the driver. This lets you actualize new translati
 |===
 |Name |Description |Type
 a| `driver` a| The ``TypeDBDriver`` object. a| `const struct TypeDBDriver*`
-a| `public_addresses` a| A null-terminated array holding the server addresses on for connection. a| `const char*const*`
+a| `public_addresses` a| A null-terminated array holding the server addresses for connection. a| `const char*const*`
 a| `private_addresses` a| A null-terminated array holding the private server addresses, configured on the server side. This array _must_ have the same length as ``public_addresses``. a| `const char*const*`
 |===
 
@@ -556,8 +556,8 @@ Enables logging in the TypeDB driver.
 
 This function sets up tracing with two environment variables:
 
- TYPEDB_DRIVER_LOG: Fine-grained control using the same syntax as RUST_LOG. Example: TYPEDB_DRIVER_LOG=typedb_driver=debug,typedb_driver_clib=trace
- TYPEDB_DRIVER_LOG_LEVEL: Simple log level that applies to both typedb_driver and typedb_driver_clib crates. Overrides any settings from TYPEDB_DRIVER_LOG. Example: TYPEDB_DRIVER_LOG_LEVEL=debug
+ ``TYPEDB_DRIVER_LOG``: Fine-grained control using the same syntax as ``RUST_LOG``. Example: ``TYPEDB_DRIVER_LOG=typedb_driver=debug,typedb_driver_clib=trace``
+ ``TYPEDB_DRIVER_LOG_LEVEL``: Simple log level that applies to both ``typedb_driver`` and ``typedb_driver_clib`` crates. Overrides any settings from ``TYPEDB_DRIVER_LOG``. Example: ``TYPEDB_DRIVER_LOG_LEVEL=debug``
 
 
 If neither is set, the default level is INFO for driver crates.

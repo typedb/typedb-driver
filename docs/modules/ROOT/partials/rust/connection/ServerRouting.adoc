@@ -14,7 +14,7 @@ Server routing directive for operations against a distributed server. All driver
 |===
 |Variant
 a| `Auto`
-a| `Server`
+a| `Direct`
 |===
 // end::enum_constants[]
 

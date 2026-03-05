@@ -23,7 +23,7 @@ import com.typedb.driver.common.exception.TypeDBDriverException;
 
 import static com.typedb.driver.common.exception.ErrorMessage.Internal.UNEXPECTED_NATIVE_VALUE;
 import static com.typedb.driver.jni.typedb_driver.server_routing_auto;
-import static com.typedb.driver.jni.typedb_driver.server_routing_server;
+import static com.typedb.driver.jni.typedb_driver.server_routing_direct;
 
 /**
  * Server routing directive for operations against a distributed server. All driver methods have
@@ -35,8 +35,8 @@ public abstract class ServerRouting {
 
     public static ServerRouting of(com.typedb.driver.jni.ServerRouting nativeValue) {
         if (nativeValue.getTag() == com.typedb.driver.jni.ServerRoutingTag.Auto) return new Auto();
-        else if (nativeValue.getTag() == com.typedb.driver.jni.ServerRoutingTag.Server) {
-            return new Server(nativeValue.getAddress());
+        else if (nativeValue.getTag() == com.typedb.driver.jni.ServerRoutingTag.Direct) {
+            return new Direct(nativeValue.getAddress());
         }
         throw new TypeDBDriverException(UNEXPECTED_NATIVE_VALUE);
     }
@@ -74,10 +74,10 @@ public abstract class ServerRouting {
     /**
      * Route to a specific known server at the given address. Mostly used for debugging purposes.
      */
-    public static final class Server extends ServerRouting {
+    public static final class Direct extends ServerRouting {
         private final String address;
 
-        public Server(String address) {
+        public Direct(String address) {
             this.address = address;
         }
 
@@ -87,7 +87,7 @@ public abstract class ServerRouting {
         }
 
         private static com.typedb.driver.jni.ServerRouting newNative(String address) {
-            return server_routing_server(address);
+            return server_routing_direct(address);
         }
 
         /**
@@ -99,7 +99,7 @@ public abstract class ServerRouting {
 
         @Override
         public String toString() {
-            return "Server(" + address + ")";
+            return "Direct(" + address + ")";
         }
     }
 }

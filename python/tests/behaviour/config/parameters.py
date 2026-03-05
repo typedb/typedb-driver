@@ -374,7 +374,7 @@ def parse_server_routing(value: str) -> ServerRouting:
     else:
         match = re.match(r'server\((?P<address>.*)\)', value)
         if match:
-            return ServerRouting(TypeDBServerRouting.Server(match.group("address")))
+            return ServerRouting(TypeDBServerRouting.Direct(match.group("address")))
         else:
             raise ValueError(f"Unrecognised ConsistencyLevel: {value}")
 

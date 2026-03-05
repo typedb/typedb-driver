@@ -435,7 +435,7 @@ public class Parameters {
                 return new Routing(new ServerRouting.Auto());
             } else if (value.toLowerCase().startsWith("server(") && value.endsWith(")")) {
                 String address = value.substring("server(".length(), value.length() - 1);
-                return new Routing(new ServerRouting.Server(address));
+                return new Routing(new ServerRouting.Direct(address));
             } else {
                 throw new IllegalArgumentException("Unknown server routing: " + value);
             }

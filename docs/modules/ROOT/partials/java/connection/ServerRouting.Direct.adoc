@@ -1,6 +1,6 @@
-[#_ServerRouting_Server]
+[#_ServerRouting_Direct]
 [.doc-api-reference-driver]
-=== ServerRouting.Server
+=== ServerRouting.Direct
 
 `class`
 
@@ -9,12 +9,12 @@
 Route to a specific known server at the given address. Mostly used for debugging purposes.
 
 // tag::methods[]
-[#_ServerRouting_Server_Server_java_lang_String]
-==== method ``Server``
+[#_ServerRouting_Direct_Direct_java_lang_String]
+==== method ``Direct``
 
 [source,java]
 ----
-public Server​(java.lang.String address)
+public Direct​(java.lang.String address)
 ----
 
 
@@ -23,7 +23,7 @@ public Server​(java.lang.String address)
 .Returns
 `public`
 
-[#_ServerRouting_Server_getAddress_]
+[#_ServerRouting_Direct_getAddress_]
 ==== method ``getAddress``
 
 [source,java]
@@ -37,7 +37,7 @@ Retrieves the address of the server this routing targets.
 .Returns
 `public java.lang.String`
 
-[#_ServerRouting_Server_nativeValue_]
+[#_ServerRouting_Direct_nativeValue_]
 ==== method ``nativeValue``
 
 [source,java]
@@ -51,7 +51,7 @@ public com.typedb.driver.jni.ServerRouting nativeValue()
 .Returns
 `public com.typedb.driver.jni.ServerRouting`
 
-[#_ServerRouting_Server_nativeValue_ServerRouting]
+[#_ServerRouting_Direct_nativeValue_ServerRouting]
 ==== method ``nativeValue``
 
 [source,java]
@@ -65,7 +65,7 @@ public static com.typedb.driver.jni.ServerRouting nativeValue​(ServerRouting s
 .Returns
 `public static com.typedb.driver.jni.ServerRouting`
 
-[#_ServerRouting_Server_of_com_typedb_driver_jni_ServerRouting]
+[#_ServerRouting_Direct_of_com_typedb_driver_jni_ServerRouting]
 ==== method ``of``
 
 [source,java]
@@ -79,7 +79,7 @@ public static ServerRouting of​(com.typedb.driver.jni.ServerRouting nativeValu
 .Returns
 `public static ServerRouting`
 
-[#_ServerRouting_Server_toString_]
+[#_ServerRouting_Direct_toString_]
 ==== method ``toString``
 
 [source,java]

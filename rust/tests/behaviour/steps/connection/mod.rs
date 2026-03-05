@@ -140,45 +140,45 @@ async fn connection_has_version(context: &mut Context, may_error: params::MayErr
 }
 
 #[apply(generic_step)]
-#[step(expr = r"connection has {int} replica(s)")]
-async fn connection_has_count_replicas(context: &mut Context, count: usize) {
+#[step(expr = r"connection has {int} server(s)")]
+async fn connection_has_count_servers(context: &mut Context, count: usize) {
     assert_eq!(context.driver.as_ref().unwrap().servers().await.unwrap().len(), count);
 }
 
 #[apply(generic_step)]
-#[step(expr = r"connection primary replica exists")]
-async fn connection_primary_replica_exists(context: &mut Context) {
+#[step(expr = r"connection primary server exists")]
+async fn connection_primary_server_exists(context: &mut Context) {
     assert!(context.driver.as_ref().unwrap().primary_server().await.unwrap().is_some());
 }
 
 #[apply(generic_step)]
-#[step(expr = r"connection get replica\({word}\) {exists_or_doesnt}")]
-async fn connection_get_replica_exists(
+#[step(expr = r"connection get server\({word}\) {exists_or_doesnt}")]
+async fn connection_get_server_exists(
     context: &mut Context,
     address: String,
     exists_or_doesnt: params::ExistsOrDoesnt,
 ) {
-    let replicas = context.driver.as_ref().unwrap().servers().await.unwrap();
-    let exists = replicas.iter().any(|r| r.address().unwrap().to_string() == address);
-    exists_or_doesnt.check_bool(exists, &format!("replica {}", address));
+    let servers = context.driver.as_ref().unwrap().servers().await.unwrap();
+    let exists = servers.iter().any(|r| r.address().unwrap().to_string() == address);
+    exists_or_doesnt.check_bool(exists, &format!("server {}", address));
 }
 
 #[apply(generic_step)]
-#[step(expr = r"connection get replica\({word}\) has term")]
-async fn connection_get_replica_has_term(context: &mut Context, address: String) {
-    let replicas = context.driver.as_ref().unwrap().servers().await.unwrap();
-    let replica = replicas.iter().find(|r| r.address().unwrap().to_string() == address);
-    params::ExistsOrDoesnt::Exists.check(&replica, &format!("replica {}", address));
-    let term = replica.unwrap().term();
+#[step(expr = r"connection get server\({word}\) has term")]
+async fn connection_get_server_has_term(context: &mut Context, address: String) {
+    let servers = context.driver.as_ref().unwrap().servers().await.unwrap();
+    let server = servers.iter().find(|r| r.address().unwrap().to_string() == address);
+    params::ExistsOrDoesnt::Exists.check(&server, &format!("server {}", address));
+    let term = server.unwrap().term();
     params::ExistsOrDoesnt::Exists.check(&term, &format!("term {:?}", term));
     assert!(term.unwrap() > 0, "Term expected");
 }
 
 #[apply(generic_step)]
-#[step("connection replicas have roles:")]
-async fn connection_replicas_have_roles(context: &mut Context, step: &Step) {
-    let replicas = context.driver.as_ref().unwrap().servers().await.unwrap();
-    let table = step.table.as_ref().expect("Expected a table with replica roles");
+#[step("connection servers have roles:")]
+async fn connection_servers_have_roles(context: &mut Context, step: &Step) {
+    let servers = context.driver.as_ref().unwrap().servers().await.unwrap();
+    let table = step.table.as_ref().expect("Expected a table with server roles");
 
     let mut expected_primary_count = 0;
     let mut expected_secondary_count = 0;
@@ -188,27 +188,27 @@ async fn connection_replicas_have_roles(context: &mut Context, step: &Step) {
             "primary" => expected_primary_count += 1,
             "secondary" => expected_secondary_count += 1,
             "candidate" => expected_candidate_count += 1,
-            other => panic!("Unknown replica role: {}", other),
+            other => panic!("Unknown server replication role: {}", other),
         }
     }
 
-    let actual_primary_count = replicas.iter().filter(|r| matches!(r.role(), Some(ReplicationRole::Primary))).count();
-    let actual_secondary_count = replicas.iter().filter(|r| matches!(r.role(), Some(ReplicationRole::Secondary))).count();
-    let actual_candidate_count = replicas.iter().filter(|r| matches!(r.role(), Some(ReplicationRole::Candidate))).count();
+    let actual_primary_count = servers.iter().filter(|r| matches!(r.role(), Some(ReplicationRole::Primary))).count();
+    let actual_secondary_count = servers.iter().filter(|r| matches!(r.role(), Some(ReplicationRole::Secondary))).count();
+    let actual_candidate_count = servers.iter().filter(|r| matches!(r.role(), Some(ReplicationRole::Candidate))).count();
 
     assert_eq!(
         expected_primary_count, actual_primary_count,
-        "Expected {} primary replicas, found {}",
+        "Expected {} primary servers, found {}",
         expected_primary_count, actual_primary_count
     );
     assert_eq!(
         expected_secondary_count, actual_secondary_count,
-        "Expected {} secondary replicas, found {}",
+        "Expected {} secondary servers, found {}",
         expected_secondary_count, actual_secondary_count
     );
     assert_eq!(
         expected_candidate_count, actual_candidate_count,
-        "Expected {} candidate replicas, found {}",
+        "Expected {} candidate servers, found {}",
         expected_candidate_count, actual_candidate_count
     );
 }
@@ -247,8 +247,8 @@ pub async fn set_transaction_option_primary_failover_retries(context: &mut Conte
 }
 
 #[apply(generic_step)]
-#[step(expr = "set driver option replica_discovery_attempts to: {int}")]
-pub async fn set_transaction_option_replica_discovery_attempts(context: &mut Context, value: usize) {
+#[step(expr = "set driver option server_discovery_attempts to: {int}")]
+pub async fn set_transaction_option_server_discovery_attempts(context: &mut Context, value: usize) {
     context.init_driver_options_if_needed();
     context.driver_options_mut().unwrap().server_discovery_attempts = Some(value);
 }

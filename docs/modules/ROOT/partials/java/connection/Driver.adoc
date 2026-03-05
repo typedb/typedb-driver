@@ -30,7 +30,7 @@ a| `LANGUAGE` a| `static java.lang.String` a|
 void close()
 ----
 
-Closes the driver. Before instantiating a new driver, the driver that’s currently open should first be closed. 
+Closes the driver. Before instantiating a new driver, the driver that's currently open should first be closed. 
 
 
 [caption=""]
@@ -75,7 +75,7 @@ driver.databases();
 void deregisterServer​(long serverID)
 ----
 
-Deregisters a server from the cluster the driver is currently connected to. This server will no longer play a raft role in this cluster.
+Deregisters a server from the cluster the driver is currently connected to. This server will no longer play a raft role in this cluster. 
 
 
 [caption=""]
@@ -130,7 +130,7 @@ driver.isOpen();
 default java.util.Optional<? extends Server> primaryServer()
 ----
 
-Returns the primary server for this driver connection, using default strong consistency. See <<#_primaryServer_com_typedb_driver_api_ConsistencyLevel,``primaryServer(ConsistencyLevel)``>> for more details and options.
+Returns the primary server for this driver connection, using default automatic routing. See <<#_primaryServer_com_typedb_driver_api_ServerRouting,``primaryServer(ServerRouting)``>> for more details and options. 
 
 
 [caption=""]
@@ -144,16 +144,16 @@ Returns the primary server for this driver connection, using default strong cons
 driver.primaryServer();
 ----
 
-[#_Driver_primaryServer_ConsistencyLevel]
+[#_Driver_primaryServer_ServerRouting]
 ==== method ``primaryServer``
 
 [source,java]
 ----
 @CheckReturnValue
-java.util.Optional<? extends Server> primaryServer​(ConsistencyLevel consistencyLevel)
+java.util.Optional<? extends Server> primaryServer​(ServerRouting serverRouting)
 ----
 
-Returns the primary server for this driver connection.
+Returns the primary server for this driver connection. 
 
 
 [caption=""]
@@ -162,7 +162,7 @@ Returns the primary server for this driver connection.
 [options="header"]
 |===
 |Name |Description |Type
-a| `consistencyLevel` a| The consistency level to use for the operation a| `ConsistencyLevel`
+a| `serverRouting` a| The server routing to use for the operation a| `ServerRouting`
 |===
 
 [caption=""]
@@ -173,7 +173,7 @@ a| `consistencyLevel` a| The consistency level to use for the operation a| `Cons
 .Code examples
 [source,java]
 ----
-driver.primaryServer(new ConsistencyLevel.Strong());
+driver.primaryServer(new ServerRouting.Auto());
 ----
 
 [#_Driver_registerServer_long_java_lang_String]
@@ -182,10 +182,10 @@ driver.primaryServer(new ConsistencyLevel.Strong());
 [source,java]
 ----
 void registerServer​(long serverID,
-                     java.lang.String address)
+                    java.lang.String address)
 ----
 
-Registers a new server in the cluster the driver is currently connected to. The registered server will become available eventually, depending on the behavior of the whole cluster. To register a server, its clustering address should be passed, not the connection address.
+Registers a new server in the cluster the driver is currently connected to. The registered server will become available eventually, depending on the behavior of the whole cluster. To register a server, its clustering address should be passed, not the connection address. 
 
 
 [caption=""]
@@ -209,6 +209,61 @@ a| `address` a| The address(es) of the TypeDB server as a string a| `java.lang.S
 driver.registerServer(2, "127.0.0.1:11729");
 ----
 
+[#_Driver_serverVersion_]
+==== method ``serverVersion``
+
+[source,java]
+----
+@CheckReturnValue
+default ServerVersion serverVersion()
+----
+
+Retrieves the server's version, using default automatic routing. See <<#_serverVersion_com_typedb_driver_api_ServerRouting,``serverVersion(ServerRouting)``>> for more details and options. 
+
+
+[caption=""]
+.Returns
+`ServerVersion`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+driver.serverVersion();
+----
+
+[#_Driver_serverVersion_ServerRouting]
+==== method ``serverVersion``
+
+[source,java]
+----
+@CheckReturnValue
+ServerVersion serverVersion​(ServerRouting serverRouting)
+----
+
+Retrieves the server's version. 
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `serverRouting` a| The server routing to use for the operation a| `ServerRouting`
+|===
+
+[caption=""]
+.Returns
+`ServerVersion`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+driver.serverVersion();
+----
+
 [#_Driver_servers_]
 ==== method ``servers``
 
@@ -218,7 +273,7 @@ driver.registerServer(2, "127.0.0.1:11729");
 default java.util.Set<? extends Server> servers()
 ----
 
-Set of ``Server`` instances for this driver connection, using default strong consistency. See <<#_servers_com_typedb_driver_api_ConsistencyLevel,``servers(ConsistencyLevel)``>> for more details and options.
+Set of servers for this driver connection, using default automatic routing. See <<#_servers_com_typedb_driver_api_ServerRouting,``servers(ServerRouting)``>> for more details and options. 
 
 
 [caption=""]
@@ -232,16 +287,16 @@ Set of ``Server`` instances for this driver connection, using default strong con
 driver.servers();
 ----
 
-[#_Driver_servers_ConsistencyLevel]
+[#_Driver_servers_ServerRouting]
 ==== method ``servers``
 
 [source,java]
 ----
 @CheckReturnValue
-java.util.Set<? extends Server> servers​(ConsistencyLevel consistencyLevel)
+java.util.Set<? extends Server> servers​(ServerRouting serverRouting)
 ----
 
-Set of ``Server`` instances for this driver connection.
+Set of servers for this driver connection. 
 
 
 [caption=""]
@@ -250,7 +305,7 @@ Set of ``Server`` instances for this driver connection.
 [options="header"]
 |===
 |Name |Description |Type
-a| `consistencyLevel` a| The consistency level to use for the operation a| `ConsistencyLevel`
+a| `serverRouting` a| The server routing to use for the operation a| `ServerRouting`
 |===
 
 [caption=""]
@@ -261,62 +316,7 @@ a| `consistencyLevel` a| The consistency level to use for the operation a| `Cons
 .Code examples
 [source,java]
 ----
-driver.servers(new ConsistencyLevel.Strong());
-----
-
-[#_Driver_serverVersion_]
-==== method ``serverVersion``
-
-[source,java]
-----
-@CheckReturnValue
-default ServerVersion serverVersion()
-----
-
-Retrieves the server's version, using default strong consistency. See <<#_serverVersion_com_typedb_driver_api_ConsistencyLevel,``serverVersion(ConsistencyLevel)``>> for more details and options. 
-
-
-[caption=""]
-.Returns
-`ServerVersion`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-driver.serverVersion();
-----
-
-[#_Driver_serverVersion_ConsistencyLevel]
-==== method ``serverVersion``
-
-[source,java]
-----
-@CheckReturnValue
-ServerVersion serverVersion​(ConsistencyLevel consistencyLevel)
-----
-
-Retrieves the server's version. 
-
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `consistencyLevel` a| The consistency level to use for the operation a| `ConsistencyLevel`
-|===
-
-[caption=""]
-.Returns
-`ServerVersion`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-driver.serverVersion();
+driver.servers(new ServerRouting.Auto());
 ----
 
 [#_Driver_transaction_java_lang_String_Transaction_Type]

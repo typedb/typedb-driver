@@ -29,14 +29,14 @@ pub enum ServerRouting {
     Auto,
 
     /// Route to a specific known server at the given address. Mostly used for debugging purposes.
-    Server { address: Address },
+    Direct { address: Address },
 }
 
 impl fmt::Display for ServerRouting {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             ServerRouting::Auto => write!(f, "Auto"),
-            ServerRouting::Server { address } => write!(f, "Server({address})"),
+            ServerRouting::Direct { address } => write!(f, "Direct({address})"),
         }
     }
 }

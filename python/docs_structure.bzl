@@ -103,6 +103,7 @@ dir_mapping = {
     "Credentials.adoc": "connection",
     "ServerRouting.adoc": "connection",
     "Auto.adoc": "connection",
+    "Direct.adoc": "connection",
     "Server.adoc": "connection",
     "DriverOptions.adoc": "connection",
     "DriverTlsConfig.adoc": "connection",

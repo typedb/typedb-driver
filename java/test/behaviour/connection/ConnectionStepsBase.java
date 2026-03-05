@@ -191,26 +191,26 @@ public abstract class ConnectionStepsBase {
         });
     }
 
-    void connection_has_count_replicas(int count) {
+    void connection_has_count_servers(int count) {
         assertEquals(driver.servers().size(), count);
     }
 
-    void connection_primary_replica_exists() {
+    void connection_primary_server_exists() {
         assertTrue(driver.primaryServer().isPresent());
     }
 
-    void connection_get_replica_exists(String address, Parameters.ExistsOrDoesnt existsOrDoesnt) {
+    void connection_get_server_exists(String address, Parameters.ExistsOrDoesnt existsOrDoesnt) {
         boolean exists = driver.servers().stream().anyMatch(r -> r.getAddress().equals(address));
         existsOrDoesnt.check(exists);
     }
 
-    void connection_get_replica_has_term(String address) {
-        var replica = driver.servers().stream().filter(r -> r.getAddress().equals(address)).findFirst();
-        Parameters.ExistsOrDoesnt.DOES.check(replica.isPresent());
+    void connection_get_server_has_term(String address) {
+        var server = driver.servers().stream().filter(r -> r.getAddress().equals(address)).findFirst();
+        Parameters.ExistsOrDoesnt.DOES.check(server.isPresent());
         // term should exist (can be any value >= 0)
     }
 
-    void connection_replicas_have_roles(List<String> roles) {
+    void connection_servers_have_roles(List<String> roles) {
         int expectedPrimaryCount = 0;
         int expectedSecondaryCount = 0;
         int expectedCandidateCount = 0;
@@ -227,21 +227,21 @@ public abstract class ConnectionStepsBase {
                     expectedCandidateCount++;
                     break;
                 default:
-                    throw new IllegalArgumentException("Unknown replica role: " + role);
+                    throw new IllegalArgumentException("Unknown server replication role: " + role);
             }
         }
 
-        var replicas = driver.servers();
-        int actualPrimaryCount = (int) replicas.stream()
+        var servers = driver.servers();
+        int actualPrimaryCount = (int) servers.stream()
                 .filter(r -> r.getRole().map(ReplicationRole::isPrimary).orElse(false)).count();
-        int actualSecondaryCount = (int) replicas.stream()
+        int actualSecondaryCount = (int) servers.stream()
                 .filter(r -> r.getRole().map(ReplicationRole::isSecondary).orElse(false)).count();
-        int actualCandidateCount = (int) replicas.stream()
+        int actualCandidateCount = (int) servers.stream()
                 .filter(r -> r.getRole().map(ReplicationRole::isCandidate).orElse(false)).count();
 
-        assertEquals("Primary replica count mismatch", expectedPrimaryCount, actualPrimaryCount);
-        assertEquals("Secondary replica count mismatch", expectedSecondaryCount, actualSecondaryCount);
-        assertEquals("Candidate replica count mismatch", expectedCandidateCount, actualCandidateCount);
+        assertEquals("Primary server count mismatch", expectedPrimaryCount, actualPrimaryCount);
+        assertEquals("Secondary server count mismatch", expectedSecondaryCount, actualSecondaryCount);
+        assertEquals("Candidate server count mismatch", expectedCandidateCount, actualCandidateCount);
     }
 
     void connection_has_count_databases(int count) {
@@ -260,8 +260,7 @@ public abstract class ConnectionStepsBase {
         driverOptions = driverOptions.primaryFailoverRetries(value);
     }
 
-    void set_driver_option_replica_discovery_attempts_to(int value) {
+    void set_driver_option_server_discovery_attempts_to(int value) {
         driverOptions = driverOptions.serverDiscoveryAttempts(value);
     }
-
 }

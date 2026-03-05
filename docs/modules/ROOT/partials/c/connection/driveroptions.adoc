@@ -9,7 +9,7 @@
 
 
 
-TypeDB driver connection options. DriverOptions object can be used to override the default driver behavior while connecting to TypeDB.
+TypeDB driver connection options. ``DriverOptions`` object can be used to override the default driver behavior while connecting to TypeDB.
 
 
 [#_driver_options_drop]
@@ -44,27 +44,6 @@ Returns the value set for the primary failover retries limit in this ``DriverOpt
 .Returns
 `int64_t`
 
-[#_driver_options_get_server_discovery_attempts]
-==== function ``driver_options_get_server_discovery_attempts``
-
-[source,c]
-----
-int64_t driver_options_get_server_discovery_attempts(const struct DriverOptions* options)
-----
-
-
-
-Returns the value set for the server discovery attempts limit in this ``DriverOptions`` object. Limits the number of driver attempts to discover a single working replica to perform an operation in case of a replica unavailability. Every replica is tested once, which means that at most:
-
- {limit} operations are performed if the limit &lt;= the number of replicas.
- {number of replicas} operations are performed if the limit &gt; the number of replicas.
- {number of replicas} operations are performed if the limit is None. Affects every eventually consistent operation, including redirect failover, when the new primary replica is unknown.
-
-
-[caption=""]
-.Returns
-`int64_t`
-
 [#_driver_options_get_request_timeout_millis]
 ==== function ``driver_options_get_request_timeout_millis``
 
@@ -76,6 +55,27 @@ int64_t driver_options_get_request_timeout_millis(const struct DriverOptions* op
 
 
 Returns the request timeout in milliseconds set for this ``DriverOptions`` object. Specifies the maximum time to wait for a response to a unary RPC request. This applies to operations like database creation, user management, and initial transaction opening. It does NOT apply to operations within transactions (queries, commits).
+
+[caption=""]
+.Returns
+`int64_t`
+
+[#_driver_options_get_server_discovery_attempts]
+==== function ``driver_options_get_server_discovery_attempts``
+
+[source,c]
+----
+int64_t driver_options_get_server_discovery_attempts(const struct DriverOptions* options)
+----
+
+
+
+Returns the value set for the server discovery attempts limit in this ``DriverOptions`` object. Limits the number of driver attempts to discover a single working server to perform an operation in case of a server unavailability. Every server is tested once, which means that at most:
+
+ {limit} operations are performed if the limit &lt;= the number of servers.
+ {number of servers} operations are performed if the limit &gt; the number of servers.
+ {number of servers} operations are performed if the limit is None. Affects every eventually consistent operation, including redirect failover, when the new primary server is unknown.
+
 
 [caption=""]
 .Returns
@@ -161,27 +161,6 @@ Limits the number of attempts to redirect a strongly consistent request to anoth
 .Returns
 `void`
 
-[#_driver_options_set_server_discovery_attempts]
-==== function ``driver_options_set_server_discovery_attempts``
-
-[source,c]
-----
-void driver_options_set_server_discovery_attempts(struct DriverOptions* options, int64_t server_discovery_attempts)
-----
-
-
-
-Limits the number of driver attempts to discover a single working replica to perform an operation in case of a replica unavailability. Every replica is tested once, which means that at most:
-
- {limit} operations are performed if the limit &lt;= the number of replicas.
- {number of replicas} operations are performed if the limit &gt; the number of replicas.
- {number of replicas} operations are performed if the limit is None. Affects every eventually consistent operation, including redirect failover, when the new primary replica is unknown. If not set, the maximum (practically unlimited) value is used.
-
-
-[caption=""]
-.Returns
-`void`
-
 [#_driver_options_set_request_timeout_millis]
 ==== function ``driver_options_set_request_timeout_millis``
 
@@ -193,6 +172,27 @@ void driver_options_set_request_timeout_millis(struct DriverOptions* options, in
 
 
 Sets the maximum time (in milliseconds) to wait for a response to a unary RPC request. This applies to operations like database creation, user management, and initial transaction opening. It does NOT apply to operations within transactions (queries, commits). Set to 0 to disable the timeout (not recommended for production use). Defaults to 2 hours (7200000 milliseconds).
+
+[caption=""]
+.Returns
+`void`
+
+[#_driver_options_set_server_discovery_attempts]
+==== function ``driver_options_set_server_discovery_attempts``
+
+[source,c]
+----
+void driver_options_set_server_discovery_attempts(struct DriverOptions* options, int64_t server_discovery_attempts)
+----
+
+
+
+Limits the number of driver attempts to discover a single working server to perform an operation in case of a server unavailability. Every server is tested once, which means that at most:
+
+ {limit} operations are performed if the limit &lt;= the number of servers.
+ {number of servers} operations are performed if the limit &gt; the number of servers.
+ {number of servers} operations are performed if the limit is None. Affects every eventually consistent operation, including redirect failover, when the new primary server is unknown. If not set, the maximum (practically unlimited) value is used.
+
 
 [caption=""]
 .Returns
