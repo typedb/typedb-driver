@@ -24,9 +24,11 @@ import com.typedb.driver.api.Driver;
 import com.typedb.driver.api.DriverOptions;
 import com.typedb.driver.api.DriverTlsConfig;
 import com.typedb.driver.api.QueryOptions;
+import com.typedb.driver.api.ServerRouting;
 import com.typedb.driver.api.Transaction;
 import com.typedb.driver.api.TransactionOptions;
 import com.typedb.driver.api.server.ReplicationRole;
+import com.typedb.driver.api.server.Server;
 import com.typedb.driver.api.server.ServerVersion;
 import com.typedb.driver.test.behaviour.config.Parameters;
 import com.typedb.driver.test.behaviour.util.Util;
@@ -35,6 +37,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -58,6 +61,7 @@ public abstract class ConnectionStepsBase {
     public static List<Transaction> backgroundTransactions = new ArrayList<>();
     public static List<CompletableFuture<Transaction>> transactionsParallel = new ArrayList<>();
 
+    public static Optional<ServerRouting> operationServerRouting = Optional.empty();
     public static DriverOptions driverOptions = new DriverOptions(DriverTlsConfig.disabled());
     public static Optional<TransactionOptions> transactionOptions = Optional.empty();
     public static Optional<QueryOptions> queryOptions = Optional.empty();
@@ -117,6 +121,7 @@ public abstract class ConnectionStepsBase {
 
         cleanupTransactions();
         cleanupBackgroundTransactions();
+        operationServerRouting = Optional.empty();
         transactionOptions = Optional.empty();
         queryOptions = Optional.empty();
 
@@ -164,6 +169,30 @@ public abstract class ConnectionStepsBase {
         }
     }
 
+    ServerVersion getServerVersion() {
+        if (operationServerRouting.isPresent()) {
+            return driver.serverVersion(operationServerRouting.get());
+        } else {
+            return driver.serverVersion();
+        }
+    }
+
+    Set<? extends Server> getServers() {
+        if (operationServerRouting.isPresent()) {
+            return driver.servers(operationServerRouting.get());
+        } else {
+            return driver.servers();
+        }
+    }
+
+    Optional<? extends Server> getPrimaryServer() {
+        if (operationServerRouting.isPresent()) {
+            return driver.primaryServer(operationServerRouting.get());
+        } else {
+            return driver.primaryServer();
+        }
+    }
+
     abstract void connection_opens_with_default_authentication();
 
     abstract void connection_opens_with_username_password(String username, String password, Parameters.MayError mayError);
@@ -178,34 +207,28 @@ public abstract class ConnectionStepsBase {
     }
 
     void connection_contains_distribution(Parameters.MayError mayError) {
-        mayError.check(() -> {
-            ServerVersion serverVersion = driver.serverVersion();
-            assertFalse(serverVersion.getDistribution().isEmpty());
-        });
+        mayError.check(() -> assertFalse(getServerVersion().getDistribution().isEmpty()));
     }
 
     void connection_contains_version(Parameters.MayError mayError) {
-        mayError.check(() -> {
-            ServerVersion serverVersion = driver.serverVersion();
-            assertFalse(serverVersion.getVersion().isEmpty());
-        });
+        mayError.check(() -> assertFalse(getServerVersion().getVersion().isEmpty()));
     }
 
     void connection_has_count_servers(int count) {
-        assertEquals(driver.servers().size(), count);
+        assertEquals(getServers().size(), count);
     }
 
     void connection_primary_server_exists() {
-        assertTrue(driver.primaryServer().isPresent());
+        assertTrue(getPrimaryServer().isPresent());
     }
 
     void connection_get_server_exists(String address, Parameters.ExistsOrDoesnt existsOrDoesnt) {
-        boolean exists = driver.servers().stream().anyMatch(r -> r.getAddress().equals(address));
+        boolean exists = getServers().stream().anyMatch(r -> r.getAddress().equals(address));
         existsOrDoesnt.check(exists);
     }
 
     void connection_get_server_has_term(String address) {
-        var server = driver.servers().stream().filter(r -> r.getAddress().equals(address)).findFirst();
+        var server = getServers().stream().filter(r -> r.getAddress().equals(address)).findFirst();
         Parameters.ExistsOrDoesnt.DOES.check(server.isPresent());
         // term should exist (can be any value >= 0)
     }
@@ -231,7 +254,7 @@ public abstract class ConnectionStepsBase {
             }
         }
 
-        var servers = driver.servers();
+        var servers = getServers();
         int actualPrimaryCount = (int) servers.stream()
                 .filter(r -> r.getRole().map(ReplicationRole::isPrimary).orElse(false)).count();
         int actualSecondaryCount = (int) servers.stream()
@@ -250,6 +273,10 @@ public abstract class ConnectionStepsBase {
 
     void connection_has_count_users(int count) {
         assertEquals(count, driver.users().all().size());
+    }
+
+    void set_operation_server_routing(Parameters.Routing serverRouting) {
+        operationServerRouting = Optional.of(serverRouting.serverRouting());
     }
 
     void set_driver_option_use_replication_to(boolean value) {

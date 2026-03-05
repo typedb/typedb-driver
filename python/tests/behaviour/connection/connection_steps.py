@@ -21,7 +21,29 @@ from tests.behaviour.config.parameters import MayError, check_is_none
 from tests.behaviour.context import Context
 
 from tests.behaviour.config.parameters import parse_list
+from typedb.api.connection.server_routing import ServerRouting
 from typedb.api.server.replication_role import ReplicationRole
+
+
+def get_server_version(context: Context):
+    if context.operation_server_routing:
+        return context.driver.server_version(context.operation_server_routing)
+    else:
+        return context.driver.server_version()
+
+
+def get_primary_server(context: Context):
+    if context.operation_server_routing:
+        return context.driver.primary_server(context.operation_server_routing)
+    else:
+        return context.driver.primary_server()
+
+
+def get_servers(context: Context):
+    if context.operation_server_routing:
+        return context.driver.servers(context.operation_server_routing)
+    else:
+        return context.driver.servers()
 
 
 def replace_host(address: str, new_host: str) -> str:
@@ -105,35 +127,35 @@ def step_impl(context: Context, is_open: bool):
 
 @step(u'connection contains distribution{may_error:MayError}')
 def step_impl(context: Context, may_error: MayError):
-    may_error.check(lambda: assert_that(len(context.driver.server_version().distribution), greater_than(0)))
+    may_error.check(lambda: assert_that(len(get_server_version(context).distribution), greater_than(0)))
 
 
 @step(u'connection contains version{may_error:MayError}')
 def step_impl(context: Context, may_error: MayError):
-    may_error.check(lambda: assert_that(len(context.driver.server_version().version), greater_than(0)))
+    may_error.check(lambda: assert_that(len(get_server_version(context).version), greater_than(0)))
 
 
 @step("connection has {count:Int} server")
 @step("connection has {count:Int} servers")
 def step_impl(context: Context, count: int):
-    assert_that(len(context.driver.servers()), equal_to(count))
+    assert_that(len(get_servers(context)), equal_to(count))
 
 
 @step(u'connection primary server exists')
 def step_impl(context: Context):
-    check_is_none(context.driver.primary_server(), False)
+    check_is_none(get_primary_server(context), False)
 
 
 @step(u'connection get server({address}) {exists_or_doesnt:ExistsOrDoesnt}')
 def step_impl(context: Context, address: str, exists_or_doesnt: bool):
-    servers = context.driver.servers()
+    servers = get_servers(context)
     exists = any(r.address == address for r in servers)
     assert_that(exists, equal_to(exists_or_doesnt), f"server {address}")
 
 
 @step(u'connection get server({address}) has term')
 def step_impl(context: Context, address: str):
-    servers = context.driver.servers()
+    servers = get_servers(context)
     server = next((r for r in servers if r.address == address), None)
     check_is_none(server, False)
     check_is_none(server.term, False)
@@ -141,7 +163,7 @@ def step_impl(context: Context, address: str):
 
 @step(u'connection servers have roles')
 def step_impl(context: Context):
-    servers = context.driver.servers()
+    servers = get_servers(context)
     expected_roles = parse_list(context)
     expected_primary_count = 0
     expected_secondary_count = 0
@@ -178,6 +200,11 @@ def step_impl(context: Context, count: int):
 @step("connection has {count:Int} users")
 def step_impl(context: Context, count: int):
     assert_that(len(context.driver.users.all()), equal_to(count))
+
+
+@step("set operation server routing to: {server_routing:ServerRouting}")
+def step_impl(context: Context, server_routing: ServerRouting):
+    context.operation_server_routing = server_routing.server_routing
 
 
 @step("set driver option use_replication to: {value:Bool}")

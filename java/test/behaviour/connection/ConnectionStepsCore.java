@@ -136,6 +136,12 @@ public class ConnectionStepsCore extends ConnectionStepsBase {
     }
 
     @Override
+    @When("set operation server routing to: {server_routing}")
+    public void set_operation_server_routing(Parameters.Routing serverRouting) {
+        super.set_operation_server_routing(serverRouting);
+    }
+
+    @Override
     @When("set driver option use_replication to: {bool}")
     public void set_driver_option_use_replication_to(boolean value) {
         super.set_driver_option_use_replication_to(value);

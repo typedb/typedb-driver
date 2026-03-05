@@ -43,7 +43,7 @@ use typedb_driver::{
     analyze::AnalyzedQuery,
     answer::{ConceptDocument, ConceptRow, QueryAnswer, QueryType},
     Addresses, BoxStream, Credentials, DriverOptions, DriverTlsConfig, QueryOptions, Result as TypeDBResult,
-    Transaction, TransactionOptions, TypeDBDriver,
+    ServerRouting, Transaction, TransactionOptions, TypeDBDriver,
 };
 
 use crate::{
@@ -105,6 +105,7 @@ static CLUSTER_SETUP: OnceCell<()> = OnceCell::const_new();
 pub struct Context {
     pub is_cluster: bool,
     pub tls_root_ca: Option<PathBuf>,
+    pub operation_server_routing: Option<ServerRouting>,
     pub driver_options: Option<DriverOptions>,
     pub transaction_options: Option<TransactionOptions>,
     pub query_options: Option<QueryOptions>,
@@ -128,6 +129,7 @@ impl fmt::Debug for Context {
         f.debug_struct("Context")
             .field("is_cluster", &self.is_cluster)
             .field("tls_root_ca", &self.tls_root_ca)
+            .field("operation_server_routing", &self.operation_server_routing)
             .field("driver_options", &self.driver_options)
             .field("transaction_options", &self.transaction_options)
             .field("query_options", &self.query_options)
@@ -207,6 +209,7 @@ impl Context {
 
     pub async fn after_scenario(&mut self) -> TypeDBResult {
         sleep(Context::STEP_REATTEMPT_SLEEP).await;
+        self.operation_server_routing = None;
         self.transaction_options = None;
         self.query_options = None;
         self.set_driver(self.create_default_driver().await.unwrap());
@@ -562,6 +565,7 @@ impl Default for Context {
         Self {
             is_cluster: false,
             tls_root_ca,
+            operation_server_routing: None,
             driver_options: None,
             transaction_options: None,
             query_options: None,

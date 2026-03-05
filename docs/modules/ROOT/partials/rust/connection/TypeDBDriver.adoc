@@ -912,7 +912,7 @@ driver.transaction(database_name, TransactionType::Read);
 --
 ====
 
-[#_struct_TypeDBDriver_transaction_with_options_options_TransactionOptions_database_name_impl_AsRef_str_transaction_type_TransactionType_options_TransactionOptions]
+[#_struct_TypeDBDriver_transaction_with_options_database_name_impl_AsRef_str_transaction_type_TransactionType_options_TransactionOptions]
 ==== transaction_with_options
 
 [tabs]
@@ -948,7 +948,7 @@ pub fn transaction_with_options(
 --
 ====
 
-Opens a new transaction with the following server routing:
+Opens a new transaction with custom transaction options.
 
 [caption=""]
 .Input parameters
@@ -956,7 +956,6 @@ Opens a new transaction with the following server routing:
 [options="header"]
 |===
 |Name |Description |Type
-a| `options` a| read transaction - auto routing, can be overridden through ; a| `TransactionOptions`
 a| `database_name` a|  — The name of the database to connect to a| `impl AsRef<str>`
 a| `transaction_type` a|  — The TransactionType to open the transaction with a| `TransactionType`
 a| `options` a|  — The TransactionOptions to open the transaction with a| `TransactionOptions`

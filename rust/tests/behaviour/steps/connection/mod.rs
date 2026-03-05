@@ -16,9 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+use std::collections::HashSet;
+
 use cucumber::gherkin::Step;
 use macro_rules_attribute::apply;
-use typedb_driver::{Replica, ReplicationRole, ServerVersion, TypeDBDriver};
+use typedb_driver::{Replica, ReplicationRole, Server, ServerVersion, TypeDBDriver};
 
 use crate::{assert_with_timeout, generic_step, params, params::check_boolean, util::iter_table, Context};
 
@@ -26,8 +28,22 @@ mod database;
 mod transaction;
 mod user;
 
-async fn get_server_version(driver: &TypeDBDriver, may_error: params::MayError) -> Option<ServerVersion> {
-    may_error.check(driver.server_version().await)
+async fn get_server_version(context: &Context, may_error: params::MayError) -> Option<ServerVersion> {
+    let res = match &context.operation_server_routing {
+        Some(server_routing) => {
+            context.driver.as_ref().unwrap().server_version_with_routing(server_routing.clone()).await
+        }
+        None => context.driver.as_ref().unwrap().server_version().await,
+    };
+    may_error.check(res)
+}
+
+async fn get_servers(context: &Context, may_error: params::MayError) -> HashSet<Server> {
+    let res = match &context.operation_server_routing {
+        Some(server_routing) => context.driver.as_ref().unwrap().servers_with_routing(server_routing.clone()).await,
+        None => context.driver.as_ref().unwrap().servers().await,
+    };
+    may_error.check(res).unwrap()
 }
 
 #[apply(generic_step)]
@@ -126,7 +142,7 @@ async fn connection_has_been_opened(context: &mut Context, is_open: params::Bool
 #[apply(generic_step)]
 #[step(expr = r"connection contains distribution{may_error}")]
 async fn connection_has_distribution(context: &mut Context, may_error: params::MayError) {
-    if let Some(server_version) = get_server_version(context.driver.as_ref().unwrap(), may_error).await {
+    if let Some(server_version) = get_server_version(context, may_error).await {
         assert!(!server_version.distribution().is_empty());
     }
 }
@@ -134,7 +150,7 @@ async fn connection_has_distribution(context: &mut Context, may_error: params::M
 #[apply(generic_step)]
 #[step(expr = r"connection contains version{may_error}")]
 async fn connection_has_version(context: &mut Context, may_error: params::MayError) {
-    if let Some(server_version) = get_server_version(context.driver.as_ref().unwrap(), may_error).await {
+    if let Some(server_version) = get_server_version(context, may_error).await {
         assert!(!server_version.version().is_empty());
     }
 }
@@ -142,13 +158,20 @@ async fn connection_has_version(context: &mut Context, may_error: params::MayErr
 #[apply(generic_step)]
 #[step(expr = r"connection has {int} server(s)")]
 async fn connection_has_count_servers(context: &mut Context, count: usize) {
-    assert_eq!(context.driver.as_ref().unwrap().servers().await.unwrap().len(), count);
+    let servers = get_servers(context, params::MayError::False).await;
+    assert_eq!(servers.len(), count);
 }
 
 #[apply(generic_step)]
 #[step(expr = r"connection primary server exists")]
 async fn connection_primary_server_exists(context: &mut Context) {
-    assert!(context.driver.as_ref().unwrap().primary_server().await.unwrap().is_some());
+    let res = match &context.operation_server_routing {
+        Some(server_routing) => {
+            context.driver.as_ref().unwrap().primary_server_with_routing(server_routing.clone()).await
+        }
+        None => context.driver.as_ref().unwrap().primary_server().await,
+    };
+    assert!(res.unwrap().is_some());
 }
 
 #[apply(generic_step)]
@@ -158,7 +181,7 @@ async fn connection_get_server_exists(
     address: String,
     exists_or_doesnt: params::ExistsOrDoesnt,
 ) {
-    let servers = context.driver.as_ref().unwrap().servers().await.unwrap();
+    let servers = get_servers(context, params::MayError::False).await;
     let exists = servers.iter().any(|r| r.address().unwrap().to_string() == address);
     exists_or_doesnt.check_bool(exists, &format!("server {}", address));
 }
@@ -166,7 +189,7 @@ async fn connection_get_server_exists(
 #[apply(generic_step)]
 #[step(expr = r"connection get server\({word}\) has term")]
 async fn connection_get_server_has_term(context: &mut Context, address: String) {
-    let servers = context.driver.as_ref().unwrap().servers().await.unwrap();
+    let servers = get_servers(context, params::MayError::False).await;
     let server = servers.iter().find(|r| r.address().unwrap().to_string() == address);
     params::ExistsOrDoesnt::Exists.check(&server, &format!("server {}", address));
     let term = server.unwrap().term();
@@ -177,7 +200,7 @@ async fn connection_get_server_has_term(context: &mut Context, address: String) 
 #[apply(generic_step)]
 #[step("connection servers have roles:")]
 async fn connection_servers_have_roles(context: &mut Context, step: &Step) {
-    let servers = context.driver.as_ref().unwrap().servers().await.unwrap();
+    let servers = get_servers(context, params::MayError::False).await;
     let table = step.table.as_ref().expect("Expected a table with server roles");
 
     let mut expected_primary_count = 0;
@@ -232,6 +255,12 @@ async fn connection_has_count_users(context: &mut Context, count: usize) {
 async fn driver_closes(context: &mut Context, may_error: params::MayError) {
     may_error.check(context.driver.as_ref().unwrap().force_close());
     context.cleanup_transactions().await;
+}
+
+#[apply(generic_step)]
+#[step(expr = "set operation server routing to: {server_routing}")]
+pub async fn set_operation_server_routing(context: &mut Context, server_routing: params::ServerRouting) {
+    context.operation_server_routing = Some(server_routing.into_typedb());
 }
 
 #[apply(generic_step)]
