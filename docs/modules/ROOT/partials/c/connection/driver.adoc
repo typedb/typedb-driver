@@ -298,7 +298,7 @@ a| `driver_lang` a| The language of the driver connecting to the server a| `cons
 
 [source,c]
 ----
-struct ServerReplica* driver_primary_replica(const struct TypeDBDriver* driver, const struct ConsistencyLevel* consistency_level)
+struct ServerReplica* driver_primary_replica(const struct TypeDBDriver* driver, const struct ServerRouting* server_routing)
 ----
 
 
@@ -313,7 +313,7 @@ Retrieves the server's primary replica, if exists.
 |===
 |Name |Description |Type
 a| `driver` a| The ``TypeDBDriver`` object. a| `const struct TypeDBDriver*`
-a| `consistency_level` a| The consistency level to use for the operation. Strongest possible if null. a| `const struct ConsistencyLevel*`
+a| `server_routing` a| The server routing directive to use for the operation. Auto if null. a| `const struct ServerRouting*`
 |===
 
 [caption=""]
@@ -348,39 +348,12 @@ a| `address` a| The address(es) of the TypeDB replica as a string a| `const char
 .Returns
 `void`
 
-[#_driver_replicas]
-==== function ``driver_replicas``
-
-[source,c]
-----
-struct ServerReplicaIterator* driver_replicas(const struct TypeDBDriver* driver, const struct ConsistencyLevel* consistency_level)
-----
-
-
-
-Retrieves the server's replicas.
-
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `driver` a| The ``TypeDBDriver`` object. a| `const struct TypeDBDriver*`
-a| `consistency_level` a| The consistency level to use for the operation. Strongest possible if null. a| `const struct ConsistencyLevel*`
-|===
-
-[caption=""]
-.Returns
-`struct ServerReplicaIterator*`
-
 [#_driver_server_version]
 ==== function ``driver_server_version``
 
 [source,c]
 ----
-struct ServerVersion* driver_server_version(const struct TypeDBDriver* driver, const struct ConsistencyLevel* consistency_level)
+struct ServerVersion* driver_server_version(const struct TypeDBDriver* driver, const struct ServerRouting* server_routing)
 ----
 
 
@@ -395,12 +368,39 @@ Retrieves the server version and distribution information.
 |===
 |Name |Description |Type
 a| `driver` a| The ``TypeDBDriver`` object. a| `const struct TypeDBDriver*`
-a| `consistency_level` a| The consistency level to use for the operation. Strongest possible if null. a| `const struct ConsistencyLevel*`
+a| `server_routing` a| The server routing directive to use for the operation. Auto if null. a| `const struct ServerRouting*`
 |===
 
 [caption=""]
 .Returns
 `struct ServerVersion*`
+
+[#_driver_servers]
+==== function ``driver_servers``
+
+[source,c]
+----
+struct ServerReplicaIterator* driver_servers(const struct TypeDBDriver* driver, const struct ServerRouting* server_routing)
+----
+
+
+
+Retrieves the servers.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `driver` a| The ``TypeDBDriver`` object. a| `const struct TypeDBDriver*`
+a| `server_routing` a| The server routing directive to use for the operation. Auto if null. a| `const struct ServerRouting*`
+|===
+
+[caption=""]
+.Returns
+`struct ServerReplicaIterator*`
 
 [#_driver_tls_config_drop]
 ==== function ``driver_tls_config_drop``

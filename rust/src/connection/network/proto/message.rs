@@ -39,7 +39,7 @@ use crate::{
     },
     error::{ConnectionError, InternalError, ServerError},
     info::UserInfo,
-    Credentials, Error,
+    Credentials,
 };
 
 impl TryIntoProto<connection::open::Req> for Request {

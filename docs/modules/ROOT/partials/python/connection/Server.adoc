@@ -1,0 +1,25 @@
+[#_Server]
+[.doc-api-reference-driver]
+=== Server
+
+`class`
+
+*Package*: `typedb.api.connection.server_routing.ServerRouting`
+
+*Supertypes:*
+
+* `ServerRouting`
+
+Route to a specific known server at the given address. Mostly used for debugging purposes.
+
+[caption=""]
+.Properties
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `address` a| `str` a| Retrieves the address of the server this routing targets.
+|===
+// end::properties[]
+

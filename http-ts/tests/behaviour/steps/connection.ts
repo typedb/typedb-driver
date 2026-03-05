@@ -24,8 +24,8 @@ import {
     DEFAULT_PASSWORD, DEFAULT_PORT,
     DEFAULT_USERNAME,
     driver,
-    openAndTestConnection,
-    openAndTestConnectionWithHostPort
+    openAndTestConnection, openAndTestConnectionWithAddresses,
+    openAndTestConnectionWithHostPort, openAndTestSingleConnection
 } from "./context";
 import assert from "assert";
 import { Server } from "../../../dist/index.cjs";
@@ -39,6 +39,11 @@ async function connectionOpens(username: string, password: string, mayError: May
 Given("connection opens with username '{word}', password {string}{may_error}", connectionOpens);
 Given(`connection opens with username '{word}', password {string}${EXPECT_ERROR_CONTAINING}`, connectionOpens);
 Given("connection opens with default authentication", () => connectionOpens(DEFAULT_USERNAME, DEFAULT_PASSWORD, false))
+
+async function connectionOpensSingle(username: string, password: string, mayError: MayError) {
+    await openAndTestSingleConnection(username, password, ).then(checkMayError(mayError));
+}
+Given("connection opens to single server with default authentication{may_error}", () => connectionOpensSingle(DEFAULT_USERNAME, DEFAULT_PASSWORD))
 
 When(`connection opens with a wrong host${EXPECT_ERROR_CONTAINING}`, (_: string) => {
     assert.rejects(async () => {

@@ -19,8 +19,6 @@
 
 use std::{fmt, sync::Arc};
 
-use futures::StreamExt;
-
 pub use self::{concept_document::ConceptDocument, concept_row::ConceptRow, json::JSON};
 use crate::{
     answer::{concept_document::ConceptDocumentHeader, concept_row::ConceptRowHeader},

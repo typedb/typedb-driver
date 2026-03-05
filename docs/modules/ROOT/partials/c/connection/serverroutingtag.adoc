@@ -1,0 +1,35 @@
+[#_methods_connection_serverroutingtag]
+=== serverroutingtag
+
+[#_Struct_ServerRoutingTag]
+[.doc-api-reference-driver]
+==== Struct ServerRoutingTag
+
+`rust struct (pointer)`
+
+
+
+``ServerRoutingTag`` is used to represent server routing directives in FFI. It is the tag part, which is combined with optional fields to form an instance of the original enum.
+
+[#_Enum_ServerRoutingTag]
+[.doc-api-reference-driver]
+==== Enum ServerRoutingTag
+
+`rust enum (pointer)`
+
+
+
+``ServerRoutingTag`` is used to represent server routing directives in FFI. It is the tag part, which is combined with optional fields to form an instance of the original enum.
+
+[caption=""]
+.Enum constants
+// tag::enum_constants[]
+[cols=""]
+[options="header"]
+|===
+|Name
+a| `Auto`
+a| `Server`
+|===
+// end::enum_constants[]
+

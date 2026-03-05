@@ -1,0 +1,20 @@
+[#_enum_ServerRouting]
+[.doc-api-reference-driver]
+=== ServerRouting
+
+`enum`
+
+Server routing directive for operations against a distributed server. All driver methods have default recommended values, however, some operations can be configured in order to target a specific server in the cluster. This setting does not affect clusters with a single node.
+
+[caption=""]
+.Enum variants
+// tag::enum_constants[]
+[cols=""]
+[options="header"]
+|===
+|Variant
+a| `Auto`
+a| `Server`
+|===
+// end::enum_constants[]
+

@@ -36,16 +36,14 @@ use prost::Message;
 #[cfg(not(feature = "sync"))]
 use tokio::sync::oneshot::channel as oneshot;
 use tokio::{
-    select,
     sync::{
         mpsc::{unbounded_channel as unbounded_async, UnboundedReceiver, UnboundedSender},
         oneshot::{channel as oneshot_async, Sender as AsyncOneshotSender},
     },
     task,
-    time::{sleep_until, Instant},
 };
 use tonic::Streaming;
-use tracing::{debug, error, trace};
+use tracing::{debug, error};
 use typedb_protocol::transaction::{self, res_part::ResPart, server::Server, stream_signal::res_part::State};
 
 #[cfg(feature = "sync")]
@@ -122,7 +120,7 @@ impl TransactionTransmitter {
         box_promise(async move {
             if self.background_runtime.is_open() && self.is_open.compare_exchange(true, false).is_ok() {
                 let (closed_sink, mut closed_source) = unbounded_async();
-                let close_notifier_callback = Box::new(move |error| {
+                let close_notifier_callback = Box::new(move |_error| {
                     closed_sink.send(()).unwrap();
                 });
                 let on_close_submit_promise = self.on_close(close_notifier_callback);
@@ -142,7 +140,7 @@ impl TransactionTransmitter {
         box_promise(move || {
             if self.background_runtime.is_open() && self.is_open.compare_exchange(true, false).is_ok() {
                 let (closed_sink, closed_source) = oneshot();
-                let close_notifier_callback = Box::new(move |error| {
+                let close_notifier_callback = Box::new(move |_error| {
                     closed_sink.send(()).unwrap();
                 });
                 let _ = resolve!(self.on_close(close_notifier_callback));

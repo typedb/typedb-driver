@@ -260,7 +260,7 @@ impl ServerConnection {
             .request(Request::Transaction(TransactionRequest::Open {
                 database: database_name.to_owned(),
                 transaction_type,
-                options: options.clone(),
+                options,
                 network_latency,
             }))
             .await?

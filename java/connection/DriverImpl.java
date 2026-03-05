@@ -19,10 +19,10 @@
 
 package com.typedb.driver.connection;
 
-import com.typedb.driver.api.ConsistencyLevel;
 import com.typedb.driver.api.Credentials;
 import com.typedb.driver.api.Driver;
 import com.typedb.driver.api.DriverOptions;
+import com.typedb.driver.api.ServerRouting;
 import com.typedb.driver.api.Transaction;
 import com.typedb.driver.api.TransactionOptions;
 import com.typedb.driver.api.database.DatabaseManager;
@@ -50,7 +50,7 @@ import static com.typedb.driver.jni.typedb_driver.driver_new_with_addresses_with
 import static com.typedb.driver.jni.typedb_driver.driver_new_with_description;
 import static com.typedb.driver.jni.typedb_driver.driver_primary_replica;
 import static com.typedb.driver.jni.typedb_driver.driver_register_replica;
-import static com.typedb.driver.jni.typedb_driver.driver_replicas;
+import static com.typedb.driver.jni.typedb_driver.driver_servers;
 import static com.typedb.driver.jni.typedb_driver.driver_server_version;
 import static com.typedb.driver.jni.typedb_driver.driver_update_address_translation;
 import static java.util.stream.Collectors.toSet;
@@ -113,9 +113,9 @@ public class DriverImpl extends NativeObject<com.typedb.driver.jni.TypeDBDriver>
     }
 
     @Override
-    public ServerVersion serverVersion(ConsistencyLevel consistencyLevel) {
+    public ServerVersion serverVersion(ServerRouting serverRouting) {
         try {
-            return new ServerVersion(driver_server_version(nativeObject, ConsistencyLevel.nativeValue(consistencyLevel)));
+            return new ServerVersion(driver_server_version(nativeObject, ServerRouting.nativeValue(serverRouting)));
         } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
@@ -144,10 +144,10 @@ public class DriverImpl extends NativeObject<com.typedb.driver.jni.TypeDBDriver>
     }
 
     @Override
-    public Set<? extends ServerReplica> replicas(ConsistencyLevel consistencyLevel) {
+    public Set<? extends ServerReplica> servers(ServerRouting serverRouting) {
         try {
 
-            return new NativeIterator<>(driver_replicas(nativeObject, ConsistencyLevel.nativeValue(consistencyLevel)))
+            return new NativeIterator<>(driver_servers(nativeObject, ServerRouting.nativeValue(serverRouting)))
                     .stream().map(ServerReplicaImpl::new).collect(toSet());
         } catch (com.typedb.driver.jni.Error error) {
             throw new TypeDBDriverException(error);
@@ -155,8 +155,8 @@ public class DriverImpl extends NativeObject<com.typedb.driver.jni.TypeDBDriver>
     }
 
     @Override
-    public Optional<? extends ServerReplica> primaryReplica(ConsistencyLevel consistencyLevel) {
-        com.typedb.driver.jni.ServerReplica nativeReplica = driver_primary_replica(nativeObject, ConsistencyLevel.nativeValue(consistencyLevel));
+    public Optional<? extends ServerReplica> primaryReplica(ServerRouting serverRouting) {
+        com.typedb.driver.jni.ServerReplica nativeReplica = driver_primary_replica(nativeObject, ServerRouting.nativeValue(serverRouting));
         if (nativeReplica != null) {
             return Optional.of(new ServerReplicaImpl(nativeReplica));
         }

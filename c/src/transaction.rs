@@ -44,7 +44,7 @@ pub extern "C" fn transaction_new(
     type_: TransactionType,
     options: *const TransactionOptions,
 ) -> *mut Transaction {
-    try_release(borrow(driver).transaction_with_options(string_view(database_name), type_, borrow(options).clone()))
+    try_release(borrow(driver).transaction_with_options(string_view(database_name), type_, *borrow(options)))
 }
 
 /// Performs a TypeQL query in the transaction.

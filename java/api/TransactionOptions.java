@@ -25,14 +25,11 @@ import com.typedb.driver.common.Validator;
 import javax.annotation.CheckReturnValue;
 import java.util.Optional;
 
-import static com.typedb.driver.jni.typedb_driver.transaction_options_get_read_consistency_level;
 import static com.typedb.driver.jni.typedb_driver.transaction_options_get_schema_lock_acquire_timeout_millis;
 import static com.typedb.driver.jni.typedb_driver.transaction_options_get_transaction_timeout_millis;
-import static com.typedb.driver.jni.typedb_driver.transaction_options_has_read_consistency_level;
 import static com.typedb.driver.jni.typedb_driver.transaction_options_has_schema_lock_acquire_timeout_millis;
 import static com.typedb.driver.jni.typedb_driver.transaction_options_has_transaction_timeout_millis;
 import static com.typedb.driver.jni.typedb_driver.transaction_options_new;
-import static com.typedb.driver.jni.typedb_driver.transaction_options_set_read_consistency_level;
 import static com.typedb.driver.jni.typedb_driver.transaction_options_set_schema_lock_acquire_timeout_millis;
 import static com.typedb.driver.jni.typedb_driver.transaction_options_set_transaction_timeout_millis;
 
@@ -119,36 +116,4 @@ public class TransactionOptions extends NativeObject<com.typedb.driver.jni.Trans
         return this;
     }
 
-    /**
-     * Returns the value set for the read consistency level in this <code>TransactionOptions</code> object.
-     * If set, specifies the requested consistency level of the transaction opening operation.
-     * Affects only read transactions, as write and schema transactions require primary replicas.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * options.readConsistencyLevel();
-     * </pre>
-     */
-    public Optional<ConsistencyLevel> readConsistencyLevel() {
-        if (transaction_options_has_read_consistency_level(nativeObject))
-            return Optional.of(ConsistencyLevel.of(transaction_options_get_read_consistency_level(nativeObject)));
-        return Optional.empty();
-    }
-
-    /**
-     * Explicitly sets read consistency level.
-     * If set, specifies the requested consistency level of the transaction opening operation.
-     * Affects only read transactions, as write and schema transactions require primary replicas.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * options.schemaLockAcquireTimeoutMillis(schemaLockAcquireTimeoutMillis);
-     * </pre>
-     *
-     * @param readConsistencyLevel The requested consistency level
-     */
-    public TransactionOptions readConsistencyLevel(ConsistencyLevel readConsistencyLevel) {
-        transaction_options_set_read_consistency_level(nativeObject, readConsistencyLevel.nativeValue());
-        return this;
-    }
 }

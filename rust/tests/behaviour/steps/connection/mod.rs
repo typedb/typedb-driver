@@ -16,18 +16,34 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+use std::collections::HashSet;
+
 use cucumber::gherkin::Step;
 use macro_rules_attribute::apply;
-use typedb_driver::{Replica, ReplicaRole, ServerVersion, TypeDBDriver};
+use typedb_driver::{Replica, ReplicaRole, ServerReplica, ServerVersion};
 
-use crate::{assert_with_timeout, generic_step, params, params::check_boolean, util::iter_table, Context};
+use crate::{generic_step, params, params::check_boolean, util::iter_table, Context};
 
 mod database;
 mod transaction;
 mod user;
 
-async fn get_server_version(driver: &TypeDBDriver, may_error: params::MayError) -> Option<ServerVersion> {
-    may_error.check(driver.server_version().await)
+async fn get_server_version(context: &Context, may_error: params::MayError) -> ServerVersion {
+    let res = match &context.operation_server_routing {
+        Some(server_routing) => {
+            context.driver.as_ref().unwrap().server_version_with_routing(server_routing.clone()).await
+        }
+        None => context.driver.as_ref().unwrap().server_version().await,
+    };
+    may_error.check(res).unwrap()
+}
+
+async fn get_servers(context: &Context, may_error: params::MayError) -> HashSet<ServerReplica> {
+    let res = match &context.operation_server_routing {
+        Some(server_routing) => context.driver.as_ref().unwrap().servers_with_routing(server_routing.clone()).await,
+        None => context.driver.as_ref().unwrap().servers().await,
+    };
+    may_error.check(res).unwrap()
 }
 
 #[apply(generic_step)]
@@ -126,29 +142,32 @@ async fn connection_has_been_opened(context: &mut Context, is_open: params::Bool
 #[apply(generic_step)]
 #[step(expr = r"connection contains distribution{may_error}")]
 async fn connection_has_distribution(context: &mut Context, may_error: params::MayError) {
-    if let Some(server_version) = get_server_version(context.driver.as_ref().unwrap(), may_error).await {
-        assert!(!server_version.distribution().is_empty());
-    }
+    assert!(!get_server_version(context, may_error).await.distribution().is_empty());
 }
 
 #[apply(generic_step)]
 #[step(expr = r"connection contains version{may_error}")]
 async fn connection_has_version(context: &mut Context, may_error: params::MayError) {
-    if let Some(server_version) = get_server_version(context.driver.as_ref().unwrap(), may_error).await {
-        assert!(!server_version.version().is_empty());
-    }
+    assert!(!get_server_version(context, may_error).await.version().is_empty());
 }
 
 #[apply(generic_step)]
 #[step(expr = r"connection has {int} replica(s)")]
 async fn connection_has_count_replicas(context: &mut Context, count: usize) {
-    assert_eq!(context.driver.as_ref().unwrap().replicas().await.unwrap().len(), count);
+    let servers = get_servers(context, params::MayError::False).await;
+    assert_eq!(servers.len(), count);
 }
 
 #[apply(generic_step)]
 #[step(expr = r"connection primary replica exists")]
 async fn connection_primary_replica_exists(context: &mut Context) {
-    assert!(context.driver.as_ref().unwrap().primary_replica().await.unwrap().is_some());
+    let res = match &context.operation_server_routing {
+        Some(server_routing) => {
+            context.driver.as_ref().unwrap().primary_replica_with_routing(server_routing.clone()).await
+        }
+        None => context.driver.as_ref().unwrap().primary_replica().await,
+    };
+    assert!(res.unwrap().is_some());
 }
 
 #[apply(generic_step)]
@@ -158,18 +177,18 @@ async fn connection_get_replica_exists(
     address: String,
     exists_or_doesnt: params::ExistsOrDoesnt,
 ) {
-    let replicas = context.driver.as_ref().unwrap().replicas().await.unwrap();
-    let exists = replicas.iter().any(|r| r.address().unwrap().to_string() == address);
-    exists_or_doesnt.check_bool(exists, &format!("replica {}", address));
+    let servers = get_servers(context, params::MayError::False).await;
+    let exists = servers.iter().any(|r| r.address().unwrap().to_string() == address);
+    exists_or_doesnt.check_bool(exists, &format!("server {}", address));
 }
 
 #[apply(generic_step)]
 #[step(expr = r"connection get replica\({word}\) has term")]
 async fn connection_get_replica_has_term(context: &mut Context, address: String) {
-    let replicas = context.driver.as_ref().unwrap().replicas().await.unwrap();
-    let replica = replicas.iter().find(|r| r.address().unwrap().to_string() == address);
-    params::ExistsOrDoesnt::Exists.check(&replica, &format!("replica {}", address));
-    let term = replica.unwrap().term();
+    let servers = get_servers(context, params::MayError::False).await;
+    let server = servers.iter().find(|r| r.address().unwrap().to_string() == address);
+    params::ExistsOrDoesnt::Exists.check(&server, &format!("server {}", address));
+    let term = server.unwrap().term();
     params::ExistsOrDoesnt::Exists.check(&term, &format!("term {:?}", term));
     assert!(term.unwrap() > 0, "Term expected");
 }
@@ -177,8 +196,7 @@ async fn connection_get_replica_has_term(context: &mut Context, address: String)
 #[apply(generic_step)]
 #[step("connection replicas have roles:")]
 async fn connection_replicas_have_roles(context: &mut Context, step: &Step) {
-    let replicas = context.driver.as_ref().unwrap().replicas().await.unwrap();
-    let table = step.table.as_ref().expect("Expected a table with replica roles");
+    let servers = get_servers(context, params::MayError::False).await;
 
     let mut expected_primary_count = 0;
     let mut expected_secondary_count = 0;
@@ -188,27 +206,27 @@ async fn connection_replicas_have_roles(context: &mut Context, step: &Step) {
             "primary" => expected_primary_count += 1,
             "secondary" => expected_secondary_count += 1,
             "candidate" => expected_candidate_count += 1,
-            other => panic!("Unknown replica role: {}", other),
+            other => panic!("Unknown server role: {}", other),
         }
     }
 
-    let actual_primary_count = replicas.iter().filter(|r| matches!(r.role(), Some(ReplicaRole::Primary))).count();
-    let actual_secondary_count = replicas.iter().filter(|r| matches!(r.role(), Some(ReplicaRole::Secondary))).count();
-    let actual_candidate_count = replicas.iter().filter(|r| matches!(r.role(), Some(ReplicaRole::Candidate))).count();
+    let actual_primary_count = servers.iter().filter(|r| matches!(r.role(), Some(ReplicaRole::Primary))).count();
+    let actual_secondary_count = servers.iter().filter(|r| matches!(r.role(), Some(ReplicaRole::Secondary))).count();
+    let actual_candidate_count = servers.iter().filter(|r| matches!(r.role(), Some(ReplicaRole::Candidate))).count();
 
     assert_eq!(
         expected_primary_count, actual_primary_count,
-        "Expected {} primary replicas, found {}",
+        "Expected {} primary servers, found {}",
         expected_primary_count, actual_primary_count
     );
     assert_eq!(
         expected_secondary_count, actual_secondary_count,
-        "Expected {} secondary replicas, found {}",
+        "Expected {} secondary servers, found {}",
         expected_secondary_count, actual_secondary_count
     );
     assert_eq!(
         expected_candidate_count, actual_candidate_count,
-        "Expected {} candidate replicas, found {}",
+        "Expected {} candidate servers, found {}",
         expected_candidate_count, actual_candidate_count
     );
 }
@@ -233,6 +251,12 @@ async fn driver_closes(context: &mut Context, may_error: params::MayError) {
 }
 
 #[apply(generic_step)]
+#[step(expr = "set operation server routing to: {server_routing}")]
+pub async fn set_operation_server_routing(context: &mut Context, server_routing: params::ServerRouting) {
+    context.operation_server_routing = Some(server_routing.into_typedb());
+}
+
+#[apply(generic_step)]
 #[step(expr = "set driver option use_replication to: {boolean}")]
 pub async fn set_transaction_option_use_replication(context: &mut Context, value: params::Boolean) {
     context.init_driver_options_if_needed();
@@ -251,10 +275,4 @@ pub async fn set_transaction_option_primary_failover_retries(context: &mut Conte
 pub async fn set_transaction_option_replica_discovery_attempts(context: &mut Context, value: usize) {
     context.init_driver_options_if_needed();
     context.driver_options_mut().unwrap().replica_discovery_attempts = Some(value);
-}
-
-#[apply(generic_step)]
-#[step(expr = r"set database operation consistency to: {consistency_level}")]
-pub async fn set_database_operation_consistency(context: &mut Context, consistency_level: params::ConsistencyLevel) {
-    context.database_operation_consistency = Some(consistency_level.into_typedb());
 }

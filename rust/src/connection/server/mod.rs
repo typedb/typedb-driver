@@ -20,4 +20,5 @@
 pub(crate) mod server_connection;
 pub(crate) mod server_manager;
 pub mod server_replica;
+pub mod server_routing;
 pub mod server_version;

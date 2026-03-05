@@ -45,7 +45,7 @@ from behave.runner import Context
 from hamcrest import *
 from typedb.api.answer.query_type import QueryType
 from typedb.api.connection.transaction import TransactionType
-from typedb.api.connection.consistency_level import ConsistencyLevel as TypeDBConsistencyLevel
+from typedb.api.connection.server_routing import ServerRouting as TypeDBServerRouting
 from typedb.common.exception import TypeDBDriverException
 from typedb.driver import *
 
@@ -358,27 +358,25 @@ def parse_by_index_of_variable_or_not(value: str) -> bool:
 register_type(IsByVarIndex=parse_by_index_of_variable_or_not)
 
 
-class ConsistencyLevel:
+class ServerRouting:
 
-    def __init__(self, consistency_level: TypeDBConsistencyLevel):
-        self.consistency_level = consistency_level
+    def __init__(self, server_routing: TypeDBServerRouting):
+        self.server_routing = server_routing
 
     def __repr__(self):
-        return f"ConsistencyLevel({self.consistency_level})"
+        return f"ServerRouting({self.server_routing})"
 
 
-@parse.with_pattern("strong|eventual|replica\((?P<address>.*)\)")
-def parse_consistency_level(value: str) -> ConsistencyLevel:
-    if value == "strong":
-        return ConsistencyLevel(TypeDBConsistencyLevel.Strong())
-    elif value == "eventual":
-        return ConsistencyLevel(TypeDBConsistencyLevel.Eventual())
+@parse.with_pattern("auto|server\((?P<address>.*)\)")
+def parse_server_routing(value: str) -> ServerRouting:
+    if value == "auto":
+        return ServerRouting(TypeDBServerRouting.Auto())
     else:
-        match = re.match(r'replica\((?P<address>.*)\)', value)
+        match = re.match(r'server\((?P<address>.*)\)', value)
         if match:
-            return ConsistencyLevel(TypeDBConsistencyLevel.ReplicaDependent(match.group("address")))
+            return ServerRouting(TypeDBServerRouting.Server(match.group("address")))
         else:
             raise ValueError(f"Unrecognised ConsistencyLevel: {value}")
 
 
-register_type(ConsistencyLevel=parse_consistency_level)
+register_type(ServerRouting=parse_server_routing)

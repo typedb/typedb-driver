@@ -17,9 +17,8 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
-from typedb.api.connection.consistency_level import ConsistencyLevel
 from typedb.api.database.database_manager import DatabaseManager
 from typedb.common.exception import TypeDBDriverException
 from typedb.common.iterator_wrapper import IteratorWrapper
@@ -37,31 +36,31 @@ class _DatabaseManager(DatabaseManager):
     def __init__(self, native_driver: NativeDriver):
         self.native_driver = native_driver
 
-    def all(self, consistency_level: Optional[ConsistencyLevel] = None) -> list[_Database]:
+    def all(self) -> list[_Database]:
         try:
-            databases = databases_all(self.native_driver, ConsistencyLevel.native_value(consistency_level))
+            databases = databases_all(self.native_driver)
             return list(map(_Database, IteratorWrapper(databases, database_iterator_next)))
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e) from None
 
-    def contains(self, name: str, consistency_level: Optional[ConsistencyLevel] = None) -> bool:
+    def contains(self, name: str) -> bool:
         require_non_null(name, "name")
         try:
-            return databases_contains(self.native_driver, name, ConsistencyLevel.native_value(consistency_level))
+            return databases_contains(self.native_driver, name)
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e) from None
 
-    def get(self, name: str, consistency_level: Optional[ConsistencyLevel] = None) -> _Database:
+    def get(self, name: str) -> _Database:
         require_non_null(name, "name")
         try:
-            return _Database(databases_get(self.native_driver, name, ConsistencyLevel.native_value(consistency_level)))
+            return _Database(databases_get(self.native_driver, name))
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e) from None
 
-    def create(self, name: str, consistency_level: Optional[ConsistencyLevel] = None) -> None:
+    def create(self, name: str) -> None:
         require_non_null(name, "name")
         try:
-            databases_create(self.native_driver, name, ConsistencyLevel.native_value(consistency_level))
+            databases_create(self.native_driver, name)
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e) from None
 

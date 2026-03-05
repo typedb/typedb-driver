@@ -176,6 +176,13 @@ export async function openAndTestConnection(username: string, password: string) 
     return openAndTestConnectionWithHostPort(username, password, DEFAULT_HOST, DEFAULT_PORT);
 }
 
+export async function openAndTestSingleConnection(username: string, password: string) {
+    if (isClusterMode) {
+        return openAndTestConnectionWithAddresses(username, password, [CLUSTER_ADDRESSES[0]]);
+    }
+    return openAndTestConnectionWithHostPort(username, password, DEFAULT_HOST, DEFAULT_PORT);
+}
+
 export async function openAndTestConnectionWithAddresses(username: string, password: string, addresses: string[]) {
     const newDriver = new TypeDBHttpDriver({
         username, password, addresses
@@ -184,6 +191,7 @@ export async function openAndTestConnectionWithAddresses(username: string, passw
     if (isOkResponse(healthCheck)) driver = newDriver;
     return healthCheck;
 }
+
 export async function openAndTestConnectionWithHostPort(username: string, password: string, host: string, port: number) {
     const newDriver = new TypeDBHttpDriver({
         username, password, addresses: [`${host}:${port}`]
@@ -192,6 +200,7 @@ export async function openAndTestConnectionWithHostPort(username: string, passwo
     if (isOkResponse(healthCheck)) driver = newDriver;
     return healthCheck;
 }
+
 export function closeConnection() {
     if (transactionID) driver.closeTransaction(transactionID).then(assertNotError);
     if (backgroundTransactionID) driver.closeTransaction(backgroundTransactionID).then(assertNotError);

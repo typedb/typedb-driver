@@ -45,8 +45,8 @@ public interface Driver extends AutoCloseable {
     boolean isOpen();
 
     /**
-     * Retrieves the server's version, using default strong consistency.
-     * See {@link #serverVersion(ConsistencyLevel)} for more details and options.
+     * Retrieves the server's version, using default automatic routing.
+     * See {@link #serverVersion(ServerRouting)} for more details and options.
      *
      * <h3>Examples</h3>
      * <pre>
@@ -66,10 +66,10 @@ public interface Driver extends AutoCloseable {
      * driver.serverVersion();
      * </pre>
      *
-     * @param consistencyLevel The consistency level to use for the operation
+     * @param serverRouting The server routing to use for the operation
      */
     @CheckReturnValue
-    ServerVersion serverVersion(ConsistencyLevel consistencyLevel);
+    ServerVersion serverVersion(ServerRouting serverRouting);
 
     /**
      * The <code>DatabaseManager</code> for this connection, providing access to database management methods.
@@ -123,35 +123,35 @@ public interface Driver extends AutoCloseable {
     Transaction transaction(String database, Transaction.Type type, TransactionOptions options);
 
     /**
-     * Set of <code>Replica</code> instances for this driver connection, using default strong consistency.
-     * See {@link #replicas(ConsistencyLevel)} for more details and options.
+     * Set of servers for this driver connection, using default automatic routing.
+     * See {@link #servers(ServerRouting)} for more details and options.
      *
      * <h3>Examples</h3>
      * <pre>
-     * driver.replicas();
+     * driver.servers();
      * </pre>
      */
     @CheckReturnValue
-    default Set<? extends ServerReplica> replicas() {
-        return replicas(null);
+    default Set<? extends ServerReplica> servers() {
+        return servers(null);
     }
 
     /**
-     * Set of <code>Replica</code> instances for this driver connection.
+     * Set of servers for this driver connection.
      *
      * <h3>Examples</h3>
      * <pre>
-     * driver.replicas(new ConsistencyLevel.Strong());
+     * driver.servers(new ServerRouting.Auto());
      * </pre>
      *
-     * @param consistencyLevel The consistency level to use for the operation
+     * @param serverRouting The server routing to use for the operation
      */
     @CheckReturnValue
-    Set<? extends ServerReplica> replicas(ConsistencyLevel consistencyLevel);
+    Set<? extends ServerReplica> servers(ServerRouting serverRouting);
 
     /**
-     * Returns the primary replica for this driver connection, using default strong consistency.
-     * See {@link #primaryReplica(ConsistencyLevel)} for more details and options.
+     * Returns the primary replica for this driver connection, using default automatic routing.
+     * See {@link #primaryReplica(ServerRouting)} for more details and options.
      *
      * <h3>Examples</h3>
      * <pre>
@@ -168,13 +168,13 @@ public interface Driver extends AutoCloseable {
      *
      * <h3>Examples</h3>
      * <pre>
-     * driver.primaryReplica(new ConsistencyLevel.Strong());
+     * driver.primaryReplica(new ServerRouting.Auto());
      * </pre>
      *
-     * @param consistencyLevel The consistency level to use for the operation
+     * @param serverRouting The server routing to use for the operation
      */
     @CheckReturnValue
-    Optional<? extends ServerReplica> primaryReplica(ConsistencyLevel consistencyLevel);
+    Optional<? extends ServerReplica> primaryReplica(ServerRouting serverRouting);
 
     /**
      * Registers a new replica in the cluster the driver is currently connected to. The registered
@@ -220,7 +220,7 @@ public interface Driver extends AutoCloseable {
     void updateAddressTranslation(Map<String, String> addressTranslation);
 
     /**
-     * Closes the driver. Before instantiating a new driver, the driver that’s currently open should first be closed.
+     * Closes the driver. Before instantiating a new driver, the driver that's currently open should first be closed.
      *
      * <h3>Examples</h3>
      * <pre>

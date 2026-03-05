@@ -19,8 +19,8 @@
 
 package com.typedb.driver.test.behaviour.config;
 
-import com.typedb.driver.api.ConsistencyLevel;
 import com.typedb.driver.api.QueryType;
+import com.typedb.driver.api.ServerRouting;
 import com.typedb.driver.api.Transaction;
 import io.cucumber.java.DataTableType;
 import io.cucumber.java.ParameterType;
@@ -182,9 +182,9 @@ public class Parameters {
         return null;
     }
 
-    @ParameterType("strong|eventual|replica\\(.*\\)")
-    public Consistency consistency_level(String value) {
-        return Consistency.parse(value);
+    @ParameterType("auto|server\\(.*\\)")
+    public Routing server_routing(String value) {
+        return Routing.parse(value);
     }
 
     public enum ConceptKind {
@@ -419,33 +419,31 @@ public class Parameters {
             DateTimeFormatter.ISO_ZONED_DATE_TIME
     );
 
-    public static class Consistency {
-        private final ConsistencyLevel level;
+    public static class Routing {
+        private final ServerRouting serverRouting;
 
-        public Consistency(ConsistencyLevel level) {
-            this.level = level;
+        public Routing(ServerRouting serverRouting) {
+            this.serverRouting = serverRouting;
         }
 
-        public ConsistencyLevel level() {
-            return level;
+        public ServerRouting serverRouting() {
+            return serverRouting;
         }
 
-        public static Consistency parse(String value) {
-            if (value.equalsIgnoreCase("strong")) {
-                return new Consistency(new ConsistencyLevel.Strong());
-            } else if (value.equalsIgnoreCase("eventual")) {
-                return new Consistency(new ConsistencyLevel.Eventual());
-            } else if (value.toLowerCase().startsWith("replica(") && value.endsWith(")")) {
-                String address = value.substring("replica(".length(), value.length() - 1);
-                return new Consistency(new ConsistencyLevel.ReplicaDependent(address));
+        public static Routing parse(String value) {
+            if (value.equalsIgnoreCase("auto")) {
+                return new Routing(new ServerRouting.Auto());
+            } else if (value.toLowerCase().startsWith("server(") && value.endsWith(")")) {
+                String address = value.substring("server(".length(), value.length() - 1);
+                return new Routing(new ServerRouting.Server(address));
             } else {
-                throw new IllegalArgumentException("Unknown consistency level: " + value);
+                throw new IllegalArgumentException("Unknown server routing: " + value);
             }
         }
 
         @Override
         public String toString() {
-            return "Consistency(" + level + ")";
+            return "Routing(" + serverRouting + ")";
         }
     }
 }

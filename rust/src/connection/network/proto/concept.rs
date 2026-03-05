@@ -38,7 +38,6 @@ use super::{FromProto, TryFromProto};
 use crate::{
     answer::concept_document::{Leaf, Node},
     concept::{
-        type_,
         type_::Type,
         value::{Decimal, TimeZone},
         Attribute, AttributeType, Concept, Entity, EntityType, Kind, Relation, RelationType, RoleType, Value,

@@ -29,8 +29,8 @@ use async_std::task::sleep;
 use futures::{StreamExt, TryStreamExt};
 use serial_test::serial;
 use typedb_driver::{
-    answer::ConceptRow, consistency_level::ConsistencyLevel, Address, Addresses, AvailableServerReplica, Credentials,
-    DriverOptions, DriverTlsConfig, Error, Replica, ServerReplica, TransactionOptions, TransactionType, TypeDBDriver,
+    answer::ConceptRow, Address, Addresses, AvailableServerReplica, Credentials, DriverOptions, DriverTlsConfig, Error,
+    Replica, ServerReplica, TransactionOptions, TransactionType, TypeDBDriver,
 };
 // DO NOT commit changes to this test. Use it as playground for dev.
 const ADDRESSES: [&'static str; 3] = ["127.0.0.1:11729", "127.0.0.1:21729", "127.0.0.1:31729"];
@@ -55,26 +55,20 @@ fn playground_test() {
 
         // setup_cluster(&driver).await;
 
-        let replicas = driver.replicas().await.unwrap();
+        let replicas = driver.servers().await.unwrap();
         let addresses = replicas.iter().map(|replica| replica.address().unwrap()).collect::<Vec<_>>();
         println!("Replicas known to the driver: {addresses:?}");
 
         const DATABASE_NAME: &str = "clustered-test";
 
         if !driver.databases().contains(DATABASE_NAME).await.expect("Expected database check") {
-            driver
-                .databases()
-                .create_with_consistency(DATABASE_NAME, ConsistencyLevel::Strong)
-                .await
-                .expect("Expected database creation");
+            driver.databases().create(DATABASE_NAME).await.expect("Expected database creation");
         }
 
         let database = driver.databases().get(DATABASE_NAME).await.expect("Expected database retrieval");
         println!("Database exists: {}", database.name());
 
-        let transaction_options = TransactionOptions::new()
-            .transaction_timeout(Duration::from_secs(100))
-            .read_consistency_level(ConsistencyLevel::Eventual);
+        let transaction_options = TransactionOptions::new().transaction_timeout(Duration::from_secs(100));
 
         // Schema transactions are always strongly consistent
         let transaction = driver

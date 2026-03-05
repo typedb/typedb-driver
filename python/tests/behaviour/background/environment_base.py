@@ -31,6 +31,7 @@ def before_all(context: Context):
     context.THREAD_POOL_SIZE = 32
     context.DEFAULT_USERNAME = "admin"
     context.DEFAULT_PASSWORD = "password"
+    context.operation_server_routing = None
     context.driver_options = DriverOptions(DriverTlsConfig.disabled())
     context.init_transaction_options_if_needed_fn = lambda: _init_transaction_options_if_needed(context)
     context.init_query_options_if_needed_fn = lambda: _init_query_options_if_needed(context)
@@ -55,6 +56,7 @@ def before_scenario(context: Context, scenario):
     context.collected_answer = None  # [ConceptRow] / [dict]
     context.concurrent_answers = None
     context.unwrapped_concurrent_answers = None
+    context.operation_server_routing = None
     context.transaction_options = None
     context.query_options = None
     context.driver_options = DriverOptions(DriverTlsConfig.disabled())

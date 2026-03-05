@@ -30,7 +30,7 @@ a| `LANGUAGE` a| `static java.lang.String` a|
 void close()
 ----
 
-Closes the driver. Before instantiating a new driver, the driver that’s currently open should first be closed. 
+Closes the driver. Before instantiating a new driver, the driver that's currently open should first be closed. 
 
 
 [caption=""]
@@ -130,7 +130,7 @@ driver.isOpen();
 default java.util.Optional<? extends ServerReplica> primaryReplica()
 ----
 
-Returns the primary replica for this driver connection, using default strong consistency. See <<#_primaryReplica_com_typedb_driver_api_ConsistencyLevel,``primaryReplica(ConsistencyLevel)``>> for more details and options. 
+Returns the primary replica for this driver connection, using default automatic routing. See <<#_primaryReplica_com_typedb_driver_api_ServerRouting,``primaryReplica(ServerRouting)``>> for more details and options. 
 
 
 [caption=""]
@@ -144,13 +144,13 @@ Returns the primary replica for this driver connection, using default strong con
 driver.primaryReplica();
 ----
 
-[#_Driver_primaryReplica_ConsistencyLevel]
+[#_Driver_primaryReplica_ServerRouting]
 ==== method ``primaryReplica``
 
 [source,java]
 ----
 @CheckReturnValue
-java.util.Optional<? extends ServerReplica> primaryReplica​(ConsistencyLevel consistencyLevel)
+java.util.Optional<? extends ServerReplica> primaryReplica​(ServerRouting serverRouting)
 ----
 
 Returns the primary replica for this driver connection. 
@@ -162,7 +162,7 @@ Returns the primary replica for this driver connection.
 [options="header"]
 |===
 |Name |Description |Type
-a| `consistencyLevel` a| The consistency level to use for the operation a| `ConsistencyLevel`
+a| `serverRouting` a| The server routing to use for the operation a| `ServerRouting`
 |===
 
 [caption=""]
@@ -173,7 +173,7 @@ a| `consistencyLevel` a| The consistency level to use for the operation a| `Cons
 .Code examples
 [source,java]
 ----
-driver.primaryReplica(new ConsistencyLevel.Strong());
+driver.primaryReplica(new ServerRouting.Auto());
 ----
 
 [#_Driver_registerReplica_long_java_lang_String]
@@ -209,61 +209,6 @@ a| `address` a| The address(es) of the TypeDB replica as a string a| `java.lang.
 driver.registerReplica(2, "127.0.0.1:11729");
 ----
 
-[#_Driver_replicas_]
-==== method ``replicas``
-
-[source,java]
-----
-@CheckReturnValue
-default java.util.Set<? extends ServerReplica> replicas()
-----
-
-Set of ``Replica`` instances for this driver connection, using default strong consistency. See <<#_replicas_com_typedb_driver_api_ConsistencyLevel,``replicas(ConsistencyLevel)``>> for more details and options. 
-
-
-[caption=""]
-.Returns
-`java.util.Set<? extends ServerReplica>`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-driver.replicas();
-----
-
-[#_Driver_replicas_ConsistencyLevel]
-==== method ``replicas``
-
-[source,java]
-----
-@CheckReturnValue
-java.util.Set<? extends ServerReplica> replicas​(ConsistencyLevel consistencyLevel)
-----
-
-Set of ``Replica`` instances for this driver connection. 
-
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `consistencyLevel` a| The consistency level to use for the operation a| `ConsistencyLevel`
-|===
-
-[caption=""]
-.Returns
-`java.util.Set<? extends ServerReplica>`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-driver.replicas(new ConsistencyLevel.Strong());
-----
-
 [#_Driver_serverVersion_]
 ==== method ``serverVersion``
 
@@ -273,7 +218,7 @@ driver.replicas(new ConsistencyLevel.Strong());
 default ServerVersion serverVersion()
 ----
 
-Retrieves the server's version, using default strong consistency. See <<#_serverVersion_com_typedb_driver_api_ConsistencyLevel,``serverVersion(ConsistencyLevel)``>> for more details and options. 
+Retrieves the server's version, using default automatic routing. See <<#_serverVersion_com_typedb_driver_api_ServerRouting,``serverVersion(ServerRouting)``>> for more details and options. 
 
 
 [caption=""]
@@ -287,13 +232,13 @@ Retrieves the server's version, using default strong consistency. See <<#_server
 driver.serverVersion();
 ----
 
-[#_Driver_serverVersion_ConsistencyLevel]
+[#_Driver_serverVersion_ServerRouting]
 ==== method ``serverVersion``
 
 [source,java]
 ----
 @CheckReturnValue
-ServerVersion serverVersion​(ConsistencyLevel consistencyLevel)
+ServerVersion serverVersion​(ServerRouting serverRouting)
 ----
 
 Retrieves the server's version. 
@@ -305,7 +250,7 @@ Retrieves the server's version.
 [options="header"]
 |===
 |Name |Description |Type
-a| `consistencyLevel` a| The consistency level to use for the operation a| `ConsistencyLevel`
+a| `serverRouting` a| The server routing to use for the operation a| `ServerRouting`
 |===
 
 [caption=""]
@@ -317,6 +262,61 @@ a| `consistencyLevel` a| The consistency level to use for the operation a| `Cons
 [source,java]
 ----
 driver.serverVersion();
+----
+
+[#_Driver_servers_]
+==== method ``servers``
+
+[source,java]
+----
+@CheckReturnValue
+default java.util.Set<? extends ServerReplica> servers()
+----
+
+Set of servers for this driver connection, using default automatic routing. See <<#_servers_com_typedb_driver_api_ServerRouting,``servers(ServerRouting)``>> for more details and options. 
+
+
+[caption=""]
+.Returns
+`java.util.Set<? extends ServerReplica>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+driver.servers();
+----
+
+[#_Driver_servers_ServerRouting]
+==== method ``servers``
+
+[source,java]
+----
+@CheckReturnValue
+java.util.Set<? extends ServerReplica> servers​(ServerRouting serverRouting)
+----
+
+Set of servers for this driver connection. 
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `serverRouting` a| The server routing to use for the operation a| `ServerRouting`
+|===
+
+[caption=""]
+.Returns
+`java.util.Set<? extends ServerReplica>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+driver.servers(new ServerRouting.Auto());
 ----
 
 [#_Driver_transaction_java_lang_String_Transaction_Type]

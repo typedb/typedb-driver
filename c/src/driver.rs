@@ -29,8 +29,8 @@ use crate::{
         memory::{borrow, free, release, string_array_view, string_view},
     },
     server::{
-        consistency_level::{native_consistency_level, ConsistencyLevel},
         server_replica::ServerReplicaIterator,
+        server_routing::{native_server_routing, ServerRouting},
         server_version::ServerVersion,
     },
 };
@@ -198,15 +198,15 @@ pub extern "C" fn driver_is_open(driver: *const TypeDBDriver) -> bool {
 /// Retrieves the server version and distribution information.
 ///
 /// @param driver The <code>TypeDBDriver</code> object.
-/// @param consistency_level The consistency level to use for the operation. Strongest possible if null.
+/// @param server_routing The server routing directive to use for the operation. Auto if null.
 #[no_mangle]
 pub extern "C" fn driver_server_version(
     driver: *const TypeDBDriver,
-    consistency_level: *const ConsistencyLevel,
+    server_routing: *const ServerRouting,
 ) -> *mut ServerVersion {
     let driver = borrow(driver);
-    let result = match native_consistency_level(consistency_level) {
-        Some(consistency_level) => driver.server_version_with_consistency(consistency_level),
+    let result = match native_server_routing(server_routing) {
+        Some(routing) => driver.server_version_with_routing(routing),
         None => driver.server_version(),
     };
     release(unwrap_or_default(result.map(|server_version| {
@@ -214,19 +214,19 @@ pub extern "C" fn driver_server_version(
     })))
 }
 
-/// Retrieves the server's replicas.
+/// Retrieves the servers.
 ///
 /// @param driver The <code>TypeDBDriver</code> object.
-/// @param consistency_level The consistency level to use for the operation. Strongest possible if null.
+/// @param server_routing The server routing directive to use for the operation. Auto if null.
 #[no_mangle]
-pub extern "C" fn driver_replicas(
+pub extern "C" fn driver_servers(
     driver: *const TypeDBDriver,
-    consistency_level: *const ConsistencyLevel,
+    server_routing: *const ServerRouting,
 ) -> *mut ServerReplicaIterator {
     let driver = borrow(driver);
-    let result = match native_consistency_level(consistency_level) {
-        Some(consistency_level) => driver.replicas_with_consistency(consistency_level),
-        None => driver.replicas(),
+    let result = match native_server_routing(server_routing) {
+        Some(routing) => driver.servers_with_routing(routing),
+        None => driver.servers(),
     };
     release(ServerReplicaIterator(CIterator(box_stream(unwrap_or_default(result).into_iter()))))
 }
@@ -234,15 +234,15 @@ pub extern "C" fn driver_replicas(
 /// Retrieves the server's primary replica, if exists.
 ///
 /// @param driver The <code>TypeDBDriver</code> object.
-/// @param consistency_level The consistency level to use for the operation. Strongest possible if null.
+/// @param server_routing The server routing directive to use for the operation. Auto if null.
 #[no_mangle]
 pub extern "C" fn driver_primary_replica(
     driver: *const TypeDBDriver,
-    consistency_level: *const ConsistencyLevel,
+    server_routing: *const ServerRouting,
 ) -> *mut ServerReplica {
     let driver = borrow(driver);
-    let result = match native_consistency_level(consistency_level) {
-        Some(consistency_level) => driver.primary_replica_with_consistency(consistency_level),
+    let result = match native_server_routing(server_routing) {
+        Some(routing) => driver.primary_replica_with_routing(routing),
         None => driver.primary_replica(),
     };
     // TODO: Return somehow else!! This will not work through SWIG

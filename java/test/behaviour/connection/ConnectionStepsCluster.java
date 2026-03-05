@@ -73,7 +73,7 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
     void setupCluster() {
         try (Driver driver = createDefaultTypeDBDriver()) {
             List<String> clusteringAddresses = DEFAULT_CLUSTER_CLUSTERING_ADDRESSES;
-            if (driver.replicas().size() != clusteringAddresses.size()) {
+            if (driver.servers().size() != clusteringAddresses.size()) {
                 for (int i = 0; i < clusteringAddresses.size(); i++) {
                     long id = i + 1L;
                     String address = clusteringAddresses.get(i);
@@ -198,6 +198,12 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
     }
 
     @Override
+    @When("set operation server routing to: {server_routing}")
+    public void set_operation_server_routing(Parameters.Routing serverRouting) {
+        super.set_operation_server_routing(serverRouting);
+    }
+
+    @Override
     @When("set driver option use_replication to: {bool}")
     public void set_driver_option_use_replication_to(boolean value) {
         super.set_driver_option_use_replication_to(value);
@@ -215,9 +221,4 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
         super.set_driver_option_replica_discovery_attempts_to(value);
     }
 
-    @Override
-    @When("set database operation consistency to: {consistency_level}")
-    public void set_database_operation_consistency_to(Parameters.Consistency consistency) {
-        super.set_database_operation_consistency_to(consistency);
-    }
 }

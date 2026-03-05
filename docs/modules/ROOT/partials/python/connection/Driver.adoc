@@ -91,12 +91,12 @@ Checks whether this connection is presently open.
 driver.is_open()
 ----
 
-[#_Driver_primary_replica_consistency_level_ConsistencyLevel_None]
+[#_Driver_primary_replica_server_routing_ServerRouting_None]
 ==== method ``primary_replica``
 
 [source,python]
 ----
-primary_replica(consistency_level: ConsistencyLevel | None = None) -> ServerReplica | None
+primary_replica(server_routing: ServerRouting | None = None) -> ServerReplica | None
 ----
 
 Returns the primary replica for this driver connection.
@@ -107,7 +107,7 @@ Returns the primary replica for this driver connection.
 [options="header"]
 |===
 |Name |Description |Type |Default Value
-a| `consistency_level` a| The consistency level to use for the operation. Strongest possible by default a| `ConsistencyLevel \| None` a| `None`
+a| `server_routing` a| The server routing to use for the operation. Auto by default a| `ServerRouting \| None` a| `None`
 |===
 
 [caption=""]
@@ -119,7 +119,7 @@ a| `consistency_level` a| The consistency level to use for the operation. Strong
 [source,python]
 ----
 driver.primary_replica()
-driver.primary_replica(ConsistencyLevel.Strong())
+driver.primary_replica(ServerRouting.Auto())
 ----
 
 [#_Driver_register_replica_replica_id_int_address_str]
@@ -153,43 +153,12 @@ a| `address` a| The address(es) of the TypeDB replica as a string a| `str` a|
 driver.register_replica(2, "127.0.0.1:11729")
 ----
 
-[#_Driver_replicas_consistency_level_ConsistencyLevel_None]
-==== method ``replicas``
-
-[source,python]
-----
-replicas(consistency_level: ConsistencyLevel | None = None) -> Set[ServerReplica]
-----
-
-Set of ``Replica`` instances for this driver connection.
-
-[caption=""]
-.Input parameters
-[cols=",,,"]
-[options="header"]
-|===
-|Name |Description |Type |Default Value
-a| `consistency_level` a| The consistency level to use for the operation. Strongest possible by default a| `ConsistencyLevel \| None` a| `None`
-|===
-
-[caption=""]
-.Returns
-`Set[ServerReplica]`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-driver.replicas()
-driver.replicas(ConsistencyLevel.Strong())
-----
-
-[#_Driver_server_version_consistency_level_ConsistencyLevel_None]
+[#_Driver_server_version_server_routing_ServerRouting_None]
 ==== method ``server_version``
 
 [source,python]
 ----
-server_version(consistency_level: ConsistencyLevel | None = None) -> ServerVersion
+server_version(server_routing: ServerRouting | None = None) -> ServerVersion
 ----
 
 Retrieves the server’s version.
@@ -200,7 +169,7 @@ Retrieves the server’s version.
 [options="header"]
 |===
 |Name |Description |Type |Default Value
-a| `consistency_level` a| The consistency level to use for the operation. Strongest possible by default a| `ConsistencyLevel \| None` a| `None`
+a| `server_routing` a| The server routing to use for the operation. Auto by default a| `ServerRouting \| None` a| `None`
 |===
 
 [caption=""]
@@ -212,7 +181,38 @@ a| `consistency_level` a| The consistency level to use for the operation. Strong
 [source,python]
 ----
 driver.server_version()
-driver.server_version(ConsistencyLevel.Strong())
+driver.server_version(ServerRouting.Auto())
+----
+
+[#_Driver_servers_server_routing_ServerRouting_None]
+==== method ``servers``
+
+[source,python]
+----
+servers(server_routing: ServerRouting | None = None) -> Set[ServerReplica]
+----
+
+Set of servers for this driver connection.
+
+[caption=""]
+.Input parameters
+[cols=",,,"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `server_routing` a| The server routing to use for the operation. Auto by default a| `ServerRouting \| None` a| `None`
+|===
+
+[caption=""]
+.Returns
+`Set[ServerReplica]`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+driver.servers()
+driver.servers(ServerRouting.Auto())
 ----
 
 [#_Driver_transaction_database_name_str_transaction_type_TransactionType_options_TransactionOptions_None]

@@ -21,7 +21,6 @@ use std::{fmt, iter, pin::Pin, sync::Arc};
 
 #[cfg(not(feature = "sync"))]
 use futures::{stream, StreamExt};
-use tracing::trace;
 
 use super::network::transmitter::TransactionTransmitter;
 use crate::{
@@ -33,7 +32,7 @@ use crate::{
         Promise, Result,
     },
     connection::message::{AnalyzeResponse, QueryRequest, QueryResponse, TransactionRequest, TransactionResponse},
-    error::{AnalyzeError, ConnectionError, InternalError, ServerError},
+    error::{ConnectionError, InternalError},
     promisify, resolve, Error, QueryOptions, TransactionOptions, TransactionType,
 };
 

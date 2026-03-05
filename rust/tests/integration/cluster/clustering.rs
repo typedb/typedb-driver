@@ -79,7 +79,7 @@ fn primary_reelection_read_query() {
         // sleep(Duration::from_secs(5)).await;
         // TODO: Does it need to return all the current replicas? Or is it not needed?
         // It's currently handled automatically, so we won't see the new replicas now after registering them!!!
-        let replicas = driver.replicas().await;
+        let replicas = driver.servers().await;
         println!("Replicas: {replicas:?}");
 
         let database_name = "typedb";
@@ -268,11 +268,6 @@ async fn verify_defined_type(driver: &TypeDBDriver, database_name: impl AsRef<st
 }
 
 async fn verify_created_database(driver: &TypeDBDriver, database_name: impl AsRef<str>) {
-    // TODO: Can additionally test with eventual consistency when it's introduced. Like this:
-    // use typedb_driver::consistency_level::ConsistencyLevel;
-    // assert_eq!(driver.databases().get_with_consistency(database_name.as_ref(), ConsistencyLevel::Eventual).await.unwrap().name(), database_name.as_ref());
-    // assert!(driver.databases().contains_with_consistency(database_name.as_ref(), ConsistencyLevel::Eventual).await.unwrap());
-
     assert_eq!(driver.databases().get(database_name.as_ref()).await.unwrap().name(), database_name.as_ref());
     assert!(driver.databases().contains(database_name.as_ref()).await.unwrap());
 }

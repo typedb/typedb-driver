@@ -21,7 +21,7 @@ from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING, Optional, Set, Mapping
 
 if TYPE_CHECKING:
-    from typedb.api.connection.consistency_level import ConsistencyLevel
+    from typedb.api.connection.server_routing import ServerRouting
     from typedb.api.database.database_manager import DatabaseManager
     from typedb.api.connection.transaction_options import TransactionOptions
     from typedb.api.connection.transaction import Transaction, TransactionType
@@ -63,18 +63,18 @@ class Driver(ABC):
         pass
 
     @abstractmethod
-    def server_version(self, consistency_level: Optional[ConsistencyLevel] = None) -> ServerVersion:
+    def server_version(self, server_routing: Optional[ServerRouting] = None) -> ServerVersion:
         """
         Retrieves the server's version.
 
-        :param consistency_level: The consistency level to use for the operation. Strongest possible by default
+        :param server_routing: The server routing to use for the operation. Auto by default
 
         Examples:
         ---------
         ::
 
             driver.server_version()
-            driver.server_version(ConsistencyLevel.Strong())
+            driver.server_version(ServerRouting.Auto())
         """
         pass
 
@@ -97,34 +97,34 @@ class Driver(ABC):
         pass
 
     @abstractmethod
-    def replicas(self, consistency_level: Optional[ConsistencyLevel] = None) -> Set[ServerReplica]:
+    def servers(self, server_routing: Optional[ServerRouting] = None) -> Set[ServerReplica]:
         """
-        Set of ``Replica`` instances for this driver connection.
+        Set of servers for this driver connection.
 
-        :param consistency_level: The consistency level to use for the operation. Strongest possible by default
+        :param server_routing: The server routing to use for the operation. Auto by default
 
         Examples:
         ---------
         ::
 
-            driver.replicas()
-            driver.replicas(ConsistencyLevel.Strong())
+            driver.servers()
+            driver.servers(ServerRouting.Auto())
         """
         pass
 
     @abstractmethod
-    def primary_replica(self, consistency_level: Optional[ConsistencyLevel] = None) -> Optional[ServerReplica]:
+    def primary_replica(self, server_routing: Optional[ServerRouting] = None) -> Optional[ServerReplica]:
         """
         Returns the primary replica for this driver connection.
 
-        :param consistency_level: The consistency level to use for the operation. Strongest possible by default
+        :param server_routing: The server routing to use for the operation. Auto by default
 
         Examples:
         ---------
         ::
 
             driver.primary_replica()
-            driver.primary_replica(ConsistencyLevel.Strong())
+            driver.primary_replica(ServerRouting.Auto())
         """
         pass
 
@@ -183,7 +183,7 @@ class Driver(ABC):
     @abstractmethod
     def close(self) -> None:
         """
-        Closes the driver. Before instantiating a new driver, the driver that’s currently open should first be closed.
+        Closes the driver. Before instantiating a new driver, the driver that's currently open should first be closed.
 
         Examples:
         ---------

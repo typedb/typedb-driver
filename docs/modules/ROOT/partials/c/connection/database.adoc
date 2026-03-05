@@ -32,7 +32,7 @@ Frees the native rust ``Database`` object.
 
 [source,c]
 ----
-void database_delete(const struct Database* database, const struct ConsistencyLevel* consistency_level)
+void database_delete(const struct Database* database)
 ----
 
 
@@ -47,7 +47,6 @@ Deletes this database.
 |===
 |Name |Description |Type
 a| `database` a| The ``Database`` to delete. a| `const struct Database*`
-a| `consistency_level` a| The consistency level to use for the operation. Strongest possible if null. a| `const struct ConsistencyLevel*`
 |===
 
 [caption=""]
@@ -59,7 +58,7 @@ a| `consistency_level` a| The consistency level to use for the operation. Strong
 
 [source,c]
 ----
-void database_export_to_file(const struct Database* database, const char* schema_file, const char* data_file, const struct ConsistencyLevel* consistency_level)
+void database_export_to_file(const struct Database* database, const char* schema_file, const char* data_file)
 ----
 
 
@@ -76,7 +75,6 @@ Export a database into a schema definition and a data files saved to the disk. T
 a| `database` a| The ``Database`` object to export from. a| `const struct Database*`
 a| `schema_file` a| The path to the schema definition file to be created. a| `const char*`
 a| `data_file` a| The path to the data file to be created. a| `const char*`
-a| `consistency_level` a| The consistency level to use for the operation. Strongest possible if null. a| `const struct ConsistencyLevel*`
 |===
 
 [caption=""]
@@ -104,7 +102,7 @@ The ``Database`` name as a string.
 
 [source,c]
 ----
-char* database_type_schema(const struct Database* database, const struct ConsistencyLevel* consistency_level)
+char* database_type_schema(const struct Database* database)
 ----
 
 
@@ -119,7 +117,6 @@ The types in the schema as a valid TypeQL define query string.
 |===
 |Name |Description |Type
 a| `database` a| The ``Database`` to get the type schema from. a| `const struct Database*`
-a| `consistency_level` a| The consistency level to use for the operation. Strongest possible if null. a| `const struct ConsistencyLevel*`
 |===
 
 [caption=""]

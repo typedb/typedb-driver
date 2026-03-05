@@ -25,7 +25,7 @@ from typedb.driver import *
 
 def setup_cluster(context: Context):
     with create_driver(context) as driver:
-        if len(driver.replicas()) != len(context.default_clustering_addresses):
+        if len(driver.servers()) != len(context.default_clustering_addresses):
             for i, address in enumerate(context.default_clustering_addresses):
                 replica_id = i + 1
 

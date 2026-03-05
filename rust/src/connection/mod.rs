@@ -22,7 +22,7 @@ pub use self::{
     credentials::Credentials,
     driver_options::DriverOptions,
     driver_tls_config::DriverTlsConfig,
-    server::{server_replica, server_version},
+    server::{server_replica, server_routing, server_version},
 };
 
 mod credentials;

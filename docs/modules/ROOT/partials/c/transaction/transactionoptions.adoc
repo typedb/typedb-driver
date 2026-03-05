@@ -28,22 +28,6 @@ Frees the native Rust ``TransactionOptions`` object.
 .Returns
 `void`
 
-[#_transaction_options_get_read_consistency_level]
-==== function ``transaction_options_get_read_consistency_level``
-
-[source,c]
-----
-struct ConsistencyLevel* transaction_options_get_read_consistency_level(const struct TransactionOptions* options)
-----
-
-
-
-Returns the value set for the read consistency level in this ``TransactionOptions`` object. If set, specifies the requested consistency level of the transaction opening operation. Affects only read transactions, as write and schema transactions require primary replicas.
-
-[caption=""]
-.Returns
-`struct ConsistencyLevel*`
-
 [#_transaction_options_get_schema_lock_acquire_timeout_millis]
 ==== function ``transaction_options_get_schema_lock_acquire_timeout_millis``
 
@@ -75,22 +59,6 @@ Returns the value set for the transaction timeout in this ``TransactionOptions``
 [caption=""]
 .Returns
 `int64_t`
-
-[#_transaction_options_has_read_consistency_level]
-==== function ``transaction_options_has_read_consistency_level``
-
-[source,c]
-----
-bool transaction_options_has_read_consistency_level(const struct TransactionOptions* options)
-----
-
-
-
-Checks whether the option for read consistency level was explicitly set for this ``TransactionOptions`` object.
-
-[caption=""]
-.Returns
-`bool`
 
 [#_transaction_options_has_schema_lock_acquire_timeout_millis]
 ==== function ``transaction_options_has_schema_lock_acquire_timeout_millis``
@@ -139,22 +107,6 @@ Produces a new ``TransactionOptions`` object.
 [caption=""]
 .Returns
 `struct TransactionOptions*`
-
-[#_transaction_options_set_read_consistency_level]
-==== function ``transaction_options_set_read_consistency_level``
-
-[source,c]
-----
-void transaction_options_set_read_consistency_level(struct TransactionOptions* options, const struct ConsistencyLevel* read_consistency_level)
-----
-
-
-
-Explicitly sets read consistency level. If set, specifies the requested consistency level of the transaction opening operation. Affects only read transactions, as write and schema transactions require primary replicas.
-
-[caption=""]
-.Returns
-`void`
 
 [#_transaction_options_set_schema_lock_acquire_timeout_millis]
 ==== function ``transaction_options_set_schema_lock_acquire_timeout_millis``

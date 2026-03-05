@@ -88,10 +88,6 @@
 %nojavaexception transaction_options_get_schema_lock_acquire_timeout_millis;
 %nojavaexception transaction_options_set_schema_lock_acquire_timeout_millis;
 %nojavaexception transaction_options_has_schema_lock_acquire_timeout_millis;
-%nojavaexception transaction_options_get_read_consistency_level;
-%nojavaexception transaction_options_set_read_consistency_level;
-%nojavaexception transaction_options_has_read_consistency_level;
-
 %nojavaexception query_options_new;
 %nojavaexception query_options_get_include_instance_types;
 %nojavaexception query_options_set_include_instance_types;
@@ -144,9 +140,8 @@
 
 %nojavaexception database_get_name;
 
-%nojavaexception consistency_level_strong;
-%nojavaexception consistency_level_eventual;
-%nojavaexception consistency_level_replica_dependent;
+%nojavaexception server_routing_auto;
+%nojavaexception server_routing_server;
 
 %nojavaexception concept_is_entity;
 %nojavaexception concept_is_relation;
@@ -240,8 +235,8 @@
 %nojavaexception Duration::days;
 %nojavaexception Duration::nanos;
 
-%nojavaexception ConsistencyLevel::tag;
-%nojavaexception ConsistencyLevel::address;
+%nojavaexception ServerRouting::tag;
+%nojavaexception ServerRouting::address;
 
 /* director constructors do not throw */
 %nojavaexception TransactionCallbackDirector;
@@ -369,7 +364,7 @@
 %nojavaexception ~ConceptIterator;
 %nojavaexception ~ConceptRow;
 %nojavaexception ~ConceptRowIterator;
-%nojavaexception ~ConsistencyLevel;
+%nojavaexception ~ServerRouting;
 %nojavaexception ~DriverOptions;
 %nojavaexception ~DriverTlsConfig;
 %nojavaexception ~Credentials;

@@ -14,10 +14,10 @@ TypeDB user information
 
 [source,java]
 ----
-default void delete()
+void delete()
 ----
 
-Deletes this user, using default strong consistency. See <<#_delete_com_typedb_driver_api_ConsistencyLevel,``delete(ConsistencyLevel)``>> for more details and options. 
+Deletes this user. 
 
 
 [caption=""]
@@ -29,37 +29,6 @@ Deletes this user, using default strong consistency. See <<#_delete_com_typedb_d
 [source,java]
 ----
 user.delete();
-----
-
-[#_User_delete_ConsistencyLevel]
-==== method ``delete``
-
-[source,java]
-----
-void delete​(ConsistencyLevel consistencyLevel)
-----
-
-Deletes this user. 
-
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `consistencyLevel` a| The consistency level to use for the operation a| `ConsistencyLevel`
-|===
-
-[caption=""]
-.Returns
-`void`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-user.delete(new ConsistencyLevel.Strong());
 ----
 
 [#_User_name_]
@@ -82,10 +51,10 @@ Returns the name of this user.
 
 [source,java]
 ----
-default void updatePassword​(java.lang.String password)
+void updatePassword​(java.lang.String password)
 ----
 
-Updates the password for this user, using default strong consistency. See <<#_updatePassword_java_lang_String_com_typedb_driver_api_ConsistencyLevel,``updatePassword(String, ConsistencyLevel)``>> for more details and options. 
+Updates the password for this user. 
 
 
 [caption=""]
@@ -106,39 +75,6 @@ a| `password` a| The new password a| `java.lang.String`
 [source,java]
 ----
 user.updatePassword("new-password");
-----
-
-[#_User_updatePassword_java_lang_String_ConsistencyLevel]
-==== method ``updatePassword``
-
-[source,java]
-----
-void updatePassword​(java.lang.String password,
-                    ConsistencyLevel consistencyLevel)
-----
-
-Updates the password for this user. 
-
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `password` a| The new password a| `java.lang.String`
-a| `consistencyLevel` a| The consistency level to use for the operation a| `ConsistencyLevel`
-|===
-
-[caption=""]
-.Returns
-`void`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-user.updatePassword("new-password", new ConsistencyLevel.Strong());
 ----
 
 // end::methods[]
