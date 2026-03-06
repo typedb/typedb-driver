@@ -19,43 +19,43 @@
 
 package com.typedb.driver.api.server;
 
-import com.typedb.driver.api.server.ReplicaRole;
+import com.typedb.driver.api.server.ReplicationRole;
 
 import javax.annotation.CheckReturnValue;
 import java.util.Optional;
 
 /**
- * The metadata and state of an individual raft replica of a driver connection.
+ * The metadata and state of an individual raft server of a driver connection.
  */
-public interface ServerReplica {
+public interface Server {
     // TODO: This is what u64 is converted to. This one feels weird, although I don't know what to do with it.
 
     /**
-     * Returns the id of this replica.
+     * Returns the id of this server.
      */
     @CheckReturnValue
     long getID();
 
     /**
-     * Returns the address this replica is hosted at.
+     * Returns the address this server is hosted at.
      */
     @CheckReturnValue
     String getAddress();
 
     /**
-     * Returns whether this is the primary replica of the raft cluster or any of the supporting types.
+     * Returns whether this is the primary server of the raft cluster or any of the supporting types.
      */
     @CheckReturnValue
-    Optional<ReplicaRole> getRole();
+    Optional<ReplicationRole> getRole();
 
     /**
-     * Checks whether this is the primary replica of the raft cluster.
+     * Checks whether this is the primary server of the raft cluster.
      */
     @CheckReturnValue
     Boolean isPrimary();
 
     /**
-     * Returns the raft protocol ‘term’ of this replica.
+     * Returns the raft protocol 'term' of this server.
      */
     @CheckReturnValue
     Optional<Long> getTerm();

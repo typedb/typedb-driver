@@ -1,6 +1,6 @@
-[#_struct_AvailableServerReplica]
+[#_struct_AvailableServer]
 [.doc-api-reference-driver]
-=== AvailableServerReplica
+=== AvailableServer
 
 `struct`
 
@@ -14,10 +14,10 @@
 * `Replica`
 * `StructuralPartialEq`
 
-A specialization of an available ``ServerReplica`` with a known connection address.
+A specialization of an available ``Server`` with a known connection address.
 
 // tag::methods[]
-[#_struct_AvailableServerReplica_address_]
+[#_struct_AvailableServer_address_]
 ==== address
 
 [source,rust]
@@ -25,7 +25,7 @@ A specialization of an available ``ServerReplica`` with a known connection addre
 pub fn address(&self) -> &Address
 ----
 
-Returns the address this replica is hosted at.
+Returns the address this server is hosted at.
 
 [caption=""]
 .Returns
@@ -34,7 +34,7 @@ Returns the address this replica is hosted at.
 &Address
 ----
 
-[#_struct_AvailableServerReplica_id_]
+[#_struct_AvailableServer_id_]
 ==== id
 
 [source,rust]
@@ -51,7 +51,7 @@ Returns the id of this replica. 0 (default) if it’s not a part of a cluster.
 u64
 ----
 
-[#_struct_AvailableServerReplica_is_primary_]
+[#_struct_AvailableServer_is_primary_]
 ==== is_primary
 
 [source,rust]
@@ -68,12 +68,12 @@ Checks whether this is the primary replica of the raft cluster.
 bool
 ----
 
-[#_struct_AvailableServerReplica_role_]
+[#_struct_AvailableServer_role_]
 ==== role
 
 [source,rust]
 ----
-fn role(&self) -> Option<ReplicaRole>
+fn role(&self) -> Option<ReplicationRole>
 ----
 
 Returns whether this is the primary replica of the raft cluster or any of the supporting roles.
@@ -82,10 +82,10 @@ Returns whether this is the primary replica of the raft cluster or any of the su
 .Returns
 [source,rust]
 ----
-Option<ReplicaRole>
+Option<ReplicationRole>
 ----
 
-[#_struct_AvailableServerReplica_term_]
+[#_struct_AvailableServer_term_]
 ==== term
 
 [source,rust]

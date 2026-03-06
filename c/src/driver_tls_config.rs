@@ -23,7 +23,7 @@ use typedb_driver::DriverTlsConfig;
 
 use crate::common::{
     error::try_release,
-    memory::{borrow, borrow_mut, free, release, release_string, string_view},
+    memory::{borrow, free, release, release_string, string_view},
 };
 
 /// Creates a new <code>DriverTlsConfig</code> with TLS disabled.

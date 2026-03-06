@@ -19,7 +19,6 @@
 
 package com.typedb.driver.connection;
 
-import com.typedb.driver.api.ConsistencyLevel;
 import com.typedb.driver.api.database.Database;
 import com.typedb.driver.api.database.DatabaseManager;
 import com.typedb.driver.common.NativeIterator;
@@ -43,39 +42,39 @@ public class DatabaseManagerImpl implements DatabaseManager {
     }
 
     @Override
-    public List<Database> all(ConsistencyLevel consistencyLevel) throws TypeDBDriverException {
+    public List<Database> all() throws TypeDBDriverException {
         try {
-            return new NativeIterator<>(databases_all(nativeDriver, ConsistencyLevel.nativeValue(consistencyLevel))).stream().map(DatabaseImpl::new).collect(toList());
+            return new NativeIterator<>(databases_all(nativeDriver)).stream().map(DatabaseImpl::new).collect(toList());
         } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
     }
 
     @Override
-    public boolean contains(String name, ConsistencyLevel consistencyLevel) throws TypeDBDriverException {
+    public boolean contains(String name) throws TypeDBDriverException {
         Validator.requireNonNull(name, "name");
         try {
-            return databases_contains(nativeDriver, name, ConsistencyLevel.nativeValue(consistencyLevel));
+            return databases_contains(nativeDriver, name);
         } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
     }
 
     @Override
-    public Database get(String name, ConsistencyLevel consistencyLevel) throws TypeDBDriverException {
+    public Database get(String name) throws TypeDBDriverException {
         Validator.requireNonNull(name, "name");
         try {
-            return new DatabaseImpl(databases_get(nativeDriver, name, ConsistencyLevel.nativeValue(consistencyLevel)));
+            return new DatabaseImpl(databases_get(nativeDriver, name));
         } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
     }
 
     @Override
-    public void create(String name, ConsistencyLevel consistencyLevel) throws TypeDBDriverException {
+    public void create(String name) throws TypeDBDriverException {
         Validator.requireNonNull(name, "name");
         try {
-            databases_create(nativeDriver, name, ConsistencyLevel.nativeValue(consistencyLevel));
+            databases_create(nativeDriver, name);
         } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }

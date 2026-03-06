@@ -55,7 +55,7 @@ public class TypeDB {
      * TypeDB.driver(address);
      * </pre>
      *
-     * @param addresses     The addresses of TypeDB cluster replicas for connection
+     * @param addresses     The addresses of TypeDB cluster servers for connection
      * @param credentials   The credentials to connect with
      * @param driverOptions The driver connection options to connect with
      */
@@ -71,7 +71,7 @@ public class TypeDB {
      * TypeDB.driver(addresses);
      * </pre>
      *
-     * @param addressTranslation The translation of public TypeDB cluster replica addresses (keys) to server-side private addresses (values)
+     * @param addressTranslation The translation of public TypeDB cluster server addresses (keys) to server-side private addresses (values)
      * @param credentials        The credentials to connect with
      * @param driverOptions      The driver connection options to connect with
      */

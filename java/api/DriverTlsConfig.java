@@ -83,8 +83,8 @@ public class DriverTlsConfig extends NativeObject<com.typedb.driver.jni.DriverTl
      *
      *                      <h3>Examples</h3>
      *                      <pre>
-     *                                                                                     DriverTlsConfig tlsConfig = DriverTlsConfig.enabledWithRootCA("path/to/ca-certificate.pem");
-     *                                                                                     </pre>
+     *                                                                                                                               DriverTlsConfig tlsConfig = DriverTlsConfig.enabledWithRootCA("path/to/ca-certificate.pem");
+     *                                                                                                                               </pre>
      */
     @CheckReturnValue
     public static DriverTlsConfig enabledWithRootCA(String tlsRootCAPath) {

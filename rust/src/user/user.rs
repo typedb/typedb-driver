@@ -19,8 +19,8 @@
 use std::sync::Arc;
 
 use crate::{
-    common::{consistency_level::ConsistencyLevel, Result},
-    connection::server::server_manager::ServerManager,
+    common::Result,
+    connection::server::{server_manager::ServerManager, server_routing::ServerRouting},
     info::UserInfo,
 };
 
@@ -51,9 +51,7 @@ impl User {
         self.password.as_ref().map(|value| value.as_str())
     }
 
-    /// Updates the user's password, using default strong consistency.
-    ///
-    /// See [`Self::update_password_with_consistency`] for more details and options.
+    /// Updates the user's password.
     ///
     /// # Arguments
     ///
@@ -67,34 +65,9 @@ impl User {
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn update_password(&self, password: impl Into<String>) -> Result<()> {
-        self.update_password_with_consistency(password, ConsistencyLevel::Strong).await
-    }
-
-    /// Updates the user's password.
-    ///
-    /// # Arguments
-    ///
-    /// * `password` — The new password
-    /// * `consistency_level` — The consistency level to use for the operation
-    ///
-    /// # Examples
-    ///
-    /// ```rust
-    #[cfg_attr(feature = "sync", doc = "user.update_password_with_consistency(password, ConsistencyLevel::Strong);")]
-    #[cfg_attr(
-        not(feature = "sync"),
-        doc = "user.update_password_with_consistency(password, ConsistencyLevel::Strong).await;"
-    )]
-    /// ```
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn update_password_with_consistency(
-        &self,
-        password: impl Into<String>,
-        consistency_level: ConsistencyLevel,
-    ) -> Result<()> {
         let password = password.into();
         self.server_manager
-            .execute(consistency_level, |server_connection| {
+            .execute(ServerRouting::Auto, |server_connection| {
                 let name = self.name.clone();
                 let password = password.clone();
                 async move { server_connection.update_password(name, password).await }
@@ -102,38 +75,18 @@ impl User {
             .await
     }
 
-    /// Deletes this user, using default strong consistency.
-    ///
-    /// See [`Self::delete_with_consistency`] for more details and options.
+    /// Deletes this user.
     ///
     /// # Examples
     ///
     /// ```rust
     #[cfg_attr(feature = "sync", doc = "user.delete();")]
     #[cfg_attr(not(feature = "sync"), doc = "user.delete().await;")]
-    /// user.delete(username).await;
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn delete(self) -> Result {
-        self.delete_with_consistency(ConsistencyLevel::Strong).await
-    }
-
-    /// Deletes this user.
-    ///
-    /// # Arguments
-    ///
-    /// * `consistency_level` — The consistency level to use for the operation
-    ///
-    /// # Examples
-    ///
-    /// ```rust
-    #[cfg_attr(feature = "sync", doc = "user.delete_with_consistency(ConsistencyLevel::Strong);")]
-    #[cfg_attr(not(feature = "sync"), doc = "user.delete_with_consistency(ConsistencyLevel::Strong).await;")]
-    /// ```
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn delete_with_consistency(self, consistency_level: ConsistencyLevel) -> Result {
         self.server_manager
-            .execute(consistency_level, |server_connection| {
+            .execute(ServerRouting::Auto, |server_connection| {
                 let name = self.name.clone();
                 async move { server_connection.delete_user(name).await }
             })

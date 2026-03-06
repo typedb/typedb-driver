@@ -112,15 +112,15 @@ public class ConnectionStepsCore extends ConnectionStepsBase {
     }
 
     @Override
-    @Then("connection has {integer} replica(s)")
-    public void connection_has_count_replicas(int count) {
-        super.connection_has_count_replicas(count);
+    @Then("connection has {integer} server(s)")
+    public void connection_has_count_servers(int count) {
+        super.connection_has_count_servers(count);
     }
 
     @Override
-    @Then("connection primary replica exists")
-    public void connection_primary_replica_exists() {
-        super.connection_primary_replica_exists();
+    @Then("connection primary server exists")
+    public void connection_primary_server_exists() {
+        super.connection_primary_server_exists();
     }
 
     @Override
@@ -136,6 +136,12 @@ public class ConnectionStepsCore extends ConnectionStepsBase {
     }
 
     @Override
+    @When("set operation server routing to: {server_routing}")
+    public void set_operation_server_routing(Parameters.Routing serverRouting) {
+        super.set_operation_server_routing(serverRouting);
+    }
+
+    @Override
     @When("set driver option use_replication to: {bool}")
     public void set_driver_option_use_replication_to(boolean value) {
         super.set_driver_option_use_replication_to(value);
@@ -148,8 +154,8 @@ public class ConnectionStepsCore extends ConnectionStepsBase {
     }
 
     @Override
-    @When("set driver option replica_discovery_attempts to: {integer}")
-    public void set_driver_option_replica_discovery_attempts_to(int value) {
-        super.set_driver_option_replica_discovery_attempts_to(value);
+    @When("set driver option server_discovery_attempts to: {integer}")
+    public void set_driver_option_server_discovery_attempts_to(int value) {
+        super.set_driver_option_server_discovery_attempts_to(value);
     }
 }

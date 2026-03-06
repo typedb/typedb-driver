@@ -19,7 +19,6 @@
 
 package com.typedb.driver.user;
 
-import com.typedb.driver.api.ConsistencyLevel;
 import com.typedb.driver.api.user.User;
 import com.typedb.driver.common.NativeObject;
 import com.typedb.driver.common.Validator;
@@ -40,19 +39,19 @@ public class UserImpl extends NativeObject<com.typedb.driver.jni.User> implement
     }
 
     @Override
-    public void updatePassword(String password, ConsistencyLevel consistencyLevel) {
+    public void updatePassword(String password) {
         Validator.requireNonNull(password, "password");
         try {
-            user_update_password(nativeObject, password, ConsistencyLevel.nativeValue(consistencyLevel));
+            user_update_password(nativeObject, password);
         } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
     }
 
     @Override
-    public void delete(ConsistencyLevel consistencyLevel) {
+    public void delete() {
         try {
-            user_delete(nativeObject.released(), ConsistencyLevel.nativeValue(consistencyLevel));
+            user_delete(nativeObject.released());
         } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }

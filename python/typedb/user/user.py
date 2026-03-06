@@ -17,9 +17,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional
-
-from typedb.api.connection.consistency_level import ConsistencyLevel
+from typing import TYPE_CHECKING
 
 from typedb.api.user.user import User
 from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE
@@ -46,15 +44,15 @@ class _User(User, NativeWrapper[NativeUser]):
     def name(self) -> str:
         return user_get_name(self.native_object)
 
-    def update_password(self, password: str, consistency_level: Optional[ConsistencyLevel] = None) -> None:
+    def update_password(self, password: str) -> None:
         require_non_null(password, "password")
         try:
-            user_update_password(self.native_object, password, ConsistencyLevel.native_value(consistency_level))
+            user_update_password(self.native_object, password)
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e) from None
 
-    def delete(self, consistency_level: Optional[ConsistencyLevel] = None) -> None:
+    def delete(self) -> None:
         try:
-            user_delete(self.native_object, ConsistencyLevel.native_value(consistency_level))
+            user_delete(self.native_object)
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e) from None

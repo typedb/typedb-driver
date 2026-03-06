@@ -33,7 +33,7 @@ use crate::{
     },
     common::{info::DatabaseInfo, RequestID},
     concept::Concept,
-    connection::{server_replica::ServerReplica, server_version::ServerVersion},
+    connection::server::{server_version::ServerVersion, Server},
     error::ServerError,
     info::UserInfo,
     Credentials, QueryOptions, TransactionOptions, TransactionType,
@@ -75,14 +75,14 @@ pub(super) enum Response {
     ConnectionOpen {
         connection_id: Uuid,
         server_duration_millis: u64,
-        servers: Vec<ServerReplica>,
+        servers: Vec<Server>,
     },
 
     ServersAll {
-        servers: Vec<ServerReplica>,
+        servers: Vec<Server>,
     },
     ServersGet {
-        server: ServerReplica,
+        server: Server,
     },
     ServersRegister,
     ServersDeregister,

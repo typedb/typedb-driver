@@ -19,8 +19,8 @@
 use std::sync::Arc;
 
 use crate::{
-    common::{consistency_level::ConsistencyLevel, Result},
-    connection::server::server_manager::ServerManager,
+    common::Result,
+    connection::server::{server_manager::ServerManager, server_routing::ServerRouting},
     User,
 };
 
@@ -35,9 +35,11 @@ impl UserManager {
         Self { server_manager }
     }
 
-    /// Checks if a user with the given name exists, using default strong consistency.
+    /// Checks if a user with the given name exists.
     ///
-    /// See [`Self::contains_with_consistency`] for more details and options.
+    /// # Arguments
+    ///
+    /// * `username` — The username to be checked
     ///
     /// # Examples
     ///
@@ -47,43 +49,20 @@ impl UserManager {
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn contains(&self, username: impl Into<String>) -> Result<bool> {
-        self.contains_with_consistency(username, ConsistencyLevel::Strong).await
-    }
-
-    /// Checks if a user with the given name exists.
-    ///
-    /// # Arguments
-    ///
-    /// * `username` — The username to be checked
-    /// * `consistency_level` — The consistency level to use for the operation
-    ///
-    /// # Examples
-    ///
-    /// ```rust
-    #[cfg_attr(feature = "sync", doc = "driver.users().contains_with_consistency(username, ConsistencyLevel::Strong);")]
-    #[cfg_attr(
-        not(feature = "sync"),
-        doc = "driver.users().contains_with_consistency(username, ConsistencyLevel::Strong).await;"
-    )]
-    /// ```
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn contains_with_consistency(
-        &self,
-        username: impl Into<String>,
-        consistency_level: ConsistencyLevel,
-    ) -> Result<bool> {
         let username = username.into();
         self.server_manager
-            .execute(consistency_level, move |server_connection| {
+            .execute(ServerRouting::Auto, move |server_connection| {
                 let username = username.clone();
                 async move { server_connection.contains_user(username).await }
             })
             .await
     }
 
-    /// Retrieves a user with the given name, using default strong consistency.
+    /// Retrieves a user with the given name.
     ///
-    /// See [`Self::get_with_consistency`] for more details and options.
+    /// # Arguments
+    ///
+    /// * `username` — The name of the user to retrieve
     ///
     /// # Examples
     ///
@@ -93,34 +72,9 @@ impl UserManager {
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn get(&self, username: impl Into<String>) -> Result<Option<User>> {
-        self.get_with_consistency(username, ConsistencyLevel::Strong).await
-    }
-
-    /// Retrieves a user with the given name.
-    ///
-    /// # Arguments
-    ///
-    /// * `username` — The name of the user to retrieve
-    /// * `consistency_level` — The consistency level to use for the operation
-    ///
-    /// # Examples
-    ///
-    /// ```rust
-    #[cfg_attr(feature = "sync", doc = "driver.users().get_with_consistency(username, ConsistencyLevel::Strong);")]
-    #[cfg_attr(
-        not(feature = "sync"),
-        doc = "driver.users().get_with_consistency(username, ConsistencyLevel::Strong).await;"
-    )]
-    /// ```
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn get_with_consistency(
-        &self,
-        username: impl Into<String>,
-        consistency_level: ConsistencyLevel,
-    ) -> Result<Option<User>> {
         let username = username.into();
         self.server_manager
-            .execute(consistency_level, |server_connection| {
+            .execute(ServerRouting::Auto, |server_connection| {
                 let username = username.clone();
                 let server_manager = self.server_manager.clone();
                 async move {
@@ -131,9 +85,7 @@ impl UserManager {
             .await
     }
 
-    /// Returns the user of the current connection, using default strong consistency.
-    ///
-    /// See [`Self::get_current_with_consistency`] for more details and options.
+    /// Returns the user of the current connection.
     ///
     /// # Examples
     ///
@@ -146,29 +98,7 @@ impl UserManager {
         self.get(self.server_manager.username()?).await
     }
 
-    /// Returns the user of the current connection.
-    ///
-    /// # Arguments
-    ///
-    /// * `consistency_level` — The consistency level to use for the operation
-    ///
-    /// # Examples
-    ///
-    /// ```rust
-    #[cfg_attr(feature = "sync", doc = "driver.users().get_current_with_consistency(ConsistencyLevel::Strong);")]
-    #[cfg_attr(
-        not(feature = "sync"),
-        doc = "driver.users().get_current_with_consistency(ConsistencyLevel::Strong).await;"
-    )]
-    /// ```
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn get_current_with_consistency(&self, consistency_level: ConsistencyLevel) -> Result<Option<User>> {
-        self.get_with_consistency(self.server_manager.username()?, consistency_level).await
-    }
-
-    /// Retrieves all users which exist on the TypeDB server, using default strong consistency.
-    ///
-    /// See [`Self::all_with_consistency`] for more details and options.
+    /// Retrieves all users which exist on the TypeDB server.
     ///
     /// # Examples
     ///
@@ -178,25 +108,8 @@ impl UserManager {
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn all(&self) -> Result<Vec<User>> {
-        self.all_with_consistency(ConsistencyLevel::Strong).await
-    }
-
-    /// Retrieves all users which exist on the TypeDB server.
-    ///
-    /// # Arguments
-    ///
-    /// * `consistency_level` — The consistency level to use for the operation
-    ///
-    /// # Examples
-    ///
-    /// ```rust
-    #[cfg_attr(feature = "sync", doc = "driver.users().all_with_consistency(ConsistencyLevel::Strong);")]
-    #[cfg_attr(not(feature = "sync"), doc = "driver.users().all_with_consistency(ConsistencyLevel::Strong).await;")]
-    /// ```
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn all_with_consistency(&self, consistency_level: ConsistencyLevel) -> Result<Vec<User>> {
         self.server_manager
-            .execute(consistency_level, |server_connection| {
+            .execute(ServerRouting::Auto, |server_connection| {
                 let server_manager = self.server_manager.clone();
                 async move {
                     let user_infos = server_connection.all_users().await?;
@@ -209,9 +122,7 @@ impl UserManager {
             .await
     }
 
-    /// Creates a user with the given name &amp; password, using default strong consistency.
-    ///
-    /// See [`Self::contains_with_consistency`] for more details and options.
+    /// Creates a user with the given name &amp; password.
     ///
     /// # Arguments
     ///
@@ -226,40 +137,10 @@ impl UserManager {
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn create(&self, username: impl Into<String>, password: impl Into<String>) -> Result {
-        self.create_with_consistency(username, password, ConsistencyLevel::Strong).await
-    }
-
-    /// Creates a user with the given name &amp; password.
-    ///
-    /// # Arguments
-    ///
-    /// * `username` — The name of the user to be created
-    /// * `password` — The password of the user to be created
-    /// * `consistency_level` — The consistency level to use for the operation
-    ///
-    /// # Examples
-    ///
-    /// ```rust
-    #[cfg_attr(
-        feature = "sync",
-        doc = "driver.users().create_with_consistency(username, password, ConsistencyLevel::Strong);"
-    )]
-    #[cfg_attr(
-        not(feature = "sync"),
-        doc = "driver.users().create_with_consistency(username, password, ConsistencyLevel::Strong).await;"
-    )]
-    /// ```
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn create_with_consistency(
-        &self,
-        username: impl Into<String>,
-        password: impl Into<String>,
-        consistency_level: ConsistencyLevel,
-    ) -> Result {
         let username = username.into();
         let password = password.into();
         self.server_manager
-            .execute(consistency_level, move |server_connection| {
+            .execute(ServerRouting::Auto, move |server_connection| {
                 let username = username.clone();
                 let password = password.clone();
                 async move { server_connection.create_user(username, password).await }

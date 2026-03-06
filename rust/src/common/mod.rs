@@ -27,7 +27,6 @@ pub use self::{
 };
 
 pub(crate) mod address;
-pub mod consistency_level;
 pub mod error;
 mod id;
 pub mod info;

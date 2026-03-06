@@ -19,7 +19,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Optional, Tuple
 
-from typedb.api.connection.consistency_level import ConsistencyLevel
+from typedb.api.connection.server_routing import ServerRouting
 from typedb.api.connection.driver import Driver
 from typedb.api.connection.transaction_options import TransactionOptions
 from typedb.api.server.server_version import ServerVersion
@@ -28,12 +28,12 @@ from typedb.common.iterator_wrapper import IteratorWrapper
 from typedb.common.native_wrapper import NativeWrapper
 from typedb.common.validation import require_non_null, require_non_negative
 from typedb.database.database_manager import _DatabaseManager
-from typedb.connection.server_replica import _ServerReplica
+from typedb.connection.server import _Server
 from typedb.connection.transaction import _Transaction
 from typedb.native_driver_wrapper import driver_new_with_description, driver_new_with_addresses_with_description, \
-    driver_new_with_address_translation_with_description, driver_is_open, driver_force_close, driver_register_replica, \
-    driver_deregister_replica, driver_replicas, driver_primary_replica, driver_server_version, \
-    driver_update_address_translation, server_replica_iterator_next, TypeDBDriver as NativeDriver, \
+    driver_new_with_address_translation_with_description, driver_is_open, driver_force_close, driver_register_server, \
+    driver_deregister_server, driver_servers, driver_primary_server, driver_server_version, \
+    driver_update_address_translation, server_iterator_next, TypeDBDriver as NativeDriver, \
     TypeDBDriverExceptionNative
 from typedb.user.user_manager import _UserManager
 
@@ -42,7 +42,7 @@ if TYPE_CHECKING:
     from typedb.api.connection.credentials import Credentials
     from typedb.api.connection.transaction import Transaction, TransactionType
     from typedb.api.user.user_manager import UserManager
-    from typedb.api.server.server_replica import ServerReplica
+    from typedb.api.server.server import Server
 
 
 class _Driver(Driver, NativeWrapper[NativeDriver]):
@@ -94,10 +94,10 @@ class _Driver(Driver, NativeWrapper[NativeDriver]):
     def users(self) -> UserManager:
         return _UserManager(self._native_driver)
 
-    def server_version(self, consistency_level: Optional[ConsistencyLevel] = None) -> ServerVersion:
+    def server_version(self, server_routing: Optional[ServerRouting] = None) -> ServerVersion:
         try:
-            consistency_level = ConsistencyLevel.native_value(consistency_level)
-            return ServerVersion(driver_server_version(self._native_driver, consistency_level))
+            server_routing = ServerRouting.native_value(server_routing)
+            return ServerVersion(driver_server_version(self._native_driver, server_routing))
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e) from None
 
@@ -107,33 +107,33 @@ class _Driver(Driver, NativeWrapper[NativeDriver]):
         require_non_null(transaction_type, "transaction_type")
         return _Transaction(self, database_name, transaction_type, options if options else TransactionOptions())
 
-    def replicas(self, consistency_level: Optional[ConsistencyLevel] = None) -> set[ServerReplica]:
+    def servers(self, server_routing: Optional[ServerRouting] = None) -> set[Server]:
         try:
-            consistency_level = ConsistencyLevel.native_value(consistency_level)
-            replica_iter = IteratorWrapper(driver_replicas(self._native_driver, consistency_level),
-                                           server_replica_iterator_next)
-            return set(_ServerReplica(server_replica) for server_replica in replica_iter)
+            server_routing = ServerRouting.native_value(server_routing)
+            server_iter = IteratorWrapper(driver_servers(self._native_driver, server_routing),
+                                          server_iterator_next)
+            return set(_Server(server) for server in server_iter)
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e) from None
 
-    def primary_replica(self, consistency_level: Optional[ConsistencyLevel] = None) -> Optional[ServerReplica]:
-        consistency_level = ConsistencyLevel.native_value(consistency_level)
-        if res := driver_primary_replica(self._native_driver, consistency_level):
-            return _ServerReplica(res)
+    def primary_server(self, server_routing: Optional[ServerRouting] = None) -> Optional[Server]:
+        server_routing = ServerRouting.native_value(server_routing)
+        if res := driver_primary_server(self._native_driver, server_routing):
+            return _Server(res)
         return None
 
-    def register_replica(self, replica_id: int, address: str) -> None:
-        require_non_negative(replica_id, "replica_id")
+    def register_server(self, server_id: int, address: str) -> None:
+        require_non_negative(server_id, "server_id")
         require_non_null(address, "address")
         try:
-            driver_register_replica(self._native_driver, replica_id, address)
+            driver_register_server(self._native_driver, server_id, address)
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e) from None
 
-    def deregister_replica(self, replica_id: int) -> None:
-        require_non_negative(replica_id, "replica_id")
+    def deregister_server(self, server_id: int) -> None:
+        require_non_negative(server_id, "server_id")
         try:
-            driver_deregister_replica(self._native_driver, replica_id)
+            driver_deregister_server(self._native_driver, server_id)
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e) from None
 

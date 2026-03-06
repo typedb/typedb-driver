@@ -6,7 +6,7 @@
 
 [source,c]
 ----
-char* database_schema(const struct Database* database, const struct ConsistencyLevel* consistency_level)
+char* database_schema(const struct Database* database)
 ----
 
 
@@ -21,7 +21,6 @@ A full schema text as a valid TypeQL define query string.
 |===
 |Name |Description |Type
 a| `database` a| The ``Database`` to get the schema from. a| `const struct Database*`
-a| `consistency_level` a| The consistency level to use for the operation. Strongest possible if null. a| `const struct ConsistencyLevel*`
 |===
 
 [caption=""]
@@ -33,7 +32,7 @@ a| `consistency_level` a| The consistency level to use for the operation. Strong
 
 [source,c]
 ----
-struct DatabaseIterator* databases_all(struct TypeDBDriver* driver, const struct ConsistencyLevel* consistency_level)
+struct DatabaseIterator* databases_all(struct TypeDBDriver* driver)
 ----
 
 
@@ -48,7 +47,6 @@ Returns a ``DatabaseIterator`` over all databases present on the TypeDB server.
 |===
 |Name |Description |Type
 a| `driver` a| The ``TypeDBDriver`` object. a| `struct TypeDBDriver*`
-a| `consistency_level` a| The consistency level to use for the operation. Strongest possible if null. a| `const struct ConsistencyLevel*`
 |===
 
 [caption=""]
@@ -60,7 +58,7 @@ a| `consistency_level` a| The consistency level to use for the operation. Strong
 
 [source,c]
 ----
-bool databases_contains(struct TypeDBDriver* driver, const char* name, const struct ConsistencyLevel* consistency_level)
+bool databases_contains(struct TypeDBDriver* driver, const char* name)
 ----
 
 
@@ -76,7 +74,6 @@ Checks if a database with the given name exists.
 |Name |Description |Type
 a| `driver` a| The ``TypeDBDriver`` object. a| `struct TypeDBDriver*`
 a| `name` a| The name of the database. a| `const char*`
-a| `consistency_level` a| The consistency level to use for the operation. Strongest possible if null. a| `const struct ConsistencyLevel*`
 |===
 
 [caption=""]
@@ -88,7 +85,7 @@ a| `consistency_level` a| The consistency level to use for the operation. Strong
 
 [source,c]
 ----
-void databases_create(struct TypeDBDriver* driver, const char* name, const struct ConsistencyLevel* consistency_level)
+void databases_create(struct TypeDBDriver* driver, const char* name)
 ----
 
 
@@ -104,7 +101,6 @@ Creates a database with the given name.
 |Name |Description |Type
 a| `driver` a| The ``TypeDBDriver`` object. a| `struct TypeDBDriver*`
 a| `name` a| The name of the database to be created. a| `const char*`
-a| `consistency_level` a| The consistency level to use for the operation. Strongest possible if null. a| `const struct ConsistencyLevel*`
 |===
 
 [caption=""]
@@ -116,7 +112,7 @@ a| `consistency_level` a| The consistency level to use for the operation. Strong
 
 [source,c]
 ----
-const struct Database* databases_get(struct TypeDBDriver* driver, const char* name, const struct ConsistencyLevel* consistency_level)
+const struct Database* databases_get(struct TypeDBDriver* driver, const char* name)
 ----
 
 
@@ -132,7 +128,6 @@ Retrieves the database with the given name.
 |Name |Description |Type
 a| `driver` a| The ``TypeDBDriver`` object. a| `struct TypeDBDriver*`
 a| `name` a| The name of the database. a| `const char*`
-a| `consistency_level` a| The consistency level to use for the operation. Strongest possible if null. a| `const struct ConsistencyLevel*`
 |===
 
 [caption=""]

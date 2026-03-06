@@ -19,52 +19,52 @@
 
 package com.typedb.driver.connection;
 
-import com.typedb.driver.api.server.ReplicaRole;
-import com.typedb.driver.api.server.ServerReplica;
+import com.typedb.driver.api.server.ReplicationRole;
+import com.typedb.driver.api.server.Server;
 import com.typedb.driver.common.NativeObject;
 
 import java.util.Optional;
 
-import static com.typedb.driver.jni.typedb_driver.server_replica_get_address;
-import static com.typedb.driver.jni.typedb_driver.server_replica_get_id;
-import static com.typedb.driver.jni.typedb_driver.server_replica_is_primary;
-import static com.typedb.driver.jni.typedb_driver.server_replica_has_term;
-import static com.typedb.driver.jni.typedb_driver.server_replica_has_role;
-import static com.typedb.driver.jni.typedb_driver.server_replica_get_term;
-import static com.typedb.driver.jni.typedb_driver.server_replica_get_role;
+import static com.typedb.driver.jni.typedb_driver.server_get_address;
+import static com.typedb.driver.jni.typedb_driver.server_get_id;
+import static com.typedb.driver.jni.typedb_driver.server_is_primary;
+import static com.typedb.driver.jni.typedb_driver.server_has_term;
+import static com.typedb.driver.jni.typedb_driver.server_has_role;
+import static com.typedb.driver.jni.typedb_driver.server_get_term;
+import static com.typedb.driver.jni.typedb_driver.server_get_role;
 
-public class ServerReplicaImpl extends NativeObject<com.typedb.driver.jni.ServerReplica> implements ServerReplica {
-    public ServerReplicaImpl(com.typedb.driver.jni.ServerReplica serverReplica) {
-        super(serverReplica);
+public class ServerImpl extends NativeObject<com.typedb.driver.jni.Server> implements Server {
+    public ServerImpl(com.typedb.driver.jni.Server server) {
+        super(server);
     }
 
     @Override
     public long getID() {
-        return server_replica_get_id(nativeObject);
+        return server_get_id(nativeObject);
     }
 
     @Override
     public String getAddress() {
-        return server_replica_get_address(nativeObject);
+        return server_get_address(nativeObject);
     }
 
     @Override
-    public Optional<ReplicaRole> getRole() {
-        if (server_replica_has_role(nativeObject)) {
-            return Optional.of(ReplicaRole.of(server_replica_get_role(nativeObject)));
+    public Optional<ReplicationRole> getRole() {
+        if (server_has_role(nativeObject)) {
+            return Optional.of(ReplicationRole.of(server_get_role(nativeObject)));
         }
         return Optional.empty();
     }
 
     @Override
     public Boolean isPrimary() {
-        return server_replica_is_primary(nativeObject);
+        return server_is_primary(nativeObject);
     }
 
     @Override
     public Optional<Long> getTerm() {
-        if (server_replica_has_term(nativeObject)) {
-            return Optional.of(server_replica_get_term(nativeObject));
+        if (server_has_term(nativeObject)) {
+            return Optional.of(server_get_term(nativeObject));
         }
         return Optional.empty();
     }

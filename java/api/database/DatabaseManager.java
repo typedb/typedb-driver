@@ -19,7 +19,6 @@
 
 package com.typedb.driver.api.database;
 
-import com.typedb.driver.api.ConsistencyLevel;
 import com.typedb.driver.common.exception.TypeDBDriverException;
 
 import javax.annotation.CheckReturnValue;
@@ -30,8 +29,7 @@ import java.util.List;
  */
 public interface DatabaseManager {
     /**
-     * Retrieves all databases present on the TypeDB server, using default strong consistency.
-     * See {@link #all(ConsistencyLevel)} for more details and options.
+     * Retrieves all databases present on the TypeDB server.
      *
      * <h3>Examples</h3>
      * <pre>
@@ -39,26 +37,10 @@ public interface DatabaseManager {
      * </pre>
      */
     @CheckReturnValue
-    default List<Database> all() throws TypeDBDriverException {
-        return all(null);
-    }
+    List<Database> all() throws TypeDBDriverException;
 
     /**
-     * Retrieves all databases present on the TypeDB server.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * driver.databases().all(new ConsistencyLevel.Strong())
-     * </pre>
-     *
-     * @param consistencyLevel The consistency level to use for the operation
-     */
-    @CheckReturnValue
-    List<Database> all(ConsistencyLevel consistencyLevel) throws TypeDBDriverException;
-
-    /**
-     * Checks if a database with the given name exists, using default strong consistency.
-     * See {@link #contains(String, ConsistencyLevel)} for more details and options.
+     * Checks if a database with the given name exists.
      *
      * <h3>Examples</h3>
      * <pre>
@@ -68,27 +50,10 @@ public interface DatabaseManager {
      * @param name The database name to be checked
      */
     @CheckReturnValue
-    default boolean contains(String name) throws TypeDBDriverException {
-        return contains(name, null);
-    }
+    boolean contains(String name) throws TypeDBDriverException;
 
     /**
-     * Checks if a database with the given name exists.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * driver.databases().contains(name, new ConsistencyLevel.Strong())
-     * </pre>
-     *
-     * @param name             The database name to be checked
-     * @param consistencyLevel The consistency level to use for the operation
-     */
-    @CheckReturnValue
-    boolean contains(String name, ConsistencyLevel consistencyLevel) throws TypeDBDriverException;
-
-    /**
-     * Retrieves the database with the given name, using default strong consistency.
-     * See {@link #get(String, ConsistencyLevel)} for more details and options.
+     * Retrieves the database with the given name.
      *
      * <h3>Examples</h3>
      * <pre>
@@ -98,27 +63,10 @@ public interface DatabaseManager {
      * @param name The name of the database to retrieve
      */
     @CheckReturnValue
-    default Database get(String name) throws TypeDBDriverException {
-        return get(name, null);
-    }
+    Database get(String name) throws TypeDBDriverException;
 
     /**
-     * Retrieves the database with the given name.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * driver.databases().get(name, new ConsistencyLevel.Strong())
-     * </pre>
-     *
-     * @param name             The name of the database to retrieve
-     * @param consistencyLevel The consistency level to use for the operation
-     */
-    @CheckReturnValue
-    Database get(String name, ConsistencyLevel consistencyLevel) throws TypeDBDriverException;
-
-    /**
-     * Creates a database with the given name, using default strong consistency.
-     * See {@link #create(String, ConsistencyLevel)} for more details and options.
+     * Creates a database with the given name.
      *
      * <h3>Examples</h3>
      * <pre>
@@ -127,22 +75,7 @@ public interface DatabaseManager {
      *
      * @param name The name of the database to be created
      */
-    default void create(String name) throws TypeDBDriverException {
-        create(name, null);
-    }
-
-    /**
-     * Creates a database with the given name.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * driver.databases().create(name, new ConsistencyLevel.Strong())
-     * </pre>
-     *
-     * @param name             The name of the database to be created
-     * @param consistencyLevel The consistency level to use for the operation
-     */
-    void create(String name, ConsistencyLevel consistencyLevel) throws TypeDBDriverException;
+    void create(String name) throws TypeDBDriverException;
 
     /**
      * Creates a database with the given name based on previously exported another database's data loaded from a file.

@@ -18,9 +18,7 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import List, Optional
-
-from typedb.api.connection.consistency_level import ConsistencyLevel
+from typing import List
 
 
 class DatabaseManager(ABC):
@@ -29,69 +27,60 @@ class DatabaseManager(ABC):
     """
 
     @abstractmethod
-    def all(self, consistency_level: Optional[ConsistencyLevel] = None) -> List[Database]:
+    def all(self) -> List[Database]:
         """
         Retrieves all databases present on the TypeDB server.
-
-        :param consistency_level: The consistency level to use for the operation. Strongest possible by default
 
         Examples:
         ---------
         ::
 
             driver.databases.all()
-            driver.databases.all(ConsistencyLevel.Strong())
         """
         pass
 
     @abstractmethod
-    def contains(self, name: str, consistency_level: Optional[ConsistencyLevel] = None) -> bool:
+    def contains(self, name: str) -> bool:
         """
         Checks if a database with the given name exists.
 
         :param name: The database name to be checked
-        :param consistency_level: The consistency level to use for the operation. Strongest possible by default
 
         Examples:
         ---------
         ::
 
             driver.databases.contains(name)
-            driver.databases.contains(name, ConsistencyLevel.Strong())
         """
         pass
 
     @abstractmethod
-    def get(self, name: str, consistency_level: Optional[ConsistencyLevel] = None) -> Database:
+    def get(self, name: str) -> Database:
         """
         Retrieves the database with the given name.
 
         :param name: The name of the database to retrieve
-        :param consistency_level: The consistency level to use for the operation. Strongest possible by default
 
         Examples:
         ---------
         ::
 
             driver.databases.get(name)
-            driver.databases.get(name, ConsistencyLevel.Strong())
         """
         pass
 
     @abstractmethod
-    def create(self, name: str, consistency_level: Optional[ConsistencyLevel] = None) -> None:
+    def create(self, name: str) -> None:
         """
         Creates a database with the given name.
 
         :param name: The name of the database to be created
-        :param consistency_level: The consistency level to use for the operation. Strongest possible by default
 
         Examples:
         ---------
         ::
 
             driver.databases.create(name)
-            driver.databases.create(name, ConsistencyLevel.Strong())
         """
         pass
 

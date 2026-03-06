@@ -18,18 +18,17 @@
  */
 use std::{collections::HashSet, fmt, sync::Arc};
 
-use tracing::{debug, error, info, trace};
-use tracing_subscriber::{fmt as tracing_fmt, layer::SubscriberExt, util::SubscriberInitExt, EnvFilter};
+use tracing::{debug, error};
+use tracing_subscriber::{fmt as tracing_fmt, EnvFilter};
 
 use crate::{
-    common::{consistency_level::ConsistencyLevel, Addresses, Result},
+    common::{Addresses, Result},
     connection::{
         runtime::BackgroundRuntime,
         server::{
-            server_connection::ServerConnection, server_manager::ServerManager, server_replica::ServerReplica,
-            server_version::ServerVersion,
+            server_connection::ServerConnection, server_manager::ServerManager, server_routing::ServerRouting,
+            server_version::ServerVersion, AvailableServer, Server,
         },
-        server_replica::AvailableServerReplica,
     },
     Credentials, DatabaseManager, DriverOptions, Transaction, TransactionOptions, TransactionType, UserManager,
 };
@@ -165,9 +164,9 @@ impl TypeDBDriver {
         &self.user_manager
     }
 
-    /// Retrieves the server's version, using default strong consistency.
+    /// Retrieves the server's version, using default automatic server routing.
     ///
-    /// See [`Self::server_version_with_consistency`] for more details and options.
+    /// See [`Self::server_version_with_routing`] for more details and options.
     ///
     /// # Examples
     ///
@@ -177,139 +176,130 @@ impl TypeDBDriver {
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn server_version(&self) -> Result<ServerVersion> {
-        self.server_version_with_consistency(ConsistencyLevel::Strong).await
+        self.server_version_with_routing(ServerRouting::Auto).await
     }
 
-    /// Retrieves the server's version, using default strong consistency.
+    /// Retrieves the server's version.
     ///
     /// # Arguments
     ///
-    /// * `consistency_level` — The consistency level to use for the operation
+    /// * `server_routing` — The server routing directive to use for the operation
     ///
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "driver.server_version_with_consistency(ConsistencyLevel::Strong);")]
-    #[cfg_attr(not(feature = "sync"), doc = "driver.server_version_with_consistency(ConsistencyLevel::Strong).await;")]
+    #[cfg_attr(feature = "sync", doc = "driver.server_version_with_routing(ServerRouting::Auto);")]
+    #[cfg_attr(not(feature = "sync"), doc = "driver.server_version_with_routing(ServerRouting::Auto).await;")]
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn server_version_with_consistency(&self, consistency_level: ConsistencyLevel) -> Result<ServerVersion> {
+    pub async fn server_version_with_routing(&self, server_routing: ServerRouting) -> Result<ServerVersion> {
         self.server_manager
-            .execute(consistency_level, |server_connection| async move { server_connection.version().await })
+            .execute(server_routing, |server_connection| async move { server_connection.version().await })
             .await
     }
 
-    // TODO: Maybe call it just "servers"?
-    /// Retrieves the server's replicas, using default strong consistency.
+    /// Retrieves the servers, using default automatic server routing.
     ///
-    /// See [`Self::replicas_with_consistency`] for more details and options.
+    /// See [`Self::servers_with_routing`] for more details and options.
     ///
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "driver.replicas();")]
-    #[cfg_attr(not(feature = "sync"), doc = "driver.replicas().await;")]
+    #[cfg_attr(feature = "sync", doc = "driver.servers();")]
+    #[cfg_attr(not(feature = "sync"), doc = "driver.servers().await;")]
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn replicas(&self) -> Result<HashSet<ServerReplica>> {
-        self.replicas_with_consistency(ConsistencyLevel::Strong).await
+    pub async fn servers(&self) -> Result<HashSet<Server>> {
+        self.servers_with_routing(ServerRouting::Auto).await
     }
 
-    /// Retrieves the server's replicas, using default strong consistency.
+    /// Retrieves the servers.
     ///
     /// # Arguments
     ///
-    /// * `consistency_level` — The consistency level to use for the operation
+    /// * `server_routing` — The server routing directive to use for the operation
     ///
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "driver.replicas_with_consistency();")]
-    #[cfg_attr(not(feature = "sync"), doc = "driver.replicas_with_consistency(ConsistencyLevel::Strong).await;")]
+    #[cfg_attr(feature = "sync", doc = "driver.servers_with_routing(ServerRouting::Auto);")]
+    #[cfg_attr(not(feature = "sync"), doc = "driver.servers_with_routing(ServerRouting::Auto).await;")]
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn replicas_with_consistency(
-        &self,
-        consistency_level: ConsistencyLevel,
-    ) -> Result<HashSet<ServerReplica>> {
-        self.server_manager.fetch_replicas(consistency_level).await
+    pub async fn servers_with_routing(&self, server_routing: ServerRouting) -> Result<HashSet<Server>> {
+        self.server_manager.fetch_servers(server_routing).await
     }
 
     // TODO: Add servers_get call for a specific server. How to design it?
 
-    /// Retrieves the server's primary replica, if exists, using default strong consistency.
+    /// Retrieves the primary server, if exists, using default automatic server routing.
     ///
-    /// See [`Self::primary_replica_with_consistency`] for more details and options.
+    /// See [`Self::primary_server_with_routing`] for more details and options.
     ///
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "driver.primary_replica();")]
-    #[cfg_attr(not(feature = "sync"), doc = "driver.primary_replica().await;")]
+    #[cfg_attr(feature = "sync", doc = "driver.primary_server();")]
+    #[cfg_attr(not(feature = "sync"), doc = "driver.primary_server().await;")]
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn primary_replica(&self) -> Result<Option<AvailableServerReplica>> {
-        self.primary_replica_with_consistency(ConsistencyLevel::Strong).await
+    pub async fn primary_server(&self) -> Result<Option<AvailableServer>> {
+        self.primary_server_with_routing(ServerRouting::Auto).await
     }
 
-    /// Retrieves the server's primary replica, if exists.
+    /// Retrieves the primary server, if exists.
     ///
     /// # Arguments
     ///
-    /// * `consistency_level` — The consistency level to use for the operation
+    /// * `server_routing` — The server routing directive to use for the operation
     ///
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "driver.primary_replica_with_consistency(ConsistencyLevel::Strong);")]
-    #[cfg_attr(not(feature = "sync"), doc = "driver.primary_replica_with_consistency(ConsistencyLevel::Strong).await;")]
+    #[cfg_attr(feature = "sync", doc = "driver.primary_server_with_routing(ServerRouting::Auto);")]
+    #[cfg_attr(not(feature = "sync"), doc = "driver.primary_server_with_routing(ServerRouting::Auto).await;")]
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn primary_replica_with_consistency(
-        &self,
-        consistency_level: ConsistencyLevel,
-    ) -> Result<Option<AvailableServerReplica>> {
-        self.server_manager.fetch_primary_replica(consistency_level).await
+    pub async fn primary_server_with_routing(&self, server_routing: ServerRouting) -> Result<Option<AvailableServer>> {
+        self.server_manager.fetch_primary_server(server_routing).await
     }
 
-    /// Registers a new replica in the cluster the driver is currently connected to. The registered
-    /// replica will become available eventually, depending on the behavior of the whole cluster.
-    /// To register a replica, its clustering address should be passed, not the connection address.
+    /// Registers a new server in the cluster the driver is currently connected to. The registered
+    /// server will become available eventually, depending on the behavior of the whole cluster.
+    /// To register a server, its clustering address should be passed, not the connection address.
     ///
     /// # Arguments
     ///
-    /// * `replica_id` — The numeric identifier of the new replica
-    /// * `address` — The clustering address of the TypeDB replica as a string
+    /// * `replica_id` — The numeric identifier of the new server
+    /// * `address` — The clustering address of the TypeDB server as a string
     ///
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "driver.register_replica(2, \"127.0.0.1:2729\")")]
-    #[cfg_attr(not(feature = "sync"), doc = "driver.register_replica(2, \"127.0.0.1:2729\").await")]
+    #[cfg_attr(feature = "sync", doc = "driver.register_server(2, \"127.0.0.1:2729\")")]
+    #[cfg_attr(not(feature = "sync"), doc = "driver.register_server(2, \"127.0.0.1:2729\").await")]
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn register_replica(&self, replica_id: u64, address: String) -> Result {
-        self.server_manager.register_replica(replica_id, address).await
+    pub async fn register_server(&self, replica_id: u64, address: String) -> Result {
+        self.server_manager.register_server(replica_id, address).await
     }
 
-    // TODO: Rename to replica_register and replica_deregister? Does not actually matter since we're removing this
-
-    /// Deregisters a replica from the cluster the driver is currently connected to. This replica
+    /// Deregisters a server from the cluster the driver is currently connected to. This server
     /// will no longer play a raft role in this cluster.
     ///
     /// # Arguments
     ///
-    /// * `replica_id` — The numeric identifier of the deregistered replica
+    /// * `replica_id` — The numeric identifier of the deregistered server
     ///
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "driver.deregister_replica(2)")]
-    #[cfg_attr(not(feature = "sync"), doc = "driver.deregister_replica(2).await")]
+    #[cfg_attr(feature = "sync", doc = "driver.deregister_server(2)")]
+    #[cfg_attr(not(feature = "sync"), doc = "driver.deregister_server(2).await")]
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn deregister_replica(&self, replica_id: u64) -> Result {
-        self.server_manager.deregister_replica(replica_id).await
+    pub async fn deregister_server(&self, replica_id: u64) -> Result {
+        self.server_manager.deregister_server(replica_id).await
     }
 
     /// Updates address translation of the driver. This lets you actualize new translation
@@ -367,8 +357,8 @@ impl TypeDBDriver {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "driver.users().all_with_consistency(ConsistencyLevel::Strong);")]
-    #[cfg_attr(not(feature = "sync"), doc = "driver.users().all_with_consistency(ConsistencyLevel::Strong).await;")]
+    #[cfg_attr(feature = "sync", doc = "driver.transaction(database_name, TransactionType::Read);")]
+    #[cfg_attr(not(feature = "sync"), doc = "driver.transaction(database_name, TransactionType::Read).await;")]
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn transaction(
@@ -379,10 +369,7 @@ impl TypeDBDriver {
         self.transaction_with_options(database_name, transaction_type, TransactionOptions::new()).await
     }
 
-    /// Opens a new transaction with the following consistency level:
-    /// * read transaction - strong consistency, can be overridden through `options`;
-    /// * write transaction - strong consistency, cannot be overridden;
-    /// * schema transaction - strong consistency, cannot be overridden.
+    /// Opens a new transaction with custom transaction options.
     ///
     /// # Arguments
     ///
@@ -416,15 +403,7 @@ impl TypeDBDriver {
         };
 
         debug!("Opening transaction for database: {} with type: {:?}", database_name, transaction_type);
-        let transaction_stream = match transaction_type {
-            TransactionType::Read => {
-                let consistency_level = options.read_consistency_level.clone().unwrap_or(ConsistencyLevel::Strong);
-                self.server_manager.execute(consistency_level, open_fn).await?
-            }
-            TransactionType::Write | TransactionType::Schema => {
-                self.server_manager.execute(ConsistencyLevel::Strong, open_fn).await?
-            }
-        };
+        let transaction_stream = self.server_manager.execute(ServerRouting::Auto, open_fn).await?;
 
         debug!("Successfully opened transaction for database: {}", database_name);
         Ok(Transaction::new(transaction_stream))

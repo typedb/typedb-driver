@@ -41,17 +41,17 @@ a| `driver` a| The ``TypeDBDriver`` object. a| `struct TypeDBDriver*`
 .Returns
 `void`
 
-[#_driver_deregister_replica]
-==== function ``driver_deregister_replica``
+[#_driver_deregister_server]
+==== function ``driver_deregister_server``
 
 [source,c]
 ----
-void driver_deregister_replica(const struct TypeDBDriver* driver, int64_t replica_id)
+void driver_deregister_server(const struct TypeDBDriver* driver, int64_t server_id)
 ----
 
 
 
-Deregisters a replica from the cluster the driver is currently connected to. This replica will no longer play a raft role in this cluster.
+Deregisters a server from the cluster the driver is currently connected to. This server will no longer play a raft role in this cluster.
 
 
 [caption=""]
@@ -61,7 +61,7 @@ Deregisters a replica from the cluster the driver is currently connected to. Thi
 |===
 |Name |Description |Type
 a| `driver` a| The ``TypeDBDriver`` object. a| `const struct TypeDBDriver*`
-a| `replica_id` a| The numeric identifier of the deregistered replica a| `int64_t`
+a| `server_id` a| The numeric identifier of the deregistered server a| `int64_t`
 |===
 
 [caption=""]
@@ -293,17 +293,17 @@ a| `driver_lang` a| The language of the driver connecting to the server a| `cons
 .Returns
 `struct TypeDBDriver*`
 
-[#_driver_primary_replica]
-==== function ``driver_primary_replica``
+[#_driver_primary_server]
+==== function ``driver_primary_server``
 
 [source,c]
 ----
-struct ServerReplica* driver_primary_replica(const struct TypeDBDriver* driver, const struct ConsistencyLevel* consistency_level)
+struct Server* driver_primary_server(const struct TypeDBDriver* driver, const struct ServerRouting* server_routing)
 ----
 
 
 
-Retrieves the server's primary replica, if exists.
+Retrieves the server's primary server, if exists.
 
 
 [caption=""]
@@ -313,24 +313,24 @@ Retrieves the server's primary replica, if exists.
 |===
 |Name |Description |Type
 a| `driver` a| The ``TypeDBDriver`` object. a| `const struct TypeDBDriver*`
-a| `consistency_level` a| The consistency level to use for the operation. Strongest possible if null. a| `const struct ConsistencyLevel*`
+a| `server_routing` a| The server routing directive to use for the operation. Auto if null. a| `const struct ServerRouting*`
 |===
 
 [caption=""]
 .Returns
-`struct ServerReplica*`
+`struct Server*`
 
-[#_driver_register_replica]
-==== function ``driver_register_replica``
+[#_driver_register_server]
+==== function ``driver_register_server``
 
 [source,c]
 ----
-void driver_register_replica(const struct TypeDBDriver* driver, int64_t replica_id, const char* address)
+void driver_register_server(const struct TypeDBDriver* driver, int64_t server_id, const char* address)
 ----
 
 
 
-Registers a new replica in the cluster the driver is currently connected to. The registered replica will become available eventually, depending on the behavior of the whole cluster. To register a replica, its clustering address should be passed, not the connection address.
+Registers a new server in the cluster the driver is currently connected to. The registered server will become available eventually, depending on the behavior of the whole cluster. To register a server, its clustering address should be passed, not the connection address.
 
 
 [caption=""]
@@ -340,47 +340,20 @@ Registers a new replica in the cluster the driver is currently connected to. The
 |===
 |Name |Description |Type
 a| `driver` a| The ``TypeDBDriver`` object. a| `const struct TypeDBDriver*`
-a| `replica_id` a| The numeric identifier of the new replica a| `int64_t`
-a| `address` a| The address(es) of the TypeDB replica as a string a| `const char*`
+a| `server_id` a| The numeric identifier of the new server a| `int64_t`
+a| `address` a| The address(es) of the TypeDB server as a string a| `const char*`
 |===
 
 [caption=""]
 .Returns
 `void`
 
-[#_driver_replicas]
-==== function ``driver_replicas``
-
-[source,c]
-----
-struct ServerReplicaIterator* driver_replicas(const struct TypeDBDriver* driver, const struct ConsistencyLevel* consistency_level)
-----
-
-
-
-Retrieves the server's replicas.
-
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `driver` a| The ``TypeDBDriver`` object. a| `const struct TypeDBDriver*`
-a| `consistency_level` a| The consistency level to use for the operation. Strongest possible if null. a| `const struct ConsistencyLevel*`
-|===
-
-[caption=""]
-.Returns
-`struct ServerReplicaIterator*`
-
 [#_driver_server_version]
 ==== function ``driver_server_version``
 
 [source,c]
 ----
-struct ServerVersion* driver_server_version(const struct TypeDBDriver* driver, const struct ConsistencyLevel* consistency_level)
+struct ServerVersion* driver_server_version(const struct TypeDBDriver* driver, const struct ServerRouting* server_routing)
 ----
 
 
@@ -395,12 +368,39 @@ Retrieves the server version and distribution information.
 |===
 |Name |Description |Type
 a| `driver` a| The ``TypeDBDriver`` object. a| `const struct TypeDBDriver*`
-a| `consistency_level` a| The consistency level to use for the operation. Strongest possible if null. a| `const struct ConsistencyLevel*`
+a| `server_routing` a| The server routing directive to use for the operation. Auto if null. a| `const struct ServerRouting*`
 |===
 
 [caption=""]
 .Returns
 `struct ServerVersion*`
+
+[#_driver_servers]
+==== function ``driver_servers``
+
+[source,c]
+----
+struct ServerIterator* driver_servers(const struct TypeDBDriver* driver, const struct ServerRouting* server_routing)
+----
+
+
+
+Retrieves the servers.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `driver` a| The ``TypeDBDriver`` object. a| `const struct TypeDBDriver*`
+a| `server_routing` a| The server routing directive to use for the operation. Auto if null. a| `const struct ServerRouting*`
+|===
+
+[caption=""]
+.Returns
+`struct ServerIterator*`
 
 [#_driver_tls_config_drop]
 ==== function ``driver_tls_config_drop``
@@ -524,7 +524,7 @@ void driver_update_address_translation(const struct TypeDBDriver* driver, const 
 
 
 
-Updates address translation of the driver. This lets you actualize new translation information without recreating the driver from scratch. Useful after registering new replicas requiring address translation. This operation will update existing connections using the provided addresses.
+Updates address translation of the driver. This lets you actualize new translation information without recreating the driver from scratch. Useful after registering new servers requiring address translation. This operation will update existing connections using the provided addresses.
 
 
 [caption=""]
@@ -534,8 +534,8 @@ Updates address translation of the driver. This lets you actualize new translati
 |===
 |Name |Description |Type
 a| `driver` a| The ``TypeDBDriver`` object. a| `const struct TypeDBDriver*`
-a| `public_addresses` a| A null-terminated array holding the replica addresses on for connection. a| `const char*const*`
-a| `private_addresses` a| A null-terminated array holding the private replica addresses, configured on the server side. This array _must_ have the same length as ``public_addresses``. a| `const char*const*`
+a| `public_addresses` a| A null-terminated array holding the server addresses for connection. a| `const char*const*`
+a| `private_addresses` a| A null-terminated array holding the private server addresses, configured on the server side. This array _must_ have the same length as ``public_addresses``. a| `const char*const*`
 |===
 
 [caption=""]
