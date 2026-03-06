@@ -19,7 +19,7 @@ TypeDB driver connection options. ``DriverOptions`` object can be used to overri
 [options="header"]
 |===
 |Name |Type |Description
-a| `primary_failover_retries` a| `usize` a| Limits the number of attempts to redirect a strongly consistent request to another primary replica in case of a failure due to the change of replica roles. Defaults to 1.
+a| `primary_failover_retries` a| `usize` a| Limits the number of attempts to redirect a strongly consistent request to another primary server in case of a failure due to the change of server replication roles. Defaults to 1.
 a| `request_timeout` a| `Duration` a| Specifies the maximum time to wait for a response to a unary RPC request. This applies to operations like database creation, user management, and initial transaction opening. It does NOT apply to operations within transactions (queries, commits). Defaults to 2 hours.
 a| `server_discovery_attempts` a| `Option<usize>` a| Limits the number of driver attempts to discover a single working server to perform an operation in case of a server unavailability. Every server is tested once, which means that at most:
 
@@ -58,7 +58,7 @@ Self
 pub fn primary_failover_retries(self, primary_failover_retries: usize) -> Self
 ----
 
-Limits the number of attempts to redirect a strongly consistent request to another primary replica in case of a failure due to the change of replica roles. Defaults to 1.
+Limits the number of attempts to redirect a strongly consistent request to another primary server in case of a failure due to the change of server replication roles. Defaults to 1.
 
 [caption=""]
 .Returns

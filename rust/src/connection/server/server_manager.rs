@@ -241,7 +241,7 @@ impl ServerManager {
             ServerRouting::Auto => self.execute_strongly_consistent(task).await,
             ServerRouting::Direct { address } => {
                 if self.read_replicas().iter().find(|replica| replica.address() == &address).is_none() {
-                    return Err(ConnectionError::UnknownDirectReplica {
+                    return Err(ConnectionError::UnknownDirectServerRouting {
                         address,
                         configured_addresses: self.configured_addresses.clone(),
                     }
@@ -283,7 +283,7 @@ impl ServerManager {
                     let replicas_without_old_primary =
                         replicas.into_iter().filter(|replica| replica.private_address() != &private_address);
                     primary_replica = match &connection_error {
-                        ConnectionError::ClusterReplicaNotPrimary => {
+                        ConnectionError::ClusterServerNotPrimary => {
                             debug!("Could not connect to the primary replica: no longer primary. Retrying...");
                             let replicas = iter::once(primary_replica).chain(replicas_without_old_primary);
                             match self.seek_primary_replica_in(replicas).await {
@@ -332,7 +332,7 @@ impl ServerManager {
             // TODO: We won't ever reconnect to disconnected / new replicas when using execute_on_any.
             // We need to think how to update the connections in this case.
             match self.execute_on(replica.address(), replica.private_address(), &task).await {
-                Err(Error::Connection(ConnectionError::ClusterReplicaNotPrimary)) => {
+                Err(Error::Connection(ConnectionError::ClusterServerNotPrimary)) => {
                     return Err(ConnectionError::NotPrimaryOnReadOnly { address: replica.address().clone() }.into());
                 }
                 Err(Error::Connection(error)) => {
@@ -367,7 +367,7 @@ impl ServerManager {
         let result = self
             .execute_on_any(source_replicas, |replica_connection| async {
                 let result = self.seek_primary_replica(replica_connection).await;
-                if &result == &Err(Error::Connection(ConnectionError::NoPrimaryReplica {})) {
+                if &result == &Err(Error::Connection(ConnectionError::NoPrimaryServer {})) {
                     // TODO: Cannot actually happen
                     Self::wait_for_primary_replica_selection().await;
                 }
@@ -398,7 +398,7 @@ impl ServerManager {
             self.refresh_replica_connections().await?;
             Ok(replica)
         } else {
-            Err(ConnectionError::NoPrimaryReplica {}.into())
+            Err(ConnectionError::NoPrimaryServer {}.into())
         }
     }
 

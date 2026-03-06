@@ -245,7 +245,6 @@ pub extern "C" fn driver_primary_server(
         Some(routing) => driver.primary_server_with_routing(routing),
         None => driver.primary_server(),
     };
-    // TODO: Return somehow else!! This will not work through SWIG
     try_release_optional(result.map(|res| res.map(|rep| Server::Available(rep))).transpose())
 }
 

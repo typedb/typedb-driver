@@ -156,7 +156,7 @@ def step_impl(context: Context, address: str, exists_or_doesnt: bool):
 @step(u'connection get server({address}) has term')
 def step_impl(context: Context, address: str):
     servers = get_servers(context)
-    server = next((r for r in servers if r.address == address), None)
+    server = next((s for s in servers if s.address == address), None)
     check_is_none(server, False)
     check_is_none(server.term, False)
 

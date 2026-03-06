@@ -54,7 +54,7 @@ pub struct DriverOptions {
     /// Defaults to true.
     pub use_replication: bool,
     /// Limits the number of attempts to redirect a strongly consistent request to another
-    /// primary replica in case of a failure due to the change of replica roles.
+    /// primary server in case of a failure due to the change of server replication roles.
     /// Defaults to 1.
     pub primary_failover_retries: usize,
     /// Limits the number of driver attempts to discover a single working server to perform an
@@ -98,7 +98,7 @@ impl DriverOptions {
     }
 
     /// Limits the number of attempts to redirect a strongly consistent request to another
-    /// primary replica in case of a failure due to the change of replica roles.
+    /// primary server in case of a failure due to the change of server replication roles.
     /// Defaults to 1.
     pub fn primary_failover_retries(self, primary_failover_retries: usize) -> Self {
         Self { primary_failover_retries, ..self }

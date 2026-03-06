@@ -23,6 +23,7 @@ server.getRole();
 [options="header"]
 |===
 |Name
+a| `CANDIDATE`
 a| `PRIMARY`
 a| `SECONDARY`
 |===

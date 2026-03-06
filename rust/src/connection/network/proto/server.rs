@@ -51,15 +51,13 @@ impl TryFromProto<ReplicaStatusProto> for ReplicationStatus {
 }
 
 impl TryFromProto<Option<i32>> for Option<ReplicationRole> {
-    fn try_from_proto(replica_role: Option<i32>) -> Result<Option<ReplicationRole>> {
-        let Some(replica_role) = replica_role else {
-            return Ok(None);
-        };
-        match replica_role {
-            0 => Ok(Some(ReplicationRole::Primary)),
-            1 => Ok(Some(ReplicationRole::Candidate)),
-            2 => Ok(Some(ReplicationRole::Secondary)),
-            _ => Err(ConnectionError::UnexpectedReplicaRole { replica_role }.into()),
+    fn try_from_proto(replication_role: Option<i32>) -> Result<Option<ReplicationRole>> {
+        match replication_role {
+            Some(0) => Ok(Some(ReplicationRole::Primary)),
+            Some(1) => Ok(Some(ReplicationRole::Candidate)),
+            Some(2) => Ok(Some(ReplicationRole::Secondary)),
+            Some(replication_role) => Err(ConnectionError::UnexpectedServerReplicationRole { replication_role }.into()),
+            None => Ok(None),
         }
     }
 }

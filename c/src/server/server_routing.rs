@@ -51,7 +51,7 @@ impl ServerRouting {
         ServerRouting { tag: ServerRoutingTag::Auto, address: std::ptr::null_mut() }
     }
 
-    fn new_server(address: *mut c_char) -> Self {
+    fn new_direct(address: *mut c_char) -> Self {
         ServerRouting { tag: ServerRoutingTag::Direct, address }
     }
 
@@ -83,7 +83,7 @@ pub extern "C" fn server_routing_auto() -> *mut ServerRouting {
 /// @param address The address of the server to route to.
 #[no_mangle]
 pub extern "C" fn server_routing_direct(address: *const c_char) -> *mut ServerRouting {
-    release(ServerRouting::new_server(release_string(string_view(address.clone()).to_string())))
+    release(ServerRouting::new_direct(release_string(string_view(address.clone()).to_string())))
 }
 
 /// Drops the <code>ServerRouting</code> object.
@@ -106,7 +106,7 @@ impl From<NativeServerRouting> for ServerRouting {
     fn from(value: NativeServerRouting) -> Self {
         match value {
             NativeServerRouting::Auto => ServerRouting::new_auto(),
-            NativeServerRouting::Direct { address } => ServerRouting::new_server(release_string(address.to_string())),
+            NativeServerRouting::Direct { address } => ServerRouting::new_direct(release_string(address.to_string())),
         }
     }
 }

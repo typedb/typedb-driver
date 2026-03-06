@@ -33,7 +33,8 @@ import static com.typedb.driver.common.exception.ErrorMessage.Internal.UNEXPECTE
  */
 public enum ReplicationRole {
     PRIMARY(0, com.typedb.driver.jni.ReplicationRole.Primary),
-    SECONDARY(1, com.typedb.driver.jni.ReplicationRole.Secondary);
+    CANDIDATE(1, com.typedb.driver.jni.ReplicationRole.Candidate),
+    SECONDARY(2, com.typedb.driver.jni.ReplicationRole.Secondary);
 
     public final com.typedb.driver.jni.ReplicationRole nativeObject;
     private final int id;
@@ -45,6 +46,7 @@ public enum ReplicationRole {
 
     public static ReplicationRole of(com.typedb.driver.jni.ReplicationRole nativeType) {
         if (nativeType == com.typedb.driver.jni.ReplicationRole.Primary) return PRIMARY;
+        else if (nativeType == com.typedb.driver.jni.ReplicationRole.Candidate) return CANDIDATE;
         else if (nativeType == com.typedb.driver.jni.ReplicationRole.Secondary) return SECONDARY;
         throw new TypeDBDriverException(UNEXPECTED_NATIVE_VALUE);
     }
