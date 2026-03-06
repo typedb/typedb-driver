@@ -38,8 +38,7 @@ use crate::{
             DatabaseExportTransmitter, DatabaseImportTransmitter, RPCTransmitter, TransactionTransmitter,
         },
         runtime::BackgroundRuntime,
-        server_replica::ServerReplica,
-        server_version::ServerVersion,
+        server::{server_version::ServerVersion, Server},
         TransactionStream,
     },
     error::{ConnectionError, InternalError},
@@ -66,7 +65,7 @@ impl ServerConnection {
         driver_options: DriverOptions,
         driver_lang: &str,
         driver_version: &str,
-    ) -> Result<(Self, Vec<ServerReplica>)> {
+    ) -> Result<(Self, Vec<Server>)> {
         let username = credentials.username().to_string();
         let request_transmitter =
             Arc::new(RPCTransmitter::start(address, credentials.clone(), driver_options, &background_runtime)?);
@@ -90,7 +89,7 @@ impl ServerConnection {
         driver_lang: &str,
         driver_version: &str,
         credentials: Credentials,
-    ) -> Result<(Uuid, Duration, Vec<ServerReplica>)> {
+    ) -> Result<(Uuid, Duration, Vec<Server>)> {
         let message = Request::ConnectionOpen {
             driver_lang: driver_lang.to_owned(),
             driver_version: driver_version.to_owned(),
@@ -120,7 +119,7 @@ impl ServerConnection {
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn servers_all(&self) -> Result<Vec<ServerReplica>> {
+    pub(crate) async fn servers_all(&self) -> Result<Vec<Server>> {
         match self.request(Request::ServersAll).await? {
             Response::ServersAll { servers } => Ok(servers),
             other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
@@ -128,7 +127,7 @@ impl ServerConnection {
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn servers_get(&self) -> Result<ServerReplica> {
+    pub(crate) async fn servers_get(&self) -> Result<Server> {
         match self.request(Request::ServersGet).await? {
             Response::ServersGet { server } => Ok(server),
             other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),

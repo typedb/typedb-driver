@@ -1,0 +1,36 @@
+[#_methods_connection_replicationrole]
+=== replicationrole
+
+[#_Struct_ReplicationRole]
+[.doc-api-reference-driver]
+==== Struct ReplicationRole
+
+`rust struct (pointer)`
+
+
+
+This enum is used to specify the replication role of a server.
+
+[#_Enum_ReplicationRole]
+[.doc-api-reference-driver]
+==== Enum ReplicationRole
+
+`rust enum (pointer)`
+
+
+
+This enum is used to specify the replication role of a server.
+
+[caption=""]
+.Enum constants
+// tag::enum_constants[]
+[cols=""]
+[options="header"]
+|===
+|Name
+a| `Candidate`
+a| `Primary`
+a| `Secondary`
+|===
+// end::enum_constants[]
+

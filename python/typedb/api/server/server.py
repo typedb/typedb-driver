@@ -22,25 +22,25 @@ from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING, Optional
 
 if TYPE_CHECKING:
-    from typedb.api.server.replica_role import ReplicaRole
+    from typedb.api.server.replication_role import ReplicationRole
 
 
-class ServerReplica(ABC):
+class Server(ABC):
     """
-    The metadata and state of an individual raft replica of a driver connection.
+    The metadata and state of an individual raft server of a driver connection.
     """
 
     @property
     @abstractmethod
     def id(self) -> int:
         """
-        Returns the id of this replica.
+        Returns the id of this server.
 
         Examples
         --------
         ::
 
-          server_replica.id
+          server.id
         """
         pass
 
@@ -48,40 +48,40 @@ class ServerReplica(ABC):
     @abstractmethod
     def address(self) -> str:
         """
-        Returns the address this replica is hosted at.
+        Returns the address this server is hosted at.
 
         Examples
         --------
         ::
 
-          server_replica.address
+          server.address
         """
         pass
 
     @property
     @abstractmethod
-    def role(self) -> Optional[ReplicaRole]:
+    def role(self) -> Optional[ReplicationRole]:
         """
-        Returns whether this is the primary replica of the raft cluster or any of the supporting types.
+        Returns whether this is the primary server of the raft cluster or any of the supporting types.
 
         Examples
         --------
         ::
 
-          server_replica.role
+          server.role
         """
         pass
 
     @abstractmethod
     def is_primary(self) -> bool:
         """
-        Checks whether this is the primary replica of the raft cluster.
+        Checks whether this is the primary server of the raft cluster.
 
         Examples
         --------
         ::
 
-          server_replica.is_primary()
+          server.is_primary()
         """
         pass
 
@@ -89,12 +89,12 @@ class ServerReplica(ABC):
     @abstractmethod
     def term(self) -> int:
         """
-        Returns the raft protocol ‘term’ of this replica.
+        Returns the raft protocol ‘term’ of this server.
 
         Examples
         --------
         ::
 
-          server_replica.term
+          server.term
         """
         pass

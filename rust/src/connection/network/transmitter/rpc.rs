@@ -17,8 +17,6 @@
  * under the License.
  */
 
-use std::time::Duration;
-
 use futures::StreamExt;
 use tokio::{
     select,

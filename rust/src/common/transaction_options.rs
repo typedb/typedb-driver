@@ -19,8 +19,6 @@
 
 use std::time::Duration;
 
-use crate::consistency_level::ConsistencyLevel;
-
 /// TypeDB transaction options.
 /// `TransactionOptions` object can be used to override the default behaviour for opened
 /// transactions.
@@ -30,15 +28,12 @@ use crate::consistency_level::ConsistencyLevel;
 /// ```rust
 /// let options = TransactionOptions::new().transaction_timeout(Duration::from_secs(60));
 /// ```
-#[derive(Clone, Debug, Default)]
+#[derive(Copy, Clone, Debug, Default)]
 pub struct TransactionOptions {
     /// If set, specifies a timeout for killing transactions automatically, preventing memory leaks in unclosed transactions.
     pub transaction_timeout: Option<Duration>,
     /// If set, specifies how long the driver should wait if opening a transaction is blocked by an exclusive schema write lock.
     pub schema_lock_acquire_timeout: Option<Duration>,
-    /// If set, specifies the requested consistency level of the transaction opening operation.
-    /// Affects only read transactions, as write and schema transactions require primary replicas.
-    pub read_consistency_level: Option<ConsistencyLevel>,
 }
 
 impl TransactionOptions {
@@ -54,11 +49,5 @@ impl TransactionOptions {
     /// If set, specifies how long the driver should wait if opening a transaction is blocked by an exclusive schema write lock.
     pub fn schema_lock_acquire_timeout(self, timeout: Duration) -> Self {
         Self { schema_lock_acquire_timeout: Some(timeout), ..self }
-    }
-
-    /// If set, specifies the requested consistency level of the transaction opening operation.
-    /// Affects only read transactions, as write and schema transactions require primary replicas.
-    pub fn read_consistency_level(self, consistency_level: ConsistencyLevel) -> Self {
-        Self { read_consistency_level: Some(consistency_level), ..self }
     }
 }

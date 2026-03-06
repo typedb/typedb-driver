@@ -20,24 +20,15 @@ a| `name` a| `str` a| Returns the name of this user.
 // end::properties[]
 
 // tag::methods[]
-[#_User_delete_consistency_level_ConsistencyLevel_None]
+[#_User_delete_]
 ==== method ``delete``
 
 [source,python]
 ----
-delete(consistency_level: ConsistencyLevel | None = None) -> None
+delete() -> None
 ----
 
 Deletes this user.
-
-[caption=""]
-.Input parameters
-[cols=",,,"]
-[options="header"]
-|===
-|Name |Description |Type |Default Value
-a| `consistency_level` a| The consistency level to use for the operation. Strongest possible by default a| `ConsistencyLevel \| None` a| `None`
-|===
 
 [caption=""]
 .Returns
@@ -48,15 +39,14 @@ a| `consistency_level` a| The consistency level to use for the operation. Strong
 [source,python]
 ----
 user.delete()
-user.delete(ConsistencyLevel.Strong())
 ----
 
-[#_User_update_password_password_str_consistency_level_ConsistencyLevel_None]
+[#_User_update_password_password_str]
 ==== method ``update_password``
 
 [source,python]
 ----
-update_password(password: str, consistency_level: ConsistencyLevel | None = None) -> None
+update_password(password: str) -> None
 ----
 
 Updates the password for this user.
@@ -68,7 +58,6 @@ Updates the password for this user.
 |===
 |Name |Description |Type |Default Value
 a| `password` a| The new password a| `str` a| 
-a| `consistency_level` a| The consistency level to use for the operation. Strongest possible by default a| `ConsistencyLevel \| None` a| `None`
 |===
 
 [caption=""]
@@ -80,7 +69,6 @@ a| `consistency_level` a| The consistency level to use for the operation. Strong
 [source,python]
 ----
 user.update_password("new-password")
-user.update_password("new-password", ConsistencyLevel.Strong())
 ----
 
 // end::methods[]

@@ -1,0 +1,71 @@
+[#_methods_connection_serverrouting]
+=== serverrouting
+
+[#_Struct_ServerRouting]
+[.doc-api-reference-driver]
+==== Struct ServerRouting
+
+`rust struct (pointer)`
+
+
+
+``ServerRouting`` is used to represent server routing directives in FFI. It combines ``ServerRoutingTag`` and optional fields to form an instance of the original enum. ``address`` is not null only when tag is ``Direct``.
+
+[#_server_routing_auto]
+==== function ``server_routing_auto``
+
+[source,c]
+----
+struct ServerRouting* server_routing_auto(void)
+----
+
+
+
+Creates an automatic ``ServerRouting`` object.
+
+[caption=""]
+.Returns
+`struct ServerRouting*`
+
+[#_server_routing_direct]
+==== function ``server_routing_direct``
+
+[source,c]
+----
+struct ServerRouting* server_routing_direct(const char* address)
+----
+
+
+
+Creates a server-specific ``ServerRouting`` object.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `address` a| The address of the server to route to. a| `const char*`
+|===
+
+[caption=""]
+.Returns
+`struct ServerRouting*`
+
+[#_server_routing_drop]
+==== function ``server_routing_drop``
+
+[source,c]
+----
+void server_routing_drop(struct ServerRouting* server_routing)
+----
+
+
+
+Drops the ``ServerRouting`` object.
+
+[caption=""]
+.Returns
+`void`
+

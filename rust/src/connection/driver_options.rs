@@ -17,12 +17,7 @@
  * under the License.
  */
 
-use std::{
-    fs,
-    path::{Path, PathBuf},
-    sync::Arc,
-    time::Duration,
-};
+use std::time::Duration;
 
 use crate::connection::driver_tls_config::DriverTlsConfig;
 
@@ -59,19 +54,19 @@ pub struct DriverOptions {
     /// Defaults to true.
     pub use_replication: bool,
     /// Limits the number of attempts to redirect a strongly consistent request to another
-    /// primary replica in case of a failure due to the change of replica roles.
+    /// primary server in case of a failure due to the change of server replication roles.
     /// Defaults to 1.
     pub primary_failover_retries: usize,
-    /// Limits the number of driver attempts to discover a single working replica to perform an
-    /// operation in case of a replica unavailability. Every replica is tested once, which means
+    /// Limits the number of driver attempts to discover a single working server to perform an
+    /// operation in case of a server unavailability. Every server is tested once, which means
     /// that at most:
-    /// - {limit} operations are performed if the limit <= the number of replicas.
-    /// - {number of replicas} operations are performed if the limit > the number of replicas.
-    /// - {number of replicas} operations are performed if the limit is None.
+    /// - {limit} operations are performed if the limit <= the number of servers.
+    /// - {number of servers} operations are performed if the limit > the number of servers.
+    /// - {number of servers} operations are performed if the limit is None.
     /// Affects every eventually consistent operation, including redirect failover, when the new
-    /// primary replica is unknown.
+    /// primary server is unknown.
     /// Defaults to None.
-    pub replica_discovery_attempts: Option<usize>,
+    pub server_discovery_attempts: Option<usize>,
 }
 
 impl DriverOptions {
@@ -103,23 +98,23 @@ impl DriverOptions {
     }
 
     /// Limits the number of attempts to redirect a strongly consistent request to another
-    /// primary replica in case of a failure due to the change of replica roles.
+    /// primary server in case of a failure due to the change of server replication roles.
     /// Defaults to 1.
     pub fn primary_failover_retries(self, primary_failover_retries: usize) -> Self {
         Self { primary_failover_retries, ..self }
     }
 
-    /// Limits the number of driver attempts to discover a single working replica to perform an
-    /// operation in case of a replica unavailability. Every replica is tested once, which means
+    /// Limits the number of driver attempts to discover a single working server to perform an
+    /// operation in case of a server unavailability. Every server is tested once, which means
     /// that at most:
-    /// - {limit} operations are performed if the limit <= the number of replicas.
-    /// - {number of replicas} operations are performed if the limit > the number of replicas.
-    /// - {number of replicas} operations are performed if the limit is None.
+    /// - {limit} operations are performed if the limit <= the number of servers.
+    /// - {number of servers} operations are performed if the limit > the number of servers.
+    /// - {number of servers} operations are performed if the limit is None.
     /// Affects every eventually consistent operation, including redirect failover, when the new
-    /// primary replica is unknown.
+    /// primary server is unknown.
     /// Defaults to None.
-    pub fn replica_discovery_attempts(self, replica_discovery_attempts: Option<usize>) -> Self {
-        Self { replica_discovery_attempts, ..self }
+    pub fn server_discovery_attempts(self, server_discovery_attempts: Option<usize>) -> Self {
+        Self { server_discovery_attempts, ..self }
     }
 }
 
@@ -130,7 +125,7 @@ impl Default for DriverOptions {
             request_timeout: DEFAULT_REQUEST_TIMEOUT,
             use_replication: DEFAULT_USE_REPLICATION,
             primary_failover_retries: DEFAULT_REDIRECT_FAILOVER_RETRIES,
-            replica_discovery_attempts: DEFAULT_DISCOVERY_FAILOVER_RETRIES,
+            server_discovery_attempts: DEFAULT_DISCOVERY_FAILOVER_RETRIES,
         }
     }
 }

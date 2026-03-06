@@ -73,14 +73,14 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
     void setupCluster() {
         try (Driver driver = createDefaultTypeDBDriver()) {
             List<String> clusteringAddresses = DEFAULT_CLUSTER_CLUSTERING_ADDRESSES;
-            if (driver.replicas().size() != clusteringAddresses.size()) {
+            if (driver.servers().size() != clusteringAddresses.size()) {
                 for (int i = 0; i < clusteringAddresses.size(); i++) {
                     long id = i + 1L;
                     String address = clusteringAddresses.get(i);
 
-                    // 1 is the default registered replica
+                    // 1 is the default registered server
                     if (id != 1) {
-                        driver.registerReplica(id, address);
+                        driver.registerServer(id, address);
                     }
                 }
             }
@@ -130,7 +130,6 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
         ));
     }
 
-
     @Override
     @When("connection closes")
     public void connection_closes() {
@@ -156,33 +155,33 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
     }
 
     @Override
-    @Then("connection has {integer} replica(s)")
-    public void connection_has_count_replicas(int count) {
-        super.connection_has_count_replicas(count);
+    @Then("connection has {integer} server(s)")
+    public void connection_has_count_servers(int count) {
+        super.connection_has_count_servers(count);
     }
 
     @Override
-    @Then("connection primary replica exists")
-    public void connection_primary_replica_exists() {
-        super.connection_primary_replica_exists();
+    @Then("connection primary server exists")
+    public void connection_primary_server_exists() {
+        super.connection_primary_server_exists();
     }
 
     @Override
-    @Then("connection get replica\\({word}) {exists_or_doesnt}")
-    public void connection_get_replica_exists(String address, Parameters.ExistsOrDoesnt existsOrDoesnt) {
-        super.connection_get_replica_exists(address, existsOrDoesnt);
+    @Then("connection get server\\({word}) {exists_or_doesnt}")
+    public void connection_get_server_exists(String address, Parameters.ExistsOrDoesnt existsOrDoesnt) {
+        super.connection_get_server_exists(address, existsOrDoesnt);
     }
 
     @Override
-    @Then("connection get replica\\({word}) has term")
-    public void connection_get_replica_has_term(String address) {
-        super.connection_get_replica_has_term(address);
+    @Then("connection get server\\({word}) has term")
+    public void connection_get_server_has_term(String address) {
+        super.connection_get_server_has_term(address);
     }
 
     @Override
-    @Then("connection replicas have roles:")
-    public void connection_replicas_have_roles(List<String> roles) {
-        super.connection_replicas_have_roles(roles);
+    @Then("connection servers have roles:")
+    public void connection_servers_have_roles(List<String> roles) {
+        super.connection_servers_have_roles(roles);
     }
 
     @Override
@@ -198,6 +197,12 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
     }
 
     @Override
+    @When("set operation server routing to: {server_routing}")
+    public void set_operation_server_routing(Parameters.Routing serverRouting) {
+        super.set_operation_server_routing(serverRouting);
+    }
+
+    @Override
     @When("set driver option use_replication to: {bool}")
     public void set_driver_option_use_replication_to(boolean value) {
         super.set_driver_option_use_replication_to(value);
@@ -210,14 +215,8 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
     }
 
     @Override
-    @When("set driver option replica_discovery_attempts to: {integer}")
-    public void set_driver_option_replica_discovery_attempts_to(int value) {
-        super.set_driver_option_replica_discovery_attempts_to(value);
-    }
-
-    @Override
-    @When("set database operation consistency to: {consistency_level}")
-    public void set_database_operation_consistency_to(Parameters.Consistency consistency) {
-        super.set_database_operation_consistency_to(consistency);
+    @When("set driver option server_discovery_attempts to: {integer}")
+    public void set_driver_option_server_discovery_attempts_to(int value) {
+        super.set_driver_option_server_discovery_attempts_to(value);
     }
 }

@@ -176,13 +176,3 @@ pub async fn set_transaction_option_schema_lock_acquire_timeout_millis(context: 
     context.init_transaction_options_if_needed();
     context.transaction_options_mut().unwrap().schema_lock_acquire_timeout = Some(Duration::from_millis(value));
 }
-
-#[apply(generic_step)]
-#[step(expr = "set transaction option read_consistency_level to: {consistency_level}")]
-pub async fn set_transaction_option_read_consistency_level(
-    context: &mut Context,
-    consistency_level: params::ConsistencyLevel,
-) {
-    context.init_transaction_options_if_needed();
-    context.transaction_options_mut().unwrap().read_consistency_level = Some(consistency_level.into_typedb());
-}

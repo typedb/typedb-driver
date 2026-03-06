@@ -56,14 +56,14 @@ int TYPEDB_EXAMPLE_FUNC() {
     delete_database_if_exists(driver, databaseName);
     if (FAILED()) goto cleanup;
     // EXAMPLE START MARKER
-    databases_create(driver, databaseName, NULL);
+    databases_create(driver, databaseName);
     if (check_error()) {
         printf("Failed to create database\n");
         goto cleanup;
     }
 
     // Check if the database exists
-    if (databases_contains(driver, databaseName, NULL)) {
+    if (databases_contains(driver, databaseName)) {
         printf("Database '%s' created successfully\n", databaseName);
     }
 

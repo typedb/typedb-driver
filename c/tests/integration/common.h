@@ -21,11 +21,6 @@ extern const char* TYPEDB_CORE_ADDRESS;
 extern const char* TYPEDB_CORE_USERNAME;
 extern const char* TYPEDB_CORE_PASSWORD;
 
-static const ConsistencyLevel STRONG_CONSISTENCY = {
-    .tag = Strong,
-    .address = NULL,
-};
-
 bool check_error_may_print(const char* filename, int lineno);
 
 TypeDBDriver* driver_new_for_tests(const char* address, const char* username, const char* password);

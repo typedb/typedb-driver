@@ -19,7 +19,6 @@
 
 package com.typedb.driver.api.user;
 
-import com.typedb.driver.api.ConsistencyLevel;
 import com.typedb.driver.common.exception.TypeDBDriverException;
 
 import javax.annotation.CheckReturnValue;
@@ -30,33 +29,17 @@ import java.util.Set;
  */
 public interface UserManager {
     /**
-     * Retrieves all users which exist on the TypeDB server, using default strong consistency.
-     * See {@link #all(ConsistencyLevel)} for more details and options.
+     * Retrieves all users which exist on the TypeDB server.
      *
      * <h3>Examples</h3>
      * <pre>
      * driver.users().all();
      * </pre>
      */
-    default Set<User> all() throws TypeDBDriverException {
-        return all(null);
-    }
+    Set<User> all() throws TypeDBDriverException;
 
     /**
-     * Retrieves all users which exist on the TypeDB server.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * driver.users().all(new ConsistencyLevel.Strong());
-     * </pre>
-     *
-     * @param consistencyLevel The consistency level to use for the operation
-     */
-    Set<User> all(ConsistencyLevel consistencyLevel) throws TypeDBDriverException;
-
-    /**
-     * Checks if a user with the given name exists., using default strong consistency.
-     * See {@link #contains(String, ConsistencyLevel)} for more details and options.
+     * Checks if a user with the given name exists.
      *
      * <h3>Examples</h3>
      * <pre>
@@ -66,27 +49,10 @@ public interface UserManager {
      * @param username The username to be checked
      */
     @CheckReturnValue
-    default boolean contains(String username) throws TypeDBDriverException {
-        return contains(username, null);
-    }
+    boolean contains(String username) throws TypeDBDriverException;
 
     /**
-     * Checks if a user with the given name exists.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * driver.users().contains(username, new ConsistencyLevel.Strong());
-     * </pre>
-     *
-     * @param username         The username to be checked
-     * @param consistencyLevel The consistency level to use for the operation
-     */
-    @CheckReturnValue
-    boolean contains(String username, ConsistencyLevel consistencyLevel) throws TypeDBDriverException;
-
-    /**
-     * Retrieves a user with the given name, using default strong consistency.
-     * See {@link #get(String, ConsistencyLevel)} for more details and options.
+     * Retrieves a user with the given name.
      *
      * <h3>Examples</h3>
      * <pre>
@@ -96,27 +62,10 @@ public interface UserManager {
      * @param username The name of the user to retrieve
      */
     @CheckReturnValue
-    default User get(String username) throws TypeDBDriverException {
-        return get(username, null);
-    }
+    User get(String username) throws TypeDBDriverException;
 
     /**
-     * Retrieves a user with the given name.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * driver.users().get(username, new ConsistencyLevel.Strong());
-     * </pre>
-     *
-     * @param username         The name of the user to retrieve
-     * @param consistencyLevel The consistency level to use for the operation
-     */
-    @CheckReturnValue
-    User get(String username, ConsistencyLevel consistencyLevel) throws TypeDBDriverException;
-
-    /**
-     * Retrieves the name of the user who opened the current connection, using default strong consistency.
-     * See {@link #getCurrent(ConsistencyLevel)} for more details and options.
+     * Retrieves the name of the user who opened the current connection.
      *
      * <h3>Examples</h3>
      * <pre>
@@ -124,26 +73,10 @@ public interface UserManager {
      * </pre>
      */
     @CheckReturnValue
-    default User getCurrent() throws TypeDBDriverException {
-        return getCurrent(null);
-    }
+    User getCurrent() throws TypeDBDriverException;
 
     /**
-     * Retrieves the name of the user who opened the current connection.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * driver.users().getCurrent(new ConsistencyLevel.Strong());
-     * </pre>
-     *
-     * @param consistencyLevel The consistency level to use for the operation
-     */
-    @CheckReturnValue
-    User getCurrent(ConsistencyLevel consistencyLevel) throws TypeDBDriverException;
-
-    /**
-     * Creates a user with the given name &amp; password, using default strong consistency.
-     * See {@link #create(String, String, ConsistencyLevel)} for more details and options.
+     * Creates a user with the given name &amp; password.
      *
      * <h3>Examples</h3>
      * <pre>
@@ -153,21 +86,5 @@ public interface UserManager {
      * @param username The name of the user to be created
      * @param password The password of the user to be created
      */
-    default void create(String username, String password) throws TypeDBDriverException {
-        create(username, password, null);
-    }
-
-    /**
-     * Creates a user with the given name &amp; password.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * driver.users().create(username, password, new ConsistencyLevel.Strong());
-     * </pre>
-     *
-     * @param username         The name of the user to be created
-     * @param password         The password of the user to be created
-     * @param consistencyLevel The consistency level to use for the operation
-     */
-    void create(String username, String password, ConsistencyLevel consistencyLevel) throws TypeDBDriverException;
+    void create(String username, String password) throws TypeDBDriverException;
 }

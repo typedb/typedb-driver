@@ -1,0 +1,83 @@
+[#_ServerRouting_Auto]
+[.doc-api-reference-driver]
+=== ServerRouting.Auto
+
+`class`
+
+*Package*: `com.typedb.driver.api`
+
+Automatic server routing. Driver automatically selects the server (primary in clusters).
+
+// tag::methods[]
+[#_ServerRouting_Auto_Auto_]
+==== method ``Auto``
+
+[source,java]
+----
+public Auto()
+----
+
+
+
+[caption=""]
+.Returns
+`public`
+
+[#_ServerRouting_Auto_nativeValue_]
+==== method ``nativeValue``
+
+[source,java]
+----
+public com.typedb.driver.jni.ServerRouting nativeValue()
+----
+
+
+
+[caption=""]
+.Returns
+`public com.typedb.driver.jni.ServerRouting`
+
+[#_ServerRouting_Auto_nativeValue_ServerRouting]
+==== method ``nativeValue``
+
+[source,java]
+----
+public static com.typedb.driver.jni.ServerRouting nativeValue​(ServerRouting serverRouting)
+----
+
+
+
+[caption=""]
+.Returns
+`public static com.typedb.driver.jni.ServerRouting`
+
+[#_ServerRouting_Auto_of_com_typedb_driver_jni_ServerRouting]
+==== method ``of``
+
+[source,java]
+----
+public static ServerRouting of​(com.typedb.driver.jni.ServerRouting nativeValue)
+----
+
+
+
+[caption=""]
+.Returns
+`public static ServerRouting`
+
+[#_ServerRouting_Auto_toString_]
+==== method ``toString``
+
+[source,java]
+----
+public java.lang.String toString()
+----
+
+
+
+[caption=""]
+.Returns
+`public java.lang.String`
+
+// end::methods[]
+

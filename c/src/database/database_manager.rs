@@ -21,13 +21,10 @@ use std::{ffi::c_char, path::Path, ptr::addr_of_mut, sync::Arc};
 
 use typedb_driver::{box_stream, Database, TypeDBDriver};
 
-use crate::{
-    common::{
-        error::{try_release, try_release_arc, unwrap_or_default, unwrap_void},
-        iterator::{iterator_arc_next, CIterator},
-        memory::{borrow, free, string_view},
-    },
-    server::consistency_level::{native_consistency_level, ConsistencyLevel},
+use crate::common::{
+    error::{try_release, try_release_arc, unwrap_or_default, unwrap_void},
+    iterator::{iterator_arc_next, CIterator},
+    memory::{borrow, free, string_view},
 };
 
 /// An <code>Iterator</code> over databases present on the TypeDB server.
@@ -49,78 +46,36 @@ pub extern "C" fn database_iterator_drop(it: *mut DatabaseIterator) {
 /// Returns a <code>DatabaseIterator</code> over all databases present on the TypeDB server.
 ///
 /// @param driver The <code>TypeDBDriver</code> object.
-/// @param consistency_level The consistency level to use for the operation. Strongest possible if null.
 #[no_mangle]
-pub extern "C" fn databases_all(
-    driver: *mut TypeDBDriver,
-    consistency_level: *const ConsistencyLevel,
-) -> *mut DatabaseIterator {
-    let databases = borrow(driver).databases();
-    let result = match native_consistency_level(consistency_level) {
-        Some(consistency_level) => databases.all_with_consistency(consistency_level),
-        None => databases.all(),
-    };
-    try_release(result.map(|dbs| DatabaseIterator(CIterator(box_stream(dbs.into_iter())))))
+pub extern "C" fn databases_all(driver: *mut TypeDBDriver) -> *mut DatabaseIterator {
+    try_release(borrow(driver).databases().all().map(|dbs| DatabaseIterator(CIterator(box_stream(dbs.into_iter())))))
 }
 
 /// Checks if a database with the given name exists.
 ///
 /// @param driver The <code>TypeDBDriver</code> object.
 /// @param name The name of the database.
-/// @param consistency_level The consistency level to use for the operation. Strongest possible if null.
 #[no_mangle]
-pub extern "C" fn databases_contains(
-    driver: *mut TypeDBDriver,
-    name: *const c_char,
-    consistency_level: *const ConsistencyLevel,
-) -> bool {
-    let databases = borrow(driver).databases();
-    let name = string_view(name);
-    let result = match native_consistency_level(consistency_level) {
-        Some(consistency_level) => databases.contains_with_consistency(name, consistency_level),
-        None => databases.contains(name),
-    };
-    unwrap_or_default(result)
+pub extern "C" fn databases_contains(driver: *mut TypeDBDriver, name: *const c_char) -> bool {
+    unwrap_or_default(borrow(driver).databases().contains(string_view(name)))
 }
 
 /// Retrieves the database with the given name.
 ///
 /// @param driver The <code>TypeDBDriver</code> object.
 /// @param name The name of the database.
-/// @param consistency_level The consistency level to use for the operation. Strongest possible if null.
 #[no_mangle]
-pub extern "C" fn databases_get(
-    driver: *mut TypeDBDriver,
-    name: *const c_char,
-    consistency_level: *const ConsistencyLevel,
-) -> *const Database {
-    let databases = borrow(driver).databases();
-    let name = string_view(name);
-    let result = match native_consistency_level(consistency_level) {
-        Some(consistency_level) => databases.get_with_consistency(name, consistency_level),
-        None => databases.get(name),
-    };
-    try_release_arc(result)
+pub extern "C" fn databases_get(driver: *mut TypeDBDriver, name: *const c_char) -> *const Database {
+    try_release_arc(borrow(driver).databases().get(string_view(name)))
 }
 
 /// Creates a database with the given name.
 ///
 /// @param driver The <code>TypeDBDriver</code> object.
 /// @param name The name of the database to be created.
-/// @param consistency_level The consistency level to use for the operation. Strongest possible if null.
 #[no_mangle]
-pub extern "C" fn databases_create(
-    driver: *mut TypeDBDriver,
-    name: *const c_char,
-    consistency_level: *const ConsistencyLevel,
-) {
-    let databases = borrow(driver).databases();
-    let name = string_view(name);
-    let result = match native_consistency_level(consistency_level) {
-        Some(consistency_level) => databases.create_with_consistency(name, consistency_level),
-        None => databases.create(name),
-    };
-    unwrap_void(result)
+pub extern "C" fn databases_create(driver: *mut TypeDBDriver, name: *const c_char) {
+    unwrap_void(borrow(driver).databases().create(string_view(name)))
 }
 
 /// Creates a database with the given name based on previously exported another database's data

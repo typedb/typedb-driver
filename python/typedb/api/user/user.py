@@ -16,9 +16,6 @@
 # under the License.
 
 from abc import ABC, abstractmethod
-from typing import Optional, TYPE_CHECKING
-
-from typedb.api.connection.consistency_level import ConsistencyLevel
 
 
 class User(ABC):
@@ -33,34 +30,29 @@ class User(ABC):
         pass
 
     @abstractmethod
-    def update_password(self, password: str, consistency_level: Optional[ConsistencyLevel] = None) -> None:
+    def update_password(self, password: str) -> None:
         """
         Updates the password for this user.
 
         :param password: The new password
-        :param consistency_level: The consistency level to use for the operation. Strongest possible by default
 
         Examples:
         ---------
         ::
 
            user.update_password("new-password")
-           user.update_password("new-password", ConsistencyLevel.Strong())
         """
         pass
 
     @abstractmethod
-    def delete(self, consistency_level: Optional[ConsistencyLevel] = None) -> None:
+    def delete(self) -> None:
         """
         Deletes this user.
-
-        :param consistency_level: The consistency level to use for the operation. Strongest possible by default
 
         Examples:
         ---------
         ::
 
            user.delete()
-           user.delete(ConsistencyLevel.Strong())
         """
         pass

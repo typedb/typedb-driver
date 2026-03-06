@@ -19,22 +19,22 @@ from __future__ import annotations
 
 from typing import Optional
 
-from typedb.api.server.replica_role import ReplicaRole
-from typedb.api.server.server_replica import ServerReplica
+from typedb.api.server.replication_role import ReplicationRole
+from typedb.api.server.server import Server
 from typedb.common.exception import TypeDBDriverException, NULL_NATIVE_OBJECT, ILLEGAL_STATE
 from typedb.common.native_wrapper import NativeWrapper
-from typedb.native_driver_wrapper import (server_replica_has_role, server_replica_has_term, server_replica_get_address, \
-                                          server_replica_get_id, server_replica_get_role, server_replica_is_primary,
-                                          server_replica_get_term, \
-                                          ServerReplica as NativeServerReplica, TypeDBDriverExceptionNative)
+from typedb.native_driver_wrapper import (server_has_role, server_has_term, server_get_address, \
+                                          server_get_id, server_get_role, server_is_primary,
+                                          server_get_term, \
+                                          Server as NativeServer, TypeDBDriverExceptionNative)
 
 
-class _ServerReplica(ServerReplica, NativeWrapper[NativeServerReplica]):
+class _Server(Server, NativeWrapper[NativeServer]):
 
-    def __init__(self, server_replica: NativeServerReplica):
-        if not server_replica:
+    def __init__(self, server: NativeServer):
+        if not server:
             raise TypeDBDriverException(NULL_NATIVE_OBJECT)
-        super().__init__(server_replica)
+        super().__init__(server)
 
     @property
     def _native_object_not_owned_exception(self) -> TypeDBDriverException:
@@ -42,27 +42,27 @@ class _ServerReplica(ServerReplica, NativeWrapper[NativeServerReplica]):
 
     @property
     def id(self) -> int:
-        return server_replica_get_id(self.native_object)
+        return server_get_id(self.native_object)
 
     @property
     def address(self) -> str:
-        return server_replica_get_address(self.native_object)
+        return server_get_address(self.native_object)
 
     @property
-    def role(self) -> Optional[ReplicaRole]:
-        return ReplicaRole(server_replica_get_role(self.native_object)) \
-            if server_replica_has_role(self.native_object) else None
+    def role(self) -> Optional[ReplicationRole]:
+        return ReplicationRole(server_get_role(self.native_object)) \
+            if server_has_role(self.native_object) else None
 
     def is_primary(self) -> bool:
-        return server_replica_is_primary(self.native_object)
+        return server_is_primary(self.native_object)
 
     @property
     def term(self) -> int:
-        return server_replica_get_term(self.native_object) \
-            if server_replica_has_term(self.native_object) else None
+        return server_get_term(self.native_object) \
+            if server_has_term(self.native_object) else None
 
     def __str__(self):
         return self.address
 
     def __repr__(self):
-        return f"ServerReplica('{str(self)}')"
+        return f"Server('{str(self)}')"

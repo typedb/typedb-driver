@@ -20,35 +20,35 @@ from __future__ import annotations
 import enum
 
 
-class ReplicaRole(enum.Enum):
+class ReplicationRole(enum.Enum):
     """
-    This class is used to specify the type of replica.
+    This class is used to specify the replication role of a server.
 
     Examples
     --------
     ::
 
-       server_replica.role
+       server.role
     """
     PRIMARY = 0
     CANDIDATE = 1
     SECONDARY = 2
 
     def is_primary(self) -> bool:
-        return self is ReplicaRole.PRIMARY
+        return self is ReplicationRole.PRIMARY
 
     def is_candidate(self) -> bool:
-        return self is ReplicaRole.CANDIDATE
+        return self is ReplicationRole.CANDIDATE
 
     def is_secondary(self) -> bool:
-        return self is ReplicaRole.SECONDARY
+        return self is ReplicationRole.SECONDARY
 
     def __repr__(self):
         if self.is_primary:
-            return "ReplicaRole.PRIMARY"
+            return "ReplicationRole.PRIMARY"
         elif self.is_candidate:
-            return "ReplicaRole.CANDIDATE"
+            return "ReplicationRole.CANDIDATE"
         elif self.is_secondary:
-            return "ReplicaRole.SECONDARY"
+            return "ReplicationRole.SECONDARY"
         else:
             return "UNKNOWN"

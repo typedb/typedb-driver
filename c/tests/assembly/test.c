@@ -70,10 +70,10 @@ int main() {
     driver = driver_new_for_tests(TYPEDB_CORE_ADDRESS, TYPEDB_CORE_USERNAME, TYPEDB_CORE_PASSWORD);
     if (FAILED()) goto cleanup;
 
-    databases_create(driver, databaseName, NULL);
+    databases_create(driver, databaseName);
     if (FAILED()) goto cleanup;
 
-    if (!databases_contains(driver, databaseName, NULL)) {
+    if (!databases_contains(driver, databaseName)) {
         fprintf(stderr, "databases_contains(\'%s\') failed\n", databaseName);
         goto cleanup;
     }

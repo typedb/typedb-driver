@@ -22,7 +22,7 @@ pub use self::{
     credentials::Credentials,
     driver_options::DriverOptions,
     driver_tls_config::DriverTlsConfig,
-    server::{server_replica, server_version},
+    server::{server_routing::ServerRouting, server_version::ServerVersion},
 };
 
 mod credentials;
@@ -32,5 +32,5 @@ mod driver_tls_config;
 mod message;
 mod network;
 pub(crate) mod runtime;
-pub(crate) mod server;
+pub mod server;
 pub(crate) mod transaction_stream;

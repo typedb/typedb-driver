@@ -1,0 +1,14 @@
+[#_Auto]
+[.doc-api-reference-driver]
+=== Auto
+
+`class`
+
+*Package*: `typedb.api.connection.server_routing.ServerRouting`
+
+*Supertypes:*
+
+* `ServerRouting`
+
+Automatic server routing. Driver automatically selects the server (primary in clusters).
+

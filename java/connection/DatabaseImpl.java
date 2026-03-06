@@ -19,7 +19,6 @@
 
 package com.typedb.driver.connection;
 
-import com.typedb.driver.api.ConsistencyLevel;
 import com.typedb.driver.api.database.Database;
 import com.typedb.driver.common.NativeObject;
 import com.typedb.driver.common.Validator;
@@ -44,42 +43,42 @@ public class DatabaseImpl extends NativeObject<com.typedb.driver.jni.Database> i
     }
 
     @Override
-    public String schema(ConsistencyLevel consistencyLevel) throws TypeDBDriverException {
+    public String schema() throws TypeDBDriverException {
         if (!nativeObject.isOwned()) throw new TypeDBDriverException(DATABASE_DELETED);
         try {
-            return database_schema(nativeObject, ConsistencyLevel.nativeValue(consistencyLevel));
+            return database_schema(nativeObject);
         } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
     }
 
     @Override
-    public String typeSchema(ConsistencyLevel consistencyLevel) throws TypeDBDriverException {
+    public String typeSchema() throws TypeDBDriverException {
         if (!nativeObject.isOwned()) throw new TypeDBDriverException(DATABASE_DELETED);
         try {
-            return database_type_schema(nativeObject, ConsistencyLevel.nativeValue(consistencyLevel));
+            return database_type_schema(nativeObject);
         } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
     }
 
     @Override
-    public void exportToFile(String schemaFilePath, String dataFilePath, ConsistencyLevel consistencyLevel) throws TypeDBDriverException {
+    public void exportToFile(String schemaFilePath, String dataFilePath) throws TypeDBDriverException {
         Validator.requireNonNull(schemaFilePath, "schemaFilePath");
         Validator.requireNonNull(dataFilePath, "dataFilePath");
         try {
-            database_export_to_file(nativeObject, schemaFilePath, dataFilePath, ConsistencyLevel.nativeValue(consistencyLevel));
+            database_export_to_file(nativeObject, schemaFilePath, dataFilePath);
         } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
     }
 
     @Override
-    public void delete(ConsistencyLevel consistencyLevel) throws TypeDBDriverException {
+    public void delete() throws TypeDBDriverException {
         if (!nativeObject.isOwned()) throw new TypeDBDriverException(DATABASE_DELETED);
         try {
             // NOTE: .released() relinquishes ownership of the native object to the Rust side
-            database_delete(nativeObject.released(), ConsistencyLevel.nativeValue(consistencyLevel));
+            database_delete(nativeObject.released());
         } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }

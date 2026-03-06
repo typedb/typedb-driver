@@ -20,7 +20,7 @@
 package com.typedb.driver.api;
 
 import com.typedb.driver.api.database.DatabaseManager;
-import com.typedb.driver.api.server.ServerReplica;
+import com.typedb.driver.api.server.Server;
 import com.typedb.driver.api.server.ServerVersion;
 import com.typedb.driver.api.user.UserManager;
 import com.typedb.driver.common.exception.TypeDBDriverException;
@@ -45,8 +45,8 @@ public interface Driver extends AutoCloseable {
     boolean isOpen();
 
     /**
-     * Retrieves the server's version, using default strong consistency.
-     * See {@link #serverVersion(ConsistencyLevel)} for more details and options.
+     * Retrieves the server's version, using default automatic routing.
+     * See {@link #serverVersion(ServerRouting)} for more details and options.
      *
      * <h3>Examples</h3>
      * <pre>
@@ -66,10 +66,10 @@ public interface Driver extends AutoCloseable {
      * driver.serverVersion();
      * </pre>
      *
-     * @param consistencyLevel The consistency level to use for the operation
+     * @param serverRouting The server routing to use for the operation
      */
     @CheckReturnValue
-    ServerVersion serverVersion(ConsistencyLevel consistencyLevel);
+    ServerVersion serverVersion(ServerRouting serverRouting);
 
     /**
      * The <code>DatabaseManager</code> for this connection, providing access to database management methods.
@@ -123,91 +123,91 @@ public interface Driver extends AutoCloseable {
     Transaction transaction(String database, Transaction.Type type, TransactionOptions options);
 
     /**
-     * Set of <code>Replica</code> instances for this driver connection, using default strong consistency.
-     * See {@link #replicas(ConsistencyLevel)} for more details and options.
+     * Set of servers for this driver connection, using default automatic routing.
+     * See {@link #servers(ServerRouting)} for more details and options.
      *
      * <h3>Examples</h3>
      * <pre>
-     * driver.replicas();
+     * driver.servers();
      * </pre>
      */
     @CheckReturnValue
-    default Set<? extends ServerReplica> replicas() {
-        return replicas(null);
+    default Set<? extends Server> servers() {
+        return servers(null);
     }
 
     /**
-     * Set of <code>Replica</code> instances for this driver connection.
+     * Set of servers for this driver connection.
      *
      * <h3>Examples</h3>
      * <pre>
-     * driver.replicas(new ConsistencyLevel.Strong());
+     * driver.servers(new ServerRouting.Auto());
      * </pre>
      *
-     * @param consistencyLevel The consistency level to use for the operation
+     * @param serverRouting The server routing to use for the operation
      */
     @CheckReturnValue
-    Set<? extends ServerReplica> replicas(ConsistencyLevel consistencyLevel);
+    Set<? extends Server> servers(ServerRouting serverRouting);
 
     /**
-     * Returns the primary replica for this driver connection, using default strong consistency.
-     * See {@link #primaryReplica(ConsistencyLevel)} for more details and options.
+     * Returns the primary server for this driver connection, using default automatic routing.
+     * See {@link #primaryServer(ServerRouting)} for more details and options.
      *
      * <h3>Examples</h3>
      * <pre>
-     * driver.primaryReplica();
+     * driver.primaryServer();
      * </pre>
      */
     @CheckReturnValue
-    default Optional<? extends ServerReplica> primaryReplica() {
-        return primaryReplica(null);
+    default Optional<? extends Server> primaryServer() {
+        return primaryServer(null);
     }
 
     /**
-     * Returns the primary replica for this driver connection.
+     * Returns the primary server for this driver connection.
      *
      * <h3>Examples</h3>
      * <pre>
-     * driver.primaryReplica(new ConsistencyLevel.Strong());
+     * driver.primaryServer(new ServerRouting.Auto());
      * </pre>
      *
-     * @param consistencyLevel The consistency level to use for the operation
+     * @param serverRouting The server routing to use for the operation
      */
     @CheckReturnValue
-    Optional<? extends ServerReplica> primaryReplica(ConsistencyLevel consistencyLevel);
+    Optional<? extends Server> primaryServer(ServerRouting serverRouting);
 
     /**
-     * Registers a new replica in the cluster the driver is currently connected to. The registered
-     * replica will become available eventually, depending on the behavior of the whole cluster.
-     * To register a replica, its clustering address should be passed, not the connection address.
+     * Registers a new server in the cluster the driver is currently connected to. The registered
+     * server will become available eventually, depending on the behavior of the whole cluster.
+     * To register a server, its clustering address should be passed, not the connection address.
      *
      * <h3>Examples</h3>
      * <pre>
-     * driver.registerReplica(2, "127.0.0.1:11729");
+     * driver.registerServer(2, "127.0.0.1:11729");
      * </pre>
      *
-     * @param replicaID The numeric identifier of the new replica
-     * @param address   The address(es) of the TypeDB replica as a string
+     * @param serverID The numeric identifier of the new server
+     * @param address  The address(es) of the TypeDB server as a string
      */
-    void registerReplica(long replicaID, String address);
+    void registerServer(long serverID, String address);
 
     /**
-     * Deregisters a replica from the cluster the driver is currently connected to. This replica
+     * Deregisters a server from the cluster the driver is currently connected to. This server
      * will no longer play a raft role in this cluster.
      *
      * <h3>Examples</h3>
      * <pre>
-     * driver.deregisterReplica(2);
+     * driver.deregisterServer(2);
      * </pre>
      *
-     * @param replicaID The numeric identifier of the deregistered replica
+     * @param serverID The numeric identifier of the deregistered server
      */
-    void deregisterReplica(long replicaID);
+    void deregisterServer(long serverID);
 
     /**
      * Updates address translation of the driver. This lets you actualize new translation
      * information without recreating the driver from scratch. Useful after registering new
-     * replicas requiring address translation.
+     * servers requiring address translation.
      * This operation will update existing connections using the provided addresses.
      *
      * <h3>Examples</h3>
@@ -215,12 +215,12 @@ public interface Driver extends AutoCloseable {
      * driver.updateAddressTranslation(2);
      * </pre>
      *
-     * @param addressTranslation The translation of public TypeDB cluster replica addresses (keys) to server-side private addresses (values)
+     * @param addressTranslation The translation of public TypeDB cluster server addresses (keys) to server-side private addresses (values)
      */
     void updateAddressTranslation(Map<String, String> addressTranslation);
 
     /**
-     * Closes the driver. Before instantiating a new driver, the driver that’s currently open should first be closed.
+     * Closes the driver. Before instantiating a new driver, the driver that's currently open should first be closed.
      *
      * <h3>Examples</h3>
      * <pre>

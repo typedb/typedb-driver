@@ -34,12 +34,11 @@ use crate::{
             AnalyzeResponse, DatabaseExportResponse, DatabaseImportRequest, QueryRequest, QueryResponse, Request,
             Response, TransactionRequest, TransactionResponse,
         },
-        server_replica::ServerReplica,
-        server_version::ServerVersion,
+        server::{server_version::ServerVersion, Server},
     },
     error::{ConnectionError, InternalError, ServerError},
     info::UserInfo,
-    Credentials, Error,
+    Credentials,
 };
 
 impl TryIntoProto<connection::open::Req> for Request {
@@ -335,7 +334,7 @@ impl TryFromProto<connection::open::Res> for Response {
             .ok_or(ConnectionError::MissingResponseField { field: "servers_all" })?
             .servers
             .into_iter()
-            .map(|server_proto| ServerReplica::try_from_proto(server_proto))
+            .map(|server_proto| Server::try_from_proto(server_proto))
             .try_collect()?;
         Ok(Self::ConnectionOpen {
             connection_id: Uuid::from_slice(
@@ -355,7 +354,7 @@ impl TryFromProto<connection::open::Res> for Response {
 impl TryFromProto<server_manager::all::Res> for Response {
     fn try_from_proto(proto: server_manager::all::Res) -> Result<Self> {
         let server_manager::all::Res { servers } = proto;
-        let servers = servers.into_iter().map(|server| ServerReplica::try_from_proto(server)).try_collect()?;
+        let servers = servers.into_iter().map(|server| Server::try_from_proto(server)).try_collect()?;
         Ok(Self::ServersAll { servers })
     }
 }
@@ -363,8 +362,7 @@ impl TryFromProto<server_manager::all::Res> for Response {
 impl TryFromProto<server_manager::get::Res> for Response {
     fn try_from_proto(proto: server_manager::get::Res) -> Result<Self> {
         let server_manager::get::Res { server } = proto;
-        let server =
-            ServerReplica::try_from_proto(server.ok_or(ConnectionError::MissingResponseField { field: "server" })?)?;
+        let server = Server::try_from_proto(server.ok_or(ConnectionError::MissingResponseField { field: "server" })?)?;
         Ok(Self::ServersGet { server })
     }
 }

@@ -6,7 +6,7 @@
 
 [source,c]
 ----
-struct UserIterator* users_all(const struct TypeDBDriver* driver, const struct ConsistencyLevel* consistency_level)
+struct UserIterator* users_all(const struct TypeDBDriver* driver)
 ----
 
 
@@ -21,7 +21,6 @@ Retrieves all users which exist on the TypeDB server.
 |===
 |Name |Description |Type
 a| `driver` a| The ``TypeDBDriver`` object. a| `const struct TypeDBDriver*`
-a| `consistency_level` a| The consistency level to use for the operation. Strongest possible if null. a| `const struct ConsistencyLevel*`
 |===
 
 [caption=""]
@@ -33,7 +32,7 @@ a| `consistency_level` a| The consistency level to use for the operation. Strong
 
 [source,c]
 ----
-bool users_contains(const struct TypeDBDriver* driver, const char* username, const struct ConsistencyLevel* consistency_level)
+bool users_contains(const struct TypeDBDriver* driver, const char* username)
 ----
 
 
@@ -49,7 +48,6 @@ Checks if a user with the given name exists.
 |Name |Description |Type
 a| `driver` a| The ``TypeDBDriver`` object. a| `const struct TypeDBDriver*`
 a| `username` a| The username of the user. a| `const char*`
-a| `consistency_level` a| The consistency level to use for the operation. Strongest possible if null. a| `const struct ConsistencyLevel*`
 |===
 
 [caption=""]
@@ -61,7 +59,7 @@ a| `consistency_level` a| The consistency level to use for the operation. Strong
 
 [source,c]
 ----
-void users_create(const struct TypeDBDriver* driver, const char* username, const char* password, const struct ConsistencyLevel* consistency_level)
+void users_create(const struct TypeDBDriver* driver, const char* username, const char* password)
 ----
 
 
@@ -77,7 +75,6 @@ Creates a user with the given name &amp; password.
 |Name |Description |Type
 a| `username` a| The username of the created user. a| `const char*`
 a| `password` a| The password of the created user. a| `const char*`
-a| `consistency_level` a| The consistency level to use for the operation. Strongest possible if null. a| `const struct ConsistencyLevel*`
 |===
 
 [caption=""]
@@ -89,7 +86,7 @@ a| `consistency_level` a| The consistency level to use for the operation. Strong
 
 [source,c]
 ----
-struct User* users_get(const struct TypeDBDriver* driver, const char* username, const struct ConsistencyLevel* consistency_level)
+struct User* users_get(const struct TypeDBDriver* driver, const char* username)
 ----
 
 
@@ -105,7 +102,6 @@ Retrieves a user with the given name.
 |Name |Description |Type
 a| `driver` a| The ``TypeDBDriver`` object. a| `const struct TypeDBDriver*`
 a| `username` a| The username of the user. a| `const char*`
-a| `consistency_level` a| The consistency level to use for the operation. Strongest possible if null. a| `const struct ConsistencyLevel*`
 |===
 
 [caption=""]
@@ -117,7 +113,7 @@ a| `consistency_level` a| The consistency level to use for the operation. Strong
 
 [source,c]
 ----
-struct User* users_get_current(const struct TypeDBDriver* driver, const struct ConsistencyLevel* consistency_level)
+struct User* users_get_current(const struct TypeDBDriver* driver)
 ----
 
 
@@ -132,7 +128,6 @@ Retrieves the username of the user who opened this connection.
 |===
 |Name |Description |Type
 a| `driver` a| The ``TypeDBDriver`` object. a| `const struct TypeDBDriver*`
-a| `consistency_level` a| The consistency level to use for the operation. Strongest possible if null. a| `const struct ConsistencyLevel*`
 |===
 
 [caption=""]

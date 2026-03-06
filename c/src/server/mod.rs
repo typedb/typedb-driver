@@ -17,6 +17,6 @@
  * under the License.
  */
 
-pub(crate) mod consistency_level;
-pub(crate) mod server_replica;
+pub(crate) mod server;
+pub(crate) mod server_routing;
 pub(crate) mod server_version;

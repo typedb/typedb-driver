@@ -1,0 +1,69 @@
+[#_ServerRouting]
+[.doc-api-reference-driver]
+=== ServerRouting
+
+`class`
+
+*Package*: `typedb.api.connection.server_routing`
+
+Server routing directive for operations against a distributed server. All driver methods have default recommended values, however, some operations can be configured in order to target a specific server in the cluster. This setting does not affect clusters with a single node.
+
+// tag::methods[]
+[#_ServerRouting_is_auto_]
+==== method ``is_auto``
+
+[source,python]
+----
+is_auto() -> bool
+----
+
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_ServerRouting_is_direct_]
+==== method ``is_direct``
+
+[source,python]
+----
+is_direct() -> bool
+----
+
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_ServerRouting_native_value_]
+==== method ``native_value``
+
+[source,python]
+----
+static native_value(server_routing: ServerRouting | None) -> ServerRouting
+----
+
+
+
+[caption=""]
+.Returns
+`ServerRouting`
+
+[#_ServerRouting_of_]
+==== method ``of``
+
+[source,python]
+----
+static of(native_value: ServerRouting) -> None | Auto | Direct
+----
+
+
+
+[caption=""]
+.Returns
+`None | Auto | Direct`
+
+// end::methods[]
+
