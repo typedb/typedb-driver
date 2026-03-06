@@ -19,9 +19,6 @@
 
 package com.typedb.driver.api.user;
 
-
-import com.typedb.driver.api.ConsistencyLevel;
-
 import javax.annotation.CheckReturnValue;
 
 /**
@@ -35,8 +32,7 @@ public interface User {
     String name();
 
     /**
-     * Updates the password for this user, using default strong consistency.
-     * See {@link #updatePassword(String, ConsistencyLevel)} for more details and options.
+     * Updates the password for this user.
      *
      * <h3>Examples</h3>
      * <pre>
@@ -45,45 +41,15 @@ public interface User {
      *
      * @param password The new password
      */
-    default void updatePassword(String password) {
-        updatePassword(password, null);
-    }
-
-    /**
-     * Updates the password for this user.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * user.updatePassword("new-password", new ConsistencyLevel.Strong());
-     * </pre>
-     *
-     * @param password         The new password
-     * @param consistencyLevel The consistency level to use for the operation
-     */
-    void updatePassword(String password, ConsistencyLevel consistencyLevel);
-
-    /**
-     * Deletes this user, using default strong consistency.
-     * See {@link #delete(ConsistencyLevel)} for more details and options.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * user.delete();
-     * </pre>
-     */
-    default void delete() {
-        delete(null);
-    }
+    void updatePassword(String password);
 
     /**
      * Deletes this user.
      *
      * <h3>Examples</h3>
      * <pre>
-     * user.delete(new ConsistencyLevel.Strong());
+     * user.delete();
      * </pre>
-     *
-     * @param consistencyLevel The consistency level to use for the operation
      */
-    void delete(ConsistencyLevel consistencyLevel);
+    void delete();
 }

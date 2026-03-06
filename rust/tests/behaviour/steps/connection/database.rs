@@ -51,10 +51,6 @@ async fn database_type_schema(driver: &TypeDBDriver, name: &str) -> String {
     driver.databases().get(name).await.expect("Expected database").type_schema().await.expect("Expected type schema")
 }
 
-async fn has_database(driver: &TypeDBDriver, name: &str) -> bool {
-    driver.databases().contains(name).await.unwrap()
-}
-
 async fn execute_and_retrieve_schema_for_comparison(driver: &TypeDBDriver, schema_query: String) -> String {
     let temp_database_name = create_temporary_database_with_schema(driver, schema_query).await;
     database_schema(driver, &temp_database_name).await
@@ -86,12 +82,7 @@ async fn import_database(
 #[apply(generic_step)]
 #[step(expr = "connection create database: {word}{may_error}")]
 pub async fn connection_create_database(context: &mut Context, name: String, may_error: params::MayError) {
-    let driver = context.driver.as_ref().unwrap();
-    let result = match &context.database_operation_consistency {
-        Some(c) => driver.databases().create_with_consistency(name, c.clone()).await,
-        None => driver.databases().create(name).await,
-    };
-    may_error.check(result);
+    create_database(context.driver.as_ref().unwrap(), name, may_error).await;
 }
 
 #[apply(generic_step)]
@@ -129,12 +120,7 @@ pub async fn in_background_connection_create_database(
 #[apply(generic_step)]
 #[step(expr = "connection delete database: {word}{may_error}")]
 pub async fn connection_delete_database(context: &mut Context, name: String, may_error: params::MayError) {
-    let driver = context.driver.as_ref().unwrap();
-    let result = match &context.database_operation_consistency {
-        Some(c) => driver.databases().get_with_consistency(&name, c.clone()).and_then(Database::delete).await,
-        None => driver.databases().get(&name).and_then(Database::delete).await,
-    };
-    may_error.check(result);
+    delete_database(context.driver.as_ref().unwrap(), &name, may_error).await;
 }
 
 #[apply(generic_step)]
@@ -171,12 +157,8 @@ pub async fn in_background_connection_delete_database(
 #[step(expr = "connection has database: {word}")]
 async fn connection_has_database(context: &mut Context, name: String) {
     let driver = context.driver.as_ref().unwrap();
-    let consistency = context.database_operation_consistency.clone();
     assert_with_timeout!(
-        match &consistency {
-            Some(c) => driver.databases().contains_with_consistency(&name, c.clone()).await.unwrap(),
-            None => driver.databases().contains(&name).await.unwrap(),
-        },
+        driver.databases().contains(&name).await.unwrap(),
         "Connection doesn't contain database {name}.",
     );
 }
@@ -185,13 +167,9 @@ async fn connection_has_database(context: &mut Context, name: String) {
 #[step(expr = "connection has database(s):")]
 async fn connection_has_databases(context: &mut Context, step: &Step) {
     let driver = context.driver.as_ref().unwrap();
-    let consistency = context.database_operation_consistency.clone();
     for name in iter_table(step).map(|name| name.to_owned()) {
         assert_with_timeout!(
-            match &consistency {
-                Some(c) => driver.databases().contains_with_consistency(&name, c.clone()).await.unwrap(),
-                None => driver.databases().contains(&name).await.unwrap(),
-            },
+            driver.databases().contains(&name).await.unwrap(),
             "Connection doesn't contain at least one of the databases.",
         );
     }
@@ -201,27 +179,16 @@ async fn connection_has_databases(context: &mut Context, step: &Step) {
 #[step(expr = "connection does not have database: {word}")]
 async fn connection_does_not_have_database(context: &mut Context, name: String) {
     let driver = context.driver.as_ref().unwrap();
-    let consistency = context.database_operation_consistency.clone();
-    assert_with_timeout!(
-        !match &consistency {
-            Some(c) => driver.databases().contains_with_consistency(&name, c.clone()).await.unwrap(),
-            None => driver.databases().contains(&name).await.unwrap(),
-        },
-        "Connection contains database {name}.",
-    );
+    assert_with_timeout!(!driver.databases().contains(&name).await.unwrap(), "Connection contains database {name}.",);
 }
 
 #[apply(generic_step)]
 #[step(expr = "connection does not have database(s):")]
 async fn connection_does_not_have_databases(context: &mut Context, step: &Step) {
     let driver = context.driver.as_ref().unwrap();
-    let consistency = context.database_operation_consistency.clone();
     for name in iter_table(step).map(|name| name.to_owned()) {
         assert_with_timeout!(
-            !match &consistency {
-                Some(c) => driver.databases().contains_with_consistency(&name, c.clone()).await.unwrap(),
-                None => driver.databases().contains(&name).await.unwrap(),
-            },
+            !driver.databases().contains(&name).await.unwrap(),
             "Connection doesn't contain at least one of the databases.",
         );
     }

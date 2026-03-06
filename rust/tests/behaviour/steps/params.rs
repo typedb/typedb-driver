@@ -25,8 +25,7 @@ use typedb_driver::{
     TransactionType as TypeDBTransactionType,
     answer::QueryType as TypeDBQueryType,
     concept::{Value as TypeDBValue, ValueType as TypeDBValueType},
-    consistency_level::ConsistencyLevel as TypeDBConsistencyLevel,
-    Address, TransactionType as TypeDBTransactionType,
+    Address, ServerRouting as TypeDBServerRouting, TransactionType as TypeDBTransactionType,
 };
 
 #[derive(Debug, Default, Parameter, Clone)]
@@ -499,44 +498,39 @@ impl fmt::Display for QueryAnswerType {
 }
 
 #[derive(Debug, Clone, Parameter)]
-#[param(name = "consistency_level", regex = "(strong|eventual|replica(.*))")]
-pub enum ConsistencyLevel {
-    Strong,
-    Eventual,
-    ReplicaDependent { address: Address },
+#[param(name = "server_routing", regex = "(auto|direct(.*))")]
+pub enum ServerRouting {
+    Auto,
+    Direct { address: Address },
 }
 
-impl ConsistencyLevel {
-    pub fn into_typedb(self) -> TypeDBConsistencyLevel {
+impl ServerRouting {
+    pub fn into_typedb(self) -> TypeDBServerRouting {
         match self {
-            ConsistencyLevel::Strong => TypeDBConsistencyLevel::Strong,
-            ConsistencyLevel::Eventual => TypeDBConsistencyLevel::Eventual,
-            ConsistencyLevel::ReplicaDependent { address } => TypeDBConsistencyLevel::ReplicaDependent { address },
+            ServerRouting::Auto => TypeDBServerRouting::Auto,
+            ServerRouting::Direct { address } => TypeDBServerRouting::Direct { address },
         }
     }
 }
 
-impl FromStr for ConsistencyLevel {
+impl FromStr for ServerRouting {
     type Err = String;
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        if s == "strong" {
-            Ok(Self::Strong)
-        } else if s == "eventual" {
-            Ok(Self::Eventual)
-        } else if let Some(message) = s.strip_prefix("replica(").and_then(|suffix| suffix.strip_suffix(")")) {
-            Ok(Self::ReplicaDependent { address: message.parse().expect("Expected a valid address") })
+        if s == "auto" {
+            Ok(Self::Auto)
+        } else if let Some(message) = s.strip_prefix("direct(").and_then(|suffix| suffix.strip_suffix(")")) {
+            Ok(Self::Direct { address: message.parse().expect("Expected a valid address") })
         } else {
-            Err(format!("Invalid `ConsistencyLevel`: {}", s))
+            Err(format!("Invalid `ServerRouting`: {}", s))
         }
     }
 }
 
-impl fmt::Display for ConsistencyLevel {
+impl fmt::Display for ServerRouting {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            Self::Strong => write!(f, "Strong"),
-            Self::Eventual => write!(f, "Eventual"),
-            Self::ReplicaDependent { address } => write!(f, "ReplicaDependent({address:?})"),
+            Self::Auto => write!(f, "Auto"),
+            Self::Direct { address } => write!(f, "Direct({address:?})"),
         }
     }
 }

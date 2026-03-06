@@ -24,8 +24,8 @@ import {
     DEFAULT_PASSWORD, DEFAULT_PORT,
     DEFAULT_USERNAME,
     driver,
-    openAndTestConnection,
-    openAndTestConnectionWithHostPort
+    openAndTestConnection, openAndTestConnectionWithAddresses,
+    openAndTestConnectionWithHostPort, openAndTestSingleConnection
 } from "./context";
 import assert from "assert";
 import { Server } from "../../../dist/index.cjs";
@@ -39,6 +39,11 @@ async function connectionOpens(username: string, password: string, mayError: May
 Given("connection opens with username '{word}', password {string}{may_error}", connectionOpens);
 Given(`connection opens with username '{word}', password {string}${EXPECT_ERROR_CONTAINING}`, connectionOpens);
 Given("connection opens with default authentication", () => connectionOpens(DEFAULT_USERNAME, DEFAULT_PASSWORD, false))
+
+async function connectionOpensSingle(username: string, password: string, mayError: MayError) {
+    await openAndTestSingleConnection(username, password).then(checkMayError(mayError));
+}
+Given("connection opens to single server with default authentication{may_error}", (mayError: MayError) => connectionOpensSingle(DEFAULT_USERNAME, DEFAULT_PASSWORD, mayError))
 
 When(`connection opens with a wrong host${EXPECT_ERROR_CONTAINING}`, (_: string) => {
     assert.rejects(async () => {
@@ -68,37 +73,37 @@ async function getServers(): Promise<Server[]> {
     return cachedServers;
 }
 
-Then("connection has {int} replica(s)", async (expectedCount: number) => {
+Then("connection has {int} server(s)", async (expectedCount: number) => {
     const servers = await getServers();
-    assert.equal(servers.length, expectedCount, `Expected ${expectedCount} replicas but got ${servers.length}`);
+    assert.equal(servers.length, expectedCount, `Expected ${expectedCount} servers but got ${servers.length}`);
 });
 
-Then("connection primary replica exists", async () => {
+Then("connection primary server exists", async () => {
     const servers = await getServers();
     const primary = servers.find(s => s.isPrimary);
-    assert.ok(primary, "No primary replica found");
+    assert.ok(primary, "No primary server found");
 });
 
-Then("connection get replica\\({word}) exists", async (address: string) => {
+Then("connection get server\\({word}) exists", async (address: string) => {
     const servers = await getServers();
-    const replica = servers.find(s => s.address === address);
-    assert.ok(replica, `Replica with address ${address} not found`);
+    const server = servers.find(s => s.address === address);
+    assert.ok(server, `Replica with address ${address} not found`);
 });
 
-Then("connection get replica\\({word}) does not exist", async (address: string) => {
+Then("connection get server\\({word}) does not exist", async (address: string) => {
     const servers = await getServers();
-    const replica = servers.find(s => s.address === address);
-    assert.ok(!replica, `Replica with address ${address} should not exist`);
+    const server = servers.find(s => s.address === address);
+    assert.ok(!server, `Replica with address ${address} should not exist`);
 });
 
-Then("connection get replica\\({word}) has term", async (address: string) => {
+Then("connection get server\\({word}) has term", async (address: string) => {
     const servers = await getServers();
-    const replica = servers.find(s => s.address === address);
-    assert.ok(replica, `Replica with address ${address} not found`);
-    assert.ok(typeof replica.term === 'number', `Replica ${address} has no term`);
+    const server = servers.find(s => s.address === address);
+    assert.ok(server, `Replica with address ${address} not found`);
+    assert.ok(typeof server.term === 'number', `Replica ${address} has no term`);
 });
 
-Then("connection replicas have roles:", async (dataTable: DataTable) => {
+Then("connection servers have roles:", async (dataTable: DataTable) => {
     const servers = await getServers();
     const rows = dataTable.hashes();
 
@@ -106,9 +111,9 @@ Then("connection replicas have roles:", async (dataTable: DataTable) => {
         const expectedAddress = row['address'];
         const expectedIsPrimary = row['is_primary'] === 'true';
 
-        const replica = servers.find(s => s.address === expectedAddress);
-        assert.ok(replica, `Replica with address ${expectedAddress} not found`);
-        assert.equal(replica.isPrimary, expectedIsPrimary,
-            `Replica ${expectedAddress} isPrimary: expected ${expectedIsPrimary}, got ${replica.isPrimary}`);
+        const server = servers.find(s => s.address === expectedAddress);
+        assert.ok(server, `Replica with address ${expectedAddress} not found`);
+        assert.equal(server.isPrimary, expectedIsPrimary,
+            `Replica ${expectedAddress} isPrimary: expected ${expectedIsPrimary}, got ${server.isPrimary}`);
     }
 });

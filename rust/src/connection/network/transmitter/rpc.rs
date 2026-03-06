@@ -17,8 +17,6 @@
  * under the License.
  */
 
-use std::time::Duration;
-
 use futures::StreamExt;
 #[cfg(not(feature = "sync"))]
 use tokio::sync::oneshot::channel as oneshot_async;

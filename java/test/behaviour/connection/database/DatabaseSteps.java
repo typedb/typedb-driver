@@ -19,7 +19,6 @@
 
 package com.typedb.driver.test.behaviour.connection.database;
 
-import com.typedb.driver.api.ConsistencyLevel;
 import com.typedb.driver.api.Driver;
 import com.typedb.driver.api.Transaction;
 import com.typedb.driver.api.database.Database;
@@ -36,7 +35,6 @@ import java.util.stream.Collectors;
 import static com.typedb.driver.common.collection.Collections.list;
 import static com.typedb.driver.test.behaviour.connection.ConnectionStepsBase.THREAD_POOL_SIZE;
 import static com.typedb.driver.test.behaviour.connection.ConnectionStepsBase.backgroundDriver;
-import static com.typedb.driver.test.behaviour.connection.ConnectionStepsBase.databaseOperationConsistency;
 import static com.typedb.driver.test.behaviour.connection.ConnectionStepsBase.driver;
 import static com.typedb.driver.test.behaviour.connection.ConnectionStepsBase.fullPath;
 import static com.typedb.driver.test.behaviour.connection.ConnectionStepsBase.threadPool;
@@ -80,8 +78,7 @@ public class DatabaseSteps {
 
     @When("connection create database: {non_semicolon}{may_error}")
     public void connection_create_database(String name, Parameters.MayError mayError) {
-        ConsistencyLevel consistency = databaseOperationConsistency.orElse(null);
-        mayError.check(() -> driver.databases().create(name, consistency));
+        mayError.check(() -> driver.databases().create(name));
     }
 
     @When("connection create database with empty name{may_error}")
@@ -112,8 +109,7 @@ public class DatabaseSteps {
 
     @When("connection delete database: {word}{may_error}")
     public void connection_delete_database(String name, Parameters.MayError mayError) {
-        ConsistencyLevel consistency = databaseOperationConsistency.orElse(null);
-        mayError.check(() -> driver.databases().get(name, consistency).delete());
+        mayError.check(() -> driver.databases().get(name).delete());
     }
 
     @When("connection delete database(s):")
@@ -139,15 +135,13 @@ public class DatabaseSteps {
 
     @When("connection has database: {word}")
     public void connection_has_database(String name) {
-        ConsistencyLevel consistency = databaseOperationConsistency.orElse(null);
-        Parameters.ContainsOrDoesnt.DOES.check(driver.databases().contains(name, consistency));
+        Parameters.ContainsOrDoesnt.DOES.check(driver.databases().contains(name));
     }
 
     @Then("connection has database(s):")
     public void connection_has_databases(List<String> names) {
-        ConsistencyLevel consistency = databaseOperationConsistency.orElse(null);
         for (String name : names) {
-            Parameters.ContainsOrDoesnt.DOES.check(driver.databases().contains(name, consistency));
+            Parameters.ContainsOrDoesnt.DOES.check(driver.databases().contains(name));
         }
     }
 
@@ -158,9 +152,8 @@ public class DatabaseSteps {
 
     @Then("connection does not have database(s):")
     public void connection_does_not_have_databases(List<String> names) {
-        ConsistencyLevel consistency = databaseOperationConsistency.orElse(null);
         for (String databaseName : names) {
-            Parameters.ContainsOrDoesnt.DOES_NOT.check(driver.databases().contains(databaseName, consistency));
+            Parameters.ContainsOrDoesnt.DOES_NOT.check(driver.databases().contains(databaseName));
         }
     }
 

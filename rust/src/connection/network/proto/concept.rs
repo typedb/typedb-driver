@@ -38,6 +38,8 @@ use crate::{
     Error, Result,
     answer::concept_document::{Leaf, Node},
     concept::{
+        type_::Type,
+        value::{Decimal, TimeZone},
         Attribute, AttributeType, Concept, Entity, EntityType, Kind, Relation, RelationType, RoleType, Value,
         ValueType,
         type_::Type,

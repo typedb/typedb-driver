@@ -21,12 +21,9 @@ use std::{ffi::c_char, path::Path};
 
 use typedb_driver::Database;
 
-use crate::{
-    common::{
-        error::{try_release_string, unwrap_void},
-        memory::{borrow, decrement_arc, release_string, string_view, take_arc},
-    },
-    server::consistency_level::{native_consistency_level, ConsistencyLevel},
+use crate::common::{
+    error::{try_release_string, unwrap_void},
+    memory::{borrow, decrement_arc, release_string, string_view, take_arc},
 };
 
 /// Frees the native rust <code>Database</code> object.
@@ -44,49 +41,25 @@ pub extern "C" fn database_get_name(database: *const Database) -> *mut c_char {
 /// Deletes this database.
 ///
 /// @param database The <code>Database</code> to delete.
-/// @param consistency_level The consistency level to use for the operation. Strongest possible if null.
 #[no_mangle]
-pub extern "C" fn database_delete(database: *const Database, consistency_level: *const ConsistencyLevel) {
-    let database = take_arc(database);
-    let result = match native_consistency_level(consistency_level) {
-        Some(consistency_level) => database.delete_with_consistency(consistency_level),
-        None => database.delete(),
-    };
-    unwrap_void(result);
+pub extern "C" fn database_delete(database: *const Database) {
+    unwrap_void(take_arc(database).delete());
 }
 
 /// A full schema text as a valid TypeQL define query string.
 ///
 /// @param database The <code>Database</code> to get the schema from.
-/// @param consistency_level The consistency level to use for the operation. Strongest possible if null.
 #[no_mangle]
-pub extern "C" fn database_schema(
-    database: *const Database,
-    consistency_level: *const ConsistencyLevel,
-) -> *mut c_char {
-    let database = borrow(database);
-    let result = match native_consistency_level(consistency_level) {
-        Some(consistency_level) => database.schema_with_consistency(consistency_level),
-        None => database.schema(),
-    };
-    try_release_string(result)
+pub extern "C" fn database_schema(database: *const Database) -> *mut c_char {
+    try_release_string(borrow(database).schema())
 }
 
 /// The types in the schema as a valid TypeQL define query string.
 ///
 /// @param database The <code>Database</code> to get the type schema from.
-/// @param consistency_level The consistency level to use for the operation. Strongest possible if null.
 #[no_mangle]
-pub extern "C" fn database_type_schema(
-    database: *const Database,
-    consistency_level: *const ConsistencyLevel,
-) -> *mut c_char {
-    let database = borrow(database);
-    let result = match native_consistency_level(consistency_level) {
-        Some(consistency_level) => database.type_schema_with_consistency(consistency_level),
-        None => database.type_schema(),
-    };
-    try_release_string(result)
+pub extern "C" fn database_type_schema(database: *const Database) -> *mut c_char {
+    try_release_string(borrow(database).type_schema())
 }
 
 /// Export a database into a schema definition and a data files saved to the disk.
@@ -95,22 +68,14 @@ pub extern "C" fn database_type_schema(
 /// @param database The <code>Database</code> object to export from.
 /// @param schema_file The path to the schema definition file to be created.
 /// @param data_file The path to the data file to be created.
-/// @param consistency_level The consistency level to use for the operation. Strongest possible if null.
 #[no_mangle]
 pub extern "C" fn database_export_to_file(
     database: *const Database,
     schema_file: *const c_char,
     data_file: *const c_char,
-    consistency_level: *const ConsistencyLevel,
 ) {
     let database = borrow(database);
     let schema_file_path = Path::new(string_view(schema_file));
     let data_file_path = Path::new(string_view(data_file));
-    let result = match native_consistency_level(consistency_level) {
-        Some(consistency_level) => {
-            database.export_to_file_with_consistency(schema_file_path, data_file_path, consistency_level)
-        }
-        None => database.export_to_file(schema_file_path, data_file_path),
-    };
-    unwrap_void(result)
+    unwrap_void(database.export_to_file(schema_file_path, data_file_path))
 }

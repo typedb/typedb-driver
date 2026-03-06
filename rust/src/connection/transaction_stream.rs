@@ -20,7 +20,7 @@
 use std::{fmt, iter, pin::Pin, sync::Arc};
 
 #[cfg(not(feature = "sync"))]
-use futures::{StreamExt, stream};
+use futures::{stream, StreamExt};
 
 use super::network::transmitter::TransactionTransmitter;
 use crate::{
@@ -34,7 +34,7 @@ use crate::{
     },
     connection::message::{AnalyzeResponse, QueryRequest, QueryResponse, TransactionRequest, TransactionResponse},
     error::{ConnectionError, InternalError},
-    promisify, resolve,
+    promisify, resolve, Error, QueryOptions, TransactionOptions, TransactionType,
 };
 
 macro_rules! require_transaction_response {

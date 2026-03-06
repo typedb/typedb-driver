@@ -38,17 +38,17 @@ bool test_database_management() {
     delete_database_if_exists(driver, databaseName);
     if (FAILED()) goto cleanup;
 
-    databases_create(driver, databaseName, NULL);
+    databases_create(driver, databaseName);
     if (FAILED()) goto cleanup;
 
     // Consistency can be provided
-    if (!databases_contains(driver, databaseName, &STRONG_CONSISTENCY)) {
+    if (!databases_contains(driver, databaseName)) {
         fprintf(stderr, "databases_contains(\'%s\') failed\n", databaseName);
         goto cleanup;
     }
 
     bool foundDB = false;
-    DatabaseIterator* it = databases_all(driver, &STRONG_CONSISTENCY);
+    DatabaseIterator* it = databases_all(driver);
     const Database* database = NULL;
     while (NULL != (database = database_iterator_next(it))) {
         char* name = database_get_name(database);
@@ -89,7 +89,7 @@ bool test_query_schema() {
     delete_database_if_exists(driver, databaseName);
     if (FAILED()) goto cleanup;
 
-    databases_create(driver, databaseName, NULL);
+    databases_create(driver, databaseName);
     if (FAILED()) goto cleanup;
 
     tx_opts = transaction_options_new();
@@ -178,8 +178,7 @@ bool test_query_data() {
     delete_database_if_exists(driver, databaseName);
     if (FAILED()) goto cleanup;
 
-    // ConsistencyLevel is automatically set if null
-    databases_create(driver, databaseName, NULL);
+    databases_create(driver, databaseName);
     if (FAILED()) goto cleanup;
 
     tx_opts = transaction_options_new();

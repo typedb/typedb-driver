@@ -28,14 +28,14 @@ import java.util.Optional;
 
 import static com.typedb.driver.jni.typedb_driver.driver_options_get_tls_config;
 import static com.typedb.driver.jni.typedb_driver.driver_options_get_primary_failover_retries;
-import static com.typedb.driver.jni.typedb_driver.driver_options_get_replica_discovery_attempts;
+import static com.typedb.driver.jni.typedb_driver.driver_options_get_server_discovery_attempts;
 import static com.typedb.driver.jni.typedb_driver.driver_options_get_request_timeout_millis;
 import static com.typedb.driver.jni.typedb_driver.driver_options_get_use_replication;
-import static com.typedb.driver.jni.typedb_driver.driver_options_has_replica_discovery_attempts;
+import static com.typedb.driver.jni.typedb_driver.driver_options_has_server_discovery_attempts;
 import static com.typedb.driver.jni.typedb_driver.driver_options_new;
 import static com.typedb.driver.jni.typedb_driver.driver_options_set_tls_config;
 import static com.typedb.driver.jni.typedb_driver.driver_options_set_primary_failover_retries;
-import static com.typedb.driver.jni.typedb_driver.driver_options_set_replica_discovery_attempts;
+import static com.typedb.driver.jni.typedb_driver.driver_options_set_server_discovery_attempts;
 import static com.typedb.driver.jni.typedb_driver.driver_options_set_request_timeout_millis;
 import static com.typedb.driver.jni.typedb_driver.driver_options_set_use_replication;
 
@@ -154,7 +154,7 @@ public class DriverOptions extends NativeObject<com.typedb.driver.jni.DriverOpti
     /**
      * Returns the value set for the primary failover retries limit in this <code>DriverOptions</code> object.
      * Limits the number of attempts to redirect a strongly consistent request to another
-     * primary replica in case of a failure due to the change of replica roles.
+     * primary server in case of a failure due to the change of server roles.
      *
      * <h3>Examples</h3>
      * <pre>
@@ -168,7 +168,7 @@ public class DriverOptions extends NativeObject<com.typedb.driver.jni.DriverOpti
 
     /**
      * Explicitly sets the limit on the number of attempts to redirect a strongly consistent request to another
-     * primary replica in case of a failure due to the change of replica roles. Defaults to 1.
+     * primary server in case of a failure due to the change of server roles. Defaults to 1.
      *
      * <h3>Examples</h3>
      * <pre>
@@ -184,48 +184,48 @@ public class DriverOptions extends NativeObject<com.typedb.driver.jni.DriverOpti
     }
 
     /**
-     * Returns the value set for the replica discovery attempts limit in this <code>DriverOptions</code> object.
-     * Limits the number of driver attempts to discover a single working replica to perform an
-     * operation in case of a replica unavailability. Every replica is tested once, which means
+     * Returns the value set for the server discovery attempts limit in this <code>DriverOptions</code> object.
+     * Limits the number of driver attempts to discover a single working server to perform an
+     * operation in case of a server unavailability. Every server is tested once, which means
      * that at most:
-     * - {limit} operations are performed if the limit <= the number of replicas.
-     * - {number of replicas} operations are performed if the limit > the number of replicas.
-     * - {number of replicas} operations are performed if the limit is None.
+     * - {limit} operations are performed if the limit <= the number of servers.
+     * - {number of servers} operations are performed if the limit > the number of servers.
+     * - {number of servers} operations are performed if the limit is None.
      * Affects every eventually consistent operation, including redirect failover, when the new
-     * primary replica is unknown.
+     * primary server is unknown.
      *
      * <h3>Examples</h3>
      * <pre>
-     * options.replicaDiscoveryAttempts();
+     * options.serverDiscoveryAttempts();
      * </pre>
      */
     @CheckReturnValue
-    public Optional<Integer> replicaDiscoveryAttempts() {
-        if (driver_options_has_replica_discovery_attempts(nativeObject))
-            return Optional.of((int) driver_options_get_replica_discovery_attempts(nativeObject));
+    public Optional<Integer> serverDiscoveryAttempts() {
+        if (driver_options_has_server_discovery_attempts(nativeObject))
+            return Optional.of((int) driver_options_get_server_discovery_attempts(nativeObject));
         return Optional.empty();
     }
 
     /**
-     * Limits the number of driver attempts to discover a single working replica to perform an
-     * operation in case of a replica unavailability. Every replica is tested once, which means
+     * Limits the number of driver attempts to discover a single working server to perform an
+     * operation in case of a server unavailability. Every server is tested once, which means
      * that at most:
-     * - {limit} operations are performed if the limit <= the number of replicas.
-     * - {number of replicas} operations are performed if the limit > the number of replicas.
-     * - {number of replicas} operations are performed if the limit is None.
+     * - {limit} operations are performed if the limit <= the number of servers.
+     * - {number of servers} operations are performed if the limit > the number of servers.
+     * - {number of servers} operations are performed if the limit is None.
      * Affects every eventually consistent operation, including redirect failover, when the new
-     * primary replica is unknown. If not set, the maximum (practically unlimited) value is used.
+     * primary server is unknown. If not set, the maximum (practically unlimited) value is used.
      *
      * <h3>Examples</h3>
      * <pre>
-     * options.primaryFailoverRetries(1);
+     * options.serverDiscoveryAttempts(1);
      * </pre>
      *
-     * @param replicaDiscoveryAttempts The limit of replica discovery attempts.
+     * @param serverDiscoveryAttempts The limit of server discovery attempts.
      */
-    public DriverOptions replicaDiscoveryAttempts(int replicaDiscoveryAttempts) {
-        Validator.requireNonNegative(replicaDiscoveryAttempts, "replicaDiscoveryAttempts");
-        driver_options_set_replica_discovery_attempts(nativeObject, replicaDiscoveryAttempts);
+    public DriverOptions serverDiscoveryAttempts(int serverDiscoveryAttempts) {
+        Validator.requireNonNegative(serverDiscoveryAttempts, "serverDiscoveryAttempts");
+        driver_options_set_server_discovery_attempts(nativeObject, serverDiscoveryAttempts);
         return this;
     }
 }

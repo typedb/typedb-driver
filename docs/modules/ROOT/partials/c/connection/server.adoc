@@ -1,0 +1,141 @@
+[#_methods_connection_server]
+=== server
+
+[#_Struct_Server]
+[.doc-api-reference-driver]
+==== Struct Server
+
+`rust struct (pointer)`
+
+
+
+The metadata and state of an individual server of a driver connection.
+
+[#_server_drop]
+==== function ``server_drop``
+
+[source,c]
+----
+void server_drop(struct Server* server_info)
+----
+
+
+
+Frees the native rust ``Server`` object.
+
+[caption=""]
+.Returns
+`void`
+
+[#_server_get_address]
+==== function ``server_get_address``
+
+[source,c]
+----
+char* server_get_address(const struct Server* server_info)
+----
+
+
+
+Returns the address this server is hosted at.
+
+[caption=""]
+.Returns
+`char*`
+
+[#_server_get_id]
+==== function ``server_get_id``
+
+[source,c]
+----
+int64_t server_get_id(const struct Server* server_info)
+----
+
+
+
+Returns the id of this server.
+
+[caption=""]
+.Returns
+`int64_t`
+
+[#_server_get_role]
+==== function ``server_get_role``
+
+[source,c]
+----
+enum ReplicationRole server_get_role(const struct Server* server_info)
+----
+
+
+
+Returns whether this is the primary server of the raft cluster or any of the supporting roles.
+
+[caption=""]
+.Returns
+`enum ReplicationRole`
+
+[#_server_get_term]
+==== function ``server_get_term``
+
+[source,c]
+----
+int64_t server_get_term(const struct Server* server_info)
+----
+
+
+
+Returns the raft protocol 'term' of this server.
+
+[caption=""]
+.Returns
+`int64_t`
+
+[#_server_has_role]
+==== function ``server_has_role``
+
+[source,c]
+----
+bool server_has_role(const struct Server* server_info)
+----
+
+
+
+Returns whether the role of this server is set.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_server_has_term]
+==== function ``server_has_term``
+
+[source,c]
+----
+bool server_has_term(const struct Server* server_info)
+----
+
+
+
+Returns whether the raft protocol 'term' of this server exists.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_server_is_primary]
+==== function ``server_is_primary``
+
+[source,c]
+----
+bool server_is_primary(const struct Server* server_info)
+----
+
+
+
+Checks whether this is the primary server of the raft cluster.
+
+[caption=""]
+.Returns
+`bool`
+

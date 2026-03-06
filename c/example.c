@@ -27,14 +27,14 @@ int main() {
 
     // Create a database
     const char* databaseName = "typedb";
-    databases_create(driver, databaseName, NULL);
+    databases_create(driver, databaseName);
     if (check_error()) {
         printf("Failed to create database\n");
         goto cleanup;
     }
 
     // Check if the database exists
-    if (databases_contains(driver, databaseName, NULL)) {
+    if (databases_contains(driver, databaseName)) {
         printf("Database '%s' created successfully\n", databaseName);
     }
 

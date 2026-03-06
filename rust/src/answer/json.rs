@@ -264,7 +264,7 @@ mod test {
     use rand::{
         Rng,
         distributions::{DistString, Distribution, Standard, WeightedIndex},
-        thread_rng,
+        thread_rng, Rng,
     };
     use serde_json::json;
 

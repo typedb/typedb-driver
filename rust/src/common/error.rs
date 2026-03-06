@@ -152,10 +152,10 @@ error_messages! { ConnectionError
         13: "Didn't receive any server responses for the query.",
     UnexpectedQueryType { query_type: i32 } =
         14: "Unexpected query type in message received from server: {query_type}. This is either a version compatibility issue or a bug.",
-    ClusterReplicaNotPrimary =
-        15: "The replica is not the primary replica.",
-    UnknownDirectReplica { address: Address, configured_addresses: Addresses } =
-        16: "Could not execute operation against '{address}' since it's not a known replica of configured addresses ({configured_addresses}).",
+    ClusterServerNotPrimary =
+        15: "The server is not primary.",
+    UnknownDirectServerRouting { address: Address, configured_addresses: Addresses } =
+        16: "Could not execute operation against '{address}' since it's not a known server of configured addresses ({configured_addresses}).",
     TokenCredentialInvalid =
         17: "Invalid credential supplied.",
     EncryptionSettingsMismatch =
@@ -168,8 +168,8 @@ error_messages! { ConnectionError
         21: "Connection refused. Please check the server is running and the address is accessible. Encrypted TypeDB endpoints may also have misconfigured SSL certificates.",
     MissingPort { address: String } =
         22: "Invalid URL '{address}': missing port.",
-    UnexpectedReplicaRole { replica_role: i32 } =
-        23: "Unexpected replica type in message received from server: {replica_role}. This is either a version compatibility issue or a bug.",
+    UnexpectedServerReplicationRole { replication_role: i32 } =
+        23: "Unexpected replication role in message received from server: {replication_role}. This is either a version compatibility issue or a bug.",
     ValueTimeZoneNameNotRecognised { time_zone: String } =
         24: "Time zone provided by the server has name '{time_zone}', which is not an officially recognized timezone.",
     ValueTimeZoneOffsetNotRecognised { offset: i32 } =
@@ -197,19 +197,15 @@ error_messages! { ConnectionError
     AnalyzeNoResponse =
         36: "Didn't receive any server responses for the analyze request.",
     NotPrimaryOnReadOnly { address: Address } =
-        37: "Could not execute a readonly operation on a non-primary replica '{address}'.",
-    NoAvailableReplicas { configured_addresses: Addresses } =
-        38: "Could not connect: no available replicas read from addresses {configured_addresses}.",
-    InvalidAddressWithScheme { addresses: Addresses } =
-        39: "Invalid address format: a scheme was found in one or more addresses. Please provide addresses as 'host:port'. Use driver options to configure TLS. Addresses: {addresses}.",
+        37: "Could not execute a readonly operation on a non-primary server '{address}'.",
     AddressTranslationWithoutTranslation { addresses: Addresses } =
-        40: "Specified addresses do not contain address translation: {addresses}.",
-    NoPrimaryReplica =
-        41: "Could not find a primary replica.",
+        38: "Specified addresses do not contain address translation: {addresses}.",
+    NoPrimaryServer =
+        39: "Could not find a primary server.",
     SchemeTlsSettingsMismatch { scheme: http::uri::Scheme, is_tls_enabled: bool } =
-        42: "Scheme {scheme} is not compatible with tls setting `enabled: {is_tls_enabled}`",
+        40: "Scheme {scheme} is not compatible with tls setting `enabled: {is_tls_enabled}`",
     RequestTimeout { timeout: String } =
-        43: "Request timed out after {timeout}. The server may be unresponsive.",
+        41: "Request timed out after {timeout}. The server may be unresponsive.",
 }
 
 impl ConnectionError {
@@ -352,7 +348,7 @@ impl Error {
         match code {
             "AUT1" | "AUT2" | "AUT3" => Some(ConnectionError::TokenCredentialInvalid {}),
             "SRV14" | "RFT1" | "CSV7" => Some(ConnectionError::ServerIsNotInitialised {}),
-            "CSV8" => Some(ConnectionError::ClusterReplicaNotPrimary {}),
+            "CSV8" => Some(ConnectionError::ClusterServerNotPrimary {}),
             _ => None,
         }
     }
