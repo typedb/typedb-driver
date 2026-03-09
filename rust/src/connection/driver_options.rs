@@ -23,7 +23,6 @@ use crate::connection::driver_tls_config::DriverTlsConfig;
 
 // When changing these numbers, also update docs in DriverOptions
 const DEFAULT_REQUEST_TIMEOUT: Duration = Duration::from_secs(2 * 60 * 60); // 2 hours
-const DEFAULT_USE_REPLICATION: bool = true;
 const DEFAULT_REDIRECT_FAILOVER_RETRIES: usize = 1;
 const DEFAULT_DISCOVERY_FAILOVER_RETRIES: Option<usize> = None;
 
@@ -34,7 +33,7 @@ const DEFAULT_DISCOVERY_FAILOVER_RETRIES: Option<usize> = None;
 /// # Examples
 ///
 /// ```rust
-/// let options = DriverOptions::new(DriverTlsConfig::default()).use_replication(false);
+/// let options = DriverOptions::new(DriverTlsConfig::default());
 /// ```
 #[derive(Debug, Clone)]
 pub struct DriverOptions {
@@ -49,10 +48,6 @@ pub struct DriverOptions {
     // TODO: What if the server does not respond on queries/commits?
     // Shall we apply the same or a different timeout?
     pub request_timeout: Duration,
-    /// Specifies whether the connection to TypeDB can use cluster replicas provided by the server
-    /// or it should be limited to a single configured address.
-    /// Defaults to true.
-    pub use_replication: bool,
     /// Limits the number of attempts to redirect a strongly consistent request to another
     /// primary server in case of a failure due to the change of server replication roles.
     /// Defaults to 1.
@@ -90,13 +85,6 @@ impl DriverOptions {
         Self { request_timeout, ..self }
     }
 
-    /// Specifies whether the connection to TypeDB can use cluster replicas provided by the server
-    /// or it should be limited to the provided address.
-    /// If set to false, restricts the driver to only a single address.
-    pub fn use_replication(self, use_replication: bool) -> Self {
-        Self { use_replication, ..self }
-    }
-
     /// Limits the number of attempts to redirect a strongly consistent request to another
     /// primary server in case of a failure due to the change of server replication roles.
     /// Defaults to 1.
@@ -123,7 +111,6 @@ impl Default for DriverOptions {
         Self {
             tls_config: DriverTlsConfig::default(),
             request_timeout: DEFAULT_REQUEST_TIMEOUT,
-            use_replication: DEFAULT_USE_REPLICATION,
             primary_failover_retries: DEFAULT_REDIRECT_FAILOVER_RETRIES,
             server_discovery_attempts: DEFAULT_DISCOVERY_FAILOVER_RETRIES,
         }

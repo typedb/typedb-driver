@@ -23,7 +23,7 @@ from typedb.common.native_wrapper import NativeWrapper
 from typedb.common.validation import require_non_negative, require_non_null
 from typedb.native_driver_wrapper import driver_options_get_tls_config, driver_options_new, \
     driver_options_set_tls_config, \
-    driver_options_get_use_replication, driver_options_set_use_replication, driver_options_get_primary_failover_retries, \
+    driver_options_get_primary_failover_retries, \
     driver_options_set_primary_failover_retries, driver_options_get_server_discovery_attempts, \
     driver_options_set_server_discovery_attempts, driver_options_has_server_discovery_attempts, \
     driver_options_get_request_timeout_millis, driver_options_set_request_timeout_millis, \
@@ -48,7 +48,6 @@ class DriverOptions(NativeWrapper[NativeDriverOptions]):
     def __init__(self,
                  tls_config: DriverTlsConfig,
                  *,
-                 use_replication: Optional[bool] = None,
                  primary_failover_retries: Optional[int] = None,
                  server_discovery_attempts: Optional[int] = None,
                  request_timeout_millis: Optional[int] = None,
@@ -65,8 +64,6 @@ class DriverOptions(NativeWrapper[NativeDriverOptions]):
         """
         require_non_null(tls_config, "tls_config")
         super().__init__(driver_options_new(tls_config.native_object))
-        if use_replication is not None:
-            self.use_replication = use_replication
         if primary_failover_retries is not None:
             self.primary_failover_retries = primary_failover_retries
         if server_discovery_attempts is not None:
@@ -127,19 +124,6 @@ class DriverOptions(NativeWrapper[NativeDriverOptions]):
         """
         require_non_negative(request_timeout_millis, "request_timeout_millis")
         driver_options_set_request_timeout_millis(self.native_object, request_timeout_millis)
-
-    @property
-    def use_replication(self) -> bool:
-        """
-        Returns the value set for the replication usage flag in this ``DriverOptions`` object.
-        Specifies whether the connection to TypeDB can use cluster servers provided by the server
-        or it should be limited to a single configured address. Defaults to True.
-        """
-        return driver_options_get_use_replication(self.native_object)
-
-    @use_replication.setter
-    def use_replication(self, use_replication: bool):
-        driver_options_set_use_replication(self.native_object, use_replication)
 
     @property
     def primary_failover_retries(self) -> int:

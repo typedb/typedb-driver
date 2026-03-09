@@ -97,22 +97,6 @@ Returns the TLS Config set for this ``DriverOptions`` object. Specifies the TLS 
 .Returns
 `struct DriverTlsConfig*`
 
-[#_driver_options_get_use_replication]
-==== function ``driver_options_get_use_replication``
-
-[source,c]
-----
-bool driver_options_get_use_replication(const struct DriverOptions* options)
-----
-
-
-
-Returns the value set for the replication usage flag in this ``DriverOptions`` object. Specifies whether the connection to TypeDB can use cluster replicas provided by the server or it should be limited to a single configured address.
-
-[caption=""]
-.Returns
-`bool`
-
 [#_driver_options_has_server_discovery_attempts]
 ==== function ``driver_options_has_server_discovery_attempts``
 
@@ -209,22 +193,6 @@ void driver_options_set_tls_config(struct DriverOptions* options, const struct D
 
 
 Overrides the TLS configuration on ``DriverOptions``. WARNING: Disabled TLS settings will make the driver sending passwords as plaintext.
-
-[caption=""]
-.Returns
-`void`
-
-[#_driver_options_set_use_replication]
-==== function ``driver_options_set_use_replication``
-
-[source,c]
-----
-void driver_options_set_use_replication(struct DriverOptions* options, bool use_replication)
-----
-
-
-
-Specifies whether the connection to TypeDB can use cluster replicas provided by the server or it should be limited to a single configured address. Defaults to true.
 
 [caption=""]
 .Returns

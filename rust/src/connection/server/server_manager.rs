@@ -90,7 +90,6 @@ impl ServerManager {
             driver_options.clone(),
             driver_lang.as_ref(),
             driver_version.as_ref(),
-            driver_options.use_replication,
         )
         .await?;
         let address_translation = addresses.address_translation();
@@ -389,11 +388,9 @@ impl ServerManager {
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     async fn seek_primary_replica(&self, replica_connection: ServerConnection) -> Result<AvailableServer> {
         let address_translation = self.read_address_translation().clone();
-        if self.driver_options.use_replication {
-            let replicas = Self::fetch_servers_from_connection(&replica_connection, &address_translation).await?;
-            *self.replicas.write().expect("Expected replicas write lock") =
-                filter_available_replicas!(replicas).collect();
-        }
+        let replicas = Self::fetch_servers_from_connection(&replica_connection, &address_translation).await?;
+        *self.replicas.write().expect("Expected replicas write lock") =
+            filter_available_replicas!(replicas).collect();
         if let Some(replica) = self.read_primary_replica() {
             self.refresh_replica_connections().await?;
             Ok(replica)
@@ -416,7 +413,6 @@ impl ServerManager {
         driver_options: DriverOptions,
         driver_lang: impl AsRef<str>,
         driver_version: impl AsRef<str>,
-        use_replication: bool,
     ) -> Result<(HashMap<Address, ServerConnection>, HashSet<Server>)> {
         let address_translation = addresses.address_translation();
         let mut errors = Vec::with_capacity(addresses.len());
@@ -434,18 +430,9 @@ impl ServerManager {
                 Ok((replica_connection, replicas)) => {
                     debug!("Fetched replicas from configured address '{address}': {replicas:?}");
                     let translated_replicas = Self::translate_replicas(replicas, &address_translation);
-                    if use_replication {
-                        let mut source_connections = HashMap::with_capacity(translated_replicas.len());
-                        source_connections.insert(address.clone(), replica_connection);
-                        return Ok((source_connections, translated_replicas));
-                    } else {
-                        if let Some(target_replica) =
-                            translated_replicas.into_iter().find(|replica| replica.address() == Some(address))
-                        {
-                            let source_connections = HashMap::from([(address.clone(), replica_connection)]);
-                            return Ok((source_connections, HashSet::from([target_replica])));
-                        }
-                    }
+                    let mut source_connections = HashMap::with_capacity(translated_replicas.len());
+                    source_connections.insert(address.clone(), replica_connection);
+                    return Ok((source_connections, translated_replicas));
                 }
                 Err(Error::Connection(err)) => {
                     debug!("Unable to fetch replicas from {}: {err:?}. Attempting next server.", address);
@@ -474,7 +461,7 @@ impl ServerManager {
             })
             .await?;
 
-        if is_auto && self.driver_options.use_replication {
+        if is_auto {
             // Update cached replicas since it's the most recent info
             *self.replicas.write().expect("Expected replicas write lock") =
                 filter_available_replicas!(replicas.clone()).collect();

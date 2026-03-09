@@ -264,13 +264,6 @@ pub async fn set_operation_server_routing(context: &mut Context, server_routing:
 }
 
 #[apply(generic_step)]
-#[step(expr = "set driver option use_replication to: {boolean}")]
-pub async fn set_transaction_option_use_replication(context: &mut Context, value: params::Boolean) {
-    context.init_driver_options_if_needed();
-    context.driver_options_mut().unwrap().use_replication = value.to_bool();
-}
-
-#[apply(generic_step)]
 #[step(expr = "set driver option primary_failover_retries to: {int}")]
 pub async fn set_transaction_option_primary_failover_retries(context: &mut Context, value: usize) {
     context.init_driver_options_if_needed();

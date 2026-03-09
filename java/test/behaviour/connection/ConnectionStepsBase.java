@@ -279,10 +279,6 @@ public abstract class ConnectionStepsBase {
         operationServerRouting = Optional.of(serverRouting.serverRouting());
     }
 
-    void set_driver_option_use_replication_to(boolean value) {
-        driverOptions = driverOptions.useReplication(value);
-    }
-
     void set_driver_option_primary_failover_retries_to(int value) {
         driverOptions = driverOptions.primaryFailoverRetries(value);
     }
