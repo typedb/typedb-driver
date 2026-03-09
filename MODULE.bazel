@@ -66,14 +66,14 @@ bazel_dep(name = "typedb_protocol", version = "0.0.0")
 git_override(
     module_name = "typedb_protocol",
     remote = "https://github.com/typedb/typedb-protocol",
-    commit = "288d316a6827ef05dd6b6968ed171b75c64e9ed9",
+    commit = "20c4e5799c5c8f8262c3fde01a1c4bfce334a6fa",
 )
 
 bazel_dep(name = "typedb_behaviour", version = "0.0.0")
 git_override(
     module_name = "typedb_behaviour",
     remote = "https://github.com/typedb/typedb-behaviour",
-    commit = "071fa49413e002e4c123210b8dc1737da8d6d32b",
+    commit = "a11320e749860876b46a9cd7f37b937b56fbee1e",
 )
 
 # Python multi-version toolchains (3.9-3.13)
