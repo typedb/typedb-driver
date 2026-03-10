@@ -33,7 +33,7 @@ const DEFAULT_DISCOVERY_FAILOVER_RETRIES: Option<usize> = None;
 /// # Examples
 ///
 /// ```rust
-/// let options = DriverOptions::new(DriverTlsConfig::default());
+/// let options = DriverOptions::new(DriverTlsConfig::default()).request_timeout(Duration::from_secs(30));
 /// ```
 #[derive(Debug, Clone)]
 pub struct DriverOptions {

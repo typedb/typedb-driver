@@ -389,8 +389,7 @@ impl ServerManager {
     async fn seek_primary_replica(&self, replica_connection: ServerConnection) -> Result<AvailableServer> {
         let address_translation = self.read_address_translation().clone();
         let replicas = Self::fetch_servers_from_connection(&replica_connection, &address_translation).await?;
-        *self.replicas.write().expect("Expected replicas write lock") =
-            filter_available_replicas!(replicas).collect();
+        *self.replicas.write().expect("Expected replicas write lock") = filter_available_replicas!(replicas).collect();
         if let Some(replica) = self.read_primary_replica() {
             self.refresh_replica_connections().await?;
             Ok(replica)
