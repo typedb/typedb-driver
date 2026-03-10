@@ -142,12 +142,6 @@ public class ConnectionStepsCore extends ConnectionStepsBase {
     }
 
     @Override
-    @When("set driver option use_replication to: {bool}")
-    public void set_driver_option_use_replication_to(boolean value) {
-        super.set_driver_option_use_replication_to(value);
-    }
-
-    @Override
     @When("set driver option primary_failover_retries to: {integer}")
     public void set_driver_option_primary_failover_retries_to(int value) {
         super.set_driver_option_primary_failover_retries_to(value);

@@ -30,14 +30,12 @@ import static com.typedb.driver.jni.typedb_driver.driver_options_get_tls_config;
 import static com.typedb.driver.jni.typedb_driver.driver_options_get_primary_failover_retries;
 import static com.typedb.driver.jni.typedb_driver.driver_options_get_server_discovery_attempts;
 import static com.typedb.driver.jni.typedb_driver.driver_options_get_request_timeout_millis;
-import static com.typedb.driver.jni.typedb_driver.driver_options_get_use_replication;
 import static com.typedb.driver.jni.typedb_driver.driver_options_has_server_discovery_attempts;
 import static com.typedb.driver.jni.typedb_driver.driver_options_new;
 import static com.typedb.driver.jni.typedb_driver.driver_options_set_tls_config;
 import static com.typedb.driver.jni.typedb_driver.driver_options_set_primary_failover_retries;
 import static com.typedb.driver.jni.typedb_driver.driver_options_set_server_discovery_attempts;
 import static com.typedb.driver.jni.typedb_driver.driver_options_set_request_timeout_millis;
-import static com.typedb.driver.jni.typedb_driver.driver_options_set_use_replication;
 
 /**
  * TypeDB driver options. <code>DriverOptions</code> are used to specify the driver's connection behavior.
@@ -117,37 +115,6 @@ public class DriverOptions extends NativeObject<com.typedb.driver.jni.DriverOpti
     public DriverOptions requestTimeoutMillis(long requestTimeoutMillis) {
         Validator.requireNonNegative(requestTimeoutMillis, "requestTimeoutMillis");
         driver_options_set_request_timeout_millis(nativeObject, requestTimeoutMillis);
-        return this;
-    }
-
-    /**
-     * Returns the value set for the replication usage flag in this <code>DriverOptions</code> object.
-     * Specifies whether the connection to TypeDB can use cluster replicas provided by the server
-     * or it should be limited to a single configured address.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * options.useReplication();
-     * </pre>
-     */
-    @CheckReturnValue
-    public Boolean useReplication() {
-        return driver_options_get_use_replication(nativeObject);
-    }
-
-    /**
-     * Explicitly sets whether the connection to TypeDB can use cluster replicas provided by the server
-     * or it should be limited to a single configured address. Defaults to true.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * options.useReplication(true);
-     * </pre>
-     *
-     * @param useReplication Whether the connection to TypeDB can use replication.
-     */
-    public DriverOptions useReplication(boolean useReplication) {
-        driver_options_set_use_replication(nativeObject, useReplication);
         return this;
     }
 

@@ -48,7 +48,7 @@ fn playground_test() {
             // Use Addresses::try_from_addresses_str() to provide multiple addresses instead.
             Addresses::try_from_address_str(ADDRESS).unwrap(),
             Credentials::new(USERNAME, PASSWORD),
-            DriverOptions::new(DriverTlsConfig::enabled_with_native_root_ca()).use_replication(true),
+            DriverOptions::new(DriverTlsConfig::enabled_with_native_root_ca()),
         )
         .await
         .expect("Error while setting up the driver");
