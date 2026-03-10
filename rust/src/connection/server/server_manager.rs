@@ -240,11 +240,9 @@ impl ServerManager {
             ServerRouting::Auto => self.execute_strongly_consistent(task).await,
             ServerRouting::Direct { address } => {
                 if self.read_replicas().iter().find(|replica| replica.address() == &address).is_none() {
-                    return Err(ConnectionError::UnknownDirectServerRouting {
-                        address,
-                        configured_addresses: self.configured_addresses.clone(),
-                    }
-                    .into());
+                    let known_addresses =
+                        Addresses::from_addresses(self.read_replicas().iter().map(|replica| replica.address().clone()));
+                    return Err(ConnectionError::UnknownDirectServerRouting { address, known_addresses }.into());
                 }
                 let private_address =
                     self.read_address_translation().to_private(&address).unwrap_or_else(|| address.clone());
