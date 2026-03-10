@@ -50,22 +50,6 @@ pub extern "C" fn driver_options_get_tls_config(options: *const DriverOptions) -
     release(borrow(options).tls_config.clone())
 }
 
-/// Specifies whether the connection to TypeDB can use cluster replicas provided by the server
-/// or it should be limited to a single configured address.
-/// Defaults to true.
-#[no_mangle]
-pub extern "C" fn driver_options_set_use_replication(options: *mut DriverOptions, use_replication: bool) {
-    borrow_mut(options).use_replication = use_replication;
-}
-
-/// Returns the value set for the replication usage flag in this <code>DriverOptions</code> object.
-/// Specifies whether the connection to TypeDB can use cluster replicas provided by the server
-/// or it should be limited to a single configured address.
-#[no_mangle]
-pub extern "C" fn driver_options_get_use_replication(options: *const DriverOptions) -> bool {
-    borrow(options).use_replication
-}
-
 /// Limits the number of attempts to redirect a strongly consistent request to another
 /// primary replica in case of a failure due to the change of replica roles.
 /// Defaults to 1.
