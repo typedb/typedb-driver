@@ -154,8 +154,8 @@ error_messages! { ConnectionError
         14: "Unexpected query type in message received from server: {query_type}. This is either a version compatibility issue or a bug.",
     ClusterServerNotPrimary =
         15: "The server is not primary.",
-    UnknownDirectServerRouting { address: Address, configured_addresses: Addresses } =
-        16: "Could not execute operation against '{address}' since it's not a known server of configured addresses ({configured_addresses}).",
+    UnknownDirectServerRouting { address: Address, known_addresses: Addresses } =
+        16: "Could not execute operation against '{address}' since it's not in the list of known servers: {known_addresses}.",
     TokenCredentialInvalid =
         17: "Invalid credential supplied.",
     EncryptionSettingsMismatch =
