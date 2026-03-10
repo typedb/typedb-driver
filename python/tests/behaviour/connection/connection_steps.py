@@ -207,11 +207,6 @@ def step_impl(context: Context, server_routing: ServerRouting):
     context.operation_server_routing = server_routing.server_routing
 
 
-@step("set driver option use_replication to: {value:Bool}")
-def step_impl(context: Context, value: bool):
-    context.driver_options.use_replication = value
-
-
 @step("set driver option primary_failover_retries to: {value:Int}")
 def step_impl(context: Context, value: int):
     context.driver_options.primary_failover_retries = value
