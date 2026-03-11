@@ -272,7 +272,7 @@ impl ServerManager {
 
         let retries = self.driver_options.primary_failover_retries;
         let mut connection_errors = HashMap::new();
-        for x in 0..=retries {
+        for _x in 0..=retries {
             let private_address = primary_replica.private_address().clone();
             match self.execute_on(primary_replica.address(), &private_address, &task).await {
                 Err(Error::Connection(connection_error)) => {

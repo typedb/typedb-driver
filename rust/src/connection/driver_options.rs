@@ -48,7 +48,7 @@ pub struct DriverOptions {
     // TODO: What if the server does not respond on queries/commits?
     // Shall we apply the same or a different timeout?
     pub request_timeout: Duration,
-    /// Limits the number of attempts to redirect a strongly consistent request to another
+    /// Limits the number of attempts to redirect a request to another
     /// primary server in case of a failure due to the change of server replication roles.
     /// Defaults to 1.
     pub primary_failover_retries: usize,
@@ -85,7 +85,7 @@ impl DriverOptions {
         Self { request_timeout, ..self }
     }
 
-    /// Limits the number of attempts to redirect a strongly consistent request to another
+    /// Limits the number of attempts to redirect a request to another
     /// primary server in case of a failure due to the change of server replication roles.
     /// Defaults to 1.
     pub fn primary_failover_retries(self, primary_failover_retries: usize) -> Self {

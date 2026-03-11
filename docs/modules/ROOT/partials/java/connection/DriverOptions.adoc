@@ -40,7 +40,7 @@ DriverOptions options = new DriverOptions(DriverTlsConfig.enabledWithNativeRootC
 public java.lang.Integer primaryFailoverRetries()
 ----
 
-Returns the value set for the primary failover retries limit in this ``DriverOptions`` object. Limits the number of attempts to redirect a strongly consistent request to another primary server in case of a failure due to the change of server roles. 
+Returns the value set for the primary failover retries limit in this ``DriverOptions`` object. Limits the number of attempts to redirect a request to another primary server in case of a failure due to the change of server roles.
 
 
 [caption=""]
@@ -62,7 +62,7 @@ options.primaryFailoverRetries();
 public DriverOptions primaryFailoverRetries​(int primaryFailoverRetries)
 ----
 
-Explicitly sets the limit on the number of attempts to redirect a strongly consistent request to another primary server in case of a failure due to the change of server roles. Defaults to 1. 
+Explicitly sets the limit on the number of attempts to redirect a request to another primary server in case of a failure due to the change of server roles. Defaults to 1.
 
 
 [caption=""]

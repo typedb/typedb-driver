@@ -120,7 +120,7 @@ public class DriverOptions extends NativeObject<com.typedb.driver.jni.DriverOpti
 
     /**
      * Returns the value set for the primary failover retries limit in this <code>DriverOptions</code> object.
-     * Limits the number of attempts to redirect a strongly consistent request to another
+     * Limits the number of attempts to redirect a request to another
      * primary server in case of a failure due to the change of server roles.
      *
      * <h3>Examples</h3>
@@ -134,7 +134,7 @@ public class DriverOptions extends NativeObject<com.typedb.driver.jni.DriverOpti
     }
 
     /**
-     * Explicitly sets the limit on the number of attempts to redirect a strongly consistent request to another
+     * Explicitly sets the limit on the number of attempts to redirect a request to another
      * primary server in case of a failure due to the change of server roles. Defaults to 1.
      *
      * <h3>Examples</h3>
