@@ -38,7 +38,7 @@ int64_t driver_options_get_primary_failover_retries(const struct DriverOptions* 
 
 
 
-Returns the value set for the primary failover retries limit in this ``DriverOptions`` object. Limits the number of attempts to redirect a strongly consistent request to another primary replica in case of a failure due to the change of replica roles.
+Returns the value set for the primary failover retries limit in this ``DriverOptions`` object. Limits the number of attempts to redirect a request to another primary replica in case of a failure due to the change of replica roles.
 
 [caption=""]
 .Returns
@@ -139,7 +139,7 @@ void driver_options_set_primary_failover_retries(struct DriverOptions* options, 
 
 
 
-Limits the number of attempts to redirect a strongly consistent request to another primary replica in case of a failure due to the change of replica roles. Defaults to 1.
+Limits the number of attempts to redirect a request to another primary replica in case of a failure due to the change of replica roles. Defaults to 1.
 
 [caption=""]
 .Returns

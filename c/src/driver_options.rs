@@ -50,7 +50,7 @@ pub extern "C" fn driver_options_get_tls_config(options: *const DriverOptions) -
     release(borrow(options).tls_config.clone())
 }
 
-/// Limits the number of attempts to redirect a strongly consistent request to another
+/// Limits the number of attempts to redirect a request to another
 /// primary replica in case of a failure due to the change of replica roles.
 /// Defaults to 1.
 #[no_mangle]
@@ -62,7 +62,7 @@ pub extern "C" fn driver_options_set_primary_failover_retries(
 }
 
 /// Returns the value set for the primary failover retries limit in this <code>DriverOptions</code> object.
-/// Limits the number of attempts to redirect a strongly consistent request to another
+/// Limits the number of attempts to redirect a request to another
 /// primary replica in case of a failure due to the change of replica roles.
 #[no_mangle]
 pub extern "C" fn driver_options_get_primary_failover_retries(options: *const DriverOptions) -> i64 {
