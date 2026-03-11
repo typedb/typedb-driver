@@ -113,10 +113,6 @@
 %nojavaexception driver_options_get_request_timeout_millis;
 %nojavaexception driver_options_set_primary_failover_retries;
 %nojavaexception driver_options_get_primary_failover_retries;
-%nojavaexception driver_options_set_server_discovery_attempts;
-%nojavaexception driver_options_get_server_discovery_attempts;
-%nojavaexception driver_options_has_server_discovery_attempts;
-
 %nojavaexception driver_tls_config_new_disabled;
 %nojavaexception driver_tls_config_new_enabled_with_native_root_ca;
 %nojavaexception driver_tls_config_is_enabled;

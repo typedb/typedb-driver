@@ -24,8 +24,7 @@ from typedb.common.validation import require_non_negative, require_non_null
 from typedb.native_driver_wrapper import driver_options_get_tls_config, driver_options_new, \
     driver_options_set_tls_config, \
     driver_options_get_primary_failover_retries, \
-    driver_options_set_primary_failover_retries, driver_options_get_server_discovery_attempts, \
-    driver_options_set_server_discovery_attempts, driver_options_has_server_discovery_attempts, \
+    driver_options_set_primary_failover_retries, \
     driver_options_get_request_timeout_millis, driver_options_set_request_timeout_millis, \
     DriverOptions as NativeDriverOptions
 
@@ -49,7 +48,6 @@ class DriverOptions(NativeWrapper[NativeDriverOptions]):
                  tls_config: DriverTlsConfig,
                  *,
                  primary_failover_retries: Optional[int] = None,
-                 server_discovery_attempts: Optional[int] = None,
                  request_timeout_millis: Optional[int] = None,
                  ):
         """
@@ -66,8 +64,6 @@ class DriverOptions(NativeWrapper[NativeDriverOptions]):
         super().__init__(driver_options_new(tls_config.native_object))
         if primary_failover_retries is not None:
             self.primary_failover_retries = primary_failover_retries
-        if server_discovery_attempts is not None:
-            self.server_discovery_attempts = server_discovery_attempts
         if request_timeout_millis is not None:
             self.request_timeout_millis = request_timeout_millis
 
@@ -139,23 +135,3 @@ class DriverOptions(NativeWrapper[NativeDriverOptions]):
         require_non_negative(primary_failover_retries, "primary_failover_retries")
         driver_options_set_primary_failover_retries(self.native_object, primary_failover_retries)
 
-    @property
-    def server_discovery_attempts(self) -> Optional[int]:
-        """
-        Returns the value set for the server discovery attempts limit in this ``DriverOptions`` object.
-        Limits the number of driver attempts to discover a single working server to perform an
-        operation in case of a server unavailability. Every server is tested once, which means
-        that at most:
-        - {limit} operations are performed if the limit <= the number of servers.
-        - {number of servers} operations are performed if the limit > the number of servers.
-        - {number of servers} operations are performed if the limit is None.
-        Affects every eventually consistent operation, including redirect failover, when the new
-        primary server is unknown. If not set, the maximum (practically unlimited) value is used.
-        """
-        return driver_options_get_server_discovery_attempts(self.native_object) \
-            if driver_options_has_server_discovery_attempts(self.native_object) else None
-
-    @server_discovery_attempts.setter
-    def server_discovery_attempts(self, server_discovery_attempts: int):
-        require_non_negative(server_discovery_attempts, "server_discovery_attempts")
-        driver_options_set_server_discovery_attempts(self.native_object, server_discovery_attempts)

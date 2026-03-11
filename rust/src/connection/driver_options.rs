@@ -24,7 +24,6 @@ use crate::connection::driver_tls_config::DriverTlsConfig;
 // When changing these numbers, also update docs in DriverOptions
 const DEFAULT_REQUEST_TIMEOUT: Duration = Duration::from_secs(2 * 60 * 60); // 2 hours
 const DEFAULT_REDIRECT_FAILOVER_RETRIES: usize = 1;
-const DEFAULT_DISCOVERY_FAILOVER_RETRIES: Option<usize> = None;
 
 /// TypeDB driver connection options.
 /// `DriverOptions` object can be used to override the default driver behavior while connecting to
@@ -52,16 +51,6 @@ pub struct DriverOptions {
     /// primary server in case of a failure due to the change of server replication roles.
     /// Defaults to 1.
     pub primary_failover_retries: usize,
-    /// Limits the number of driver attempts to discover a single working server to perform an
-    /// operation in case of a server unavailability. Every server is tested once, which means
-    /// that at most:
-    /// - {limit} operations are performed if the limit <= the number of servers.
-    /// - {number of servers} operations are performed if the limit > the number of servers.
-    /// - {number of servers} operations are performed if the limit is None.
-    /// Affects every eventually consistent operation, including redirect failover, when the new
-    /// primary server is unknown.
-    /// Defaults to None.
-    pub server_discovery_attempts: Option<usize>,
 }
 
 impl DriverOptions {
@@ -92,18 +81,6 @@ impl DriverOptions {
         Self { primary_failover_retries, ..self }
     }
 
-    /// Limits the number of driver attempts to discover a single working server to perform an
-    /// operation in case of a server unavailability. Every server is tested once, which means
-    /// that at most:
-    /// - {limit} operations are performed if the limit <= the number of servers.
-    /// - {number of servers} operations are performed if the limit > the number of servers.
-    /// - {number of servers} operations are performed if the limit is None.
-    /// Affects every eventually consistent operation, including redirect failover, when the new
-    /// primary server is unknown.
-    /// Defaults to None.
-    pub fn server_discovery_attempts(self, server_discovery_attempts: Option<usize>) -> Self {
-        Self { server_discovery_attempts, ..self }
-    }
 }
 
 impl Default for DriverOptions {
@@ -112,7 +89,6 @@ impl Default for DriverOptions {
             tls_config: DriverTlsConfig::default(),
             request_timeout: DEFAULT_REQUEST_TIMEOUT,
             primary_failover_retries: DEFAULT_REDIRECT_FAILOVER_RETRIES,
-            server_discovery_attempts: DEFAULT_DISCOVERY_FAILOVER_RETRIES,
         }
     }
 }
