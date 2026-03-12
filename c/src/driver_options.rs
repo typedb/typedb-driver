@@ -69,42 +69,6 @@ pub extern "C" fn driver_options_get_primary_failover_retries(options: *const Dr
     borrow(options).primary_failover_retries as i64
 }
 
-/// Limits the number of driver attempts to discover a single working server to perform an
-/// operation in case of a server unavailability. Every server is tested once, which means
-/// that at most:
-/// - {limit} operations are performed if the limit <= the number of servers.
-/// - {number of servers} operations are performed if the limit > the number of servers.
-/// - {number of servers} operations are performed if the limit is None.
-/// Affects every eventually consistent operation, including redirect failover, when the new
-/// primary server is unknown. If not set, the maximum (practically unlimited) value is used.
-#[no_mangle]
-pub extern "C" fn driver_options_set_server_discovery_attempts(
-    options: *mut DriverOptions,
-    server_discovery_attempts: i64,
-) {
-    borrow_mut(options).server_discovery_attempts = Some(server_discovery_attempts as usize);
-}
-
-/// Returns the value set for the server discovery attempts limit in this <code>DriverOptions</code> object.
-/// Limits the number of driver attempts to discover a single working server to perform an
-/// operation in case of a server unavailability. Every server is tested once, which means
-/// that at most:
-/// - {limit} operations are performed if the limit <= the number of servers.
-/// - {number of servers} operations are performed if the limit > the number of servers.
-/// - {number of servers} operations are performed if the limit is None.
-/// Affects every eventually consistent operation, including redirect failover, when the new
-/// primary server is unknown.
-#[no_mangle]
-pub extern "C" fn driver_options_get_server_discovery_attempts(options: *const DriverOptions) -> i64 {
-    borrow(options).server_discovery_attempts.unwrap() as i64
-}
-
-/// Checks whether the server discovery attempts limit was explicitly set for this <code>DriverOptions</code> object.
-#[no_mangle]
-pub extern "C" fn driver_options_has_server_discovery_attempts(options: *const DriverOptions) -> bool {
-    borrow(options).server_discovery_attempts.is_some()
-}
-
 /// Sets the maximum time (in milliseconds) to wait for a response to a unary RPC request.
 /// This applies to operations like database creation, user management, and initial
 /// transaction opening. It does NOT apply to operations within transactions (queries, commits).

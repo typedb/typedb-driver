@@ -26,7 +26,7 @@ use std::{
     time::Duration,
 };
 
-use itertools::{enumerate, Itertools};
+use itertools::Itertools;
 use tracing::debug;
 
 use crate::{
@@ -320,12 +320,8 @@ impl ServerManager {
         F: Fn(ServerConnection) -> P,
         P: Future<Output = Result<R>>,
     {
-        let limit = self.driver_options.server_discovery_attempts.unwrap_or(usize::MAX);
         let mut connection_errors = HashMap::new();
-        for (attempt, replica) in enumerate(replicas.into_iter()) {
-            if attempt == limit {
-                break;
-            }
+        for replica in replicas.into_iter() {
             // TODO: We won't ever reconnect to disconnected / new replicas when using execute_on_any.
             // We need to think how to update the connections in this case.
             match self.execute_on(replica.address(), replica.private_address(), &task).await {
