@@ -80,7 +80,6 @@ impl DriverOptions {
     pub fn primary_failover_retries(self, primary_failover_retries: usize) -> Self {
         Self { primary_failover_retries, ..self }
     }
-
 }
 
 impl Default for DriverOptions {

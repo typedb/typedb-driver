@@ -269,4 +269,3 @@ pub async fn set_transaction_option_primary_failover_retries(context: &mut Conte
     context.init_driver_options_if_needed();
     context.driver_options_mut().unwrap().primary_failover_retries = value;
 }
-
