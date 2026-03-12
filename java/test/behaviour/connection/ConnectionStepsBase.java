@@ -283,7 +283,4 @@ public abstract class ConnectionStepsBase {
         driverOptions = driverOptions.primaryFailoverRetries(value);
     }
 
-    void set_driver_option_server_discovery_attempts_to(int value) {
-        driverOptions = driverOptions.serverDiscoveryAttempts(value);
-    }
 }

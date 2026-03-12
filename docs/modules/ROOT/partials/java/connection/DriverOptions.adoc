@@ -40,7 +40,7 @@ DriverOptions options = new DriverOptions(DriverTlsConfig.enabledWithNativeRootC
 public java.lang.Integer primaryFailoverRetries()
 ----
 
-Returns the value set for the primary failover retries limit in this ``DriverOptions`` object. Limits the number of attempts to redirect a request to another primary server in case of a failure due to the change of server roles.
+Returns the value set for the primary failover retries limit in this ``DriverOptions`` object. Limits the number of attempts to redirect a request to another primary server in case of a failure due to the change of server roles. 
 
 
 [caption=""]
@@ -62,7 +62,7 @@ options.primaryFailoverRetries();
 public DriverOptions primaryFailoverRetries​(int primaryFailoverRetries)
 ----
 
-Explicitly sets the limit on the number of attempts to redirect a request to another primary server in case of a failure due to the change of server roles. Defaults to 1.
+Explicitly sets the limit on the number of attempts to redirect a request to another primary server in case of a failure due to the change of server roles. Defaults to 1. 
 
 
 [caption=""]
@@ -137,60 +137,6 @@ a| `requestTimeoutMillis` a| The request timeout in milliseconds. Must be non-ne
 [source,java]
 ----
 options.requestTimeoutMillis(30000); // 30 seconds
-----
-
-[#_DriverOptions_serverDiscoveryAttempts_]
-==== method ``serverDiscoveryAttempts``
-
-[source,java]
-----
-@CheckReturnValue
-public java.util.Optional<java.lang.Integer> serverDiscoveryAttempts()
-----
-
-Returns the value set for the server discovery attempts limit in this ``DriverOptions`` object. Limits the number of driver attempts to discover a single working server to perform an operation in case of a server unavailability. Every server is tested once, which means that at most: - {limit} operations are performed if the limit &lt;= the number of servers. - {number of servers} operations are performed if the limit &gt; the number of servers. - {number of servers} operations are performed if the limit is None. Affects every eventually consistent operation, including redirect failover, when the new primary server is unknown. 
-
-
-[caption=""]
-.Returns
-`public java.util.Optional<java.lang.Integer>`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-options.serverDiscoveryAttempts();
-----
-
-[#_DriverOptions_serverDiscoveryAttempts_int]
-==== method ``serverDiscoveryAttempts``
-
-[source,java]
-----
-public DriverOptions serverDiscoveryAttempts​(int serverDiscoveryAttempts)
-----
-
-Limits the number of driver attempts to discover a single working server to perform an operation in case of a server unavailability. Every server is tested once, which means that at most: - {limit} operations are performed if the limit &lt;= the number of servers. - {number of servers} operations are performed if the limit &gt; the number of servers. - {number of servers} operations are performed if the limit is None. Affects every eventually consistent operation, including redirect failover, when the new primary server is unknown. If not set, the maximum (practically unlimited) value is used. 
-
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `serverDiscoveryAttempts` a| The limit of server discovery attempts. a| `int`
-|===
-
-[caption=""]
-.Returns
-`public DriverOptions`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-options.serverDiscoveryAttempts(1);
 ----
 
 [#_DriverOptions_tlsConfig_]

@@ -208,9 +208,4 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
         super.set_driver_option_primary_failover_retries_to(value);
     }
 
-    @Override
-    @When("set driver option server_discovery_attempts to: {integer}")
-    public void set_driver_option_server_discovery_attempts_to(int value) {
-        super.set_driver_option_server_discovery_attempts_to(value);
-    }
 }
