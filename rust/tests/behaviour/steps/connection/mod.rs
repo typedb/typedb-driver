@@ -269,10 +269,3 @@ pub async fn set_transaction_option_primary_failover_retries(context: &mut Conte
     context.init_driver_options_if_needed();
     context.driver_options_mut().unwrap().primary_failover_retries = value;
 }
-
-#[apply(generic_step)]
-#[step(expr = "set driver option server_discovery_attempts to: {int}")]
-pub async fn set_transaction_option_server_discovery_attempts(context: &mut Context, value: usize) {
-    context.init_driver_options_if_needed();
-    context.driver_options_mut().unwrap().server_discovery_attempts = Some(value);
-}
