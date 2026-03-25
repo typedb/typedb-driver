@@ -40,4 +40,4 @@ query --@aspect_rules_ts//ts:skipLibCheck=always
 
 # Bazel 8 migration: Allow empty globs temporarily
 # TODO: Fix all BUILD files to use allow_empty=True explicitly, then remove this flag
-build --noincompatible_disallow_empty_glob
+common --noincompatible_disallow_empty_glob

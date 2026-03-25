@@ -38,28 +38,28 @@ build:
       image: typedb-ubuntu-20.04 # Ubuntu 20.04 has GLIBC version 2.31 (2020) which we should verify to compile against
       machine: 16-core-64-gb
       command: |
-        # export PATH="$HOME/.local/bin:$PATH"
-        # sudo apt-get update
-        # sudo apt install python3-pip -y
-        # python3 -m pip install -U pip
-        # python3 -m pip install -r python/requirements_dev.txt
-        # tool/http-ts/install-deps.sh
-        # export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
-        # export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-        # bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
-        # bazel run @typedb_dependencies//distribution/artifact:create-netrc
-        # # TODO: Temporarily build only the 3.0-reimplemented drivers:
-        # # bazel build //...
-        # bazel build //c/...
-        # bazel build //rust/...
-        # bazel build //java/...
-        # bazel build //python/...
-        # bazel build //http-ts/...
-        #
-        # bazel run @typedb_dependencies//tool/checkstyle:test-coverage
-        # bazel test $(bazel query 'kind(checkstyle_test, //...)') --test_output=errors
-        # bazel test $(bazel query 'kind(rustfmt_test, //...)') --@rules_rust//:rustfmt.toml=//rust:rustfmt_config --test_output=errors
-        sleep 3600
+        export PATH="$HOME/.local/bin:$PATH"
+        sudo apt-get update
+        sudo apt install python3-pip -y
+        python3 -m pip install -U pip
+        python3 -m pip install -r python/requirements_dev.txt
+        tool/http-ts/install-deps.sh
+        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
+        bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        bazel run @typedb_dependencies//distribution/artifact:create-netrc
+        # TODO: Temporarily build only the 3.0-reimplemented drivers:
+        # bazel build //...
+        bazel build //c/...
+        bazel build //rust/...
+        bazel build //java/...
+        bazel build //python/...
+        bazel build //http-ts/...
+        
+        rm -rf csharp go # exclude csharp and go before running checkstyle
+        bazel run @typedb_dependencies//tool/checkstyle:test-coverage
+        bazel test $(bazel query 'kind(checkstyle_test, //...)') --test_output=errors
+        bazel test $(bazel query 'kind(rustfmt_test, //...)') --@rules_rust//:rustfmt.toml=//rust:rustfmt_config --test_output=errors
 
 #    build-dependency:
 #      image: typedb-ubuntu-22.04
@@ -119,17 +119,16 @@ build:
     test-rust-behaviour-community:
       image: typedb-ubuntu-20.04 # Ubuntu 20.04 has GLIBC version 2.31 (2020) which we should verify to compile against
       command: |
-        # export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
-        # export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-        # bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
-        # bazel run @typedb_dependencies//distribution/artifact:create-netrc
-        #
-        # tool/test/start-community-server.sh &&
-        #   bazel test //rust/tests/behaviour/... --test_output=streamed --jobs=1 &&
-        #   export TEST_SUCCESS=0 || export TEST_SUCCESS=1
-        # tool/test/stop-community-server.sh
-        # exit $TEST_SUCCESS
-        sleep 3600
+        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
+        bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        bazel run @typedb_dependencies//distribution/artifact:create-netrc
+        
+        tool/test/start-community-server.sh &&
+          bazel test //rust/tests/behaviour/... --test_output=streamed --jobs=1 &&
+          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        tool/test/stop-community-server.sh
+        exit $TEST_SUCCESS
 
     # TODO: Use cluster server artifact with 3 nodes when available (it would do the same thing as community now)
     # test-rust-behaviour-cluster:

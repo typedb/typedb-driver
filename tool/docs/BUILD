@@ -30,6 +30,6 @@ kt_jvm_library(
 checkstyle_test(
     name = "checkstyle",
     include = glob(["**/*"]),
-    exclude = glob(["cpp/doxyfile.template"]),
+    exclude = glob(["cpp/doxyfile.template"], allow_empty = True),
     license_type = "apache-header",
 )

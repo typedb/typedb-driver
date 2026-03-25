@@ -1,0 +1,3 @@
+# 2.x-only drivers - require WORKSPACE-era rules not available in Bzlmod
+csharp
+go

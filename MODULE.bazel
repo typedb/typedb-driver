@@ -160,9 +160,9 @@ use_repo(npm, "typedb_protocol_npm", "nodejs_npm", "http-ts_npm")
 rules_ts_ext = use_extension("@aspect_rules_ts//ts:extensions.bzl", "ext")
 use_repo(rules_ts_ext, "npm_typescript")
 
-# Maven dependencies - import from typedb_dependencies
-# The driver-specific artifacts extend the base artifacts from typedb_dependencies
-maven = use_extension("@rules_jvm_external//:extensions.bzl", "maven")
+# Maven dependencies - use typedb_dependencies' custom maven extension
+# which includes all versioned artifacts needed across TypeDB modules
+maven = use_extension("@typedb_dependencies//library/maven:maven_extension.bzl", "maven")
 use_repo(maven, "maven")
 
 # Register Kotlin toolchain

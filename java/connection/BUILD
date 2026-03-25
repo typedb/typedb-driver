@@ -49,9 +49,12 @@ java_library(
 checkstyle_test(
     name = "checkstyle",
     size = "small",
-    include = glob([
-        "*",
-        "*/*",
-    ]),
+    include = glob(
+        [
+            "*",
+            "*/*",
+        ],
+        allow_empty = True,
+    ),
     license_type = "apache-header",
 )
