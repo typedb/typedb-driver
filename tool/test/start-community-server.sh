@@ -21,16 +21,17 @@ set -e
 rm -rf typedb-all
 
 bazel run //tool/test:typedb-extractor -- typedb-all
-./typedb-all/typedb server --development-mode.enabled true --server.authentication.token-expiration-seconds 15 &
+./typedb-all/typedb server --development-mode.enabled=true &
 
 set +e
 POLL_INTERVAL_SECS=0.5
-RETRY_NUM=20
+MAX_RETRIES=20
+RETRY_NUM=$MAX_RETRIES
 while [[ $RETRY_NUM -gt 0 ]]; do
   lsof -i :1729 > /dev/null
   if [ $? -eq 0 ]; then exit 0; fi
   ((RETRY_NUM-=1))
   sleep $POLL_INTERVAL_SECS
 done
-echo "TypeDB server failed to start within $((POLL_INTERVAL_SECS * RETRY_NUM)) seconds, aborting..."
+echo "TypeDB server failed to start within $MAX_RETRIES retries, aborting..."
 exit 1
