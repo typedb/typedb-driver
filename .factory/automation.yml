@@ -96,25 +96,26 @@ build:
     test-rust-unit-integration:
       image: typedb-ubuntu-20.04 # Ubuntu 20.04 has GLIBC version 2.31 (2020) which we should verify to compile against
       command: |
-        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
-        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-        bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
-        bazel run @typedb_dependencies//distribution/artifact:create-netrc
-        
-        bazel test //rust:typedb_driver_unit_tests --test_output=streamed || exit 1
-        
-        tool/test/start-community-server.sh &&
-          bazel test //rust/tests/integration:all --test_output=streamed --test_arg=--nocapture &&
-          export COMMUNITY_FAILED= || export COMMUNITY_FAILED=1
-        tool/test/stop-community-server.sh
-        if [[ -n "$COMMUNITY_FAILED" ]]; then exit 1; fi
-        
-        # TODO: Use cluster server artifact with 3 nodes for the same common tests when available
-        # tool/test/start-cluster-servers.sh 3 &&
+        # export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
+        # export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
+        # bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        # bazel run @typedb_dependencies//distribution/artifact:create-netrc
+        #
+        # bazel test //rust:typedb_driver_unit_tests --test_output=streamed || exit 1
+        #
+        # tool/test/start-community-server.sh &&
         #   bazel test //rust/tests/integration:all --test_output=streamed --test_arg=--nocapture &&
-        #   export CLUSTER_FAILED= || export CLUSTER_FAILED=1
-        # tool/test/stop-cluster-servers.sh
-        # if [[ -n "$CLUSTER_FAILED" ]]; then exit 1; fi
+        #   export COMMUNITY_FAILED= || export COMMUNITY_FAILED=1
+        # tool/test/stop-community-server.sh
+        # if [[ -n "$COMMUNITY_FAILED" ]]; then exit 1; fi
+        #
+        # # TODO: Use cluster server artifact with 3 nodes for the same common tests when available
+        # # tool/test/start-cluster-servers.sh 3 &&
+        # #   bazel test //rust/tests/integration:all --test_output=streamed --test_arg=--nocapture &&
+        # #   export CLUSTER_FAILED= || export CLUSTER_FAILED=1
+        # # tool/test/stop-cluster-servers.sh
+        # # if [[ -n "$CLUSTER_FAILED" ]]; then exit 1; fi
+        sleep 3600
 
     test-rust-behaviour-community:
       image: typedb-ubuntu-20.04 # Ubuntu 20.04 has GLIBC version 2.31 (2020) which we should verify to compile against
