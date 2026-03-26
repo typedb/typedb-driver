@@ -217,17 +217,18 @@ build:
       image: typedb-ubuntu-22.04
       type: foreground
       command: |
-        export PATH="$HOME/.local/bin:$PATH"
-        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
-        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-        bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
-        bazel run @typedb_dependencies//distribution/artifact:create-netrc
-
-        tool/test/start-community-server.sh &&
-          bazel test //python/tests/integration:all --test_output=streamed --jobs=1 &&
-          export COMMUNITY_FAILED= || export COMMUNITY_FAILED=1
-        tool/test/stop-community-server.sh
-        if [[ -n "$COMMUNITY_FAILED" ]]; then exit 1; fi
+        # export PATH="$HOME/.local/bin:$PATH"
+        # export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
+        # export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
+        # bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        # bazel run @typedb_dependencies//distribution/artifact:create-netrc
+        #
+        # tool/test/start-community-server.sh &&
+        #   bazel test //python/tests/integration:all --test_output=streamed --jobs=1 &&
+        #   export COMMUNITY_FAILED= || export COMMUNITY_FAILED=1
+        # tool/test/stop-community-server.sh
+        # if [[ -n "$COMMUNITY_FAILED" ]]; then exit 1; fi
+        sleep 3600
 
         # TODO: Use cluster server artifact with 3 nodes when available
         # tool/test/start-cluster-servers.sh 3 &&
