@@ -29,7 +29,7 @@ import org.junit.runner.RunWith;
         strict = true,
         plugin = "pretty",
         glue = "com.typedb.driver.test.behaviour",
-        features = "external/typedb_behaviour/connection/database.feature",
+        features = "../typedb_behaviour+/connection/database.feature",
         tags = "not @ignore and not @ignore-typedb-driver and not @ignore-typedb-driver-java"
 )
 public class DatabaseTest extends BehaviourTest {

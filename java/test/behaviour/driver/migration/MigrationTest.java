@@ -29,7 +29,7 @@ import org.junit.runner.RunWith;
         strict = true,
         plugin = "pretty",
         glue = "com.typedb.driver.test.behaviour",
-        features = "external/typedb_behaviour/driver/migration.feature",
+        features = "../typedb_behaviour+/driver/migration.feature",
         tags = "not @ignore and not @ignore-typedb-driver and not @ignore-typedb-driver-java"
 )
 public class MigrationTest extends BehaviourTest {
