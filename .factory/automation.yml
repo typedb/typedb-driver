@@ -56,7 +56,8 @@ build:
         bazel build --config=ci //python/...
         bazel build --config=ci //http-ts/...
         # CSharp subpackage parallel builds break due to mutexes somewhere in csharp??
-        bazel build --config=ci //csharp/... --jobs=1  
+        # TODO: Uncomment csharp when implemented
+        # bazel build --config=ci //csharp/... --jobs=1  
         
         bazel run --config=ci @typedb_dependencies//tool/checkstyle:test-coverage
         bazel test --config=ci $(bazel query 'kind(checkstyle_test, //...)') --test_output=errors
