@@ -23,16 +23,6 @@ config:
     typedb-protocol: [build, release]
 
 build:
-# TODO: It is broken, while not being very beneficial. Check the deps manually. Consider returning this in the future
-#  quality:
-#    filter:
-#      owner: typedb
-#      branch: [master, development]
-#    dependency-analysis:
-#      image: typedb-ubuntu-22.04
-#      command: |
-#        bazel run @typedb_dependencies//factory/analysis:dependency-analysis
-
   correctness:
     build:
       image: typedb-ubuntu-20.04 # Ubuntu 20.04 has GLIBC version 2.31 (2020) which we should verify to compile against
