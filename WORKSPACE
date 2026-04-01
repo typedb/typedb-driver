@@ -15,5 +15,6 @@
 # specific language governing permissions and limitations
 # under the License.
 
-# Intentionally empty - dependencies managed via MODULE.bazel
-workspace(name = "typedb_driver")
+# This file intentionally left empty.
+# It serves as a workspace root marker for Bazelisk.
+# All dependency management is done via MODULE.bazel (Bzlmod).
