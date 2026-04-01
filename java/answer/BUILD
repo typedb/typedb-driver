@@ -21,7 +21,7 @@ load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 java_library(
     name = "answer",
-    srcs = glob(["*.java", "*/*.java"], exclude=["test/**"]),
+    srcs = glob(["*.java", "*/*.java"], exclude=["test/**"], allow_empty = True),
     deps = [
         # Internal dependencies
         "//java/api:api",
@@ -38,7 +38,7 @@ java_library(
 
 checkstyle_test(
     name = "checkstyle",
-    include = glob(["*", "*/*"]),
+    include = glob(["*", "*/*"], allow_empty = True),
     license_type = "apache-header",
     size = "small",
 )

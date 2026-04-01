@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import TypeDoc = require("typedoc");
+import * as TypeDoc from "typedoc";
 
 async function main() {
     const app = await TypeDoc.Application.bootstrapWithPlugins({

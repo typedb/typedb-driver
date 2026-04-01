@@ -28,7 +28,7 @@ async fn test() {
     // @typedb_behaviour is stored in a directory that is a sibling to
     // the working directory.
     #[cfg(feature = "bazel")]
-    let path = "../typedb_behaviour/driver/connection.feature";
+    let path = "../typedb_behaviour+/driver/connection.feature";
 
     #[cfg(not(feature = "bazel"))]
     let path = "../../typedb-behaviour/driver/connection.feature";

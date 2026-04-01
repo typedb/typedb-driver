@@ -1,0 +1,222 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+
+module(
+    name = "typedb_driver",
+    version = "0.0.0",
+    compatibility_level = 1,
+)
+
+# Core BCR dependencies
+bazel_dep(name = "platforms", version = "0.0.10")
+bazel_dep(name = "bazel_skylib", version = "1.7.1")
+bazel_dep(name = "rules_cc", version = "0.0.17")
+bazel_dep(name = "rules_java", version = "8.6.2")
+bazel_dep(name = "rules_jvm_external", version = "6.6")
+bazel_dep(name = "rules_python", version = "1.0.0")
+bazel_dep(name = "rules_rust", version = "0.56.0")
+bazel_dep(name = "rules_kotlin", version = "2.0.0", repo_name = "io_bazel_rules_kotlin")
+bazel_dep(name = "rules_pkg", version = "1.0.1")
+bazel_dep(name = "rules_proto", version = "7.1.0")
+bazel_dep(name = "protobuf", version = "29.3", repo_name = "com_google_protobuf")
+
+# gRPC dependencies
+bazel_dep(name = "grpc", version = "1.69.0")
+bazel_dep(name = "rules_proto_grpc", version = "5.0.1")
+
+# C++ test dependencies
+bazel_dep(name = "googletest", version = "1.14.0", repo_name = "gtest")
+
+# Node.js / TypeScript dependencies
+bazel_dep(name = "rules_nodejs", version = "6.3.2")
+bazel_dep(name = "aspect_rules_js", version = "2.1.2")
+bazel_dep(name = "aspect_rules_ts", version = "3.4.0")
+bazel_dep(name = "aspect_bazel_lib", version = "2.9.4")
+
+# typedb ecosystem dependencies
+bazel_dep(name = "typedb_dependencies", version = "0.0.0")
+git_override(
+    module_name = "typedb_dependencies",
+    remote = "https://github.com/typedb/dependencies",
+    commit = "d278224d632c75c608053df19c5cdd5abf2421cf",
+)
+
+bazel_dep(name = "typedb_bazel_distribution", version = "0.0.0")
+git_override(
+    module_name = "typedb_bazel_distribution",
+    remote = "https://github.com/typedb/bazel-distribution",
+    commit = "4e400ddcc52da12809db323874eb3516ee9ab5c3",
+)
+
+bazel_dep(name = "typedb_protocol", version = "0.0.0")
+git_override(
+    module_name = "typedb_protocol",
+    remote = "https://github.com/typedb/typedb-protocol",
+    commit = "ae00f1339236b851252a4a6ccafe5f1753797945",
+)
+
+bazel_dep(name = "typedb_behaviour", version = "0.0.0")
+git_override(
+    module_name = "typedb_behaviour",
+    remote = "https://github.com/typedb/typedb-behaviour",
+    commit = "bc1e71c9334272178104f657b0996d9f15be66c9",
+)
+
+# Python multi-version toolchains (3.9-3.13)
+# Order matters! First python toolchain that is registered is used by Bazel's py_binary.
+# Default is 3.11 to match typedb_bazel_distribution pip dependencies.
+python = use_extension("@rules_python//python/extensions:python.bzl", "python")
+python.toolchain(python_version = "3.9")
+python.toolchain(python_version = "3.10")
+python.toolchain(
+    is_default = True,
+    python_version = "3.11",
+)
+python.toolchain(python_version = "3.12")
+python.toolchain(python_version = "3.13")
+use_repo(python, "python_3_9", "python_3_10", "python_3_11", "python_3_12", "python_3_13")
+
+# Pip dependencies for driver development
+pip = use_extension("@rules_python//python/extensions:pip.bzl", "pip")
+pip.parse(
+    hub_name = "typedb_driver_pip",
+    python_version = "3.11",
+    requirements_lock = "//python:requirements_dev.txt",
+)
+use_repo(pip, "typedb_driver_pip")
+
+# Rust toolchain
+rust = use_extension("@rules_rust//rust:extensions.bzl", "rust")
+rust.toolchain(
+    edition = "2021",
+    versions = ["1.81.0"],
+    extra_target_triples = [
+        "aarch64-apple-darwin",
+        "aarch64-unknown-linux-gnu",
+        "x86_64-apple-darwin",
+        "x86_64-pc-windows-msvc",
+        "x86_64-unknown-linux-gnu",
+    ],
+)
+use_repo(rust, "rust_toolchains")
+register_toolchains("@rust_toolchains//:all")
+
+# Rust crates - import from typedb_dependencies' crate extension
+# This ensures type compatibility across all TypeDB modules
+crate = use_extension("@rules_rust//crate_universe:extensions.bzl", "crate")
+use_repo(crate, "crates")
+
+# Node.js toolchain
+# Note: node_repositories attribute is not supported in Bzlmod extension API
+node = use_extension("@rules_nodejs//nodejs:extensions.bzl", "node")
+node.toolchain(
+    name = "nodejs",
+    node_version = "22.11.0",  # LTS version with linux_arm64 support
+)
+use_repo(node, "nodejs")
+
+# NPM dependencies
+npm = use_extension("@aspect_rules_js//npm:extensions.bzl", "npm")
+
+# Note: typedb_protocol_npm is defined by typedb_protocol module - do not redefine here
+
+# Node.js driver npm dependencies (2.x only, excluded from default build)
+npm.npm_translate_lock(
+    name = "nodejs_npm",
+    bins = {
+        "@cucumber/cucumber": ["cucumber-js=./bin/cucumber-js"],
+    },
+    pnpm_lock = "//nodejs:pnpm-lock.yaml",
+)
+
+# TypeScript HTTP driver npm dependencies
+npm.npm_translate_lock(
+    name = "http-ts_npm",
+    # Bzlmod format: list of "name=path" strings instead of dict-of-dicts
+    bins = {
+        "tsup": ["tsup=./dist/cli-default.js"],
+    },
+    pnpm_lock = "//http-ts:pnpm-lock.yaml",
+)
+
+use_repo(npm, "typedb_protocol_npm", "nodejs_npm", "http-ts_npm")
+
+# TypeScript toolchain - import @npm_typescript from typedb_protocol module
+# The repo is created by typedb_protocol's rules_ts extension usage
+rules_ts_ext = use_extension("@aspect_rules_ts//ts:extensions.bzl", "ext")
+use_repo(rules_ts_ext, "npm_typescript")
+
+# Maven dependencies - use typedb_dependencies' custom maven extension
+# which includes all versioned artifacts needed across TypeDB modules
+maven = use_extension("@typedb_dependencies//library/maven:maven_extension.bzl", "maven")
+use_repo(maven, "maven")
+
+# Register Kotlin toolchain
+register_toolchains("@io_bazel_rules_kotlin//kotlin/internal:default_toolchain")
+
+# google_bazel_common for javadoc generation (used by java/BUILD)
+http_archive = use_repo_rule("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+http_archive(
+    name = "google_bazel_common",
+    sha256 = "e982cc2e4c9a7d664e77d97a99debb3d18261e6ac6ea5bc4d8f453a521fdf1cf",
+    strip_prefix = "bazel-common-78cc73600ddfa62f953652625abd7c6f1656cfac",
+    urls = ["https://github.com/google/bazel-common/archive/78cc73600ddfa62f953652625abd7c6f1656cfac.zip"],
+)
+
+# workspace_refs for release validation
+# Creates a refs.json file with version information from dependencies
+workspace_refs = use_repo_rule("@typedb_bazel_distribution//common/workspace_refs:rules.bzl", "_workspace_refs")
+workspace_refs(
+    name = "typedb_driver_workspace_refs",
+    workspace_commit_dict = {},
+    workspace_tag_dict = {},
+)
+
+# TypeDB server artifacts for testing
+# These download the TypeDB server binary for integration/behaviour tests
+# Using release version 3.7.0 to match protocol version 7
+http_file = use_repo_rule("@bazel_tools//tools/build_defs/repo:http.bzl", "http_file")
+
+http_file(
+    name = "typedb_artifact_linux-arm64",
+    urls = ["https://repo.typedb.com/public/public-release/raw/names/typedb-all-linux-arm64/versions/3.7.0/typedb-all-linux-arm64-3.7.0.tar.gz"],
+    downloaded_file_path = "typedb-all-linux-arm64-3.7.0.tar.gz",
+)
+
+http_file(
+    name = "typedb_artifact_linux-x86_64",
+    urls = ["https://repo.typedb.com/public/public-release/raw/names/typedb-all-linux-x86_64/versions/3.7.0/typedb-all-linux-x86_64-3.7.0.tar.gz"],
+    downloaded_file_path = "typedb-all-linux-x86_64-3.7.0.tar.gz",
+)
+
+http_file(
+    name = "typedb_artifact_mac-arm64",
+    urls = ["https://repo.typedb.com/public/public-release/raw/names/typedb-all-mac-arm64/versions/3.7.0/typedb-all-mac-arm64-3.7.0.zip"],
+    downloaded_file_path = "typedb-all-mac-arm64-3.7.0.zip",
+)
+
+http_file(
+    name = "typedb_artifact_mac-x86_64",
+    urls = ["https://repo.typedb.com/public/public-release/raw/names/typedb-all-mac-x86_64/versions/3.7.0/typedb-all-mac-x86_64-3.7.0.zip"],
+    downloaded_file_path = "typedb-all-mac-x86_64-3.7.0.zip",
+)
+
+http_file(
+    name = "typedb_artifact_windows-x86_64",
+    urls = ["https://repo.typedb.com/public/public-release/raw/names/typedb-all-windows-x86_64/versions/3.7.0/typedb-all-windows-x86_64-3.7.0.zip"],
+    downloaded_file_path = "typedb-all-windows-x86_64-3.7.0.zip",
+)

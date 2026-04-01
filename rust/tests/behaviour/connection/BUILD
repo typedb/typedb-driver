@@ -37,7 +37,7 @@ checkstyle_test(
     include = glob(["*"]),
     exclude = glob([
         "Cargo.*",
-    ]),
+    ], allow_empty = True),
     license_type = "apache-header",
     size = "small",
 )

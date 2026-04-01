@@ -161,7 +161,7 @@ checkstyle_test(
         "docs/**/*.adoc",
         "example.rs",
         "cloud_example.rs",
-    ]),
+    ], allow_empty = True),
     license_type = "apache-header",
 )
 

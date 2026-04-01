@@ -27,23 +27,32 @@ exports_files([
 checkstyle_test(
     name = "checkstyle",
     size = "small",
-    include = glob([
-        "*",
-        ".circleci/**/*",
-        ".factory/*",
-        "tools/*",
-    ]),
-    exclude = glob([
-        "*.md",
-        ".bazelversion",
-        ".bazel-remote-cache.rc",
-        ".bazel-cache-credential.json",
-        ".circleci/windows/git.patch",
-        "LICENSE",
-        "VERSION",
-        "docs/**/*",
-        "Cargo.*",
-    ]),
+    include = glob(
+        [
+            "*",
+            ".circleci/**/*",
+            ".factory/*",
+            "tools/*",
+        ],
+        allow_empty = True,
+    ),
+    exclude = glob(
+        [
+            "*.md",
+            ".bazelversion",
+            ".bazel-remote-cache.rc",
+            ".bazel-cache-credential.json",
+            ".circleci/windows/git.patch",
+            "LICENSE",
+            "VERSION",
+            "docs/**/*",
+            "Cargo.*",
+            ".bazelignore",
+            ".claude/**/*",
+            "MODULE.bazel.lock",
+        ],
+        allow_empty = True,
+    ),
     license_type = "apache-header",
 )
 

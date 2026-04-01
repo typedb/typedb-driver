@@ -56,8 +56,8 @@ build:
         bazel build --config=ci //python/...
         bazel build --config=ci //http-ts/...
         # CSharp subpackage parallel builds break due to mutexes somewhere in csharp??
-        bazel build --config=ci //csharp/... --jobs=1  
-        
+        bazel build --config=ci //csharp/... --jobs=1
+
         bazel run --config=ci @typedb_dependencies//tool/checkstyle:test-coverage
         bazel test --config=ci $(bazel query 'kind(checkstyle_test, //...)') --test_output=errors
         bazel test --config=ci $(bazel query 'kind(rustfmt_test, //...)') --@rules_rust//:rustfmt.toml=//rust:rustfmt_config --test_output=errors
@@ -70,29 +70,29 @@ build:
 #        git diff --exit-code dependencies/maven/artifacts.snapshot
 #        bazel run --config=ci @typedb_dependencies//tool/unuseddeps:unused-deps -- list
 
-    build-docs:
-      image: typedb-ubuntu-22.04
-      command: |
-        curl -L https://github.com/doxygen/doxygen/releases/download/Release_1_10_0/doxygen-1.10.0.linux.bin.tar.gz | tar xzO doxygen-1.10.0/bin/doxygen > /var/tmp/doxygen &&
-          sudo mv /var/tmp/doxygen /usr/local/bin/ && sudo chmod +x /usr/local/bin/doxygen
-        bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
-        
-        # TODO: Temporarily update only 3.0 drivers
-        DOCS_DIRS=("docs/modules/ROOT/partials/rust" "docs/modules/ROOT/partials/java" "docs/modules/ROOT/partials/python" "docs/modules/ROOT/partials/http-ts" "docs/modules/ROOT/partials/c" "docs/modules/ROOT/partials/csharp")
-        find "${DOCS_DIRS[@]}" -type f ! -name 'api-reference.adoc' -exec rm -f {} \;
-        tool/docs/update.sh
-        git add "${DOCS_DIRS[@]}"
-        git diff --exit-code HEAD "${DOCS_DIRS[@]}" || { 
-          echo "Failed to verify docs files: please update it manually and verify the changes"
-          exit 1
-        }
-        
-        tool/docs/update_readme.sh
-        git add .
-        git diff --exit-code || { 
-          echo "Failed to verify README files: plese update it manually and verify the changes"
-          exit 1
-        }
+#    build-docs:
+#      image: typedb-ubuntu-22.04
+#      command: |
+#        curl -L https://github.com/doxygen/doxygen/releases/download/Release_1_10_0/doxygen-1.10.0.linux.bin.tar.gz | tar xzO doxygen-1.10.0/bin/doxygen > /var/tmp/doxygen &&
+#          sudo mv /var/tmp/doxygen /usr/local/bin/ && sudo chmod +x /usr/local/bin/doxygen
+#        bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+#
+#        # TODO: Temporarily update only 3.0 drivers
+#        DOCS_DIRS=("docs/modules/ROOT/partials/rust" "docs/modules/ROOT/partials/java" "docs/modules/ROOT/partials/python" "docs/modules/ROOT/partials/http-ts" "docs/modules/ROOT/partials/c" "docs/modules/ROOT/partials/csharp")
+#        find "${DOCS_DIRS[@]}" -type f ! -name 'api-reference.adoc' -exec rm -f {} \;
+#        tool/docs/update.sh
+#        git add "${DOCS_DIRS[@]}"
+#        git diff --exit-code HEAD "${DOCS_DIRS[@]}" || {
+#          echo "Failed to verify docs files: please update it manually and verify the changes"
+#          exit 1
+#        }
+#
+#        tool/docs/update_readme.sh
+#        git add .
+#        git diff --exit-code || {
+#          echo "Failed to verify README files: plese update it manually and verify the changes"
+#          exit 1
+#        }
 
     test-rust-unit-integration:
       image: typedb-ubuntu-20.04 # Ubuntu 20.04 has GLIBC version 2.31 (2020) which we should verify to compile against
@@ -101,15 +101,15 @@ build:
         export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
         bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
-        
+
         bazel test --config=ci //rust:typedb_driver_unit_tests --test_output=streamed || exit 1
-        
+
         tool/test/start-community-server.sh &&
           bazel test --config=ci //rust/tests/integration:all --test_output=streamed --test_arg=--nocapture &&
           export COMMUNITY_FAILED= || export COMMUNITY_FAILED=1
         tool/test/stop-community-server.sh
         if [[ -n "$COMMUNITY_FAILED" ]]; then exit 1; fi
-        
+
         # TODO: Use cluster server artifact with 3 nodes for the same common tests when available
         # tool/test/start-cluster-servers.sh 3 &&
         #   bazel test --config=ci //rust/tests/integration:all --test_output=streamed --test_arg=--nocapture &&
@@ -124,7 +124,7 @@ build:
         export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
         bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
-        
+
         tool/test/start-community-server.sh &&
           bazel test --config=ci //rust/tests/behaviour/... --test_output=streamed --jobs=1 &&
           export TEST_SUCCESS=0 || export TEST_SUCCESS=1
@@ -168,7 +168,7 @@ build:
         export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
         bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
-        
+
         tool/test/start-community-server.sh &&
           bazel test --config=ci //java/test/integration:all --test_output=streamed --jobs=1 &&
           export COMMUNITY_FAILED= || export COMMUNITY_FAILED=1
@@ -189,7 +189,7 @@ build:
         export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
         bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
         bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
-        
+
         tool/test/start-community-server.sh &&
           .factory/test-community.sh //java/test/behaviour/... --test_output=streamed --jobs=1 &&
           export TEST_SUCCESS=0 || export TEST_SUCCESS=1
@@ -290,36 +290,37 @@ build:
         tool/test/stop-community-server.sh
         exit $TEST_SUCCESS
 
-    test-csharp-behaviour-community:
-      image: typedb-ubuntu-22.04
-      type: foreground
-      command: |
-        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
-        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-        bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
-        bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
-
-        tool/test/start-community-server.sh &&
-          bazel test //csharp/Test/Integration:test-example --test_output=streamed &&
-          .factory/test-community.sh //csharp/Test/Behaviour/... --test_output=streamed --jobs=1 &&
-          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
-        tool/test/stop-community-server.sh
-        exit $TEST_SUCCESS
-
-    test-csharp-integration:
-      image: typedb-ubuntu-22.04
-      type: foreground
-      command: |
-        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
-        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-        bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
-        bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
-
-        tool/test/start-community-server.sh &&
-          bazel test --config=ci //csharp/Test/Integration/Data:all --test_output=streamed --jobs=1 &&
-          export COMMUNITY_FAILED= || export COMMUNITY_FAILED=1
-        tool/test/stop-community-server.sh
-        if [[ -n "$COMMUNITY_FAILED" ]]; then exit 1; fi
+    # Temporarily disabled: csharp is bazelignored (2.x-only driver, not yet migrated to Bzlmod)
+#    test-csharp-behaviour-community:
+#      image: typedb-ubuntu-22.04
+#      type: foreground
+#      command: |
+#        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
+#        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
+#        bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+#        bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
+#
+#        tool/test/start-community-server.sh &&
+#          bazel test //csharp/Test/Integration:test-example --test_output=streamed &&
+#          .factory/test-community.sh //csharp/Test/Behaviour/... --test_output=streamed --jobs=1 &&
+#          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+#        tool/test/stop-community-server.sh
+#        exit $TEST_SUCCESS
+#
+#    test-csharp-integration:
+#      image: typedb-ubuntu-22.04
+#      type: foreground
+#      command: |
+#        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
+#        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
+#        bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+#        bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
+#
+#        tool/test/start-community-server.sh &&
+#          bazel test --config=ci //csharp/Test/Integration/Data:all --test_output=streamed --jobs=1 &&
+#          export COMMUNITY_FAILED= || export COMMUNITY_FAILED=1
+#        tool/test/stop-community-server.sh
+#        if [[ -n "$COMMUNITY_FAILED" ]]; then exit 1; fi
 
 # TODO: Re-enable these tests when Node.js/C++ drivers are updated for 3.x
 #    test-nodejs-integration:

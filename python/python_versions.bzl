@@ -15,48 +15,48 @@
 # specific language governing permissions and limitations
 # under the License.
 
-load("//dependencies/typedb:repositories.bzl", "typedb_dependencies")
-load("@rules_python//python:repositories.bzl", "python_register_toolchains")
-
+# Python version configurations for multi-version driver builds.
+# Order matters! First python toolchain that is registered is used by Bazel's py_binary.
+#
+# Repository references use Bzlmod naming: @python_3_<minor>
 python_versions = [
-    # Order matters! First python toolchain that is registered is used by Bazel's py_binary.
     {
         "name": "python39",
         "python_version": "3.9",
-        "python_headers": "@python39//:python_headers",
-        "libpython": "@python39//:libpython",
+        "python_headers": "@python_3_9//:python_headers",
+        "libpython": "@python_3_9//:libpython",
         "suffix": "39",
     },
     {
         "name": "python310",
         "python_version": "3.10",
-        "python_headers": "@python310//:python_headers",
-        "libpython": "@python310//:libpython",
+        "python_headers": "@python_3_10//:python_headers",
+        "libpython": "@python_3_10//:libpython",
         "suffix": "310",
     },
     {
         "name": "python311",
         "python_version": "3.11",
-        "python_headers": "@python311//:python_headers",
-        "libpython": "@python311//:libpython",
+        "python_headers": "@python_3_11//:python_headers",
+        "libpython": "@python_3_11//:libpython",
         "suffix": "311",
     },
     {
         "name": "python312",
         "python_version": "3.12",
-        "python_headers": "@python312//:python_headers",
-        "libpython": "@python312//:libpython",
+        "python_headers": "@python_3_12//:python_headers",
+        "libpython": "@python_3_12//:libpython",
         "suffix": "312",
     },
     {
         "name": "python313",
         "python_version": "3.13",
-        "python_headers": "@python313//:python_headers",
-        "libpython": "@python313//:libpython",
+        "python_headers": "@python_3_13//:python_headers",
+        "libpython": "@python_3_13//:libpython",
         "suffix": "313",
     },
 ]
 
 def register_all_toolchains():
-    for version in python_versions:
-        python_register_toolchains(name=version["name"], python_version=version["python_version"], ignore_root_user_error = True)
+    """No-op: Python toolchains are now registered via MODULE.bazel."""
+    pass

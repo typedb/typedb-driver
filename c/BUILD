@@ -22,7 +22,7 @@ load("@typedb_dependencies//builder/rust:rules.bzl", "rust_cbindgen")
 load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 load("@typedb_bazel_distribution//common:rules.bzl", "assemble_targz", "assemble_zip", "checksum", "assemble_versioned")
-load("@typedb_bazel_distribution//docs:doxygen/rules.bzl", "doxygen_docs")
+load("@typedb_bazel_distribution//docs/doxygen:rules.bzl", "doxygen_docs")
 load("@typedb_bazel_distribution//artifact:rules.bzl", "deploy_artifact")
 load("@typedb_dependencies//distribution:deployment.bzl", "deployment")
 load("@rules_pkg//:pkg.bzl", "pkg_tar")
@@ -279,7 +279,7 @@ checkstyle_test(
         "src/**/*",
         "swig/*",
     ]),
-    exclude = [".clang-format", "README.md", "Cargo.lock", "Cargo.toml", "example.c"] + glob(["docs/**/*.adoc"]),
+    exclude = [".clang-format", "README.md", "Cargo.lock", "Cargo.toml", "example.c"] + glob(["docs/**/*.adoc"], allow_empty = True),
     license_type = "apache-header",
 )
 

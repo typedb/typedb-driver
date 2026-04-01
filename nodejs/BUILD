@@ -193,15 +193,18 @@ checkstyle_test(
         "user/**/*.ts",
         "tool/typedoc/*",
     ]),
-    exclude = glob([
-        "*.json",
-        "tool/typedoc/*.json",
-        "*.md",
-        ".eslintrc",
-        "dist/**/*.*",
-        "pnpm-lock.yaml",
-        "docs/**/*.adoc",
-    ]),
+    exclude = glob(
+        [
+            "*.json",
+            "tool/typedoc/*.json",
+            "*.md",
+            ".eslintrc",
+            "dist/**/*.*",
+            "pnpm-lock.yaml",
+            "docs/**/*.adoc",
+        ],
+        allow_empty = True,
+    ),
     license_type = "apache-header",
 )
 

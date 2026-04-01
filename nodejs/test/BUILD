@@ -25,12 +25,15 @@ exports_files([
 
 checkstyle_test(
     name = "checkstyle",
-    include = glob([
-        "*",
-        "deployment/*",
-        "integration/*",
-        "common/*"
-    ]),
+    include = glob(
+        [
+            "*",
+            "deployment/*",
+            "integration/*",
+            "common/*",
+        ],
+        allow_empty = True,
+    ),
     exclude = glob([
         "**/*.md",
         "deployment/package.json",

@@ -27,6 +27,7 @@ java_library(
             "*/*.java",
         ],
         exclude = ["test/**"],
+        allow_empty = True,
     ),
     runtime_deps = [
         "@maven//:ch_qos_logback_logback_classic",
@@ -48,9 +49,12 @@ java_library(
 checkstyle_test(
     name = "checkstyle",
     size = "small",
-    include = glob([
-        "*",
-        "*/*",
-    ]),
+    include = glob(
+        [
+            "*",
+            "*/*",
+        ],
+        allow_empty = True,
+    ),
     license_type = "apache-header",
 )

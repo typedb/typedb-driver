@@ -18,7 +18,7 @@
 load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("@typedb_dependencies//builder/cpp:rules.bzl", "clang_format_test")
 load("@typedb_bazel_distribution//common:rules.bzl", "assemble_targz", "assemble_zip", "checksum", "assemble_versioned")
-load("@typedb_bazel_distribution//docs:doxygen/rules.bzl", "doxygen_docs")
+load("@typedb_bazel_distribution//docs/doxygen:rules.bzl", "doxygen_docs")
 load("@typedb_bazel_distribution//artifact:rules.bzl", "deploy_artifact")
 load("@typedb_dependencies//distribution:deployment.bzl", "deployment")
 load("@rules_pkg//:pkg.bzl", "pkg_tar")

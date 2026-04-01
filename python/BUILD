@@ -15,7 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 
-load("@typedb_bazel_distribution//docs:python/rules.bzl", "sphinx_docs")
+load("@typedb_bazel_distribution//docs/python:rules.bzl", "sphinx_docs")
 load("@typedb_dependencies//builder/swig:python.bzl", "py_native_lib_rename")
 load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("//python:rules.bzl", "native_driver_versioned")
@@ -28,14 +28,14 @@ native_driver_versioned(python_versions = python_versions)
 
 alias(
     name = "driver_python",
-    actual = ":driver_python39",
+    actual = ":driver_python311",
     visibility = ["//visibility:public"],
 )
 
 genrule(
     name = "native-driver-wrapper-link",
     outs = ["typedb/native_driver_wrapper.py"],
-    srcs = [":native-driver-wrapper39"],
+    srcs = [":native-driver-wrapper311"],
     cmd = "cp $< $@",
     visibility = ["//visibility:public"]
 )
@@ -43,13 +43,13 @@ genrule(
 py_native_lib_rename(
     name = "native-driver-binary-link",
     out = "typedb/native_driver_python",
-    src = ":native_driver_python39",
+    src = ":native_driver_python311",
     visibility = ["//visibility:public"]
 )
 
 sphinx_docs(
     name = "docs_html",
-    target = ":assemble-pip39",
+    target = ":assemble-pip311",
     out = "driver_docs_sphinx",
     sphinx_conf = "conf.py",
     sphinx_rst = "index.rst",
@@ -95,14 +95,14 @@ checkstyle_test(
         "WORKSPACE",
         "requirements*.txt",
         "typedb/**/*",
-    ]),
+    ], allow_empty = True),
     exclude = glob([
         "conf.py",
         "index.rst",
         "docs/**/*.adoc",
         "example.py",
         "cloud_example.py",
-    ]),
+    ], allow_empty = True),
     license_type = "apache-header",
     size = "small",
 )

@@ -40,7 +40,7 @@ rustfmt_test(
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*", "**/*"]),
-    exclude = glob(["**/Cargo.*"]),
+    exclude = glob(["**/Cargo.*"], allow_empty = True),
     license_type = "apache-header",
     size = "small",
 )
