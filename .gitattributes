@@ -16,5 +16,6 @@
 # under the License.
 
 *.bat   text eol=crlf
+.circleci/windows/git.patch text eol=lf
 
 
