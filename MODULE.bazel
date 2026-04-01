@@ -80,14 +80,15 @@ git_override(
 # Order matters! First python toolchain that is registered is used by Bazel's py_binary.
 # Default is 3.11 to match typedb_bazel_distribution pip dependencies.
 python = use_extension("@rules_python//python/extensions:python.bzl", "python")
-python.toolchain(python_version = "3.9")
-python.toolchain(python_version = "3.10")
+python.toolchain(python_version = "3.9", ignore_root_user_error = True)
+python.toolchain(python_version = "3.10", ignore_root_user_error = True)
 python.toolchain(
     is_default = True,
     python_version = "3.11",
+    ignore_root_user_error = True,
 )
-python.toolchain(python_version = "3.12")
-python.toolchain(python_version = "3.13")
+python.toolchain(python_version = "3.12", ignore_root_user_error = True)
+python.toolchain(python_version = "3.13", ignore_root_user_error = True)
 use_repo(python, "python_3_9", "python_3_10", "python_3_11", "python_3_12", "python_3_13")
 
 # Pip dependencies for driver development

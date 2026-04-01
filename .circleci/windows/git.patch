@@ -1,13 +1,13 @@
-diff --git a/WORKSPACE b/WORKSPACE
-index a6df7ba2..420f8397 100644
---- a/WORKSPACE
-+++ b/WORKSPACE
-@@ -15,7 +15,7 @@
- # specific language governing permissions and limitations
+diff --git a/MODULE.bazel b/MODULE.bazel
+index 9792ec1a..058998ab 100644
+--- a/MODULE.bazel
++++ b/MODULE.bazel
+@@ -16,7 +16,7 @@
  # under the License.
- 
--workspace(name = "typedb_driver")
-+workspace(name = "v")
- 
- ##############################
- # Load @typedb_dependencies #
+
+ module(
+-    name = "typedb_driver",
++    name = "v",
+     version = "0.0.0",
+     compatibility_level = 1,
+ )
