@@ -49,6 +49,10 @@ checkstyle_test(
             "Cargo.*",
             ".bazelignore",
             "MODULE.bazel.lock",
+            # Temporarily excluded: bazelignored directories (2.x-only drivers) whose BUILD files
+            # are not loaded, so their checkstyle_test targets are invisible to test-coverage
+            "csharp/**/*",
+            "go/**/*",
         ],
         allow_empty = True,
     ),
