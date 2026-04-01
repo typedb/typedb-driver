@@ -22,7 +22,7 @@ choco install cmake.install --version 3.27.0 --installargs '"ADD_CMAKE_TO_PATH=U
 CALL refreshenv
 
 bazel --output_user_root=C:\b build --config=ci @typedb_artifact_windows-x86_64//file
-powershell -Command "Move-Item -Path bazel-typedb-driver\external\typedb_artifact_windows-x86_64\file\typedb-all-windows* -Destination typedb-all-windows.zip"
+powershell -Command "Move-Item -Path (Get-ChildItem -Path bazel-typedb-driver\external\*typedb_artifact_windows-x86_64\file\typedb-all-windows*) -Destination typedb-all-windows.zip"
 7z x typedb-all-windows.zip
 powershell -Command "Move-Item -Path typedb-all-windows-* -Destination typedb-all-windows"
 

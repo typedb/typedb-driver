@@ -2,4 +2,5 @@
 [workspace]
 	resolver = "2"
 	members = ["rust", "rust/tests/behaviour/config", "rust/tests/behaviour/steps", "c"]
+	exclude = ["bazel-out"]
 
