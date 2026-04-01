@@ -1,0 +1,51 @@
+[#_IIid]
+[.doc-api-reference-driver]
+=== IIid
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+*Supertypes:*
+
+* `TypeDB.Driver.Api.Analyze.IConstraint`
+
+
+
+Represents an IID constraint: concept iid iid_value.
+
+// tag::methods[]
+[#_string_TypeDB_Driver_Api_Analyze_IIid_Iid]
+==== method ``Iid``
+
+[source,cs]
+----
+string TypeDB.Driver.Api.Analyze.IIid.Iid
+----
+
+
+
+The internal identifier value.
+
+[caption=""]
+.Returns
+`string`
+
+[#_IConstraintVertex_TypeDB_Driver_Api_Analyze_IIid_Variable]
+==== method ``Variable``
+
+[source,cs]
+----
+IConstraintVertex TypeDB.Driver.Api.Analyze.IIid.Variable
+----
+
+
+
+The variable being constrained.
+
+[caption=""]
+.Returns
+`IConstraintVertex`
+
+// end::methods[]
+

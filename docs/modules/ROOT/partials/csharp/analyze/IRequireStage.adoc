@@ -1,0 +1,35 @@
+[#_IRequireStage]
+[.doc-api-reference-driver]
+=== IRequireStage
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+*Supertypes:*
+
+* `TypeDB.Driver.Api.Analyze.IPipelineStage`
+
+
+
+Represents a "require" stage: require variables.
+
+// tag::methods[]
+[#_IEnumerable_IVariable_TypeDB_Driver_Api_Analyze_IRequireStage_Variables]
+==== method ``Variables``
+
+[source,cs]
+----
+IEnumerable< IVariable > TypeDB.Driver.Api.Analyze.IRequireStage.Variables
+----
+
+
+
+The variables that must be present in the result.
+
+[caption=""]
+.Returns
+`IEnumerable< IVariable >`
+
+// end::methods[]
+

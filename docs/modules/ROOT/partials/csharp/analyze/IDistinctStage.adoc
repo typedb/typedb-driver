@@ -1,0 +1,16 @@
+[#_IDistinctStage]
+[.doc-api-reference-driver]
+=== IDistinctStage
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+*Supertypes:*
+
+* `TypeDB.Driver.Api.Analyze.IPipelineStage`
+
+
+
+Represents a "distinct" stage.
+

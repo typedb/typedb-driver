@@ -1,0 +1,202 @@
+[#_Datetime]
+[.doc-api-reference-driver]
+=== Datetime
+
+`class`
+
+*Package*: `TypeDB.Driver.Common`
+
+
+
+Represents a datetime with nanosecond precision. C#'s System.DateTime only has tick precision (100ns, 7 fractional digits), losing the last 2 digits of TypeDB's 9-digit nanosecond precision. This class stores the full-precision seconds and subsecond nanoseconds separately, similar to Java's ``Instant``.
+
+// tag::methods[]
+[#_DateTime_TypeDB_Driver_Common_Datetime_DateTime]
+==== method ``DateTime``
+
+[source,cs]
+----
+DateTime TypeDB.Driver.Common.Datetime.DateTime
+----
+
+
+
+Gets a System.DateTime derived from this value. Note: this has only tick precision (100ns) and may lose the last 2 nanosecond digits.
+
+[caption=""]
+.Returns
+`DateTime`
+
+[#_TypeDB_Driver_Common_Datetime_Datetime_long_seconds_uint_subsecNanos_]
+==== method ``Datetime``
+
+[source,cs]
+----
+Datetime(long seconds, uint subsecNanos)
+----
+
+
+
+Creates a Datetime from Unix epoch seconds and subsecond nanoseconds.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `seconds` a| Seconds since Unix epoch (1970-01-01T00:00:00Z). a| `long`
+a| `subsecNanos` a| Nanoseconds within the second (0–999,999,999). a| `uint`
+|===
+
+[caption=""]
+.Returns
+`Datetime`
+
+[#_bool_TypeDB_Driver_Common_Datetime_Equals_Datetime_other_]
+==== method ``Equals``
+
+[source,cs]
+----
+bool Equals(Datetime? other)
+----
+
+
+
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_override_bool_TypeDB_Driver_Common_Datetime_Equals_object_obj_]
+==== method ``Equals``
+
+[source,cs]
+----
+override bool Equals(object? obj)
+----
+
+
+
+
+
+[caption=""]
+.Returns
+`override bool`
+
+[#_override_int_TypeDB_Driver_Common_Datetime_GetHashCode_]
+==== method ``GetHashCode``
+
+[source,cs]
+----
+override int GetHashCode()
+----
+
+
+
+
+
+[caption=""]
+.Returns
+`override int`
+
+[#_static_Datetime_TypeDB_Driver_Common_Datetime_Parse_string_value_]
+==== method ``Parse``
+
+[source,cs]
+----
+static Datetime Parse(string value)
+----
+
+
+
+Parses a datetime string in TypeDB format, preserving all 9 fractional digits. Example: "2024-09-20T16:40:05.123456789".
+
+[caption=""]
+.Returns
+`Datetime`
+
+[#_long_TypeDB_Driver_Common_Datetime_Seconds]
+==== method ``Seconds``
+
+[source,cs]
+----
+long TypeDB.Driver.Common.Datetime.Seconds
+----
+
+
+
+Gets the Unix epoch seconds component.
+
+[caption=""]
+.Returns
+`long`
+
+[#_uint_TypeDB_Driver_Common_Datetime_SubsecNanos]
+==== method ``SubsecNanos``
+
+[source,cs]
+----
+uint TypeDB.Driver.Common.Datetime.SubsecNanos
+----
+
+
+
+Gets the subsecond nanoseconds component (0–999,999,999).
+
+[caption=""]
+.Returns
+`uint`
+
+[#_override_string_TypeDB_Driver_Common_Datetime_ToString_]
+==== method ``ToString``
+
+[source,cs]
+----
+override string ToString()
+----
+
+
+
+Formats the datetime as an ISO-8601 string with nanosecond precision. Subsecond precision is omitted if zero, otherwise trailing zeros are trimmed.
+
+[caption=""]
+.Returns
+`override string`
+
+[#_static_bool_TypeDB_Driver_Common_Datetime_operator!_Datetime_left_Datetime_right_]
+==== method ``operator!=``
+
+[source,cs]
+----
+static bool operator!=(Datetime? left, Datetime? right)
+----
+
+
+
+Inequality operator.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_static_bool_TypeDB_Driver_Common_Datetime_operator_Datetime_left_Datetime_right_]
+==== method ``operator==``
+
+[source,cs]
+----
+static bool operator==(Datetime? left, Datetime? right)
+----
+
+
+
+Equality operator.
+
+[caption=""]
+.Returns
+`bool`
+
+// end::methods[]
+

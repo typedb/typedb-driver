@@ -1,0 +1,51 @@
+[#_IDeleteStage]
+[.doc-api-reference-driver]
+=== IDeleteStage
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+*Supertypes:*
+
+* `TypeDB.Driver.Api.Analyze.IPipelineStage`
+
+
+
+Represents a "delete" stage: delete block; deleted_variables;.
+
+// tag::methods[]
+[#_IConjunctionID_TypeDB_Driver_Api_Analyze_IDeleteStage_Block]
+==== method ``Block``
+
+[source,cs]
+----
+IConjunctionID TypeDB.Driver.Api.Analyze.IDeleteStage.Block
+----
+
+
+
+The index into the pipeline's conjunctions.
+
+[caption=""]
+.Returns
+`IConjunctionID`
+
+[#_IEnumerable_IVariable_TypeDB_Driver_Api_Analyze_IDeleteStage_DeletedVariables]
+==== method ``DeletedVariables``
+
+[source,cs]
+----
+IEnumerable< IVariable > TypeDB.Driver.Api.Analyze.IDeleteStage.DeletedVariables
+----
+
+
+
+The variables for which the unified concepts are to be deleted.
+
+[caption=""]
+.Returns
+`IEnumerable< IVariable >`
+
+// end::methods[]
+

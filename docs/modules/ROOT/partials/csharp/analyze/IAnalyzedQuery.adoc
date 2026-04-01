@@ -1,0 +1,63 @@
+[#_IAnalyzedQuery]
+[.doc-api-reference-driver]
+=== IAnalyzedQuery
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+
+
+An AnalyzedQuery contains the server's representation of the query and preamble functions, as well as the result of types inferred for each variable by type-inference.
+
+// tag::methods[]
+[#_IFetch_TypeDB_Driver_Api_Analyze_IAnalyzedQuery_Fetch]
+==== method ``Fetch``
+
+[source,cs]
+----
+IFetch? TypeDB.Driver.Api.Analyze.IAnalyzedQuery.Fetch
+----
+
+
+
+Gets a representation of the Fetch stage of the query, if it has one.
+
+[caption=""]
+.Returns
+`IFetch?`
+
+[#_IPipeline_TypeDB_Driver_Api_Analyze_IAnalyzedQuery_Pipeline]
+==== method ``Pipeline``
+
+[source,cs]
+----
+IPipeline TypeDB.Driver.Api.Analyze.IAnalyzedQuery.Pipeline
+----
+
+
+
+Gets a representation of the query as a Pipeline.
+
+[caption=""]
+.Returns
+`IPipeline`
+
+[#_IEnumerable_IFunction_TypeDB_Driver_Api_Analyze_IAnalyzedQuery_Preamble]
+==== method ``Preamble``
+
+[source,cs]
+----
+IEnumerable< IFunction > TypeDB.Driver.Api.Analyze.IAnalyzedQuery.Preamble
+----
+
+
+
+Gets a representation of the Functions in the preamble of the query.
+
+[caption=""]
+.Returns
+`IEnumerable< IFunction >`
+
+// end::methods[]
+

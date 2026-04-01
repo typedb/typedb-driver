@@ -246,9 +246,13 @@ class DoxygenParserCsharp : Callable<Unit> {
         }
         val methodReturnType = getReturnTypeFromSignature(methodSignature)
         val methodDescr: List<String> = element.selectFirst("div.memdoc")
-            ?.let { splitToParagraphs(it.html()) }
+            ?.let { stripDocSections(it.html()) }
+            ?.let { splitToParagraphs(it) }
             ?.map { replaceSpaces(reformatTextWithCode(it.substringBefore("<h").substringBefore("<dl class=\"params\">"), idToAnchor)) } ?: listOf()
-        val methodExamples = element.select("div.memdoc > pre").map { replaceSpaces(it.text()) }
+        // Extract examples from <pre> tags (old format) or <div class="fragment"> (new format)
+        val preExamples = element.select("div.memdoc > pre").map { replaceSpaces(it.text()) }
+        val fragmentExamples = element.select("div.memdoc > div.fragment").map { replaceSpaces(it.text()) }
+        val methodExamples = if (preExamples.isNotEmpty()) preExamples else fragmentExamples
 
         val methodArgs = element.select("table.params > tbody > tr")
             .map {
@@ -402,6 +406,25 @@ class DoxygenParserCsharp : Callable<Unit> {
 
     private fun splitToParagraphs(html: String): List<String> {
         return html.replace("</p>", "").split("\\s*<p>\\s*".toRegex()).map { it.trim() }
+    }
+
+    /**
+     * Strip documentation sections that should not be included in the description.
+     * These include exception blocks, return descriptions, and code fragment examples.
+     */
+    private fun stripDocSections(html: String): String {
+        var result = html
+        // Remove exception documentation blocks: <dl class="exception">...</dl>
+        result = Regex("<dl class=\"exception\">.*?</dl>", RegexOption.DOT_MATCHES_ALL).replace(result, "")
+        // Remove return section blocks: <dl class="section return">...</dl>
+        result = Regex("<dl class=\"section return\">.*?</dl>", RegexOption.DOT_MATCHES_ALL).replace(result, "")
+        // Remove any other section blocks that might appear
+        result = Regex("<dl class=\"section [^\"]*\">.*?</dl>", RegexOption.DOT_MATCHES_ALL).replace(result, "")
+        // Remove code fragment blocks: <div class="fragment">...</div>
+        result = Regex("<div class=\"fragment\">.*?</div><!-- fragment -->", RegexOption.DOT_MATCHES_ALL).replace(result, "")
+        // Also handle fragments without the comment
+        result = Regex("<div class=\"fragment\">.*?</div>\\s*", RegexOption.DOT_MATCHES_ALL).replace(result, "")
+        return result
     }
 
 

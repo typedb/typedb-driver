@@ -1,0 +1,35 @@
+[#_INot]
+[.doc-api-reference-driver]
+=== INot
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+*Supertypes:*
+
+* `TypeDB.Driver.Api.Analyze.IConstraint`
+
+
+
+Represents a "not" constraint: not { conjunction }.
+
+// tag::methods[]
+[#_IConjunctionID_TypeDB_Driver_Api_Analyze_INot_Conjunction]
+==== method ``Conjunction``
+
+[source,cs]
+----
+IConjunctionID TypeDB.Driver.Api.Analyze.INot.Conjunction
+----
+
+
+
+The index into the pipeline's conjunctions.
+
+[caption=""]
+.Returns
+`IConjunctionID`
+
+// end::methods[]
+

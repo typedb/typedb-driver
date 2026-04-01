@@ -1,0 +1,51 @@
+[#_IKind]
+[.doc-api-reference-driver]
+=== IKind
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+*Supertypes:*
+
+* `TypeDB.Driver.Api.Analyze.IConstraint`
+
+
+
+Represents a kind constraint: kind type.
+
+// tag::methods[]
+[#_Pinvoke_Kind_TypeDB_Driver_Api_Analyze_IKind_Kind]
+==== method ``Kind``
+
+[source,cs]
+----
+Pinvoke.Kind TypeDB.Driver.Api.Analyze.IKind.Kind
+----
+
+
+
+The kind of the type.
+
+[caption=""]
+.Returns
+`Pinvoke.Kind`
+
+[#_IConstraintVertex_TypeDB_Driver_Api_Analyze_IKind_Type]
+==== method ``Type``
+
+[source,cs]
+----
+IConstraintVertex TypeDB.Driver.Api.Analyze.IKind.Type
+----
+
+
+
+The type vertex of the constraint.
+
+[caption=""]
+.Returns
+`IConstraintVertex`
+
+// end::methods[]
+

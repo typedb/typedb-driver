@@ -1,0 +1,51 @@
+[#_IIs]
+[.doc-api-reference-driver]
+=== IIs
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+*Supertypes:*
+
+* `TypeDB.Driver.Api.Analyze.IConstraint`
+
+
+
+Represents an "is" constraint: lhs is rhs.
+
+// tag::methods[]
+[#_IConstraintVertex_TypeDB_Driver_Api_Analyze_IIs_Lhs]
+==== method ``Lhs``
+
+[source,cs]
+----
+IConstraintVertex TypeDB.Driver.Api.Analyze.IIs.Lhs
+----
+
+
+
+The left-hand side of the constraint.
+
+[caption=""]
+.Returns
+`IConstraintVertex`
+
+[#_IConstraintVertex_TypeDB_Driver_Api_Analyze_IIs_Rhs]
+==== method ``Rhs``
+
+[source,cs]
+----
+IConstraintVertex TypeDB.Driver.Api.Analyze.IIs.Rhs
+----
+
+
+
+The right-hand side of the constraint.
+
+[caption=""]
+.Returns
+`IConstraintVertex`
+
+// end::methods[]
+

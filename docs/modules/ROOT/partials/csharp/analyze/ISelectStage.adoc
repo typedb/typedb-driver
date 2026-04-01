@@ -1,0 +1,35 @@
+[#_ISelectStage]
+[.doc-api-reference-driver]
+=== ISelectStage
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+*Supertypes:*
+
+* `TypeDB.Driver.Api.Analyze.IPipelineStage`
+
+
+
+Represents a "select" stage: select variables.
+
+// tag::methods[]
+[#_IEnumerable_IVariable_TypeDB_Driver_Api_Analyze_ISelectStage_Variables]
+==== method ``Variables``
+
+[source,cs]
+----
+IEnumerable< IVariable > TypeDB.Driver.Api.Analyze.ISelectStage.Variables
+----
+
+
+
+The variables being selected.
+
+[caption=""]
+.Returns
+`IEnumerable< IVariable >`
+
+// end::methods[]
+

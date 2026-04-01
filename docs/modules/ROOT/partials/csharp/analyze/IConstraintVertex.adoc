@@ -1,0 +1,143 @@
+[#_IConstraintVertex]
+[.doc-api-reference-driver]
+=== IConstraintVertex
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+
+
+The answer to a TypeDB query is a set of concepts which satisfy the constraints in the query. A ConstraintVertex is either a variable, or some identifier of the concept. A Variable is a vertex the query must match and return. A Label uniquely identifies a type. A Value represents a primitive value literal in TypeDB. A NamedRole vertex is used in links and relates constraints, as multiple relations may have roles with the same name.
+
+// tag::methods[]
+[#_IType_TypeDB_Driver_Api_Analyze_IConstraintVertex_AsLabel_]
+==== method ``AsLabel``
+
+[source,cs]
+----
+IType AsLabel()
+----
+
+
+
+Down-casts this vertex to a type label.
+
+[caption=""]
+.Returns
+`IType`
+
+[#_INamedRole_TypeDB_Driver_Api_Analyze_IConstraintVertex_AsNamedRole_]
+==== method ``AsNamedRole``
+
+[source,cs]
+----
+INamedRole AsNamedRole()
+----
+
+
+
+Down-casts this vertex to a named role.
+
+[caption=""]
+.Returns
+`INamedRole`
+
+[#_Api_IValue_TypeDB_Driver_Api_Analyze_IConstraintVertex_AsValue_]
+==== method ``AsValue``
+
+[source,cs]
+----
+Api.IValue AsValue()
+----
+
+
+
+Down-casts this vertex to a value.
+
+[caption=""]
+.Returns
+`Api.IValue`
+
+[#_IVariable_TypeDB_Driver_Api_Analyze_IConstraintVertex_AsVariable_]
+==== method ``AsVariable``
+
+[source,cs]
+----
+IVariable AsVariable()
+----
+
+
+
+Down-casts this vertex to a variable.
+
+[caption=""]
+.Returns
+`IVariable`
+
+[#_bool_TypeDB_Driver_Api_Analyze_IConstraintVertex_IsLabel]
+==== method ``IsLabel``
+
+[source,cs]
+----
+bool TypeDB.Driver.Api.Analyze.IConstraintVertex.IsLabel
+----
+
+
+
+Checks if this vertex is a label.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_bool_TypeDB_Driver_Api_Analyze_IConstraintVertex_IsNamedRole]
+==== method ``IsNamedRole``
+
+[source,cs]
+----
+bool TypeDB.Driver.Api.Analyze.IConstraintVertex.IsNamedRole
+----
+
+
+
+Checks if this vertex is a named role.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_bool_TypeDB_Driver_Api_Analyze_IConstraintVertex_IsValue]
+==== method ``IsValue``
+
+[source,cs]
+----
+bool TypeDB.Driver.Api.Analyze.IConstraintVertex.IsValue
+----
+
+
+
+Checks if this vertex is a value.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_bool_TypeDB_Driver_Api_Analyze_IConstraintVertex_IsVariable]
+==== method ``IsVariable``
+
+[source,cs]
+----
+bool TypeDB.Driver.Api.Analyze.IConstraintVertex.IsVariable
+----
+
+
+
+Checks if this vertex is a variable.
+
+[caption=""]
+.Returns
+`bool`
+
+// end::methods[]
+

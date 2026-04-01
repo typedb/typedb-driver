@@ -1,0 +1,35 @@
+[#_ISortStage]
+[.doc-api-reference-driver]
+=== ISortStage
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+*Supertypes:*
+
+* `TypeDB.Driver.Api.Analyze.IPipelineStage`
+
+
+
+Represents a "sort" stage: sort variables-and-order.
+
+// tag::methods[]
+[#_IEnumerable_ISortVariable_TypeDB_Driver_Api_Analyze_ISortStage_Variables]
+==== method ``Variables``
+
+[source,cs]
+----
+IEnumerable< ISortVariable > TypeDB.Driver.Api.Analyze.ISortStage.Variables
+----
+
+
+
+The sort variables and their sort orders.
+
+[caption=""]
+.Returns
+`IEnumerable< ISortVariable >`
+
+// end::methods[]
+

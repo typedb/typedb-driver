@@ -1,0 +1,47 @@
+[#_IReduceAssignment]
+[.doc-api-reference-driver]
+=== IReduceAssignment
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+
+
+An assignment of a reducer to a variable.
+
+// tag::methods[]
+[#_IVariable_TypeDB_Driver_Api_Analyze_IReduceAssignment_Assigned]
+==== method ``Assigned``
+
+[source,cs]
+----
+IVariable TypeDB.Driver.Api.Analyze.IReduceAssignment.Assigned
+----
+
+
+
+The variable being assigned to.
+
+[caption=""]
+.Returns
+`IVariable`
+
+[#_IReducer_TypeDB_Driver_Api_Analyze_IReduceAssignment_Reducer]
+==== method ``Reducer``
+
+[source,cs]
+----
+IReducer TypeDB.Driver.Api.Analyze.IReduceAssignment.Reducer
+----
+
+
+
+The reducer being applied.
+
+[caption=""]
+.Returns
+`IReducer`
+
+// end::methods[]
+

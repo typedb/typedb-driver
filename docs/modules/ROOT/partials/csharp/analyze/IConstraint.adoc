@@ -1,0 +1,623 @@
+[#_IConstraint]
+[.doc-api-reference-driver]
+=== IConstraint
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+
+
+A representation of a TypeQL constraint.
+
+// tag::methods[]
+[#_IComparison_TypeDB_Driver_Api_Analyze_IConstraint_AsComparison_]
+==== method ``AsComparison``
+
+[source,cs]
+----
+IComparison AsComparison()
+----
+
+
+
+Casts this constraint to a comparison constraint.
+
+[caption=""]
+.Returns
+`IComparison`
+
+[#_IExpression_TypeDB_Driver_Api_Analyze_IConstraint_AsExpression_]
+==== method ``AsExpression``
+
+[source,cs]
+----
+IExpression AsExpression()
+----
+
+
+
+Casts this constraint to an expression constraint.
+
+[caption=""]
+.Returns
+`IExpression`
+
+[#_IFunctionCall_TypeDB_Driver_Api_Analyze_IConstraint_AsFunctionCall_]
+==== method ``AsFunctionCall``
+
+[source,cs]
+----
+IFunctionCall AsFunctionCall()
+----
+
+
+
+Casts this constraint to a function call constraint.
+
+[caption=""]
+.Returns
+`IFunctionCall`
+
+[#_IHas_TypeDB_Driver_Api_Analyze_IConstraint_AsHas_]
+==== method ``AsHas``
+
+[source,cs]
+----
+IHas AsHas()
+----
+
+
+
+Casts this constraint to a has constraint.
+
+[caption=""]
+.Returns
+`IHas`
+
+[#_IIid_TypeDB_Driver_Api_Analyze_IConstraint_AsIid_]
+==== method ``AsIid``
+
+[source,cs]
+----
+IIid AsIid()
+----
+
+
+
+Casts this constraint to an iid constraint.
+
+[caption=""]
+.Returns
+`IIid`
+
+[#_IIs_TypeDB_Driver_Api_Analyze_IConstraint_AsIs_]
+==== method ``AsIs``
+
+[source,cs]
+----
+IIs AsIs()
+----
+
+
+
+Casts this constraint to an is constraint.
+
+[caption=""]
+.Returns
+`IIs`
+
+[#_IIsa_TypeDB_Driver_Api_Analyze_IConstraint_AsIsa_]
+==== method ``AsIsa``
+
+[source,cs]
+----
+IIsa AsIsa()
+----
+
+
+
+Casts this constraint to an isa constraint.
+
+[caption=""]
+.Returns
+`IIsa`
+
+[#_IKind_TypeDB_Driver_Api_Analyze_IConstraint_AsKind_]
+==== method ``AsKind``
+
+[source,cs]
+----
+IKind AsKind()
+----
+
+
+
+Casts this constraint to a kind constraint.
+
+[caption=""]
+.Returns
+`IKind`
+
+[#_ILabelConstraint_TypeDB_Driver_Api_Analyze_IConstraint_AsLabel_]
+==== method ``AsLabel``
+
+[source,cs]
+----
+ILabelConstraint AsLabel()
+----
+
+
+
+Casts this constraint to a label constraint.
+
+[caption=""]
+.Returns
+`ILabelConstraint`
+
+[#_ILinks_TypeDB_Driver_Api_Analyze_IConstraint_AsLinks_]
+==== method ``AsLinks``
+
+[source,cs]
+----
+ILinks AsLinks()
+----
+
+
+
+Casts this constraint to a links constraint.
+
+[caption=""]
+.Returns
+`ILinks`
+
+[#_INot_TypeDB_Driver_Api_Analyze_IConstraint_AsNot_]
+==== method ``AsNot``
+
+[source,cs]
+----
+INot AsNot()
+----
+
+
+
+Casts this constraint to a not constraint.
+
+[caption=""]
+.Returns
+`INot`
+
+[#_IOr_TypeDB_Driver_Api_Analyze_IConstraint_AsOr_]
+==== method ``AsOr``
+
+[source,cs]
+----
+IOr AsOr()
+----
+
+
+
+Casts this constraint to an or constraint.
+
+[caption=""]
+.Returns
+`IOr`
+
+[#_IOwns_TypeDB_Driver_Api_Analyze_IConstraint_AsOwns_]
+==== method ``AsOwns``
+
+[source,cs]
+----
+IOwns AsOwns()
+----
+
+
+
+Casts this constraint to an owns constraint.
+
+[caption=""]
+.Returns
+`IOwns`
+
+[#_IPlays_TypeDB_Driver_Api_Analyze_IConstraint_AsPlays_]
+==== method ``AsPlays``
+
+[source,cs]
+----
+IPlays AsPlays()
+----
+
+
+
+Casts this constraint to a plays constraint.
+
+[caption=""]
+.Returns
+`IPlays`
+
+[#_IRelates_TypeDB_Driver_Api_Analyze_IConstraint_AsRelates_]
+==== method ``AsRelates``
+
+[source,cs]
+----
+IRelates AsRelates()
+----
+
+
+
+Casts this constraint to a relates constraint.
+
+[caption=""]
+.Returns
+`IRelates`
+
+[#_ISub_TypeDB_Driver_Api_Analyze_IConstraint_AsSub_]
+==== method ``AsSub``
+
+[source,cs]
+----
+ISub AsSub()
+----
+
+
+
+Casts this constraint to a sub constraint.
+
+[caption=""]
+.Returns
+`ISub`
+
+[#_ITry_TypeDB_Driver_Api_Analyze_IConstraint_AsTry_]
+==== method ``AsTry``
+
+[source,cs]
+----
+ITry AsTry()
+----
+
+
+
+Casts this constraint to a try constraint.
+
+[caption=""]
+.Returns
+`ITry`
+
+[#_IValueConstraint_TypeDB_Driver_Api_Analyze_IConstraint_AsValue_]
+==== method ``AsValue``
+
+[source,cs]
+----
+IValueConstraint AsValue()
+----
+
+
+
+Casts this constraint to a value constraint.
+
+[caption=""]
+.Returns
+`IValueConstraint`
+
+[#_bool_TypeDB_Driver_Api_Analyze_IConstraint_IsComparison]
+==== method ``IsComparison``
+
+[source,cs]
+----
+bool TypeDB.Driver.Api.Analyze.IConstraint.IsComparison
+----
+
+
+
+Checks if this constraint is a comparison constraint.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_bool_TypeDB_Driver_Api_Analyze_IConstraint_IsExpression]
+==== method ``IsExpression``
+
+[source,cs]
+----
+bool TypeDB.Driver.Api.Analyze.IConstraint.IsExpression
+----
+
+
+
+Checks if this constraint is an expression constraint.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_bool_TypeDB_Driver_Api_Analyze_IConstraint_IsFunctionCall]
+==== method ``IsFunctionCall``
+
+[source,cs]
+----
+bool TypeDB.Driver.Api.Analyze.IConstraint.IsFunctionCall
+----
+
+
+
+Checks if this constraint is a function call constraint.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_bool_TypeDB_Driver_Api_Analyze_IConstraint_IsHas]
+==== method ``IsHas``
+
+[source,cs]
+----
+bool TypeDB.Driver.Api.Analyze.IConstraint.IsHas
+----
+
+
+
+Checks if this constraint is a has constraint.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_bool_TypeDB_Driver_Api_Analyze_IConstraint_IsIid]
+==== method ``IsIid``
+
+[source,cs]
+----
+bool TypeDB.Driver.Api.Analyze.IConstraint.IsIid
+----
+
+
+
+Checks if this constraint is an iid constraint.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_bool_TypeDB_Driver_Api_Analyze_IConstraint_IsIs]
+==== method ``IsIs``
+
+[source,cs]
+----
+bool TypeDB.Driver.Api.Analyze.IConstraint.IsIs
+----
+
+
+
+Checks if this constraint is an is constraint.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_bool_TypeDB_Driver_Api_Analyze_IConstraint_IsIsa]
+==== method ``IsIsa``
+
+[source,cs]
+----
+bool TypeDB.Driver.Api.Analyze.IConstraint.IsIsa
+----
+
+
+
+Checks if this constraint is an isa constraint.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_bool_TypeDB_Driver_Api_Analyze_IConstraint_IsKind]
+==== method ``IsKind``
+
+[source,cs]
+----
+bool TypeDB.Driver.Api.Analyze.IConstraint.IsKind
+----
+
+
+
+Checks if this constraint is a kind constraint.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_bool_TypeDB_Driver_Api_Analyze_IConstraint_IsLabel]
+==== method ``IsLabel``
+
+[source,cs]
+----
+bool TypeDB.Driver.Api.Analyze.IConstraint.IsLabel
+----
+
+
+
+Checks if this constraint is a label constraint.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_bool_TypeDB_Driver_Api_Analyze_IConstraint_IsLinks]
+==== method ``IsLinks``
+
+[source,cs]
+----
+bool TypeDB.Driver.Api.Analyze.IConstraint.IsLinks
+----
+
+
+
+Checks if this constraint is a links constraint.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_bool_TypeDB_Driver_Api_Analyze_IConstraint_IsNot]
+==== method ``IsNot``
+
+[source,cs]
+----
+bool TypeDB.Driver.Api.Analyze.IConstraint.IsNot
+----
+
+
+
+Checks if this constraint is a not constraint.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_bool_TypeDB_Driver_Api_Analyze_IConstraint_IsOr]
+==== method ``IsOr``
+
+[source,cs]
+----
+bool TypeDB.Driver.Api.Analyze.IConstraint.IsOr
+----
+
+
+
+Checks if this constraint is an or constraint.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_bool_TypeDB_Driver_Api_Analyze_IConstraint_IsOwns]
+==== method ``IsOwns``
+
+[source,cs]
+----
+bool TypeDB.Driver.Api.Analyze.IConstraint.IsOwns
+----
+
+
+
+Checks if this constraint is an owns constraint.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_bool_TypeDB_Driver_Api_Analyze_IConstraint_IsPlays]
+==== method ``IsPlays``
+
+[source,cs]
+----
+bool TypeDB.Driver.Api.Analyze.IConstraint.IsPlays
+----
+
+
+
+Checks if this constraint is a plays constraint.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_bool_TypeDB_Driver_Api_Analyze_IConstraint_IsRelates]
+==== method ``IsRelates``
+
+[source,cs]
+----
+bool TypeDB.Driver.Api.Analyze.IConstraint.IsRelates
+----
+
+
+
+Checks if this constraint is a relates constraint.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_bool_TypeDB_Driver_Api_Analyze_IConstraint_IsSub]
+==== method ``IsSub``
+
+[source,cs]
+----
+bool TypeDB.Driver.Api.Analyze.IConstraint.IsSub
+----
+
+
+
+Checks if this constraint is a sub constraint.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_bool_TypeDB_Driver_Api_Analyze_IConstraint_IsTry]
+==== method ``IsTry``
+
+[source,cs]
+----
+bool TypeDB.Driver.Api.Analyze.IConstraint.IsTry
+----
+
+
+
+Checks if this constraint is a try constraint.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_bool_TypeDB_Driver_Api_Analyze_IConstraint_IsValue]
+==== method ``IsValue``
+
+[source,cs]
+----
+bool TypeDB.Driver.Api.Analyze.IConstraint.IsValue
+----
+
+
+
+Checks if this constraint is a value constraint.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_ISpan_TypeDB_Driver_Api_Analyze_IConstraint_Span]
+==== method ``Span``
+
+[source,cs]
+----
+ISpan TypeDB.Driver.Api.Analyze.IConstraint.Span
+----
+
+
+
+Gets the span of this constraint in the source query.
+
+[caption=""]
+.Returns
+`ISpan`
+
+[#_Pinvoke_ConstraintVariant_TypeDB_Driver_Api_Analyze_IConstraint_Variant]
+==== method ``Variant``
+
+[source,cs]
+----
+Pinvoke.ConstraintVariant TypeDB.Driver.Api.Analyze.IConstraint.Variant
+----
+
+
+
+Gets the variant of this constraint.
+
+[caption=""]
+.Returns
+`Pinvoke.ConstraintVariant`
+
+// end::methods[]
+

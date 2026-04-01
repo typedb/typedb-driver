@@ -1,0 +1,67 @@
+[#_IExpression]
+[.doc-api-reference-driver]
+=== IExpression
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+*Supertypes:*
+
+* `TypeDB.Driver.Api.Analyze.IConstraint`
+
+
+
+Represents an expression: let assigned = expression.
+
+// tag::methods[]
+[#_IEnumerable_IConstraintVertex_TypeDB_Driver_Api_Analyze_IExpression_Arguments]
+==== method ``Arguments``
+
+[source,cs]
+----
+IEnumerable< IConstraintVertex > TypeDB.Driver.Api.Analyze.IExpression.Arguments
+----
+
+
+
+The arguments to the expression.
+
+[caption=""]
+.Returns
+`IEnumerable< IConstraintVertex >`
+
+[#_IConstraintVertex_TypeDB_Driver_Api_Analyze_IExpression_Assigned]
+==== method ``Assigned``
+
+[source,cs]
+----
+IConstraintVertex TypeDB.Driver.Api.Analyze.IExpression.Assigned
+----
+
+
+
+The variable being assigned to.
+
+[caption=""]
+.Returns
+`IConstraintVertex`
+
+[#_string_TypeDB_Driver_Api_Analyze_IExpression_Text]
+==== method ``Text``
+
+[source,cs]
+----
+string TypeDB.Driver.Api.Analyze.IExpression.Text
+----
+
+
+
+The text of the expression.
+
+[caption=""]
+.Returns
+`string`
+
+// end::methods[]
+

@@ -25,5 +25,5 @@ SET DEPLOY_MAVEN_PASSWORD=%REPO_TYPEDB_PASSWORD%
 
 git rev-parse HEAD > version_snapshot.txt
 set /p VER=<version_snapshot.txt
-bazel --output_user_root=C:/b run --verbose_failures --define version=%VER% //java:deploy-maven-jni -- snapshot
+bazel --output_user_root=C:/b run --config=ci --verbose_failures --define version=%VER% //java:deploy-maven-jni -- snapshot
 IF %errorlevel% NEQ 0 EXIT /b %errorlevel%

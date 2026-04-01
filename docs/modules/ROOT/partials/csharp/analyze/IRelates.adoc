@@ -1,0 +1,67 @@
+[#_IRelates]
+[.doc-api-reference-driver]
+=== IRelates
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+*Supertypes:*
+
+* `TypeDB.Driver.Api.Analyze.IConstraint`
+
+
+
+Represents a "relates" constraint: relation relates role.
+
+// tag::methods[]
+[#_Pinvoke_ConstraintExactness_TypeDB_Driver_Api_Analyze_IRelates_Exactness]
+==== method ``Exactness``
+
+[source,cs]
+----
+Pinvoke.ConstraintExactness TypeDB.Driver.Api.Analyze.IRelates.Exactness
+----
+
+
+
+The exactness of the constraint.
+
+[caption=""]
+.Returns
+`Pinvoke.ConstraintExactness`
+
+[#_IConstraintVertex_TypeDB_Driver_Api_Analyze_IRelates_Relation]
+==== method ``Relation``
+
+[source,cs]
+----
+IConstraintVertex TypeDB.Driver.Api.Analyze.IRelates.Relation
+----
+
+
+
+The relation vertex of the constraint.
+
+[caption=""]
+.Returns
+`IConstraintVertex`
+
+[#_IConstraintVertex_TypeDB_Driver_Api_Analyze_IRelates_Role]
+==== method ``Role``
+
+[source,cs]
+----
+IConstraintVertex TypeDB.Driver.Api.Analyze.IRelates.Role
+----
+
+
+
+The role vertex of the constraint.
+
+[caption=""]
+.Returns
+`IConstraintVertex`
+
+// end::methods[]
+

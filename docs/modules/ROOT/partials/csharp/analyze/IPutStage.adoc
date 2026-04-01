@@ -1,0 +1,35 @@
+[#_IPutStage]
+[.doc-api-reference-driver]
+=== IPutStage
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+*Supertypes:*
+
+* `TypeDB.Driver.Api.Analyze.IPipelineStage`
+
+
+
+Represents a "put" stage: put block.
+
+// tag::methods[]
+[#_IConjunctionID_TypeDB_Driver_Api_Analyze_IPutStage_Block]
+==== method ``Block``
+
+[source,cs]
+----
+IConjunctionID TypeDB.Driver.Api.Analyze.IPutStage.Block
+----
+
+
+
+The index into the pipeline's conjunctions.
+
+[caption=""]
+.Returns
+`IConjunctionID`
+
+// end::methods[]
+

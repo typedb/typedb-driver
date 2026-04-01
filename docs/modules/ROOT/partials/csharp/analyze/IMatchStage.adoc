@@ -1,0 +1,35 @@
+[#_IMatchStage]
+[.doc-api-reference-driver]
+=== IMatchStage
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+*Supertypes:*
+
+* `TypeDB.Driver.Api.Analyze.IPipelineStage`
+
+
+
+Represents a "match" stage: match block.
+
+// tag::methods[]
+[#_IConjunctionID_TypeDB_Driver_Api_Analyze_IMatchStage_Block]
+==== method ``Block``
+
+[source,cs]
+----
+IConjunctionID TypeDB.Driver.Api.Analyze.IMatchStage.Block
+----
+
+
+
+The index into the pipeline's conjunctions.
+
+[caption=""]
+.Returns
+`IConjunctionID`
+
+// end::methods[]
+

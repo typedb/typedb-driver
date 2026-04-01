@@ -46,12 +46,28 @@ Available through https://pypi.org
 pip install typedb-driver=={version}
 ```
 
+### C# driver
+
+NuGet package: https://www.nuget.org/packages/TypeDB.Driver
+Documentation: https://typedb.com/docs/drivers/csharp/overview
+
+```xml
+<ItemGroup>
+    <PackageReference Include="TypeDB.Driver" Version="{version}" />
+    <PackageReference Include="TypeDB.Driver.Pinvoke.osx-x64" Version="{version}" />
+    <PackageReference Include="TypeDB.Driver.Pinvoke.linux-x64" Version="{version}" />
+    <PackageReference Include="TypeDB.Driver.Pinvoke.win-x64" Version="{version}" />
+    <PackageReference Include="TypeDB.Driver.Pinvoke.osx-arm64" Version="{version}" />
+    <PackageReference Include="TypeDB.Driver.Pinvoke.linux-arm64" Version="{version}" />
+</ItemGroup>
+```
+
 ### HTTP Typescript driver
 
 [//]: # (TODO: Update docs link)
 
 NPM package: https://www.npmjs.com/package/@typedb/driver-http
-Documentation: https://typedb.com/docs/drivers/
+Documentation: https://typedb.com/docs/home/install/drivers/
 
 ```
 npm install @typedb/driver-http@{version}

@@ -25,5 +25,5 @@ SET DEPLOY_MAVEN_USERNAME=%REPO_TYPEDB_USERNAME%
 SET DEPLOY_MAVEN_PASSWORD=%REPO_TYPEDB_PASSWORD%
 
 SET /p VER=<VERSION
-bazel --output_user_root=C:/b run --verbose_failures --define version=%VER% //java:deploy-maven-jni --compilation_mode=opt -- release
+bazel --output_user_root=C:/b run --config=ci --verbose_failures --define version=%VER% //java:deploy-maven-jni --compilation_mode=opt -- release
 IF %errorlevel% NEQ 0 EXIT /b %errorlevel%

@@ -1,0 +1,31 @@
+[#_IFetchList]
+[.doc-api-reference-driver]
+=== IFetchList
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+
+
+A list of Fetch documents.
+
+// tag::methods[]
+[#_IFetch_TypeDB_Driver_Api_Analyze_IFetchList_Element]
+==== method ``Element``
+
+[source,cs]
+----
+IFetch TypeDB.Driver.Api.Analyze.IFetchList.Element
+----
+
+
+
+Gets the element of the list.
+
+[caption=""]
+.Returns
+`IFetch`
+
+// end::methods[]
+

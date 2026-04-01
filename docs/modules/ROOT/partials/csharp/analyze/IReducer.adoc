@@ -1,0 +1,47 @@
+[#_IReducer]
+[.doc-api-reference-driver]
+=== IReducer
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+
+
+Representation of a reducer used either in a reduce stage or in a function's return operation.
+
+// tag::methods[]
+[#_IEnumerable_IVariable_TypeDB_Driver_Api_Analyze_IReducer_Arguments]
+==== method ``Arguments``
+
+[source,cs]
+----
+IEnumerable< IVariable > TypeDB.Driver.Api.Analyze.IReducer.Arguments
+----
+
+
+
+Gets the arguments to the reducer.
+
+[caption=""]
+.Returns
+`IEnumerable< IVariable >`
+
+[#_string_TypeDB_Driver_Api_Analyze_IReducer_Name]
+==== method ``Name``
+
+[source,cs]
+----
+string TypeDB.Driver.Api.Analyze.IReducer.Name
+----
+
+
+
+Gets the name of the reduce operation.
+
+[caption=""]
+.Returns
+`string`
+
+// end::methods[]
+

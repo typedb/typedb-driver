@@ -1,0 +1,35 @@
+[#_IUpdateStage]
+[.doc-api-reference-driver]
+=== IUpdateStage
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+*Supertypes:*
+
+* `TypeDB.Driver.Api.Analyze.IPipelineStage`
+
+
+
+Represents an "update" stage: update block.
+
+// tag::methods[]
+[#_IConjunctionID_TypeDB_Driver_Api_Analyze_IUpdateStage_Block]
+==== method ``Block``
+
+[source,cs]
+----
+IConjunctionID TypeDB.Driver.Api.Analyze.IUpdateStage.Block
+----
+
+
+
+The index into the pipeline's conjunctions.
+
+[caption=""]
+.Returns
+`IConjunctionID`
+
+// end::methods[]
+

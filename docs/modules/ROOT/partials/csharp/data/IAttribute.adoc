@@ -1,22 +1,23 @@
 [#_IAttribute]
+[.doc-api-reference-driver]
 === IAttribute
+
+`class`
 
 *Package*: `TypeDB.Driver.Api`
 
 *Supertypes:*
 
-* `TypeDB.Driver.Api.IThing`
+* `TypeDB.Driver.Api.IInstance`
 * `TypeDB.Driver.Api.IConcept`
 
 
 
-Attribute is an instance of the attribute type and has a value. This value is fixed and unique for every given instance of the attribute type.
-
-Attributes can be uniquely addressed by their type and value.
+Represents an attribute instance in TypeDB. Attribute instances represent properties with values that can be owned by other instances. In TypeDB 3.0, instances are read-only data returned from queries.
 
 // tag::methods[]
 [#_IAttribute_IConcept_TypeDB_Driver_Api_IAttribute_AsAttribute_]
-==== AsAttribute
+==== method ``AsAttribute``
 
 [source,cs]
 ----
@@ -25,7 +26,8 @@ IAttribute IConcept. AsAttribute()
 
 
 
-Casts the concept to ``IAttribute``.
+Casts the concept to IAttribute.
+
 
 
 Implements TypeDB.Driver.Api.IConcept.
@@ -38,78 +40,11 @@ Implements TypeDB.Driver.Api.IConcept.
 .Code examples
 [source,cs]
 ----
-attribute.AsAttribute();
-----
-
-[#_IEnumerable_IThing_TypeDB_Driver_Api_IAttribute_GetOwners_ITypeDBTransaction_transaction_]
-==== GetOwners
-
-[source,cs]
-----
-IEnumerable< IThing > GetOwners(ITypeDBTransaction transaction)
-----
-
-
-
-Retrieves the instances that own this ``IAttribute``.
-
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `ITypeDBTransaction`
-|===
-
-[caption=""]
-.Returns
-`IEnumerable< IThing >`
-
-[caption=""]
-.Code examples
-[source,cs]
-----
-attribute.GetOwners(transaction);
-----
-
-[#_IEnumerable_IThing_TypeDB_Driver_Api_IAttribute_GetOwners_ITypeDBTransaction_transaction_IThingType_ownerType_]
-==== GetOwners
-
-[source,cs]
-----
-IEnumerable< IThing > GetOwners(ITypeDBTransaction transaction, IThingType ownerType)
-----
-
-
-
-Retrieves the instances that own this ``IAttribute``.
-
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `ITypeDBTransaction`
-a| `ownerType` a| Filter results for only owners of the given type a| `IThingType`
-|===
-
-[caption=""]
-.Returns
-`IEnumerable< IThing >`
-
-[caption=""]
-.Code examples
-[source,cs]
-----
-attribute.GetOwners(transaction, ownerType);
+concept.AsAttribute()
 ----
 
 [#_bool_IConcept_TypeDB_Driver_Api_IAttribute_IsAttribute_]
-==== IsAttribute
+==== method ``IsAttribute``
 
 [source,cs]
 ----
@@ -118,7 +53,8 @@ bool IConcept. IsAttribute()
 
 
 
-Checks if the concept is an ``IAttribute``.
+Checks if the concept is an IAttribute.
+
 
 
 Implements TypeDB.Driver.Api.IConcept.
@@ -131,32 +67,44 @@ Implements TypeDB.Driver.Api.IConcept.
 .Code examples
 [source,cs]
 ----
-attribute.IsAttribute();
+concept.IsAttribute()
 ----
 
-[#_IValue_TypeDB_Driver_Api_IAttribute_Value]
-==== Value
+[#_new_IAttributeType_TypeDB_Driver_Api_IAttribute_Type]
+==== method ``Type [1/2]``
 
 [source,cs]
 ----
-IValue TypeDB.Driver.Api.IAttribute.Value
+new IAttributeType TypeDB.Driver.Api.IAttribute.Type
 ----
 
 
 
-Retrieves the value which the ``IAttribute`` instance holds.
+The attribute type which this attribute instance belongs to.
 
+Implements TypeDB.Driver.Api.IInstance.
 
 [caption=""]
 .Returns
-`IValue`
+`new IAttributeType`
 
-[caption=""]
-.Code examples
+[#_IType_IInstance_TypeDB_Driver_Api_IAttribute_Type]
+==== method ``Type [2/2]``
+
 [source,cs]
 ----
-attribute.Value;
+IType IInstance. TypeDB.Driver.Api.IAttribute.Type
 ----
+
+
+
+The type which this instance belongs to.
+
+Implements TypeDB.Driver.Api.IInstance.
+
+[caption=""]
+.Returns
+`IType IInstance.`
 
 // end::methods[]
 

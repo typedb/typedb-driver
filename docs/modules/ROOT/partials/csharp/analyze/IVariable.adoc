@@ -1,0 +1,12 @@
+[#_IVariable]
+[.doc-api-reference-driver]
+=== IVariable
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+
+
+Represents a variable in a TypeQL query.
+

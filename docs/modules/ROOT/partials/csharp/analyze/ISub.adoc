@@ -1,0 +1,67 @@
+[#_ISub]
+[.doc-api-reference-driver]
+=== ISub
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+*Supertypes:*
+
+* `TypeDB.Driver.Api.Analyze.IConstraint`
+
+
+
+Represents a "sub" constraint: subtype sub(!) supertype.
+
+// tag::methods[]
+[#_Pinvoke_ConstraintExactness_TypeDB_Driver_Api_Analyze_ISub_Exactness]
+==== method ``Exactness``
+
+[source,cs]
+----
+Pinvoke.ConstraintExactness TypeDB.Driver.Api.Analyze.ISub.Exactness
+----
+
+
+
+The exactness of the constraint.
+
+[caption=""]
+.Returns
+`Pinvoke.ConstraintExactness`
+
+[#_IConstraintVertex_TypeDB_Driver_Api_Analyze_ISub_Subtype]
+==== method ``Subtype``
+
+[source,cs]
+----
+IConstraintVertex TypeDB.Driver.Api.Analyze.ISub.Subtype
+----
+
+
+
+The subtype vertex of the constraint.
+
+[caption=""]
+.Returns
+`IConstraintVertex`
+
+[#_IConstraintVertex_TypeDB_Driver_Api_Analyze_ISub_Supertype]
+==== method ``Supertype``
+
+[source,cs]
+----
+IConstraintVertex TypeDB.Driver.Api.Analyze.ISub.Supertype
+----
+
+
+
+The supertype vertex of the constraint.
+
+[caption=""]
+.Returns
+`IConstraintVertex`
+
+// end::methods[]
+

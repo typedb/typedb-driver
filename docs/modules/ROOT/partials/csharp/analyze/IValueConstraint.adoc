@@ -1,0 +1,51 @@
+[#_IValueConstraint]
+[.doc-api-reference-driver]
+=== IValueConstraint
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+*Supertypes:*
+
+* `TypeDB.Driver.Api.Analyze.IConstraint`
+
+
+
+Represents a value constraint: attribute_type value value_type.
+
+// tag::methods[]
+[#_IConstraintVertex_TypeDB_Driver_Api_Analyze_IValueConstraint_AttributeType]
+==== method ``AttributeType``
+
+[source,cs]
+----
+IConstraintVertex TypeDB.Driver.Api.Analyze.IValueConstraint.AttributeType
+----
+
+
+
+The attribute type vertex of the constraint.
+
+[caption=""]
+.Returns
+`IConstraintVertex`
+
+[#_string_TypeDB_Driver_Api_Analyze_IValueConstraint_ValueType]
+==== method ``ValueType``
+
+[source,cs]
+----
+string TypeDB.Driver.Api.Analyze.IValueConstraint.ValueType
+----
+
+
+
+The value type.
+
+[caption=""]
+.Returns
+`string`
+
+// end::methods[]
+

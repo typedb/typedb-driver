@@ -1,0 +1,35 @@
+[#_IStreamReturn]
+[.doc-api-reference-driver]
+=== IStreamReturn
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+*Supertypes:*
+
+* `TypeDB.Driver.Api.Analyze.IReturnOperation`
+
+
+
+Indicates the function returns a stream of concepts.
+
+// tag::methods[]
+[#_IEnumerable_IVariable_TypeDB_Driver_Api_Analyze_IStreamReturn_Variables]
+==== method ``Variables``
+
+[source,cs]
+----
+IEnumerable< IVariable > TypeDB.Driver.Api.Analyze.IStreamReturn.Variables
+----
+
+
+
+The variables in the returned row.
+
+[caption=""]
+.Returns
+`IEnumerable< IVariable >`
+
+// end::methods[]
+

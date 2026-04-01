@@ -1,0 +1,67 @@
+[#_IHas]
+[.doc-api-reference-driver]
+=== IHas
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+*Supertypes:*
+
+* `TypeDB.Driver.Api.Analyze.IConstraint`
+
+
+
+Represents a "has" constraint: owner has attribute.
+
+// tag::methods[]
+[#_IConstraintVertex_TypeDB_Driver_Api_Analyze_IHas_Attribute]
+==== method ``Attribute``
+
+[source,cs]
+----
+IConstraintVertex TypeDB.Driver.Api.Analyze.IHas.Attribute
+----
+
+
+
+The attribute vertex of the constraint.
+
+[caption=""]
+.Returns
+`IConstraintVertex`
+
+[#_Pinvoke_ConstraintExactness_TypeDB_Driver_Api_Analyze_IHas_Exactness]
+==== method ``Exactness``
+
+[source,cs]
+----
+Pinvoke.ConstraintExactness TypeDB.Driver.Api.Analyze.IHas.Exactness
+----
+
+
+
+The exactness of the constraint.
+
+[caption=""]
+.Returns
+`Pinvoke.ConstraintExactness`
+
+[#_IConstraintVertex_TypeDB_Driver_Api_Analyze_IHas_Owner]
+==== method ``Owner``
+
+[source,cs]
+----
+IConstraintVertex TypeDB.Driver.Api.Analyze.IHas.Owner
+----
+
+
+
+The owner vertex of the constraint.
+
+[caption=""]
+.Returns
+`IConstraintVertex`
+
+// end::methods[]
+

@@ -1,0 +1,83 @@
+[#_ILinks]
+[.doc-api-reference-driver]
+=== ILinks
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+*Supertypes:*
+
+* `TypeDB.Driver.Api.Analyze.IConstraint`
+
+
+
+Represents a "links" constraint: relation links (role: player)
+
+// tag::methods[]
+[#_Pinvoke_ConstraintExactness_TypeDB_Driver_Api_Analyze_ILinks_Exactness]
+==== method ``Exactness``
+
+[source,cs]
+----
+Pinvoke.ConstraintExactness TypeDB.Driver.Api.Analyze.ILinks.Exactness
+----
+
+
+
+The exactness of the constraint.
+
+[caption=""]
+.Returns
+`Pinvoke.ConstraintExactness`
+
+[#_IConstraintVertex_TypeDB_Driver_Api_Analyze_ILinks_Player]
+==== method ``Player``
+
+[source,cs]
+----
+IConstraintVertex TypeDB.Driver.Api.Analyze.ILinks.Player
+----
+
+
+
+The player vertex of the constraint.
+
+[caption=""]
+.Returns
+`IConstraintVertex`
+
+[#_IConstraintVertex_TypeDB_Driver_Api_Analyze_ILinks_Relation]
+==== method ``Relation``
+
+[source,cs]
+----
+IConstraintVertex TypeDB.Driver.Api.Analyze.ILinks.Relation
+----
+
+
+
+The relation vertex of the constraint.
+
+[caption=""]
+.Returns
+`IConstraintVertex`
+
+[#_IConstraintVertex_TypeDB_Driver_Api_Analyze_ILinks_Role]
+==== method ``Role``
+
+[source,cs]
+----
+IConstraintVertex TypeDB.Driver.Api.Analyze.ILinks.Role
+----
+
+
+
+The role vertex of the constraint.
+
+[caption=""]
+.Returns
+`IConstraintVertex`
+
+// end::methods[]
+

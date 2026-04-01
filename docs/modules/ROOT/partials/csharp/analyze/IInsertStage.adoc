@@ -1,0 +1,35 @@
+[#_IInsertStage]
+[.doc-api-reference-driver]
+=== IInsertStage
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+*Supertypes:*
+
+* `TypeDB.Driver.Api.Analyze.IPipelineStage`
+
+
+
+Represents an "insert" stage: insert block.
+
+// tag::methods[]
+[#_IConjunctionID_TypeDB_Driver_Api_Analyze_IInsertStage_Block]
+==== method ``Block``
+
+[source,cs]
+----
+IConjunctionID TypeDB.Driver.Api.Analyze.IInsertStage.Block
+----
+
+
+
+The index into the pipeline's conjunctions.
+
+[caption=""]
+.Returns
+`IConjunctionID`
+
+// end::methods[]
+

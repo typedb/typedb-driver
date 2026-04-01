@@ -1,5 +1,8 @@
 [#_TransactionType]
+[.doc-api-reference-driver]
 === TransactionType
+
+`class`
 
 *Package*: `TypeDB.Driver.Api`
 
@@ -7,23 +10,22 @@
 
 Used to specify the type of transaction.
 
+ 
+  driver.Transaction(database, TransactionType.Read);
+ 
+ 
+  
+   TypeDB.Driver.Api.TransactionType
+  
+  
+   TransactionType
+  
+  
+   Used to specify the type of transaction.
+  
+  
+   Definition ITransaction.cs:99
+  
+ 
 
-[caption=""]
-.Examples
-[source,cs]
-----
-session.Transaction(TransactionType.Read);
-----
-
-[caption=""]
-.Enum constants
-// tag::enum_constants[]
-[cols=""]
-[options="header"]
-|===
-|Name
-a| `Read`
-a| `Write`
-|===
-// end::enum_constants[]
 
