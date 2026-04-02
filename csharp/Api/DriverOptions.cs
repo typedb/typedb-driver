@@ -21,40 +21,44 @@ using TypeDB.Driver.Common;
 
 namespace TypeDB.Driver.Api
 {
-    /// <summary>
-    /// User connection settings (TLS encryption, etc.) for connecting to TypeDB Server.
-    /// </summary>
-    /// <example>
-    /// <code>
-    /// // No TLS
-    /// DriverOptions options = new DriverOptions(false, null);
-    ///
-    /// // TLS with custom CA certificate
-    /// DriverOptions options = new DriverOptions(true, "/path/to/ca-certificate.pem");
-    /// </code>
-    /// </example>
     public class DriverOptions : NativeObjectWrapper<Pinvoke.DriverOptions>
     {
-        /// <summary>
-        /// Creates a new <see cref="DriverOptions"/> for connecting to TypeDB Server.
-        /// </summary>
-        /// <param name="isTlsEnabled">Specify whether the connection to TypeDB Server must be done over TLS.</param>
-        /// <param name="tlsRootCAPath">Path to the CA certificate to use for authenticating server certificates. Can be null if using system CA or TLS is disabled.</param>
-        public DriverOptions(bool isTlsEnabled, string? tlsRootCAPath = null)
-            : base(NewNative(isTlsEnabled, tlsRootCAPath))
+        public DriverOptions(DriverTlsConfig tlsConfig)
+            : base(Pinvoke.typedb_driver.driver_options_new(tlsConfig.NativeObject))
         {
         }
 
-        private static Pinvoke.DriverOptions NewNative(bool isTlsEnabled, string? tlsRootCAPath)
+        public DriverTlsConfig TlsConfig
         {
-            try
-            {
-                return Pinvoke.typedb_driver.driver_options_new(isTlsEnabled, tlsRootCAPath);
-            }
-            catch (Pinvoke.Error e)
-            {
-                throw new TypeDBDriverException(e);
-            }
+            get { return new DriverTlsConfig(Pinvoke.typedb_driver.driver_options_get_tls_config(NativeObject)); }
+        }
+
+        public DriverOptions SetTlsConfig(DriverTlsConfig tlsConfig)
+        {
+            Pinvoke.typedb_driver.driver_options_set_tls_config(NativeObject, tlsConfig.NativeObject);
+            return this;
+        }
+
+        public long RequestTimeoutMillis
+        {
+            get { return Pinvoke.typedb_driver.driver_options_get_request_timeout_millis(NativeObject); }
+        }
+
+        public DriverOptions SetRequestTimeoutMillis(long requestTimeoutMillis)
+        {
+            Pinvoke.typedb_driver.driver_options_set_request_timeout_millis(NativeObject, requestTimeoutMillis);
+            return this;
+        }
+
+        public int PrimaryFailoverRetries
+        {
+            get { return (int)Pinvoke.typedb_driver.driver_options_get_primary_failover_retries(NativeObject); }
+        }
+
+        public DriverOptions SetPrimaryFailoverRetries(int primaryFailoverRetries)
+        {
+            Pinvoke.typedb_driver.driver_options_set_primary_failover_retries(NativeObject, primaryFailoverRetries);
+            return this;
         }
     }
 }

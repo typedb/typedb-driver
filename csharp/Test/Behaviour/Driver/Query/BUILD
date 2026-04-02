@@ -31,7 +31,7 @@ csharp_behaviour_test_all(
         "//csharp/Test/Behaviour/Connection/Transaction:steps",
         "//csharp/Test/Behaviour/Connection/Database:steps",
     ],
-    connection_steps_community = "//csharp/Test/Behaviour/Connection:steps-community",
+    connection_steps_core = "//csharp/Test/Behaviour/Connection:steps-core",
     connection_steps_cluster = "//csharp/Test/Behaviour/Connection:steps-cluster",
     features = ["@typedb_behaviour//driver:query.feature"],
     deps = [

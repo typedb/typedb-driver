@@ -133,7 +133,6 @@ struct Type {};
 
 %promiseproxy(AnalyzedQueryPromise, analyzed_query_promise)
 %promiseproxy(BoolPromise, bool_promise)
-%promiseproxy(ConceptPromise, concept_promise)
 %promiseproxy(StringPromise, string_promise)
 %promiseproxy(QueryAnswerPromise, query_answer_promise)
 %promiseproxy(VoidPromise, void_promise)

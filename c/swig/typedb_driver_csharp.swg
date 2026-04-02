@@ -150,17 +150,37 @@
 %noexception user_get_name;
 %noexception user_get_password_expiry_seconds;
 
-/* Replica info getters do not throw */
-%noexception replica_info_get_server;
-%noexception replica_info_is_primary;
-%noexception replica_info_is_preferred;
-%noexception replica_info_get_term;
+/* Driver options do not throw */
+%noexception driver_options_new;
+%noexception driver_options_set_tls_config;
+%noexception driver_options_get_tls_config;
+%noexception driver_options_set_request_timeout_millis;
+%noexception driver_options_get_request_timeout_millis;
+%noexception driver_options_set_primary_failover_retries;
+%noexception driver_options_get_primary_failover_retries;
+
+/* TLS config do not throw */
+%noexception driver_tls_config_new_disabled;
+%noexception driver_tls_config_new_enabled_with_native_root_ca;
+%noexception driver_tls_config_is_enabled;
+%noexception driver_tls_config_has_root_ca_path;
+%noexception driver_tls_config_get_root_ca_path;
+
+/* Server property getters do not throw */
+%noexception server_get_address;
+%noexception server_is_primary;
+%noexception server_get_id;
+%noexception server_get_role;
+%noexception server_has_role;
+%noexception server_get_term;
+%noexception server_has_term;
+
+/* Server routing do not throw */
+%noexception server_routing_auto;
+%noexception server_routing_direct;
 
 /* Database property getters do not throw */
 %noexception database_get_name;
-%noexception database_get_replicas_info;
-%noexception database_get_primary_replica_info;
-%noexception database_get_preferred_replica_info;
 
 /* Query options do not throw */
 %noexception query_options_new;
@@ -182,9 +202,6 @@
 %noexception transaction_options_has_schema_lock_acquire_timeout_millis;
 %noexception transaction_options_set_transaction_timeout_millis;
 %noexception transaction_options_set_schema_lock_acquire_timeout_millis;
-%noexception transaction_options_get_parallel;
-%noexception transaction_options_set_parallel;
-%noexception transaction_options_has_parallel;
 
 /* Query answer getters do not throw */
 %noexception query_answer_get_query_type;
@@ -259,6 +276,14 @@
 %noexception entity_get_type;
 %noexception relation_get_type;
 %noexception attribute_get_type;
+
+/* ServerVersion field accessors do not throw */
+%noexception ServerVersion::distribution;
+%noexception ServerVersion::version;
+
+/* ServerRouting field accessors do not throw */
+%noexception ServerRouting::tag;
+%noexception ServerRouting::address;
 
 /* Struct field accessors do not throw */
 %noexception StringPair::_0;
@@ -399,11 +424,12 @@
 %noexception TransactionCallbackDirector;
 
 /* Destructors do not throw */
-%noexception ~Connection;
+%noexception ~TypeDBDriver;
 %noexception ~Credentials;
+%noexception ~DriverOptions;
+%noexception ~DriverTlsConfig;
 %noexception ~Database;
 %noexception ~DatabaseIterator;
-%noexception ~DriverOptions;
 %noexception ~Error;
 %noexception ~QueryAnswer;
 %noexception ~QueryOptions;
@@ -418,8 +444,10 @@
 %noexception ~TransactionCallbackDirector;
 %noexception ~User;
 %noexception ~UserIterator;
-%noexception ~ReplicaInfo;
-%noexception ~ReplicaInfoIterator;
+%noexception ~Server;
+%noexception ~ServerIterator;
+%noexception ~ServerVersion;
+%noexception ~ServerRouting;
 %noexception ~DatetimeAndTimeZone;
 %noexception ~DatetimeInNanos;
 %noexception ~Decimal;
@@ -429,8 +457,9 @@
 %noexception ~ValueType;
 %noexception ~BoolPromise;
 %noexception ~VoidPromise;
-%noexception ~StringPromise;
 %noexception ~AnalyzedQueryPromise;
+%noexception ~QueryAnswerPromise;
+%noexception ~StringPromise;
 
 /* Analyze destructors do not throw */
 %noexception ~AnalyzedQuery;
@@ -507,10 +536,10 @@
 %enddef
 
 /* 3.0 API promises */
-%promise(String, string, string)
-%promise(Bool, bool, bool)
 %promise(AnalyzedQuery, AnalyzedQuery, analyzed_query)
 %promise(QueryAnswer, QueryAnswer, query_answer)
+%promise(String, string, string)
+%promise(Bool, bool, bool)
 
 /* void promises require special handling */
 %typemap(csbody) VoidPromise %{
@@ -611,6 +640,7 @@
 %iterator(StringAndOptValue, StringAndOptValue, string_and_opt_value)
 %iterator(User, User, user)
 %iterator(Database, Database, database)
+%iterator(Server, Server, server)
 
 /* Analyze API iterators */
 %iterator(Variable, Variable, variable)

@@ -53,7 +53,7 @@ def csharp_behaviour_test_all(
         name,
         test_files,
         steps_files,
-        connection_steps_community,
+        connection_steps_core,
         connection_steps_cluster,
         features,
         deps,
@@ -61,12 +61,12 @@ def csharp_behaviour_test_all(
         targeting_packs,
         add_certificates = False,
         **kwargs):
-    """Creates both community and cluster test variants."""
+    """Creates both core and cluster test variants."""
 
     csharp_behaviour_test(
-        name = name + "-community",
+        name = name + "-core",
         test_files = test_files,
-        steps_files = steps_files + [connection_steps_community],
+        steps_files = steps_files + [connection_steps_core],
         features = features,
         deps = deps,
         target_frameworks = target_frameworks,

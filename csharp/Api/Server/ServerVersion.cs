@@ -17,30 +17,19 @@
  * under the License.
  */
 
-using System.Collections.Generic;
+using TypeDB.Driver.Common;
 
-using TypeDB.Driver.Api;
-using TypeDB.Driver.Connection;
-
-namespace TypeDB.Driver
+namespace TypeDB.Driver.Api
 {
-    public static class TypeDB
+    public class ServerVersion : NativeObjectWrapper<Pinvoke.ServerVersion>
     {
-        public const string DefaultAddress = "127.0.0.1:1729";
-
-        public static IDriver Driver(string address, Credentials credentials, DriverOptions driverOptions)
+        internal ServerVersion(Pinvoke.ServerVersion nativeObject)
+            : base(nativeObject)
         {
-            return new TypeDBDriver(address, credentials, driverOptions);
         }
 
-        public static IDriver Driver(ISet<string> addresses, Credentials credentials, DriverOptions driverOptions)
-        {
-            return new TypeDBDriver(addresses, credentials, driverOptions);
-        }
+        public string Distribution => NativeObject.distribution;
 
-        public static IDriver Driver(IDictionary<string, string> addressTranslation, Credentials credentials, DriverOptions driverOptions)
-        {
-            return new TypeDBDriver(addressTranslation, credentials, driverOptions);
-        }
+        public string Version => NativeObject.version;
     }
 }

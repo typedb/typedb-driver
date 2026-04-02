@@ -44,7 +44,7 @@ namespace TypeDB.Driver.Test.Behaviour
             Driver = TypeDB.Driver(
                 TypeDB.DefaultAddress,
                 new Credentials(username, password),
-                new DriverOptions(false, null));
+                new DriverOptions(DriverTlsConfig.Disabled()));
         }
 
         [Then(@"connection opens with username '(.*)', password '([^']*)'; fails with a message containing: ""(.*)""")]
@@ -56,7 +56,7 @@ namespace TypeDB.Driver.Test.Behaviour
                 TypeDB.Driver(
                     TypeDB.DefaultAddress,
                     new Credentials(username, password),
-                    new DriverOptions(false, null));
+                    new DriverOptions(DriverTlsConfig.Disabled()));
             });
             Assert.Contains(expectedMessage, exception.Message);
         }

@@ -29,22 +29,27 @@ using TypeDB.Driver.User;
 
 namespace TypeDB.Driver.Connection
 {
-    /// <summary>
-    /// Implementation of the TypeDB driver connection.
-    /// </summary>
     public class TypeDBDriver : NativeObjectWrapper<Pinvoke.TypeDBDriver>, IDriver
     {
         private readonly IDatabaseManager _databaseManager;
         private readonly UserManager _userManager;
 
-        /// <summary>
-        /// Create a driver to connect to a TypeDB 3.0 server.
-        /// </summary>
-        /// <param name="address">The address (host:port) on which the TypeDB Server is running.</param>
-        /// <param name="credentials">The credentials to connect with.</param>
-        /// <param name="driverOptions">The driver options (TLS settings, etc.).</param>
         public TypeDBDriver(string address, Credentials credentials, DriverOptions driverOptions)
             : base(Open(address, credentials, driverOptions))
+        {
+            _databaseManager = new DatabaseManager(NativeObject);
+            _userManager = new UserManager(NativeObject);
+        }
+
+        public TypeDBDriver(ISet<string> addresses, Credentials credentials, DriverOptions driverOptions)
+            : base(Open(addresses, credentials, driverOptions))
+        {
+            _databaseManager = new DatabaseManager(NativeObject);
+            _userManager = new UserManager(NativeObject);
+        }
+
+        public TypeDBDriver(IDictionary<string, string> addressTranslation, Credentials credentials, DriverOptions driverOptions)
+            : base(Open(addressTranslation, credentials, driverOptions))
         {
             _databaseManager = new DatabaseManager(NativeObject);
             _userManager = new UserManager(NativeObject);
@@ -54,7 +59,7 @@ namespace TypeDB.Driver.Connection
         {
             try
             {
-                return Pinvoke.typedb_driver.driver_open_with_description(
+                return Pinvoke.typedb_driver.driver_new_with_description(
                     address,
                     credentials.NativeObject,
                     driverOptions.NativeObject,
@@ -66,10 +71,43 @@ namespace TypeDB.Driver.Connection
             }
         }
 
-        /// <inheritdoc/>
+        private static Pinvoke.TypeDBDriver Open(ISet<string> addresses, Credentials credentials, DriverOptions driverOptions)
+        {
+            try
+            {
+                return Pinvoke.typedb_driver.driver_new_with_addresses_with_description(
+                    addresses.ToArray(),
+                    credentials.NativeObject,
+                    driverOptions.NativeObject,
+                    IDriver.Language);
+            }
+            catch (Pinvoke.Error e)
+            {
+                throw new TypeDBDriverException(e);
+            }
+        }
+
+        private static Pinvoke.TypeDBDriver Open(IDictionary<string, string> addressTranslation, Credentials credentials, DriverOptions driverOptions)
+        {
+            try
+            {
+                string[] publicAddresses = addressTranslation.Keys.ToArray();
+                string[] privateAddresses = addressTranslation.Values.ToArray();
+                return Pinvoke.typedb_driver.driver_new_with_address_translation_with_description(
+                    publicAddresses,
+                    privateAddresses,
+                    credentials.NativeObject,
+                    driverOptions.NativeObject,
+                    IDriver.Language);
+            }
+            catch (Pinvoke.Error e)
+            {
+                throw new TypeDBDriverException(e);
+            }
+        }
+
         public bool IsOpen()
         {
-            // Check if the SWIG object has been disposed (pointer is null)
             if (!NativeObject.IsOwned())
             {
                 return false;
@@ -77,25 +115,21 @@ namespace TypeDB.Driver.Connection
             return Pinvoke.typedb_driver.driver_is_open(NativeObject);
         }
 
-        /// <inheritdoc/>
         public IDatabaseManager Databases
         {
             get { return _databaseManager; }
         }
 
-        /// <inheritdoc/>
         public IUserManager Users
         {
             get { return _userManager; }
         }
 
-        /// <inheritdoc/>
         public ITransaction Transaction(string database, TransactionType type)
         {
             return Transaction(database, type, new TransactionOptions());
         }
 
-        /// <inheritdoc/>
         public ITransaction Transaction(string database, TransactionType type, TransactionOptions options)
         {
             try
@@ -114,10 +148,98 @@ namespace TypeDB.Driver.Connection
             }
         }
 
-        /// <inheritdoc/>
+        public ServerVersion GetServerVersion(ServerRouting? serverRouting = null)
+        {
+            try
+            {
+                return new ServerVersion(
+                    Pinvoke.typedb_driver.driver_server_version(
+                        NativeObject,
+                        ServerRouting.GetNativeValue(serverRouting)));
+            }
+            catch (Pinvoke.Error e)
+            {
+                throw new TypeDBDriverException(e);
+            }
+        }
+
+        public ISet<IServer> GetServers(ServerRouting? serverRouting = null)
+        {
+            try
+            {
+                return new NativeEnumerable<Pinvoke.Server>(
+                    Pinvoke.typedb_driver.driver_servers(
+                        NativeObject,
+                        ServerRouting.GetNativeValue(serverRouting)))
+                    .Select(s => (IServer)new ServerImpl(s))
+                    .ToHashSet();
+            }
+            catch (Pinvoke.Error e)
+            {
+                throw new TypeDBDriverException(e);
+            }
+        }
+
+        public IServer? GetPrimaryServer(ServerRouting? serverRouting = null)
+        {
+            try
+            {
+                Pinvoke.Server? nativeServer = Pinvoke.typedb_driver.driver_primary_server(
+                    NativeObject,
+                    ServerRouting.GetNativeValue(serverRouting));
+                if (nativeServer != null)
+                {
+                    return new ServerImpl(nativeServer);
+                }
+                return null;
+            }
+            catch (Pinvoke.Error e)
+            {
+                throw new TypeDBDriverException(e);
+            }
+        }
+
+        public void RegisterServer(long serverId, string address)
+        {
+            try
+            {
+                Pinvoke.typedb_driver.driver_register_server(NativeObject, serverId, address);
+            }
+            catch (Pinvoke.Error e)
+            {
+                throw new TypeDBDriverException(e);
+            }
+        }
+
+        public void DeregisterServer(long serverId)
+        {
+            try
+            {
+                Pinvoke.typedb_driver.driver_deregister_server(NativeObject, serverId);
+            }
+            catch (Pinvoke.Error e)
+            {
+                throw new TypeDBDriverException(e);
+            }
+        }
+
+        public void UpdateAddressTranslation(IDictionary<string, string> addressTranslation)
+        {
+            try
+            {
+                string[] publicAddresses = addressTranslation.Keys.ToArray();
+                string[] privateAddresses = addressTranslation.Values.ToArray();
+                Pinvoke.typedb_driver.driver_update_address_translation(
+                    NativeObject, publicAddresses, privateAddresses);
+            }
+            catch (Pinvoke.Error e)
+            {
+                throw new TypeDBDriverException(e);
+            }
+        }
+
         public void Close()
         {
-            // Check if already closed/disposed
             if (!NativeObject.IsOwned())
             {
                 return;
@@ -125,7 +247,6 @@ namespace TypeDB.Driver.Connection
 
             try
             {
-                // Signal the driver to shut down gracefully, like Java/Python do.
                 Pinvoke.typedb_driver.driver_force_close(NativeObject);
             }
             catch (Pinvoke.Error e)
@@ -134,7 +255,6 @@ namespace TypeDB.Driver.Connection
             }
         }
 
-        /// <inheritdoc/>
         public void Dispose()
         {
             Close();

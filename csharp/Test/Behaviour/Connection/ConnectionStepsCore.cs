@@ -19,6 +19,7 @@
 
 using DataTable = Gherkin.Ast.DataTable;
 using System;
+using System.Linq;
 using Xunit;
 using Xunit.Gherkin.Quick;
 
@@ -48,12 +49,20 @@ namespace TypeDB.Driver.Test.Behaviour
             _concurrentRowStreams = null;
         }
 
+        public override IDriver CreateDefaultTypeDBDriver()
+        {
+            return TypeDB.Driver(
+                TypeDB.DefaultAddress,
+                DefaultCredentials,
+                new DriverOptions(DriverTlsConfig.Disabled()));
+        }
+
         public override IDriver CreateTypeDBDriver(string address)
         {
             return TypeDB.Driver(
                 address,
                 new Credentials(DefaultUsername, DefaultPassword),
-                new DriverOptions(false, null));
+                new DriverOptions(DriverTlsConfig.Disabled()));
         }
 
         [Given(@"typedb starts")]
@@ -77,13 +86,13 @@ namespace TypeDB.Driver.Test.Behaviour
             Driver = TypeDB.Driver(
                 TypeDB.DefaultAddress,
                 new Credentials(username, password),
-                new DriverOptions(false, null));
+                new DriverOptions(DriverTlsConfig.Disabled()));
         }
 
         [Given(@"typedb has configuration")]
         public void TypeDBHasConfiguration(DataTable data)
         {
-            throw new NotImplementedException("Community tests are not expected to use this method");
+            throw new NotImplementedException("Core tests are not expected to use this method");
         }
 
         // Connection-level steps (from Base)
@@ -119,6 +128,34 @@ namespace TypeDB.Driver.Test.Behaviour
             }
         }
 
+        [Then(@"connection contains distribution")]
+        public void ConnectionContainsDistribution()
+        {
+            if (_requiredConfiguration) return;
+            Assert.False(string.IsNullOrEmpty(GetServerVersion().Distribution));
+        }
+
+        [Then(@"connection contains version")]
+        public void ConnectionContainsVersion()
+        {
+            if (_requiredConfiguration) return;
+            Assert.False(string.IsNullOrEmpty(GetServerVersion().Version));
+        }
+
+        [Then(@"connection has (\d+) servers?")]
+        public void ConnectionHasServerCount(int count)
+        {
+            if (_requiredConfiguration) return;
+            Assert.Equal(count, GetServers().Count);
+        }
+
+        [Then(@"connection primary server exists")]
+        public void ConnectionPrimaryServerExists()
+        {
+            if (_requiredConfiguration) return;
+            Assert.NotNull(GetPrimaryServer());
+        }
+
         [Given(@"connection has (\d+) databases?")]
         [Then(@"connection has (\d+) databases?")]
         public void ConnectionHasDatabaseCount(int expectedCount)
@@ -127,6 +164,38 @@ namespace TypeDB.Driver.Test.Behaviour
 
             Assert.NotNull(Driver);
             Assert.Equal(expectedCount, Driver.Databases.GetAll().Count);
+        }
+
+        [Then(@"connection has (\d+) users?")]
+        public void ConnectionHasUserCount(int expectedCount)
+        {
+            if (_requiredConfiguration) return;
+            Assert.NotNull(Driver);
+            Assert.Equal(expectedCount, Driver.Users.GetAll().Count);
+        }
+
+        [When(@"set operation server routing to: (.+)")]
+        public void SetOperationServerRouting(string routing)
+        {
+            if (routing.Equals("auto", StringComparison.OrdinalIgnoreCase))
+            {
+                OperationServerRouting = new ServerRouting.Auto();
+            }
+            else if (routing.ToLower().StartsWith("direct(") && routing.EndsWith(")"))
+            {
+                string address = routing.Substring("direct(".Length, routing.Length - "direct(".Length - 1);
+                OperationServerRouting = new ServerRouting.Direct(address);
+            }
+            else
+            {
+                throw new ArgumentException($"Unknown server routing: {routing}");
+            }
+        }
+
+        [When(@"set driver option primary_failover_retries to: (\d+)")]
+        public void SetDriverOptionPrimaryFailoverRetriesTo(int value)
+        {
+            DriverOptions = DriverOptions.SetPrimaryFailoverRetries(value);
         }
 
         // Connection: wrong host/port (from DriverSteps)
@@ -140,7 +209,7 @@ namespace TypeDB.Driver.Test.Behaviour
                 var wrongPortDriver = TypeDB.Driver(
                     "localhost:9999",
                     new Credentials("admin", "password"),
-                    new DriverOptions(false, null));
+                    new DriverOptions(DriverTlsConfig.Disabled()));
             });
         }
 
@@ -153,7 +222,7 @@ namespace TypeDB.Driver.Test.Behaviour
                 var wrongHostDriver = TypeDB.Driver(
                     "nonexistent-host.invalid:1729",
                     new Credentials("admin", "password"),
-                    new DriverOptions(false, null));
+                    new DriverOptions(DriverTlsConfig.Disabled()));
             });
             Assert.Contains(expectedMessage, exception.Message);
         }

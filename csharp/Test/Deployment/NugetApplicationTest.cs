@@ -37,7 +37,7 @@ namespace TypeDB.Driver.Test.Deployment
 
             string dbName = "nuget-test-database";
 
-            using (var driver = TypeDB.Driver(TypeDB.DefaultAddress, new Credentials("admin", "password"), new DriverOptions(false, null)))
+            using (var driver = TypeDB.Driver(TypeDB.DefaultAddress, new Credentials("admin", "password"), new DriverOptions(DriverTlsConfig.Disabled())))
             {
                 if (driver.Databases.Contains(dbName))
                 {

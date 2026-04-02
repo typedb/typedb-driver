@@ -30,24 +30,6 @@ use crate::common::{
 mod concept;
 mod instance;
 
-/// Promise object representing the result of an asynchronous operation.
-/// Use \ref concept_promise_resolve(ConceptPromise*) to wait for and retrieve the resulting boolean value.
-pub struct ConceptPromise(BoxPromise<'static, Result<Option<Concept>>>);
-
-/// Waits for and returns the result of the operation represented by the <code>ConceptPromise</code> object.
-/// In case the operation failed, the error flag will only be set when the promise is resolved.
-/// The native promise object is freed when it is resolved.
-#[no_mangle]
-pub extern "C" fn concept_promise_resolve(promise: *mut ConceptPromise) -> *mut Concept {
-    try_release_optional(take_ownership(promise).0.resolve().transpose())
-}
-
-/// Frees the native rust <code>ConceptPromise</code> object.
-#[no_mangle]
-pub extern "C" fn concept_promise_drop(promise: *mut ConceptPromise) {
-    drop(take_ownership(promise))
-}
-
 /// Iterator over the <code>ConceptRow</code>s returned by an API method or query.
 pub struct ConceptRowIterator(pub CIterator<Result<ConceptRow>>);
 

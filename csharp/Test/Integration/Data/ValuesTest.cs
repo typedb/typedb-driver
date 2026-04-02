@@ -51,7 +51,7 @@ namespace TypeDB.Driver.Test.Integration
         {
             try
             {
-                using var driver = TypeDB.Driver(ServerAddress, new Credentials("admin", "password"), new DriverOptions(false, null));
+                using var driver = TypeDB.Driver(ServerAddress, new Credentials("admin", "password"), new DriverOptions(DriverTlsConfig.Disabled()));
                 if (driver.Databases.Contains(DatabaseName))
                 {
                     driver.Databases.Get(DatabaseName).Delete();
@@ -303,7 +303,7 @@ namespace TypeDB.Driver.Test.Integration
         [Test]
         public void TestAllValueTypes()
         {
-            using var driver = TypeDB.Driver(ServerAddress, new Credentials("admin", "password"), new DriverOptions(false, null));
+            using var driver = TypeDB.Driver(ServerAddress, new Credentials("admin", "password"), new DriverOptions(DriverTlsConfig.Disabled()));
             driver.Databases.Create(DatabaseName);
 
             var attributeValueTypes = new Dictionary<string, string>
@@ -468,7 +468,7 @@ namespace TypeDB.Driver.Test.Integration
         [Test]
         public void TestDatetimeNaive()
         {
-            using var driver = TypeDB.Driver(ServerAddress, new Credentials("admin", "password"), new DriverOptions(false, null));
+            using var driver = TypeDB.Driver(ServerAddress, new Credentials("admin", "password"), new DriverOptions(DriverTlsConfig.Disabled()));
             driver.Databases.Create(DatabaseName);
 
             // Define datetime attribute
@@ -537,7 +537,7 @@ namespace TypeDB.Driver.Test.Integration
         [Test]
         public void TestDatetimeTZIana()
         {
-            using var driver = TypeDB.Driver(ServerAddress, new Credentials("admin", "password"), new DriverOptions(false, null));
+            using var driver = TypeDB.Driver(ServerAddress, new Credentials("admin", "password"), new DriverOptions(DriverTlsConfig.Disabled()));
             driver.Databases.Create(DatabaseName);
 
             // Define datetime-tz attribute
@@ -570,7 +570,7 @@ namespace TypeDB.Driver.Test.Integration
         [Test]
         public void TestDatetimeTZFixedOffset()
         {
-            using var driver = TypeDB.Driver(ServerAddress, new Credentials("admin", "password"), new DriverOptions(false, null));
+            using var driver = TypeDB.Driver(ServerAddress, new Credentials("admin", "password"), new DriverOptions(DriverTlsConfig.Disabled()));
             driver.Databases.Create(DatabaseName);
 
             // Define datetime-tz attribute
@@ -604,7 +604,7 @@ namespace TypeDB.Driver.Test.Integration
         [Test]
         public void TestDurationViaDatabase()
         {
-            using var driver = TypeDB.Driver(ServerAddress, new Credentials("admin", "password"), new DriverOptions(false, null));
+            using var driver = TypeDB.Driver(ServerAddress, new Credentials("admin", "password"), new DriverOptions(DriverTlsConfig.Disabled()));
             driver.Databases.Create(DatabaseName);
 
             // Define duration attribute

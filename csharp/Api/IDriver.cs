@@ -18,85 +18,36 @@
  */
 
 using System;
+using System.Collections.Generic;
 
 namespace TypeDB.Driver.Api
 {
-    /// <summary>
-    /// A connection to a TypeDB server which serves as the starting point for all interaction.
-    /// </summary>
     public interface IDriver : IDisposable
     {
-        /// <summary>
-        /// The language identifier for this driver.
-        /// </summary>
         public const string Language = "csharp";
 
-        /// <summary>
-        /// Checks whether this connection is presently open.
-        /// </summary>
-        /// <returns><c>true</c> if the connection is open, <c>false</c> otherwise.</returns>
-        /// <example>
-        /// <code>
-        /// driver.IsOpen();
-        /// </code>
-        /// </example>
         bool IsOpen();
 
-        /// <summary>
-        /// The <see cref="IDatabaseManager"/> for this connection, providing access to database management methods.
-        /// </summary>
-        /// <example>
-        /// <code>
-        /// driver.Databases
-        /// </code>
-        /// </example>
         IDatabaseManager Databases { get; }
 
-        /// <summary>
-        /// The <see cref="IUserManager"/> instance for this connection, providing access to user management methods.
-        /// </summary>
-        /// <example>
-        /// <code>
-        /// driver.Users
-        /// </code>
-        /// </example>
         IUserManager Users { get; }
 
-        /// <summary>
-        /// Opens a transaction to perform read or write queries on the database.
-        /// </summary>
-        /// <param name="database">The name of the database to open a transaction for.</param>
-        /// <param name="type">The type of transaction to be created (Read, Write, or Schema).</param>
-        /// <returns>A new transaction.</returns>
-        /// <example>
-        /// <code>
-        /// driver.Transaction(database, TransactionType.Read);
-        /// </code>
-        /// </example>
         ITransaction Transaction(string database, TransactionType type);
 
-        /// <summary>
-        /// Opens a transaction to perform read or write queries on the database with custom options.
-        /// </summary>
-        /// <param name="database">The name of the database to open a transaction for.</param>
-        /// <param name="type">The type of transaction to be created (Read, Write, or Schema).</param>
-        /// <param name="options">Transaction options to configure the opened transaction.</param>
-        /// <returns>A new transaction.</returns>
-        /// <example>
-        /// <code>
-        /// driver.Transaction(database, TransactionType.Read, options);
-        /// </code>
-        /// </example>
         ITransaction Transaction(string database, TransactionType type, TransactionOptions options);
 
-        /// <summary>
-        /// Closes the driver. Before instantiating a new driver, the driver that's currently open should first be closed.
-        /// </summary>
-        /// <example>
-        /// <code>
-        /// driver.Close();
-        /// </code>
-        /// </example>
+        ServerVersion GetServerVersion(ServerRouting? serverRouting = null);
+
+        ISet<IServer> GetServers(ServerRouting? serverRouting = null);
+
+        IServer? GetPrimaryServer(ServerRouting? serverRouting = null);
+
+        void RegisterServer(long serverId, string address);
+
+        void DeregisterServer(long serverId);
+
+        void UpdateAddressTranslation(IDictionary<string, string> addressTranslation);
+
         void Close();
     }
 }
