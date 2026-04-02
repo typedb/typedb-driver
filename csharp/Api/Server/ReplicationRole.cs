@@ -39,6 +39,10 @@ namespace TypeDB.Driver.Api
 
     public static class ReplicationRoleExtensions
     {
+        /// <summary>
+        /// Converts a native <c>ReplicationRole</c> to the managed enum value.
+        /// </summary>
+        /// <param name="nativeRole">The native replication role value.</param>
         public static ReplicationRole Of(Pinvoke.ReplicationRole nativeRole)
         {
             if (nativeRole == Pinvoke.ReplicationRole.Primary) return ReplicationRole.Primary;

@@ -24,6 +24,9 @@ namespace TypeDB.Driver.Api
 {
     public interface IDriver : IDisposable
     {
+        /// <summary>
+        /// The language identifier for this driver.
+        /// </summary>
         public const string Language = "csharp";
 
         /// <summary>

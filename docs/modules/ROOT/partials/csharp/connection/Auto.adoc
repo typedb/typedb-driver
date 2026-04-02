@@ -14,3 +14,38 @@
 
 Automatic server routing. Driver automatically selects the server (primary in clusters).
 
+// tag::methods[]
+[#_override_Pinvoke_ServerRouting_TypeDB_Driver_Api_ServerRouting_Auto_NativeValue_]
+==== method ``NativeValue``
+
+[source,cs]
+----
+override Pinvoke.ServerRouting NativeValue()
+----
+
+
+
+
+
+[caption=""]
+.Returns
+`override Pinvoke.ServerRouting`
+
+[#_override_string_TypeDB_Driver_Api_ServerRouting_Auto_ToString_]
+==== method ``ToString``
+
+[source,cs]
+----
+override string ToString()
+----
+
+
+
+
+
+[caption=""]
+.Returns
+`override string`
+
+// end::methods[]
+

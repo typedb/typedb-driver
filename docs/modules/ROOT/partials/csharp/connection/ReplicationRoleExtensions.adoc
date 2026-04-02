@@ -55,5 +55,31 @@ Checks whether this is a secondary server of the raft cluster.
 .Returns
 `bool`
 
+[#_static_ReplicationRole_TypeDB_Driver_Api_ReplicationRoleExtensions_Of_PinvokeReplicationRole_nativeRole_]
+==== method ``Of``
+
+[source,cs]
+----
+static ReplicationRole Of(Pinvoke::ReplicationRole nativeRole)
+----
+
+
+
+Converts a native ``ReplicationRole`` to the managed enum value.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `nativeRole` a| The native replication role value. a| `Pinvoke::ReplicationRole`
+|===
+
+[caption=""]
+.Returns
+`ReplicationRole`
+
 // end::methods[]
 

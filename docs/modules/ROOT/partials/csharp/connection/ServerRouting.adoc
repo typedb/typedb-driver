@@ -10,3 +10,48 @@
 
 Server routing directive for operations against a distributed server. All driver methods have default recommended values, however, some operations can be configured in order to target a specific server in the cluster. This setting does not affect clusters with a single node.
 
+// tag::methods[]
+[#_static_Pinvoke_ServerRouting_TypeDB_Driver_Api_ServerRouting_GetNativeValue_ServerRouting_serverRouting_]
+==== method ``GetNativeValue``
+
+[source,cs]
+----
+static Pinvoke.? ServerRouting GetNativeValue(ServerRouting? serverRouting)
+----
+
+
+
+Returns the native server routing value, or ``null`` if routing is not specified.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `serverRouting` a| The server routing, or ``null``. a| `ServerRouting?`
+|===
+
+[caption=""]
+.Returns
+`Pinvoke.? ServerRouting`
+
+[#_Pinvoke_ServerRouting_TypeDB_Driver_Api_ServerRouting_NativeValue_]
+==== method ``NativeValue``
+
+[source,cs]
+----
+Pinvoke.ServerRouting NativeValue()
+----
+
+
+
+Returns the native server routing value.
+
+[caption=""]
+.Returns
+`Pinvoke.ServerRouting`
+
+// end::methods[]
+

@@ -26,8 +26,15 @@ namespace TypeDB.Driver.Api
     /// </summary>
     public abstract class ServerRouting
     {
+        /// <summary>
+        /// Returns the native server routing value.
+        /// </summary>
         public abstract Pinvoke.ServerRouting NativeValue();
 
+        /// <summary>
+        /// Returns the native server routing value, or <c>null</c> if routing is not specified.
+        /// </summary>
+        /// <param name="serverRouting">The server routing, or <c>null</c>.</param>
         public static Pinvoke.ServerRouting? GetNativeValue(ServerRouting? serverRouting)
         {
             return serverRouting?.NativeValue();
@@ -38,11 +45,13 @@ namespace TypeDB.Driver.Api
         /// </summary>
         public sealed class Auto : ServerRouting
         {
+            /// <inheritdoc />
             public override Pinvoke.ServerRouting NativeValue()
             {
                 return Pinvoke.typedb_driver.server_routing_auto();
             }
 
+            /// <inheritdoc />
             public override string ToString()
             {
                 return "Auto";
@@ -59,16 +68,22 @@ namespace TypeDB.Driver.Api
             /// </summary>
             public string Address { get; }
 
+            /// <summary>
+            /// Creates a Direct routing to the specified server address.
+            /// </summary>
+            /// <param name="address">The address of the server to route to.</param>
             public Direct(string address)
             {
                 Address = address;
             }
 
+            /// <inheritdoc />
             public override Pinvoke.ServerRouting NativeValue()
             {
                 return Pinvoke.typedb_driver.server_routing_direct(Address);
             }
 
+            /// <inheritdoc />
             public override string ToString()
             {
                 return "Direct(" + Address + ")";

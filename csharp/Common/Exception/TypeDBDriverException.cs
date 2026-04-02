@@ -24,65 +24,67 @@ using TypeDB.Driver.Common;
 
 namespace TypeDB.Driver.Common
 {
-    /**
-     * Exceptions raised by the driver.
-     */
+    /// <summary>
+    /// Exceptions raised by the driver.
+    /// </summary>
     public class TypeDBDriverException : System.Exception
     {
-        /**
-         * @private
-         */
+        /// <summary>
+        /// Creates a new exception from a structured error message.
+        /// </summary>
+        /// <param name="error">The error message template.</param>
+        /// <param name="errorParams">The parameters for the error message.</param>
         public TypeDBDriverException(ErrorMessage error, params object?[] errorParams)
             : base(error.ToString(errorParams))
         {
         }
 
-        /**
-         * @private
-         */
+        /// <summary>
+        /// Creates a new exception with the given message.
+        /// </summary>
+        /// <param name="message">The exception message.</param>
         public TypeDBDriverException(string message)
             : base(message)
         {
         }
 
-        /**
-         * @private
-         */
+        /// <summary>
+        /// Creates a new exception wrapping an existing exception.
+        /// </summary>
+        /// <param name="error">The exception to wrap.</param>
         public TypeDBDriverException(System.Exception error)
             : base(error.Message)
         {
         }
 
-        /**
-         * @private
-         */
+        /// <summary>
+        /// Creates a new exception from a native error.
+        /// </summary>
+        /// <param name="nativeError">The native error.</param>
         public TypeDBDriverException(Pinvoke.Error nativeError)
             : base(nativeError.Message)
         {
         }
 
-        /**
-         * Checks whether a substring is a part of this exception's message.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * try
-         * {
-         *     ...
-         * }
-         * catch (TypeDBDriverException e)
-         * {
-         *     if (e.Contains("CSCO01"))
-         *     {
-         *         ...
-         *     }
-         *     else
-         *     {
-         *         ...
-         *     }
-         * }
-         * </pre>
-         */
+        /// <summary>
+        /// Checks whether a substring is a part of this exception's message.
+        /// </summary>
+        /// <param name="subString">The substring to search for.</param>
+        /// <example>
+        /// <code>
+        /// try
+        /// {
+        ///     // ...
+        /// }
+        /// catch (TypeDBDriverException e)
+        /// {
+        ///     if (e.Contains("CSCO01"))
+        ///     {
+        ///         // ...
+        ///     }
+        /// }
+        /// </code>
+        /// </example>
         public bool Contains(string subString)
         {
             return Message.Contains(subString);

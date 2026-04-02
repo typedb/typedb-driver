@@ -116,7 +116,7 @@ a| `serverRouting` a| The server routing to use for the operation. a|
 .Code examples
 [source,cs]
 ----
-driver.GetPrimaryServer(new ServerRouting.Auto()); TypeDB.Driver.Api.ServerRouting.Auto Automatic server routing. Driver automatically selects the server (primary in clusters). Definition ServerRouting.cs:40 TypeDB.Driver.Api.ServerRouting Server routing directive for operations against a distributed server. All driver methods have default... Definition ServerRouting.cs:28
+driver.GetPrimaryServer(new ServerRouting.Auto()); TypeDB.Driver.Api.ServerRouting.Auto Automatic server routing. Driver automatically selects the server (primary in clusters). Definition ServerRouting.cs:47 TypeDB.Driver.Api.ServerRouting Server routing directive for operations against a distributed server. All driver methods have default... Definition ServerRouting.cs:28
 ----
 
 [#_ServerVersion_TypeDB_Driver_Api_IDriver_GetServerVersion_ServerRouting_serverRouting_null_]
