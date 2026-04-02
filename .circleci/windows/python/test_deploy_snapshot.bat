@@ -23,11 +23,11 @@ git rev-parse HEAD > version_temp.txt
 set /p VER=<version_temp.txt
 
 bazel --output_user_root=C:\b build --config=ci @typedb_artifact_windows-x86_64//file
-powershell -Command "Move-Item -Path bazel-typedb-driver\external\typedb_artifact_windows-x86_64\file\typedb-all-windows* -Destination typedb-all-windows.zip"
+powershell -Command "Move-Item -Path (Get-ChildItem -Path bazel-typedb-driver\external\*typedb_artifact_windows-x86_64\file\typedb-all-windows*) -Destination typedb-all-windows.zip"
 7z x typedb-all-windows.zip
 RD /S /Q typedb-all-windows
 powershell -Command "Move-Item -Path typedb-all-windows-* -Destination typedb-all-windows"
-START /B "" typedb-all-windows\typedb server --development-mode.enable=true
+START /B "" typedb-all-windows\typedb server --development-mode.enabled=true
 
 python3 -m pip install --extra-index-url https://repo.typedb.com/public/public-snapshot/python/simple typedb-driver==0.0.0+%VER%
 cd python/tests/deployment
