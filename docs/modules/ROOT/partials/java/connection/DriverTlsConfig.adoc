@@ -80,7 +80,8 @@ DriverTlsConfig tlsConfig = DriverTlsConfig.enabledWithNativeRootCA();
 public static DriverTlsConfig enabledWithRootCA​(java.lang.String tlsRootCAPath)
 ----
 
-Creates a TLS configuration enabled with a custom root CA certificate bundle (PEM).
+Creates a TLS configuration enabled with a custom root CA certificate bundle (PEM). 
+
 
 [caption=""]
 .Input parameters
@@ -88,19 +89,19 @@ Creates a TLS configuration enabled with a custom root CA certificate bundle (PE
 [options="header"]
 |===
 |Name |Description |Type
-a| `tlsRootCAPath` a| Path to PEM-encoded root CA certificate bundle. 
-Examples
-[source,java]
-----
-                                                                                                                               DriverTlsConfig tlsConfig = DriverTlsConfig.enabledWithRootCA("path/to/ca-certificate.pem");
-                                                                                                                               
-----
- a| `java.lang.String`
+a| `tlsRootCAPath` a| Path to PEM-encoded root CA certificate bundle. a| `java.lang.String`
 |===
 
 [caption=""]
 .Returns
 `public static DriverTlsConfig`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+DriverTlsConfig tlsConfig = DriverTlsConfig.enabledWithRootCA("path/to/ca-certificate.pem");
+----
 
 [#_DriverTlsConfig_isEnabled_]
 ==== method ``isEnabled``

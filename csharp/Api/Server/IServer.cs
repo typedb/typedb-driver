@@ -19,12 +19,34 @@
 
 namespace TypeDB.Driver.Api
 {
+    /// <summary>
+    /// The metadata and state of an individual raft server of a driver connection.
+    /// </summary>
     public interface IServer
     {
+        /// <summary>
+        /// Returns the id of this server.
+        /// </summary>
         long Id { get; }
+
+        /// <summary>
+        /// Returns the address this server is hosted at.
+        /// </summary>
         string Address { get; }
+
+        /// <summary>
+        /// Returns whether this is the primary server of the raft cluster or any of the supporting types.
+        /// </summary>
         ReplicationRole? Role { get; }
+
+        /// <summary>
+        /// Checks whether this is the primary server of the raft cluster.
+        /// </summary>
         bool IsPrimary { get; }
+
+        /// <summary>
+        /// Returns the raft protocol 'term' of this server.
+        /// </summary>
         long? Term { get; }
     }
 }

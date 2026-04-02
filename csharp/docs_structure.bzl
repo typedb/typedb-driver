@@ -77,10 +77,18 @@ dir_mapping = {
     "IDriver.adoc": "connection",
     "Credentials.adoc": "connection",
     "DriverOptions.adoc": "connection",
+    "DriverTlsConfig.adoc": "connection",
     "IDatabaseManager.adoc": "connection",
     "IDatabase.adoc": "connection",
+    "IServer.adoc": "connection",
     "IUserManager.adoc": "connection",
     "IUser.adoc": "connection",
+    "ReplicationRole.adoc": "connection",
+    "ReplicationRoleExtensions.adoc": "connection",
+    "ServerRouting.adoc": "connection",
+    "Auto.adoc": "connection",
+    "Direct.adoc": "connection",
+    "ServerVersion.adoc": "connection",
 
     # Transaction
     "ITransaction.adoc": "transaction",

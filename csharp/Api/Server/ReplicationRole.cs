@@ -22,6 +22,14 @@ using TypeDB.Driver.Common;
 
 namespace TypeDB.Driver.Api
 {
+    /// <summary>
+    /// This enum is used to specify the replication role of a server.
+    /// </summary>
+    /// <example>
+    /// <code>
+    /// server.Role;
+    /// </code>
+    /// </example>
     public enum ReplicationRole
     {
         Primary = 0,
@@ -39,8 +47,19 @@ namespace TypeDB.Driver.Api
             throw new TypeDBDriverException("Unexpected native ReplicationRole value");
         }
 
+        /// <summary>
+        /// Checks whether this is the primary server of the raft cluster.
+        /// </summary>
         public static bool IsPrimary(this ReplicationRole role) => role == ReplicationRole.Primary;
+
+        /// <summary>
+        /// Checks whether this is a candidate server of the raft cluster.
+        /// </summary>
         public static bool IsCandidate(this ReplicationRole role) => role == ReplicationRole.Candidate;
+
+        /// <summary>
+        /// Checks whether this is a secondary server of the raft cluster.
+        /// </summary>
         public static bool IsSecondary(this ReplicationRole role) => role == ReplicationRole.Secondary;
     }
 }

@@ -21,6 +21,14 @@ using TypeDB.Driver.Common;
 
 namespace TypeDB.Driver.Api
 {
+    /// <summary>
+    /// A full TypeDB server's version specification.
+    /// </summary>
+    /// <example>
+    /// <code>
+    /// driver.GetServerVersion();
+    /// </code>
+    /// </example>
     public class ServerVersion : NativeObjectWrapper<Pinvoke.ServerVersion>
     {
         internal ServerVersion(Pinvoke.ServerVersion nativeObject)
@@ -28,8 +36,24 @@ namespace TypeDB.Driver.Api
         {
         }
 
+        /// <summary>
+        /// Returns the server's distribution.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// serverVersion.Distribution;
+        /// </code>
+        /// </example>
         public string Distribution => NativeObject.distribution;
 
+        /// <summary>
+        /// Returns the server's version.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// serverVersion.Version;
+        /// </code>
+        /// </example>
         public string Version => NativeObject.version;
     }
 }

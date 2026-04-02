@@ -19,6 +19,11 @@
 
 namespace TypeDB.Driver.Api
 {
+    /// <summary>
+    /// Server routing directive for operations against a distributed server. All driver methods have
+    /// default recommended values, however, some operations can be configured in order to
+    /// target a specific server in the cluster. This setting does not affect clusters with a single node.
+    /// </summary>
     public abstract class ServerRouting
     {
         public abstract Pinvoke.ServerRouting NativeValue();
@@ -28,6 +33,9 @@ namespace TypeDB.Driver.Api
             return serverRouting?.NativeValue();
         }
 
+        /// <summary>
+        /// Automatic server routing. Driver automatically selects the server (primary in clusters).
+        /// </summary>
         public sealed class Auto : ServerRouting
         {
             public override Pinvoke.ServerRouting NativeValue()
@@ -41,8 +49,14 @@ namespace TypeDB.Driver.Api
             }
         }
 
+        /// <summary>
+        /// Route to a specific known server at the given address. Mostly used for debugging purposes.
+        /// </summary>
         public sealed class Direct : ServerRouting
         {
+            /// <summary>
+            /// Retrieves the address of the server this routing targets.
+            /// </summary>
             public string Address { get; }
 
             public Direct(string address)

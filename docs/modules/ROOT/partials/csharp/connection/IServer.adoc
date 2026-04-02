@@ -1,0 +1,95 @@
+[#_IServer]
+[.doc-api-reference-driver]
+=== IServer
+
+`class`
+
+*Package*: `TypeDB.Driver.Api`
+
+
+
+The metadata and state of an individual raft server of a driver connection.
+
+// tag::methods[]
+[#_string_TypeDB_Driver_Api_IServer_Address]
+==== method ``Address``
+
+[source,cs]
+----
+string TypeDB.Driver.Api.IServer.Address
+----
+
+
+
+Returns the address this server is hosted at.
+
+[caption=""]
+.Returns
+`string`
+
+[#_long_TypeDB_Driver_Api_IServer_Id]
+==== method ``Id``
+
+[source,cs]
+----
+long TypeDB.Driver.Api.IServer.Id
+----
+
+
+
+Returns the id of this server.
+
+[caption=""]
+.Returns
+`long`
+
+[#_bool_TypeDB_Driver_Api_IServer_IsPrimary]
+==== method ``IsPrimary``
+
+[source,cs]
+----
+bool TypeDB.Driver.Api.IServer.IsPrimary
+----
+
+
+
+Checks whether this is the primary server of the raft cluster.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_ReplicationRole_TypeDB_Driver_Api_IServer_Role]
+==== method ``Role``
+
+[source,cs]
+----
+ReplicationRole? TypeDB.Driver.Api.IServer.Role
+----
+
+
+
+Returns whether this is the primary server of the raft cluster or any of the supporting types.
+
+[caption=""]
+.Returns
+`ReplicationRole?`
+
+[#_long_TypeDB_Driver_Api_IServer_Term]
+==== method ``Term``
+
+[source,cs]
+----
+long? TypeDB.Driver.Api.IServer.Term
+----
+
+
+
+Returns the raft protocol 'term' of this server.
+
+[caption=""]
+.Returns
+`long?`
+
+// end::methods[]
+

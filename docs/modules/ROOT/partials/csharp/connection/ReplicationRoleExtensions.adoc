@@ -1,0 +1,59 @@
+[#_ReplicationRoleExtensions]
+[.doc-api-reference-driver]
+=== ReplicationRoleExtensions
+
+`class`
+
+*Package*: `TypeDB.Driver.Api`
+
+// tag::methods[]
+[#_static_bool_TypeDB_Driver_Api_ReplicationRoleExtensions_IsCandidate_this_ReplicationRole_role_]
+==== method ``IsCandidate``
+
+[source,cs]
+----
+static bool IsCandidate(this ReplicationRole role)
+----
+
+
+
+Checks whether this is a candidate server of the raft cluster.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_static_bool_TypeDB_Driver_Api_ReplicationRoleExtensions_IsPrimary_this_ReplicationRole_role_]
+==== method ``IsPrimary``
+
+[source,cs]
+----
+static bool IsPrimary(this ReplicationRole role)
+----
+
+
+
+Checks whether this is the primary server of the raft cluster.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_static_bool_TypeDB_Driver_Api_ReplicationRoleExtensions_IsSecondary_this_ReplicationRole_role_]
+==== method ``IsSecondary``
+
+[source,cs]
+----
+static bool IsSecondary(this ReplicationRole role)
+----
+
+
+
+Checks whether this is a secondary server of the raft cluster.
+
+[caption=""]
+.Returns
+`bool`
+
+// end::methods[]
+

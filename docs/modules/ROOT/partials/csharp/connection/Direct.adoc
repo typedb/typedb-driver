@@ -1,0 +1,35 @@
+[#_Direct]
+[.doc-api-reference-driver]
+=== Direct
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.ServerRouting`
+
+*Supertypes:*
+
+* `TypeDB.Driver.Api.ServerRouting`
+
+
+
+Route to a specific known server at the given address. Mostly used for debugging purposes.
+
+// tag::methods[]
+[#_string_TypeDB_Driver_Api_ServerRouting_Direct_Address]
+==== method ``Address``
+
+[source,cs]
+----
+string TypeDB.Driver.Api.ServerRouting.Direct.Address
+----
+
+
+
+Retrieves the address of the server this routing targets.
+
+[caption=""]
+.Returns
+`string`
+
+// end::methods[]
+

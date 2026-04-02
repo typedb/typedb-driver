@@ -1,0 +1,12 @@
+[#_ServerRouting]
+[.doc-api-reference-driver]
+=== ServerRouting
+
+`class`
+
+*Package*: `TypeDB.Driver.Api`
+
+
+
+Server routing directive for operations against a distributed server. All driver methods have default recommended values, however, some operations can be configured in order to target a specific server in the cluster. This setting does not affect clusters with a single node.
+
