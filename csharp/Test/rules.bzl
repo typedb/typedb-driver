@@ -20,10 +20,43 @@ load("//csharp:build_opts.bzl", "nullable_context")
 load("//csharp/Test:build_opts.bzl", "behaviour_tests_deps")
 
 
+def csharp_behaviour_test_all(name, test_files, step_files, features, deps, target_frameworks, targeting_packs, **kwargs):
+    csharp_behaviour_test_core(name, test_files, step_files, features, deps, target_frameworks, targeting_packs, **kwargs)
+    csharp_behaviour_test_cluster(name, test_files, step_files, features, deps, target_frameworks, targeting_packs, **kwargs)
+
+
+def csharp_behaviour_test_core(name, test_files, step_files, features, deps, target_frameworks, targeting_packs, **kwargs):
+    csharp_behaviour_test(
+        name = name + "-core",
+        test_files = test_files,
+        step_files = step_files + ["//csharp/Test/Behaviour/Connection:steps-core"],
+        features = features,
+        deps = deps,
+        target_frameworks = target_frameworks,
+        targeting_packs = targeting_packs,
+        add_certificates = False,
+        **kwargs,
+    )
+
+
+def csharp_behaviour_test_cluster(name, test_files, step_files, features, deps, target_frameworks, targeting_packs, **kwargs):
+    csharp_behaviour_test(
+        name = name + "-cluster",
+        test_files = test_files,
+        step_files = step_files + ["//csharp/Test/Behaviour/Connection:steps-cluster"],
+        features = features,
+        deps = deps,
+        target_frameworks = target_frameworks,
+        targeting_packs = targeting_packs,
+        add_certificates = True,
+        **kwargs,
+    )
+
+
 def csharp_behaviour_test(
         name,
         test_files,
-        steps_files,
+        step_files,
         features,
         deps,
         target_frameworks,
@@ -34,7 +67,7 @@ def csharp_behaviour_test(
 
     csharp_test(
         name = name,
-        srcs = test_files + steps_files + [
+        srcs = test_files + step_files + [
             "//csharp/Test/Behaviour/Util:TestRunner.cs",
             "//csharp/Test/Behaviour:TestValueHelper.cs",
         ],
@@ -45,45 +78,6 @@ def csharp_behaviour_test(
         runtime_identifier = "any",
         nullable = nullable_context,
         visibility = ["//visibility:public"],
-        **kwargs,
-    )
-
-
-def csharp_behaviour_test_all(
-        name,
-        test_files,
-        steps_files,
-        connection_steps_core,
-        connection_steps_cluster,
-        features,
-        deps,
-        target_frameworks,
-        targeting_packs,
-        add_certificates = False,
-        **kwargs):
-    """Creates both core and cluster test variants."""
-
-    csharp_behaviour_test(
-        name = name + "-core",
-        test_files = test_files,
-        steps_files = steps_files + [connection_steps_core],
-        features = features,
-        deps = deps,
-        target_frameworks = target_frameworks,
-        targeting_packs = targeting_packs,
-        add_certificates = add_certificates,
-        **kwargs,
-    )
-
-    csharp_behaviour_test(
-        name = name + "-cluster",
-        test_files = test_files,
-        steps_files = steps_files + [connection_steps_cluster],
-        features = features,
-        deps = deps,
-        target_frameworks = target_frameworks,
-        targeting_packs = targeting_packs,
-        add_certificates = True,  # Cluster needs TLS certificates
         **kwargs,
     )
 

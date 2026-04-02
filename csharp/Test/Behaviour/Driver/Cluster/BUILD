@@ -19,18 +19,17 @@ package(default_visibility = ["//csharp/Test/Behaviour:__subpackages__"])
 
 load("//csharp:build_opts.bzl", "nullable_context", "target_frameworks", "targeting_packs")
 load("//csharp/Test:build_opts.bzl", "behaviour_tests_deps")
-load("//csharp/Test:rules.bzl", "csharp_behaviour_test")
+load("//csharp/Test:rules.bzl", "csharp_behaviour_test_cluster")
 load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
-csharp_behaviour_test(
-    name = "test-cluster",
+csharp_behaviour_test_cluster(
+    name = "test",
     test_files = ["ClusterTest.cs"],
-    steps_files = [
+    step_files = [
         "//csharp/Test/Behaviour/Util:steps",
         "//csharp/Test/Behaviour/Query:steps",
         "//csharp/Test/Behaviour/Connection/Transaction:steps",
         "//csharp/Test/Behaviour/Connection/Database:steps",
-        "//csharp/Test/Behaviour/Connection:steps-cluster",
     ],
     features = ["@typedb_behaviour//driver:cluster.feature"],
     deps = [
@@ -44,7 +43,6 @@ csharp_behaviour_test(
     ],
     target_frameworks = target_frameworks,
     targeting_packs = targeting_packs,
-    add_certificates = True,
 )
 
 checkstyle_test(

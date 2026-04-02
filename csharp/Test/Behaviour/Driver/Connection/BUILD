@@ -25,14 +25,12 @@ load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 csharp_behaviour_test_all(
     name = "test",
     test_files = ["ConnectionTest.cs"],
-    steps_files = [
+    step_files = [
         "//csharp/Test/Behaviour/Util:steps",
         "//csharp/Test/Behaviour/Query:steps",
         "//csharp/Test/Behaviour/Connection/Transaction:steps",
         "//csharp/Test/Behaviour/Connection/Database:steps",
     ],
-    connection_steps_core = "//csharp/Test/Behaviour/Connection:steps-core",
-    connection_steps_cluster = "//csharp/Test/Behaviour/Connection:steps-cluster",
     features = ["@typedb_behaviour//driver:connection.feature"],
     deps = [
         "//csharp/Api:api",
