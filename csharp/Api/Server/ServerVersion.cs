@@ -31,7 +31,7 @@ namespace TypeDB.Driver.Api
     /// </example>
     public class ServerVersion : NativeObjectWrapper<Pinvoke.ServerVersion>
     {
-        internal ServerVersion(Pinvoke.ServerVersion nativeObject)
+        public ServerVersion(Pinvoke.ServerVersion nativeObject)
             : base(nativeObject)
         {
         }

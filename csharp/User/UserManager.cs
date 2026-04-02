@@ -108,7 +108,7 @@ namespace TypeDB.Driver.User
         {
             try
             {
-                return new User(Pinvoke.typedb_driver.users_get_current_user(_nativeDriver), this);
+                return new User(Pinvoke.typedb_driver.users_get_current(_nativeDriver), this);
             }
             catch (Pinvoke.Error e)
             {

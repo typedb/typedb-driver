@@ -277,14 +277,6 @@ namespace TypeDB.Driver.Test.Behaviour
             Assert.Equal(expectedCount, Driver.Databases.GetAll().Count);
         }
 
-        [Then(@"connection has (\d+) users?")]
-        public void ConnectionHasUserCount(int expectedCount)
-        {
-            if (_requiredConfiguration) return;
-            Assert.NotNull(Driver);
-            Assert.Equal(expectedCount, Driver.Users.GetAll().Count);
-        }
-
         [When(@"set operation server routing to: (.+)")]
         public void SetOperationServerRouting(string routing)
         {

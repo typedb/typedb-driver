@@ -94,7 +94,7 @@ class Value(Concept, ABC):
     @abstractmethod
     def get_integer(self) -> int:
         """
-        Returns a ``integer`` value of this value concept. If the value has
+        Returns an ``integer`` value of this value concept. If the value has
         another type, raises an exception.
 
         Examples

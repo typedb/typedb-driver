@@ -75,9 +75,9 @@ namespace TypeDB.Driver.Test.Behaviour
             Assert.NotNull(Driver);
             var allUsers = Driver!.Users.GetAll();
             Assert.True(
-                allUsers.Any(u => u.Username == username),
+                allUsers.Any(u => u.Name == username),
                 $"Expected users to contain '{username}' but they don't. " +
-                $"Users: {string.Join(", ", allUsers.Select(u => u.Username))}");
+                $"Users: {string.Join(", ", allUsers.Select(u => u.Name))}");
         }
 
         [Then(@"get all users does not contain: (.+)")]
@@ -86,7 +86,7 @@ namespace TypeDB.Driver.Test.Behaviour
             Assert.NotNull(Driver);
             var allUsers = Driver!.Users.GetAll();
             Assert.False(
-                allUsers.Any(u => u.Username == username),
+                allUsers.Any(u => u.Name == username),
                 $"Expected users to NOT contain '{username}' but they do.");
         }
 
@@ -103,7 +103,7 @@ namespace TypeDB.Driver.Test.Behaviour
                 }
             }
             var actualNames = Driver!.Users.GetAll()
-                .Select(u => u.Username).ToHashSet();
+                .Select(u => u.Name).ToHashSet();
             Assert.Equal(expectedNames, actualNames);
         }
 
@@ -165,7 +165,7 @@ namespace TypeDB.Driver.Test.Behaviour
             Assert.NotNull(Driver);
             var user = Driver!.Users.Get(username);
             Assert.NotNull(user);
-            Assert.Equal(expectedName, user!.Username);
+            Assert.Equal(expectedName, user!.Name);
         }
 
         [Then(@"get user: ([^;]+); fails with a message containing: ""(.*)""")]
@@ -207,7 +207,7 @@ namespace TypeDB.Driver.Test.Behaviour
             Assert.NotNull(Driver);
             var currentUser = Driver!.Users.GetCurrentUser();
             Assert.NotNull(currentUser);
-            Assert.Equal(expectedUsername, currentUser.Username);
+            Assert.Equal(expectedUsername, currentUser.Name);
         }
     }
 }

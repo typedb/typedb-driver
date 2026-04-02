@@ -123,7 +123,7 @@ class InternalErrorMessage(ErrorMessage):
 UNEXPECTED_NATIVE_VALUE = InternalErrorMessage(1, "Unexpected native value encountered!")
 ILLEGAL_STATE = InternalErrorMessage(2, "Illegal state has been reached!")
 NULL_NATIVE_OBJECT = InternalErrorMessage(3, "Unhandled null pointer to a native object encountered!")
-NULL_CONCEPT_PROPERTY = InternalErrorMessage(4, "Unexpected null for a concept (%s) property is found!");
+NULL_CONCEPT_PROPERTY = InternalErrorMessage(4, "Unexpected null for a concept (%s) property is found!")
 
 
 class AnalyzeExceptionMessage(ErrorMessage):

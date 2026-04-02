@@ -39,7 +39,7 @@ namespace TypeDB.Driver.User
         }
 
         /// <inheritdoc/>
-        public string Username
+        public string Name
         {
             get { return Pinvoke.typedb_driver.user_get_name(NativeObject); }
         }

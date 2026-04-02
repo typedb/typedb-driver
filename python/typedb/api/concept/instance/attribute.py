@@ -96,7 +96,7 @@ class Attribute(Instance, ABC):
     @abstractmethod
     def get_integer(self) -> int:
         """
-        Returns a ``integer`` value of the value concept that this attribute holds. If the value has
+        Returns an ``integer`` value of the value concept that this attribute holds. If the value has
         another type, raises an exception.
 
         Examples

@@ -157,9 +157,9 @@ namespace TypeDB.Driver.Test.Behaviour
                 {
                     foreach (var user in cleanupDriver.Users.GetAll())
                     {
-                        if (user.Username != AdminUsername)
+                        if (user.Name != AdminUsername)
                         {
-                            try { cleanupDriver.Users.Get(user.Username)?.Delete(); } catch { }
+                            try { cleanupDriver.Users.Get(user.Name)?.Delete(); } catch { }
                         }
                     }
 

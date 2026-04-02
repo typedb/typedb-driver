@@ -376,7 +376,7 @@ namespace TypeDB.Driver.Test.Behaviour
         [Then(@"in background, connection open schema transaction for database: ([^;]+)$")]
         public void InBackgroundConnectionOpenSchemaTransaction(string databaseName)
         {
-            BackgroundDriver ??= ConnectionStepsBase.CreateDefaultTypeDBDriver();
+            BackgroundDriver ??= CreateDefaultTypeDBDriver();;
             var tx = ConnectionStepsBase.OpenTransaction(
                 BackgroundDriver, databaseName.Trim(), TransactionType.Schema, CurrentTransactionOptions);
             BackgroundTransactions.Add(tx);
@@ -388,7 +388,7 @@ namespace TypeDB.Driver.Test.Behaviour
         {
             var exception = Assert.ThrowsAny<Exception>(() =>
             {
-                BackgroundDriver ??= ConnectionStepsBase.CreateDefaultTypeDBDriver();
+                BackgroundDriver ??= CreateDefaultTypeDBDriver();;
                 var tx = ConnectionStepsBase.OpenTransaction(
                     BackgroundDriver, databaseName.Trim(), TransactionType.Schema, CurrentTransactionOptions);
                 BackgroundTransactions.Add(tx);
@@ -400,7 +400,7 @@ namespace TypeDB.Driver.Test.Behaviour
         [Then(@"in background, connection open write transaction for database: ([^;]+)")]
         public void InBackgroundConnectionOpenWriteTransaction(string databaseName)
         {
-            BackgroundDriver ??= ConnectionStepsBase.CreateDefaultTypeDBDriver();
+            BackgroundDriver ??= CreateDefaultTypeDBDriver();;
             var tx = ConnectionStepsBase.OpenTransaction(
                 BackgroundDriver, databaseName.Trim(), TransactionType.Write, CurrentTransactionOptions);
             BackgroundTransactions.Add(tx);
@@ -410,7 +410,7 @@ namespace TypeDB.Driver.Test.Behaviour
         [Then(@"in background, connection open read transaction for database: ([^;]+)")]
         public void InBackgroundConnectionOpenReadTransaction(string databaseName)
         {
-            BackgroundDriver ??= ConnectionStepsBase.CreateDefaultTypeDBDriver();
+            BackgroundDriver ??= CreateDefaultTypeDBDriver();;
             var tx = ConnectionStepsBase.OpenTransaction(
                 BackgroundDriver, databaseName.Trim(), TransactionType.Read, CurrentTransactionOptions);
             BackgroundTransactions.Add(tx);

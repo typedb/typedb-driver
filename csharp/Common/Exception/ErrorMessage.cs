@@ -56,22 +56,14 @@ namespace TypeDB.Driver.Common
             {
             }
 
-            public static readonly Driver DRIVER_CLOSED =
-                new Driver(1, "The driver has been closed and no further operation is allowed.");
-            public static readonly Driver SESSION_CLOSED =
-                new Driver(2, "The session has been closed and no further operation is allowed.");
             public static readonly Driver TRANSACTION_CLOSED =
-                new Driver(3, "The transaction has been closed and no further operation is allowed.");
-            public static readonly Driver TRANSACTION_CLOSED_WITH_ERRORS =
-                new Driver(4, "The transaction has been closed with error(s): \n{0}.");
+                new Driver(1, "The transaction has been closed and no further operation is allowed.");
             public static readonly Driver DATABASE_DELETED =
-                new Driver(5, "The database has been deleted and no further operation is allowed.");
-            public static readonly Driver POSITIVE_VALUE_REQUIRED =
-                new Driver(6, "Value cannot be less than 1, was: {0}.");
+                new Driver(2, "The database has been deleted and no further operation is allowed.");
             public static readonly Driver UNEXPECTED_NATIVE_VALUE =
-                new Driver(7, "Unexpected native value encountered!");
+                new Driver(3, "Unexpected native value encountered!");
             public static readonly Driver NON_NULL_VALUE_REQUIRED =
-                new Driver(8, "Value of '{0}' should not be null.");
+                new Driver(4, "Value of '{0}' should not be null.");
         }
 
         public class Concept : ErrorMessage
@@ -86,42 +78,34 @@ namespace TypeDB.Driver.Common
 
             public static readonly Concept INVALID_CONCEPT_CASTING =
                 new Concept(1, "Invalid concept conversion from {0} to {1}.");
-            public static readonly Concept MISSING_TRANSACTION =
-                new Concept(2, "Transaction cannot be null.");
-            public static readonly Concept MISSING_IID =
-                new Concept(3, "IID cannot be null or empty.");
-            public static readonly Concept MISSING_LABEL =
-                new Concept(4, "Label cannot be null or empty.");
-            public static readonly Concept MISSING_VARIABLE =
-                new Concept(5, "Variable name cannot be null or empty.");
-            public static readonly Concept MISSING_VALUE =
-                new Concept(6, "Value cannot be null.");
-            public static readonly Concept NONEXISTENT_EXPLAINABLE_CONCEPT =
-                new Concept(7, "The concept identified by {0} is not explainable.");
-            public static readonly Concept NONEXISTENT_EXPLAINABLE_OWNERSHIP =
-                new Concept(8, "The ownership by owner {0} of attribute {1} is not explainable.");
-            public static readonly Concept UNRECOGNISED_ANNOTATION =
-                new Concept(9, "The annotation {0} is not recognised.");
             public static readonly Concept INVALID_QUERY_ANSWER_CASTING =
-                new Concept(10, "Invalid query answer conversion from {0} to {1}.");
+                new Concept(2, "Invalid query answer conversion from {0} to {1}.");
             public static readonly Concept INVALID_VALUE_RETRIEVAL =
-                new Concept(11, "Could not retrieve a '{0}' value.");
+                new Concept(3, "Could not retrieve a '{0}' value.");
         }
 
-        public class Query : ErrorMessage
+        public class Analyze : ErrorMessage
         {
-            private const string CODE_PREFIX = "CSQR";
-            private const string MESSAGE_PREFIX = "Query Error";
+            private const string CODE_PREFIX = "CSAN";
+            private const string MESSAGE_PREFIX = "Analyze Error";
 
-            public Query(int codeNumber, string message)
+            public Analyze(int codeNumber, string message)
                 : base(CODE_PREFIX, codeNumber, MESSAGE_PREFIX, message)
             {
             }
 
-            public static readonly Query VARIABLE_DOES_NOT_EXIST =
-                new Query(1, "The variable {0} does not exist.");
-            public static readonly Query MISSING_QUERY =
-                new Query(2, "Query cannot be null or empty.");
+            public static readonly Analyze INVALID_CONSTRAINT_CASTING =
+                new Analyze(1, "Invalid constraint conversion from {0} to {1}.");
+            public static readonly Analyze INVALID_CONSTRAINT_VERTEX_CASTING =
+                new Analyze(2, "Invalid constraint vertex conversion from {0} to {1}.");
+            public static readonly Analyze INVALID_STAGE_CASTING =
+                new Analyze(3, "Invalid stage conversion from {0} to {1}.");
+            public static readonly Analyze INVALID_RETURN_OPERATION_CASTING =
+                new Analyze(4, "Invalid return operation conversion from {0} to {1}.");
+            public static readonly Analyze INVALID_FETCH_CASTING =
+                new Analyze(5, "Invalid fetch conversion from {0} to {1}.");
+            public static readonly Analyze INVALID_VARIABLE_ANNOTATIONS_CASTING =
+                new Analyze(6, "Invalid VariableAnnotations conversion from {0} to {1}.");
         }
 
         public class Internal : ErrorMessage
@@ -136,16 +120,12 @@ namespace TypeDB.Driver.Common
 
             public static readonly Internal UNEXPECTED_NATIVE_VALUE =
                 new Internal(1, "Unexpected native value encountered!");
-            public static readonly Internal ILLEGAL_STATE =
-                new Internal(2, "Illegal state has been reached! ({0} : {1}).");
-            public static readonly Internal ILLEGAL_CAST =
-                new Internal(3, "Illegal casting operation to {0}.");
             public static readonly Internal NULL_NATIVE_VALUE =
-                new Internal(4, "Unhandled null pointer to a native object encountered!");
+                new Internal(2, "Unhandled null pointer to a native object encountered!");
             public static readonly Internal ENUMERATOR_EXCESSIVE_ACCESS =
-                new Internal(5, "Such Enumerables support Enumerator's getting only once.");
+                new Internal(3, "Such Enumerables support Enumerator's getting only once.");
             public static readonly Internal UNEXPECTED_INTERNAL_VALUE =
-                new Internal(6, "Unexpected internal value {0} encountered!");
+                new Internal(4, "Unexpected internal value {0} encountered!");
         }
     }
 }
