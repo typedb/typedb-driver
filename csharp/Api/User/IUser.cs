@@ -27,7 +27,7 @@ namespace TypeDB.Driver.Api
         /// <summary>
         /// Returns the name of this user.
         /// </summary>
-        string Username { get; }
+        string Name { get; }
 
         /// <summary>
         /// Updates the password for this user.

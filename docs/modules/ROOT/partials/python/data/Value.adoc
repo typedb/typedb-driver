@@ -208,7 +208,7 @@ value.get_duration()
 get_integer() -> int
 ----
 
-Returns a ``integer`` value of this value concept. If the value has another type, raises an exception.
+Returns an ``integer`` value of this value concept. If the value has another type, raises an exception.
 
 [caption=""]
 .Returns

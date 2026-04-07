@@ -1,0 +1,66 @@
+[#_ServerVersion]
+[.doc-api-reference-driver]
+=== ServerVersion
+
+`class`
+
+*Package*: `TypeDB.Driver.Api`
+
+
+
+A full TypeDB server's version specification.
+
+ 
+  driver.GetServerVersion();
+ 
+
+
+// tag::methods[]
+[#_string_TypeDB_Driver_Api_ServerVersion_Distribution]
+==== method ``Distribution``
+
+[source,cs]
+----
+string TypeDB.Driver.Api.ServerVersion.Distribution
+----
+
+
+
+Returns the server's distribution.
+
+[caption=""]
+.Returns
+`string`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+serverVersion.Distribution;
+----
+
+[#_string_TypeDB_Driver_Api_ServerVersion_Version]
+==== method ``Version``
+
+[source,cs]
+----
+string TypeDB.Driver.Api.ServerVersion.Version
+----
+
+
+
+Returns the server's version.
+
+[caption=""]
+.Returns
+`string`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+serverVersion.Version;
+----
+
+// end::methods[]
+

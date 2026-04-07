@@ -17,7 +17,7 @@ namespace TypeDB.Driver.Examples
         public void Example()
         {
             // Open a driver connection. Using statements can be used for automatic driver connection management
-            using (var driver = TypeDB.Driver(TypeDB.DefaultAddress, new Credentials("admin", "password"), new DriverOptions(false, null)))
+            using (var driver = TypeDB.Driver(TypeDB.DefaultAddress, new Credentials("admin", "password"), new DriverOptions(DriverTlsConfig.Disabled())))
             {
                 // Create a database
                 driver.Databases.Create("typedb");

@@ -24,6 +24,8 @@ using System.Linq;
 using TypeDB.Driver.Api.Analyze;
 using TypeDB.Driver.Common;
 
+using AnalyzeError = TypeDB.Driver.Common.Error.Analyze;
+
 namespace TypeDB.Driver.Analyze
 {
     public abstract class Constraint : NativeObjectWrapper<Pinvoke.ConstraintWithSpan>, IConstraint
@@ -132,9 +134,9 @@ namespace TypeDB.Driver.Analyze
         public virtual INot AsNot() => throw InvalidCast("Not");
         public virtual ITry AsTry() => throw InvalidCast("Try");
 
-        private InvalidOperationException InvalidCast(string targetType)
+        private TypeDBDriverException InvalidCast(string targetType)
         {
-            return new InvalidOperationException($"Cannot cast {GetType().Name} to {targetType}");
+            return new TypeDBDriverException(AnalyzeError.INVALID_CONSTRAINT_CASTING, GetType().Name, targetType);
         }
 
         public override string ToString()

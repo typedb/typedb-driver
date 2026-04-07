@@ -20,6 +20,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -46,13 +47,12 @@ namespace TypeDB.Driver.Test.Behaviour
 
         public static readonly string AdminUsername = "admin";
         public static readonly string AdminPassword = "password";
+        public static readonly Credentials DefaultCredentials = new Credentials("admin", "password");
 
-        // Sleep between scenarios to let the driver close completely.
-        // This mirrors the Java driver's workaround for the same issue.
+        protected static DriverOptions DriverOptions = new DriverOptions(DriverTlsConfig.Disabled());
+        protected static ServerRouting? OperationServerRouting;
+
         private const int BeforeTimeoutMillis = 50;
-
-        // TODO: implement configuration and remove skips when @ignore-typedb-driver is removed from .feature.
-        protected bool _requiredConfiguration = false;
 
         public static ITransaction Tx => Transactions[0];
 
@@ -78,38 +78,29 @@ namespace TypeDB.Driver.Test.Behaviour
             return tx;
         }
 
-        // Constructor - runs before each scenario
         public ConnectionStepsBase()
         {
             Thread.Sleep(BeforeTimeoutMillis);
-            After();
+            Cleanup();
             BackgroundDriver = CreateDefaultTypeDBDriver();
         }
 
-        // Dispose - runs after each scenario
         public virtual void Dispose()
         {
             CleanupTempDir();
-            After();
+            Cleanup();
         }
 
-        public static IDriver CreateDefaultTypeDBDriver()
-        {
-            return TypeDB.Driver(
-                TypeDB.DefaultAddress,
-                new Credentials(AdminUsername, AdminPassword),
-                new DriverOptions(false, null));
-        }
-
-        public static IDriver CreateBackgroundDriver() => CreateDefaultTypeDBDriver();
+        public abstract IDriver CreateDefaultTypeDBDriver();
 
         public abstract IDriver CreateTypeDBDriver(string address);
+
         public abstract void TypeDBStarts();
+
         public abstract void ConnectionOpensWithDefaultAuthentication();
 
         public virtual void ConnectionHasBeenOpened()
         {
-            if (_requiredConfiguration) return;
             Assert.NotNull(Driver);
             Assert.True(Driver!.IsOpen());
         }
@@ -129,47 +120,71 @@ namespace TypeDB.Driver.Test.Behaviour
                 : driver.Transaction(databaseName, type);
         }
 
-        // Matches Java's after() - cleans up state between scenarios
-        private static void After()
+        protected ServerVersion GetServerVersion()
+        {
+            return Driver!.GetServerVersion(OperationServerRouting);
+        }
+
+        protected ISet<IServer> GetServers()
+        {
+            return Driver!.GetServers(OperationServerRouting);
+        }
+
+        protected IServer? GetPrimaryServer()
+        {
+            return Driver!.GetPrimaryServer(OperationServerRouting);
+        }
+
+        protected virtual void InitializeDriverOptions()
+        {
+            DriverOptions = new DriverOptions(DriverTlsConfig.Disabled());
+        }
+
+        private void Cleanup()
         {
             CleanupTransactions();
             CleanupBackgroundTransactions();
             CurrentTransactionOptions = null;
+            OperationServerRouting = null;
 
-            // Create a fresh driver for cleanup (matches Java pattern)
-            var cleanupDriver = CreateDefaultTypeDBDriver();
+            if (Driver != null && Driver.IsOpen())
+            {
+                Driver.Close();
+            }
+
+            BackgroundDriver?.Close();
+            BackgroundDriver = null;
+            Driver = null;
+
+            InitializeDriverOptions();
+
             try
             {
-                // Delete non-admin users
-                foreach (var user in cleanupDriver.Users.GetAll())
+                var cleanupDriver = CreateDefaultTypeDBDriver();
+                try
                 {
-                    if (user.Username != AdminUsername)
+                    foreach (var user in cleanupDriver.Users.GetAll())
                     {
-                        try { cleanupDriver.Users.Get(user.Username)?.Delete(); } catch { }
+                        if (user.Name != AdminUsername)
+                        {
+                            try { cleanupDriver.Users.Get(user.Name)?.Delete(); } catch { }
+                        }
+                    }
+
+                    cleanupDriver.Users.Get(AdminUsername)?.UpdatePassword(AdminPassword);
+
+                    foreach (var db in cleanupDriver.Databases.GetAll())
+                    {
+                        try { cleanupDriver.Databases.Get(db.Name).Delete(); } catch { }
                     }
                 }
-
-                // Reset admin password
-                cleanupDriver.Users.Get(AdminUsername)?.UpdatePassword(AdminPassword);
-
-                // Delete all databases
-                foreach (var db in cleanupDriver.Databases.GetAll())
+                catch { }
+                finally
                 {
-                    try { cleanupDriver.Databases.Get(db.Name).Delete(); } catch { }
+                    cleanupDriver.Close();
                 }
             }
             catch { }
-            finally
-            {
-                cleanupDriver.Close();
-            }
-
-            // Close existing drivers (matches Java's order - after cleanup operations)
-            BackgroundDriver?.Close();
-            BackgroundDriver = null;
-
-            Driver?.Close();
-            Driver = null;
         }
 
         private static void CleanupTempDir()

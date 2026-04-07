@@ -115,5 +115,4 @@ public class TransactionOptions extends NativeObject<com.typedb.driver.jni.Trans
         transaction_options_set_schema_lock_acquire_timeout_millis(nativeObject, schemaLockAcquireTimeoutMillis);
         return this;
     }
-
 }

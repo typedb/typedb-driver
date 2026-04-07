@@ -45,6 +45,30 @@ namespace TypeDB.Driver.Common.Validation
             ThrowIfTrue(() => input == null, errorMessage, exceptionArgs);
         }
 
+        public static void RequireNonNull(object? value, string fieldName)
+        {
+            if (value == null)
+            {
+                throw new TypeDBDriverException(Error.Driver.NON_NULL_VALUE_REQUIRED, fieldName);
+            }
+        }
+
+        public static void RequirePositive(long value, string fieldName)
+        {
+            if (value < 1)
+            {
+                throw new TypeDBDriverException(Error.Driver.POSITIVE_VALUE_REQUIRED, fieldName, value);
+            }
+        }
+
+        public static void RequireNonNegative(long value, string fieldName)
+        {
+            if (value < 0)
+            {
+                throw new TypeDBDriverException(Error.Driver.NON_NEGATIVE_VALUE_REQUIRED, fieldName, value);
+            }
+        }
+
         private static void ThrowIf(
             bool expectedResult,
             Func<bool> checker,

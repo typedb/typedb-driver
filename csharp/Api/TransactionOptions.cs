@@ -18,17 +18,28 @@
  */
 
 using TypeDB.Driver.Common;
+using TypeDB.Driver.Common.Validation;
 
 namespace TypeDB.Driver.Api
 {
     /// <summary>
-    /// Options for transactions.
+    /// TypeDB transaction options. <c>TransactionOptions</c> can be used to override
+    /// the default server behaviour for opened transactions.
     /// </summary>
     public class TransactionOptions : NativeObjectWrapper<Pinvoke.TransactionOptions>
     {
         /// <summary>
-        /// Creates a new TransactionOptions with default settings.
+        /// Produces a new <c>TransactionOptions</c> object.
         /// </summary>
+        /// <example>
+        /// <code>
+        /// TransactionOptions options = new TransactionOptions
+        /// {
+        ///     TransactionTimeoutMillis = 10_000,
+        ///     SchemaLockAcquireTimeoutMillis = 3000
+        /// };
+        /// </code>
+        /// </example>
         public TransactionOptions()
             : base(Pinvoke.typedb_driver.transaction_options_new())
         {
@@ -36,7 +47,14 @@ namespace TypeDB.Driver.Api
 
         /// <summary>
         /// Gets or sets the transaction timeout in milliseconds.
+        /// If set, specifies a timeout for killing transactions automatically,
+        /// preventing memory leaks in unclosed transactions.
         /// </summary>
+        /// <example>
+        /// <code>
+        /// options.TransactionTimeoutMillis = 5000;
+        /// </code>
+        /// </example>
         public long? TransactionTimeoutMillis
         {
             get
@@ -51,6 +69,7 @@ namespace TypeDB.Driver.Api
             {
                 if (value.HasValue)
                 {
+                    Validator.RequirePositive(value.Value, nameof(TransactionTimeoutMillis));
                     Pinvoke.typedb_driver.transaction_options_set_transaction_timeout_millis(NativeObject, value.Value);
                 }
             }
@@ -58,7 +77,14 @@ namespace TypeDB.Driver.Api
 
         /// <summary>
         /// Gets or sets the schema lock acquire timeout in milliseconds.
+        /// If set, specifies how long the driver should wait if opening a transaction
+        /// is blocked by an exclusive schema write lock.
         /// </summary>
+        /// <example>
+        /// <code>
+        /// options.SchemaLockAcquireTimeoutMillis = 3000;
+        /// </code>
+        /// </example>
         public long? SchemaLockAcquireTimeoutMillis
         {
             get
@@ -73,6 +99,7 @@ namespace TypeDB.Driver.Api
             {
                 if (value.HasValue)
                 {
+                    Validator.RequirePositive(value.Value, nameof(SchemaLockAcquireTimeoutMillis));
                     Pinvoke.typedb_driver.transaction_options_set_schema_lock_acquire_timeout_millis(NativeObject, value.Value);
                 }
             }

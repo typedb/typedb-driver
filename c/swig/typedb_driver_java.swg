@@ -103,8 +103,6 @@
 %nojavaexception error_message;
 
 %nojavaexception driver_is_open;
-// TODO: Remove from this list if we start making network calls to retrieve this
-%nojavaexception driver_primary_server;
 
 %nojavaexception driver_options_new;
 %nojavaexception driver_options_set_tls_config;
@@ -152,16 +150,14 @@
 %nojavaexception concept_as_entity_type;
 %nojavaexception concept_as_relation_type;
 %nojavaexception concept_as_attribute_type;
-%nojavaexception concept_get_label;
-%nojavaexception concept_try_get_label;
-%nojavaexception concept_to_string;
-%nojavaexception concept_equals;
 
 %nojavaexception concept_get_label;
 %nojavaexception concept_try_get_label;
 %nojavaexception concept_try_get_iid;
 %nojavaexception concept_try_get_value_type;
 %nojavaexception concept_try_get_value;
+%nojavaexception concept_to_string;
+%nojavaexception concept_equals;
 
 %nojavaexception concept_is_boolean;
 %nojavaexception concept_is_date;
@@ -413,7 +409,6 @@
 %nojavaexception ~Variable;
 %nojavaexception ~VariableIterator;
 
-
 %nojavaexception transaction_commit;
 %nojavaexception transaction_rollback;
 
@@ -463,8 +458,6 @@
 
 %promise(AnalyzedQuery, analyzed_query)
 %promise(QueryAnswer, query_answer)
-%promise(Concept, concept)
-%promise(Rule, rule)
 %promise(String, string)
 
 /* void promises require special handling */

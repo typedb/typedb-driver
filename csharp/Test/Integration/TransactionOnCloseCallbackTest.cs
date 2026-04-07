@@ -41,7 +41,7 @@ namespace TypeDB.Driver.Test.Integration
         [SetUp]
         public void SetUp()
         {
-            _driver = TypeDB.Driver(TypeDB.DefaultAddress, new Credentials("admin", "password"), new DriverOptions(false, null));
+            _driver = TypeDB.Driver(TypeDB.DefaultAddress, new Credentials("admin", "password"), new DriverOptions(DriverTlsConfig.Disabled()));
 
             // Clean up any existing test database
             if (_driver.Databases.Contains("callback_test"))

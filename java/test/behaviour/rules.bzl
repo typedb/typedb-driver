@@ -23,26 +23,21 @@ def typedb_behaviour_java_test(
         runtime_deps = [],
         **kwargs):
 
-    typedb_behaviour_java_core_test(
+    typedb_behaviour_java_test_core(
         name,
         steps,
         runtime_deps,
         **kwargs
     )
 
-    typedb_behaviour_java_cluster_test(
+    typedb_behaviour_java_test_cluster(
         name,
         steps,
         runtime_deps,
         **kwargs
     )
 
-def typedb_behaviour_java_core_test(
-        name,
-        steps,
-        runtime_deps = [],
-        **kwargs):
-
+def typedb_behaviour_java_test_core(name, steps, runtime_deps = [], **kwargs):
     typedb_java_test(
         name = name + "-core",
         server_artifacts = {
@@ -56,12 +51,7 @@ def typedb_behaviour_java_core_test(
         **kwargs,
     )
 
-def typedb_behaviour_java_cluster_test(
-        name,
-        steps,
-        runtime_deps = [],
-        **kwargs):
-
+def typedb_behaviour_java_test_cluster(name, steps, runtime_deps = [], **kwargs):
     typedb_java_test(
         name = name + "-cluster",
         server_artifacts = { # TODO: Uncomment all platforms

@@ -156,11 +156,15 @@ public class DriverImpl extends NativeObject<com.typedb.driver.jni.TypeDBDriver>
 
     @Override
     public Optional<? extends Server> primaryServer(ServerRouting serverRouting) {
-        com.typedb.driver.jni.Server nativeServer = driver_primary_server(nativeObject, ServerRouting.nativeValue(serverRouting));
-        if (nativeServer != null) {
-            return Optional.of(new ServerImpl(nativeServer));
+        try {
+            com.typedb.driver.jni.Server nativeServer = driver_primary_server(nativeObject, ServerRouting.nativeValue(serverRouting));
+            if (nativeServer != null) {
+                return Optional.of(new ServerImpl(nativeServer));
+            }
+            return Optional.empty();
+        } catch (com.typedb.driver.jni.Error error) {
+            throw new TypeDBDriverException(error);
         }
-        return Optional.empty();
     }
 
     @Override

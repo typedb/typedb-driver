@@ -14,26 +14,28 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
+
 package(default_visibility = ["//csharp/Test/Behaviour:__subpackages__"])
+
 load("//csharp:build_opts.bzl", "nullable_context", "target_frameworks", "targeting_packs")
 load("//csharp/Test:rules.bzl", "csharp_behaviour_test_all")
 load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+
 filegroup(
     name = "steps",
     srcs = ["TransactionSteps.cs"],
     visibility = ["//csharp/Test/Behaviour:__subpackages__"],
 )
+
 csharp_behaviour_test_all(
     name = "test",
     test_files = ["TransactionTest.cs"],
-    steps_files = [
+    step_files = [
         ":steps",
         "//csharp/Test/Behaviour/Util:steps",
         "//csharp/Test/Behaviour/Query:steps",
         "//csharp/Test/Behaviour/Connection/Database:steps",
     ],
-    connection_steps_community = "//csharp/Test/Behaviour/Connection:steps-community",
-    connection_steps_cluster = "//csharp/Test/Behaviour/Connection:steps-cluster",
     features = ["@typedb_behaviour//connection:transaction.feature"],
     deps = [
         "//csharp/Api:api",
@@ -47,6 +49,7 @@ csharp_behaviour_test_all(
     target_frameworks = target_frameworks,
     targeting_packs = targeting_packs,
 )
+
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*"]),

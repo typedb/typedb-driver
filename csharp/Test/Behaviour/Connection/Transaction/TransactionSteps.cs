@@ -76,15 +76,11 @@ namespace TypeDB.Driver.Test.Behaviour
             }
         }
 
-        // Transaction open steps (from Base)
-
         [When(@"connection open schema transaction for database: (\S+)")]
         [Given(@"connection open schema transaction for database: (\S+)")]
         [Then(@"connection open schema transaction for database: (\S+)")]
         public void ConnectionOpenSchemaTransactionForDatabase(string name)
         {
-            if (_requiredConfiguration) return;
-
             Transactions.Clear();
             var tx = ConnectionStepsBase.OpenTransaction(
                 Driver!, name, TransactionType.Schema, CurrentTransactionOptions);
@@ -96,8 +92,6 @@ namespace TypeDB.Driver.Test.Behaviour
         [Then(@"connection open read transaction for database: (\S+)")]
         public void ConnectionOpenReadTransactionForDatabase(string name)
         {
-            if (_requiredConfiguration) return;
-
             Transactions.Clear();
             var tx = ConnectionStepsBase.OpenTransaction(
                 Driver!, name, TransactionType.Read, CurrentTransactionOptions);
@@ -109,21 +103,15 @@ namespace TypeDB.Driver.Test.Behaviour
         [Then(@"connection open write transaction for database: (\S+)")]
         public void ConnectionOpenWriteTransactionForDatabase(string name)
         {
-            if (_requiredConfiguration) return;
-
             Transactions.Clear();
             var tx = ConnectionStepsBase.OpenTransaction(
                 Driver!, name, TransactionType.Write, CurrentTransactionOptions);
             Transactions.Add(tx);
         }
 
-        // Transaction state steps (from Base)
-
         [Then(@"transaction is open: (.*)")]
         public void TransactionIsOpen(string expectedState)
         {
-            if (_requiredConfiguration) return;
-
             bool expected = bool.Parse(expectedState);
             Assert.Equal(expected, Transactions.Count > 0 && Transactions[0].IsOpen());
         }
@@ -139,7 +127,6 @@ namespace TypeDB.Driver.Test.Behaviour
         [Then(@"transaction commits")]
         public void TransactionCommits()
         {
-            if (_requiredConfiguration) return;
             TxPop().Commit();
         }
 
@@ -148,7 +135,6 @@ namespace TypeDB.Driver.Test.Behaviour
         [Then(@"transaction closes")]
         public void TransactionCloses()
         {
-            if (_requiredConfiguration) return;
             TxPop().Close();
         }
 
@@ -157,11 +143,8 @@ namespace TypeDB.Driver.Test.Behaviour
         [Then(@"transaction rollbacks")]
         public void TransactionRollbacks()
         {
-            if (_requiredConfiguration) return;
             Tx.Rollback();
         }
-
-        // Transaction plural state steps
 
         [Then(@"transactions are open: (.*)")]
         public void TransactionsAreOpen(string expectedState)
@@ -172,8 +155,6 @@ namespace TypeDB.Driver.Test.Behaviour
                 Assert.Equal(expected, tx.IsOpen());
             }
         }
-
-        // Transaction commits/closes/rollbacks ; fails variants
 
         [Then(@"transaction commits; fails")]
         public void TransactionCommitsFails()
@@ -305,8 +286,6 @@ namespace TypeDB.Driver.Test.Behaviour
             Assert.Equal(expectedTypes.Count, index);
         }
 
-        // Transaction open fails with message (from DriverSteps)
-
         [Then(@"connection open schema transaction for database: ([^;]+); fails with a message containing: ""(.*)""")]
         public void ConnectionOpenSchemaTransactionFailsWithMessage(
             string name, string expectedMessage)
@@ -352,8 +331,6 @@ namespace TypeDB.Driver.Test.Behaviour
             Assert.Contains(expectedMessage, exception.Message);
         }
 
-        // Transaction options (from DriverSteps)
-
         [When(@"set transaction option transaction_timeout_millis to: (\d+)")]
         public void SetTransactionOptionTransactionTimeoutMillis(int value)
         {
@@ -376,7 +353,7 @@ namespace TypeDB.Driver.Test.Behaviour
         [Then(@"in background, connection open schema transaction for database: ([^;]+)$")]
         public void InBackgroundConnectionOpenSchemaTransaction(string databaseName)
         {
-            BackgroundDriver ??= ConnectionStepsBase.CreateDefaultTypeDBDriver();
+            BackgroundDriver ??= CreateDefaultTypeDBDriver();;
             var tx = ConnectionStepsBase.OpenTransaction(
                 BackgroundDriver, databaseName.Trim(), TransactionType.Schema, CurrentTransactionOptions);
             BackgroundTransactions.Add(tx);
@@ -388,7 +365,7 @@ namespace TypeDB.Driver.Test.Behaviour
         {
             var exception = Assert.ThrowsAny<Exception>(() =>
             {
-                BackgroundDriver ??= ConnectionStepsBase.CreateDefaultTypeDBDriver();
+                BackgroundDriver ??= CreateDefaultTypeDBDriver();;
                 var tx = ConnectionStepsBase.OpenTransaction(
                     BackgroundDriver, databaseName.Trim(), TransactionType.Schema, CurrentTransactionOptions);
                 BackgroundTransactions.Add(tx);
@@ -400,7 +377,7 @@ namespace TypeDB.Driver.Test.Behaviour
         [Then(@"in background, connection open write transaction for database: ([^;]+)")]
         public void InBackgroundConnectionOpenWriteTransaction(string databaseName)
         {
-            BackgroundDriver ??= ConnectionStepsBase.CreateDefaultTypeDBDriver();
+            BackgroundDriver ??= CreateDefaultTypeDBDriver();;
             var tx = ConnectionStepsBase.OpenTransaction(
                 BackgroundDriver, databaseName.Trim(), TransactionType.Write, CurrentTransactionOptions);
             BackgroundTransactions.Add(tx);
@@ -410,7 +387,7 @@ namespace TypeDB.Driver.Test.Behaviour
         [Then(@"in background, connection open read transaction for database: ([^;]+)")]
         public void InBackgroundConnectionOpenReadTransaction(string databaseName)
         {
-            BackgroundDriver ??= ConnectionStepsBase.CreateDefaultTypeDBDriver();
+            BackgroundDriver ??= CreateDefaultTypeDBDriver();;
             var tx = ConnectionStepsBase.OpenTransaction(
                 BackgroundDriver, databaseName.Trim(), TransactionType.Read, CurrentTransactionOptions);
             BackgroundTransactions.Add(tx);

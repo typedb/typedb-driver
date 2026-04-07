@@ -17,39 +17,66 @@
  * under the License.
  */
 
+using System.Collections.Generic;
+
 using TypeDB.Driver.Api;
 using TypeDB.Driver.Connection;
 
 namespace TypeDB.Driver
 {
-    /// <summary>
-    /// Entry point for creating TypeDB driver connections.
-    /// </summary>
     public static class TypeDB
     {
         /// <summary>
-        /// The default address for TypeDB Server.
+        /// The default address of the TypeDB server.
         /// </summary>
-        public const string DefaultAddress = "localhost:1729";
+        public const string DefaultAddress = "127.0.0.1:1729";
 
         /// <summary>
         /// Open a TypeDB Driver to a TypeDB server available at the provided address.
         /// </summary>
-        /// <param name="address">The address (host:port) on which the TypeDB Server is running.</param>
-        /// <param name="credentials">The <see cref="Credentials"/> to connect with.</param>
-        /// <param name="driverOptions">The <see cref="DriverOptions"/> to connect with.</param>
-        /// <returns>An open <see cref="IDriver"/> connection to the TypeDB server.</returns>
+        /// <param name="address">The address of the TypeDB server.</param>
+        /// <param name="credentials">The credentials to connect with.</param>
+        /// <param name="driverOptions">The driver connection options to connect with.</param>
         /// <example>
         /// <code>
-        /// using var driver = TypeDB.Driver(
-        ///     "localhost:1729",
-        ///     new Credentials("admin", "password"),
-        ///     new DriverOptions(false, null));
+        /// TypeDB.Driver(address, credentials, driverOptions);
         /// </code>
         /// </example>
         public static IDriver Driver(string address, Credentials credentials, DriverOptions driverOptions)
         {
             return new TypeDBDriver(address, credentials, driverOptions);
+        }
+
+        /// <summary>
+        /// Open a TypeDB Driver to a TypeDB cluster available at the provided addresses.
+        /// </summary>
+        /// <param name="addresses">The addresses of TypeDB cluster servers for connection.</param>
+        /// <param name="credentials">The credentials to connect with.</param>
+        /// <param name="driverOptions">The driver connection options to connect with.</param>
+        /// <example>
+        /// <code>
+        /// TypeDB.Driver(addresses, credentials, driverOptions);
+        /// </code>
+        /// </example>
+        public static IDriver Driver(ISet<string> addresses, Credentials credentials, DriverOptions driverOptions)
+        {
+            return new TypeDBDriver(addresses, credentials, driverOptions);
+        }
+
+        /// <summary>
+        /// Open a TypeDB Driver to a TypeDB cluster, using the provided address translation.
+        /// </summary>
+        /// <param name="addressTranslation">The translation of public TypeDB cluster server addresses (keys) to server-side private addresses (values).</param>
+        /// <param name="credentials">The credentials to connect with.</param>
+        /// <param name="driverOptions">The driver connection options to connect with.</param>
+        /// <example>
+        /// <code>
+        /// TypeDB.Driver(addressTranslation, credentials, driverOptions);
+        /// </code>
+        /// </example>
+        public static IDriver Driver(IDictionary<string, string> addressTranslation, Credentials credentials, DriverOptions driverOptions)
+        {
+            return new TypeDBDriver(addressTranslation, credentials, driverOptions);
         }
     }
 }

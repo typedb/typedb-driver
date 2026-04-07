@@ -17,9 +17,9 @@
 
 package(default_visibility = ["//visibility:__subpackages__"])
 load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("//java/test/behaviour:rules.bzl", "typedb_behaviour_java_cluster_test")
+load("//java/test/behaviour:rules.bzl", "typedb_behaviour_java_test_cluster")
 
-typedb_behaviour_java_cluster_test(
+typedb_behaviour_java_test_cluster(
     name = "test",
     srcs = [
         "ClusterTest.java",

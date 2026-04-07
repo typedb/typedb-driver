@@ -439,7 +439,7 @@ class Concept(ABC):
     def try_get_boolean(self) -> Optional[bool]:
         """
         Returns a ``boolean`` value of this ``Concept``.
-        If it's not a ``Value`` or it has another type, raises an exception.
+        If it's not a ``Value`` or it has another type, returns ``None``.
 
         Examples
         --------
@@ -452,8 +452,8 @@ class Concept(ABC):
     @abstractmethod
     def try_get_integer(self) -> Optional[int]:
         """
-        Returns a ``integer`` value of this ``Concept``.
-        If it's not a ``Value`` or it has another type, raises an exception.
+        Returns an ``integer`` value of this ``Concept``.
+        If it's not a ``Value`` or it has another type, returns ``None``.
 
         Examples
         --------
@@ -467,7 +467,7 @@ class Concept(ABC):
     def try_get_double(self) -> Optional[float]:
         """
         Returns a ``double`` value of this ``Concept``.
-        If it's not a ``Value`` or it has another type, raises an exception.
+        If it's not a ``Value`` or it has another type, returns ``None``.
 
         Examples
         --------
@@ -481,7 +481,7 @@ class Concept(ABC):
     def try_get_decimal(self) -> Optional[Decimal]:
         """
         Returns a ``decimal`` value of this ``Concept``.
-        If it's not a ``Value`` or it has another type, raises an exception.
+        If it's not a ``Value`` or it has another type, returns ``None``.
 
         Examples
         --------
@@ -495,7 +495,7 @@ class Concept(ABC):
     def try_get_string(self) -> Optional[str]:
         """
         Returns a ``string`` value of this ``Concept``.
-        If it's not a ``Value`` or it has another type, raises an exception.
+        If it's not a ``Value`` or it has another type, returns ``None``.
 
         Examples
         --------
@@ -509,7 +509,7 @@ class Concept(ABC):
     def try_get_date(self) -> Optional[date]:
         """
         Returns a timezone naive ``date`` value of this ``Concept``.
-        If it's not a ``Value`` or it has another type, raises an exception.
+        If it's not a ``Value`` or it has another type, returns ``None``.
 
         Examples
         --------
@@ -523,7 +523,7 @@ class Concept(ABC):
     def try_get_datetime(self) -> Optional[Datetime]:
         """
         Returns a timezone naive ``datetime`` value of this ``Concept``.
-        If it's not a ``Value`` or it has another type, raises an exception.
+        If it's not a ``Value`` or it has another type, returns ``None``.
 
         Examples
         --------
@@ -536,8 +536,8 @@ class Concept(ABC):
     @abstractmethod
     def try_get_datetime_tz(self) -> Optional[Datetime]:
         """
-        Returns a timezone naive ``datetime_tz`` value of this ``Concept``.
-        If it's not a ``Value`` or it has another type, raises an exception.
+        Returns a ``datetime_tz`` value of this ``Concept``.
+        If it's not a ``Value`` or it has another type, returns ``None``.
 
         Examples
         --------
@@ -550,8 +550,8 @@ class Concept(ABC):
     @abstractmethod
     def try_get_duration(self) -> Optional[Duration]:
         """
-        Returns a timezone naive ``duration`` value of this ``Concept``.
-        If it's not a ``Value`` or it has another type, raises an exception.
+        Returns a ``duration`` value of this ``Concept``.
+        If it's not a ``Value`` or it has another type, returns ``None``.
 
         Examples
         --------
@@ -565,7 +565,7 @@ class Concept(ABC):
     def try_get_struct(self) -> Optional[STRUCT]:
         """
         Returns a ``struct`` value of this ``Concept`` represented as a map from field names to values.
-        If it's not a ``Value`` or it has another type, raises an exception.
+        If it's not a ``Value`` or it has another type, returns ``None``.
 
         Examples
         --------

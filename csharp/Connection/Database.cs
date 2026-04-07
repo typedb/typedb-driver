@@ -94,6 +94,8 @@ namespace TypeDB.Driver.Connection
         /// <inheritdoc/>
         public void ExportToFile(string schemaFile, string dataFile)
         {
+            Validator.RequireNonNull(schemaFile, nameof(schemaFile));
+            Validator.RequireNonNull(dataFile, nameof(dataFile));
             Validator.ThrowIfFalse(NativeObject.IsOwned, DriverError.DATABASE_DELETED);
 
             try
