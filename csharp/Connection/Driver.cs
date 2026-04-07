@@ -235,22 +235,6 @@ namespace TypeDB.Driver.Connection
             }
         }
 
-        public void UpdateAddressTranslation(IDictionary<string, string> addressTranslation)
-        {
-            Validator.RequireNonNull(addressTranslation, nameof(addressTranslation));
-            try
-            {
-                string[] publicAddresses = addressTranslation.Keys.ToArray();
-                string[] privateAddresses = addressTranslation.Values.ToArray();
-                Pinvoke.typedb_driver.driver_update_address_translation(
-                    NativeObject, publicAddresses, privateAddresses);
-            }
-            catch (Pinvoke.Error e)
-            {
-                throw new TypeDBDriverException(e);
-            }
-        }
-
         public void Close()
         {
             if (!NativeObject.IsOwned())

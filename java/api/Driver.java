@@ -205,21 +205,6 @@ public interface Driver extends AutoCloseable {
     void deregisterServer(long serverID);
 
     /**
-     * Updates address translation of the driver. This lets you actualize new translation
-     * information without recreating the driver from scratch. Useful after registering new
-     * servers requiring address translation.
-     * This operation will update existing connections using the provided addresses.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * driver.updateAddressTranslation(2);
-     * </pre>
-     *
-     * @param addressTranslation The translation of public TypeDB cluster server addresses (keys) to server-side private addresses (values)
-     */
-    void updateAddressTranslation(Map<String, String> addressTranslation);
-
-    /**
      * Closes the driver. Before instantiating a new driver, the driver that's currently open should first be closed.
      *
      * <h3>Examples</h3>

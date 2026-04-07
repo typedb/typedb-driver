@@ -33,7 +33,7 @@ from typedb.connection.transaction import _Transaction
 from typedb.native_driver_wrapper import driver_new_with_description, driver_new_with_addresses_with_description, \
     driver_new_with_address_translation_with_description, driver_is_open, driver_force_close, driver_register_server, \
     driver_deregister_server, driver_servers, driver_primary_server, driver_server_version, \
-    driver_update_address_translation, server_iterator_next, TypeDBDriver as NativeDriver, \
+    server_iterator_next, TypeDBDriver as NativeDriver, \
     TypeDBDriverExceptionNative
 from typedb.user.user_manager import _UserManager
 
@@ -134,14 +134,6 @@ class _Driver(Driver, NativeWrapper[NativeDriver]):
         require_non_negative(server_id, "server_id")
         try:
             driver_deregister_server(self._native_driver, server_id)
-        except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException.of(e) from None
-
-    def update_address_translation(self, address_translation: dict[str, str]) -> None:
-        require_non_null(address_translation, "address_translation")
-        public_addresses, private_addresses = _Driver._get_translated_addresses(address_translation)
-        try:
-            driver_update_address_translation(self._native_driver, public_addresses, private_addresses)
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e) from None
 

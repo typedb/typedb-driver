@@ -144,20 +144,6 @@ namespace TypeDB.Driver.Api
         void DeregisterServer(long serverId);
 
         /// <summary>
-        /// Updates address translation of the driver. This lets you actualize new translation
-        /// information without recreating the driver from scratch. Useful after registering new
-        /// servers requiring address translation.
-        /// This operation will update existing connections using the provided addresses.
-        /// </summary>
-        /// <param name="addressTranslation">The translation of public TypeDB cluster server addresses (keys) to server-side private addresses (values).</param>
-        /// <example>
-        /// <code>
-        /// driver.UpdateAddressTranslation(addressTranslation);
-        /// </code>
-        /// </example>
-        void UpdateAddressTranslation(IDictionary<string, string> addressTranslation);
-
-        /// <summary>
         /// Closes the driver. Before instantiating a new driver, the driver that's currently open should first be closed.
         /// </summary>
         /// <example>

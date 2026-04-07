@@ -198,14 +198,12 @@ error_messages! { ConnectionError
         36: "Didn't receive any server responses for the analyze request.",
     NotPrimaryOnReadOnly { address: Address } =
         37: "Could not execute a readonly operation on a non-primary server '{address}'.",
-    AddressTranslationWithoutTranslation { addresses: Addresses } =
-        38: "Specified addresses do not contain address translation: {addresses}.",
     NoPrimaryServer =
-        39: "Could not find a primary server.",
+        38: "Could not find a primary server.",
     SchemeTlsSettingsMismatch { scheme: http::uri::Scheme, is_tls_enabled: bool } =
-        40: "Scheme {scheme} is not compatible with tls setting `enabled: {is_tls_enabled}`",
+        39: "Scheme {scheme} is not compatible with tls setting `enabled: {is_tls_enabled}`",
     RequestTimeout { timeout: String } =
-        41: "Request timed out after {timeout}. The server may be unresponsive.",
+        40: "Request timed out after {timeout}. The server may be unresponsive.",
 }
 
 impl ConnectionError {

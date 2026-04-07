@@ -247,35 +247,5 @@ a| `options` a| ``TransactionOptions`` to configure the opened transaction a| `T
 driver.transaction(database, transaction_type, options)
 ----
 
-[#_Driver_update_address_translation_address_translation_Mapping_str_str_]
-==== method ``update_address_translation``
-
-[source,python]
-----
-update_address_translation(address_translation: Mapping[str, str]) -> None
-----
-
-Updates address translation of the driver. This lets you actualize new translation information without recreating the driver from scratch. Useful after registering new servers requiring address translation. This operation will update existing connections using the provided addresses.
-
-[caption=""]
-.Input parameters
-[cols=",,,"]
-[options="header"]
-|===
-|Name |Description |Type |Default Value
-a| `address_translation` a| The translation of public TypeDB cluster server addresses (keys) to server-side private addresses (values) a| `Mapping[str, str]` a| 
-|===
-
-[caption=""]
-.Returns
-`None`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-driver.update_address_translation({"typedb-cloud.ext:11729": "127.0.0.1:11729"})
-----
-
 // end::methods[]
 
