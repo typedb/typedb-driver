@@ -89,12 +89,6 @@ namespace TypeDB.Driver.Test.Behaviour
                 new DriverOptions(DriverTlsConfig.Disabled()));
         }
 
-        [Given(@"typedb has configuration")]
-        public void TypeDBHasConfiguration(DataTable data)
-        {
-            throw new NotImplementedException("Core tests are not expected to use this method");
-        }
-
         // Connection-level steps (from Base)
 
         [Given(@"connection has been opened")]

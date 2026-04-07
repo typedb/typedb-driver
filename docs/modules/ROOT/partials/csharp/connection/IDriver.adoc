@@ -273,7 +273,7 @@ a| `type` a| The type of transaction to be created (READ, WRITE, or SCHEMA). a| 
 .Code examples
 [source,cs]
 ----
-driver.Transaction(database, transactionType);
+driver.Transaction(database, TransactionType.Read); TypeDB.Driver.Api.TransactionType TransactionType Used to specify the type of transaction. Definition ITransaction.cs:99
 ----
 
 [#_ITransaction_TypeDB_Driver_Api_IDriver_Transaction_string_database_TransactionType_type_TransactionOptions_options_]
@@ -308,7 +308,7 @@ a| `options` a| ``TransactionOptions`` to configure the opened transaction. a| `
 .Code examples
 [source,cs]
 ----
-driver.Transaction(database, transactionType, options);
+driver.Transaction(database, TransactionType.Read, options);
 ----
 
 [#_void_TypeDB_Driver_Api_IDriver_UpdateAddressTranslation_IDictionary_string_string_addressTranslation_]

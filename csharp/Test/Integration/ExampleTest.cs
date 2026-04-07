@@ -67,7 +67,7 @@ namespace TypeDB.Driver.Test.Integration
                 try
                 {
                     // Execute any TypeDB query using TypeQL. Wrong queries are rejected with an explicit exception
-                    var answer = tx.Query("define entity i-cannot-be-defined-in-read-transactions;").Resolve();
+                    var answer = tx.Query("define entity i-cannot-be-defined-in-read-transactions;").Resolve()!;
 
                     Console.WriteLine("The query has been sent, iterating or committing will surface errors!");
                     // Iterating the answer would throw an exception
@@ -94,7 +94,7 @@ namespace TypeDB.Driver.Test.Integration
                         attribute name, value string;
                         attribute age, value integer;";
 
-                    var answer = transaction.Query(defineQuery).Resolve();
+                    var answer = transaction.Query(defineQuery).Resolve()!;
                     Assert.IsTrue(answer.IsOk);
                     Assert.AreEqual(QueryType.Schema, answer.QueryType);
 
@@ -105,7 +105,7 @@ namespace TypeDB.Driver.Test.Integration
                 // Open a read transaction to safely read anything without database modifications
                 using (var transaction = driver.Transaction(database.Name, TransactionType.Read))
                 {
-                    var entityAnswer = transaction.Query("match entity $x;").Resolve();
+                    var entityAnswer = transaction.Query("match entity $x;").Resolve()!;
                     Assert.IsTrue(entityAnswer.IsConceptRows);
                     Assert.IsFalse(entityAnswer.IsConceptDocuments);
                     Assert.AreEqual(QueryType.Read, entityAnswer.QueryType);
@@ -145,7 +145,7 @@ namespace TypeDB.Driver.Test.Integration
                     Assert.AreNotEqual("age", conceptByName.AsEntityType().GetLabel());
 
                     // Continue querying in the same transaction if needed
-                    var attributeAnswer = transaction.Query("match attribute $a;").Resolve();
+                    var attributeAnswer = transaction.Query("match attribute $a;").Resolve()!;
                     Assert.IsTrue(attributeAnswer.IsConceptRows);
                     Assert.AreEqual(QueryType.Read, attributeAnswer.QueryType);
 
@@ -181,7 +181,7 @@ namespace TypeDB.Driver.Test.Integration
                 using (var transaction = driver.Transaction(database.Name, TransactionType.Write))
                 {
                     var insertQuery = "insert $z isa person, has age 10; $x isa person, has age 20, has name \"John\";";
-                    var answer = transaction.Query(insertQuery).Resolve();
+                    var answer = transaction.Query(insertQuery).Resolve()!;
                     Assert.IsTrue(answer.IsConceptRows);
                     Assert.AreEqual(QueryType.Write, answer.QueryType);
 
@@ -254,7 +254,7 @@ namespace TypeDB.Driver.Test.Integration
                     var queryOptions = new QueryOptions { IncludeInstanceTypes = true };
                     // A match query can be used for concept row outputs
                     var varName = "x";
-                    var matchAnswer = transaction.Query($"match ${varName} isa person;", queryOptions).Resolve();
+                    var matchAnswer = transaction.Query($"match ${varName} isa person;", queryOptions).Resolve()!;
                     Assert.IsTrue(matchAnswer.IsConceptRows);
                     Assert.AreEqual(QueryType.Read, matchAnswer.QueryType);
 
@@ -287,7 +287,7 @@ namespace TypeDB.Driver.Test.Integration
                             ""single attribute type"": $t,
                             ""single attribute"": $a,
                             ""all attributes"": { $x.* },
-                        };").Resolve();
+                        };").Resolve()!;
                     Assert.IsTrue(fetchAnswer.IsConceptDocuments);
                     Assert.AreEqual(QueryType.Read, fetchAnswer.QueryType);
 

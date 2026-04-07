@@ -56,12 +56,6 @@ def replace_port(address: str, new_port: str) -> str:
     return "".join(address_parts)
 
 
-@step(u'typedb has configuration')
-def step_impl(context: Context):
-    # TODO: implement configuring the TypeDB runner when a python typedb-runner is available
-    pass
-
-
 @step(u'typedb starts')
 def step_impl(context: Context):
     # TODO: start TypeDB via a python typedb-runner once one is available

@@ -329,10 +329,5 @@ namespace TypeDB.Driver.Test.Behaviour
             });
             Assert.Contains(expectedMessage, exception.Message);
         }
-
-        [Given(@"typedb has configuration")]
-        public void TypeDBHasConfiguration(DataTable data)
-        {
-        }
     }
 }

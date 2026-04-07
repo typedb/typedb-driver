@@ -66,7 +66,7 @@ namespace TypeDB.Driver.Api
         /// <param name="type">The type of transaction to be created (READ, WRITE, or SCHEMA).</param>
         /// <example>
         /// <code>
-        /// driver.Transaction(database, transactionType);
+        /// driver.Transaction(database, TransactionType.Read);
         /// </code>
         /// </example>
         ITransaction Transaction(string database, TransactionType type);
@@ -79,7 +79,7 @@ namespace TypeDB.Driver.Api
         /// <param name="options"><c>TransactionOptions</c> to configure the opened transaction.</param>
         /// <example>
         /// <code>
-        /// driver.Transaction(database, transactionType, options);
+        /// driver.Transaction(database, TransactionType.Read, options);
         /// </code>
         /// </example>
         ITransaction Transaction(string database, TransactionType type, TransactionOptions options);
