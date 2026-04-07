@@ -89,14 +89,13 @@ namespace TypeDB.Driver.Test.Behaviour
                 new DriverOptions(DriverTlsConfig.Disabled()));
         }
 
-        // Connection-level steps (from Base)
-
         [Given(@"connection has been opened")]
         public override void ConnectionHasBeenOpened()
         {
             base.ConnectionHasBeenOpened();
         }
 
+        [Given(@"connection closes")]
         [When(@"connection closes")]
         [Then(@"connection closes")]
         public override void ConnectionCloses()
@@ -108,8 +107,6 @@ namespace TypeDB.Driver.Test.Behaviour
         [Then(@"connection is open: (.*)")]
         public void ConnectionIsOpen(string expectedState)
         {
-            if (_requiredConfiguration) return;
-
             bool expected = bool.Parse(expectedState);
             if (expected)
             {
@@ -125,28 +122,24 @@ namespace TypeDB.Driver.Test.Behaviour
         [Then(@"connection contains distribution")]
         public void ConnectionContainsDistribution()
         {
-            if (_requiredConfiguration) return;
             Assert.False(string.IsNullOrEmpty(GetServerVersion().Distribution));
         }
 
         [Then(@"connection contains version")]
         public void ConnectionContainsVersion()
         {
-            if (_requiredConfiguration) return;
             Assert.False(string.IsNullOrEmpty(GetServerVersion().Version));
         }
 
         [Then(@"connection has (\d+) servers?")]
         public void ConnectionHasServerCount(int count)
         {
-            if (_requiredConfiguration) return;
             Assert.Equal(count, GetServers().Count);
         }
 
         [Then(@"connection primary server exists")]
         public void ConnectionPrimaryServerExists()
         {
-            if (_requiredConfiguration) return;
             Assert.NotNull(GetPrimaryServer());
         }
 
@@ -154,8 +147,6 @@ namespace TypeDB.Driver.Test.Behaviour
         [Then(@"connection has (\d+) databases?")]
         public void ConnectionHasDatabaseCount(int expectedCount)
         {
-            if (_requiredConfiguration) return;
-
             Assert.NotNull(Driver);
             Assert.Equal(expectedCount, Driver.Databases.GetAll().Count);
         }
@@ -183,8 +174,6 @@ namespace TypeDB.Driver.Test.Behaviour
         {
             DriverOptions.PrimaryFailoverRetries = value;
         }
-
-        // Connection: wrong host/port (from DriverSteps)
 
         [When(@"connection opens with a wrong port; fails")]
         [Then(@"connection opens with a wrong port; fails")]

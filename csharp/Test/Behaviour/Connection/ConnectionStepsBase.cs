@@ -54,8 +54,6 @@ namespace TypeDB.Driver.Test.Behaviour
 
         private const int BeforeTimeoutMillis = 50;
 
-        protected bool _requiredConfiguration = false;
-
         public static ITransaction Tx => Transactions[0];
 
         public static string TempDir
@@ -103,7 +101,6 @@ namespace TypeDB.Driver.Test.Behaviour
 
         public virtual void ConnectionHasBeenOpened()
         {
-            if (_requiredConfiguration) return;
             Assert.NotNull(Driver);
             Assert.True(Driver!.IsOpen());
         }
