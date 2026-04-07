@@ -882,7 +882,7 @@ workflows:
       - deploy-snapshot-dotnet-any:
           filters:
             branches:
-              only: [master]
+              only: [master, cluster-support-feature-branch]
           requires:
             - deploy-snapshot-linux-arm64
             - deploy-snapshot-linux-x86_64
