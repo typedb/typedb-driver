@@ -390,37 +390,6 @@ a| `options` a| ``TransactionOptions`` to configure the opened transaction a| `T
 driver.transaction(database, sessionType);
 ----
 
-[#_Driver_updateAddressTranslation_java_util_Map_java_lang_String_​java_lang_String_]
-==== method ``updateAddressTranslation``
-
-[source,java]
-----
-void updateAddressTranslation​(java.util.Map<java.lang.String,​java.lang.String> addressTranslation)
-----
-
-Updates address translation of the driver. This lets you actualize new translation information without recreating the driver from scratch. Useful after registering new servers requiring address translation. This operation will update existing connections using the provided addresses. 
-
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `addressTranslation` a| The translation of public TypeDB cluster server addresses (keys) to server-side private addresses (values) a| `java.util.Map<java.lang.String,​java.lang.String>`
-|===
-
-[caption=""]
-.Returns
-`void`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-driver.updateAddressTranslation(2);
-----
-
 [#_Driver_users_]
 ==== method ``users``
 

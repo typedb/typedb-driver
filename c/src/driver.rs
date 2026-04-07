@@ -270,22 +270,3 @@ pub extern "C" fn driver_deregister_server(driver: *const TypeDBDriver, server_i
     unwrap_void(borrow(driver).deregister_server(server_id as u64))
 }
 
-/// Updates address translation of the driver. This lets you actualize new translation
-/// information without recreating the driver from scratch. Useful after registering new
-/// servers requiring address translation.
-/// This operation will update existing connections using the provided addresses.
-///
-/// @param driver The <code>TypeDBDriver</code> object.
-/// @param public_addresses A null-terminated array holding the server addresses for connection.
-/// @param private_addresses A null-terminated array holding the private server addresses, configured on the server side.
-/// This array <i>must</i> have the same length as <code>public_addresses</code>.
-#[no_mangle]
-pub extern "C" fn driver_update_address_translation(
-    driver: *const TypeDBDriver,
-    public_addresses: *const *const c_char,
-    private_addresses: *const *const c_char,
-) {
-    let translation = iterators_to_map(string_array_view(public_addresses), string_array_view(private_addresses));
-    let addresses = unwrap_or_default(Addresses::try_from_translation_str(translation));
-    unwrap_void(borrow(driver).update_address_translation(addresses))
-}

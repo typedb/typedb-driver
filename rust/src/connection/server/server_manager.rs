@@ -136,19 +136,6 @@ impl ServerManager {
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn update_address_translation(&self, addresses: Addresses) -> Result {
-        if !matches!(addresses, Addresses::Translated(_)) {
-            return Err(ConnectionError::AddressTranslationWithoutTranslation { addresses }.into());
-        }
-
-        *self.address_translation.write().expect("Expected address translation write access") =
-            addresses.address_translation();
-
-        self.refresh_replicas().await?;
-        self.refresh_replica_connections().await
-    }
-
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     async fn refresh_replica_connections(&self) -> Result {
         let mut replicas = self.read_replicas().clone();
         let mut connection_errors = HashMap::with_capacity(replicas.len());

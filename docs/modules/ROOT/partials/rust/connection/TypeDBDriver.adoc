@@ -345,6 +345,8 @@ TypeDBDriver::new_with_description(Addresses::try_from_address_str("127.0.0.1:17
 pub fn options(&self) -> &DriverOptions
 ----
 
+Updates address translation of the driver. This lets you actualize new translation information without recreating the driver from scratch. Useful after registering new replicas requiring address translation. This operation will update existing connections using the provided addresses.
+
 The ``DriverOptions`` for this connection.
 
 [caption=""]
@@ -988,75 +990,6 @@ sync::
 [source,rust]
 ----
 transaction.transaction_with_options(database_name, transaction_type, options)
-----
-
---
-====
-
-[#_struct_TypeDBDriver_update_address_translation_addresses_Addresses]
-==== update_address_translation
-
-[tabs]
-====
-async::
-+
---
-[source,rust]
-----
-pub async fn update_address_translation(&self, addresses: Addresses) -> Result
-----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-pub fn update_address_translation(&self, addresses: Addresses) -> Result
-----
-
---
-====
-
-Updates address translation of the driver. This lets you actualize new translation information without recreating the driver from scratch. Useful after registering new replicas requiring address translation. This operation will update existing connections using the provided addresses.
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `addresses` a|  — Addresses containing the new address translation information a| `Addresses`
-|===
-
-[caption=""]
-.Returns
-[source,rust]
-----
-Result
-----
-
-[caption=""]
-.Code examples
-[tabs]
-====
-async::
-+
---
-[source,rust]
-----
-driver.update_address_translation(Addresses::try_from_translation_str([("typedb-cloud.ext:11729", "127.0.0.1:1729")].into()).unwrap()).await;
-----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-driver.update_address_translation(Addresses::try_from_translation_str([("typedb-cloud.ext:11729", "127.0.0.1:1729")].into()).unwrap());
 ----
 
 --

@@ -514,34 +514,6 @@ Creates a new ``DriverTlsConfig`` with TLS enabled using a custom root CA certif
 .Returns
 `struct DriverTlsConfig*`
 
-[#_driver_update_address_translation]
-==== function ``driver_update_address_translation``
-
-[source,c]
-----
-void driver_update_address_translation(const struct TypeDBDriver* driver, const char*const* public_addresses, const char*const* private_addresses)
-----
-
-
-
-Updates address translation of the driver. This lets you actualize new translation information without recreating the driver from scratch. Useful after registering new servers requiring address translation. This operation will update existing connections using the provided addresses.
-
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `driver` a| The ``TypeDBDriver`` object. a| `const struct TypeDBDriver*`
-a| `public_addresses` a| A null-terminated array holding the server addresses for connection. a| `const char*const*`
-a| `private_addresses` a| A null-terminated array holding the private server addresses, configured on the server side. This array _must_ have the same length as ``public_addresses``. a| `const char*const*`
-|===
-
-[caption=""]
-.Returns
-`void`
-
 [#_init_logging]
 ==== function ``init_logging``
 

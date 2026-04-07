@@ -163,24 +163,6 @@ class Driver(ABC):
         pass
 
     @abstractmethod
-    def update_address_translation(self, address_translation: Mapping[str, str]) -> None:
-        """
-        Updates address translation of the driver. This lets you actualize new translation
-        information without recreating the driver from scratch. Useful after registering new
-        servers requiring address translation.
-        This operation will update existing connections using the provided addresses.
-
-        :param address_translation: The translation of public TypeDB cluster server addresses (keys) to server-side private addresses (values)
-
-        Examples:
-        ---------
-        ::
-
-            driver.update_address_translation({"typedb-cloud.ext:11729": "127.0.0.1:11729"})
-        """
-        pass
-
-    @abstractmethod
     def close(self) -> None:
         """
         Closes the driver. Before instantiating a new driver, the driver that's currently open should first be closed.

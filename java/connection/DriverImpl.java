@@ -52,7 +52,6 @@ import static com.typedb.driver.jni.typedb_driver.driver_primary_server;
 import static com.typedb.driver.jni.typedb_driver.driver_register_server;
 import static com.typedb.driver.jni.typedb_driver.driver_servers;
 import static com.typedb.driver.jni.typedb_driver.driver_server_version;
-import static com.typedb.driver.jni.typedb_driver.driver_update_address_translation;
 import static java.util.stream.Collectors.toSet;
 
 public class DriverImpl extends NativeObject<com.typedb.driver.jni.TypeDBDriver> implements Driver {
@@ -182,17 +181,6 @@ public class DriverImpl extends NativeObject<com.typedb.driver.jni.TypeDBDriver>
             driver_deregister_server(nativeObject, serverID);
         } catch (com.typedb.driver.jni.Error error) {
             throw new TypeDBDriverException(error);
-        }
-    }
-
-    @Override
-    public void updateAddressTranslation(Map<String, String> addressTranslation) {
-        Validator.requireNonNull(addressTranslation, "addressTranslation");
-        try {
-            Map.Entry<String[], String[]> addresses = getTranslatedAddresses(addressTranslation);
-            driver_update_address_translation(nativeObject, addresses.getKey(), addresses.getValue());
-        } catch (com.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
         }
     }
 
