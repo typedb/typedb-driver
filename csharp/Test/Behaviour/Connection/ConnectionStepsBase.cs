@@ -138,6 +138,11 @@ namespace TypeDB.Driver.Test.Behaviour
             return Driver!.GetPrimaryServer(OperationServerRouting);
         }
 
+        protected virtual void InitializeDriverOptions()
+        {
+            DriverOptions = new DriverOptions(DriverTlsConfig.Disabled());
+        }
+
         private void Cleanup()
         {
             CleanupTransactions();
@@ -149,6 +154,12 @@ namespace TypeDB.Driver.Test.Behaviour
             {
                 Driver.Close();
             }
+
+            BackgroundDriver?.Close();
+            BackgroundDriver = null;
+            Driver = null;
+
+            InitializeDriverOptions();
 
             try
             {
@@ -177,12 +188,6 @@ namespace TypeDB.Driver.Test.Behaviour
                 }
             }
             catch { }
-
-            BackgroundDriver?.Close();
-            BackgroundDriver = null;
-            Driver = null;
-
-            DriverOptions = new DriverOptions(DriverTlsConfig.Disabled());
         }
 
         private static void CleanupTempDir()

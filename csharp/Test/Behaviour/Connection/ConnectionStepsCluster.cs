@@ -52,8 +52,6 @@ namespace TypeDB.Driver.Test.Behaviour
         public BehaviourSteps()
             : base()
         {
-            InitClusterTls();
-
             if (!_isBeforeAllRan)
             {
                 SetupCluster();
@@ -68,12 +66,16 @@ namespace TypeDB.Driver.Test.Behaviour
             _concurrentRowStreams = null;
         }
 
-        private void InitClusterTls()
+        protected override void InitializeDriverOptions()
         {
             string? rootCA = Environment.GetEnvironmentVariable("ROOT_CA");
             if (rootCA != null)
             {
-                DriverOptions.TlsConfig = DriverTlsConfig.EnabledWithRootCA(rootCA);
+                DriverOptions = new DriverOptions(DriverTlsConfig.EnabledWithRootCA(rootCA));
+            }
+            else
+            {
+                base.InitializeDriverOptions();
             }
         }
 
