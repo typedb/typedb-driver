@@ -37,6 +37,8 @@ use crate::{
 
 type TonicResult<T> = StdResult<Response<T>, Status>;
 
+const GRPC_MAX_MESSAGE_SIZE: usize = 1024 * 1024 * 1024;
+
 #[derive(Clone, Debug)]
 pub(super) struct RPCStub<Channel: GRPCChannel> {
     grpc: GRPC<Channel>,
@@ -45,7 +47,12 @@ pub(super) struct RPCStub<Channel: GRPCChannel> {
 
 impl<Channel: GRPCChannel> RPCStub<Channel> {
     pub(super) async fn new(channel: Channel, call_credentials: Option<Arc<CallCredentials>>) -> Self {
-        Self { grpc: GRPC::new(channel), call_credentials }
+        Self {
+            grpc: GRPC::new(channel)
+                .max_decoding_message_size(GRPC_MAX_MESSAGE_SIZE)
+                .max_encoding_message_size(GRPC_MAX_MESSAGE_SIZE),
+            call_credentials,
+        }
     }
 
     async fn call_with_auto_renew_token<F, R>(&mut self, call: F) -> Result<R>
