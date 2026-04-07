@@ -43,7 +43,7 @@ public interface Server {
     String getAddress();
 
     /**
-     * Returns whether this is the primary server of the raft cluster or any of the supporting types.
+     * Returns whether this is the primary server of the raft cluster or any of the supporting roles.
      */
     @CheckReturnValue
     Optional<ReplicationRole> getRole();

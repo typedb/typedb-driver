@@ -73,7 +73,7 @@ namespace TypeDB.Driver.Test.Behaviour
             string? rootCA = Environment.GetEnvironmentVariable("ROOT_CA");
             if (rootCA != null)
             {
-                DriverOptions = DriverOptions.SetTlsConfig(DriverTlsConfig.EnabledWithRootCA(rootCA));
+                DriverOptions.TlsConfig = DriverTlsConfig.EnabledWithRootCA(rootCA);
             }
         }
 
@@ -298,7 +298,7 @@ namespace TypeDB.Driver.Test.Behaviour
         [When(@"set driver option primary_failover_retries to: (\d+)")]
         public void SetDriverOptionPrimaryFailoverRetriesTo(int value)
         {
-            DriverOptions = DriverOptions.SetPrimaryFailoverRetries(value);
+            DriverOptions.PrimaryFailoverRetries = value;
         }
 
         [When(@"connection opens with a wrong port; fails")]

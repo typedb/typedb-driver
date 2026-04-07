@@ -24,6 +24,7 @@ using System.Linq;
 using TypeDB.Driver;
 using TypeDB.Driver.Api;
 using TypeDB.Driver.Common;
+using TypeDB.Driver.Common.Validation;
 using TypeDB.Driver.Connection;
 using TypeDB.Driver.User;
 
@@ -57,6 +58,9 @@ namespace TypeDB.Driver.Connection
 
         private static Pinvoke.TypeDBDriver Open(string address, Credentials credentials, DriverOptions driverOptions)
         {
+            Validator.RequireNonNull(address, nameof(address));
+            Validator.RequireNonNull(credentials, nameof(credentials));
+            Validator.RequireNonNull(driverOptions, nameof(driverOptions));
             try
             {
                 return Pinvoke.typedb_driver.driver_new_with_description(
@@ -73,6 +77,9 @@ namespace TypeDB.Driver.Connection
 
         private static Pinvoke.TypeDBDriver Open(ISet<string> addresses, Credentials credentials, DriverOptions driverOptions)
         {
+            Validator.RequireNonNull(addresses, nameof(addresses));
+            Validator.RequireNonNull(credentials, nameof(credentials));
+            Validator.RequireNonNull(driverOptions, nameof(driverOptions));
             try
             {
                 return Pinvoke.typedb_driver.driver_new_with_addresses_with_description(
@@ -89,6 +96,9 @@ namespace TypeDB.Driver.Connection
 
         private static Pinvoke.TypeDBDriver Open(IDictionary<string, string> addressTranslation, Credentials credentials, DriverOptions driverOptions)
         {
+            Validator.RequireNonNull(addressTranslation, nameof(addressTranslation));
+            Validator.RequireNonNull(credentials, nameof(credentials));
+            Validator.RequireNonNull(driverOptions, nameof(driverOptions));
             try
             {
                 string[] publicAddresses = addressTranslation.Keys.ToArray();
@@ -132,6 +142,8 @@ namespace TypeDB.Driver.Connection
 
         public ITransaction Transaction(string database, TransactionType type, TransactionOptions options)
         {
+            Validator.RequireNonNull(database, nameof(database));
+            Validator.RequireNonNull(options, nameof(options));
             try
             {
                 Pinvoke.Transaction nativeTransaction = Pinvoke.typedb_driver.transaction_new(
@@ -225,6 +237,7 @@ namespace TypeDB.Driver.Connection
 
         public void UpdateAddressTranslation(IDictionary<string, string> addressTranslation)
         {
+            Validator.RequireNonNull(addressTranslation, nameof(addressTranslation));
             try
             {
                 string[] publicAddresses = addressTranslation.Keys.ToArray();

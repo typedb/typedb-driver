@@ -24,6 +24,7 @@ using TypeDB.Driver.Api;
 using TypeDB.Driver.Api.Analyze;
 using TypeDB.Driver.Api.Answer;
 using TypeDB.Driver.Common;
+using TypeDB.Driver.Common.Validation;
 
 namespace TypeDB.Driver.Answer
 {
@@ -69,6 +70,7 @@ namespace TypeDB.Driver.Answer
         /// <inheritdoc/>
         public IConcept? Get(string columnName)
         {
+            Validator.RequireNonNull(columnName, nameof(columnName));
             try
             {
                 Pinvoke.Concept? nativeConcept = Pinvoke.typedb_driver.concept_row_get(NativeObject, columnName);
@@ -87,6 +89,7 @@ namespace TypeDB.Driver.Answer
         /// <inheritdoc/>
         public IConcept? GetIndex(long columnIndex)
         {
+            Validator.RequireNonNegative(columnIndex, nameof(columnIndex));
             try
             {
                 Pinvoke.Concept? nativeConcept = Pinvoke.typedb_driver.concept_row_get_index(NativeObject, (uint)columnIndex);

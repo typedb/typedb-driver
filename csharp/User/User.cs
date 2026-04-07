@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using TypeDB.Driver;
 using TypeDB.Driver.Api;
 using TypeDB.Driver.Common;
+using TypeDB.Driver.Common.Validation;
 
 namespace TypeDB.Driver.User
 {
@@ -47,6 +48,7 @@ namespace TypeDB.Driver.User
         /// <inheritdoc/>
         public void UpdatePassword(string password)
         {
+            Validator.RequireNonNull(password, nameof(password));
             try
             {
                 Pinvoke.typedb_driver.user_update_password(NativeObject, password);

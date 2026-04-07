@@ -187,7 +187,7 @@ namespace TypeDB.Driver.Test.Behaviour
         [When(@"set driver option primary_failover_retries to: (\d+)")]
         public void SetDriverOptionPrimaryFailoverRetriesTo(int value)
         {
-            DriverOptions = DriverOptions.SetPrimaryFailoverRetries(value);
+            DriverOptions.PrimaryFailoverRetries = value;
         }
 
         // Connection: wrong host/port (from DriverSteps)

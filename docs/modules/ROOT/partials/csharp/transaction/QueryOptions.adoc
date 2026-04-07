@@ -8,7 +8,7 @@
 
 
 
-Options for query execution.
+TypeDB query options. ``QueryOptions`` can be used to override the default server behaviour for executed queries.
 
 // tag::methods[]
 [#_bool_TypeDB_Driver_Api_QueryOptions_IncludeInstanceTypes]
@@ -21,11 +21,18 @@ bool? TypeDB.Driver.Api.QueryOptions.IncludeInstanceTypes
 
 
 
-Gets or sets whether to include instance types in query results.
+Gets or sets whether to include instance types in ConceptRow answers. If set, specifies if types should be included in instance structs returned in ConceptRow answers. This option allows reducing the amount of unnecessary data transmitted.
 
 [caption=""]
 .Returns
 `bool?`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+options.IncludeInstanceTypes = true;
+----
 
 [#_bool_TypeDB_Driver_Api_QueryOptions_IncludeQueryStructure]
 ==== method ``IncludeQueryStructure``
@@ -37,11 +44,18 @@ bool? TypeDB.Driver.Api.QueryOptions.IncludeQueryStructure
 
 
 
-Gets or sets whether to include query structure in query results.
+Gets or sets whether to include the query structure in the ConceptRow header. If set, requests the server to return the structure of the query in the ConceptRow header.
 
 [caption=""]
 .Returns
 `bool?`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+options.IncludeQueryStructure = true;
+----
 
 [#_long_TypeDB_Driver_Api_QueryOptions_PrefetchSize]
 ==== method ``PrefetchSize``
@@ -53,11 +67,18 @@ long? TypeDB.Driver.Api.QueryOptions.PrefetchSize
 
 
 
-Gets or sets the prefetch size for query results.
+Gets or sets the prefetch size for query results. If set, specifies the number of extra query responses sent before the client side has to re-request more responses. Increasing this may increase performance for queries with a huge number of answers, as it can reduce the number of network round-trips at the cost of more resources on the server side. Minimal value: 1.
 
 [caption=""]
 .Returns
 `long?`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+options.PrefetchSize = 50;
+----
 
 [#_TypeDB_Driver_Api_QueryOptions_QueryOptions_]
 ==== method ``QueryOptions``
@@ -69,11 +90,18 @@ QueryOptions()
 
 
 
-Creates a new QueryOptions with default settings.
+Produces a new ``QueryOptions`` object.
 
 [caption=""]
 .Returns
 `QueryOptions`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+QueryOptions options = new QueryOptions { PrefetchSize = 50, IncludeQueryStructure = true }; TypeDB.Driver.Api.QueryOptions TypeDB query options. QueryOptions can be used to override the default server behaviour for executed ... Definition QueryOptions.cs:30
+----
 
 // end::methods[]
 

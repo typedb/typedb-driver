@@ -46,6 +46,7 @@ csharp_behaviour_test_core(
     ],
     target_frameworks = target_frameworks,
     targeting_packs = targeting_packs,
+    tags = ["manual"],
 )
 
 checkstyle_test(

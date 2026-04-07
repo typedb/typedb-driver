@@ -35,7 +35,7 @@ Creates a TLS configuration with TLS disabled. WARNING: Disabling TLS causes cre
 .Code examples
 [source,cs]
 ----
-DriverTlsConfig tlsConfig = DriverTlsConfig.Disabled(); TypeDB.Driver.Api.DriverTlsConfig TLS configuration for the TypeDB driver. Definition DriverTlsConfig.cs:36 TypeDB.Driver.Api.DriverTlsConfig.Disabled static DriverTlsConfig Disabled() Creates a TLS configuration with TLS disabled. WARNING: Disabling TLS causes credentials and data to ... Definition DriverTlsConfig.cs:51
+DriverTlsConfig tlsConfig = DriverTlsConfig.Disabled(); TypeDB.Driver.Api.DriverTlsConfig TLS configuration for the TypeDB driver. Definition DriverTlsConfig.cs:37 TypeDB.Driver.Api.DriverTlsConfig.Disabled static DriverTlsConfig Disabled() Creates a TLS configuration with TLS disabled. WARNING: Disabling TLS causes credentials and data to ... Definition DriverTlsConfig.cs:52
 ----
 
 [#_static_DriverTlsConfig_TypeDB_Driver_Api_DriverTlsConfig_EnabledWithNativeRootCA_]
@@ -58,7 +58,7 @@ Creates a TLS configuration enabled with system native trust roots.
 .Code examples
 [source,cs]
 ----
-DriverTlsConfig tlsConfig = DriverTlsConfig.EnabledWithNativeRootCA(); TypeDB.Driver.Api.DriverTlsConfig.EnabledWithNativeRootCA static DriverTlsConfig EnabledWithNativeRootCA() Creates a TLS configuration enabled with system native trust roots. Definition DriverTlsConfig.cs:64
+DriverTlsConfig tlsConfig = DriverTlsConfig.EnabledWithNativeRootCA(); TypeDB.Driver.Api.DriverTlsConfig.EnabledWithNativeRootCA static DriverTlsConfig EnabledWithNativeRootCA() Creates a TLS configuration enabled with system native trust roots. Definition DriverTlsConfig.cs:65
 ----
 
 [#_static_DriverTlsConfig_TypeDB_Driver_Api_DriverTlsConfig_EnabledWithRootCA_string_tlsRootCAPath_]
@@ -91,7 +91,7 @@ a| `tlsRootCAPath` a| Path to PEM-encoded root CA certificate bundle. a| `string
 .Code examples
 [source,cs]
 ----
-DriverTlsConfig tlsConfig = DriverTlsConfig.EnabledWithRootCA("path/to/ca-certificate.pem"); TypeDB.Driver.Api.DriverTlsConfig.EnabledWithRootCA static DriverTlsConfig EnabledWithRootCA(string tlsRootCAPath) Creates a TLS configuration enabled with a custom root CA certificate bundle (PEM). Definition DriverTlsConfig.cs:78
+DriverTlsConfig tlsConfig = DriverTlsConfig.EnabledWithRootCA("path/to/ca-certificate.pem"); TypeDB.Driver.Api.DriverTlsConfig.EnabledWithRootCA static DriverTlsConfig EnabledWithRootCA(string tlsRootCAPath) Creates a TLS configuration enabled with a custom root CA certificate bundle (PEM). Definition DriverTlsConfig.cs:79
 ----
 
 [#_bool_TypeDB_Driver_Api_DriverTlsConfig_IsEnabled]

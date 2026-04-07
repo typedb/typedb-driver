@@ -64,6 +64,10 @@ namespace TypeDB.Driver.Common
                 new Driver(3, "Unexpected native value encountered!");
             public static readonly Driver NON_NULL_VALUE_REQUIRED =
                 new Driver(4, "Value of '{0}' should not be null.");
+            public static readonly Driver POSITIVE_VALUE_REQUIRED =
+                new Driver(5, "Value of '{0}' should be positive, was: '{1}'.");
+            public static readonly Driver NON_NEGATIVE_VALUE_REQUIRED =
+                new Driver(6, "Value of '{0}' should be non-negative, was: '{1}'.");
         }
 
         public class Concept : ErrorMessage

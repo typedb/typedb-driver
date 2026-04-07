@@ -18,6 +18,7 @@
  */
 
 using TypeDB.Driver.Common;
+using TypeDB.Driver.Common.Validation;
 
 namespace TypeDB.Driver.Api
 {
@@ -33,7 +34,10 @@ namespace TypeDB.Driver.Api
         /// <param name="tlsConfig">The TLS configuration for the connection.</param>
         /// <example>
         /// <code>
-        /// DriverOptions options = new DriverOptions(DriverTlsConfig.EnabledWithNativeRootCA());
+        /// DriverOptions options = new DriverOptions(DriverTlsConfig.EnabledWithNativeRootCA())
+        /// {
+        ///     RequestTimeoutMillis = 30000
+        /// };
         /// </code>
         /// </example>
         public DriverOptions(DriverTlsConfig tlsConfig)
@@ -42,98 +46,63 @@ namespace TypeDB.Driver.Api
         }
 
         /// <summary>
-        /// Returns the TLS configuration associated with this <c>DriverOptions</c>.
+        /// Gets or sets the TLS configuration associated with this <c>DriverOptions</c>.
         /// Specifies the TLS configuration of the connection to TypeDB.
+        /// WARNING: Disabled TLS settings will make the driver sending passwords as plaintext.
         /// </summary>
         /// <example>
         /// <code>
-        /// options.TlsConfig;
+        /// options.TlsConfig = DriverTlsConfig.EnabledWithNativeRootCA();
         /// </code>
         /// </example>
         public DriverTlsConfig TlsConfig
         {
             get { return new DriverTlsConfig(Pinvoke.typedb_driver.driver_options_get_tls_config(NativeObject)); }
+            set
+            {
+                Validator.RequireNonNull(value, nameof(TlsConfig));
+                Pinvoke.typedb_driver.driver_options_set_tls_config(NativeObject, value.NativeObject);
+            }
         }
 
         /// <summary>
-        /// Overrides the TLS configuration associated with this <c>DriverOptions</c>.
-        /// WARNING: Disabled TLS settings will make the driver sending passwords as plaintext.
-        /// </summary>
-        /// <param name="tlsConfig">The new TLS configuration.</param>
-        /// <example>
-        /// <code>
-        /// options.SetTlsConfig(DriverTlsConfig.EnabledWithNativeRootCA());
-        /// </code>
-        /// </example>
-        public DriverOptions SetTlsConfig(DriverTlsConfig tlsConfig)
-        {
-            Pinvoke.typedb_driver.driver_options_set_tls_config(NativeObject, tlsConfig.NativeObject);
-            return this;
-        }
-
-        /// <summary>
-        /// Returns the request timeout in milliseconds set for this <c>DriverOptions</c> object.
-        /// Specifies the maximum time to wait for a response to a unary RPC request.
+        /// Gets or sets the maximum time (in milliseconds) to wait for a response to a unary RPC request.
         /// This applies to operations like database creation, user management, and initial
         /// transaction opening. It does NOT apply to operations within transactions (queries, commits).
+        /// Defaults to 2 hours (7200000 milliseconds).
         /// </summary>
         /// <example>
         /// <code>
-        /// options.RequestTimeoutMillis;
+        /// options.RequestTimeoutMillis = 30000;
         /// </code>
         /// </example>
         public long RequestTimeoutMillis
         {
             get { return Pinvoke.typedb_driver.driver_options_get_request_timeout_millis(NativeObject); }
+            set
+            {
+                Validator.RequireNonNegative(value, nameof(RequestTimeoutMillis));
+                Pinvoke.typedb_driver.driver_options_set_request_timeout_millis(NativeObject, value);
+            }
         }
 
         /// <summary>
-        /// Sets the maximum time (in milliseconds) to wait for a response to a unary RPC request.
-        /// This applies to operations like database creation, user management, and initial
-        /// transaction opening. It does NOT apply to operations within transactions (queries, commits).
-        /// Defaults to 2 hours (7200000 milliseconds).
-        /// </summary>
-        /// <param name="requestTimeoutMillis">The request timeout in milliseconds. Must be non-negative.</param>
-        /// <example>
-        /// <code>
-        /// options.SetRequestTimeoutMillis(30000); // 30 seconds
-        /// </code>
-        /// </example>
-        public DriverOptions SetRequestTimeoutMillis(long requestTimeoutMillis)
-        {
-            Pinvoke.typedb_driver.driver_options_set_request_timeout_millis(NativeObject, requestTimeoutMillis);
-            return this;
-        }
-
-        /// <summary>
-        /// Returns the value set for the primary failover retries limit in this <c>DriverOptions</c> object.
-        /// Limits the number of attempts to redirect a request to another
-        /// primary server in case of a failure due to the change of server roles.
+        /// Gets or sets the limit on the number of attempts to redirect a request to another
+        /// primary server in case of a failure due to the change of server roles. Defaults to 1.
         /// </summary>
         /// <example>
         /// <code>
-        /// options.PrimaryFailoverRetries;
+        /// options.PrimaryFailoverRetries = 3;
         /// </code>
         /// </example>
         public int PrimaryFailoverRetries
         {
             get { return (int)Pinvoke.typedb_driver.driver_options_get_primary_failover_retries(NativeObject); }
-        }
-
-        /// <summary>
-        /// Explicitly sets the limit on the number of attempts to redirect a request to another
-        /// primary server in case of a failure due to the change of server roles. Defaults to 1.
-        /// </summary>
-        /// <param name="primaryFailoverRetries">The limit of primary failover retries.</param>
-        /// <example>
-        /// <code>
-        /// options.SetPrimaryFailoverRetries(1);
-        /// </code>
-        /// </example>
-        public DriverOptions SetPrimaryFailoverRetries(int primaryFailoverRetries)
-        {
-            Pinvoke.typedb_driver.driver_options_set_primary_failover_retries(NativeObject, primaryFailoverRetries);
-            return this;
+            set
+            {
+                Validator.RequireNonNegative(value, nameof(PrimaryFailoverRetries));
+                Pinvoke.typedb_driver.driver_options_set_primary_failover_retries(NativeObject, value);
+            }
         }
     }
 }

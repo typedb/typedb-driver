@@ -23,6 +23,7 @@ using System.Linq;
 using TypeDB.Driver;
 using TypeDB.Driver.Api;
 using TypeDB.Driver.Common;
+using TypeDB.Driver.Common.Validation;
 
 namespace TypeDB.Driver.User
 {
@@ -45,6 +46,7 @@ namespace TypeDB.Driver.User
         /// <inheritdoc/>
         public bool Contains(string username)
         {
+            Validator.RequireNonNull(username, nameof(username));
             try
             {
                 return Pinvoke.typedb_driver.users_contains(_nativeDriver, username);
@@ -58,6 +60,8 @@ namespace TypeDB.Driver.User
         /// <inheritdoc/>
         public void Create(string username, string password)
         {
+            Validator.RequireNonNull(username, nameof(username));
+            Validator.RequireNonNull(password, nameof(password));
             try
             {
                 Pinvoke.typedb_driver.users_create(_nativeDriver, username, password);
@@ -71,6 +75,7 @@ namespace TypeDB.Driver.User
         /// <inheritdoc/>
         public IUser? Get(string username)
         {
+            Validator.RequireNonNull(username, nameof(username));
             try
             {
                 Pinvoke.User user = Pinvoke.typedb_driver.users_get(_nativeDriver, username);

@@ -35,7 +35,7 @@ namespace TypeDB.Driver.Api
         string Address { get; }
 
         /// <summary>
-        /// Returns whether this is the primary server of the raft cluster or any of the supporting types.
+        /// Returns whether this is the primary server of the raft cluster or any of the supporting roles.
         /// </summary>
         ReplicationRole? Role { get; }
 

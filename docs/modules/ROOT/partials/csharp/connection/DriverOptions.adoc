@@ -41,7 +41,7 @@ a| `tlsConfig` a| The TLS configuration for the connection. a| `DriverTlsConfig`
 .Code examples
 [source,cs]
 ----
-DriverOptions options = new DriverOptions(DriverTlsConfig.EnabledWithNativeRootCA()); TypeDB.Driver.Api.DriverOptions TypeDB driver options. DriverOptions are used to specify the driver's connection behavior. Definition DriverOptions.cs:28 TypeDB.Driver.Api.DriverTlsConfig TLS configuration for the TypeDB driver. Definition DriverTlsConfig.cs:36 TypeDB.Driver.Api.DriverTlsConfig.EnabledWithNativeRootCA static DriverTlsConfig EnabledWithNativeRootCA() Creates a TLS configuration enabled with system native trust roots. Definition DriverTlsConfig.cs:64
+DriverOptions options = new DriverOptions(DriverTlsConfig.EnabledWithNativeRootCA()) { RequestTimeoutMillis = 30000 }; TypeDB.Driver.Api.DriverOptions TypeDB driver options. DriverOptions are used to specify the driver's connection behavior. Definition DriverOptions.cs:29 TypeDB.Driver.Api.DriverTlsConfig TLS configuration for the TypeDB driver. Definition DriverTlsConfig.cs:37 TypeDB.Driver.Api.DriverTlsConfig.EnabledWithNativeRootCA static DriverTlsConfig EnabledWithNativeRootCA() Creates a TLS configuration enabled with system native trust roots. Definition DriverTlsConfig.cs:65
 ----
 
 [#_int_TypeDB_Driver_Api_DriverOptions_PrimaryFailoverRetries]
@@ -54,7 +54,7 @@ int TypeDB.Driver.Api.DriverOptions.PrimaryFailoverRetries
 
 
 
-Returns the value set for the primary failover retries limit in this ``DriverOptions`` object. Limits the number of attempts to redirect a request to another primary server in case of a failure due to the change of server roles.
+Gets or sets the limit on the number of attempts to redirect a request to another primary server in case of a failure due to the change of server roles. Defaults to 1.
 
 [caption=""]
 .Returns
@@ -64,7 +64,7 @@ Returns the value set for the primary failover retries limit in this ``DriverOpt
 .Code examples
 [source,cs]
 ----
-options.PrimaryFailoverRetries;
+options.PrimaryFailoverRetries = 3;
 ----
 
 [#_long_TypeDB_Driver_Api_DriverOptions_RequestTimeoutMillis]
@@ -77,7 +77,7 @@ long TypeDB.Driver.Api.DriverOptions.RequestTimeoutMillis
 
 
 
-Returns the request timeout in milliseconds set for this ``DriverOptions`` object. Specifies the maximum time to wait for a response to a unary RPC request. This applies to operations like database creation, user management, and initial transaction opening. It does NOT apply to operations within transactions (queries, commits).
+Gets or sets the maximum time (in milliseconds) to wait for a response to a unary RPC request. This applies to operations like database creation, user management, and initial transaction opening. It does NOT apply to operations within transactions (queries, commits). Defaults to 2 hours (7200000 milliseconds).
 
 [caption=""]
 .Returns
@@ -87,106 +87,7 @@ Returns the request timeout in milliseconds set for this ``DriverOptions`` objec
 .Code examples
 [source,cs]
 ----
-options.RequestTimeoutMillis;
-----
-
-[#_DriverOptions_TypeDB_Driver_Api_DriverOptions_SetPrimaryFailoverRetries_int_primaryFailoverRetries_]
-==== method ``SetPrimaryFailoverRetries``
-
-[source,cs]
-----
-DriverOptions SetPrimaryFailoverRetries(int primaryFailoverRetries)
-----
-
-
-
-Explicitly sets the limit on the number of attempts to redirect a request to another primary server in case of a failure due to the change of server roles. Defaults to 1.
-
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `primaryFailoverRetries` a| The limit of primary failover retries. a| `int`
-|===
-
-[caption=""]
-.Returns
-`DriverOptions`
-
-[caption=""]
-.Code examples
-[source,cs]
-----
-options.SetPrimaryFailoverRetries(1);
-----
-
-[#_DriverOptions_TypeDB_Driver_Api_DriverOptions_SetRequestTimeoutMillis_long_requestTimeoutMillis_]
-==== method ``SetRequestTimeoutMillis``
-
-[source,cs]
-----
-DriverOptions SetRequestTimeoutMillis(long requestTimeoutMillis)
-----
-
-
-
-Sets the maximum time (in milliseconds) to wait for a response to a unary RPC request. This applies to operations like database creation, user management, and initial transaction opening. It does NOT apply to operations within transactions (queries, commits). Defaults to 2 hours (7200000 milliseconds).
-
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `requestTimeoutMillis` a| The request timeout in milliseconds. Must be non-negative. a| `long`
-|===
-
-[caption=""]
-.Returns
-`DriverOptions`
-
-[caption=""]
-.Code examples
-[source,cs]
-----
-options.SetRequestTimeoutMillis(30000); // 30 seconds
-----
-
-[#_DriverOptions_TypeDB_Driver_Api_DriverOptions_SetTlsConfig_DriverTlsConfig_tlsConfig_]
-==== method ``SetTlsConfig``
-
-[source,cs]
-----
-DriverOptions SetTlsConfig(DriverTlsConfig tlsConfig)
-----
-
-
-
-Overrides the TLS configuration associated with this ``DriverOptions``. WARNING: Disabled TLS settings will make the driver sending passwords as plaintext.
-
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `tlsConfig` a| The new TLS configuration. a| `DriverTlsConfig`
-|===
-
-[caption=""]
-.Returns
-`DriverOptions`
-
-[caption=""]
-.Code examples
-[source,cs]
-----
-options.SetTlsConfig(DriverTlsConfig.EnabledWithNativeRootCA());
+options.RequestTimeoutMillis = 30000;
 ----
 
 [#_DriverTlsConfig_TypeDB_Driver_Api_DriverOptions_TlsConfig]
@@ -199,7 +100,7 @@ DriverTlsConfig TypeDB.Driver.Api.DriverOptions.TlsConfig
 
 
 
-Returns the TLS configuration associated with this ``DriverOptions``. Specifies the TLS configuration of the connection to TypeDB.
+Gets or sets the TLS configuration associated with this ``DriverOptions``. Specifies the TLS configuration of the connection to TypeDB. WARNING: Disabled TLS settings will make the driver sending passwords as plaintext.
 
 [caption=""]
 .Returns
@@ -209,7 +110,7 @@ Returns the TLS configuration associated with this ``DriverOptions``. Specifies 
 .Code examples
 [source,cs]
 ----
-options.TlsConfig;
+options.TlsConfig = DriverTlsConfig.EnabledWithNativeRootCA();
 ----
 
 // end::methods[]

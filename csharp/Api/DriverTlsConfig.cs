@@ -18,6 +18,7 @@
  */
 
 using TypeDB.Driver.Common;
+using TypeDB.Driver.Common.Validation;
 
 namespace TypeDB.Driver.Api
 {
@@ -77,6 +78,7 @@ namespace TypeDB.Driver.Api
         /// </example>
         public static DriverTlsConfig EnabledWithRootCA(string tlsRootCAPath)
         {
+            Validator.RequireNonNull(tlsRootCAPath, nameof(tlsRootCAPath));
             try
             {
                 return new DriverTlsConfig(
