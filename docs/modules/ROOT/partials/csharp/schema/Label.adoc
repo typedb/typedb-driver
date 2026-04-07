@@ -72,6 +72,22 @@ a| `obj` a| Object to compare with a| `object?`
 label.Equals(obj);
 ----
 
+[#_override_int_TypeDB_Driver_Common_Label_GetHashCode_]
+==== method ``GetHashCode``
+
+[source,cs]
+----
+override int GetHashCode()
+----
+
+
+
+
+
+[caption=""]
+.Returns
+`override int`
+
 [#_TypeDB_Driver_Common_Label_Label_string_scope_string_name_]
 ==== method ``Label``
 
