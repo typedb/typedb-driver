@@ -79,12 +79,12 @@ public class DriverTlsConfig extends NativeObject<com.typedb.driver.jni.DriverTl
     /**
      * Creates a TLS configuration enabled with a custom root CA certificate bundle (PEM).
      *
-     * @param tlsRootCAPath Path to PEM-encoded root CA certificate bundle.
+     * <h3>Examples</h3>
+     * <pre>
+     * DriverTlsConfig tlsConfig = DriverTlsConfig.enabledWithRootCA("path/to/ca-certificate.pem");
+     * </pre>
      *
-     *                      <h3>Examples</h3>
-     *                      <pre>
-     *                                                                                                                               DriverTlsConfig tlsConfig = DriverTlsConfig.enabledWithRootCA("path/to/ca-certificate.pem");
-     *                                                                                                                               </pre>
+     * @param tlsRootCAPath Path to PEM-encoded root CA certificate bundle.
      */
     @CheckReturnValue
     public static DriverTlsConfig enabledWithRootCA(String tlsRootCAPath) {

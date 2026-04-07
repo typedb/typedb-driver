@@ -27,6 +27,22 @@ Deletes this user.
 .Returns
 `void`
 
+[#_string_TypeDB_Driver_Api_IUser_Name]
+==== method ``Name``
+
+[source,cs]
+----
+string TypeDB.Driver.Api.IUser.Name
+----
+
+
+
+Returns the name of this user.
+
+[caption=""]
+.Returns
+`string`
+
 [#_void_TypeDB_Driver_Api_IUser_UpdatePassword_string_password_]
 ==== method ``UpdatePassword``
 
@@ -52,22 +68,6 @@ a| `password` a| The new password. a| `string`
 [caption=""]
 .Returns
 `void`
-
-[#_string_TypeDB_Driver_Api_IUser_Username]
-==== method ``Username``
-
-[source,cs]
-----
-string TypeDB.Driver.Api.IUser.Username
-----
-
-
-
-Returns the name of this user.
-
-[caption=""]
-.Returns
-`string`
 
 // end::methods[]
 

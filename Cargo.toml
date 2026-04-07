@@ -82,7 +82,7 @@
 			default-features = false
 
 		[workspace.dependencies.steps]
-			path = "rust/tests/behaviour/steps"
+			path = "../steps"
 			features = []
 			default-features = false
 
@@ -117,7 +117,7 @@
 			default-features = false
 
 		[workspace.dependencies.typedb-driver]
-			path = "rust"
+			path = "../typedb-driver"
 			features = ["sync"]
 			default-features = false
 
@@ -127,7 +127,7 @@
 			default-features = false
 
 		[workspace.dependencies.config]
-			path = "rust/tests/behaviour/config"
+			path = "../config"
 			features = []
 			default-features = false
 

@@ -24,6 +24,8 @@ using System.Linq;
 using TypeDB.Driver.Api.Analyze;
 using TypeDB.Driver.Common;
 
+using AnalyzeError = TypeDB.Driver.Common.Error.Analyze;
+
 namespace TypeDB.Driver.Analyze
 {
     public class Function : NativeObjectWrapper<Pinvoke.Function>, IFunction
@@ -93,9 +95,9 @@ namespace TypeDB.Driver.Analyze
         public virtual ICheckReturn AsCheck() => throw InvalidCast("CheckReturn");
         public virtual IReduceReturn AsReduce() => throw InvalidCast("ReduceReturn");
 
-        private InvalidOperationException InvalidCast(string targetType)
+        private TypeDBDriverException InvalidCast(string targetType)
         {
-            return new InvalidOperationException($"Cannot cast {GetType().Name} to {targetType}");
+            return new TypeDBDriverException(AnalyzeError.INVALID_RETURN_OPERATION_CASTING, GetType().Name, targetType);
         }
     }
 

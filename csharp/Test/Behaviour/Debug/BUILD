@@ -19,20 +19,19 @@ package(default_visibility = ["//csharp/Test/Behaviour:__subpackages__"])
 
 load("//csharp:build_opts.bzl", "nullable_context", "target_frameworks", "targeting_packs")
 load("//csharp/Test:build_opts.bzl", "behaviour_tests_deps")
-load("//csharp/Test:rules.bzl", "csharp_behaviour_test")
+load("//csharp/Test:rules.bzl", "csharp_behaviour_test_core")
 load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
-csharp_behaviour_test(
-    name = "test-community",
+csharp_behaviour_test_core(
+    name = "test",
     test_files = ["DebugTest.cs"],
-    steps_files = [
+    step_files = [
         "//csharp/Test/Behaviour/Util:steps",
         "//csharp/Test/Behaviour/Query:steps",
         "//csharp/Test/Behaviour/Concept:steps",
         "//csharp/Test/Behaviour/Connection/Database:steps",
         "//csharp/Test/Behaviour/Connection/Transaction:steps",
         "//csharp/Test/Behaviour/Connection/User:steps",
-        "//csharp/Test/Behaviour/Connection:steps-community",
     ],
     features = ["debug.feature"],
     deps = [
@@ -47,6 +46,7 @@ csharp_behaviour_test(
     ],
     target_frameworks = target_frameworks,
     targeting_packs = targeting_packs,
+    tags = ["manual"],
 )
 
 checkstyle_test(
@@ -54,4 +54,3 @@ checkstyle_test(
     include = glob(["*"]),
     license_type = "apache-header",
 )
-

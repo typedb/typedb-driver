@@ -140,9 +140,7 @@ namespace TypeDB.Driver.Common
             return this.Name == that.Name && this.Scope == that.Scope;
         }
 
-        /**
-         * @private
-         */
+        /// <inheritdoc/>
         public override int GetHashCode()
         {
             return _hash;

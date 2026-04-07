@@ -24,6 +24,8 @@ using System.Linq;
 using TypeDB.Driver.Api.Analyze;
 using TypeDB.Driver.Common;
 
+using AnalyzeError = TypeDB.Driver.Common.Error.Analyze;
+
 namespace TypeDB.Driver.Analyze
 {
     public abstract class PipelineStage : NativeObjectWrapper<Pinvoke.PipelineStage>, IPipelineStage
@@ -98,9 +100,9 @@ namespace TypeDB.Driver.Analyze
         public virtual IDistinctStage AsDistinct() => throw InvalidCast("DistinctStage");
         public virtual IReduceStage AsReduce() => throw InvalidCast("ReduceStage");
 
-        private InvalidOperationException InvalidCast(string targetType)
+        private TypeDBDriverException InvalidCast(string targetType)
         {
-            return new InvalidOperationException($"Cannot cast {GetType().Name} to {targetType}");
+            return new TypeDBDriverException(AnalyzeError.INVALID_STAGE_CASTING, GetType().Name, targetType);
         }
 
         public override string ToString()

@@ -334,18 +334,16 @@ namespace TypeDB.Driver.Test.Behaviour
         [Then(@"in background, connection create database: (.+)")]
         public void InBackgroundConnectionCreateDatabase(string databaseName)
         {
-            var bgDriver = ConnectionStepsBase.CreateBackgroundDriver();
-            bgDriver.Databases.Create(databaseName);
-            bgDriver.Close();
+            BackgroundDriver ??= CreateDefaultTypeDBDriver();
+            BackgroundDriver.Databases.Create(databaseName);
         }
 
         [When(@"in background, connection delete database: (.+)")]
         [Then(@"in background, connection delete database: (.+)")]
         public void InBackgroundConnectionDeleteDatabase(string databaseName)
         {
-            var bgDriver = ConnectionStepsBase.CreateBackgroundDriver();
-            bgDriver.Databases.Get(databaseName).Delete();
-            bgDriver.Close();
+            BackgroundDriver ??= CreateDefaultTypeDBDriver();
+            BackgroundDriver.Databases.Get(databaseName).Delete();
         }
 
         #region Export / Import Steps

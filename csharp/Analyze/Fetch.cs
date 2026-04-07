@@ -23,6 +23,8 @@ using System.Collections.Generic;
 using TypeDB.Driver.Api.Analyze;
 using TypeDB.Driver.Common;
 
+using AnalyzeError = TypeDB.Driver.Common.Error.Analyze;
+
 namespace TypeDB.Driver.Analyze
 {
     public abstract class Fetch : NativeObjectWrapper<Pinvoke.Fetch>, IFetch
@@ -66,9 +68,9 @@ namespace TypeDB.Driver.Analyze
         public virtual IFetchList AsList() => throw InvalidCast("FetchList");
         public virtual IFetchObject AsObject() => throw InvalidCast("FetchObject");
 
-        private InvalidOperationException InvalidCast(string targetType)
+        private TypeDBDriverException InvalidCast(string targetType)
         {
-            return new InvalidOperationException($"Cannot cast {GetType().Name} to {targetType}");
+            return new TypeDBDriverException(AnalyzeError.INVALID_FETCH_CASTING, GetType().Name, targetType);
         }
 
         public class FetchLeafImpl : Fetch, IFetchLeaf

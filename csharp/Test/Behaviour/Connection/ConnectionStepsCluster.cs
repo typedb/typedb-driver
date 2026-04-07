@@ -19,6 +19,8 @@
 
 using DataTable = Gherkin.Ast.DataTable;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 using Xunit.Gherkin.Quick;
 
@@ -31,20 +33,31 @@ namespace TypeDB.Driver.Test.Behaviour
 {
     public partial class BehaviourSteps : ConnectionStepsBase
     {
-        // Default test credentials
-        private const string DefaultUsername = "admin";
-        private const string DefaultPassword = "password";
+        private static readonly HashSet<string> DEFAULT_CLUSTER_ADDRESSES = new HashSet<string>
+        {
+            "127.0.0.1:11729",
+            "127.0.0.1:21729",
+            "127.0.0.1:31729",
+        };
 
-        // TODO: Add cluster-specific fields:
-        // - TLS configuration (DriverTlsConfig)
-        // - Multi-node address list
-        // - Consistency level settings
+        private static readonly string[] DEFAULT_CLUSTER_CLUSTERING_ADDRESSES =
+        {
+            "127.0.0.1:11730",
+            "127.0.0.1:21730",
+            "127.0.0.1:31730",
+        };
+
+        private static bool _isBeforeAllRan = false;
 
         public BehaviourSteps()
             : base()
         {
-            // Reset query-level state between scenarios.
-            // These static fields persist across scenarios and must be cleared.
+            if (!_isBeforeAllRan)
+            {
+                SetupCluster();
+                _isBeforeAllRan = true;
+            }
+
             _queryOptions = null;
             _queryAnswer = null;
             _collectedRows = null;
@@ -53,54 +66,101 @@ namespace TypeDB.Driver.Test.Behaviour
             _concurrentRowStreams = null;
         }
 
+        protected override void InitializeDriverOptions()
+        {
+            string? rootCA = Environment.GetEnvironmentVariable("ROOT_CA");
+            if (rootCA != null)
+            {
+                DriverOptions = new DriverOptions(DriverTlsConfig.EnabledWithRootCA(rootCA));
+            }
+            else
+            {
+                base.InitializeDriverOptions();
+            }
+        }
+
+        private void SetupCluster()
+        {
+            using (var driver = CreateDefaultTypeDBDriver())
+            {
+                if (driver.GetServers().Count < DEFAULT_CLUSTER_CLUSTERING_ADDRESSES.Length)
+                {
+                    for (int i = 0; i < DEFAULT_CLUSTER_CLUSTERING_ADDRESSES.Length; i++)
+                    {
+                        long serverId = i + 1;
+                        if (serverId != 1)
+                        {
+                            driver.RegisterServer(serverId, DEFAULT_CLUSTER_CLUSTERING_ADDRESSES[i]);
+                        }
+                    }
+                }
+            }
+        }
+
+        public override IDriver CreateDefaultTypeDBDriver()
+        {
+            return TypeDB.Driver(DEFAULT_CLUSTER_ADDRESSES, DefaultCredentials, DriverOptions);
+        }
+
+        private IDriver CreateTypeDBDriver(
+            ISet<string>? addresses = null,
+            string? username = null,
+            string? password = null)
+        {
+            return TypeDB.Driver(
+                addresses ?? DEFAULT_CLUSTER_ADDRESSES,
+                new Credentials(
+                    username ?? AdminUsername,
+                    password ?? AdminPassword),
+                DriverOptions);
+        }
+
         public override IDriver CreateTypeDBDriver(string address)
         {
-            // TODO: Implement cluster driver creation with:
-            // - TLS/encryption support
-            // - Multi-node address handling
-            // - Cluster-specific DriverOptions
             return TypeDB.Driver(
-                address,
-                new Credentials(DefaultUsername, DefaultPassword),
-                new DriverOptions(false, null));
+                new HashSet<string> { address },
+                DefaultCredentials,
+                DriverOptions);
         }
 
         [Given(@"typedb starts")]
         [When(@"typedb starts")]
         public override void TypeDBStarts()
         {
-            // TypeDB cluster is assumed to be running externally for these tests
         }
 
         [Given(@"connection opens with default authentication")]
         [When(@"connection opens with default authentication")]
         public override void ConnectionOpensWithDefaultAuthentication()
         {
-            // TODO: Use cluster-specific connection with encryption
-            Driver = CreateTypeDBDriver(TypeDB.DefaultAddress);
+            Driver = CreateDefaultTypeDBDriver();
+        }
+
+        [When(@"connection opens to single server with default authentication")]
+        public void ConnectionOpensToSingleServerWithDefaultAuthentication()
+        {
+            Driver = CreateTypeDBDriver(DEFAULT_CLUSTER_ADDRESSES.First());
         }
 
         [Given(@"connection opens with authentication: {}, {}")]
         [When(@"connection opens with authentication: {}, {}")]
         public void ConnectionOpensWithAuthentication(string username, string password)
         {
-            // TODO: Use cluster-specific connection with encryption
-            Driver = TypeDB.Driver(
-                TypeDB.DefaultAddress,
-                new Credentials(username, password),
-                new DriverOptions(false, null));
+            if (Driver != null)
+            {
+                Driver.Close();
+                Driver = null;
+            }
+
+            Driver = CreateTypeDBDriver(username: username, password: password);
         }
 
-        [Given(@"typedb has configuration")]
-        public void TypeDBHasConfiguration(DataTable data)
+        [When(@"connection opens with authentication: {}, {}; throws exception")]
+        public void ConnectionOpensWithAuthenticationThrowsException(string username, string password)
         {
-            // TODO: Implement cluster configuration handling
-            // This method should parse the DataTable and configure cluster settings
-            // such as node addresses, TLS certificates, consistency levels, etc.
-            throw new NotImplementedException("Cluster configuration not yet implemented");
+            Assert.Throws<TypeDBDriverException>(
+                () => ConnectionOpensWithAuthentication(username, password));
         }
-
-        // Connection-level steps (from Base)
 
         [Given(@"connection has been opened")]
         public override void ConnectionHasBeenOpened()
@@ -108,6 +168,7 @@ namespace TypeDB.Driver.Test.Behaviour
             base.ConnectionHasBeenOpened();
         }
 
+        [Given(@"connection closes")]
         [When(@"connection closes")]
         [Then(@"connection closes")]
         public override void ConnectionCloses()
@@ -119,8 +180,6 @@ namespace TypeDB.Driver.Test.Behaviour
         [Then(@"connection is open: (.*)")]
         public void ConnectionIsOpen(string expectedState)
         {
-            if (_requiredConfiguration) return;
-
             bool expected = bool.Parse(expectedState);
             if (expected)
             {
@@ -133,17 +192,106 @@ namespace TypeDB.Driver.Test.Behaviour
             }
         }
 
+        [Then(@"connection contains distribution")]
+        public void ConnectionContainsDistribution()
+        {
+            Assert.False(string.IsNullOrEmpty(GetServerVersion().Distribution));
+        }
+
+        [Then(@"connection contains version")]
+        public void ConnectionContainsVersion()
+        {
+            Assert.False(string.IsNullOrEmpty(GetServerVersion().Version));
+        }
+
+        [Then(@"connection has (\d+) servers?")]
+        public void ConnectionHasServerCount(int count)
+        {
+            Assert.Equal(count, GetServers().Count);
+        }
+
+        [Then(@"connection primary server exists")]
+        public void ConnectionPrimaryServerExists()
+        {
+            Assert.NotNull(GetPrimaryServer());
+        }
+
+        [Then(@"connection get server\((\S+)\) (exists|does not exist)")]
+        public void ConnectionGetServerExists(string address, string existsOrDoesnt)
+        {
+            bool exists = GetServers().Any(s => s.Address == address);
+            Assert.Equal(existsOrDoesnt == "exists", exists);
+        }
+
+        [Then(@"connection get server\((\S+)\) has term")]
+        public void ConnectionGetServerHasTerm(string address)
+        {
+            var server = GetServers().FirstOrDefault(s => s.Address == address);
+            Assert.NotNull(server);
+        }
+
+        [Then(@"connection servers have roles:")]
+        public void ConnectionServersHaveRoles(DataTable data)
+        {
+            int expectedPrimaryCount = 0;
+            int expectedSecondaryCount = 0;
+            int expectedCandidateCount = 0;
+
+            foreach (var row in data.Rows)
+            {
+                foreach (var cell in row.Cells)
+                {
+                    switch (cell.Value.ToLower())
+                    {
+                        case "primary": expectedPrimaryCount++; break;
+                        case "secondary": expectedSecondaryCount++; break;
+                        case "candidate": expectedCandidateCount++; break;
+                        default: throw new ArgumentException($"Unknown server replication role: {cell.Value}");
+                    }
+                }
+            }
+
+            var servers = GetServers();
+            int actualPrimaryCount = servers.Count(s => s.Role?.IsPrimary() ?? false);
+            int actualSecondaryCount = servers.Count(s => s.Role?.IsSecondary() ?? false);
+            int actualCandidateCount = servers.Count(s => s.Role?.IsCandidate() ?? false);
+
+            Assert.Equal(expectedPrimaryCount, actualPrimaryCount);
+            Assert.Equal(expectedSecondaryCount, actualSecondaryCount);
+            Assert.Equal(expectedCandidateCount, actualCandidateCount);
+        }
+
         [Given(@"connection has (\d+) databases?")]
         [Then(@"connection has (\d+) databases?")]
         public void ConnectionHasDatabaseCount(int expectedCount)
         {
-            if (_requiredConfiguration) return;
-
             Assert.NotNull(Driver);
             Assert.Equal(expectedCount, Driver.Databases.GetAll().Count);
         }
 
-        // Connection: wrong host/port (from DriverSteps)
+        [When(@"set operation server routing to: (.+)")]
+        public void SetOperationServerRouting(string routing)
+        {
+            if (routing.Equals("auto", StringComparison.OrdinalIgnoreCase))
+            {
+                OperationServerRouting = new ServerRouting.Auto();
+            }
+            else if (routing.ToLower().StartsWith("direct(") && routing.EndsWith(")"))
+            {
+                string address = routing.Substring("direct(".Length, routing.Length - "direct(".Length - 1);
+                OperationServerRouting = new ServerRouting.Direct(address);
+            }
+            else
+            {
+                throw new ArgumentException($"Unknown server routing: {routing}");
+            }
+        }
+
+        [When(@"set driver option primary_failover_retries to: (\d+)")]
+        public void SetDriverOptionPrimaryFailoverRetriesTo(int value)
+        {
+            DriverOptions.PrimaryFailoverRetries = value;
+        }
 
         [When(@"connection opens with a wrong port; fails")]
         [Then(@"connection opens with a wrong port; fails")]
@@ -151,11 +299,10 @@ namespace TypeDB.Driver.Test.Behaviour
         {
             Assert.ThrowsAny<Exception>(() =>
             {
-                // TODO: Use cluster-specific connection with encryption
                 var wrongPortDriver = TypeDB.Driver(
-                    "localhost:9999",
-                    new Credentials("admin", "password"),
-                    new DriverOptions(false, null));
+                    new HashSet<string> { "127.0.0.1:9999" },
+                    DefaultCredentials,
+                    DriverOptions);
             });
         }
 
@@ -165,11 +312,10 @@ namespace TypeDB.Driver.Test.Behaviour
         {
             var exception = Assert.ThrowsAny<Exception>(() =>
             {
-                // TODO: Use cluster-specific connection with encryption
                 var wrongHostDriver = TypeDB.Driver(
-                    "nonexistent-host.invalid:1729",
-                    new Credentials("admin", "password"),
-                    new DriverOptions(false, null));
+                    new HashSet<string> { "surely-not-localhost:11729" },
+                    DefaultCredentials,
+                    DriverOptions);
             });
             Assert.Contains(expectedMessage, exception.Message);
         }

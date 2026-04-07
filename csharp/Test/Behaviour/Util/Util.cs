@@ -132,7 +132,7 @@ namespace TypeDB.Driver.Test.Behaviour
                     {
                         var normalizedArrayItems = jArray
                             .Select(x => GetSortedJson(x))
-                            .OrderBy(x => x.ToString(), StringComparer.Ordinal);
+                            .OrderBy(x => x!.ToString(), StringComparer.Ordinal);
 
                         result = new JArray(normalizedArrayItems);
                     }

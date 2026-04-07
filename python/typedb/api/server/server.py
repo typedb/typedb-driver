@@ -62,7 +62,7 @@ class Server(ABC):
     @abstractmethod
     def role(self) -> Optional[ReplicationRole]:
         """
-        Returns whether this is the primary server of the raft cluster or any of the supporting types.
+        Returns whether this is the primary server of the raft cluster or any of the supporting roles.
 
         Examples
         --------

@@ -6,10 +6,6 @@
 
 *Package*: `TypeDB.Driver`
 
-
-
-Entry point for creating TypeDB driver connections.
-
 // tag::methods[]
 [#_static_IDriver_TypeDB_Driver_TypeDB_Driver_string_address_Credentials_credentials_DriverOptions_driverOptions_]
 ==== method ``Driver``
@@ -30,9 +26,9 @@ Open a TypeDB Driver to a TypeDB server available at the provided address.
 [options="header"]
 |===
 |Name |Description |Type
-a| `address` a| The address (host:port) on which the TypeDB Server is running. a| `string`
-a| `credentials` a| The Credentials to connect with. a| `Credentials`
-a| `driverOptions` a| The DriverOptions to connect with. a| `DriverOptions`
+a| `address` a| The address of the TypeDB server. a| `string`
+a| `credentials` a| The credentials to connect with. a| `Credentials`
+a| `driverOptions` a| The driver connection options to connect with. a| `DriverOptions`
 |===
 
 [caption=""]
@@ -43,7 +39,77 @@ a| `driverOptions` a| The DriverOptions to connect with. a| `DriverOptions`
 .Code examples
 [source,cs]
 ----
-using var driver = TypeDB.Driver( "localhost:1729", new Credentials("admin", "password"), new DriverOptions(false, null)); TypeDB.Driver.Api.Credentials User credentials for connecting to TypeDB Server. Definition Credentials.cs:33 TypeDB.Driver.Api.DriverOptions User connection settings (TLS encryption, etc.) for connecting to TypeDB Server. Definition DriverOptions.cs:37 TypeDB.Driver Definition TypeDB.cs:24 TypeDB Definition TypeDB.cs:24
+TypeDB.Driver(address, credentials, driverOptions);
+----
+
+[#_static_IDriver_TypeDB_Driver_TypeDB_Driver_ISet_string_addresses_Credentials_credentials_DriverOptions_driverOptions_]
+==== method ``Driver``
+
+[source,cs]
+----
+static IDriver Driver(ISet< string > addresses, Credentials credentials, DriverOptions driverOptions)
+----
+
+
+
+Open a TypeDB Driver to a TypeDB cluster available at the provided addresses.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `addresses` a| The addresses of TypeDB cluster servers for connection. a| `ISet< string >`
+a| `credentials` a| The credentials to connect with. a| `Credentials`
+a| `driverOptions` a| The driver connection options to connect with. a| `DriverOptions`
+|===
+
+[caption=""]
+.Returns
+`IDriver`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+TypeDB.Driver(addresses, credentials, driverOptions);
+----
+
+[#_static_IDriver_TypeDB_Driver_TypeDB_Driver_IDictionary_string_string_addressTranslation_Credentials_credentials_DriverOptions_driverOptions_]
+==== method ``Driver``
+
+[source,cs]
+----
+static IDriver Driver(IDictionary< string, string > addressTranslation, Credentials credentials, DriverOptions driverOptions)
+----
+
+
+
+Open a TypeDB Driver to a TypeDB cluster, using the provided address translation.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `addressTranslation` a| The translation of public TypeDB cluster server addresses (keys) to server-side private addresses (values). a| `IDictionary< string, string >`
+a| `credentials` a| The credentials to connect with. a| `Credentials`
+a| `driverOptions` a| The driver connection options to connect with. a| `DriverOptions`
+|===
+
+[caption=""]
+.Returns
+`IDriver`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+TypeDB.Driver(addressTranslation, credentials, driverOptions); TypeDB.Driver Definition TypeDB.cs:26 TypeDB Definition TypeDB.cs:26
 ----
 
 // end::methods[]

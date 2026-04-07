@@ -1,0 +1,17 @@
+[#_ReplicationRole]
+[.doc-api-reference-driver]
+=== ReplicationRole
+
+`class`
+
+*Package*: `TypeDB.Driver.Api`
+
+
+
+This enum is used to specify the replication role of a server.
+
+ 
+  server.Role;
+ 
+
+
