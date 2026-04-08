@@ -8309,6 +8309,79 @@
           ]
         ]
       }
+    },
+    "@@typedb_dependencies+//distribution/artifact:rules.bzl%native_artifact_files": {
+      "general": {
+        "bzlTransitiveDigest": "Gen/GwEHHAvak8+gnn0Ci/OUihHT9IcTIquSmKkXOmc=",
+        "usagesDigest": "bKWbBJIL1RyrcQTg0rGN6zM3+q2fFxZ5QA/04xFGTcU=",
+        "recordedFileInputs": {},
+        "recordedDirentsInputs": {},
+        "envVariables": {},
+        "generatedRepoSpecs": {
+          "typedb_artifact_linux-arm64": {
+            "repoRuleId": "@@bazel_tools//tools/build_defs/repo:http.bzl%http_file",
+            "attributes": {
+              "urls": [
+                "https://repo.typedb.com/public/public-release/raw/names/typedb-all-linux-arm64/versions/3.8.3/typedb-all-linux-arm64-3.8.3.tar.gz"
+              ],
+              "downloaded_file_path": "typedb-all-linux-arm64-3.8.3.tar.gz"
+            }
+          },
+          "typedb_artifact_linux-x86_64": {
+            "repoRuleId": "@@bazel_tools//tools/build_defs/repo:http.bzl%http_file",
+            "attributes": {
+              "urls": [
+                "https://repo.typedb.com/public/public-release/raw/names/typedb-all-linux-x86_64/versions/3.8.3/typedb-all-linux-x86_64-3.8.3.tar.gz"
+              ],
+              "downloaded_file_path": "typedb-all-linux-x86_64-3.8.3.tar.gz"
+            }
+          },
+          "typedb_artifact_mac-arm64": {
+            "repoRuleId": "@@bazel_tools//tools/build_defs/repo:http.bzl%http_file",
+            "attributes": {
+              "urls": [
+                "https://repo.typedb.com/public/public-release/raw/names/typedb-all-mac-arm64/versions/3.8.3/typedb-all-mac-arm64-3.8.3.zip"
+              ],
+              "downloaded_file_path": "typedb-all-mac-arm64-3.8.3.zip"
+            }
+          },
+          "typedb_artifact_mac-x86_64": {
+            "repoRuleId": "@@bazel_tools//tools/build_defs/repo:http.bzl%http_file",
+            "attributes": {
+              "urls": [
+                "https://repo.typedb.com/public/public-release/raw/names/typedb-all-mac-x86_64/versions/3.8.3/typedb-all-mac-x86_64-3.8.3.zip"
+              ],
+              "downloaded_file_path": "typedb-all-mac-x86_64-3.8.3.zip"
+            }
+          },
+          "typedb_artifact_windows-x86_64": {
+            "repoRuleId": "@@bazel_tools//tools/build_defs/repo:http.bzl%http_file",
+            "attributes": {
+              "urls": [
+                "https://repo.typedb.com/public/public-release/raw/names/typedb-all-windows-x86_64/versions/3.8.3/typedb-all-windows-x86_64-3.8.3.zip"
+              ],
+              "downloaded_file_path": "typedb-all-windows-x86_64-3.8.3.zip"
+            }
+          }
+        },
+        "recordedRepoMappingEntries": [
+          [
+            "typedb_bazel_distribution+",
+            "bazel_tools",
+            "bazel_tools"
+          ],
+          [
+            "typedb_dependencies+",
+            "bazel_tools",
+            "bazel_tools"
+          ],
+          [
+            "typedb_dependencies+",
+            "typedb_bazel_distribution",
+            "typedb_bazel_distribution+"
+          ]
+        ]
+      }
     }
   }
 }

@@ -51,8 +51,8 @@ bazel_dep(name = "aspect_bazel_lib", version = "2.9.4")
 bazel_dep(name = "typedb_dependencies", version = "0.0.0")
 git_override(
     module_name = "typedb_dependencies",
-    remote = "https://github.com/typedb/dependencies",
-    commit = "2fab539ba3533e88dd3e337bd3d074e60a7f1f6f",
+    remote = "https://github.com/krishnangovindraj/dependencies",
+    commit = "89fb404efbb4735dbec9f3edc33ba9d7b62c1ad2",
 )
 
 bazel_dep(name = "typedb_bazel_distribution", version = "0.0.0")
@@ -189,35 +189,18 @@ workspace_refs(
 
 # TypeDB server artifacts for testing
 # These download the TypeDB server binary for integration/behaviour tests
-# Using release version 3.7.0 to match protocol version 7
-http_file = use_repo_rule("@bazel_tools//tools/build_defs/repo:http.bzl", "http_file")
-
-http_file(
-    name = "typedb_artifact_linux-arm64",
-    urls = ["https://repo.typedb.com/public/public-release/raw/names/typedb-all-linux-arm64/versions/3.7.0/typedb-all-linux-arm64-3.7.0.tar.gz"],
-    downloaded_file_path = "typedb-all-linux-arm64-3.7.0.tar.gz",
+native_artifact_files = use_extension("@typedb_dependencies//distribution/artifact:rules.bzl", "native_artifact_files")
+native_artifact_files.artifact(
+    name = "typedb_artifact",
+    group_name = "typedb-all-{platform}",
+    artifact_name = "typedb-all-{platform}-{version}.{ext}",
+    tag = "3.8.3",
 )
-
-http_file(
-    name = "typedb_artifact_linux-x86_64",
-    urls = ["https://repo.typedb.com/public/public-release/raw/names/typedb-all-linux-x86_64/versions/3.7.0/typedb-all-linux-x86_64-3.7.0.tar.gz"],
-    downloaded_file_path = "typedb-all-linux-x86_64-3.7.0.tar.gz",
-)
-
-http_file(
-    name = "typedb_artifact_mac-arm64",
-    urls = ["https://repo.typedb.com/public/public-release/raw/names/typedb-all-mac-arm64/versions/3.7.0/typedb-all-mac-arm64-3.7.0.zip"],
-    downloaded_file_path = "typedb-all-mac-arm64-3.7.0.zip",
-)
-
-http_file(
-    name = "typedb_artifact_mac-x86_64",
-    urls = ["https://repo.typedb.com/public/public-release/raw/names/typedb-all-mac-x86_64/versions/3.7.0/typedb-all-mac-x86_64-3.7.0.zip"],
-    downloaded_file_path = "typedb-all-mac-x86_64-3.7.0.zip",
-)
-
-http_file(
-    name = "typedb_artifact_windows-x86_64",
-    urls = ["https://repo.typedb.com/public/public-release/raw/names/typedb-all-windows-x86_64/versions/3.7.0/typedb-all-windows-x86_64-3.7.0.zip"],
-    downloaded_file_path = "typedb-all-windows-x86_64-3.7.0.zip",
+use_repo(
+    native_artifact_files,
+     "typedb_artifact_linux-x86_64",
+     "typedb_artifact_linux-arm64",
+     "typedb_artifact_mac-x86_64",
+     "typedb_artifact_mac-arm64",
+     "typedb_artifact_windows-x86_64",
 )
