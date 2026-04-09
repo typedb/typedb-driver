@@ -48,6 +48,12 @@ cc_test(
         "@gtest//:gtest",
         "@gtest//:gtest_main"
     ],
+    linkopts = select({
+      "@typedb_bazel_distribution//platform:is_mac": [
+          "-framework Security",
+      ],
+      "//conditions:default": [],
+    }),
     env = {"RUST_BACKTRACE": "full"}
 )
 
