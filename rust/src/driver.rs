@@ -19,7 +19,6 @@
 use std::{collections::HashSet, fmt, sync::Arc};
 
 use tracing::{debug, error};
-use tracing_subscriber::{fmt as tracing_fmt, EnvFilter};
 
 use crate::{
     common::{Addresses, Result},
@@ -262,44 +261,6 @@ impl TypeDBDriver {
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn primary_server_with_routing(&self, server_routing: ServerRouting) -> Result<Option<AvailableServer>> {
         self.server_manager.fetch_primary_server(server_routing).await
-    }
-
-    /// Registers a new server in the cluster the driver is currently connected to. The registered
-    /// server will become available eventually, depending on the behavior of the whole cluster.
-    /// To register a server, its clustering address should be passed, not the connection address.
-    ///
-    /// # Arguments
-    ///
-    /// * `replica_id` — The numeric identifier of the new server
-    /// * `address` — The clustering address of the TypeDB server as a string
-    ///
-    /// # Examples
-    ///
-    /// ```rust
-    #[cfg_attr(feature = "sync", doc = "driver.register_server(2, \"127.0.0.1:2729\")")]
-    #[cfg_attr(not(feature = "sync"), doc = "driver.register_server(2, \"127.0.0.1:2729\").await")]
-    /// ```
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn register_server(&self, replica_id: u64, address: String) -> Result {
-        self.server_manager.register_server(replica_id, address).await
-    }
-
-    /// Deregisters a server from the cluster the driver is currently connected to. This server
-    /// will no longer play a raft role in this cluster.
-    ///
-    /// # Arguments
-    ///
-    /// * `replica_id` — The numeric identifier of the deregistered server
-    ///
-    /// # Examples
-    ///
-    /// ```rust
-    #[cfg_attr(feature = "sync", doc = "driver.deregister_server(2)")]
-    #[cfg_attr(not(feature = "sync"), doc = "driver.deregister_server(2).await")]
-    /// ```
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn deregister_server(&self, replica_id: u64) -> Result {
-        self.server_manager.deregister_server(replica_id).await
     }
 
     /// Updates address translation of the driver. This lets you actualize new translation

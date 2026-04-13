@@ -18,12 +18,7 @@
  */
 
 pub(crate) use self::transaction_stream::TransactionStream;
-pub use self::{
-    credentials::Credentials,
-    driver_options::DriverOptions,
-    driver_tls_config::DriverTlsConfig,
-    server::{server_routing::ServerRouting, server_version::ServerVersion},
-};
+pub use self::{credentials::Credentials, driver_options::DriverOptions, driver_tls_config::DriverTlsConfig};
 
 mod credentials;
 pub(crate) mod database;

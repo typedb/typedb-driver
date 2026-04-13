@@ -62,7 +62,7 @@ impl DriverOptions {
 
     /// Override the existing TLS configuration.
     /// WARNING: Disabled TLS settings will make the driver sending passwords as plaintext.
-    pub fn tls_config(mut self, tls_config: DriverTlsConfig) -> Self {
+    pub fn tls_config(self, tls_config: DriverTlsConfig) -> Self {
         Self { tls_config, ..self }
     }
 

@@ -31,8 +31,8 @@ from typedb.database.database_manager import _DatabaseManager
 from typedb.connection.server import _Server
 from typedb.connection.transaction import _Transaction
 from typedb.native_driver_wrapper import driver_new_with_description, driver_new_with_addresses_with_description, \
-    driver_new_with_address_translation_with_description, driver_is_open, driver_force_close, driver_register_server, \
-    driver_deregister_server, driver_servers, driver_primary_server, driver_server_version, \
+    driver_new_with_address_translation_with_description, driver_is_open, driver_force_close, \
+    driver_servers, driver_primary_server, driver_server_version, \
     server_iterator_next, TypeDBDriver as NativeDriver, \
     TypeDBDriverExceptionNative
 from typedb.user.user_manager import _UserManager
@@ -121,21 +121,6 @@ class _Driver(Driver, NativeWrapper[NativeDriver]):
         if res := driver_primary_server(self._native_driver, server_routing):
             return _Server(res)
         return None
-
-    def register_server(self, server_id: int, address: str) -> None:
-        require_non_negative(server_id, "server_id")
-        require_non_null(address, "address")
-        try:
-            driver_register_server(self._native_driver, server_id, address)
-        except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException.of(e) from None
-
-    def deregister_server(self, server_id: int) -> None:
-        require_non_negative(server_id, "server_id")
-        try:
-            driver_deregister_server(self._native_driver, server_id)
-        except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException.of(e) from None
 
     def close(self) -> None:
         driver_force_close(self._native_driver)

@@ -18,4 +18,3 @@
  */
 
 mod clustering;
-mod playground;

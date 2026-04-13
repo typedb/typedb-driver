@@ -177,34 +177,6 @@ public interface Driver extends AutoCloseable {
     Optional<? extends Server> primaryServer(ServerRouting serverRouting);
 
     /**
-     * Registers a new server in the cluster the driver is currently connected to. The registered
-     * server will become available eventually, depending on the behavior of the whole cluster.
-     * To register a server, its clustering address should be passed, not the connection address.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * driver.registerServer(2, "127.0.0.1:11729");
-     * </pre>
-     *
-     * @param serverID The numeric identifier of the new server
-     * @param address  The address(es) of the TypeDB server as a string
-     */
-    void registerServer(long serverID, String address);
-
-    /**
-     * Deregisters a server from the cluster the driver is currently connected to. This server
-     * will no longer play a raft role in this cluster.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * driver.deregisterServer(2);
-     * </pre>
-     *
-     * @param serverID The numeric identifier of the deregistered server
-     */
-    void deregisterServer(long serverID);
-
-    /**
      * Closes the driver. Before instantiating a new driver, the driver that's currently open should first be closed.
      *
      * <h3>Examples</h3>

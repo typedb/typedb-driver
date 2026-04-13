@@ -42,14 +42,12 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import static com.typedb.driver.jni.typedb_driver.driver_deregister_server;
 import static com.typedb.driver.jni.typedb_driver.driver_force_close;
 import static com.typedb.driver.jni.typedb_driver.driver_is_open;
 import static com.typedb.driver.jni.typedb_driver.driver_new_with_address_translation_with_description;
 import static com.typedb.driver.jni.typedb_driver.driver_new_with_addresses_with_description;
 import static com.typedb.driver.jni.typedb_driver.driver_new_with_description;
 import static com.typedb.driver.jni.typedb_driver.driver_primary_server;
-import static com.typedb.driver.jni.typedb_driver.driver_register_server;
 import static com.typedb.driver.jni.typedb_driver.driver_servers;
 import static com.typedb.driver.jni.typedb_driver.driver_server_version;
 import static java.util.stream.Collectors.toSet;
@@ -161,24 +159,6 @@ public class DriverImpl extends NativeObject<com.typedb.driver.jni.TypeDBDriver>
                 return Optional.of(new ServerImpl(nativeServer));
             }
             return Optional.empty();
-        } catch (com.typedb.driver.jni.Error error) {
-            throw new TypeDBDriverException(error);
-        }
-    }
-
-    @Override
-    public void registerServer(long serverID, String address) {
-        try {
-            driver_register_server(nativeObject, serverID, address);
-        } catch (com.typedb.driver.jni.Error error) {
-            throw new TypeDBDriverException(error);
-        }
-    }
-
-    @Override
-    public void deregisterServer(long serverID) {
-        try {
-            driver_deregister_server(nativeObject, serverID);
         } catch (com.typedb.driver.jni.Error error) {
             throw new TypeDBDriverException(error);
         }

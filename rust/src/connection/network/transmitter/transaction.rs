@@ -19,19 +19,17 @@
 
 use std::{
     collections::HashMap,
-    future::Future,
-    pin::Pin,
     sync::{Arc, RwLock},
     thread::sleep,
     time::Duration,
 };
+#[cfg(not(feature = "sync"))]
+use std::{future::Future, pin::Pin};
 
 use crossbeam::{atomic::AtomicCell, channel::Sender};
 use futures::StreamExt;
 #[cfg(not(feature = "sync"))]
 use futures::TryStreamExt;
-#[cfg(feature = "sync")]
-use itertools::Itertools;
 use prost::Message;
 #[cfg(not(feature = "sync"))]
 use tokio::sync::oneshot::channel as oneshot;
@@ -358,7 +356,7 @@ impl TransactionTransmitter {
         shutdown_sink: UnboundedSender<()>,
     ) {
         loop {
-            let result = tokio::select! { biased;
+            let _result = tokio::select! { biased;
                 message = grpc_source.next() => {
                     match message {
                         Some(Ok(message)) => collector.collect(message).await,

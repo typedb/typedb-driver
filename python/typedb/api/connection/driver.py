@@ -129,40 +129,6 @@ class Driver(ABC):
         pass
 
     @abstractmethod
-    def register_server(self, server_id: int, address: str) -> None:
-        """
-        Registers a new server in the cluster the driver is currently connected to. The registered
-        server will become available eventually, depending on the behavior of the whole cluster.
-        To register a server, its clustering address should be passed, not the connection address.
-
-        :param server_id: The numeric identifier of the new server
-        :param address: The address(es) of the TypeDB server as a string
-
-        Examples:
-        ---------
-        ::
-
-            driver.register_server(2, "127.0.0.1:11729")
-        """
-        pass
-
-    @abstractmethod
-    def deregister_server(self, server_id: int) -> None:
-        """
-        Deregisters a server from the cluster the driver is currently connected to. This server
-        will no longer play a raft role in this cluster.
-
-        :param server_id: The numeric identifier of the deregistered server
-
-        Examples:
-        ---------
-        ::
-
-            driver.deregister_server(2)
-        """
-        pass
-
-    @abstractmethod
     def close(self) -> None:
         """
         Closes the driver. Before instantiating a new driver, the driver that's currently open should first be closed.

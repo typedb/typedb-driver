@@ -211,30 +211,6 @@ namespace TypeDB.Driver.Connection
             }
         }
 
-        public void RegisterServer(long serverId, string address)
-        {
-            try
-            {
-                Pinvoke.typedb_driver.driver_register_server(NativeObject, serverId, address);
-            }
-            catch (Pinvoke.Error e)
-            {
-                throw new TypeDBDriverException(e);
-            }
-        }
-
-        public void DeregisterServer(long serverId)
-        {
-            try
-            {
-                Pinvoke.typedb_driver.driver_deregister_server(NativeObject, serverId);
-            }
-            catch (Pinvoke.Error e)
-            {
-                throw new TypeDBDriverException(e);
-            }
-        }
-
         public void Close()
         {
             if (!NativeObject.IsOwned())

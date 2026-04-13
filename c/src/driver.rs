@@ -247,26 +247,3 @@ pub extern "C" fn driver_primary_server(
     };
     try_release_optional(result.map(|res| res.map(|rep| Server::Available(rep))).transpose())
 }
-
-/// Registers a new server in the cluster the driver is currently connected to. The registered
-/// server will become available eventually, depending on the behavior of the whole cluster.
-/// To register a server, its clustering address should be passed, not the connection address.
-///
-/// @param driver The <code>TypeDBDriver</code> object.
-/// @param server_id The numeric identifier of the new server
-/// @param address The address(es) of the TypeDB server as a string
-#[no_mangle]
-pub extern "C" fn driver_register_server(driver: *const TypeDBDriver, server_id: i64, address: *const c_char) {
-    unwrap_void(borrow(driver).register_server(server_id as u64, string_view(address).to_string()))
-}
-
-/// Deregisters a server from the cluster the driver is currently connected to. This server
-/// will no longer play a raft role in this cluster.
-///
-/// @param driver The <code>TypeDBDriver</code> object.
-/// @param server_id The numeric identifier of the deregistered server
-#[no_mangle]
-pub extern "C" fn driver_deregister_server(driver: *const TypeDBDriver, server_id: i64) {
-    unwrap_void(borrow(driver).deregister_server(server_id as u64))
-}
-

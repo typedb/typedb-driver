@@ -16,11 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+#[cfg(not(feature = "sync"))]
+use std::future::Future;
 use std::{
     collections::{HashMap, HashSet},
-    fmt,
-    future::Future,
-    iter,
+    fmt, iter,
     sync::{Arc, RwLock, RwLockReadGuard, RwLockWriteGuard},
     thread::sleep,
     time::Duration,
@@ -117,27 +117,8 @@ impl ServerManager {
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn register_server(&self, replica_id: u64, address: String) -> Result {
-        self.execute(ServerRouting::Auto, |replica_connection| {
-            let address = address.clone();
-            async move { replica_connection.servers_register(replica_id, address).await }
-        })
-        .await?;
-        self.refresh_replicas().await
-    }
-
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn deregister_server(&self, replica_id: u64) -> Result {
-        self.execute(ServerRouting::Auto, |replica_connection| async move {
-            replica_connection.servers_deregister(replica_id).await
-        })
-        .await?;
-        self.refresh_replicas().await
-    }
-
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     async fn refresh_replica_connections(&self) -> Result {
-        let mut replicas = self.read_replicas().clone();
+        let replicas = self.read_replicas().clone();
         let mut connection_errors = HashMap::with_capacity(replicas.len());
         let mut new_replica_connections = HashMap::new();
         let connection_addresses: HashSet<Address> = self.read_replica_connections().keys().cloned().collect();

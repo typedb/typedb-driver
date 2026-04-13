@@ -40,13 +40,6 @@ namespace TypeDB.Driver.Test.Behaviour
             "127.0.0.1:31729",
         };
 
-        private static readonly string[] DEFAULT_CLUSTER_CLUSTERING_ADDRESSES =
-        {
-            "127.0.0.1:11730",
-            "127.0.0.1:21730",
-            "127.0.0.1:31730",
-        };
-
         private static bool _isBeforeAllRan = false;
 
         public BehaviourSteps()
@@ -54,7 +47,6 @@ namespace TypeDB.Driver.Test.Behaviour
         {
             if (!_isBeforeAllRan)
             {
-                SetupCluster();
                 _isBeforeAllRan = true;
             }
 
@@ -76,24 +68,6 @@ namespace TypeDB.Driver.Test.Behaviour
             else
             {
                 base.InitializeDriverOptions();
-            }
-        }
-
-        private void SetupCluster()
-        {
-            using (var driver = CreateDefaultTypeDBDriver())
-            {
-                if (driver.GetServers().Count < DEFAULT_CLUSTER_CLUSTERING_ADDRESSES.Length)
-                {
-                    for (int i = 0; i < DEFAULT_CLUSTER_CLUSTERING_ADDRESSES.Length; i++)
-                    {
-                        long serverId = i + 1;
-                        if (serverId != 1)
-                        {
-                            driver.RegisterServer(serverId, DEFAULT_CLUSTER_CLUSTERING_ADDRESSES[i]);
-                        }
-                    }
-                }
             }
         }
 
