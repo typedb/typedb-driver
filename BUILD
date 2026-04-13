@@ -83,7 +83,6 @@ filegroup(
         "@typedb_dependencies//tool/ide:rust_sync",
         "@typedb_dependencies//tool/sonarcloud:code-analysis",
         "@typedb_dependencies//tool/unuseddeps:unused-deps",
-        "@rust_analyzer_toolchain_tools//lib/rustlib/src:rustc_srcs",
         "@typedb_dependencies//tool/sync:dependencies",
     ],
 )
