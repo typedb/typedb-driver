@@ -145,7 +145,7 @@ macro_rules! assert_with_timeout {
 #[apply(generic_step)]
 #[step(expr = "set time-zone: {word}")]
 async fn set_time_zone(_context: &mut Context, timezone: String) {
-    env::set_var("TZ", timezone);
+    unsafe { env::set_var("TZ", timezone) };
 }
 
 #[apply(generic_step)]

@@ -17,22 +17,19 @@
  * under the License.
  */
 
-use std::{
-    ffi::c_char,
-    ptr::{addr_of_mut, null_mut},
-};
+use std::{ffi::c_char, ptr::addr_of_mut};
 
 use typedb_driver::{
     analyze::{
         conjunction::{
-            Comparator, Conjunction, ConjunctionID, Constraint, ConstraintExactness, ConstraintSpan, ConstraintVertex,
+            Comparator, Conjunction, ConjunctionID, Constraint, ConstraintExactness, ConstraintVertex,
             ConstraintWithSpan, NamedRole, Variable,
         },
         pipeline::{Pipeline, PipelineStage, ReduceAssignment, Reducer, SortOrder, SortVariable},
         AnalyzedQuery, Fetch, Function, ReturnOperation, TypeAnnotations, VariableAnnotations,
     },
     box_stream,
-    concept::{type_::Type, AttributeType, Concept, Kind, ValueType},
+    concept::{type_::Type, Concept, Kind},
     BoxPromise, Promise,
 };
 
@@ -51,7 +48,7 @@ pub struct AnalyzedQueryPromise(BoxPromise<'static, typedb_driver::Result<Analyz
 
 impl AnalyzedQueryPromise {
     pub fn new(promise: impl Promise<'static, typedb_driver::Result<AnalyzedQuery>>) -> Self {
-        Self(Box::new(|| Ok(promise.resolve()?)))
+        Self(Box::new(|| promise.resolve()))
     }
 }
 
@@ -366,13 +363,13 @@ pub extern "C" fn pipeline_stage_get_block(stage: *const PipelineStage) -> *mut 
         | PipelineStage::Insert { block, .. }
         | PipelineStage::Put { block, .. }
         | PipelineStage::Update { block, .. }
-        | PipelineStage::Delete { block, .. } => release(block.clone()),
+        | PipelineStage::Delete { block, .. } => release(*block),
         PipelineStage::Select { .. }
         | PipelineStage::Sort { .. }
         | PipelineStage::Require { .. }
         | PipelineStage::Offset { .. }
         | PipelineStage::Limit { .. }
-        | PipelineStage::Distinct { .. }
+        | PipelineStage::Distinct
         | PipelineStage::Reduce { .. } => unreachable!("PipelineStage {stage:?} has no block"),
     }
 }
@@ -406,7 +403,7 @@ pub extern "C" fn pipeline_stage_require_get_variables(stage: *const PipelineSta
 #[no_mangle]
 pub extern "C" fn pipeline_stage_offset_get_offset(stage: *const PipelineStage) -> i64 {
     let PipelineStage::Offset { offset, .. } = borrow(stage) else { unreachable!("Expected Offset stage") };
-    (*offset as i64)
+    *offset as i64
 }
 
 /// Unwraps the <code>PipelineStage</code> instance as a Limit stage, and returns the limit applied.
@@ -414,7 +411,7 @@ pub extern "C" fn pipeline_stage_offset_get_offset(stage: *const PipelineStage) 
 #[no_mangle]
 pub extern "C" fn pipeline_stage_limit_get_limit(stage: *const PipelineStage) -> i64 {
     let PipelineStage::Limit { limit, .. } = borrow(stage) else { unreachable!("Expected Limit stage") };
-    (*limit as i64)
+    *limit as i64
 }
 
 /// Unwraps the <code>PipelineStage</code> instance as a Sort stage, and returns the <code>SortVariable</code>.
@@ -1041,7 +1038,7 @@ pub extern "C" fn constraint_kind_get_kind(constraint: *const ConstraintWithSpan
     let Constraint::Kind { kind, .. } = &borrow(constraint).constraint else {
         unreachable!("Expected constraint to be Kind");
     };
-    kind.clone()
+    *kind
 }
 
 /// Unwraps the <code>Constraint</code> instance as a `Kind` constraint,
@@ -1118,7 +1115,7 @@ pub extern "C" fn constraint_not_get_conjunction(constraint: *const ConstraintWi
     let Constraint::Not { conjunction, .. } = &borrow(constraint).constraint else {
         unreachable!("Expected constraint to be Not");
     };
-    release(conjunction.clone())
+    release(*conjunction)
 }
 
 /// Unwraps the <code>Constraint</code> instance as a `Try` constraint,
@@ -1129,7 +1126,7 @@ pub extern "C" fn constraint_try_get_conjunction(constraint: *const ConstraintWi
     let Constraint::Try { conjunction, .. } = &borrow(constraint).constraint else {
         unreachable!("Expected constraint to be Try");
     };
-    release(conjunction.clone())
+    release(*conjunction)
 }
 
 /// Returns a string representation of the constraint

@@ -19,23 +19,23 @@
 
 use itertools::Itertools;
 use typedb_protocol::{
-    authentication, connection, database, database_manager, migration, query::initial_res::Res, server_manager,
-    transaction, user, user_manager, ExtensionVersion::Extension, Version::Version,
+    ExtensionVersion::Extension, Version::Version, authentication, connection, database, database_manager, migration,
+    query::initial_res::Res, server_manager, transaction, user, user_manager,
 };
 use uuid::Uuid;
 
 use super::{FromProto, IntoProto, TryFromProto, TryIntoProto};
 use crate::{
+    Credentials,
     analyze::pipeline::Pipeline,
-    answer::{concept_document::ConceptDocumentHeader, concept_row::ConceptRowHeader, QueryType},
-    common::{info::DatabaseInfo, RequestID, Result},
+    answer::{QueryType, concept_document::ConceptDocumentHeader, concept_row::ConceptRowHeader},
+    common::{RequestID, Result, info::DatabaseInfo},
     connection::message::{
         AnalyzeResponse, DatabaseExportResponse, DatabaseImportRequest, QueryRequest, QueryResponse, Request, Response,
         TransactionRequest, TransactionResponse,
     },
     error::{ConnectionError, InternalError, ServerError},
     info::UserInfo,
-    Credentials, Error,
 };
 
 impl TryIntoProto<connection::open::Req> for Request {
@@ -118,9 +118,7 @@ impl IntoProto<migration::import::Client> for DatabaseImportRequest {
             DatabaseImportRequest::ItemPart { items } => {
                 migration::import::client::Client::ReqPart(migration::import::client::ReqPart { items })
             }
-            DatabaseImportRequest::Done {} => {
-                migration::import::client::Client::Done(migration::import::client::Done {})
-            }
+            DatabaseImportRequest::Done => migration::import::client::Client::Done(migration::import::client::Done {}),
         };
         migration::import::Client { client: Some(req) }
     }
@@ -360,7 +358,7 @@ impl FromProto<database::type_schema::Res> for Response {
 
 impl TryFromProto<database::export::Server> for DatabaseExportResponse {
     fn try_from_proto(proto: database::export::Server) -> Result<Self> {
-        use migration::export::{server::Server, Done, InitialRes, ResPart};
+        use migration::export::{Done, InitialRes, ResPart, server::Server};
         match proto.server {
             Some(server) => match server.server {
                 Some(Server::InitialRes(InitialRes { schema })) => Ok(Self::Schema(schema)),

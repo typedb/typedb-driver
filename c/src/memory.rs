@@ -27,10 +27,6 @@ use std::{
 use tracing::trace;
 use typedb_driver::Error;
 
-thread_local! {
-    static LAST_ERROR: RefCell<Option<Error>> = RefCell::new(None);
-}
-
 pub(super) fn release<T>(t: T) -> *mut T {
     let raw = Box::into_raw(Box::new(t));
     trace!("Releasing ownership of <{}> @ {:?}", std::any::type_name::<T>(), raw);

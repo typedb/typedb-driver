@@ -27,7 +27,7 @@ use super::{
 };
 use crate::memory::release;
 
-const DRIVER_LANG: &'static str = "c";
+const DRIVER_LANG: &str = "c";
 
 /// Open a TypeDB C Driver to a TypeDB server available at the provided address.
 ///

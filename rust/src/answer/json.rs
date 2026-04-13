@@ -26,8 +26,8 @@ use std::{
 
 use itertools::Itertools;
 use serde::{
-    ser::{SerializeMap, SerializeSeq},
     Deserialize, Serialize,
+    ser::{SerializeMap, SerializeSeq},
 };
 
 #[derive(Clone, Debug, PartialEq)]
@@ -262,9 +262,9 @@ mod test {
     use std::{borrow::Cow, collections::HashMap, iter};
 
     use rand::{
+        Rng,
         distributions::{DistString, Distribution, Standard, WeightedIndex},
-        rngs::ThreadRng,
-        thread_rng, Rng,
+        thread_rng,
     };
     use serde_json::json;
 
@@ -319,11 +319,11 @@ mod test {
                 JSON::Array(iter::from_fn(|| Some(random_json(rng))).take(len).collect())
             },
             |rng| JSON::String(Cow::Owned(random_string(rng))),
-            |rng| JSON::Number(rng.gen()),
-            |rng| JSON::Boolean(rng.gen()),
+            |rng| JSON::Number(rng.r#gen()),
+            |rng| JSON::Boolean(rng.r#gen()),
             |_| JSON::Null,
         ];
-        let dist = WeightedIndex::new(&weights).unwrap();
+        let dist = WeightedIndex::new(weights).unwrap();
         generators[dist.sample(rng)](rng)
     }
 

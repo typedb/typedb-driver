@@ -17,9 +17,9 @@
  * under the License.
  */
 
-use crossbeam::channel::{
-    bounded as bounded_blocking, Receiver as SyncReceiver, Sender as SyncSender, TryRecvError as SyncTryRecvError,
-};
+#[cfg(feature = "sync")]
+use crossbeam::channel::TryRecvError as SyncTryRecvError;
+use crossbeam::channel::{Receiver as SyncReceiver, Sender as SyncSender, bounded as bounded_blocking};
 
 pub(in crate::connection) use self::{
     export::DatabaseExportTransmitter, import::DatabaseImportTransmitter, rpc::RPCTransmitter,

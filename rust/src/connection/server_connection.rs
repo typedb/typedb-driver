@@ -20,8 +20,8 @@
 use std::{
     fmt,
     sync::{
-        atomic::{AtomicU64, Ordering},
         Arc, Mutex,
+        atomic::{AtomicU64, Ordering},
     },
     time::Duration,
 };
@@ -30,19 +30,19 @@ use tokio::{sync::mpsc::UnboundedSender, time::Instant};
 use uuid::Uuid;
 
 use crate::{
+    Credentials, DriverOptions, TransactionOptions, TransactionType,
     common::address::Address,
     connection::{
+        TransactionStream,
         database::{export_stream::DatabaseExportStream, import_stream::DatabaseImportStream},
         message::{DatabaseImportRequest, Request, Response, TransactionRequest},
         network::transmitter::{
             DatabaseExportTransmitter, DatabaseImportTransmitter, RPCTransmitter, TransactionTransmitter,
         },
         runtime::BackgroundRuntime,
-        TransactionStream,
     },
     error::{ConnectionError, InternalError},
     info::{DatabaseInfo, UserInfo},
-    Credentials, DriverOptions, TransactionOptions, TransactionType,
 };
 
 #[derive(Clone)]
@@ -252,7 +252,7 @@ impl ServerConnection {
             .await?
         {
             Response::TransactionStream {
-                open_request_id: request_id,
+                open_request_id: _,
                 request_sink,
                 response_source,
                 server_duration_millis,

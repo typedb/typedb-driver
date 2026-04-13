@@ -19,10 +19,10 @@
 use std::collections::HashMap;
 
 use crate::{
-    common::{address::Address, Result},
+    User,
+    common::{Result, address::Address},
     connection::server_connection::ServerConnection,
     error::ConnectionError,
-    User,
 };
 
 /// Provides access to all user management methods.
@@ -32,7 +32,7 @@ pub struct UserManager {
 }
 
 impl UserManager {
-    pub fn new(server_connections: HashMap<Address, ServerConnection>) -> Self {
+    pub(crate) fn new(server_connections: HashMap<Address, ServerConnection>) -> Self {
         Self { server_connections }
     }
 
@@ -92,7 +92,7 @@ impl UserManager {
                         name: u_info.name,
                         password: u_info.password,
                         server_connections: self.server_connections.clone(),
-                    }))
+                    }));
                 }
                 Err(err) => error_buffer.push(format!("- {}: {}", server_id, err)),
             }
@@ -120,7 +120,7 @@ impl UserManager {
                             password: u_info.password.clone(),
                             server_connections: self.server_connections.clone(),
                         })
-                        .collect())
+                        .collect());
                 }
                 Err(err) => error_buffer.push(format!("- {}: {}", server_id, err)),
             }

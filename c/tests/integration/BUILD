@@ -28,7 +28,6 @@ cc_library(
     name = "lib-test-driver",
     srcs = glob(["*.c", "*.h"]),
     deps = [
-        "//c:typedb_driver_clib_headers",
         "//c:typedb_driver_clib"
     ],
     copts = ["-fsanitize=address"], # Remove this if you're running leaks

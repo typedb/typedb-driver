@@ -19,51 +19,45 @@
 
 use std::{
     collections::HashMap,
-    future::Future,
-    pin::Pin,
     sync::{Arc, RwLock},
     thread::sleep,
     time::Duration,
 };
+#[cfg(not(feature = "sync"))]
+use std::{future::Future, pin::Pin};
 
 use crossbeam::{atomic::AtomicCell, channel::Sender};
 use futures::StreamExt;
-#[cfg(not(feature = "sync"))]
-use futures::TryStreamExt;
-#[cfg(feature = "sync")]
-use itertools::Itertools;
 use prost::Message;
 #[cfg(not(feature = "sync"))]
 use tokio::sync::oneshot::channel as oneshot;
 use tokio::{
-    select,
     sync::{
-        mpsc::{error::SendError, unbounded_channel as unbounded_async, UnboundedReceiver, UnboundedSender},
-        oneshot::{channel as oneshot_async, Sender as AsyncOneshotSender},
+        mpsc::{UnboundedReceiver, UnboundedSender, unbounded_channel as unbounded_async},
+        oneshot::{Sender as AsyncOneshotSender, channel as oneshot_async},
     },
     task,
-    time::{sleep_until, Instant},
 };
 use tonic::Streaming;
-use tracing::{debug, error, trace};
+use tracing::{debug, error};
 use typedb_protocol::transaction::{self, res_part::ResPart, server::Server, stream_signal::res_part::State};
 
 #[cfg(feature = "sync")]
 use super::oneshot_blocking as oneshot;
 use super::response_sink::{ResponseSink, StreamResponse};
 use crate::{
+    Error,
     common::{
-        box_promise,
+        Callback, Promise, RequestID, Result, box_promise,
         error::ConnectionError,
         stream::{NetworkStream, Stream},
-        Callback, Promise, RequestID, Result,
     },
     connection::{
         message::{QueryResponse, TransactionRequest, TransactionResponse},
         network::proto::{FromProto, IntoProto, TryFromProto},
         runtime::BackgroundRuntime,
     },
-    resolve, Error,
+    resolve,
 };
 
 pub(in crate::connection) struct TransactionTransmitter {
@@ -122,7 +116,7 @@ impl TransactionTransmitter {
         box_promise(async move {
             if self.background_runtime.is_open() && self.is_open.compare_exchange(true, false).is_ok() {
                 let (closed_sink, mut closed_source) = unbounded_async();
-                let close_notifier_callback = Box::new(move |error| {
+                let close_notifier_callback = Box::new(move |_error| {
                     closed_sink.send(()).unwrap();
                 });
                 let on_close_submit_promise = self.on_close(close_notifier_callback);
@@ -142,7 +136,7 @@ impl TransactionTransmitter {
         box_promise(move || {
             if self.background_runtime.is_open() && self.is_open.compare_exchange(true, false).is_ok() {
                 let (closed_sink, closed_source) = oneshot();
-                let close_notifier_callback = Box::new(move |error| {
+                let close_notifier_callback = Box::new(move |_error| {
                     closed_sink.send(()).unwrap();
                 });
                 let _ = resolve!(self.on_close(close_notifier_callback));
@@ -194,16 +188,16 @@ impl TransactionTransmitter {
     pub(in crate::connection) fn single(
         &self,
         req: TransactionRequest,
-    ) -> impl Promise<'static, Result<TransactionResponse>> {
+    ) -> impl Promise<'static, Result<TransactionResponse>> + use<> {
         if !self.is_open() {
             let error = self.error();
-            return box_promise(async move { Err(error.into()) });
+            return box_promise(async move { Err(error) });
         }
         let (res_sink, recv) = oneshot();
         let send_result = self.request_sink.send((req, Some(ResponseSink::AsyncOneShot(res_sink))));
         box_promise(async move {
             send_result.map_err(|_| ConnectionError::TransactionIsClosed)?;
-            recv.await?.map(Into::into)
+            recv.await?
         })
     }
 
@@ -211,10 +205,10 @@ impl TransactionTransmitter {
     pub(in crate::connection) fn single(
         &self,
         req: TransactionRequest,
-    ) -> impl Promise<'static, Result<TransactionResponse>> {
+    ) -> impl Promise<'static, Result<TransactionResponse>> + use<> {
         if !self.is_open() {
             let error = self.error();
-            return box_promise(|| Err(error.into()));
+            return box_promise(|| Err(error));
         }
         let (res_sink, recv) = oneshot();
         let send_result = self.request_sink.send((req, Some(ResponseSink::BlockingOneShot(res_sink))));
@@ -226,9 +220,9 @@ impl TransactionTransmitter {
     pub(in crate::connection) fn stream(
         &self,
         req: TransactionRequest,
-    ) -> Result<impl Stream<Item = Result<TransactionResponse>>> {
+    ) -> Result<impl Stream<Item = Result<TransactionResponse>> + use<>> {
         if !self.is_open() {
-            return Err(self.error().into());
+            return Err(self.error());
         }
         let (res_part_sink, recv) = unbounded_async();
         self.request_sink
@@ -260,7 +254,7 @@ impl TransactionTransmitter {
     }
 
     #[cfg(feature = "sync")]
-    pub(in crate::connection) fn process_response(
+    pub(super) fn process_response(
         response: StreamResponse<TransactionResponse>,
         sink: UnboundedSender<(TransactionRequest, Option<ResponseSink<TransactionResponse>>)>,
     ) -> Option<Result<TransactionResponse>> {
@@ -299,7 +293,7 @@ impl TransactionTransmitter {
         shutdown_sink: UnboundedSender<()>,
         shutdown_signal: UnboundedReceiver<()>,
     ) {
-        let mut collector = ResponseCollector {
+        let collector = ResponseCollector {
             callbacks: Default::default(),
             is_open,
             error,
@@ -325,7 +319,7 @@ impl TransactionTransmitter {
 
         let mut request_buffer = TransactionRequestBuffer::default();
         loop {
-            if let Ok(_) = shutdown_signal.try_recv() {
+            if shutdown_signal.try_recv().is_ok() {
                 if !request_buffer.is_empty() {
                     request_sink.send(request_buffer.take()).ok();
                 }
@@ -360,7 +354,7 @@ impl TransactionTransmitter {
         shutdown_sink: UnboundedSender<()>,
     ) {
         loop {
-            let result = tokio::select! { biased;
+            tokio::select! { biased;
                 message = grpc_source.next() => {
                     match message {
                         Some(Ok(message)) => collector.collect(message).await,
@@ -374,7 +368,7 @@ impl TransactionTransmitter {
                         recorded_signal.send(()).expect("Failed to signal back that on_close callback was recorded.")
                     }
                 }
-            };
+            }
         }
         shutdown_sink.send(()).ok();
     }

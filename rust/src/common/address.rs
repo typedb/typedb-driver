@@ -43,7 +43,7 @@ impl Address {
     }
 
     pub(crate) fn is_https(&self) -> bool {
-        self.uri_scheme().map_or(false, |scheme| scheme == &http::uri::Scheme::HTTPS)
+        self.uri_scheme() == Some(&http::uri::Scheme::HTTPS)
     }
 }
 

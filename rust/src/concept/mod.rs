@@ -27,8 +27,8 @@ pub use self::{
     value::{Value, ValueType},
 };
 use crate::{
-    concept::value::{Decimal, Duration, Struct, TimeZone},
     IID,
+    concept::value::{Decimal, Duration, Struct, TimeZone},
 };
 
 pub mod instance;
@@ -173,7 +173,7 @@ impl Concept {
     /// If this a boolean-valued Value, returns the boolean value.
     /// Otherwise, returns None.
     pub fn try_get_boolean(&self) -> Option<bool> {
-        self.try_get_value().map(|value| value.get_boolean()).flatten()
+        self.try_get_value().and_then(|value| value.get_boolean())
     }
 
     /// Retrieves the integer value of this Concept, if it exists.
@@ -181,7 +181,7 @@ impl Concept {
     /// If this an integer-valued Value, returns the integer value.
     /// Otherwise, returns None.
     pub fn try_get_integer(&self) -> Option<i64> {
-        self.try_get_value().map(|value| value.get_integer()).flatten()
+        self.try_get_value().and_then(|value| value.get_integer())
     }
 
     /// Retrieves the double value of this Concept, if it exists.
@@ -189,7 +189,7 @@ impl Concept {
     /// If this a double-valued Value, returns the double value.
     /// Otherwise, returns None.
     pub fn try_get_double(&self) -> Option<f64> {
-        self.try_get_value().map(|value| value.get_double()).flatten()
+        self.try_get_value().and_then(|value| value.get_double())
     }
 
     /// Retrieves the fixed-decimal value of this Concept, if it exists.
@@ -197,7 +197,7 @@ impl Concept {
     /// If this a fixed-decimal valued Value, returns the fixed-decimal value.
     /// Otherwise, returns None.
     pub fn try_get_decimal(&self) -> Option<Decimal> {
-        self.try_get_value().map(|value| value.get_decimal()).flatten()
+        self.try_get_value().and_then(|value| value.get_decimal())
     }
 
     /// Retrieves the string value of this Concept, if it exists.
@@ -205,7 +205,7 @@ impl Concept {
     /// If this a string-valued Value, returns the string value.
     /// Otherwise, returns None.
     pub fn try_get_string(&self) -> Option<&str> {
-        self.try_get_value().map(|value| value.get_string()).flatten()
+        self.try_get_value().and_then(|value| value.get_string())
     }
 
     /// Retrieves the date value of this Concept, if it exists.
@@ -213,7 +213,7 @@ impl Concept {
     /// If this a date-valued Value, returns the date value.
     /// Otherwise, returns None.
     pub fn try_get_date(&self) -> Option<NaiveDate> {
-        self.try_get_value().map(|value| value.get_date()).flatten()
+        self.try_get_value().and_then(|value| value.get_date())
     }
 
     /// Retrieves the datetime value of this Concept, if it exists.
@@ -221,7 +221,7 @@ impl Concept {
     /// If this a datetime-valued Value, returns the datetime value.
     /// Otherwise, returns None.
     pub fn try_get_datetime(&self) -> Option<NaiveDateTime> {
-        self.try_get_value().map(|value| value.get_datetime()).flatten()
+        self.try_get_value().and_then(|value| value.get_datetime())
     }
 
     /// Retrieves the timezoned-datetime value of this Concept, if it exists.
@@ -229,7 +229,7 @@ impl Concept {
     /// If this a timezoned-datetime valued Value, returns the timezoned-datetime value.
     /// Otherwise, returns None.
     pub fn try_get_datetime_tz(&self) -> Option<DateTime<TimeZone>> {
-        self.try_get_value().map(|value| value.get_datetime_tz()).flatten()
+        self.try_get_value().and_then(|value| value.get_datetime_tz())
     }
 
     /// Retrieves the duration value of this Concept, if it exists.
@@ -237,7 +237,7 @@ impl Concept {
     /// If this a duration-valued Value, returns the duration value.
     /// Otherwise, returns None.
     pub fn try_get_duration(&self) -> Option<Duration> {
-        self.try_get_value().map(|value| value.get_duration()).flatten()
+        self.try_get_value().and_then(|value| value.get_duration())
     }
 
     /// Retrieves the struct value of this Concept, if it exists.
@@ -245,7 +245,7 @@ impl Concept {
     /// If this a struct-valued Value, returns the struct value.
     /// Otherwise, returns None.
     pub fn try_get_struct(&self) -> Option<&Struct> {
-        self.try_get_value().map(|value| value.get_struct()).flatten()
+        self.try_get_value().and_then(|value| value.get_struct())
     }
 
     /// Retrieves the category of this Concept.
@@ -270,10 +270,7 @@ impl Concept {
     /// concept.is_entity_type() || concept.is_relation_type() || concept.is_role_type() || concept.is_attribute_type()
     /// ```
     pub fn is_type(&self) -> bool {
-        match self {
-            Self::EntityType(_) | Self::RelationType(_) | Self::RoleType(_) | Self::AttributeType(_) => true,
-            _ => false,
-        }
+        matches!(self, Self::EntityType(_) | Self::RelationType(_) | Self::RoleType(_) | Self::AttributeType(_))
     }
 
     /// Check if this Concept represents an Entity Type from the schema of the database
@@ -304,10 +301,7 @@ impl Concept {
     /// concept.is_entity() || concept.is_relation() ||  concept.is_attribute()
     /// ```
     pub fn is_instance(&self) -> bool {
-        match self {
-            Self::Entity(_) | Self::Relation(_) | Self::Attribute(_) => true,
-            _ => false,
-        }
+        matches!(self, Self::Entity(_) | Self::Relation(_) | Self::Attribute(_))
     }
 
     /// Check if this Concept represents an Entity instance from the database

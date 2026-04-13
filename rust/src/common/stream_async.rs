@@ -17,7 +17,7 @@
  * under the License.
  */
 
-pub use futures::{stream::BoxStream, Stream};
+pub use futures::{Stream, stream::BoxStream};
 pub use tokio_stream::wrappers::UnboundedReceiverStream as NetworkStream;
 
 pub fn box_stream<'a, T>(stream: impl Stream<Item = T> + Send + 'a) -> BoxStream<'a, T> {

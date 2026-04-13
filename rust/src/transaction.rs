@@ -22,11 +22,11 @@ use std::{fmt, pin::Pin};
 use tracing::debug;
 
 use crate::{
+    Error, QueryOptions, TransactionOptions,
     analyze::AnalyzedQuery,
     answer::QueryAnswer,
     common::{Promise, Result, TransactionType},
     connection::TransactionStream,
-    Error, QueryOptions, TransactionOptions,
 };
 
 /// A transaction with a TypeDB database.

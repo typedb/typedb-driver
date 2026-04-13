@@ -16,10 +16,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-use std::{collections::HashMap, sync::Arc};
+use std::collections::HashMap;
 
 use crate::{
-    common::{address::Address, Result},
+    common::{Result, address::Address},
     connection::server_connection::ServerConnection,
     error::ConnectionError,
 };
@@ -28,7 +28,7 @@ use crate::{
 pub struct User {
     pub name: String,
     pub password: Option<String>,
-    pub server_connections: HashMap<Address, ServerConnection>,
+    pub(crate) server_connections: HashMap<Address, ServerConnection>,
 }
 
 impl User {
@@ -52,7 +52,7 @@ impl User {
         let mut error_buffer = Vec::with_capacity(self.server_connections.len());
         for (server_id, server_connection) in self.server_connections.iter() {
             match server_connection.update_password(self.name.clone(), password.clone()).await {
-                Ok(res) => return Ok(()),
+                Ok(_) => return Ok(()),
                 Err(err) => error_buffer.push(format!("- {}: {}", server_id, err)),
             }
         }

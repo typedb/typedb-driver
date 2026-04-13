@@ -18,13 +18,5 @@
  */
 
 pub fn is_cluster() -> bool {
-    #[cfg(feature = "cluster")]
-    {
-        true
-    }
-
-    #[cfg(not(feature = "cluster"))]
-    {
-        false
-    }
+    cfg!(feature = "cluster")
 }

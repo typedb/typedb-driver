@@ -26,12 +26,12 @@ use std::{
 };
 
 use prost::{
-    bytes::{Buf, BytesMut},
     Message,
+    bytes::{Buf, BytesMut},
 };
 use typedb_protocol::migration::Item as MigrationItemProto;
 
-use crate::{error::MigrationError, Error, Result};
+use crate::{Error, Result, error::MigrationError};
 
 #[derive(Debug)]
 pub(crate) enum DatabaseExportAnswer {
@@ -78,7 +78,7 @@ impl<M: Message + Default, R: BufRead> ProtoMessageIterator<M, R> {
                         return Err(Error::Migration(MigrationError::CannotDecodeImportedConceptLength));
                     }
                     match self.read_more(Self::MAX_LENGTH_DELIMITER_LEN - self.buffer.len()) {
-                        Ok(bytes_read) if bytes_read == 0 => {
+                        Ok(0) => {
                             return if self.buffer.is_empty() {
                                 Ok(None)
                             } else {

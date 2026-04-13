@@ -17,9 +17,9 @@
  * under the License.
  */
 
-use std::{collections::HashMap, fmt};
+use std::collections::HashMap;
 
-use crate::{analyze::VariableAnnotations, concept, IID};
+use crate::{IID, analyze::VariableAnnotations, concept};
 
 /// Holds the index of the conjunction in a <code>Pipeline</code>'s <code>conjunctions</code> field.
 /// Used as indirection in the representation of a pipeline.
@@ -138,6 +138,7 @@ pub struct Variable(pub u32);
 /// * A <code>Label</code> uniquely identifies a type
 /// * A <code>Value</code> represents a primitive value literal in TypeDB.
 /// * A <code>NamedRole</code> vertex is used in links & relates constraints, as multiple relations may have roles with the same name.
+///
 /// The types inferred for <code>Variable</code>, <code>Label</code> and <code>NamedRole</code> vertices
 /// can be read from the <code>variable_annotations</code> field of the <code>Conjunction</code> it is in.
 #[derive(Debug, Clone, PartialEq)]

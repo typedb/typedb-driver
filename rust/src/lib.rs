@@ -22,8 +22,8 @@
 
 pub use self::{
     common::{
-        box_stream, error, info, BoxPromise, BoxStream, Error, Promise, QueryOptions, Result, TransactionOptions,
-        TransactionType, IID,
+        BoxPromise, BoxStream, Error, IID, Promise, QueryOptions, Result, TransactionOptions, TransactionType,
+        box_stream, error, info,
     },
     connection::{Credentials, DriverOptions},
     database::{Database, DatabaseManager},

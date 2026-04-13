@@ -125,6 +125,6 @@ pub extern "C" fn transaction_on_close(
 ) -> *mut VoidPromise {
     release(VoidPromise(Box::new(
         borrow(txn)
-            .on_close(move |error| callback(callback_id, error.map(|err| release(err.into())).unwrap_or(null_mut()))),
+            .on_close(move |error| callback(callback_id, error.map(|err| release(err)).unwrap_or(null_mut()))),
     )))
 }

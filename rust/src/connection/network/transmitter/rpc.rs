@@ -18,29 +18,28 @@
  */
 
 use futures::StreamExt;
+#[cfg(not(feature = "sync"))]
+use tokio::sync::oneshot::channel as oneshot_async;
 use tokio::{
     select,
-    sync::{
-        mpsc::{unbounded_channel as unbounded_async, UnboundedReceiver, UnboundedSender},
-        oneshot::channel as oneshot_async,
-    },
+    sync::mpsc::{UnboundedReceiver, UnboundedSender, unbounded_channel as unbounded_async},
 };
 use tracing::trace;
 use typedb_protocol::{transaction, transaction::server::Server};
 
 use super::{oneshot_blocking, response_sink::ResponseSink};
 use crate::{
-    common::{address::Address, error::ConnectionError, RequestID, Result},
+    Credentials, DriverOptions, Error,
+    common::{RequestID, Result, address::Address, error::ConnectionError},
     connection::{
         message::{Request, Response, TransactionResponse},
         network::{
-            channel::{open_callcred_channel, GRPCChannel},
+            channel::{GRPCChannel, open_callcred_channel},
             proto::{FromProto, IntoProto, TryFromProto, TryIntoProto},
             stub::RPCStub,
         },
         runtime::BackgroundRuntime,
     },
-    Credentials, DriverOptions, Error,
 };
 
 pub(in crate::connection) struct RPCTransmitter {
@@ -76,6 +75,7 @@ impl RPCTransmitter {
         self.request_blocking(request)
     }
 
+    #[cfg(not(feature = "sync"))]
     pub(in crate::connection) async fn request_async(&self, request: Request) -> Result<Response> {
         let (response_sink, response) = oneshot_async();
         self.request_sink.send((request, ResponseSink::AsyncOneShot(response_sink)))?;
@@ -107,8 +107,7 @@ impl RPCTransmitter {
                 let response = Self::send_request(rpc, request).await;
                 trace!(
                     "RPC dispatcher loop received response, will send into response {:?} into sink {:?}",
-                    response,
-                    response_sink
+                    response, response_sink
                 );
                 response_sink.finish(response);
             });
@@ -150,7 +149,7 @@ impl RPCTransmitter {
                 rpc.database_type_schema(request.try_into_proto()?).await.map(Response::from_proto)
             }
             Request::DatabaseExport { .. } => {
-                let mut response_source = rpc.database_export(request.try_into_proto()?).await?;
+                let response_source = rpc.database_export(request.try_into_proto()?).await?;
                 Ok(Response::DatabaseExportStream { response_source })
             }
 

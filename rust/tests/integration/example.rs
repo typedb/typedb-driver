@@ -25,12 +25,12 @@ use futures::{StreamExt, TryStreamExt};
 use serial_test::serial;
 // EXAMPLE START MARKER
 use typedb_driver::{
+    Credentials, DriverOptions, Error, QueryOptions, TransactionOptions, TransactionType, TypeDBDriver,
     answer::{
-        concept_document::{Leaf, Node},
         ConceptRow, QueryAnswer,
+        concept_document::{Leaf, Node},
     },
     concept::{Concept, ValueType},
-    Credentials, DriverOptions, Error, QueryOptions, TransactionOptions, TransactionType, TypeDBDriver,
 };
 
 // EXAMPLE END MARKER
@@ -110,7 +110,9 @@ fn example() {
 
         // Work with the driver's enums in a classic way or using helper methods
         if answer.is_ok() && matches!(answer, QueryAnswer::Ok(_)) {
-            println!("OK results do not give any extra interesting information, but they mean that the query is successfully executed!");
+            println!(
+                "OK results do not give any extra interesting information, but they mean that the query is successfully executed!"
+            );
         }
         assert!(answer.is_ok());
 

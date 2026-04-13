@@ -19,9 +19,9 @@
 
 pub use self::{
     error::Error,
-    promise::{box_promise, BoxPromise, Promise},
+    promise::{BoxPromise, Promise, box_promise},
     query_options::QueryOptions,
-    stream::{box_stream, BoxStream},
+    stream::{BoxStream, box_stream},
     transaction_options::TransactionOptions,
 };
 
