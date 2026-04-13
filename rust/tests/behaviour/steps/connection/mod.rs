@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-use std::collections::HashSet;
+use std::{collections::HashSet, time::Duration};
 
 use cucumber::gherkin::Step;
 use macro_rules_attribute::apply;
@@ -268,4 +268,11 @@ pub async fn set_operation_server_routing(context: &mut Context, server_routing:
 pub async fn set_transaction_option_primary_failover_retries(context: &mut Context, value: usize) {
     context.init_driver_options_if_needed();
     context.driver_options_mut().unwrap().primary_failover_retries = value;
+}
+
+#[apply(generic_step)]
+#[step(expr = "set driver option request_timeout_millis to: {int}")]
+pub async fn set_driver_option_request_timeout_millis(context: &mut Context, value: u64) {
+    context.init_driver_options_if_needed();
+    context.driver_options_mut().unwrap().request_timeout = Duration::from_millis(value);
 }

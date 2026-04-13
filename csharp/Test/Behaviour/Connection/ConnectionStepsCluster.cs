@@ -267,6 +267,12 @@ namespace TypeDB.Driver.Test.Behaviour
             DriverOptions.PrimaryFailoverRetries = value;
         }
 
+        [When(@"set driver option request_timeout_millis to: (\d+)")]
+        public void SetDriverOptionRequestTimeoutMillisTo(int value)
+        {
+            DriverOptions.RequestTimeoutMillis = value;
+        }
+
         [When(@"connection opens with a wrong port; fails")]
         [Then(@"connection opens with a wrong port; fails")]
         public void ConnectionOpensWithWrongPortFails()

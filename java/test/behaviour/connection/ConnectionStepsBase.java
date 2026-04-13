@@ -283,4 +283,8 @@ public abstract class ConnectionStepsBase {
         driverOptions = driverOptions.primaryFailoverRetries(value);
     }
 
+    void set_driver_option_request_timeout_millis_to(int value) {
+        driverOptions = driverOptions.requestTimeoutMillis(value);
+    }
+
 }

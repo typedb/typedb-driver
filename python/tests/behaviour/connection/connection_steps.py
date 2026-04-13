@@ -206,4 +206,9 @@ def step_impl(context: Context, value: int):
     context.driver_options.primary_failover_retries = value
 
 
+@step("set driver option request_timeout_millis to: {value:Int}")
+def step_impl(context: Context, value: int):
+    context.driver_options.request_timeout_millis = value
+
+
 
