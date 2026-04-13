@@ -17,7 +17,7 @@
 
 package(default_visibility = ["//visibility:public"])
 
-load("@rules_rust//rust:defs.bzl", "rust_library", "rust_static_library", "rustfmt_test", "rust_test")
+load("@rules_rust//rust:defs.bzl", "rust_binary", "rust_library", "rust_static_library", "rustfmt_test", "rust_test")
 load("@typedb_bazel_distribution//crates:rules.bzl", "assemble_crate", "deploy_crate")
 load("@typedb_dependencies//builder/rust:rules.bzl", "rust_cbindgen")
 load("@typedb_dependencies//distribution:deployment.bzl", "deployment")
@@ -122,7 +122,7 @@ test_to_example(
     output = "rust/example.rs",
     removed_lines = ["assert", "todo"],
     changed_words = {
-        "example()": "typedb_example()",
+        "example()": "main()",
     },
     header_comment_sign = "//",
 )
@@ -137,8 +137,8 @@ update_markdown_example(
     removed_header = "//",
 )
 
-rust_library(
-    name = "driver-example-lib",
+rust_binary(
+    name = "driver-example",
     srcs = ["example.rs"],
     deps = [
         ":typedb_driver",
