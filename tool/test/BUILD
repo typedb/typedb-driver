@@ -64,7 +64,7 @@ artifact_extractor(
     artifact = ":native-typedb-artifact",
 )
 
-artifact_extractor(
-    name = "typedb-cloud-extractor",
-    artifact = ":native-typedb-cloud-artifact",
-)
+#artifact_extractor(
+#    name = "typedb-cloud-extractor",
+#    artifact = ":native-typedb-cloud-artifact",
+#)
