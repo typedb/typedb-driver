@@ -107,8 +107,8 @@ use_repo(pip, "typedb_driver_pip")
 # Rust toolchain
 rust = use_extension("@rules_rust//rust:extensions.bzl", "rust")
 rust.toolchain(
-    edition = "2021",
-    versions = ["1.81.0"],
+    edition = "2024",
+    versions = ["1.93.0"],
     extra_target_triples = [
         "aarch64-apple-darwin",
         "aarch64-unknown-linux-gnu",
