@@ -33,7 +33,7 @@ use crate::{
 /// @param database_name The name of the database with which the transaction connects.
 /// @param type_ The type of transaction to be created (Write / Read / Schema).
 /// @param options <code>TransactionOptions</code> to configure the opened transaction.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn transaction_new(
     driver: *mut TypeDBDriver,
     database_name: *const c_char,
@@ -48,7 +48,7 @@ pub extern "C" fn transaction_new(
 /// @param transaction The <code>Transaction</code> to execute the query within.
 /// @param query The query string.
 /// @param options <code>QueryOptions</code> to configure the executed query.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn transaction_query(
     transaction: *mut Transaction,
     query: *const c_char,
@@ -63,7 +63,7 @@ pub extern "C" fn transaction_query(
 ///
 /// @param transaction The <code>Transaction</code> to analyze the query within.
 /// @param query The query string.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn transaction_analyze(
     transaction: *mut Transaction,
     query: *const c_char,
@@ -72,7 +72,7 @@ pub extern "C" fn transaction_analyze(
 }
 
 /// Closes the transaction, waits for all callbacks to complete, then frees the memory.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn transaction_drop_sync(txn: *mut Transaction) {
     if txn.is_null() {
         return;
@@ -87,7 +87,7 @@ pub extern "C" fn transaction_drop_sync(txn: *mut Transaction) {
 }
 
 /// Forcibly closes this transaction. Returns a resolvable promise.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn transaction_close(txn: *mut Transaction) -> *mut VoidPromise {
     release(VoidPromise(Box::new(borrow_mut(txn).close())))
 }
@@ -95,19 +95,19 @@ pub extern "C" fn transaction_close(txn: *mut Transaction) -> *mut VoidPromise {
 /// Commits the changes made via this transaction to the TypeDB database.
 /// Whether or not the transaction is commited successfully, the transaction is closed after
 /// the commit call and the native rust object is freed.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn transaction_commit(txn: *mut Transaction) -> *mut VoidPromise {
     release(VoidPromise(Box::new(take_ownership(txn).commit())))
 }
 
 /// Rolls back the uncommitted changes made via this transaction.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn transaction_rollback(txn: *const Transaction) -> *mut VoidPromise {
     release(VoidPromise(Box::new(borrow(txn).rollback())))
 }
 
 /// Checks whether this transaction is open.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn transaction_is_open(txn: *const Transaction) -> bool {
     borrow(txn).is_open()
 }
@@ -117,7 +117,7 @@ pub extern "C" fn transaction_is_open(txn: *const Transaction) -> bool {
 /// @param txn The transaction on which to register the callback
 /// @param callback_id The argument to be passed to the callback function when it is executed.
 /// @param callback The function to be called
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn transaction_on_close(
     txn: *const Transaction,
     callback_id: usize,

@@ -34,13 +34,13 @@ pub struct VoidPromise(pub BoxPromise<'static, Result<()>>);
 /// Waits for the operation represented by the <code>VoidPromise</code> to complete.
 /// In case the operation failed, the error flag will only be set when the promise is resolved.
 /// The native promise object is freed when it is resolved.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn void_promise_resolve(promise: *mut VoidPromise) {
     unwrap_void(take_ownership(promise).0.resolve());
 }
 
 /// Frees the native rust <code>VoidPromise</code> object.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn void_promise_drop(promise: *mut VoidPromise) {
     drop(take_ownership(promise));
 }
@@ -52,13 +52,13 @@ pub struct BoolPromise(pub BoxPromise<'static, Result<bool>>);
 /// Waits for and returns the result of the operation represented by the <code>BoolPromise</code> object.
 /// In case the operation failed, the error flag will only be set when the promise is resolved.
 /// The native promise object is freed when it is resolved.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn bool_promise_resolve(promise: *mut BoolPromise) -> bool {
     unwrap_or_default(take_ownership(promise).0.resolve())
 }
 
 /// Frees the native rust <code>BoolPromise</code> object.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn bool_promise_drop(promise: *mut BoolPromise) {
     drop(take_ownership(promise))
 }
@@ -70,13 +70,13 @@ pub struct StringPromise(pub BoxPromise<'static, Result<Option<String>>>);
 /// Waits for and returns the result of the operation represented by the <code>BoolPromise</code> object.
 /// In case the operation failed, the error flag will only be set when the promise is resolved.
 /// The native promise object is freed when it is resolved.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn string_promise_resolve(promise: *mut StringPromise) -> *mut c_char {
     try_release_optional_string(take_ownership(promise).0.resolve().transpose())
 }
 
 /// Frees the native rust <code>StringPromise</code> object.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn string_promise_drop(promise: *mut StringPromise) {
     drop(take_ownership(promise))
 }

@@ -109,7 +109,7 @@ impl Drop for DatetimeAndTimeZone {
 }
 
 /// Frees the native rust <code>DatetimeAndTimeZone</code> object
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn datetime_and_time_zone_drop(datetime_tz: *mut DatetimeAndTimeZone) {
     free(datetime_tz);
 }
@@ -119,13 +119,13 @@ pub struct StringAndOptValueIterator(pub CIterator<StringAndOptValue>);
 
 /// Forwards the <code>StringAndOptValueIterator</code> and returns the next <code>StringAndOptValue</code> if it exists,
 /// or null if there are no more elements.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn string_and_opt_value_iterator_next(it: *mut StringAndOptValueIterator) -> *mut StringAndOptValue {
     release_optional(borrow_mut(it).0 .0.next())
 }
 
 /// Frees the native rust <code>StringAndOptValueIterator</code> object
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn string_and_opt_value_iterator_drop(it: *mut StringAndOptValueIterator) {
     free(it);
 }
@@ -152,7 +152,7 @@ impl Drop for StringAndOptValue {
 }
 
 /// Frees the native rust <code>StringAndOptValue</code> object
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn string_and_opt_value_drop(string_and_opt_value: *mut StringAndOptValue) {
     free(string_and_opt_value);
 }
@@ -160,7 +160,7 @@ pub extern "C" fn string_and_opt_value_drop(string_and_opt_value: *mut StringAnd
 /// Retrieves the unique id (IID) of this <code>Concept</code>.
 /// If this is an Entity or Relation Instance, returns the IID of the instance.
 /// Otherwise, returns null.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn concept_try_get_iid(instance: *mut Concept) -> *mut c_char {
     release_optional_string(borrow(instance).try_get_iid().map(|iid| iid.to_string()))
 }
@@ -169,7 +169,7 @@ pub extern "C" fn concept_try_get_iid(instance: *mut Concept) -> *mut c_char {
 /// If this is an <code>Instance</code>, returns the label of the type of this instance ("unknown" if type fetching is disabled).
 /// If this is a <code>Value</code>, returns the label of the value type of the value.
 /// If this is a <code>Type</code>, returns the label of the type.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn concept_get_label(concept: *const Concept) -> *mut c_char {
     release_string(borrow(concept).get_label().to_owned())
 }
@@ -178,7 +178,7 @@ pub extern "C" fn concept_get_label(concept: *const Concept) -> *mut c_char {
 /// If this is an <code>Instance</code>, returns the label of the type of this instance (None if type fetching is disabled).
 /// If this is a <code>Value</code>, returns the label of the value type of the value.
 /// If this is a <code>Type</code>, returns the label of the type.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn concept_try_get_label(concept: *const Concept) -> *mut c_char {
     release_optional_string(borrow(concept).try_get_label().map(|str| str.to_owned()))
 }
@@ -188,7 +188,7 @@ pub extern "C" fn concept_try_get_label(concept: *const Concept) -> *mut c_char 
 /// If this is a <code>Value</code>, returns its value type.
 /// If this is an <code>AttributeType</code>, returns the value type that the schema permits for the attribute type, if one is defined.
 /// Otherwise, returns null.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn concept_try_get_value_type(concept: *const Concept) -> *mut c_char {
     release_optional_string(borrow(concept).try_get_value_label().map(|str| str.to_owned()))
 }
@@ -197,84 +197,84 @@ pub extern "C" fn concept_try_get_value_type(concept: *const Concept) -> *mut c_
 /// If this is an <code>Attribute</code> instance, returns the value of this instance.
 /// If this a <code>Value</code>, returns the value.
 /// Otherwise, returns null.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn concept_try_get_value(concept: *const Concept) -> *mut Concept {
     release_optional(borrow(concept).try_get_value().map(|value| Concept::Value(value.clone())))
 }
 
 /// Returns <code>true</code> if the value which this <code>Concept</code> holds is of type <code>boolean</code>.
 /// Otherwise, returns <code>false</code>.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn concept_is_boolean(concept: *const Concept) -> bool {
     borrow(concept).is_boolean()
 }
 
 /// Returns <code>true</code> if the value which this <code>Concept</code> holds is of type <code>integer</code>.
 /// Otherwise, returns <code>false</code>.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn concept_is_integer(concept: *const Concept) -> bool {
     borrow(concept).is_integer()
 }
 
 /// Returns <code>true</code> if the value which this <code>Concept</code> holds is of type <code>double</code>.
 /// Otherwise, returns <code>false</code>.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn concept_is_double(concept: *const Concept) -> bool {
     borrow(concept).is_double()
 }
 
 /// Returns <code>true</code> if the value which this <code>Concept</code> holds is of type <code>decimal</code>.
 /// Otherwise, returns <code>false</code>.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn concept_is_decimal(concept: *const Concept) -> bool {
     borrow(concept).is_decimal()
 }
 
 /// Returns <code>true</code> if the value which this <code>Concept</code> holds is of type <code>string</code>.
 /// Otherwise, returns <code>false</code>.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn concept_is_string(concept: *const Concept) -> bool {
     borrow(concept).is_string()
 }
 
 /// Returns <code>true</code> if the value which this <code>Concept</code> holds is of type <code>date</code>.
 /// Otherwise, returns <code>false</code>.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn concept_is_date(concept: *const Concept) -> bool {
     borrow(concept).is_date()
 }
 
 /// Returns <code>true</code> if the value which this <code>Concept</code> holds is of type <code>datetime</code>.
 /// Otherwise, returns <code>false</code>.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn concept_is_datetime(concept: *const Concept) -> bool {
     borrow(concept).is_datetime()
 }
 
 /// Returns <code>true</code> if the value which this <code>Concept</code> holds is of type <code>datetime-tz</code>.
 /// Otherwise, returns <code>false</code>.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn concept_is_datetime_tz(concept: *const Concept) -> bool {
     borrow(concept).is_datetime_tz()
 }
 
 /// Returns <code>true</code> if the value which this <code>Concept</code> holds is of type <code>duration</code>.
 /// Otherwise, returns <code>false</code>.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn concept_is_duration(concept: *const Concept) -> bool {
     borrow(concept).is_duration()
 }
 
 /// Returns <code>true</code> if the value which this <code>Concept</code> holds is of type <code>struct</code>.
 /// Otherwise, returns <code>false</code>.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn concept_is_struct(concept: *const Concept) -> bool {
     borrow(concept).is_struct()
 }
 
 /// Returns a <code>boolean</code> value of this value concept.
 /// If the value has another type, the error is set.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn concept_get_boolean(concept: *const Concept) -> bool {
     match borrow(concept).try_get_boolean() {
         Some(value) => value,
@@ -284,7 +284,7 @@ pub extern "C" fn concept_get_boolean(concept: *const Concept) -> bool {
 
 /// Returns the <code>integer</code> value of this value concept.
 /// If the value has another type, the error is set.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn concept_get_integer(concept: *const Concept) -> i64 {
     match borrow(concept).try_get_integer() {
         Some(value) => value,
@@ -294,7 +294,7 @@ pub extern "C" fn concept_get_integer(concept: *const Concept) -> i64 {
 
 /// Returns the <code>double</code> value of this value concept.
 /// If the value has another type, the error is set.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn concept_get_double(concept: *const Concept) -> f64 {
     match borrow(concept).try_get_double() {
         Some(value) => value,
@@ -304,7 +304,7 @@ pub extern "C" fn concept_get_double(concept: *const Concept) -> f64 {
 
 /// Returns the <code>decimal</code> value of this value concept.
 /// If the value has another type, the error is set.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn concept_get_decimal(concept: *const Concept) -> Decimal {
     match borrow(concept).try_get_decimal() {
         Some(value) => value,
@@ -314,7 +314,7 @@ pub extern "C" fn concept_get_decimal(concept: *const Concept) -> Decimal {
 
 /// Returns the <code>string</code> value of this value concept.
 /// If the value has another type, the error is set.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn concept_get_string(concept: *const Concept) -> *mut c_char {
     match borrow(concept).try_get_string() {
         Some(value) => release_string(value.to_owned()),
@@ -324,7 +324,7 @@ pub extern "C" fn concept_get_string(concept: *const Concept) -> *mut c_char {
 
 /// Returns the value of this date value concept as seconds since the start of the UNIX epoch.
 /// If the value has another type, the error is set.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn concept_get_date_as_seconds(concept: *const Concept) -> i64 {
     match borrow(concept).try_get_date() {
         Some(value) => value.and_time(NaiveTime::MIN).and_utc().timestamp(),
@@ -334,7 +334,7 @@ pub extern "C" fn concept_get_date_as_seconds(concept: *const Concept) -> i64 {
 
 /// Returns the value of this datetime value concept as seconds and nanoseconds parts since the start of the UNIX epoch.
 /// If the value has another type, the error is set.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn concept_get_datetime(concept: *const Concept) -> DatetimeInNanos {
     match borrow(concept).try_get_datetime() {
         Some(value) => DatetimeInNanos::new(&value.and_utc()),
@@ -344,7 +344,7 @@ pub extern "C" fn concept_get_datetime(concept: *const Concept) -> DatetimeInNan
 
 /// Returns the value of this datetime-tz value concept as seconds and nanoseconds parts since the start of the UNIX epoch and timezone information.
 /// If the value has another type, the error is set.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn concept_get_datetime_tz(concept: *const Concept) -> DatetimeAndTimeZone {
     match borrow(concept).try_get_datetime_tz() {
         Some(value) => DatetimeAndTimeZone::new(&value),
@@ -354,7 +354,7 @@ pub extern "C" fn concept_get_datetime_tz(concept: *const Concept) -> DatetimeAn
 
 /// Returns the value of this duration value.
 /// If the value has another type, the error is set.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn concept_get_duration(concept: *const Concept) -> Duration {
     match borrow(concept).try_get_duration() {
         Some(value) => value,
@@ -364,7 +364,7 @@ pub extern "C" fn concept_get_duration(concept: *const Concept) -> Duration {
 
 /// Returns the value of this struct value concept represented as an iterator of {field_name: value?} pairs.
 /// If the value has another type, the error is set.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn concept_get_struct(concept: *const Concept) -> *mut StringAndOptValueIterator {
     match borrow(concept).try_get_struct() {
         Some(value) => release(StringAndOptValueIterator(CIterator(box_stream(
@@ -375,67 +375,67 @@ pub extern "C" fn concept_get_struct(concept: *const Concept) -> *mut StringAndO
 }
 
 /// Checks whether the provided <code>Concept</code> objects are equal
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn concept_equals(lhs: *const Concept, rhs: *const Concept) -> bool {
     borrow(lhs) == borrow(rhs)
 }
 
 /// Frees the native rust <code>Concept</code> object
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn concept_drop(concept: *mut Concept) {
     free(concept);
 }
 
 /// Checks if this <code>Concept</code> is an <code>EntityType</code>.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn concept_is_entity_type(concept: *const Concept) -> bool {
     borrow(concept).is_entity_type()
 }
 
 /// Checks if this <code>Concept</code> is a <code>RelationType</code>.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn concept_is_relation_type(concept: *const Concept) -> bool {
     borrow(concept).is_relation_type()
 }
 
 /// Checks if this <code>Concept</code> is an <code>AttributeType</code>.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn concept_is_attribute_type(concept: *const Concept) -> bool {
     borrow(concept).is_attribute_type()
 }
 
 /// Checks if this <code>Concept</code> is a <code>RoleType</code>.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn concept_is_role_type(concept: *const Concept) -> bool {
     borrow(concept).is_role_type()
 }
 
 /// Checks if this <code>Concept</code> is an <code>Entity</code>.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn concept_is_entity(concept: *const Concept) -> bool {
     borrow(concept).is_entity()
 }
 
 /// Checks if this <code>Concept</code> is a <code>Relation</code>.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn concept_is_relation(concept: *const Concept) -> bool {
     borrow(concept).is_relation()
 }
 
 /// Checks if this <code>Concept</code> is an <code>Attribute</code>.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn concept_is_attribute(concept: *const Concept) -> bool {
     borrow(concept).is_attribute()
 }
 
 /// Checks if this <code>Concept</code> is a <code>Value</code>.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn concept_is_value(concept: *const Concept) -> bool {
     borrow(concept).is_value()
 }
 
 /// A string representation of this <code>Concept</code> object.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn concept_to_string(concept: *const Concept) -> *mut c_char {
     release_string(format!("{:?}", borrow(concept)))
 }

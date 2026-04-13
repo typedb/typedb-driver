@@ -22,13 +22,13 @@ use typedb_driver::QueryOptions;
 use super::memory::{borrow, borrow_mut, free, release};
 
 /// Produces a new <code>QueryOptions</code> object.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn query_options_new() -> *mut QueryOptions {
     release(QueryOptions::new())
 }
 
 /// Frees the native Rust <code>QueryOptions</code> object.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn query_options_drop(options: *mut QueryOptions) {
     free(options);
 }
@@ -36,7 +36,7 @@ pub extern "C" fn query_options_drop(options: *mut QueryOptions) {
 /// Explicitly set the "include instance types" flag.
 /// If set, specifies if types should be included in instance structs returned in ConceptRow answers.
 /// This option allows reducing the amount of unnecessary data transmitted.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn query_options_set_include_instance_types(options: *mut QueryOptions, include_instance_types: bool) {
     borrow_mut(options).include_instance_types = Some(include_instance_types);
 }
@@ -44,13 +44,13 @@ pub extern "C" fn query_options_set_include_instance_types(options: *mut QueryOp
 /// Returns the value set for the "include instance types" flag in this <code>QueryOptions</code> object.
 /// If set, specifies if types should be included in instance structs returned in ConceptRow answers.
 /// This option allows reducing the amount of unnecessary data transmitted.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn query_options_get_include_instance_types(options: *const QueryOptions) -> bool {
     borrow(options).include_instance_types.unwrap()
 }
 
 /// Checks whether the "include instance types" flag was explicitly set for this <code>QueryOptions</code> object.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn query_options_has_include_instance_types(options: *const QueryOptions) -> bool {
     borrow(options).include_instance_types.is_some()
 }
@@ -60,7 +60,7 @@ pub extern "C" fn query_options_has_include_instance_types(options: *const Query
 /// Increasing this may increase performance for queries with a huge number of answers, as it can
 /// reduce the number of network round-trips at the cost of more resources on the server side.
 /// Minimal value: 1.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn query_options_set_prefetch_size(options: *mut QueryOptions, prefetch_size: i64) {
     borrow_mut(options).prefetch_size = Some(prefetch_size as u64);
 }
@@ -70,32 +70,32 @@ pub extern "C" fn query_options_set_prefetch_size(options: *mut QueryOptions, pr
 /// Increasing this may increase performance for queries with a huge number of answers, as it can
 /// reduce the number of network round-trips at the cost of more resources on the server side.
 /// Minimal value: 1.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn query_options_get_prefetch_size(options: *const QueryOptions) -> i64 {
     borrow(options).prefetch_size.unwrap() as i64
 }
 
 /// Checks whether the prefetch size was explicitly set for this <code>QueryOptions</code> object.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn query_options_has_prefetch_size(options: *const QueryOptions) -> bool {
     borrow(options).prefetch_size.is_some()
 }
 
 /// Explicitly set the prefetch size.
 /// If set, it requests the server to include the query structure in the answer header.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn query_options_set_include_query_structure(options: *mut QueryOptions, include_query_structure: bool) {
     borrow_mut(options).include_query_structure = Some(include_query_structure);
 }
 
 /// Returns the value set for 'include query structure' in this <code>QueryOptions</code> object.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn query_options_get_include_query_structure(options: *const QueryOptions) -> bool {
     borrow(options).include_query_structure.unwrap()
 }
 
 /// Checks whether the prefetch size was explicitly set for this <code>QueryOptions</code> object.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn query_options_has_include_query_structure(options: *const QueryOptions) -> bool {
     borrow(options).include_query_structure.is_some()
 }

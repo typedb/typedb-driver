@@ -25,13 +25,13 @@ use super::concept::{borrow_as_attribute, borrow_as_entity, borrow_as_relation};
 use crate::memory::release;
 
 /// Retrieves the type which this ``Entity`` belongs to.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn entity_get_type(entity: *const Concept) -> *mut Concept {
     borrow_as_entity(entity).type_().map(|type_| release(Concept::EntityType(type_.clone()))).unwrap_or_else(null_mut)
 }
 
 /// Retrieves the type which this ``Relation`` belongs to.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn relation_get_type(relation: *const Concept) -> *mut Concept {
     borrow_as_relation(relation)
         .type_()
@@ -40,7 +40,7 @@ pub extern "C" fn relation_get_type(relation: *const Concept) -> *mut Concept {
 }
 
 /// Retrieves the type which this ``Attribute`` belongs to.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn attribute_get_type(attribute: *const Concept) -> *mut Concept {
     borrow_as_attribute(attribute)
         .type_()
