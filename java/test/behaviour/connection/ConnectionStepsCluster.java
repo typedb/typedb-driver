@@ -184,4 +184,10 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
         super.set_driver_option_primary_failover_retries_to(value);
     }
 
+    @Override
+    @When("set driver option request_timeout_millis to: {integer}")
+    public void set_driver_option_request_timeout_millis_to(int value) {
+        super.set_driver_option_request_timeout_millis_to(value);
+    }
+
 }
