@@ -75,24 +75,6 @@ impl TryIntoProto<server_manager::get::Req> for Request {
     }
 }
 
-impl TryIntoProto<server_manager::register::Req> for Request {
-    fn try_into_proto(self) -> Result<server_manager::register::Req> {
-        match self {
-            Self::ServersRegister { replica_id, address } => Ok(server_manager::register::Req { replica_id, address }),
-            other => Err(InternalError::UnexpectedRequestType { request_type: format!("{other:?}") }.into()),
-        }
-    }
-}
-
-impl TryIntoProto<server_manager::deregister::Req> for Request {
-    fn try_into_proto(self) -> Result<server_manager::deregister::Req> {
-        match self {
-            Self::ServersDeregister { replica_id } => Ok(server_manager::deregister::Req { replica_id }),
-            other => Err(InternalError::UnexpectedRequestType { request_type: format!("{other:?}") }.into()),
-        }
-    }
-}
-
 impl TryIntoProto<server::version::Req> for Request {
     fn try_into_proto(self) -> Result<server::version::Req> {
         match self {
@@ -363,18 +345,6 @@ impl TryFromProto<server_manager::get::Res> for Response {
         let server_manager::get::Res { server } = proto;
         let server = Server::try_from_proto(server.ok_or(ConnectionError::MissingResponseField { field: "server" })?)?;
         Ok(Self::ServersGet { server })
-    }
-}
-
-impl TryFromProto<server_manager::register::Res> for Response {
-    fn try_from_proto(_proto: server_manager::register::Res) -> Result<Self> {
-        Ok(Self::ServersRegister)
-    }
-}
-
-impl TryFromProto<server_manager::deregister::Res> for Response {
-    fn try_from_proto(_proto: server_manager::deregister::Res) -> Result<Self> {
-        Ok(Self::ServersDeregister)
     }
 }
 

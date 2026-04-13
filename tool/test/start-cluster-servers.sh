@@ -34,6 +34,7 @@ server_start() {
   local clustering_port="${node_id}1730"
   local monitoring_port="${node_id}1731"
   local http_port="${node_id}8000"
+  local admin_port="${node_id}1728"
 
   local node_dir="./${node_id}"
   local data_dir="${node_dir}/data"
@@ -48,6 +49,8 @@ server_start() {
     --server.http.address="0.0.0.0:${http_port}" \
     --server.clustering.id="${node_id}" \
     --server.clustering.address="127.0.0.1:${clustering_port}" \
+    --server.admin.enabled=true \
+    --server.admin.port="${admin_port}" \
     --server.encryption.enabled="${ENCRYPTION_ENABLED}" \
     --server.encryption.certificate="${CERT_PATH}" \
     --server.encryption.certificate-key="${KEY_PATH}" \
@@ -100,3 +103,12 @@ fi
 
 sleep $LEADER_SELF_ELECT_TIMEOUT
 echo $NODE_COUNT TypeDB Cluster database servers started
+
+# Register peer replicas via admin tool on node 1
+if [ "$NODE_COUNT" -gt 1 ]; then
+  for i in $(seq 2 $NODE_COUNT); do
+    clustering_port="${i}1730"
+    echo "Registering replica ${i} at 127.0.0.1:${clustering_port}..."
+    ./1/typedb admin --address=127.0.0.1:11728 --command "servers register ${i} 127.0.0.1:${clustering_port}"
+  done
+fi

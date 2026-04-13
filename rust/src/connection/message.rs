@@ -45,8 +45,6 @@ pub(super) enum Request {
 
     ServersAll,
     ServersGet,
-    ServersRegister { replica_id: u64, address: String },
-    ServersDeregister { replica_id: u64 },
     ServerVersion,
 
     DatabasesAll,
@@ -84,8 +82,6 @@ pub(super) enum Response {
     ServersGet {
         server: Server,
     },
-    ServersRegister,
-    ServersDeregister,
     ServerVersion {
         server_version: ServerVersion,
     },

@@ -134,4 +134,3 @@ class DriverOptions(NativeWrapper[NativeDriverOptions]):
     def primary_failover_retries(self, primary_failover_retries: int):
         require_non_negative(primary_failover_retries, "primary_failover_retries")
         driver_options_set_primary_failover_retries(self.native_object, primary_failover_retries)
-

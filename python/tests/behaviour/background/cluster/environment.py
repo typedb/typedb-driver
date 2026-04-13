@@ -23,17 +23,6 @@ from tests.behaviour.context import Context
 from typedb.driver import *
 
 
-def setup_cluster(context: Context):
-    with create_driver(context) as driver:
-        if len(driver.servers()) != len(context.default_clustering_addresses):
-            for i, address in enumerate(context.default_clustering_addresses):
-                server_id = i + 1
-
-                # 1 is the default registered server
-                if server_id != 1:
-                    driver.register_server(server_id, address)
-
-
 def before_all(context: Context):
     environment_base.before_all(context)
     context.tls_root_ca_path = os.environ["ROOT_CA"]
@@ -42,9 +31,7 @@ def before_all(context: Context):
     context.setup_context_driver_fn = lambda address=None, username=None, password=None: \
         setup_context_driver(context, address, username, password)
     context.default_address = ["127.0.0.1:11729", "127.0.0.1:21729", "127.0.0.1:31729"]
-    context.default_clustering_addresses = ["127.0.0.1:11730", "127.0.0.1:21730", "127.0.0.1:31730"]
     context.driver_options.tls_config = DriverTlsConfig.enabled_with_root_ca(context.tls_root_ca_path)
-    setup_cluster(context)
 
 
 def before_scenario(context: Context, scenario):

@@ -33,7 +33,7 @@ impl TryFromProto<ServerProto> for Server {
     fn try_from_proto(proto: ServerProto) -> Result<Server> {
         let replication_status =
             proto.replica_status.map(|status| ReplicationStatus::try_from_proto(status)).transpose()?;
-        match proto.connection_address {
+        match proto.address {
             Some(address) => Ok(Server::available_from_private(address.parse()?, replication_status)),
             None => Ok(Server::Unavailable { replication_status }),
         }

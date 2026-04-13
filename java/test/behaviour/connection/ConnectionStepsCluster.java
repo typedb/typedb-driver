@@ -38,16 +38,9 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
             "127.0.0.1:21729",
             "127.0.0.1:31729"
     );
-    public static List<String> DEFAULT_CLUSTER_CLUSTERING_ADDRESSES = List.of(
-            "127.0.0.1:11730",
-            "127.0.0.1:21730",
-            "127.0.0.1:31730"
-    );
-
     @Override
     public void beforeAll() {
         super.beforeAll();
-        setupCluster();
     }
 
     @Before
@@ -68,23 +61,6 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
 
     Driver createTypeDBDriver(Set<String> address, Credentials credentials, DriverOptions driverOptions) {
         return TypeDB.driver(address, credentials, driverOptions);
-    }
-
-    void setupCluster() {
-        try (Driver driver = createDefaultTypeDBDriver()) {
-            List<String> clusteringAddresses = DEFAULT_CLUSTER_CLUSTERING_ADDRESSES;
-            if (driver.servers().size() != clusteringAddresses.size()) {
-                for (int i = 0; i < clusteringAddresses.size(); i++) {
-                    long id = i + 1L;
-                    String address = clusteringAddresses.get(i);
-
-                    // 1 is the default registered server
-                    if (id != 1) {
-                        driver.registerServer(id, address);
-                    }
-                }
-            }
-        }
     }
 
     @Override

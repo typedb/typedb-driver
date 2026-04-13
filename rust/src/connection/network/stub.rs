@@ -106,20 +106,6 @@ impl<Channel: GRPCChannel> RPCStub<Channel> {
         self.single(|this| Box::pin(this.grpc.servers_get(req.clone()))).await
     }
 
-    pub(super) async fn servers_register(
-        &mut self,
-        req: server_manager::register::Req,
-    ) -> Result<server_manager::register::Res> {
-        self.single(|this| Box::pin(this.grpc.servers_register(req.clone()))).await
-    }
-
-    pub(super) async fn servers_deregister(
-        &mut self,
-        req: server_manager::deregister::Req,
-    ) -> Result<server_manager::deregister::Res> {
-        self.single(|this| Box::pin(this.grpc.servers_deregister(req.clone()))).await
-    }
-
     pub(super) async fn server_version(&mut self, req: server::version::Req) -> Result<server::version::Res> {
         self.single(|this| Box::pin(this.grpc.server_version(req.clone()))).await
     }

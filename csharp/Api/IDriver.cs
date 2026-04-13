@@ -118,32 +118,6 @@ namespace TypeDB.Driver.Api
         IServer? GetPrimaryServer(ServerRouting? serverRouting = null);
 
         /// <summary>
-        /// Registers a new server in the cluster the driver is currently connected to. The registered
-        /// server will become available eventually, depending on the behavior of the whole cluster.
-        /// To register a server, its clustering address should be passed, not the connection address.
-        /// </summary>
-        /// <param name="serverId">The numeric identifier of the new server.</param>
-        /// <param name="address">The address(es) of the TypeDB server as a string.</param>
-        /// <example>
-        /// <code>
-        /// driver.RegisterServer(2, "127.0.0.1:11729");
-        /// </code>
-        /// </example>
-        void RegisterServer(long serverId, string address);
-
-        /// <summary>
-        /// Deregisters a server from the cluster the driver is currently connected to. This server
-        /// will no longer play a raft role in this cluster.
-        /// </summary>
-        /// <param name="serverId">The numeric identifier of the deregistered server.</param>
-        /// <example>
-        /// <code>
-        /// driver.DeregisterServer(2);
-        /// </code>
-        /// </example>
-        void DeregisterServer(long serverId);
-
-        /// <summary>
         /// Closes the driver. Before instantiating a new driver, the driver that's currently open should first be closed.
         /// </summary>
         /// <example>

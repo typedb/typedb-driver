@@ -137,22 +137,6 @@ impl ServerConnection {
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn servers_register(&self, replica_id: u64, address: String) -> Result {
-        match self.request(Request::ServersRegister { replica_id, address }).await? {
-            Response::ServersRegister => Ok(()),
-            other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
-        }
-    }
-
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn servers_deregister(&self, replica_id: u64) -> Result {
-        match self.request(Request::ServersDeregister { replica_id }).await? {
-            Response::ServersDeregister => Ok(()),
-            other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
-        }
-    }
-
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn version(&self) -> Result<ServerVersion> {
         match self.request(Request::ServerVersion).await? {
             Response::ServerVersion { server_version: version } => Ok(version),

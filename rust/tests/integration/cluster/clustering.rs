@@ -60,10 +60,6 @@ fn primary_reelection_read_query() {
         .await
         .unwrap();
 
-        for (i, address) in CLUSTERING_ADDRESSES[1..].iter().enumerate() {
-            driver.register_server((i + 2) as u64, address.to_string()).await.unwrap();
-        }
-
         // TODO: Temp, resolve it somehow!!!
         sleep(Duration::from_secs(6)).await;
         println!("Recreating the driver to fetch new servers");

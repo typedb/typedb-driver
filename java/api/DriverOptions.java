@@ -24,6 +24,7 @@ import com.typedb.driver.common.NativeObject;
 import com.typedb.driver.common.Validator;
 
 import javax.annotation.CheckReturnValue;
+
 import static com.typedb.driver.jni.typedb_driver.driver_options_get_tls_config;
 import static com.typedb.driver.jni.typedb_driver.driver_options_get_primary_failover_retries;
 import static com.typedb.driver.jni.typedb_driver.driver_options_get_request_timeout_millis;
