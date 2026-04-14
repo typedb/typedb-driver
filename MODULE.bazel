@@ -120,6 +120,9 @@ rust.toolchain(
 use_repo(rust, "rust_toolchains")
 register_toolchains("@rust_toolchains//:all")
 
+rust_host_tools = use_extension("@rules_rust//rust:extensions.bzl", "rust_host_tools")
+rust_host_tools.host_tools(version = "1.93.0")
+
 # Rust crates - import from typedb_dependencies' crate extension
 # This ensures type compatibility across all TypeDB modules
 crate = use_extension("@rules_rust//crate_universe:extensions.bzl", "crate")
