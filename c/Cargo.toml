@@ -6,7 +6,7 @@ features = {}
 
 [package]
 	name = "typedb_driver_clib"
-	edition = "2021"
+	edition = "2024"
 	version = "0.0.0"
 
 [lib]
