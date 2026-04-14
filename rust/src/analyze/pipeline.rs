@@ -52,33 +52,33 @@ pub struct VariableInfo {
 /// Representation of a stage in a <code>Pipeline</code>.
 #[derive(Debug, Clone)]
 pub enum PipelineStage {
-    /// match <block>
+    /// match &lt;block&gt;
     /// e.g. `match $f isa friendship, links (friend: $x, friend: $y)`
     Match {
         /// The index into <code>Pipeline.conjunctions</code>
         block: ConjunctionID,
     },
-    /// insert <block>
+    /// insert &lt;block&gt;
     /// e.g. `insert $f isa friendship, links (friend: $x, friend: $y)`
     Insert {
         /// The index into <code>Pipeline.conjunctions</code>
         block: ConjunctionID,
     },
-    /// put <block>
+    /// put &lt;block&gt;
     /// e.g. `put $f isa friendship, links (friend: $x, friend: $y)`
     Put {
         /// The index into <code>Pipeline.conjunctions</code>
         block: ConjunctionID,
     },
-    /// update <block>
+    /// update &lt;block&gt;
     /// e.g. `update $owner has name "John"`
     Update {
         /// The index into <code>Pipeline.conjunctions</code>
         block: ConjunctionID,
     },
     /// delete
-    ///     <block>;
-    ///     <deleted_variables>;
+    ///     &lt;block&gt;;
+    ///     &lt;deleted_variables&gt;;
     /// e.g.
     /// ```typeql
     ///  delete
@@ -91,24 +91,24 @@ pub enum PipelineStage {
         /// The variables for which the unified concepts are to be deleted.
         deleted_variables: Vec<Variable>,
     },
-    /// select <variables>
+    /// select &lt;variables&gt;
     /// e.g. `select $x, $y`
     Select { variables: Vec<Variable> },
-    /// sort <variables-and-order>
+    /// sort &lt;variables-and-order&gt;
     /// e.g. `sort $x asc, $y desc`
     Sort { variables: Vec<SortVariable> },
-    /// require <variables>
+    /// require &lt;variables&gt;
     /// e.g. `require $x, $y`
     Require { variables: Vec<Variable> },
-    /// offset <offset>
+    /// offset &lt;offset&gt;
     /// e.g. `offset 3`
     Offset { offset: u64 },
-    /// limit <limit>
+    /// limit &lt;limit&gt;
     /// e.g. `limit 5`
     Limit { limit: u64 },
     /// distinct
     Distinct,
-    /// reduce <reducers> groupby <groupby>
+    /// reduce &lt;reducers&gt; groupby &lt;groupby&gt;
     /// e.g.
     /// ```typeql
     /// reduce $sum = sum($v), $count = count groupby $x, $y;
