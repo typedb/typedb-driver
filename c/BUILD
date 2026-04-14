@@ -55,6 +55,7 @@ rust_static_library(
 
 cc_import(
     name = "typedb_driver_clib",
+    hdrs = [":typedb_driver_clib_headers"],
     static_library = ":_typedb_driver_clib",
     linkopts = select({
         "@typedb_bazel_distribution//platform:is_mac": ["-framework", "Security"],
@@ -274,7 +275,6 @@ cc_library(
     name = "driver-example-lib",
     srcs = ["example.c"],
     deps = [
-        ":typedb_driver_clib_headers",
         ":typedb_driver_clib",
     ],
     includes = ["."],
