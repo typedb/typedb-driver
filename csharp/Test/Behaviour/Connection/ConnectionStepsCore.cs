@@ -79,6 +79,17 @@ namespace TypeDB.Driver.Test.Behaviour
             Driver = CreateTypeDBDriver(TypeDB.DefaultAddress);
         }
 
+        [When(@"connection opens with default authentication; fails with a message containing: ""(.*)""")]
+        [Then(@"connection opens with default authentication; fails with a message containing: ""(.*)""")]
+        public void ConnectionOpensWithDefaultAuthenticationFailsWithMessage(string expectedMessage)
+        {
+            var exception = Assert.ThrowsAny<Exception>(() =>
+            {
+                CreateTypeDBDriver(TypeDB.DefaultAddress);
+            });
+            Assert.Contains(expectedMessage, exception.Message);
+        }
+
         [Given(@"connection opens with authentication: {}, {}")]
         [When(@"connection opens with authentication: {}, {}")]
         public void ConnectionOpensWithAuthentication(string username, string password)

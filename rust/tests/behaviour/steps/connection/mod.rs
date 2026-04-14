@@ -51,9 +51,11 @@ async fn get_servers(context: &Context, may_error: params::MayError) -> HashSet<
 async fn typedb_starts(_: &mut Context) {}
 
 #[apply(generic_step)]
-#[step("connection opens with default authentication")]
-async fn connection_opens_with_default_authentication(context: &mut Context) {
-    context.set_driver(context.create_default_driver().await.unwrap());
+#[step(expr = "connection opens with default authentication{may_error}")]
+async fn connection_opens_with_default_authentication(context: &mut Context, may_error: params::MayError) {
+    if let Some(driver) = may_error.check(context.create_default_driver().await) {
+        context.set_driver(driver)
+    }
 }
 
 #[apply(generic_step)]
