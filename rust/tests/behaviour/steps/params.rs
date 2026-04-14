@@ -17,14 +17,14 @@
  * under the License.
  */
 
-use std::{borrow::Borrow, convert::Infallible, fmt, str::FromStr};
+use std::{convert::Infallible, fmt, str::FromStr};
 
 use chrono::{FixedOffset, NaiveDate, NaiveDateTime, NaiveTime};
 use cucumber::Parameter;
 use typedb_driver::{
+    TransactionType as TypeDBTransactionType,
     answer::QueryType as TypeDBQueryType,
     concept::{Value as TypeDBValue, ValueType as TypeDBValueType},
-    TransactionType as TypeDBTransactionType,
 };
 
 #[derive(Debug, Default, Parameter, Clone)]
@@ -262,8 +262,8 @@ macro_rules! check_boolean {
 }
 pub(crate) use check_boolean;
 use typedb_driver::concept::{
-    value::{Decimal, TimeZone},
     Concept,
+    value::{Decimal, TimeZone},
 };
 
 impl FromStr for Boolean {
@@ -355,10 +355,10 @@ impl IsOrNot {
     pub fn check_none<T: fmt::Debug>(&self, value: &Option<T>) {
         match self {
             Self::Is => {
-                assert!(matches!(value, None), "expected to be none")
+                assert!(value.is_none(), "expected to be none, found: {value:?}")
             }
             Self::IsNot => {
-                assert!(matches!(value, Some(_)), "expected to be NOT none")
+                assert!(value.is_some(), "expected to be NOT none")
             }
         };
     }
@@ -402,14 +402,6 @@ impl ContainsOrDoesnt {
         }
     }
 
-    pub fn check_result<T: fmt::Debug, E>(&self, scrutinee: &Result<T, E>, message: &str) {
-        let option = match scrutinee {
-            Ok(result) => Some(result),
-            Err(_) => None,
-        };
-        self.check(&option, message)
-    }
-
     pub fn check_bool(&self, contains: bool, message: &str) {
         match self {
             ContainsOrDoesnt::Contains => assert!(contains, "Expected to contain, not found: {message}"),
@@ -437,22 +429,6 @@ pub(crate) enum ExistsOrDoesnt {
 }
 
 impl ExistsOrDoesnt {
-    pub fn check<T: fmt::Debug>(&self, scrutinee: &Option<T>, message: &str) {
-        match (self, scrutinee) {
-            (Self::Exists, Some(_)) | (Self::DoesNotExist, None) => (),
-            (Self::Exists, None) => panic!("Expected to exist, not found: {message}"),
-            (Self::DoesNotExist, Some(value)) => panic!("Expected not to exist, {value:?} is found: {message}"),
-        }
-    }
-
-    pub fn check_result<T: fmt::Debug, E>(&self, scrutinee: &Result<T, E>, message: &str) {
-        let option = match scrutinee {
-            Ok(result) => Some(result),
-            Err(_) => None,
-        };
-        self.check(&option, message)
-    }
-
     pub fn check_bool(&self, contains: bool, message: &str) {
         match self {
             ExistsOrDoesnt::Exists => assert!(contains, "Expected to exist, not found: {message}"),
@@ -543,17 +519,13 @@ impl ConceptKind {
     pub(crate) fn matches_concept(&self, concept: &Concept) -> bool {
         match self {
             ConceptKind::Concept => true,
-            ConceptKind::Type => match concept {
-                Concept::EntityType(_)
-                | Concept::RelationType(_)
-                | Concept::AttributeType(_)
-                | Concept::RoleType(_) => true,
-                _ => false,
-            },
-            ConceptKind::Instance => match concept {
-                Concept::Entity(_) | Concept::Relation(_) | Concept::Attribute(_) => true,
-                _ => false,
-            },
+            ConceptKind::Type => matches!(
+                concept,
+                Concept::EntityType(_) | Concept::RelationType(_) | Concept::AttributeType(_) | Concept::RoleType(_)
+            ),
+            ConceptKind::Instance => {
+                matches!(concept, Concept::Entity(_) | Concept::Relation(_) | Concept::Attribute(_))
+            }
             ConceptKind::EntityType => matches!(concept, Concept::EntityType(_)),
             ConceptKind::RelationType => matches!(concept, Concept::RelationType(_)),
             ConceptKind::AttributeType => matches!(concept, Concept::AttributeType(_)),

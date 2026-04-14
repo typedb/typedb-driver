@@ -20,13 +20,14 @@
 use cucumber::gherkin::Step;
 use itertools::Itertools;
 use macro_rules_attribute::apply;
-use typedb_driver::{analyze::AnalyzedQuery, Result as TypeDBResult, Transaction};
+use typedb_driver::{Result as TypeDBResult, Transaction, analyze::AnalyzedQuery};
 
 use crate::{
+    Context,
     analyze::functor_encoding::{
         encode_fetch_annotations_as_functor, encode_query_annotations_as_functor, encode_query_structure_as_functor,
     },
-    generic_step, params, Context,
+    generic_step, params,
 };
 
 pub(crate) async fn run_analyze_query(
@@ -54,7 +55,7 @@ async fn typeql_analyze_may_error(context: &mut Context, may_error: params::MayE
 pub async fn analyzed_query_pipeline_structure_is(context: &mut Context, step: &Step) {
     let expected_functor = step.docstring().unwrap();
     let analyzed = context.get_analyzed().unwrap();
-    let (actual_functor, _preamble) = encode_query_structure_as_functor(&analyzed);
+    let (actual_functor, _preamble) = encode_query_structure_as_functor(analyzed);
     assert_eq!(normalize_functor_for_compare(&actual_functor), normalize_functor_for_compare(expected_functor));
 }
 
@@ -63,7 +64,7 @@ pub async fn analyzed_query_pipeline_structure_is(context: &mut Context, step: &
 async fn analyzed_query_preamble_contains(context: &mut Context, step: &Step) {
     let expected_functor = step.docstring().unwrap();
     let analyzed = context.get_analyzed().unwrap();
-    let (_pipeline, preamble_functors) = encode_query_structure_as_functor(&analyzed);
+    let (_pipeline, preamble_functors) = encode_query_structure_as_functor(analyzed);
 
     assert!(
         preamble_functors.iter().any(|actual_functor| {
@@ -80,7 +81,7 @@ async fn analyzed_query_preamble_contains(context: &mut Context, step: &Step) {
 async fn analyzed_query_annotations_is(context: &mut Context, step: &Step) {
     let expected_functor = step.docstring().unwrap();
     let analyzed = context.get_analyzed().unwrap();
-    let (actual_functor, _preamble) = encode_query_annotations_as_functor(&analyzed);
+    let (actual_functor, _preamble) = encode_query_annotations_as_functor(analyzed);
     assert_eq!(normalize_functor_for_compare(&actual_functor), normalize_functor_for_compare(expected_functor));
 }
 
@@ -89,7 +90,7 @@ async fn analyzed_query_annotations_is(context: &mut Context, step: &Step) {
 async fn analyzed_preamble_annotations_contains(context: &mut Context, step: &Step) {
     let expected_functor = step.docstring().unwrap();
     let analyzed = context.get_analyzed().unwrap();
-    let (_pipeline, preamble_functors) = encode_query_annotations_as_functor(&analyzed);
+    let (_pipeline, preamble_functors) = encode_query_annotations_as_functor(analyzed);
 
     assert!(
         preamble_functors.iter().any(|actual_functor| {
@@ -106,12 +107,12 @@ async fn analyzed_preamble_annotations_contains(context: &mut Context, step: &St
 async fn analyzed_fetch_annotations_are(context: &mut Context, step: &Step) {
     let expected_functor = step.docstring().unwrap();
     let analyzed = context.get_analyzed().unwrap();
-    let actual_functor = encode_fetch_annotations_as_functor(&analyzed);
+    let actual_functor = encode_fetch_annotations_as_functor(analyzed);
 
     assert_eq!(normalize_functor_for_compare(&actual_functor), normalize_functor_for_compare(expected_functor));
 }
 
-pub(crate) fn normalize_functor_for_compare(functor: &String) -> String {
+pub(crate) fn normalize_functor_for_compare(functor: &str) -> String {
     let mut normalized = functor.to_lowercase();
     normalized.retain(|c| !c.is_whitespace());
     normalized
@@ -177,6 +178,7 @@ pub mod functor_encoding {
         macro_rules! impl_functor_for_impl {
             ($which:ident => |$self:ident, $context:ident| $block:block) => {
                 impl FunctorEncoded for $which {
+                    #[allow(unused_variables, reason = "$block may leave $context unused")]
                     fn encode_as_functor<'a>($self: &Self, $context: &FunctorContext<'a>) -> String {
                         $block
                     }
@@ -233,7 +235,7 @@ pub mod functor_encoding {
         }
     }
 
-    impl<'b, T: FunctorEncoded> FunctorEncoded for &'b [T] {
+    impl<T: FunctorEncoded> FunctorEncoded for &[T] {
         fn encode_as_functor<'a>(&self, context: &FunctorContext<'a>) -> String {
             std::format!("[{}]", self.iter().map(|v| v.encode_as_functor(context)).join(", "))
         }
@@ -288,7 +290,7 @@ pub mod functor_encoding {
         };
     }
     impl FunctorEncoded for Constraint {
-        fn encode_as_functor<'a>(self: &Self, context: &FunctorContext<'a>) -> String {
+        fn encode_as_functor(&self, context: &FunctorContext<'_>) -> String {
             match self {
                 Self::Isa { instance, r#type, exactness } => {
                     encode_functor_impl_exactness!(context, exactness, Isa IsaExact { instance, r#type, })
@@ -361,7 +363,7 @@ pub mod functor_encoding {
             ConstraintVertex::NamedRole(NamedRole { name,.. }) => { name.encode_as_functor(context) }
             ConstraintVertex::Value(v) => {
                 match v {
-                    Value::String(s) => std::format!("\"{}\"", s.to_string()),
+                    Value::String(s) => std::format!("\"{s}\""),
                     other => other.to_string(),
                 }
             }
@@ -370,13 +372,13 @@ pub mod functor_encoding {
     //
     macro_rules! impl_functor_for_multi {
         (|$self:ident, $context:ident| [ $( $type_name:ident => $block:block )* ]) => {
-            $ (impl_functor_for_impl!($type_name => |$self, $context| $block); )*
+            $(impl_functor_for_impl!($type_name => |$self, $context| $block); )*
         };
     }
     impl_functor_for_multi!(|self, context| [
         Variable =>  { format!("${}", context.structure.variable_name(self).unwrap_or("_")) }
         Type => { self.label().to_owned().encode_as_functor(context) }
-        Comparator =>  { format!("{}", self.symbol()) }
+        Comparator =>  { self.symbol().to_string() }
         ConjunctionID => { context.structure.conjunctions[self.0].encode_as_functor(context) }
         Conjunction => { let Conjunction { constraints, .. } = self; constraints.encode_as_functor(context) }
         ConstraintWithSpan => { self.constraint.encode_as_functor(context) }
@@ -413,7 +415,7 @@ pub mod functor_encoding {
         let preamble = analyzed
             .preamble
             .iter()
-            .map(|(func)| {
+            .map(|func| {
                 let context = FunctorContext { structure: &func.body };
                 func.encode_as_functor(&context)
             })
@@ -431,7 +433,7 @@ pub mod functor_encoding {
         let preamble = analyzed
             .preamble
             .iter()
-            .map(|(func)| {
+            .map(|func| {
                 let context = FunctorContext { structure: &func.body };
                 FunctionAnnotations(func).encode_as_functor(&context)
             })
@@ -480,7 +482,7 @@ pub mod functor_encoding {
     impl<'b> FunctorEncoded for FunctionAnnotations<'b> {
         fn encode_as_functor<'a>(&self, context: &FunctorContext<'a>) -> String {
             let Function { body, argument_annotations, return_annotations, return_operation, ..} = &self.0;
-            let body_annotations = PipelineAnnotations(&body);
+            let body_annotations = PipelineAnnotations(body);
             let return_annotations = if matches!(return_operation, ReturnOperation::Stream { .. }) {
                 encode_functor_impl!(context, Stream { return_annotations,})
             } else {

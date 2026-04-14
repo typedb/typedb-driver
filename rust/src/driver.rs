@@ -24,17 +24,16 @@ use std::{
 };
 
 use itertools::Itertools;
-use tracing::{debug, error, info, trace};
-use tracing_subscriber::{fmt as tracing_fmt, layer::SubscriberExt, util::SubscriberInitExt, EnvFilter};
+use tracing::{debug, error};
 
 use crate::{
+    Credentials, DatabaseManager, DriverOptions, Transaction, TransactionOptions, TransactionType, UserManager,
     common::{
+        Result,
         address::Address,
         error::{ConnectionError, Error},
-        Result,
     },
     connection::{runtime::BackgroundRuntime, server_connection::ServerConnection},
-    Credentials, DatabaseManager, DriverOptions, Transaction, TransactionOptions, TransactionType, UserManager,
 };
 
 /// A connection to a TypeDB server which serves as the starting point for all interaction.
@@ -149,6 +148,7 @@ impl TypeDBDriver {
         Ok(Self { server_connections, database_manager, user_manager, background_runtime })
     }
 
+    #[expect(unused, reason = "automatic discovery is not yet implemented")]
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     async fn fetch_server_list(
         background_runtime: Arc<BackgroundRuntime>,
@@ -240,8 +240,7 @@ impl TypeDBDriver {
         let database = self.database_manager.get_cached_or_fetch(database_name).await?;
         let transaction_stream = database
             .run_failsafe(|database| async move {
-                let res = database.connection().open_transaction(database.name(), transaction_type, options).await;
-                res
+                database.connection().open_transaction(database.name(), transaction_type, options).await
             })
             .await?;
 
@@ -262,8 +261,7 @@ impl TypeDBDriver {
         }
 
         debug!("Closing TypeDB driver connection");
-        let result =
-            self.server_connections.values().map(ServerConnection::force_close).try_collect().map_err(Into::into);
+        let result = self.server_connections.values().map(ServerConnection::force_close).try_collect();
         let close_result = self.background_runtime.force_close().and(result);
 
         match &close_result {
@@ -274,26 +272,24 @@ impl TypeDBDriver {
         close_result
     }
 
+    #[expect(unused, reason = "automatic discovery is not yet implemented")]
     pub(crate) fn server_count(&self) -> usize {
         self.server_connections.len()
     }
 
+    #[expect(unused, reason = "automatic discovery is not yet implemented")]
     pub(crate) fn servers(&self) -> impl Iterator<Item = &Address> {
         self.server_connections.keys()
     }
 
+    #[expect(unused, reason = "automatic discovery is not yet implemented")]
     pub(crate) fn connection(&self, id: &Address) -> Option<&ServerConnection> {
         self.server_connections.get(id)
     }
 
+    #[expect(unused, reason = "automatic discovery is not yet implemented")]
     pub(crate) fn connections(&self) -> impl Iterator<Item = (&Address, &ServerConnection)> + '_ {
         self.server_connections.iter()
-    }
-
-    pub(crate) fn unable_to_connect_error(&self) -> Error {
-        Error::Connection(ConnectionError::ServerConnectionFailed {
-            addresses: self.servers().map(Address::clone).collect_vec(),
-        })
     }
 }
 

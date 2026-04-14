@@ -25,7 +25,7 @@ use serial_test::serial;
 use typedb_driver::{
     Credentials, DriverOptions, TransactionType, TypeDBDriver,
     concept::{
-        Concept, Value, ValueType,
+        Value,
         value::{Decimal, Duration, TimeZone},
     },
 };
@@ -190,13 +190,13 @@ fn duration_display_days() {
 
 #[test]
 fn duration_display_time() {
-    let duration = Duration::new(0, 0, 3661_000_000_000); // 1h 1m 1s
+    let duration = Duration::new(0, 0, Duration::NANOS_PER_HOUR + Duration::NANOS_PER_MINUTE + Duration::NANOS_PER_SEC);
     assert_eq!(format!("{}", duration), "PT1H1M1S");
 }
 
 #[test]
 fn duration_display_nanos() {
-    let duration = Duration::new(0, 0, 1_500_000_000); // 1.5s
+    let duration = Duration::new(0, 0, Duration::NANOS_PER_SEC * 3 / 2); // 1.5s
     assert_eq!(format!("{}", duration), "PT1.500000000S");
 }
 
@@ -225,7 +225,7 @@ fn decimal_display_whole() {
 
 #[test]
 fn decimal_display_fractional() {
-    let decimal = Decimal::new(1234567890, 1234567890_000_000_000);
+    let decimal = Decimal::new(1234567890, 1_234_567_890_000_000_000);
     assert_eq!(format!("{}", decimal), "1234567890.123456789dec");
 }
 
@@ -767,7 +767,7 @@ fn test_duration_via_database() {
 
             assert_eq!(duration.months(), 12000);
             assert_eq!(duration.days(), 31);
-            assert_eq!(duration.nanos(), 89999_999_999_999);
+            assert_eq!(duration.nanos(), 89_999_999_999_999);
         }
 
         cleanup().await;
@@ -798,7 +798,7 @@ fn test_decimal_via_database() {
 
             assert_eq!(decimal.integer_part(), 1234567890);
             // The fractional part is 0001234567890 * 10^7 (to fill 19 digits)
-            assert_eq!(decimal.fractional_part(), 1234567890_000_000);
+            assert_eq!(decimal.fractional_part(), 1_234_567_890_000_000);
         }
 
         // Test: Zero decimal

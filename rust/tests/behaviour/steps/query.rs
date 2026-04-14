@@ -17,26 +17,21 @@
  * under the License.
  */
 
-use std::{collections::VecDeque, ops::Index};
-
-use cucumber::{gherkin::Step, given, then, when};
-use futures::{future::join_all, StreamExt, TryStreamExt};
+use cucumber::gherkin::Step;
+use futures::{StreamExt, future::join_all};
 use itertools::Itertools;
 use macro_rules_attribute::apply;
 use typedb_driver::{
-    answer::{ConceptRow, QueryAnswer, JSON},
+    QueryOptions, Result as TypeDBResult, Transaction,
+    answer::{ConceptRow, QueryAnswer},
     concept::{AttributeType, Concept, ConceptCategory, EntityType, RelationType, Value, ValueType},
     error::ConceptError,
-    QueryOptions, Result as TypeDBResult, Transaction,
 };
 
 use crate::{
-    analyze::functor_encoding::encode_query_structure_as_functor,
-    assert_err, generic_step, params,
+    BehaviourTestOptionalError, Context, generic_step, params,
     params::check_boolean,
-    util,
     util::{iter_table, list_contains_json, parse_json},
-    BehaviourTestOptionalError, Context,
 };
 
 pub(crate) async fn run_query(
@@ -51,7 +46,7 @@ pub(crate) async fn run_query(
 }
 
 fn get_collected_column_names(concept_row: &ConceptRow) -> Vec<String> {
-    concept_row.get_column_names().into_iter().cloned().collect()
+    concept_row.get_column_names().to_vec()
 }
 
 async fn get_answer_rows_var(
@@ -414,9 +409,9 @@ pub async fn answer_get_row_get_variable_as(
     may_error: params::MayError,
 ) {
     let concept = get_answer_rows_var(context, index, is_by_var_index, var).await.unwrap().unwrap();
-    may_error.check((|| {
-        kind.matches_concept(concept).then(|| ()).ok_or(BehaviourTestOptionalError::InvalidConceptConversion)
-    })());
+    let result =
+        if kind.matches_concept(concept) { Ok(()) } else { Err(BehaviourTestOptionalError::InvalidConceptConversion) };
+    may_error.check(result);
 }
 
 #[apply(generic_step)]
@@ -713,7 +708,7 @@ pub async fn answer_get_row_get_variable_try_get_specific_value_is_none(
     var_kind: params::ConceptKind,
     is_by_var_index: params::IsByVarIndex,
     var: params::Var,
-    value_type: params::ValueType,
+    _value_type: params::ValueType,
     is_or_not: params::IsOrNot,
 ) {
     let concept = get_answer_rows_var(context, index, is_by_var_index, var).await.unwrap().unwrap();
@@ -740,7 +735,7 @@ pub async fn answer_get_row_get_variable_get_specific_value(
 ) {
     let concept = get_answer_rows_var(context, index, is_by_var_index, var).await.unwrap().unwrap();
     check_concept_is_kind(concept, var_kind, params::Boolean::True);
-    let actual_value = concept.try_get_value().expect("Value is expected");
+    let _actual_value = concept.try_get_value().expect("Value is expected");
     let expected_value = value.into_typedb(value_type.value_type.clone());
     match value_type.value_type {
         ValueType::Boolean => {

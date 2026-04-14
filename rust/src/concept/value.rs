@@ -310,7 +310,7 @@ impl fmt::Debug for Decimal {
             // count number of tailing 0's that don't have to be represented
             let mut tail_0s = 0;
             let mut fractional = self.fractional;
-            while fractional % 10 == 0 {
+            while fractional.is_multiple_of(10) {
                 tail_0s += 1;
                 fractional /= 10;
             }
@@ -411,11 +411,11 @@ pub struct Duration {
 }
 
 impl Duration {
-    const NANOS_PER_SEC: u64 = 1_000_000_000;
-    const NANOS_PER_MINUTE: u64 = 60 * Self::NANOS_PER_SEC;
-    const NANOS_PER_HOUR: u64 = 60 * 60 * Self::NANOS_PER_SEC;
-    const DAYS_PER_WEEK: u32 = 7;
-    const MONTHS_PER_YEAR: u32 = 12;
+    pub const NANOS_PER_SEC: u64 = 1_000_000_000;
+    pub const NANOS_PER_MINUTE: u64 = 60 * Self::NANOS_PER_SEC;
+    pub const NANOS_PER_HOUR: u64 = 60 * 60 * Self::NANOS_PER_SEC;
+    pub const DAYS_PER_WEEK: u32 = 7;
+    pub const MONTHS_PER_YEAR: u32 = 12;
 
     pub fn new(months: u32, days: u32, nanos: u64) -> Self {
         Self { months, days, nanos }

@@ -17,25 +17,22 @@
  * under the License.
  */
 
-use std::io::Read;
-
-use cucumber::{gherkin::Step, given, then, when};
+use cucumber::gherkin::Step;
 use futures::{
+    TryFutureExt,
     future::{join_all, try_join_all},
-    stream, StreamExt, TryFutureExt,
 };
 use macro_rules_attribute::apply;
 use tokio::time::sleep;
-use typedb_driver::{Database, DatabaseManager, Result as TypeDBResult, TransactionType, TypeDBDriver};
+use typedb_driver::{Database, TransactionType, TypeDBDriver};
 use uuid::Uuid;
 
 use crate::{
-    assert_with_timeout,
+    Context, assert_with_timeout,
     connection::transaction::open_transaction_for_database,
     generic_step, in_oneshot_background, params,
     query::run_query,
     util::{iter_table, read_file_to_string},
-    Context,
 };
 
 async fn create_database(driver: &TypeDBDriver, name: String, may_error: params::MayError) {
