@@ -19,6 +19,7 @@
 
 #![deny(unused_must_use)]
 #![deny(elided_lifetimes_in_paths)]
+#![allow(clippy::too_many_arguments, reason = "too many false positives")]
 
 use std::{
     collections::{HashSet, VecDeque},
