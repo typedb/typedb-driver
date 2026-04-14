@@ -193,6 +193,7 @@ impl Context {
 
     pub async fn after_scenario(&mut self) -> TypeDBResult {
         sleep(Context::STEP_REATTEMPT_SLEEP).await;
+        self.driver_options = None;
         self.operation_server_routing = None;
         self.transaction_options = None;
         self.query_options = None;

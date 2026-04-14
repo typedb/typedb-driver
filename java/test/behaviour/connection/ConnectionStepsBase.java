@@ -128,13 +128,13 @@ public abstract class ConnectionStepsBase {
         if (driver.isOpen()) {
             driver.close();
         }
+        backgroundDriver.close();
+        driverOptions = new DriverOptions(DriverTlsConfig.disabled());
         driver = createDefaultTypeDBDriver();
         driver.users().all().stream().filter(user -> !user.name().equals(ADMIN_USERNAME)).forEach(user -> driver.users().get(user.name()).delete());
         driver.users().get(ADMIN_USERNAME).updatePassword(ADMIN_PASSWORD);
         driver.databases().all().forEach(database -> driver.databases().get(database.name()).delete());
         driver.close();
-        backgroundDriver.close();
-        driverOptions = new DriverOptions(DriverTlsConfig.disabled());
     }
 
     void cleanupTransactions() {

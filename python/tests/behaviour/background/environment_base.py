@@ -80,6 +80,7 @@ def after_scenario(context: Context, scenario):
     if context.background_driver and context.background_driver.is_open():
         context.background_driver.close()
 
+    context.driver_options = DriverOptions(context.driver_options.tls_config)
     context.setup_context_driver_fn()
     for database in context.driver.databases.all():
         database.delete()

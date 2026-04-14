@@ -62,9 +62,9 @@ def step_impl(context: Context):
     pass
 
 
-@step(u'connection opens with default authentication')
-def step_impl(context: Context):
-    context.setup_context_driver_fn()
+@step(u'connection opens with default authentication{may_error:MayError}')
+def step_impl(context: Context, may_error: MayError):
+    may_error.check(lambda: context.setup_context_driver_fn())
 
 
 @step(u'connection opens to single server with default authentication')
