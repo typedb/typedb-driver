@@ -26,7 +26,7 @@ mod transaction;
 mod user;
 
 #[apply(generic_step)]
-#[step("typedb starts")]
+#[step(expr = "typedb starts")]
 async fn typedb_starts(_: &mut Context) {}
 
 #[apply(generic_step)]
