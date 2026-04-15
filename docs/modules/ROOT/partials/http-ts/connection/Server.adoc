@@ -2,7 +2,7 @@
 [.doc-api-reference-driver]
 === Server
 
-`class`
+`interface`
 
 [caption=""]
 .Fields
@@ -11,9 +11,38 @@
 [options="header"]
 |===
 |Name |Type |Description
-a| `address` a| `string` a| 
-a| `isPrimary` a| `boolean` a| 
-a| `term` a| `number` a| 
+a| `address` a| `string \| null` a|
+a| `replicaStatus` a| `<<_ReplicaStatus,ReplicaStatus>> \| null` a|
 |===
 // end::properties[]
+
+[#_ReplicaStatus]
+[.doc-api-reference-driver]
+=== ReplicaStatus
+
+`interface`
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `replicaId` a| `number` a|
+a| `replicaRole` a| `<<_ReplicaRole,ReplicaRole>> \| null` a|
+a| `term` a| `number \| null` a|
+|===
+// end::properties[]
+
+[#_ReplicaRole]
+[.doc-api-reference-driver]
+=== ReplicaRole
+
+`type`
+
+[source,typescript]
+----
+type ReplicaRole = "primary" | "candidate" | "secondary";
+----
 
