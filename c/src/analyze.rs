@@ -20,24 +20,24 @@
 use std::{ffi::c_char, ptr::addr_of_mut};
 
 use typedb_driver::{
+    BoxPromise, Promise,
     analyze::{
+        AnalyzedQuery, Fetch, Function, ReturnOperation, TypeAnnotations, VariableAnnotations,
         conjunction::{
             Comparator, Conjunction, ConjunctionID, Constraint, ConstraintExactness, ConstraintVertex,
             ConstraintWithSpan, NamedRole, Variable,
         },
         pipeline::{Pipeline, PipelineStage, ReduceAssignment, Reducer, SortOrder, SortVariable},
-        AnalyzedQuery, Fetch, Function, ReturnOperation, TypeAnnotations, VariableAnnotations,
     },
     box_stream,
-    concept::{type_::Type, Concept, Kind},
-    BoxPromise, Promise,
+    concept::{Concept, Kind, type_::Type},
 };
 
 use crate::{
     common::StringIterator,
     concept::ConceptIterator,
     error::try_release,
-    iterator::{iterator_next, CIterator},
+    iterator::{CIterator, iterator_next},
     memory::{
         borrow, free, release, release_optional, release_optional_string, release_string, string_view, take_ownership,
     },

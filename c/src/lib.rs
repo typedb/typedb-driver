@@ -34,7 +34,7 @@ mod transaction_options;
 mod user;
 mod user_manager;
 
-use tracing_subscriber::{filter::LevelFilter, fmt, layer::SubscriberExt, util::SubscriberInitExt, EnvFilter};
+use tracing_subscriber::{EnvFilter, filter::LevelFilter, fmt, layer::SubscriberExt, util::SubscriberInitExt};
 
 /// Enables logging in the TypeDB driver.
 ///

@@ -23,8 +23,8 @@ use chrono::{DateTime, NaiveTime, TimeZone as ChronoTimeZone};
 use typedb_driver::{
     box_stream,
     concept::{
-        value::{Decimal, Duration, TimeZone},
         Attribute, Concept, Entity, Relation, Value,
+        value::{Decimal, Duration, TimeZone},
     },
 };
 
@@ -121,7 +121,7 @@ pub struct StringAndOptValueIterator(pub CIterator<StringAndOptValue>);
 /// or null if there are no more elements.
 #[unsafe(no_mangle)]
 pub extern "C" fn string_and_opt_value_iterator_next(it: *mut StringAndOptValueIterator) -> *mut StringAndOptValue {
-    release_optional(borrow_mut(it).0 .0.next())
+    release_optional(borrow_mut(it).0.0.next())
 }
 
 /// Frees the native rust <code>StringAndOptValueIterator</code> object

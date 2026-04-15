@@ -19,7 +19,7 @@
 
 use std::ptr::addr_of_mut;
 
-use typedb_driver::{answer::ConceptRow, concept::Concept, BoxPromise, Promise, Result};
+use typedb_driver::{BoxPromise, Promise, Result, answer::ConceptRow, concept::Concept};
 
 use super::{iterator::iterator_try_next, memory::free};
 use crate::{error::try_release_optional, iterator::CIterator, memory::take_ownership};

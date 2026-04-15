@@ -19,11 +19,11 @@
 
 use std::{ffi::c_char, ptr::addr_of_mut};
 
-use typedb_driver::{box_stream, TypeDBDriver, User};
+use typedb_driver::{TypeDBDriver, User, box_stream};
 
 use super::{
     error::{try_release, try_release_optional, unwrap_or_default, unwrap_void},
-    iterator::{iterator_next, CIterator},
+    iterator::{CIterator, iterator_next},
     memory::{borrow, free, string_view},
 };
 

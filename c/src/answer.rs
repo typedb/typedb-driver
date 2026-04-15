@@ -20,11 +20,11 @@
 use std::ffi::c_char;
 
 use typedb_driver::{
+    BoxPromise, Promise, Result,
     analyze::pipeline::Pipeline,
     answer::{ConceptRow, QueryAnswer, QueryType},
     box_stream,
     concept::Concept,
-    BoxPromise, Promise, Result,
 };
 
 use super::{
