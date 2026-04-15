@@ -32,7 +32,7 @@ def rust_behaviour_test(name, srcs, data, deps=[], crate_features=[], **kwargs):
         name = name,
         srcs = srcs,
         data = data,
-        deps = behaviour_test_deps + [] + deps,
+        deps = behaviour_test_deps + deps,
         crate_features = crate_features_common + crate_features,
         **kwargs,
     )
