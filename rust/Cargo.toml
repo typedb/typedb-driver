@@ -26,9 +26,6 @@
 	[dev-dependencies.regex]
 		workspace = true
 
-	[dev-dependencies.cucumber]
-		workspace = true
-
 	[dev-dependencies.config]
 		workspace = true
 

@@ -24,7 +24,6 @@ rust_behaviour_test(
     name = "test_database",
     srcs = ["database.rs"],
     data = ["@typedb_behaviour//connection:database.feature"],
-    deps = ["@crates//:cucumber"],
 )
 
 rust_behaviour_test(
