@@ -27,7 +27,7 @@ mod user;
 
 #[apply(generic_step)]
 #[step("typedb starts")]
-async fn typedb_starts(_: &mut Context) {}
+pub async fn typedb_starts(_: &mut Context) {}
 
 #[apply(generic_step)]
 #[step("connection opens with default authentication")]
