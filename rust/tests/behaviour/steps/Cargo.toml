@@ -11,6 +11,7 @@ features = {}
 
 [lib]
 	path = "lib.rs"
+	crate-type = ["lib"]
 
 [dependencies]
 

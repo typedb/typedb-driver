@@ -11,6 +11,7 @@ features = {}
 
 [lib]
 	path = "src/lib.rs"
+	crate-type = ["staticlib", "cdylib"]
 
 [dependencies]
 

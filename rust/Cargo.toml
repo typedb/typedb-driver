@@ -13,6 +13,7 @@
 
 [lib]
 	path = "src/lib.rs"
+	crate-type = ["lib"]
 
 [dev-dependencies]
 
@@ -85,9 +86,6 @@
 		workspace = true
 
 	[dependencies.tonic]
-		workspace = true
-
-	[dependencies.typedb-driver]
 		workspace = true
 
 	[dependencies.chrono]
