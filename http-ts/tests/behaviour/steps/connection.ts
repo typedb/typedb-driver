@@ -80,7 +80,7 @@ Then("connection has {int} server(s)", async (expectedCount: number) => {
 
 Then("connection primary server exists", async () => {
     const servers = await getServers();
-    const primary = servers.find(s => s.isPrimary);
+    const primary = servers.find(s => s.replicaStatus?.replicaRole === "primary");
     assert.ok(primary, "No primary server found");
 });
 
@@ -100,7 +100,7 @@ Then("connection get server\\({word}) has term", async (address: string) => {
     const servers = await getServers();
     const server = servers.find(s => s.address === address);
     assert.ok(server, `Replica with address ${address} not found`);
-    assert.ok(typeof server.term === 'number', `Replica ${address} has no term`);
+    assert.ok(typeof server.replicaStatus?.term === 'number', `Replica ${address} has no term`);
 });
 
 Then("connection servers have roles:", async (dataTable: DataTable) => {
@@ -113,7 +113,8 @@ Then("connection servers have roles:", async (dataTable: DataTable) => {
 
         const server = servers.find(s => s.address === expectedAddress);
         assert.ok(server, `Replica with address ${expectedAddress} not found`);
-        assert.equal(server.isPrimary, expectedIsPrimary,
-            `Replica ${expectedAddress} isPrimary: expected ${expectedIsPrimary}, got ${server.isPrimary}`);
+        const isPrimary = server.replicaStatus?.replicaRole === "primary";
+        assert.equal(isPrimary, expectedIsPrimary,
+            `Replica ${expectedAddress} isPrimary: expected ${expectedIsPrimary}, got ${isPrimary}`);
     }
 });
