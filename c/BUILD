@@ -59,6 +59,7 @@ cc_import(
     static_library = ":_typedb_driver_clib",
     linkopts = select({
         "@typedb_bazel_distribution//platform:is_mac": ["-framework", "Security"],
+        "@typedb_bazel_distribution//platform:is_linux": ["-ldl"],
         "//conditions:default": [],
     }),
 )
