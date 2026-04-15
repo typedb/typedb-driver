@@ -29,6 +29,13 @@ bazel_dep(name = "rules_java", version = "8.6.2")
 bazel_dep(name = "rules_jvm_external", version = "6.6")
 bazel_dep(name = "rules_python", version = "1.0.0")
 bazel_dep(name = "rules_rust", version = "0.56.0")
+git_override(
+    module_name = "rules_rust",
+    remote = "https://github.com/bazelbuild/rules_rust",
+    tag = "0.56.0",
+    patches = ["@typedb_dependencies//patches:rules_rust.patch"],
+)
+
 bazel_dep(name = "rules_kotlin", version = "2.0.0", repo_name = "io_bazel_rules_kotlin")
 bazel_dep(name = "rules_pkg", version = "1.0.1")
 bazel_dep(name = "rules_proto", version = "7.1.0")
@@ -52,7 +59,7 @@ bazel_dep(name = "typedb_dependencies", version = "0.0.0")
 git_override(
     module_name = "typedb_dependencies",
     remote = "https://github.com/typedb/dependencies",
-    commit = "c3a95df730dd526abb9b9e6bd149ba676c721e0b",
+    commit = "432e565e9b75a252d9eee044b45af7c7e5abdc7e",
 )
 
 bazel_dep(name = "typedb_bazel_distribution", version = "0.0.0")
