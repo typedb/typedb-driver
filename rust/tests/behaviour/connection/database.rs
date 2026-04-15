@@ -21,6 +21,9 @@ use config::is_cluster;
 use serial_test::serial;
 use steps::Context;
 
+#[::cucumber::given("typedb starts")]
+async fn typedb_starts(_: &mut Context) {}
+
 #[tokio::test]
 #[serial]
 async fn test() {
