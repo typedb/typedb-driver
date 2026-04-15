@@ -2835,6 +2835,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "typedb_driver_clib"
+version = "0.0.0"
+dependencies = [
+ "chrono",
+ "itertools 0.10.5",
+ "tracing",
+ "tracing-subscriber",
+ "typedb-driver",
+]
+
+[[package]]
 name = "uncased"
 version = "0.9.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
