@@ -28,14 +28,6 @@ bazel_dep(name = "rules_cc", version = "0.0.17")
 bazel_dep(name = "rules_java", version = "8.6.2")
 bazel_dep(name = "rules_jvm_external", version = "6.6")
 bazel_dep(name = "rules_python", version = "1.0.0")
-bazel_dep(name = "rules_rust", version = "0.56.0")
-git_override(
-    module_name = "rules_rust",
-    remote = "https://github.com/bazelbuild/rules_rust",
-    tag = "0.56.0",
-    patches = ["@typedb_dependencies//patches:rules_rust.patch"],
-)
-
 bazel_dep(name = "rules_kotlin", version = "2.0.0", repo_name = "io_bazel_rules_kotlin")
 bazel_dep(name = "rules_pkg", version = "1.0.1")
 bazel_dep(name = "rules_proto", version = "7.1.0")
@@ -81,6 +73,15 @@ git_override(
     module_name = "typedb_behaviour",
     remote = "https://github.com/typedb/typedb-behaviour",
     commit = "bc1e71c9334272178104f657b0996d9f15be66c9",
+)
+
+# Rust rules need typedb_dependencies for patching
+bazel_dep(name = "rules_rust", version = "0.56.0")
+git_override(
+    module_name = "rules_rust",
+    remote = "https://github.com/bazelbuild/rules_rust",
+    tag = "0.56.0",
+    patches = ["@typedb_dependencies//patches:rules_rust.patch"],
 )
 
 # Python multi-version toolchains (3.9-3.13)
