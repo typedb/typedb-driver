@@ -412,7 +412,11 @@ pub struct Duration {
 
 impl Duration {
     pub const NANOS_PER_SEC: u64 = 1_000_000_000;
+    #[doc(hidden)]
+    /// cbindgen:ignore
     pub const NANOS_PER_MINUTE: u64 = 60 * Self::NANOS_PER_SEC;
+    #[doc(hidden)]
+    /// cbindgen:ignore
     pub const NANOS_PER_HOUR: u64 = 60 * 60 * Self::NANOS_PER_SEC;
     pub const DAYS_PER_WEEK: u32 = 7;
     pub const MONTHS_PER_YEAR: u32 = 12;
