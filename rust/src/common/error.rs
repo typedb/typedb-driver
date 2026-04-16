@@ -149,61 +149,61 @@ error_messages! { ConnectionError
     UnexpectedResponse { response: String } =
         11: "Received unexpected response from server: '{response}'. This is either a version compatibility issue or a bug.",
     QueryStreamNoResponse =
-        13: "Didn't receive any server responses for the query.",
+        12: "Didn't receive any server responses for the query.",
     UnexpectedQueryType { query_type: i32 } =
-        14: "Unexpected query type in message received from server: {query_type}. This is either a version compatibility issue or a bug.",
+        13: "Unexpected query type in message received from server: {query_type}. This is either a version compatibility issue or a bug.",
     ClusterServerNotPrimary =
-        15: "The server is not primary.",
+        14: "The server is not primary.",
     UnknownDirectServerRouting { address: Address, known_addresses: Addresses } =
-        16: "Could not execute operation against '{address}' since it's not in the list of known servers: {known_addresses}.",
+        15: "Could not execute operation against '{address}' since it's not in the list of known servers: {known_addresses}.",
     TokenCredentialInvalid =
-        17: "Invalid credential supplied.",
+        16: "Invalid credential supplied.",
     EncryptionSettingsMismatch =
-        18: "Unable to connect to TypeDB: possible encryption settings mismatch.",
+        17: "Unable to connect to TypeDB: possible encryption settings mismatch.",
     SslCertificateNotValidated =
-        19: "SSL handshake with TypeDB failed: the server's identity could not be verified. Possible CA mismatch.",
+        18: "SSL handshake with TypeDB failed: the server's identity could not be verified. Possible CA mismatch.",
     BrokenPipe =
-        20: "Stream closed because of a broken pipe. This could happen if you are attempting to connect to an unencrypted TypeDB server using a TLS-enabled credentials.",
+        19: "Stream closed because of a broken pipe. This could happen if you are attempting to connect to an unencrypted TypeDB server using a TLS-enabled credentials.",
     ConnectionRefusedNetworking =
-        21: "Connection refused. Please check the server is running and the address is accessible. Encrypted TypeDB endpoints may also have misconfigured SSL certificates.",
+        20: "Connection refused. Please check the server is running and the address is accessible. Encrypted TypeDB endpoints may also have misconfigured SSL certificates.",
     MissingPort { address: String } =
-        22: "Invalid URL '{address}': missing port.",
+        21: "Invalid URL '{address}': missing port.",
     UnexpectedServerReplicationRole { replication_role: i32 } =
-        23: "Unexpected replication role in message received from server: {replication_role}. This is either a version compatibility issue or a bug.",
+        22: "Unexpected replication role in message received from server: {replication_role}. This is either a version compatibility issue or a bug.",
     ValueTimeZoneNameNotRecognised { time_zone: String } =
-        24: "Time zone provided by the server has name '{time_zone}', which is not an officially recognized timezone.",
+        23: "Time zone provided by the server has name '{time_zone}', which is not an officially recognized timezone.",
     ValueTimeZoneOffsetNotRecognised { offset: i32 } =
-        25: "Time zone provided by the server has numerical offset '{offset}', which is not recognised as a valid value for offset in seconds.",
+        24: "Time zone provided by the server has numerical offset '{offset}', which is not recognised as a valid value for offset in seconds.",
     ValueStructNotImplemented =
-        26: "Struct valued responses are not yet supported by the driver.",
+        25: "Struct valued responses are not yet supported by the driver.",
     ListsNotImplemented =
-        27: "Lists are not yet supported by the driver.",
+        26: "Lists are not yet supported by the driver.",
     UnexpectedKind { kind: i32 } =
-        28: "Unexpected kind in message received from server: {kind}. This is either a version compatibility issue or a bug.",
+        27: "Unexpected kind in message received from server: {kind}. This is either a version compatibility issue or a bug.",
     UnexpectedConnectionClose =
-        29: "Connection closed unexpectedly.",
+        28: "Connection closed unexpectedly.",
     DatabaseImportChannelIsClosed =
-        30: "The database import channel is closed and no further operation is allowed.",
+        29: "The database import channel is closed and no further operation is allowed.",
     DatabaseImportStreamUnexpectedResponse =
-        31: "The database import stream received an unexpected response in the process. It is either a version compatibility issue or a bug.",
+        30: "The database import stream received an unexpected response in the process. It is either a version compatibility issue or a bug.",
     DatabaseExportChannelIsClosed =
-        32: "The database export channel is closed and no further operation is allowed.",
+        31: "The database export channel is closed and no further operation is allowed.",
     DatabaseExportStreamNoResponse =
-        33: "Didn't receive any server responses for the database export command.",
+        32: "Didn't receive any server responses for the database export command.",
     AbsentTlsConfigForTlsConnection =
-        34: "Could not establish a TLS connection without a TLS config specified. Please verify your driver options.",
+        33: "Could not establish a TLS connection without a TLS config specified. Please verify your driver options.",
     ServerIsNotInitialised =
-        35: "Server is not yet initialized.",
+        34: "Server is not yet initialized.",
     AnalyzeNoResponse =
-        36: "Didn't receive any server responses for the analyze request.",
+        35: "Didn't receive any server responses for the analyze request.",
     NotPrimaryOnReadOnly { address: Address } =
-        37: "Could not execute a readonly operation on a non-primary server '{address}'.",
+        36: "Could not execute a readonly operation on a non-primary server '{address}'.",
     NoPrimaryServer =
-        38: "Could not find a primary server.",
+        37: "Could not find a primary server.",
     SchemeTlsSettingsMismatch { scheme: http::uri::Scheme, is_tls_enabled: bool } =
-        39: "Scheme {scheme} is not compatible with tls setting `enabled: {is_tls_enabled}`",
+        38: "Scheme {scheme} is not compatible with tls setting `enabled: {is_tls_enabled}`",
     RequestTimeout { timeout: String } =
-        40: "Request timed out after {timeout}. The server may be unresponsive.",
+        39: "Request timed out after {timeout}. The server may be unresponsive.",
 }
 
 impl ConnectionError {
