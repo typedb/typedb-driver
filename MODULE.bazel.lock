@@ -11482,8 +11482,8 @@
     },
     "@@typedb_dependencies+//distribution/artifact:rules.bzl%native_artifact_files": {
       "general": {
-        "bzlTransitiveDigest": "k03qoYxEvRfyBTU10EQxhGJI1EoNPAWe8+UTCpR/Gak=",
-        "usagesDigest": "bKWbBJIL1RyrcQTg0rGN6zM3+q2fFxZ5QA/04xFGTcU=",
+        "bzlTransitiveDigest": "G2tVfxi6pNMPwxLud5h67xKrwcp4+6MJIFRhSA7KBWo=",
+        "usagesDigest": "NHfAN1a+yr81kEpTcf7LxrfVxu2eR72s8dzJ65MEwIE=",
         "recordedFileInputs": {},
         "recordedDirentsInputs": {},
         "envVariables": {},
@@ -11492,45 +11492,45 @@
             "repoRuleId": "@@bazel_tools//tools/build_defs/repo:http.bzl%http_file",
             "attributes": {
               "urls": [
-                "https://repo.typedb.com/public/public-release/raw/names/typedb-all-linux-arm64/versions/3.8.3/typedb-all-linux-arm64-3.8.3.tar.gz"
+                "https://repo.typedb.com/public/public-snapshot/raw/names/typedb-all-linux-arm64/versions/43498326502fb6abf67e0ef5b089bd350f241cdb/typedb-all-linux-arm64-43498326502fb6abf67e0ef5b089bd350f241cdb.tar.gz"
               ],
-              "downloaded_file_path": "typedb-all-linux-arm64-3.8.3.tar.gz"
+              "downloaded_file_path": "typedb-all-linux-arm64-43498326502fb6abf67e0ef5b089bd350f241cdb.tar.gz"
             }
           },
           "typedb_artifact_linux-x86_64": {
             "repoRuleId": "@@bazel_tools//tools/build_defs/repo:http.bzl%http_file",
             "attributes": {
               "urls": [
-                "https://repo.typedb.com/public/public-release/raw/names/typedb-all-linux-x86_64/versions/3.8.3/typedb-all-linux-x86_64-3.8.3.tar.gz"
+                "https://repo.typedb.com/public/public-snapshot/raw/names/typedb-all-linux-x86_64/versions/43498326502fb6abf67e0ef5b089bd350f241cdb/typedb-all-linux-x86_64-43498326502fb6abf67e0ef5b089bd350f241cdb.tar.gz"
               ],
-              "downloaded_file_path": "typedb-all-linux-x86_64-3.8.3.tar.gz"
+              "downloaded_file_path": "typedb-all-linux-x86_64-43498326502fb6abf67e0ef5b089bd350f241cdb.tar.gz"
             }
           },
           "typedb_artifact_mac-arm64": {
             "repoRuleId": "@@bazel_tools//tools/build_defs/repo:http.bzl%http_file",
             "attributes": {
               "urls": [
-                "https://repo.typedb.com/public/public-release/raw/names/typedb-all-mac-arm64/versions/3.8.3/typedb-all-mac-arm64-3.8.3.zip"
+                "https://repo.typedb.com/public/public-snapshot/raw/names/typedb-all-mac-arm64/versions/43498326502fb6abf67e0ef5b089bd350f241cdb/typedb-all-mac-arm64-43498326502fb6abf67e0ef5b089bd350f241cdb.zip"
               ],
-              "downloaded_file_path": "typedb-all-mac-arm64-3.8.3.zip"
+              "downloaded_file_path": "typedb-all-mac-arm64-43498326502fb6abf67e0ef5b089bd350f241cdb.zip"
             }
           },
           "typedb_artifact_mac-x86_64": {
             "repoRuleId": "@@bazel_tools//tools/build_defs/repo:http.bzl%http_file",
             "attributes": {
               "urls": [
-                "https://repo.typedb.com/public/public-release/raw/names/typedb-all-mac-x86_64/versions/3.8.3/typedb-all-mac-x86_64-3.8.3.zip"
+                "https://repo.typedb.com/public/public-snapshot/raw/names/typedb-all-mac-x86_64/versions/43498326502fb6abf67e0ef5b089bd350f241cdb/typedb-all-mac-x86_64-43498326502fb6abf67e0ef5b089bd350f241cdb.zip"
               ],
-              "downloaded_file_path": "typedb-all-mac-x86_64-3.8.3.zip"
+              "downloaded_file_path": "typedb-all-mac-x86_64-43498326502fb6abf67e0ef5b089bd350f241cdb.zip"
             }
           },
           "typedb_artifact_windows-x86_64": {
             "repoRuleId": "@@bazel_tools//tools/build_defs/repo:http.bzl%http_file",
             "attributes": {
               "urls": [
-                "https://repo.typedb.com/public/public-release/raw/names/typedb-all-windows-x86_64/versions/3.8.3/typedb-all-windows-x86_64-3.8.3.zip"
+                "https://repo.typedb.com/public/public-snapshot/raw/names/typedb-all-windows-x86_64/versions/43498326502fb6abf67e0ef5b089bd350f241cdb/typedb-all-windows-x86_64-43498326502fb6abf67e0ef5b089bd350f241cdb.zip"
               ],
-              "downloaded_file_path": "typedb-all-windows-x86_64-3.8.3.zip"
+              "downloaded_file_path": "typedb-all-windows-x86_64-43498326502fb6abf67e0ef5b089bd350f241cdb.zip"
             }
           }
         },
