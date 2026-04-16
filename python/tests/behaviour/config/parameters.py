@@ -257,7 +257,7 @@ def parse_may_error(value: str) -> MayError:
     else:
         match = re.match(r'; fails with a message containing: "(?P<message>.*)"', value)
         if match:
-            return MayError(True, re.escape(match.group("message")))
+            return MayError(True, re.escape(match.group("message").replace(r'\"', '"')))
         else:
             raise ValueError(f"Unrecognised MayError: {value}")
 
