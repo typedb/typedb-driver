@@ -19,9 +19,3 @@
 set -e
 
 kill $(ps aux | awk '/typedb[_server_bin]/ {print $2}')
-
-#procs=$(ps aux | awk '/TypeDBCloudServe[r]/ {print $2}' | paste -sd " " -)
-#echo $procs
-#if [ -n "$procs" ]; then
-#    kill $procs
-#fi
