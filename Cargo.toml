@@ -12,7 +12,7 @@
 
 		[workspace.dependencies.cucumber]
 			features = ["default", "macros"]
-			version = "0.22.1"
+			version = "0.19.1"
 			default-features = false
 
 		[workspace.dependencies.tracing-subscriber]
