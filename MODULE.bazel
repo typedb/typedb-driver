@@ -206,7 +206,6 @@ native_artifact_files.artifact(
     group_name = "typedb-all-{platform}",
     artifact_name = "typedb-all-{platform}-{version}.{ext}",
     commit = "43498326502fb6abf67e0ef5b089bd350f241cdb",
-    tag = None,
 )
 use_repo(
     native_artifact_files,
