@@ -326,7 +326,7 @@ impl FromStr for MayError {
         } else if let Some(message) =
             s.strip_prefix("; fails with a message containing: \"").and_then(|suffix| suffix.strip_suffix("\""))
         {
-            Ok(MayError::True(Some(message.to_string())))
+            Ok(MayError::True(Some(message.replace(r#"\""#, r#"""#))))
         } else {
             Err(format!("Invalid `MayError`: {}", s))
         }
