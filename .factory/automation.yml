@@ -122,6 +122,7 @@ build:
       command: |
         export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
         export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
+        bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
 
         tool/test/start-community-server.sh &&
