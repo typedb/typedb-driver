@@ -19,11 +19,10 @@
 
 use std::{collections::HashSet, error::Error as StdError, fmt};
 
-use itertools::Itertools;
 use tonic::{Code, Status};
 use tonic_types::StatusExt;
 
-use super::{address::Address, RequestID};
+use super::{RequestID, address::Address};
 
 macro_rules! error_messages {
     {
@@ -262,19 +261,15 @@ impl ServerError {
     pub(crate) fn message(&self) -> String {
         self.to_string()
     }
-
-    fn to_string(&self) -> String {
-        if self.stack_trace.is_empty() {
-            format!("[{}] {}. {}", self.error_code, self.error_domain, self.message)
-        } else {
-            format!("\n{}", self.stack_trace.join("\nCaused: "))
-        }
-    }
 }
 
 impl fmt::Display for ServerError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}", self.to_string())
+        if self.stack_trace.is_empty() {
+            write!(f, "[{}] {}. {}", self.error_code, self.error_domain, self.message)
+        } else {
+            write!(f, "\n{}", self.stack_trace.join("\nCaused: "))
+        }
     }
 }
 
@@ -321,7 +316,7 @@ impl Error {
         }
     }
 
-    fn try_extracting_connection_error(status: &Status, code: &str) -> Option<ConnectionError> {
+    fn try_extracting_connection_error(_status: &Status, code: &str) -> Option<ConnectionError> {
         // TODO: We should probably catch more connection errors instead of wrapping them into
         // ServerErrors. However, the most valuable information even for connection is inside
         // stacktraces now.

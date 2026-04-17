@@ -17,10 +17,9 @@
  * under the License.
  */
 
-use cucumber::{given, then, when};
 use macro_rules_attribute::apply;
 
-use crate::{assert_with_timeout, generic_step, params, params::check_boolean, Context};
+use crate::{Context, generic_step, params, params::check_boolean};
 
 mod database;
 mod transaction;
@@ -75,8 +74,7 @@ async fn connection_opens_with_a_wrong_host(context: &mut Context, may_error: pa
                 .await
         }
         true => {
-            let updated_address =
-                change_host(Context::DEFAULT_CLUSTER_ADDRESSES.get(0).unwrap(), "surely-not-localhost");
+            let updated_address = change_host(Context::DEFAULT_CLUSTER_ADDRESSES[0], "surely-not-localhost");
             context.create_driver_cluster(&[&updated_address], Context::ADMIN_USERNAME, Context::ADMIN_PASSWORD).await
         }
     });
@@ -96,7 +94,7 @@ async fn connection_opens_with_a_wrong_port(context: &mut Context, may_error: pa
                 .await
         }
         true => {
-            let updated_address = change_port(Context::DEFAULT_CLUSTER_ADDRESSES.get(0).unwrap(), "0");
+            let updated_address = change_port(Context::DEFAULT_CLUSTER_ADDRESSES[0], "0");
             context.create_driver_cluster(&[&updated_address], Context::ADMIN_USERNAME, Context::ADMIN_PASSWORD).await
         }
     });

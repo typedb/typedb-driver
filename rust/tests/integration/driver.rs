@@ -18,8 +18,8 @@
  */
 
 use std::sync::{
-    atomic::{AtomicBool, Ordering},
     Arc,
+    atomic::{AtomicBool, Ordering},
 };
 
 use serial_test::serial;
@@ -60,13 +60,12 @@ fn transaction_on_close_callback() {
         transaction
             .on_close(Box::new({
                 let clone = close_called.clone();
-                move |error| {
-                    clone.store(true, Ordering::SeqCst);
-                }
+                move |_| clone.store(true, Ordering::SeqCst)
             }))
-            .await;
+            .await
+            .unwrap();
 
-        transaction.close().await;
+        transaction.close().await.unwrap();
         drop(transaction);
 
         while !close_called.load(Ordering::Acquire) {

@@ -34,7 +34,7 @@ mod transaction_options;
 mod user;
 mod user_manager;
 
-use tracing_subscriber::{filter::LevelFilter, fmt, layer::SubscriberExt, util::SubscriberInitExt, EnvFilter};
+use tracing_subscriber::{EnvFilter, filter::LevelFilter, fmt, layer::SubscriberExt, util::SubscriberInitExt};
 
 /// Enables logging in the TypeDB driver.
 ///
@@ -51,7 +51,7 @@ use tracing_subscriber::{filter::LevelFilter, fmt, layer::SubscriberExt, util::S
 ///
 /// The logging is initialized only once to prevent multiple initializations
 /// in applications that create multiple drivers.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn init_logging() {
     const ENV_TYPEDB_DRIVER_LOG: &str = "TYPEDB_DRIVER_LOG";
     const ENV_TYPEDB_DRIVER_LOG_LEVEL: &str = "TYPEDB_DRIVER_LOG_LEVEL";

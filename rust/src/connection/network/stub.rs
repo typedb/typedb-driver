@@ -19,11 +19,11 @@
 
 use std::sync::Arc;
 
-use futures::{future::BoxFuture, FutureExt, TryFutureExt};
-use tokio::sync::mpsc::{unbounded_channel as unbounded_async, UnboundedSender};
+use futures::{FutureExt, TryFutureExt, future::BoxFuture};
+use tokio::sync::mpsc::{UnboundedSender, unbounded_channel as unbounded_async};
 use tokio_stream::wrappers::UnboundedReceiverStream;
 use tonic::{Response, Status, Streaming};
-use tracing::{debug, trace};
+use tracing::debug;
 use typedb_protocol::{
     connection, database, database_manager, migration, server_manager, transaction,
     type_db_client::TypeDbClient as GRPC, user, user_manager,
@@ -31,7 +31,7 @@ use typedb_protocol::{
 
 use super::channel::{CallCredentials, GRPCChannel};
 use crate::{
-    common::{error::ConnectionError, Error, Result, StdResult},
+    common::{Error, Result, StdResult, error::ConnectionError},
     connection::network::proto::TryIntoProto,
 };
 
@@ -83,24 +83,24 @@ impl<Channel: GRPCChannel> RPCStub<Channel> {
 
     pub(super) async fn connection_open(&mut self, req: connection::open::Req) -> Result<connection::open::Res> {
         let result = self.single(|this| Box::pin(this.grpc.connection_open(req.clone()))).await;
-        if let Ok(response) = &result {
-            if let Some(call_credentials) = &self.call_credentials {
-                call_credentials
-                    .set_token(response.authentication.as_ref().expect("Expected authentication token").token.clone());
-            }
+        if let Ok(response) = &result
+            && let Some(call_credentials) = &self.call_credentials
+        {
+            call_credentials
+                .set_token(response.authentication.as_ref().expect("Expected authentication token").token.clone());
         }
         result
     }
 
     pub(super) async fn servers_all(&mut self, req: server_manager::all::Req) -> Result<server_manager::all::Res> {
-        self.single(|this| Box::pin(this.grpc.servers_all(req.clone()))).await
+        self.single(|this| Box::pin(this.grpc.servers_all(req))).await
     }
 
     pub(super) async fn databases_all(
         &mut self,
         req: database_manager::all::Req,
     ) -> Result<database_manager::all::Res> {
-        self.single(|this| Box::pin(this.grpc.databases_all(req.clone()))).await
+        self.single(|this| Box::pin(this.grpc.databases_all(req))).await
     }
 
     pub(super) async fn databases_get(
@@ -185,7 +185,7 @@ impl<Channel: GRPCChannel> RPCStub<Channel> {
     }
 
     pub(super) async fn users_all(&mut self, req: user_manager::all::Req) -> Result<user_manager::all::Res> {
-        self.single(|this| Box::pin(this.grpc.users_all(req.clone()))).await
+        self.single(|this| Box::pin(this.grpc.users_all(req))).await
     }
 
     pub(super) async fn users_get(&mut self, req: user_manager::get::Req) -> Result<user_manager::get::Res> {

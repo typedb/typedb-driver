@@ -27,14 +27,14 @@ use super::{
 };
 use crate::memory::release;
 
-const DRIVER_LANG: &'static str = "c";
+const DRIVER_LANG: &str = "c";
 
 /// Open a TypeDB C Driver to a TypeDB server available at the provided address.
 ///
 /// @param address The address (host:port) on which the TypeDB Server is running
 /// @param credentials The <code>Credentials</code> to connect with
 /// @param driver_options The <code>DriverOptions</code> to connect with
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn driver_open(
     address: *const c_char,
     credentials: *const Credentials,
@@ -55,7 +55,7 @@ pub extern "C" fn driver_open(
 /// @param credentials The <code>Credentials</code> to connect with
 /// @param driver_options The <code>DriverOptions</code> to connect with
 /// @param driver_lang The language of the driver connecting to the server
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn driver_open_with_description(
     address: *const c_char,
     credentials: *const Credentials,
@@ -72,19 +72,19 @@ pub extern "C" fn driver_open_with_description(
 
 /// Closes the driver. Before instantiating a new driver, the driver that's currently open should first be closed.
 /// Closing a driver frees the underlying Rust object.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn driver_close(driver: *mut TypeDBDriver) {
     free(driver);
 }
 
 /// Checks whether this connection is presently open.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn driver_is_open(driver: *const TypeDBDriver) -> bool {
     borrow(driver).is_open()
 }
 
 /// Forcibly closes the driver. To be used in exceptional cases.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn driver_force_close(driver: *mut TypeDBDriver) {
     unwrap_void(borrow(driver).force_close());
 }
@@ -93,13 +93,13 @@ pub extern "C" fn driver_force_close(driver: *mut TypeDBDriver) {
 //
 // @param username The name of the user to connect as
 // @param password The password for the user
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn credentials_new(username: *const c_char, password: *const c_char) -> *mut Credentials {
     release(Credentials::new(string_view(username), string_view(password)))
 }
 
 // Frees the native rust <code>Credentials</code> object
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn credentials_drop(credentials: *mut Credentials) {
     free(credentials);
 }
@@ -108,14 +108,14 @@ pub extern "C" fn credentials_drop(credentials: *mut Credentials) {
 //
 // @param tls_root_ca Path to the CA certificate to use for authenticating server certificates.
 // @param with_tls Specify whether the connection to TypeDB Cloud must be done over TLS
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn driver_options_new(is_tls_enabled: bool, tls_root_ca: *const c_char) -> *mut DriverOptions {
     let tls_root_ca_path = unsafe { tls_root_ca.as_ref().map(|str| Path::new(string_view(str))) };
     try_release(DriverOptions::new(is_tls_enabled, tls_root_ca_path))
 }
 
 // Frees the native rust <code>DriverOptions</code> object
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn driver_options_drop(driver_options: *mut DriverOptions) {
     free(driver_options);
 }

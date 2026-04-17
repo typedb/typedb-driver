@@ -26,16 +26,16 @@ use std::{
     sync::{Arc, RwLock},
 };
 
-use tracing::{debug, error, info};
 use typedb_protocol::migration::Item;
 
 use super::Database;
 use crate::{
-    common::{address::Address, error::ConnectionError, Result},
+    Error,
+    common::{Result, address::Address, error::ConnectionError},
     connection::server_connection::ServerConnection,
-    database::migration::{try_open_import_file, ProtoMessageIterator},
+    database::migration::{ProtoMessageIterator, try_open_import_file},
     info::DatabaseInfo,
-    resolve, Error,
+    resolve,
 };
 
 /// Provides access to all database management methods.
@@ -198,9 +198,7 @@ impl DatabaseManager {
             let mut import_stream = server_connection.import_database(name, schema_ref.to_string()).await?;
 
             let mut item_buffer = Vec::with_capacity(ITEM_BATCH_SIZE);
-            let mut read_item_iterator = ProtoMessageIterator::<Item, _>::new(BufReader::new(file));
-
-            while let Some(item) = read_item_iterator.next() {
+            for item in ProtoMessageIterator::<Item, _>::new(BufReader::new(file)) {
                 let item = item?;
                 item_buffer.push(item);
                 if item_buffer.len() >= ITEM_BATCH_SIZE {

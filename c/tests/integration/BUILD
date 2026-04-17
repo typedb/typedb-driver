@@ -28,8 +28,7 @@ cc_library(
     name = "lib-test-driver",
     srcs = glob(["*.c", "*.h"]),
     deps = [
-        "//c:typedb_driver_clib_headers",
-        "//c:typedb_driver_clib"
+        "//c:typedb_driver_clib",
     ],
     copts = ["-fsanitize=address"], # Remove this if you're running leaks
     linkopts = ["-fsanitize=address"], # Remove this if you're running leaks
@@ -41,13 +40,16 @@ cc_test(
     srcs = glob(["gtest_runner.cpp"]),
     deps = [
         ":lib-test-driver",
-        "//c:typedb_driver_clib_headers",
         "//c:typedb_driver_clib",
 
         # External
         "@gtest//:gtest",
         "@gtest//:gtest_main"
     ],
+    linkopts = select({
+        "@typedb_bazel_distribution//platform:is_linux": ["-ldl"],
+        "//conditions:default": [],
+    }),
     env = {"RUST_BACKTRACE": "full"}
 )
 

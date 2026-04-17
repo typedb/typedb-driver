@@ -127,7 +127,7 @@ public class Parameters {
         } else if (value.equals("; fails") || value.equals("; parsing fails")) {
             return new MayError(true);
         } else if (value.startsWith("; fails with a message containing:")) {
-            String pattern = value.substring("; fails with a message containing: ".length()).replaceAll("^\"|\"$", "");
+            String pattern = value.substring("; fails with a message containing: ".length()).replaceAll("^\"|\"$", "").replaceAll("\\\\\"", "\"");
             return new MayError(true, pattern);
         }
         return null;

@@ -67,7 +67,7 @@ impl ValueType {
             Self::Datetime => Self::DATETIME_STR,
             Self::DatetimeTZ => Self::DATETIME_TZ_STR,
             Self::Duration => Self::DURATION_STR,
-            Self::Struct(name) => &name,
+            Self::Struct(name) => name,
         }
     }
 }
@@ -144,83 +144,43 @@ impl Value {
     }
 
     pub fn get_boolean(&self) -> Option<bool> {
-        if let Value::Boolean(bool) = self {
-            Some(*bool)
-        } else {
-            None
-        }
+        if let Value::Boolean(bool) = self { Some(*bool) } else { None }
     }
 
     pub fn get_integer(&self) -> Option<i64> {
-        if let Value::Integer(integer) = self {
-            Some(*integer)
-        } else {
-            None
-        }
+        if let Value::Integer(integer) = self { Some(*integer) } else { None }
     }
 
     pub fn get_double(&self) -> Option<f64> {
-        if let Value::Double(double) = self {
-            Some(*double)
-        } else {
-            None
-        }
+        if let Value::Double(double) = self { Some(*double) } else { None }
     }
 
     pub fn get_string(&self) -> Option<&str> {
-        if let Value::String(string) = self {
-            Some(&**string)
-        } else {
-            None
-        }
+        if let Value::String(string) = self { Some(&**string) } else { None }
     }
 
     pub fn get_decimal(&self) -> Option<Decimal> {
-        if let Value::Decimal(decimal) = self {
-            Some(*decimal)
-        } else {
-            None
-        }
+        if let Value::Decimal(decimal) = self { Some(*decimal) } else { None }
     }
 
     pub fn get_date(&self) -> Option<NaiveDate> {
-        if let Value::Date(naive_date) = self {
-            Some(*naive_date)
-        } else {
-            None
-        }
+        if let Value::Date(naive_date) = self { Some(*naive_date) } else { None }
     }
 
     pub fn get_datetime(&self) -> Option<NaiveDateTime> {
-        if let Value::Datetime(datetime) = self {
-            Some(*datetime)
-        } else {
-            None
-        }
+        if let Value::Datetime(datetime) = self { Some(*datetime) } else { None }
     }
 
     pub fn get_datetime_tz(&self) -> Option<DateTime<TimeZone>> {
-        if let Value::DatetimeTZ(datetime_tz) = self {
-            Some(*datetime_tz)
-        } else {
-            None
-        }
+        if let Value::DatetimeTZ(datetime_tz) = self { Some(*datetime_tz) } else { None }
     }
 
     pub fn get_duration(&self) -> Option<Duration> {
-        if let Value::Duration(duration) = self {
-            Some(*duration)
-        } else {
-            None
-        }
+        if let Value::Duration(duration) = self { Some(*duration) } else { None }
     }
 
     pub fn get_struct(&self) -> Option<&Struct> {
-        if let Value::Struct(struct_, _) = self {
-            Some(struct_)
-        } else {
-            None
-        }
+        if let Value::Struct(struct_, _) = self { Some(struct_) } else { None }
     }
 }
 
@@ -350,7 +310,7 @@ impl fmt::Debug for Decimal {
             // count number of tailing 0's that don't have to be represented
             let mut tail_0s = 0;
             let mut fractional = self.fractional;
-            while fractional % 10 == 0 {
+            while fractional.is_multiple_of(10) {
                 tail_0s += 1;
                 fractional /= 10;
             }
@@ -451,11 +411,15 @@ pub struct Duration {
 }
 
 impl Duration {
-    const NANOS_PER_SEC: u64 = 1_000_000_000;
-    const NANOS_PER_MINUTE: u64 = 60 * Self::NANOS_PER_SEC;
-    const NANOS_PER_HOUR: u64 = 60 * 60 * Self::NANOS_PER_SEC;
-    const DAYS_PER_WEEK: u32 = 7;
-    const MONTHS_PER_YEAR: u32 = 12;
+    pub const NANOS_PER_SEC: u64 = 1_000_000_000;
+    #[doc(hidden)]
+    /// cbindgen:ignore
+    pub const NANOS_PER_MINUTE: u64 = 60 * Self::NANOS_PER_SEC;
+    #[doc(hidden)]
+    /// cbindgen:ignore
+    pub const NANOS_PER_HOUR: u64 = 60 * 60 * Self::NANOS_PER_SEC;
+    pub const DAYS_PER_WEEK: u32 = 7;
+    pub const MONTHS_PER_YEAR: u32 = 12;
 
     pub fn new(months: u32, days: u32, nanos: u64) -> Self {
         Self { months, days, nanos }

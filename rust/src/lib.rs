@@ -19,11 +19,16 @@
 
 #![deny(elided_lifetimes_in_paths)]
 #![deny(unused_must_use)]
+#![allow(clippy::collapsible_if, reason = "too many false positives")]
+#![allow(clippy::collapsible_else_if, reason = "too many false positives")]
+#![allow(clippy::module_inception, reason = "too many false positives")]
+#![allow(clippy::too_many_arguments, reason = "too many false positives")]
+#![allow(clippy::type_complexity, reason = "too many false positives")]
 
 pub use self::{
     common::{
-        box_stream, error, info, BoxPromise, BoxStream, Error, Promise, QueryOptions, Result, TransactionOptions,
-        TransactionType, IID,
+        BoxPromise, BoxStream, Error, IID, Promise, QueryOptions, Result, TransactionOptions, TransactionType,
+        box_stream, error, info,
     },
     connection::{Credentials, DriverOptions},
     database::{Database, DatabaseManager},

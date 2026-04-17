@@ -19,6 +19,7 @@
 
 #![deny(unused_must_use)]
 #![deny(elided_lifetimes_in_paths)]
+#![allow(clippy::too_many_arguments, reason = "too many false positives")]
 
 use std::{
     collections::{HashSet, VecDeque},
@@ -29,23 +30,23 @@ use std::{
     path::{Path, PathBuf},
 };
 
-use cucumber::{gherkin::Feature, StatsWriter, World};
+use cucumber::{StatsWriter, World, gherkin::Feature};
 use futures::{
-    future::{try_join_all, Either},
+    future::{Either, try_join_all},
     stream::{self, StreamExt},
 };
 use itertools::Itertools;
-use tokio::time::{sleep, Duration};
+use tokio::time::{Duration, sleep};
 use typedb_driver::{
-    analyze::AnalyzedQuery,
-    answer::{ConceptDocument, ConceptRow, QueryAnswer, QueryType},
     BoxStream, Credentials, DriverOptions, QueryOptions, Result as TypeDBResult, Transaction, TransactionOptions,
     TypeDBDriver,
+    analyze::AnalyzedQuery,
+    answer::{ConceptDocument, ConceptRow, QueryAnswer, QueryType},
 };
 
 use crate::{
     params::QueryAnswerType,
-    util::{create_temp_dir, TempDir},
+    util::{TempDir, create_temp_dir},
 };
 
 mod analyze;
@@ -109,7 +110,7 @@ pub struct Context {
     pub background_transactions: VecDeque<Transaction>,
     pub analyzed: Option<AnalyzedQuery>,
     pub answer: Option<QueryAnswer>,
-    pub answer_type: Option<QueryAnswerType>,
+    pub(crate) answer_type: Option<QueryAnswerType>,
     pub answer_query_type: Option<QueryType>,
     pub collected_rows: Option<Vec<ConceptRow>>,
     pub collected_documents: Option<Vec<ConceptDocument>>,
@@ -285,11 +286,11 @@ impl Context {
     }
 
     pub fn transaction_opt(&self) -> Option<&Transaction> {
-        self.transactions.get(0)
+        self.transactions.front()
     }
 
     pub fn transaction(&self) -> &Transaction {
-        self.transactions.get(0).unwrap()
+        &self.transactions[0]
     }
 
     pub fn take_transaction(&mut self) -> Transaction {
@@ -393,10 +394,6 @@ impl Context {
 
     pub async fn get_answer_query_type(&self) -> Option<QueryType> {
         self.answer_query_type
-    }
-
-    pub async fn get_answer_type(&self) -> Option<QueryAnswerType> {
-        self.answer_type
     }
 
     pub async fn try_get_collected_rows(&mut self) -> Option<&Vec<ConceptRow>> {

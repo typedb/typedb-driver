@@ -28,19 +28,19 @@ use super::{
 use crate::memory::take_ownership;
 
 /// Frees the native rust <code>User</code> object.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn user_drop(user: *mut User) {
     free(user);
 }
 
 /// Returns the name of this user.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn user_get_name(user: *mut User) -> *mut c_char {
     release_string(borrow(user).name.clone())
 }
 
 // /// Returns the number of seconds remaining till this user’s current password expires.
-// #[no_mangle]
+// #[unsafe(no_mangle)]
 // pub extern "C" fn user_get_password_expiry_seconds(user: *mut User) -> i64 {
 //     borrow(user).password_expiry_seconds.unwrap_or(-1)
 // }
@@ -51,13 +51,13 @@ pub extern "C" fn user_get_name(user: *mut User) -> *mut c_char {
 /// @param user_manager The <code>UserManager</code> object on this connection.
 /// @param password_old The current password of this user
 /// @param password_new The new password
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn user_update_password(user: *mut User, password: *const c_char) {
     unwrap_void(borrow(user).update_password(string_view(password)));
 }
 
 /// Deletes this database.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn user_delete(user: *mut User) {
     unwrap_void(take_ownership(user).delete());
 }

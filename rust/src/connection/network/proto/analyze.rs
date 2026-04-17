@@ -23,15 +23,15 @@ use typedb_protocol::{analyze::res::analyzed_query as analyze_proto, analyzed_co
 
 use crate::{
     analyze::{
+        AnalyzedQuery, Fetch, FetchLeaf, Function, ReturnOperation, TypeAnnotations, VariableAnnotations,
         conjunction::{
             Comparator, Conjunction, ConjunctionID, Constraint, ConstraintExactness, ConstraintSpan, ConstraintVertex,
             ConstraintWithSpan, NamedRole, Variable,
         },
         pipeline::{Pipeline, PipelineStage, ReduceAssignment, Reducer, SortOrder, SortVariable, VariableInfo},
-        AnalyzedQuery, Fetch, FetchLeaf, Function, ReturnOperation, TypeAnnotations, VariableAnnotations,
     },
     common::Result,
-    concept::{type_, Kind, Value, ValueType},
+    concept::{Kind, Value, ValueType, type_},
     connection::{
         message::AnalyzeResponse,
         network::proto::{FromProto, TryFromProto},
@@ -79,7 +79,7 @@ impl TryFromProto<typedb_protocol::analyze::res::AnalyzedQuery> for AnalyzedQuer
             source,
             query: expect_try_from_proto(query, "AnalyzedQuery.query")?,
             preamble: vec_from_proto(preamble)?,
-            fetch: fetch.map(|f| Fetch::try_from_proto(f)).transpose()?,
+            fetch: fetch.map(Fetch::try_from_proto).transpose()?,
         })
     }
 }

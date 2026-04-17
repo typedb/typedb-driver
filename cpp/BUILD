@@ -45,7 +45,6 @@ cc_binary(
     includes = ["include"], 
     deps = [
         "//c:typedb_driver_clib",
-        "//c:typedb_driver_clib_headers",
         "@nlohmann_json//:json",
     ],
     copts = cxxopts,

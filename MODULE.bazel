@@ -28,7 +28,6 @@ bazel_dep(name = "rules_cc", version = "0.0.17")
 bazel_dep(name = "rules_java", version = "8.6.2")
 bazel_dep(name = "rules_jvm_external", version = "6.6")
 bazel_dep(name = "rules_python", version = "1.0.0")
-bazel_dep(name = "rules_rust", version = "0.56.0")
 bazel_dep(name = "rules_kotlin", version = "2.0.0", repo_name = "io_bazel_rules_kotlin")
 bazel_dep(name = "rules_pkg", version = "1.0.1")
 bazel_dep(name = "rules_proto", version = "7.1.0")
@@ -52,7 +51,7 @@ bazel_dep(name = "typedb_dependencies", version = "0.0.0")
 git_override(
     module_name = "typedb_dependencies",
     remote = "https://github.com/typedb/dependencies",
-    commit = "5b0fa39ccdac93ad486c83cffbbafdbc0bfd83f6",
+    commit = "00d895243d72e2b19b0e5dc121eec4f0ed8eb532",
 )
 
 bazel_dep(name = "typedb_bazel_distribution", version = "0.0.0")
@@ -73,7 +72,17 @@ bazel_dep(name = "typedb_behaviour", version = "0.0.0")
 git_override(
     module_name = "typedb_behaviour",
     remote = "https://github.com/typedb/typedb-behaviour",
-    commit = "bc1e71c9334272178104f657b0996d9f15be66c9",
+    commit = "fa485602adda5f31d67c3b35e5de43caeb8ee91a",
+)
+
+# Rust rules need typedb_dependencies for patching
+bazel_dep(name = "rules_rust", version = "0.56.0")
+# Backport a bug fix from rules_rust 0.58 (bazelbuild/rules_rust#3251)
+git_override(
+    module_name = "rules_rust",
+    remote = "https://github.com/bazelbuild/rules_rust",
+    tag = "0.56.0",
+    patches = ["@@typedb_dependencies+//patches:rules_rust.patch"],
 )
 
 # Python multi-version toolchains (3.9-3.13)
@@ -103,8 +112,8 @@ use_repo(pip, "typedb_driver_pip")
 # Rust toolchain
 rust = use_extension("@rules_rust//rust:extensions.bzl", "rust")
 rust.toolchain(
-    edition = "2021",
-    versions = ["1.81.0"],
+    edition = "2024",
+    versions = ["1.93.0"],
     extra_target_triples = [
         "aarch64-apple-darwin",
         "aarch64-unknown-linux-gnu",
@@ -115,6 +124,9 @@ rust.toolchain(
 )
 use_repo(rust, "rust_toolchains")
 register_toolchains("@rust_toolchains//:all")
+
+rust_host_tools = use_extension("@rules_rust//rust:extensions.bzl", "rust_host_tools")
+rust_host_tools.host_tools(version = "1.93.0")
 
 # Rust crates - import from typedb_dependencies' crate extension
 # This ensures type compatibility across all TypeDB modules
@@ -184,7 +196,7 @@ workspace_refs = use_repo_rule("@typedb_bazel_distribution//common/workspace_ref
 workspace_refs(
     name = "typedb_driver_workspace_refs",
     workspace_commit_dict = {},
-    workspace_tag_dict = {"typedb_protocol": "3.7.1-rc1"},
+    workspace_tag_dict = {"typedb_protocol+": "3.7.1-rc1"},
 )
 
 # TypeDB server artifacts for testing
@@ -194,7 +206,7 @@ native_artifact_files.artifact(
     name = "typedb_artifact",
     group_name = "typedb-all-{platform}",
     artifact_name = "typedb-all-{platform}-{version}.{ext}",
-    tag = "3.8.3",
+    commit = "43498326502fb6abf67e0ef5b089bd350f241cdb",
 )
 use_repo(
     native_artifact_files,

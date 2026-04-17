@@ -23,7 +23,7 @@ use typedb_protocol::{
 };
 
 use super::{IntoProto, TryFromProto};
-use crate::{answer::QueryType, error::ConnectionError, QueryOptions, Result, TransactionOptions, TransactionType};
+use crate::{QueryOptions, Result, TransactionOptions, TransactionType, answer::QueryType, error::ConnectionError};
 
 impl IntoProto<i32> for TransactionType {
     fn into_proto(self) -> i32 {

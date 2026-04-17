@@ -17,9 +17,9 @@
  * under the License.
  */
 
-use std::{collections::HashMap, fmt};
+use std::collections::HashMap;
 
-use crate::{analyze::VariableAnnotations, concept, IID};
+use crate::{IID, analyze::VariableAnnotations, concept};
 
 /// Holds the index of the conjunction in a <code>Pipeline</code>'s <code>conjunctions</code> field.
 /// Used as indirection in the representation of a pipeline.
@@ -65,61 +65,61 @@ pub struct ConstraintWithSpan {
 /// A representation of a TypeQL constraint.
 #[derive(Debug, Clone)]
 pub enum Constraint {
-    /// <instance> isa(!) <type>
+    /// &lt;instance&gt; isa(!) &lt;type&gt;
     Isa { instance: ConstraintVertex, r#type: ConstraintVertex, exactness: ConstraintExactness },
-    /// <owner> has <attribute>
+    /// &lt;owner&gt; has &lt;attribute&gt;
     Has { owner: ConstraintVertex, attribute: ConstraintVertex, exactness: ConstraintExactness },
-    /// <relation> links (<role>: <player>)
+    /// &lt;relation&gt; links (&lt;role&gt;: &lt;player&gt;)
     Links {
         relation: ConstraintVertex,
         player: ConstraintVertex,
         role: ConstraintVertex,
         exactness: ConstraintExactness,
     },
-    /// <subtype> sub(!) <supertype>
+    /// &lt;subtype&gt; sub(!) &lt;supertype&gt;
     Sub { subtype: ConstraintVertex, supertype: ConstraintVertex, exactness: ConstraintExactness },
-    /// <owner> owns <attribute>
+    /// &lt;owner&gt; owns &lt;attribute&gt;
     Owns { owner: ConstraintVertex, attribute: ConstraintVertex, exactness: ConstraintExactness },
-    /// <relation> relates <role>
+    /// &lt;relation&gt; relates &lt;role&gt;
     Relates { relation: ConstraintVertex, role: ConstraintVertex, exactness: ConstraintExactness },
-    /// <player> plays <role>
+    /// &lt;player&gt; plays &lt;role&gt;
     Plays { player: ConstraintVertex, role: ConstraintVertex, exactness: ConstraintExactness },
-    /// let <assigned> = name(<arguments>)
+    /// let &lt;assigned&gt; = name(&lt;arguments&gt;)
     /// e.g. let $x, $y = my_function($a, $b);
     FunctionCall { name: String, assigned: Vec<ConstraintVertex>, arguments: Vec<ConstraintVertex> },
-    /// let <assigned> = <expression>
+    /// let &lt;assigned&gt; = &lt;expression&gt;
     /// e.g. let $x = $y + 5;
-    /// Here, arguments will be `[$y]`
+    /// Here, arguments will be `&lsqb;$y&rsqb;`
     Expression { text: String, assigned: ConstraintVertex, arguments: Vec<ConstraintVertex> },
-    /// <lhs> is <rhs>
+    /// &lt;lhs&gt; is &lt;rhs&gt;
     /// $x is $y
     Is { lhs: ConstraintVertex, rhs: ConstraintVertex },
-    /// <concept> iid <iid>
+    /// &lt;concept&gt; iid &lt;iid&gt;
     /// e.g. `$y iid 0x1f0005000000000000012f`
     Iid { concept: ConstraintVertex, iid: IID },
-    /// <lhs> <comparator> <rhs>
-    /// e.g. `$x < 5`
+    /// &lt;lhs&gt; &lt;comparator&gt; &lt;rhs&gt;
+    /// e.g. `$x &lt; 5`
     Comparison { lhs: ConstraintVertex, rhs: ConstraintVertex, comparator: Comparator },
-    /// <kind> <type>
+    /// &lt;kind&gt; &lt;type&gt;
     /// e.g. `entity person`
     Kind { kind: concept::Kind, r#type: ConstraintVertex },
-    /// <type> label <label>
+    /// &lt;type&gt; label &lt;label&gt;
     /// e.g. `$t label person`
     Label { r#type: ConstraintVertex, label: String },
-    /// <attribute_type> value <value_type>
+    /// &lt;attribute_type&gt; value &lt;value_type&gt;
     /// e.g. $t value string
     Value { attribute_type: ConstraintVertex, value_type: concept::ValueType },
-    /// { <branches[0]> } or { <branches[1]> } [or ...]
+    /// { &lt;branches&lsqb;0&rsqb;&gt; } or { &lt;branches&lsqb;1&rsqb;&gt; } &lsqb;or ...&rsqb;
     Or {
         /// Index into <code>Pipeline.conjunctions</code>
         branches: Vec<ConjunctionID>,
     },
-    /// not { <conjunction> }
+    /// not { &lt;conjunction&gt; }
     Not {
         /// Index into <code>Pipeline.conjunctions</code>
         conjunction: ConjunctionID,
     },
-    /// try { <conjunction> }
+    /// try { &lt;conjunction&gt; }
     Try {
         /// Index into <code>Pipeline.conjunctions</code>
         conjunction: ConjunctionID,
@@ -138,6 +138,7 @@ pub struct Variable(pub u32);
 /// * A <code>Label</code> uniquely identifies a type
 /// * A <code>Value</code> represents a primitive value literal in TypeDB.
 /// * A <code>NamedRole</code> vertex is used in links & relates constraints, as multiple relations may have roles with the same name.
+///
 /// The types inferred for <code>Variable</code>, <code>Label</code> and <code>NamedRole</code> vertices
 /// can be read from the <code>variable_annotations</code> field of the <code>Conjunction</code> it is in.
 #[derive(Debug, Clone, PartialEq)]

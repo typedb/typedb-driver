@@ -19,17 +19,13 @@
 
 use std::{
     cell::RefCell,
-    ffi::{c_char, CStr, CString},
+    ffi::{CStr, CString, c_char},
     ptr::null_mut,
     sync::Arc,
 };
 
 use tracing::trace;
 use typedb_driver::Error;
-
-thread_local! {
-    static LAST_ERROR: RefCell<Option<Error>> = RefCell::new(None);
-}
 
 pub(super) fn release<T>(t: T) -> *mut T {
     let raw = Box::into_raw(Box::new(t));
@@ -105,7 +101,7 @@ pub(super) fn string_view(str: *const c_char) -> &'static str {
 
 /// Frees a native rust string.
 /// _WARNING: Always use this function to free strings returned by the driver. Using the standard C free function will create a dangling reference on the rust side._
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn string_free(str: *mut c_char) {
     trace!("Freeing <CString> @ {:?}", str);
     if !str.is_null() {

@@ -20,18 +20,16 @@
 use std::{sync::Arc, thread::sleep, time::Duration};
 
 use futures::StreamExt;
+use tokio::sync::mpsc::{UnboundedReceiver, UnboundedSender, unbounded_channel as unbounded_async};
 #[cfg(not(feature = "sync"))]
-use futures::TryStreamExt;
-use tokio::sync::mpsc::{unbounded_channel as unbounded_async, UnboundedReceiver, UnboundedSender};
-#[cfg(not(feature = "sync"))]
-use tokio::sync::oneshot::{channel as oneshot, error::TryRecvError, Receiver as OneshotReceiver};
+use tokio::sync::oneshot::{Receiver as OneshotReceiver, channel as oneshot, error::TryRecvError};
 use tonic::Streaming;
 use typedb_protocol::database_manager;
 
 #[cfg(feature = "sync")]
-use super::{oneshot_blocking as oneshot, SyncReceiver as OneshotReceiver, SyncTryRecvError as TryRecvError};
+use super::{SyncReceiver as OneshotReceiver, SyncTryRecvError as TryRecvError, oneshot_blocking as oneshot};
 use crate::{
-    common::{box_promise, error::ConnectionError, Promise, Result},
+    common::{Promise, Result, box_promise, error::ConnectionError},
     connection::{
         message::DatabaseImportRequest,
         network::{
@@ -42,12 +40,12 @@ use crate::{
     },
 };
 
-pub(in crate::connection) struct DatabaseImportTransmitter {
+pub(crate) struct DatabaseImportTransmitter {
     request_sink: UnboundedSender<DatabaseImportRequest>,
     shutdown_guard: ShutdownGuard<()>,
     result_source: OneshotReceiver<Result>,
     // runtime is alive as long as the import transmitter is alive:
-    background_runtime: Arc<BackgroundRuntime>,
+    _background_runtime: Arc<BackgroundRuntime>,
 }
 
 impl DatabaseImportTransmitter {
@@ -77,7 +75,7 @@ impl DatabaseImportTransmitter {
             request_sink: buffer_sink,
             shutdown_guard: ShutdownGuard::new(shutdown_sink),
             result_source,
-            background_runtime,
+            _background_runtime: background_runtime,
         }
     }
 
@@ -107,7 +105,7 @@ impl DatabaseImportTransmitter {
         box_promise(move || {
             let _shutdown_guard = self.shutdown_guard; // Don't let it drop before resolving
             match self.result_source.recv() {
-                Ok(result) => return result,
+                Ok(result) => result,
                 Err(_) => Err(ConnectionError::DatabaseImportChannelIsClosed.into()),
             }
         })
@@ -157,7 +155,7 @@ impl DatabaseImportTransmitter {
         const DISPATCH_INTERVAL: Duration = Duration::from_micros(50);
 
         loop {
-            if let Ok(_) = shutdown_signal.try_recv() {
+            if shutdown_signal.try_recv().is_ok() {
                 break;
             }
             sleep(DISPATCH_INTERVAL);

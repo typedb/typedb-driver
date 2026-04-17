@@ -21,12 +21,12 @@ use std::{future::Future, thread, thread::JoinHandle};
 
 use crossbeam::{
     atomic::AtomicCell,
-    channel::{bounded as bounded_blocking, unbounded, Sender},
+    channel::{Sender, bounded as bounded_blocking, unbounded},
 };
 use tokio::{
     runtime,
     sync::{
-        mpsc::{unbounded_channel as unbounded_async, UnboundedSender},
+        mpsc::{UnboundedSender, unbounded_channel as unbounded_async},
         oneshot::Sender as AsyncOneshotSender,
     },
 };

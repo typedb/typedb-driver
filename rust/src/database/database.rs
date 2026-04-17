@@ -19,6 +19,8 @@
 
 #[cfg(not(feature = "sync"))]
 use std::future::Future;
+#[cfg(feature = "sync")]
+use std::thread::sleep;
 use std::{
     collections::HashMap,
     fmt,
@@ -26,7 +28,6 @@ use std::{
     io::{BufWriter, Write},
     path::Path,
     sync::{Arc, RwLock},
-    thread::sleep,
     time::Duration,
 };
 
@@ -36,16 +37,15 @@ use tracing::{debug, error};
 
 use crate::{
     common::{
+        Error, Result,
         address::Address,
         error::ConnectionError,
         info::{DatabaseInfo, ReplicaInfo},
-        Error, Result,
     },
-    connection::{database::export_stream::DatabaseExportStream, server_connection::ServerConnection},
-    database::migration::{try_create_export_file, try_open_existing_export_file, DatabaseExportAnswer},
-    driver::TypeDBDriver,
+    connection::server_connection::ServerConnection,
+    database::migration::{DatabaseExportAnswer, try_create_export_file, try_open_existing_export_file},
     error::{InternalError, MigrationError},
-    resolve, Transaction, TransactionOptions, TransactionType,
+    resolve,
 };
 
 /// A TypeDB database

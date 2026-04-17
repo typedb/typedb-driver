@@ -17,44 +17,26 @@
  * under the License.
  */
 
-use std::{
-    fmt,
-    fmt::{Debug, Formatter},
-    sync::Arc,
-};
+use std::fmt::Debug;
 
 use crossbeam::channel::Sender as SyncOneshotSender;
-use tokio::sync::{mpsc::UnboundedSender, oneshot::Sender as AsyncOneshotSender};
+use tokio::sync::mpsc::UnboundedSender;
+#[cfg(not(feature = "sync"))]
+use tokio::sync::oneshot::Sender as AsyncOneshotSender;
 use tracing::{debug, error};
 
 use crate::{
+    Error,
     common::{RequestID, Result},
     error::InternalError,
-    Error,
 };
 
 #[derive(Debug)]
 pub(super) enum ResponseSink<T> {
-    ImmediateOneShot(ImmediateHandler<Result<T>>),
+    #[cfg(not(feature = "sync"))]
     AsyncOneShot(AsyncOneshotSender<Result<T>>),
     BlockingOneShot(SyncOneshotSender<Result<T>>),
     Streamed(UnboundedSender<StreamResponse<T>>),
-}
-
-pub(super) struct ImmediateHandler<T> {
-    pub(super) handler: Arc<dyn Fn(T) -> () + Sync + Send>,
-}
-
-impl<T> ImmediateHandler<T> {
-    pub(super) fn run(&self, value: T) {
-        (self.handler)(value)
-    }
-}
-
-impl<T> fmt::Debug for ImmediateHandler<T> {
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        write!(f, "Immediate handler")
-    }
 }
 
 pub(super) enum StreamResponse<T> {
@@ -65,10 +47,7 @@ pub(super) enum StreamResponse<T> {
 impl<T: Debug> ResponseSink<T> {
     pub(super) fn finish(self, response: Result<T>) {
         let result = match self {
-            Self::ImmediateOneShot(handler) => {
-                handler.run(response);
-                Ok(())
-            }
+            #[cfg(not(feature = "sync"))]
             Self::AsyncOneShot(sink) => sink.send(response).map_err(|_| InternalError::SendError.into()),
             Self::BlockingOneShot(sink) => sink.send(response).map_err(Error::from),
             Self::Streamed(sink) => sink.send(StreamResponse::Result(response)).map_err(Error::from),
@@ -108,10 +87,10 @@ impl<T: Debug> ResponseSink<T> {
 
     pub(super) fn error(self, error: impl Into<Error>) {
         match self {
+            #[cfg(not(feature = "sync"))]
             Self::AsyncOneShot(sink) => sink.send(Err(error.into())).ok(),
             Self::BlockingOneShot(sink) => sink.send(Err(error.into())).ok(),
             Self::Streamed(sink) => sink.send(StreamResponse::Result(Err(error.into()))).ok(),
-            Self::ImmediateOneShot(_) => None,
         };
     }
 }

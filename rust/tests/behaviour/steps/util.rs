@@ -19,46 +19,27 @@
 
 use std::{
     borrow::Cow,
-    collections::{HashMap, HashSet},
+    collections::HashSet,
     env, fs,
     fs::File,
     io::{Read, Write},
-    iter, mem,
     ops::Deref,
     path::{Path, PathBuf},
 };
 
-use chrono::{NaiveDate, NaiveDateTime, NaiveTime};
-use cucumber::{
-    gherkin::{Feature, Step},
-    given, then, when, StatsWriter, World,
-};
-use futures::{
-    future::{try_join_all, Either},
-    stream::{self, StreamExt},
-};
-use itertools::Itertools;
+use cucumber::gherkin::Step;
 use macro_rules_attribute::apply;
-use tokio::time::{sleep, Duration};
-use typedb_driver::{
-    answer::{ConceptRow, JSON},
-    concept::{Attribute, AttributeType, Concept, Entity, EntityType, Relation, RelationType, RoleType, Value},
-    DatabaseManager, Error, Result as TypeDBResult,
-};
+use tokio::time::{Duration, sleep};
+use typedb_driver::{Result as TypeDBResult, answer::JSON};
 use uuid::Uuid;
 
-use crate::{assert_with_timeout, generic_step, params, params::check_boolean, Context};
+use crate::{Context, generic_step, params};
 
 pub fn iter_table(step: &Step) -> impl Iterator<Item = &str> {
     step.table().unwrap().rows.iter().flatten().map(String::as_str)
 }
 
-pub fn iter_table_map(step: &Step) -> impl Iterator<Item = HashMap<&str, &str>> {
-    let (keys, rows) = step.table().unwrap().rows.split_first().unwrap();
-    rows.iter().map(|row| keys.iter().zip(row).map(|(k, v)| (k.as_str(), v.as_str())).collect())
-}
-
-pub fn list_contains_json(list: &Vec<JSON>, json: &JSON) -> bool {
+pub fn list_contains_json(list: &[JSON], json: &JSON) -> bool {
     list.iter().any(|list_json| jsons_equal_up_to_reorder(list_json, json))
 }
 
@@ -145,7 +126,7 @@ macro_rules! assert_with_timeout {
 #[apply(generic_step)]
 #[step(expr = "set time-zone: {word}")]
 async fn set_time_zone(_context: &mut Context, timezone: String) {
-    env::set_var("TZ", timezone);
+    unsafe { env::set_var("TZ", timezone) };
 }
 
 #[apply(generic_step)]
@@ -197,7 +178,8 @@ pub(crate) fn read_file(path: PathBuf) -> Vec<u8> {
 }
 
 pub(crate) fn write_file(path: PathBuf, data: &[u8]) {
-    let mut file = fs::OpenOptions::new().write(true).create(true).open(path).expect("Expected file open to write");
+    let mut file =
+        fs::OpenOptions::new().write(true).truncate(true).create(true).open(path).expect("Expected file open to write");
     file.write_all(data).expect("Expected file write");
     file.flush().expect("Expected flush");
 }

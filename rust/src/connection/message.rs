@@ -25,17 +25,17 @@ use typedb_protocol::{database, database_manager, migration::Item, transaction};
 use uuid::Uuid;
 
 use crate::{
+    Credentials, QueryOptions, TransactionOptions, TransactionType,
     analyze::AnalyzedQuery,
     answer::{
+        QueryType,
         concept_document::{ConceptDocumentHeader, Node},
         concept_row::ConceptRowHeader,
-        QueryType,
     },
-    common::{address::Address, info::DatabaseInfo, RequestID},
+    common::{RequestID, address::Address, info::DatabaseInfo},
     concept::Concept,
     error::ServerError,
     info::UserInfo,
-    Credentials, QueryOptions, TransactionOptions, TransactionType,
 };
 
 #[derive(Debug)]

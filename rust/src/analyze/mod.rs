@@ -24,7 +24,7 @@ use crate::{
         conjunction::Variable,
         pipeline::{Pipeline, Reducer},
     },
-    concept::{type_::Type, ValueType},
+    concept::{ValueType, type_::Type},
 };
 
 pub mod conjunction;
@@ -107,7 +107,8 @@ pub struct FetchLeaf {
 
 #[derive(Debug, Clone)]
 pub struct VariableAnnotations {
-    pub(crate) is_optional: bool, // TODO: Make pub when we know this is correct
+    #[allow(dead_code, reason = "TODO: Make pub when we know this is correct")]
+    pub(crate) is_optional: bool,
     /// The <code>TypeAnnotations</code> of this variable.
     pub types: TypeAnnotations,
 }

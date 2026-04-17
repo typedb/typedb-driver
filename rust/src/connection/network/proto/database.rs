@@ -18,12 +18,12 @@
  */
 
 use itertools::Itertools;
-use typedb_protocol::{database_replicas::Replica as ReplicaProto, DatabaseReplicas as DatabaseProto};
+use typedb_protocol::{DatabaseReplicas as DatabaseProto, database_replicas::Replica as ReplicaProto};
 
 use super::TryFromProto;
 use crate::common::{
-    info::{DatabaseInfo, ReplicaInfo},
     Result,
+    info::{DatabaseInfo, ReplicaInfo},
 };
 
 impl TryFromProto<DatabaseProto> for DatabaseInfo {

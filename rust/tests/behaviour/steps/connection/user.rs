@@ -19,13 +19,12 @@
 
 use std::collections::HashSet;
 
-use cucumber::{gherkin::Step, given, then, when};
+use cucumber::gherkin::Step;
 use futures::TryFutureExt;
 use macro_rules_attribute::apply;
 use tokio::time::sleep;
-use typedb_driver::{Database, Result as TypeDBResult, TypeDBDriver, User};
 
-use crate::{assert_err, assert_with_timeout, generic_step, params, util::iter_table, Context};
+use crate::{Context, assert_with_timeout, generic_step, params, util::iter_table};
 
 async fn all_user_names(context: &Context) -> HashSet<String> {
     context.driver.as_ref().unwrap().users().all().await.unwrap().into_iter().map(|user| user.name).collect()
@@ -48,7 +47,7 @@ async fn get_all_users_error(context: &mut Context, may_error: params::MayError)
 #[apply(generic_step)]
 #[step(expr = "get all users {contains_or_doesnt}: {word}")]
 async fn get_all_users_contains(context: &mut Context, contains_or_doesnt: params::ContainsOrDoesnt, username: String) {
-    contains_or_doesnt.check(&all_user_names(context).await.iter().find(|&name| name == &username), "user");
+    contains_or_doesnt.check(&all_user_names(context).await.get(&username), "user");
 }
 
 #[apply(generic_step)]

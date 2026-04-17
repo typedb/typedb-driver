@@ -19,12 +19,10 @@
 
 use std::{fmt, sync::Arc};
 
-use futures::StreamExt;
-
 pub use self::{concept_document::ConceptDocument, concept_row::ConceptRow, json::JSON};
 use crate::{
-    answer::{concept_document::ConceptDocumentHeader, concept_row::ConceptRowHeader},
     BoxStream, Result,
+    answer::{concept_document::ConceptDocumentHeader, concept_row::ConceptRowHeader},
 };
 
 pub mod concept_document;
@@ -46,8 +44,8 @@ impl QueryAnswer {
     /// query_answer.get_query_type()
     /// ```
     pub fn get_query_type(&self) -> QueryType {
-        match &self {
-            QueryAnswer::Ok(query_type) => query_type.clone(),
+        match self {
+            &QueryAnswer::Ok(query_type) => query_type,
             QueryAnswer::ConceptRowStream(header, _) => header.query_type,
             QueryAnswer::ConceptDocumentStream(header, _) => header.query_type,
         }
@@ -95,11 +93,8 @@ impl QueryAnswer {
     /// query_answer.into_rows()
     /// ```
     pub fn into_rows(self) -> BoxStream<'static, Result<ConceptRow>> {
-        if let Self::ConceptRowStream(_, stream) = self {
-            stream
-        } else {
-            panic!("Query answer is not a rows stream.")
-        }
+        let Self::ConceptRowStream(_, stream) = self else { panic!("Query answer is not a rows stream.") };
+        stream
     }
 
     /// Unwraps the <code>QueryAnswer</code> into a <code>ConceptDocumentStream</code>.
