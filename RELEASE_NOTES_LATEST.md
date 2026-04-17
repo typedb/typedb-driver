@@ -9,13 +9,13 @@ Documentation: https://typedb.com/docs/drivers/rust/overview
 
 
 ```sh
-cargo add typedb-driver@3.8.1
+cargo add typedb-driver@3.8.4-rc0
 ```
 
 
 ### Java driver
 
-Available through [https://repo.typedb.com](https://cloudsmith.io/~typedb/repos/public-release/packages/detail/maven/typedb-driver/3.8.1/a=noarch;xg=com.typedb/)
+Available through [https://repo.typedb.com](https://cloudsmith.io/~typedb/repos/public-release/packages/detail/maven/typedb-driver/3.8.4-rc0/a=noarch;xg=com.typedb/)
 Documentation: https://typedb.com/docs/drivers/java/overview
 
 ```xml
@@ -29,7 +29,7 @@ Documentation: https://typedb.com/docs/drivers/java/overview
     <dependency>
         <groupid>com.typedb</groupid>
         <artifactid>typedb-driver</artifactid>
-        <version>3.8.1</version>
+        <version>3.8.4-rc0</version>
     </dependency>
 </dependencies>
 ```
@@ -43,7 +43,7 @@ Available through https://pypi.org
 
 [//]: # (TODO: Python's RC/Alpha/Beta versions are formatted differently. Don't foget to update manually until we make an automation)
 ```
-pip install typedb-driver==3.8.1
+pip install typedb-driver==3.8.4rc0
 ```
 
 ### C# driver
@@ -53,12 +53,12 @@ Documentation: https://typedb.com/docs/drivers/csharp/overview
 
 ```xml
 <ItemGroup>
-    <PackageReference Include="TypeDB.Driver" Version="3.8.1" />
-    <PackageReference Include="TypeDB.Driver.Pinvoke.osx-x64" Version="3.8.1" />
-    <PackageReference Include="TypeDB.Driver.Pinvoke.linux-x64" Version="3.8.1" />
-    <PackageReference Include="TypeDB.Driver.Pinvoke.win-x64" Version="3.8.1" />
-    <PackageReference Include="TypeDB.Driver.Pinvoke.osx-arm64" Version="3.8.1" />
-    <PackageReference Include="TypeDB.Driver.Pinvoke.linux-arm64" Version="3.8.1" />
+    <PackageReference Include="TypeDB.Driver" Version="3.8.4-rc0" />
+    <PackageReference Include="TypeDB.Driver.Pinvoke.osx-x64" Version="3.8.4-rc0" />
+    <PackageReference Include="TypeDB.Driver.Pinvoke.linux-x64" Version="3.8.4-rc0" />
+    <PackageReference Include="TypeDB.Driver.Pinvoke.win-x64" Version="3.8.4-rc0" />
+    <PackageReference Include="TypeDB.Driver.Pinvoke.osx-arm64" Version="3.8.4-rc0" />
+    <PackageReference Include="TypeDB.Driver.Pinvoke.linux-arm64" Version="3.8.4-rc0" />
 </ItemGroup>
 ```
 
@@ -67,33 +67,19 @@ Documentation: https://typedb.com/docs/drivers/csharp/overview
 [//]: # (TODO: Update docs link)
 
 NPM package: https://www.npmjs.com/package/@typedb/driver-http
-Documentation: https://typedb.com/docs/drivers/
+Documentation: https://typedb.com/docs/home/install/drivers/
 
 ```
-npm install @typedb/driver-http@3.8.1
+npm install @typedb/driver-http@3.8.4-rc0
 ```
 
 ### C driver
 
-Compiled distributions comprising headers and shared libraries available at: https://cloudsmith.io/~typedb/repos/public-release/packages/?q=name:^typedb-driver-clib+version:3.8.1
+Compiled distributions comprising headers and shared libraries available at: https://cloudsmith.io/~typedb/repos/public-release/packages/?q=name:^typedb-driver-clib+version:3.8.4-rc0
 
 
 ## New Features
-- **Csharp driver 3.0**
-  
-  This PR ports the C# driver to the TypeDB 3.0 API, aligning it with the Java and Rust drivers. The driver now uses the simplified 3.0 architecture where sessions are removed and transactions are opened directly from the driver. Query execution returns `IQueryAnswer` with streaming `IConceptRow` results instead of the previous `IConceptMap` model.
-  
-  Key API changes include:
-  - `ITypeDBDriver` renamed to `IDriver` with direct transaction access via `Transaction(database, type, options)`
-  - New `IQueryAnswer` and `IConceptRow` types replace `IConceptMap` for query results
-  - Promise-based query submission
-  - New `IJSON` type for fetch query results with document iteration
-  - Query analysis via `ITypeDBTransaction.Analyze()` returning `IAnalyzedQuery` with full pipeline introspection
-  - `DatetimeTZ` and `Duration` types for temporal values with nanosecond precision
-  - Simplified concept API removing manager classes—operations are now methods directly on concepts
-  - `QueryOptions` and `TransactionOptions` replace the monolithic `TypeDBOptions`
-  
-  
+
 
 ## Bugs Fixed
 
@@ -102,14 +88,24 @@ Compiled distributions comprising headers and shared libraries available at: htt
 
 
 ## Other Improvements
-- **Fix build**
-
-- **Fix tests and add missing CSharp docs**
+- **Update Rust toolchain**
   
-  We fix one broken Rust test and add missing CSharp docs
+  We update the Rust toolchain version to 1.93 and edition to 2024. We also update the source to make it compile with this new toolchain, and resolve the warnings.
   
-- **Handle output directory differently in python sphinx_docs rule**
-  Update dependencies after merging https://github.com/typedb/typedb-dependencies/pull/599 to fix the Python Driver build.
   
+- **Raise gRPC message size limits to 1 GB**
+  
+  The default tonic limit of 4 MB is too restrictive for database workloads. Large fetch documents, query result batches, and export streams can legitimately exceed 4 MB, causing decode failures on the client side with: "decoded message length too large: found N bytes, the limit is: 4194304 bytes"
+  
+  Set both encoding and decoding limits to 1 GB on the TypeDbClient stub, matching the corresponding server-side change in https://github.com/typedb/typedb/pull/7745
+  
+  
+- **Add security framework for c integration test**
+  
+  Add `-framework Security` linkopt for macOS to the exposed C lib target, fixing linker errors with undefined Security framework symbols when building with Bazel 8.   
+  
+  
+- **Fetch TypeDB server using native_artifact_files module extension**
+  Fetches the TypeDB server artifact using `native_artifacts_files`, close to how we used to with bazel 6.
   
     
