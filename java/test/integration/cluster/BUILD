@@ -18,8 +18,28 @@
 load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("@typedb_dependencies//builder/java:rules.bzl", "typedb_java_test")
 
-# TODO: This package can contain cluster-specific integration tests. Tests available for running for both core
-# edition and cluster should be run for both setups (and be limited: always prefer BDDs to integration tests)!
+typedb_java_test(
+    name = "test-failover",
+    srcs = ["FailoverTest.java"],
+    server_artifacts = {
+        "@typedb_bazel_distribution//platform:is_linux_arm64": "@typedb_cluster_artifact_linux-arm64//file",
+        "@typedb_bazel_distribution//platform:is_linux_x86_64": "@typedb_cluster_artifact_linux-x86_64//file",
+        "@typedb_bazel_distribution//platform:is_mac_arm64": "@typedb_cluster_artifact_mac-arm64//file",
+        "@typedb_bazel_distribution//platform:is_mac_x86_64": "@typedb_cluster_artifact_mac-x86_64//file",
+        "@typedb_bazel_distribution//platform:is_windows_x86_64": "@typedb_cluster_artifact_windows-x86_64//file",
+    },
+    test_class = "com.typedb.driver.test.integration.cluster.FailoverTest",
+    size = "large",
+    deps = [
+        # Internal dependencies
+        "//java:driver-java",
+        "//java/api",
+        "//java/common",
+
+        # External dependencies
+        "@maven//:org_slf4j_slf4j_api",
+    ],
+)
 
 checkstyle_test(
     name = "checkstyle",

@@ -49,6 +49,20 @@ csharp_integration_test(
     targeting_packs = targeting_packs,
 )
 
+csharp_integration_test(
+    name = "test-failover",
+    srcs = ["FailoverTest.cs"],
+    deps = [
+        "//csharp:driver-csharp",
+        "//csharp/Api:api",
+        "//csharp/Answer:answer",
+        "//csharp/Common:common",
+    ],
+    target_frameworks = target_frameworks,
+    targeting_packs = targeting_packs,
+    size = "large",
+)
+
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*"]),

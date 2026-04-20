@@ -20,86 +20,32 @@ set -e
 
 NODE_COUNT="${1:-1}"
 ENCRYPTION_ENABLED="${2:-true}"
+export ENCRYPTION_ENABLED
 
-DEPLOYMENT_ID="test"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+CLUSTER_SERVER="${SCRIPT_DIR}/cluster-server.sh"
 
 ROOT_CA_PATH="$(realpath tool/test/resources/encryption/ext-grpc-root-ca.pem)"
-CERT_PATH="$(realpath tool/test/resources/encryption/ext-grpc-certificate.pem)"
-KEY_PATH="$(realpath tool/test/resources/encryption/ext-grpc-private-key.pem)"
-CONFIG_PATH="$(realpath tool/test/resources/config.yml)"
-
-server_start() {
-  local node_id="$1"
-  local server_port="${node_id}1729"
-  local clustering_port="${node_id}1730"
-  local monitoring_port="${node_id}1731"
-  local http_port="${node_id}8000"
-  local admin_port="${node_id}1728"
-
-  local node_dir="./${node_id}"
-  local data_dir="${node_dir}/data"
-  local clustering_dir="${node_dir}/clustering"
-
-  "${node_dir}/typedb" server \
-    --config="${CONFIG_PATH}" \
-    --diagnostics.deployment-id "${DEPLOYMENT_ID}" \
-    --server.address="0.0.0.0:${server_port}" \
-    --server.connection-address="127.0.0.1:${server_port}" \
-    --server.http.enabled=true \
-    --server.http.address="0.0.0.0:${http_port}" \
-    --server.clustering.id="${node_id}" \
-    --server.clustering.address="127.0.0.1:${clustering_port}" \
-    --server.admin.enabled=true \
-    --server.admin.port="${admin_port}" \
-    --server.encryption.enabled="${ENCRYPTION_ENABLED}" \
-    --server.encryption.certificate="${CERT_PATH}" \
-    --server.encryption.certificate-key="${KEY_PATH}" \
-    --server.encryption.ca-certificate="${ROOT_CA_PATH}" \
-    --storage.data-directory="${data_dir}" \
-    --storage.clustering-directory="${clustering_dir}" \
-    --diagnostics.monitoring.port="${monitoring_port}" \
-    --development-mode.enabled=true
-}
 
 rm -rf $(seq 1 $NODE_COUNT) typedb-cluster-all
 
 bazel run //tool/test:typedb-cluster-extractor -- typedb-cluster-all
 
-echo Successfully unarchived a TypeDB distribution. Creating $NODE_COUNT copies ${1}.
+echo Successfully unarchived a TypeDB distribution. Creating $NODE_COUNT copies.
 for i in $(seq 1 $NODE_COUNT); do
   rm -rf $i
   cp -r typedb-cluster-all $i || exit 1
 done
+
 echo Starting a cluster consisting of $NODE_COUNT servers...
 for i in $(seq 1 $NODE_COUNT); do
-  server_start $i &
+  "${CLUSTER_SERVER}" start $i
 done
 
-ROOT_CA=$ROOT_CA_PATH
-export ROOT_CA
-
-POLL_INTERVAL_SECS=0.5
 LEADER_SELF_ELECT_TIMEOUT=8
-MAX_RETRIES=60
-RETRY_NUM=0
-while [[ $RETRY_NUM -lt $MAX_RETRIES ]]; do
-  RETRY_NUM=$(($RETRY_NUM + 1))
-  if [[ $(($RETRY_NUM % 4)) -eq 0 ]]; then
-    echo Waiting for TypeDB Cluster servers to start \($(($RETRY_NUM / 2))s\)...
-  fi
-  ALL_STARTED=1
-  for i in $(seq 1 $NODE_COUNT); do
-    lsof -i :${i}1729 || ALL_STARTED=0
-  done
-  if (( $ALL_STARTED )); then
-    break
-  fi
-  sleep $POLL_INTERVAL_SECS
+for i in $(seq 1 $NODE_COUNT); do
+  "${CLUSTER_SERVER}" await $i
 done
-if (( ! $ALL_STARTED )); then
-  echo Failed to start one or more TypeDB Cluster servers
-  exit 1
-fi
 
 sleep $LEADER_SELF_ELECT_TIMEOUT
 echo $NODE_COUNT TypeDB Cluster database servers started
@@ -112,3 +58,6 @@ if [ "$NODE_COUNT" -gt 1 ]; then
     ./1/typedb admin --address=127.0.0.1:11728 --command "servers register ${i} 127.0.0.1:${clustering_port}"
   done
 fi
+
+ROOT_CA=$ROOT_CA_PATH
+export ROOT_CA

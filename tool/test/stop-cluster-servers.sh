@@ -18,4 +18,5 @@
 
 set -e
 
-kill $(ps aux | awk '/typedb[_server_bin]/ {print $2}')
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+exec "${SCRIPT_DIR}/cluster-server.sh" stop-all
