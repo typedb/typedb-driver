@@ -305,7 +305,7 @@ class Datetime:
         return f"Datetime({self._datetime_of_seconds!r}, {self._nanos}, {self._tz_name})"
 
     def __hash__(self):
-        return hash((self._datetime_of_seconds, self._nanos, self._tz_name))
+        return hash((self._datetime_of_seconds, self._nanos))
 
     def __eq__(self, other):
         if other is self:
