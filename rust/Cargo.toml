@@ -94,12 +94,8 @@
 		workspace = true
 
 [[test]]
-	path = "tests/integration/cluster/playground.rs"
-	name = "test_playground"
-
-[[test]]
-	path = "tests/integration/cluster/clustering.rs"
-	name = "test_clustering"
+	path = "tests/integration/cluster/failover.rs"
+	name = "test_failover"
 
 [[test]]
 	path = "tests/integration/values.rs"

@@ -21,8 +21,8 @@ load("@rules_rust//rust:defs.bzl", "rust_test")
 load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 rust_test(
-    name = "test_clustering",
-    srcs = ["clustering.rs"],
+    name = "test_failover",
+    srcs = ["failover.rs"],
     deps = [
         "//rust:typedb_driver",
         "@crates//:async-std",
