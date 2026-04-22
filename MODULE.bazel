@@ -51,7 +51,7 @@ bazel_dep(name = "typedb_dependencies", version = "0.0.0")
 git_override(
     module_name = "typedb_dependencies",
     remote = "https://github.com/typedb/dependencies",
-    commit = "00d895243d72e2b19b0e5dc121eec4f0ed8eb532",
+    commit = "4b4a8c694ab098a52678d66608ce0a9fb13b7cff",
 )
 
 bazel_dep(name = "typedb_bazel_distribution", version = "0.0.0")
@@ -65,7 +65,7 @@ bazel_dep(name = "typedb_protocol", version = "0.0.0")
 git_override(
     module_name = "typedb_protocol",
     remote = "https://github.com/typedb/typedb-protocol",
-    tag = "3.10.0",
+    commit = "3428a6321740f0e06eb8c4a7b732d6426cc852aa",
 )
 
 bazel_dep(name = "typedb_behaviour", version = "0.0.0")
@@ -121,6 +121,7 @@ rust.toolchain(
         "x86_64-pc-windows-msvc",
         "x86_64-unknown-linux-gnu",
     ],
+    rustfmt_version = "nightly/2026-04-15",
 )
 use_repo(rust, "rust_toolchains")
 register_toolchains("@rust_toolchains//:all")
