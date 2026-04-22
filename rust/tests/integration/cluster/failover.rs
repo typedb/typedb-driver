@@ -69,8 +69,7 @@ fn tls_root_ca() -> PathBuf {
 
 async fn create_driver() -> TypeDBDriver {
     for attempt in 0..PRIMARY_POLL_RETRIES {
-        let tls_config =
-            DriverTlsConfig::enabled_with_root_ca(&tls_root_ca()).expect("Failed to create TLS config");
+        let tls_config = DriverTlsConfig::enabled_with_root_ca(&tls_root_ca()).expect("Failed to create TLS config");
         let driver_options = DriverOptions::new(tls_config).primary_failover_retries(PRIMARY_FAILOVER_RETRIES);
         match TypeDBDriver::new(
             Addresses::try_from_addresses_str(ADDRESSES.iter()).unwrap(),
@@ -145,9 +144,8 @@ async fn try_setup_database(driver: &TypeDBDriver) -> std::result::Result<(), ty
     }
     driver.databases().create(DATABASE_NAME).await?;
 
-    let transaction = driver
-        .transaction_with_options(DATABASE_NAME, TransactionType::Schema, TransactionOptions::default())
-        .await?;
+    let transaction =
+        driver.transaction_with_options(DATABASE_NAME, TransactionType::Schema, TransactionOptions::default()).await?;
     transaction.query("define entity person;").await?;
     transaction.commit().await?;
     Ok(())

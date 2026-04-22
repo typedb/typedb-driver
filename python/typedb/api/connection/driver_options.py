@@ -125,8 +125,10 @@ class DriverOptions(NativeWrapper[NativeDriverOptions]):
     def primary_failover_retries(self) -> int:
         """
         Returns the value set for the primary failover retries limit in this ``DriverOptions`` object.
-        Limits the number of attempts to redirect a request to another
-        primary server in case of a failure due to the change of replication roles. Defaults to 1.
+        Sets the number of times the driver retries finding and re-routing to the primary server
+        on connection failures. This value is used both for polling during leader election (up to
+        N+1 attempts with a 2-second sleep between each) and for re-executing a failed request on
+        a newly discovered primary. Defaults to 1.
         """
         return driver_options_get_primary_failover_retries(self.native_object)
 

@@ -20,7 +20,7 @@
 use std::future::Future;
 use std::{
     collections::{HashMap, HashSet},
-    fmt, iter,
+    fmt,
     sync::{Arc, RwLock, RwLockReadGuard, RwLockWriteGuard},
     thread::sleep,
     time::Duration,
@@ -225,84 +225,50 @@ impl ServerManager {
         F: Fn(ServerConnection) -> P,
         P: Future<Output = Result<R>>,
     {
-        let mut primary_replica = match self.read_primary_replica() {
-            Some(replica) => replica,
-            None => {
-                let replicas: HashSet<_> = self.read_replicas().iter().cloned().collect();
-                if replicas.len() == 1 && replicas.iter().next().unwrap().replication_status().is_none() {
-                    // Only replica without status => not Cluster
-                    replicas.into_iter().next().unwrap()
-                } else {
-                    self.seek_primary_replica_in(replicas).await?
-                }
-            }
-        };
-
         let retries = self.driver_options.primary_failover_retries;
+        let mut primary = self.get_or_seek_primary_replica(retries).await?;
+
         let mut connection_errors = HashMap::new();
         for _ in 0..=retries {
-            let private_address = primary_replica.private_address().clone();
-            match self.execute_on(primary_replica.address(), &private_address, &task).await {
+            let private_address = primary.private_address().clone();
+            match self.execute_on(primary.address(), &private_address, &task).await {
+                Ok(result) => return Ok(result),
                 Err(Error::Connection(connection_error)) => {
-                    let replicas: HashSet<_> = self.read_replicas().iter().cloned().collect();
-                    let replicas_without_old_primary =
-                        replicas.into_iter().filter(|replica| replica.private_address() != &private_address);
-                    let is_not_primary = matches!(
-                        &connection_error,
-                        ConnectionError::ClusterServerNotPrimary
-                    );
-                    primary_replica = match &connection_error {
-                        ConnectionError::ClusterServerNotPrimary => {
-                            debug!("Could not connect to the primary replica: no longer primary. Retrying...");
-                            let replicas =
-                                iter::once(primary_replica.clone()).chain(replicas_without_old_primary);
-                            match self.seek_primary_replica_in(replicas).await {
-                                Ok(replica) => replica,
-                                Err(_) => {
-                                    Self::wait_for_primary_replica_selection().await;
-                                    connection_errors
-                                        .insert(private_address.clone(), connection_error.into());
-                                    continue;
-                                }
-                            }
-                        }
-                        err => {
-                            debug!("Could not connect to the primary replica: {err:?}. Retrying...");
-                            match self.seek_primary_replica_in(replicas_without_old_primary).await {
-                                Ok(replica) => replica,
-                                Err(_) => {
-                                    Self::wait_for_primary_replica_selection().await;
-                                    connection_errors
-                                        .insert(private_address.clone(), connection_error.into());
-                                    continue;
-                                }
-                            }
-                        }
-                    };
-
-                    connection_errors.insert(primary_replica.address().clone(), connection_error.into());
-
-                    if primary_replica.private_address() == &private_address {
-                        if is_not_primary {
-                            // Server is alive but keeps being reported as the primary —
-                            // nothing more we can do.
-                            break;
-                        }
-                        // Server is unreachable but other replicas still report it as
-                        // primary (election in progress). Wait and retry.
-                        Self::wait_for_primary_replica_selection().await;
-                        continue;
+                    debug!("Failed on primary {}: {connection_error:?}", primary.address());
+                    connection_errors.insert(primary.address().clone(), connection_error.clone().into());
+                    let candidates = self.failover_candidates(&private_address, &connection_error);
+                    match self.seek_primary_replica_in(candidates, retries, Some(&private_address)).await {
+                        Ok(replica) => primary = replica,
+                        Err(_) => break,
                     }
                 }
-                Err(err) => {
-                    return Err(err);
-                }
-                res => {
-                    return res;
-                }
+                Err(err) => return Err(err),
             }
         }
         Err(self.server_connection_failed_err(connection_errors))
+    }
+
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    async fn get_or_seek_primary_replica(&self, retries: usize) -> Result<AvailableServer> {
+        if let Some(replica) = self.read_primary_replica() {
+            return Ok(replica);
+        }
+        let replicas: HashSet<_> = self.read_replicas().iter().cloned().collect();
+        if replicas.len() == 1 && replicas.iter().next().unwrap().replication_status().is_none() {
+            // Only replica without status => not Cluster
+            return Ok(replicas.into_iter().next().unwrap());
+        }
+        self.seek_primary_replica_in(replicas, retries, None).await
+    }
+
+    fn failover_candidates(&self, failed_address: &Address, error: &ConnectionError) -> HashSet<AvailableServer> {
+        let replicas: HashSet<_> = self.read_replicas().iter().cloned().collect();
+        if matches!(error, ConnectionError::ClusterServerNotPrimary) {
+            replicas // Server is alive — include it as a candidate to query
+        } else {
+            replicas.into_iter().filter(|r| r.private_address() != failed_address).collect()
+            // Server is dead — exclude it
+        }
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
@@ -346,28 +312,48 @@ impl ServerManager {
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     async fn seek_primary_replica_in(
         &self,
+        source_replicas: HashSet<AvailableServer>,
+        retries: usize,
+        expect_different_from: Option<&Address>,
+    ) -> Result<AvailableServer> {
+        let mut last_error = None;
+        for attempt in 0..=retries {
+            match self.try_seek_primary_replica_in(source_replicas.iter().cloned()).await {
+                Ok(replica) => {
+                    if let Some(stale) = expect_different_from {
+                        if replica.private_address() == stale && attempt < retries {
+                            debug!(
+                                "Seek returned stale primary (attempt {}/{}), retrying...",
+                                attempt + 1,
+                                retries + 1
+                            );
+                            Self::wait_for_primary_replica_selection().await;
+                            continue;
+                        }
+                    }
+                    return Ok(replica);
+                }
+                Err(err) => {
+                    last_error = Some(err);
+                    if attempt < retries {
+                        debug!("Primary not found (attempt {}/{}), retrying...", attempt + 1, retries + 1);
+                        Self::wait_for_primary_replica_selection().await;
+                    }
+                }
+            }
+        }
+        Err(last_error.unwrap())
+    }
+
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    async fn try_seek_primary_replica_in(
+        &self,
         source_replicas: impl IntoIterator<Item = AvailableServer>,
     ) -> Result<AvailableServer> {
-        let result = self
-            .execute_on_any(source_replicas, |replica_connection| async {
-                let result = self.seek_primary_replica(replica_connection).await;
-                if &result == &Err(Error::Connection(ConnectionError::NoPrimaryServer {})) {
-                    // TODO: Cannot actually happen
-                    Self::wait_for_primary_replica_selection().await;
-                }
-                result
-            })
-            .await;
-
-        match result {
-            // TODO: We may not check newly added configured addresses, and we need to somehow integrate it here...
-            // Err(Error::Connection(ConnectionError::ServerConnectionFailed { configured_addresses, accessed_addresses, details })) => {
-            //
-            //     // Last resort: try configured addresses if they are not in the list of accessed addresses
-            //     let addresses = configured_addresses.exclude_addresses(accessed_addresses);
-            // }
-            res => res,
-        }
+        self.execute_on_any(source_replicas, |replica_connection| async {
+            self.seek_primary_replica(replica_connection).await
+        })
+        .await
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]

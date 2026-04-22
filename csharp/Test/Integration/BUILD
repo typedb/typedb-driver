@@ -65,10 +65,7 @@ csharp_integration_test(
         "//tool/test:cluster-server.sh",
         "//tool/test/resources:encryption/ext-grpc-root-ca.pem",
     ],
-    env = {
-        "CLUSTER_SERVER_SCRIPT": "$(rootpath //tool/test:cluster-server.sh)",
-        "ROOT_CA": "$(rootpath //tool/test/resources:encryption/ext-grpc-root-ca.pem)",
-    },
+    # Pass these paths via --test_env: --test_env=CLUSTER_SERVER_SCRIPT=<path> --test_env=ROOT_CA=<path>
 )
 
 checkstyle_test(
