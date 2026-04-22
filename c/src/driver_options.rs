@@ -50,9 +50,10 @@ pub extern "C" fn driver_options_get_tls_config(options: *const DriverOptions) -
     release(borrow(options).tls_config.clone())
 }
 
-/// Limits the number of attempts to redirect a request to another
-/// primary replica in case of a failure due to the change of replica roles.
-/// Defaults to 1.
+/// Sets the number of times the driver retries finding and re-routing to the primary replica
+/// on connection failures. This value is used both for polling during leader election (up to
+/// N+1 attempts with a 2-second sleep between each) and for re-executing a failed request on
+/// a newly discovered primary. Defaults to 1.
 #[no_mangle]
 pub extern "C" fn driver_options_set_primary_failover_retries(
     options: *mut DriverOptions,
@@ -62,8 +63,10 @@ pub extern "C" fn driver_options_set_primary_failover_retries(
 }
 
 /// Returns the value set for the primary failover retries limit in this <code>DriverOptions</code> object.
-/// Limits the number of attempts to redirect a request to another
-/// primary replica in case of a failure due to the change of replica roles.
+/// Sets the number of times the driver retries finding and re-routing to the primary replica
+/// on connection failures. This value is used both for polling during leader election (up to
+/// N+1 attempts with a 2-second sleep between each) and for re-executing a failed request on
+/// a newly discovered primary.
 #[no_mangle]
 pub extern "C" fn driver_options_get_primary_failover_retries(options: *const DriverOptions) -> i64 {
     borrow(options).primary_failover_retries as i64
