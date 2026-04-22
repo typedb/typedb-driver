@@ -356,7 +356,7 @@ impl Error {
     }
 
     fn try_extracting_connection_error_message(message: &str) -> Option<ConnectionError> {
-        if is_rst_stream(message) || is_tcp_connect_error(message) {
+        if is_rst_stream(message) || is_tcp_connect_error(message) || is_connection_error(message) {
             Some(ConnectionError::ServerConnectionFailedNetworking { error: message.to_string() })
         } else if is_reading_body_from_connection_error(message) {
             Some(ConnectionError::ServerConnectionIsClosedUnexpectedly)
@@ -506,6 +506,11 @@ fn is_reading_body_from_connection_error(message: &str) -> bool {
 fn is_tcp_connect_error(message: &str) -> bool {
     // No TCP connection
     message.contains("tcp connect error")
+}
+
+fn is_connection_error(message: &str) -> bool {
+    // Transport-level connection errors
+    message.contains("connection error")
 }
 
 fn concat_source_messages(status: &Status) -> String {

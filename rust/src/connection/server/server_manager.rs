@@ -240,27 +240,42 @@ impl ServerManager {
 
         let retries = self.driver_options.primary_failover_retries;
         let mut connection_errors = HashMap::new();
-        for _x in 0..=retries {
+        for _ in 0..=retries {
             let private_address = primary_replica.private_address().clone();
             match self.execute_on(primary_replica.address(), &private_address, &task).await {
                 Err(Error::Connection(connection_error)) => {
                     let replicas: HashSet<_> = self.read_replicas().iter().cloned().collect();
                     let replicas_without_old_primary =
                         replicas.into_iter().filter(|replica| replica.private_address() != &private_address);
+                    let is_not_primary = matches!(
+                        &connection_error,
+                        ConnectionError::ClusterServerNotPrimary
+                    );
                     primary_replica = match &connection_error {
                         ConnectionError::ClusterServerNotPrimary => {
                             debug!("Could not connect to the primary replica: no longer primary. Retrying...");
-                            let replicas = iter::once(primary_replica).chain(replicas_without_old_primary);
+                            let replicas =
+                                iter::once(primary_replica.clone()).chain(replicas_without_old_primary);
                             match self.seek_primary_replica_in(replicas).await {
                                 Ok(replica) => replica,
-                                Err(_) => return Err(connection_error.into()),
+                                Err(_) => {
+                                    Self::wait_for_primary_replica_selection().await;
+                                    connection_errors
+                                        .insert(private_address.clone(), connection_error.into());
+                                    continue;
+                                }
                             }
                         }
                         err => {
                             debug!("Could not connect to the primary replica: {err:?}. Retrying...");
                             match self.seek_primary_replica_in(replicas_without_old_primary).await {
                                 Ok(replica) => replica,
-                                Err(_) => return Err(connection_error.into()),
+                                Err(_) => {
+                                    Self::wait_for_primary_replica_selection().await;
+                                    connection_errors
+                                        .insert(private_address.clone(), connection_error.into());
+                                    continue;
+                                }
                             }
                         }
                     };
@@ -268,7 +283,15 @@ impl ServerManager {
                     connection_errors.insert(primary_replica.address().clone(), connection_error.into());
 
                     if primary_replica.private_address() == &private_address {
-                        break;
+                        if is_not_primary {
+                            // Server is alive but keeps being reported as the primary —
+                            // nothing more we can do.
+                            break;
+                        }
+                        // Server is unreachable but other replicas still report it as
+                        // primary (election in progress). Wait and retry.
+                        Self::wait_for_primary_replica_selection().await;
+                        continue;
                     }
                 }
                 Err(err) => {

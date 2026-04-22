@@ -15,6 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 
+import os
 import subprocess
 import unittest
 from time import sleep
@@ -26,20 +27,29 @@ USERNAME = "admin"
 PASSWORD = "password"
 DATABASE_NAME = "test-failover"
 FAILOVER_ITERATIONS = 10
-POST_KILL_WAIT_SECS = 5
 PRIMARY_POLL_RETRIES = 20
 PRIMARY_POLL_INTERVAL_SECS = 2
-CLUSTER_NODE_SCRIPT = "tool/test/cluster-server.sh"
+PRIMARY_FAILOVER_RETRIES = 5
+CLUSTER_SERVER_SCRIPT = os.environ["CLUSTER_SERVER_SCRIPT"]
 
 
-def cluster_node(command, node_id):
+def cluster_server(command, node_id):
+    env = None
+    if "CLUSTER_DIR" not in os.environ and "BUILD_WORKSPACE_DIRECTORY" in os.environ:
+        env = {**os.environ, "CLUSTER_DIR": os.environ["BUILD_WORKSPACE_DIRECTORY"]}
     result = subprocess.run(
-        [CLUSTER_NODE_SCRIPT, command, str(node_id)],
-        capture_output=True, text=True
+        [CLUSTER_SERVER_SCRIPT, command, str(node_id)],
+        capture_output=True, text=True, env=env
     )
     assert result.returncode == 0, (
-        f"{CLUSTER_NODE_SCRIPT} {command} {node_id} failed: {result.stderr}"
+        f"{CLUSTER_SERVER_SCRIPT} {command} {node_id} failed: {result.stderr}"
     )
+
+
+def ensure_all_nodes_up():
+    for i in range(1, len(ADDRESSES) + 1):
+        cluster_server("start", str(i))
+        cluster_server("await", str(i))
 
 
 def node_id_from_address(address):
@@ -48,11 +58,19 @@ def node_id_from_address(address):
 
 
 def create_driver():
-    return TypeDB.driver(
-        ADDRESSES,
-        Credentials(USERNAME, PASSWORD),
-        DriverOptions(DriverTlsConfig.disabled()),
-    )
+    for attempt in range(PRIMARY_POLL_RETRIES):
+        try:
+            root_ca = os.environ["ROOT_CA"]
+            options = DriverOptions(DriverTlsConfig.enabled_with_root_ca(root_ca))
+            options.primary_failover_retries = PRIMARY_FAILOVER_RETRIES
+            return TypeDB.driver(ADDRESSES, Credentials(USERNAME, PASSWORD), options)
+        except Exception as e:
+            if attempt < PRIMARY_POLL_RETRIES - 1:
+                print(f"  Driver creation failed (attempt {attempt + 1}/{PRIMARY_POLL_RETRIES}): "
+                      f"{e}. Retrying in {PRIMARY_POLL_INTERVAL_SECS}s...")
+                sleep(PRIMARY_POLL_INTERVAL_SECS)
+            else:
+                raise
 
 
 def get_primary_server(driver):
@@ -70,10 +88,14 @@ def get_primary_server(driver):
 class TestClusterFailover(unittest.TestCase):
 
     def setUp(self):
-        driver = create_driver()
-        if driver.databases.contains(DATABASE_NAME):
-            driver.databases.get(DATABASE_NAME).delete()
-        driver.close()
+        ensure_all_nodes_up()
+        try:
+            driver = create_driver()
+            if driver.databases.contains(DATABASE_NAME):
+                driver.databases.get(DATABASE_NAME).delete()
+            driver.close()
+        except Exception:
+            pass
 
     def tearDown(self):
         try:
@@ -87,22 +109,14 @@ class TestClusterFailover(unittest.TestCase):
     def test_primary_failover(self):
         print("=== Cluster Failover Test ===")
 
-        # Connect driver (cluster must already be running via start-cluster-servers.sh)
         print("Connecting driver...")
         driver = create_driver()
 
-        # Setup database with schema
         print("Setting up database and schema...")
-        driver.databases.create(DATABASE_NAME)
-
-        tx = driver.transaction(DATABASE_NAME, TransactionType.SCHEMA)
-        tx.query("define entity person;").resolve()
-        tx.commit()
-
+        self._setup_database(driver)
         self._verify_read_query(driver)
         print("Initial setup verified.")
 
-        # Failover loop
         for iteration in range(1, FAILOVER_ITERATIONS + 1):
             print(f"\n--- Failover iteration {iteration}/{FAILOVER_ITERATIONS} ---")
 
@@ -111,23 +125,50 @@ class TestClusterFailover(unittest.TestCase):
             node_id = node_id_from_address(primary_address)
             print(f"  Primary server: {primary_address} (node {node_id})")
 
-            print(f"  Killing node {node_id}...")
-            cluster_node("kill", node_id)
-
-            print(f"  Waiting {POST_KILL_WAIT_SECS}s for re-election...")
-            sleep(POST_KILL_WAIT_SECS)
-
-            print("  Verifying read query on new primary...")
+            print("  Read query before kill...")
             self._verify_read_query(driver)
-            print("  Read query succeeded.")
+
+            print(f"  Killing node {node_id}...")
+            cluster_server("kill", node_id)
+
+            print("  Read query immediately after kill (driver auto-failover)...")
+            self._verify_read_query(driver)
+            print("  Auto-failover read succeeded.")
+
+            print("  Confirming new primary...")
+            new_primary = get_primary_server(driver)
+            print(f"  New primary: {new_primary.address} "
+                  f"(node {node_id_from_address(new_primary.address)})")
+
+            print("  Read query on confirmed primary...")
+            self._verify_read_query(driver)
+            print("  Confirmed primary read succeeded.")
 
             print(f"  Restarting node {node_id}...")
-            cluster_node("start", node_id)
-            cluster_node("await", node_id)
+            cluster_server("start", node_id)
+            cluster_server("await", node_id)
             print(f"  Node {node_id} restarted.")
 
         print(f"\n=== All {FAILOVER_ITERATIONS} failover iterations passed! ===")
         driver.close()
+
+    def _setup_database(self, driver):
+        for attempt in range(PRIMARY_POLL_RETRIES):
+            try:
+                if driver.databases.contains(DATABASE_NAME):
+                    driver.databases.get(DATABASE_NAME).delete()
+                driver.databases.create(DATABASE_NAME)
+                tx = driver.transaction(DATABASE_NAME, TransactionType.SCHEMA)
+                tx.query("define entity person;").resolve()
+                tx.commit()
+                return
+            except Exception as e:
+                if attempt < PRIMARY_POLL_RETRIES - 1:
+                    print(f"  Database setup failed (attempt {attempt + 1}/{PRIMARY_POLL_RETRIES}): "
+                          f"{e}. Retrying in {PRIMARY_POLL_INTERVAL_SECS}s...")
+                    sleep(PRIMARY_POLL_INTERVAL_SECS)
+                else:
+                    raise
 
     def _verify_read_query(self, driver):
         tx = driver.transaction(DATABASE_NAME, TransactionType.READ)

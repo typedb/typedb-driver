@@ -61,6 +61,14 @@ csharp_integration_test(
     target_frameworks = target_frameworks,
     targeting_packs = targeting_packs,
     size = "large",
+    data = [
+        "//tool/test:cluster-server.sh",
+        "//tool/test/resources:encryption/ext-grpc-root-ca.pem",
+    ],
+    env = {
+        "CLUSTER_SERVER_SCRIPT": "$(rootpath //tool/test:cluster-server.sh)",
+        "ROOT_CA": "$(rootpath //tool/test/resources:encryption/ext-grpc-root-ca.pem)",
+    },
 )
 
 checkstyle_test(
