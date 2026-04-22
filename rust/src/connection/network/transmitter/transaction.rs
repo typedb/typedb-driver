@@ -466,9 +466,12 @@ impl ResponseCollector {
             Some(ResPart::StreamRes(stream_res)) => match stream_res.state {
                 None => {
                     self.callbacks.write().unwrap().remove(&request_id);
-                    error!("{}", ConnectionError::MissingResponseField {
-                        field: "transaction.res_part.res_part.stream_res.state"
-                    })
+                    error!(
+                        "{}",
+                        ConnectionError::MissingResponseField {
+                            field: "transaction.res_part.res_part.stream_res.state"
+                        }
+                    )
                 }
                 Some(state) => match state {
                     State::Continue(_) => match self.callbacks.read().unwrap().get(&request_id) {
