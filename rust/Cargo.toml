@@ -134,10 +134,6 @@
 	path = "tests/behaviour/driver/migration.rs"
 	name = "test_migration"
 
-[[test]]
-	path = "tests/behaviour/debug/debug.rs"
-	name = "test_debug"
-
 [[bin]]
 	path = "example.rs"
 	name = "driver-example"

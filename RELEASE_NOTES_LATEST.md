@@ -9,13 +9,13 @@ Documentation: https://typedb.com/docs/drivers/rust/overview
 
 
 ```sh
-cargo add typedb-driver@3.8.4-rc0
+cargo add typedb-driver@3.10.0
 ```
 
 
 ### Java driver
 
-Available through [https://repo.typedb.com](https://cloudsmith.io/~typedb/repos/public-release/packages/detail/maven/typedb-driver/3.8.4-rc0/a=noarch;xg=com.typedb/)
+Available through [https://repo.typedb.com](https://cloudsmith.io/~typedb/repos/public-release/packages/detail/maven/typedb-driver/3.10.0/a=noarch;xg=com.typedb/)
 Documentation: https://typedb.com/docs/drivers/java/overview
 
 ```xml
@@ -29,7 +29,7 @@ Documentation: https://typedb.com/docs/drivers/java/overview
     <dependency>
         <groupid>com.typedb</groupid>
         <artifactid>typedb-driver</artifactid>
-        <version>3.8.4-rc0</version>
+        <version>3.10.0</version>
     </dependency>
 </dependencies>
 ```
@@ -43,7 +43,7 @@ Available through https://pypi.org
 
 [//]: # (TODO: Python's RC/Alpha/Beta versions are formatted differently. Don't foget to update manually until we make an automation)
 ```
-pip install typedb-driver==3.8.4rc0
+pip install typedb-driver==3.10.0
 ```
 
 ### C# driver
@@ -53,12 +53,12 @@ Documentation: https://typedb.com/docs/drivers/csharp/overview
 
 ```xml
 <ItemGroup>
-    <PackageReference Include="TypeDB.Driver" Version="3.8.4-rc0" />
-    <PackageReference Include="TypeDB.Driver.Pinvoke.osx-x64" Version="3.8.4-rc0" />
-    <PackageReference Include="TypeDB.Driver.Pinvoke.linux-x64" Version="3.8.4-rc0" />
-    <PackageReference Include="TypeDB.Driver.Pinvoke.win-x64" Version="3.8.4-rc0" />
-    <PackageReference Include="TypeDB.Driver.Pinvoke.osx-arm64" Version="3.8.4-rc0" />
-    <PackageReference Include="TypeDB.Driver.Pinvoke.linux-arm64" Version="3.8.4-rc0" />
+    <PackageReference Include="TypeDB.Driver" Version="3.10.0" />
+    <PackageReference Include="TypeDB.Driver.Pinvoke.osx-x64" Version="3.10.0" />
+    <PackageReference Include="TypeDB.Driver.Pinvoke.linux-x64" Version="3.10.0" />
+    <PackageReference Include="TypeDB.Driver.Pinvoke.win-x64" Version="3.10.0" />
+    <PackageReference Include="TypeDB.Driver.Pinvoke.osx-arm64" Version="3.10.0" />
+    <PackageReference Include="TypeDB.Driver.Pinvoke.linux-arm64" Version="3.10.0" />
 </ItemGroup>
 ```
 
@@ -70,12 +70,12 @@ NPM package: https://www.npmjs.com/package/@typedb/driver-http
 Documentation: https://typedb.com/docs/home/install/drivers/
 
 ```
-npm install @typedb/driver-http@3.8.4-rc0
+npm install @typedb/driver-http@3.10.0
 ```
 
 ### C driver
 
-Compiled distributions comprising headers and shared libraries available at: https://cloudsmith.io/~typedb/repos/public-release/packages/?q=name:^typedb-driver-clib+version:3.8.4-rc0
+Compiled distributions comprising headers and shared libraries available at: https://cloudsmith.io/~typedb/repos/public-release/packages/?q=name:^typedb-driver-clib+version:3.10.0
 
 
 ## New Features
@@ -88,6 +88,11 @@ Compiled distributions comprising headers and shared libraries available at: htt
 
 
 ## Other Improvements
+- **Prepare release 3.8.4-rc0**
+  
+  Bump version and generate release notes
+  
+  
 - **Update Rust toolchain**
   
   We update the Rust toolchain version to 1.93 and edition to 2024. We also update the source to make it compile with this new toolchain, and resolve the warnings.
@@ -100,6 +105,7 @@ Compiled distributions comprising headers and shared libraries available at: htt
   Set both encoding and decoding limits to 1 GB on the TypeDbClient stub, matching the corresponding server-side change in https://github.com/typedb/typedb/pull/7745
   
   
+  
 - **Add security framework for c integration test**
   
   Add `-framework Security` linkopt for macOS to the exposed C lib target, fixing linker errors with undefined Security framework symbols when building with Bazel 8.   
@@ -108,4 +114,35 @@ Compiled distributions comprising headers and shared libraries available at: htt
 - **Fetch TypeDB server using native_artifact_files module extension**
   Fetches the TypeDB server artifact using `native_artifacts_files`, close to how we used to with bazel 6.
   
+  
+  
+- **Fix Windows CircleCI test deployment**
+
+- **Update bazel-distribution**
+
+- **Update workspace_refs manually**
+
+- **Fix issue in workspace-status script**
+
+- **Update typedb-protocol**
+
+- **Depend on protocol by tag**
+
+- **Fix windows git patch line ending**
+
+- **Bump version to 3.8.2-rc0**
+
+- **Fix Windows and Linux CI for Bazel 8**
+
+- **Fix deploy-snapshot jobs**
+
+- **Bazel 8 upgrade**
+  
+- **Fix csharp documentation outdated references**
+  
+  Add missing csharp driver documentation missing references, and fix existing broken ones.
+  
+  
+- **Add release cleanup job dependency**
+
     
