@@ -40,23 +40,40 @@ namespace TypeDB.Driver.Test.Integration
         private const string Password = "password";
         private const string DatabaseName = "test-failover";
         private const int FailoverIterations = 10;
-        private const int PostKillWaitSecs = 5;
         private const int PrimaryPollRetries = 20;
         private const int PrimaryPollIntervalSecs = 2;
-        private const string ClusterNodeScript = "tool/test/cluster-server.sh";
+        private const int PrimaryFailoverRetries = 5;
+        private static readonly string ClusterServerScript =
+            Environment.GetEnvironmentVariable("CLUSTER_SERVER_SCRIPT")
+            ?? throw new InvalidOperationException("CLUSTER_SERVER_SCRIPT environment variable must be set");
 
-        private static void ClusterNode(string command, string nodeId)
+        private static void ClusterServer(string command, string nodeId)
         {
             var process = new Process();
-            process.StartInfo.FileName = ClusterNodeScript;
+            process.StartInfo.FileName = ClusterServerScript;
             process.StartInfo.Arguments = $"{command} {nodeId}";
             process.StartInfo.UseShellExecute = false;
             process.StartInfo.RedirectStandardError = true;
+            if (Environment.GetEnvironmentVariable("CLUSTER_DIR") == null
+                && Environment.GetEnvironmentVariable("BUILD_WORKSPACE_DIRECTORY") != null)
+            {
+                process.StartInfo.EnvironmentVariables["CLUSTER_DIR"] =
+                    Environment.GetEnvironmentVariable("BUILD_WORKSPACE_DIRECTORY");
+            }
             process.Start();
             var stderr = process.StandardError.ReadToEnd();
             process.WaitForExit();
             Assert.AreEqual(0, process.ExitCode,
-                $"{ClusterNodeScript} {command} {nodeId} failed: {stderr}");
+                $"{ClusterServerScript} {command} {nodeId} failed: {stderr}");
+        }
+
+        private static void EnsureAllNodesUp()
+        {
+            for (int i = 1; i <= Addresses.Count; i++)
+            {
+                ClusterServer("start", i.ToString());
+                ClusterServer("await", i.ToString());
+            }
         }
 
         private static string NodeIdFromAddress(string address)
@@ -67,11 +84,31 @@ namespace TypeDB.Driver.Test.Integration
 
         private static IDriver CreateDriver()
         {
-            return TypeDB.Driver(
-                Addresses,
-                new Credentials(Username, Password),
-                new DriverOptions(DriverTlsConfig.Disabled())
-            );
+            var rootCA = Environment.GetEnvironmentVariable("ROOT_CA");
+            Assert.IsNotNull(rootCA, "ROOT_CA environment variable must be set");
+            for (int attempt = 0; attempt < PrimaryPollRetries; attempt++)
+            {
+                try
+                {
+                    var options = new DriverOptions(DriverTlsConfig.EnabledWithRootCA(rootCA));
+                    options.PrimaryFailoverRetries = PrimaryFailoverRetries;
+                    return TypeDB.Driver(Addresses, new Credentials(Username, Password), options);
+                }
+                catch (Exception e)
+                {
+                    if (attempt < PrimaryPollRetries - 1)
+                    {
+                        Console.WriteLine($"  Driver creation failed (attempt {attempt + 1}/{PrimaryPollRetries}): "
+                            + $"{e.Message}. Retrying in {PrimaryPollIntervalSecs}s...");
+                        Thread.Sleep(PrimaryPollIntervalSecs * 1000);
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+            }
+            throw new InvalidOperationException("unreachable");
         }
 
         private static IServer GetPrimaryServer(IDriver driver)
@@ -94,9 +131,44 @@ namespace TypeDB.Driver.Test.Integration
             return null;
         }
 
+        private static void SetupDatabase(IDriver driver)
+        {
+            for (int attempt = 0; attempt < PrimaryPollRetries; attempt++)
+            {
+                try
+                {
+                    if (driver.Databases.Contains(DatabaseName))
+                    {
+                        driver.Databases.Get(DatabaseName).Delete();
+                    }
+                    driver.Databases.Create(DatabaseName);
+                    using (var tx = driver.Transaction(DatabaseName, TransactionType.Schema))
+                    {
+                        tx.Query("define entity person;").Resolve();
+                        tx.Commit();
+                    }
+                    return;
+                }
+                catch (Exception e)
+                {
+                    if (attempt < PrimaryPollRetries - 1)
+                    {
+                        Console.WriteLine($"  Database setup failed (attempt {attempt + 1}/{PrimaryPollRetries}): "
+                            + $"{e.Message}. Retrying in {PrimaryPollIntervalSecs}s...");
+                        Thread.Sleep(PrimaryPollIntervalSecs * 1000);
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+            }
+        }
+
         [SetUp]
         public void SetUp()
         {
+            EnsureAllNodesUp();
             try
             {
                 using var driver = CreateDriver();
@@ -133,24 +205,14 @@ namespace TypeDB.Driver.Test.Integration
         {
             Console.WriteLine("=== Cluster Failover Test ===");
 
-            // Connect driver (cluster must already be running via start-cluster-servers.sh)
             Console.WriteLine("Connecting driver...");
             using var driver = CreateDriver();
 
-            // Setup database with schema
             Console.WriteLine("Setting up database and schema...");
-            driver.Databases.Create(DatabaseName);
-
-            using (var tx = driver.Transaction(DatabaseName, TransactionType.Schema))
-            {
-                tx.Query("define entity person;").Resolve();
-                tx.Commit();
-            }
-
+            SetupDatabase(driver);
             VerifyReadQuery(driver);
             Console.WriteLine("Initial setup verified.");
 
-            // Failover loop
             for (int iteration = 1; iteration <= FailoverIterations; iteration++)
             {
                 Console.WriteLine($"\n--- Failover iteration {iteration}/{FailoverIterations} ---");
@@ -161,19 +223,28 @@ namespace TypeDB.Driver.Test.Integration
                 var nodeId = NodeIdFromAddress(primaryAddress);
                 Console.WriteLine($"  Primary server: {primaryAddress} (node {nodeId})");
 
-                Console.WriteLine($"  Killing node {nodeId}...");
-                ClusterNode("kill", nodeId);
-
-                Console.WriteLine($"  Waiting {PostKillWaitSecs}s for re-election...");
-                Thread.Sleep(PostKillWaitSecs * 1000);
-
-                Console.WriteLine("  Verifying read query on new primary...");
+                Console.WriteLine("  Read query before kill...");
                 VerifyReadQuery(driver);
-                Console.WriteLine("  Read query succeeded.");
+
+                Console.WriteLine($"  Killing node {nodeId}...");
+                ClusterServer("kill", nodeId);
+
+                Console.WriteLine("  Read query immediately after kill (driver auto-failover)...");
+                VerifyReadQuery(driver);
+                Console.WriteLine("  Auto-failover read succeeded.");
+
+                Console.WriteLine("  Confirming new primary...");
+                var newPrimary = GetPrimaryServer(driver);
+                Console.WriteLine($"  New primary: {newPrimary.Address} "
+                    + $"(node {NodeIdFromAddress(newPrimary.Address)})");
+
+                Console.WriteLine("  Read query on confirmed primary...");
+                VerifyReadQuery(driver);
+                Console.WriteLine("  Confirmed primary read succeeded.");
 
                 Console.WriteLine($"  Restarting node {nodeId}...");
-                ClusterNode("start", nodeId);
-                ClusterNode("await", nodeId);
+                ClusterServer("start", nodeId);
+                ClusterServer("await", nodeId);
                 Console.WriteLine($"  Node {nodeId} restarted.");
             }
 

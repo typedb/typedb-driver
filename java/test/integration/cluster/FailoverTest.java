@@ -35,6 +35,7 @@ import java.io.IOException;
 import java.util.Optional;
 import java.util.Set;
 
+import static java.util.Objects.requireNonNull;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -48,18 +49,28 @@ public class FailoverTest {
     private static final String PASSWORD = "password";
     private static final String DATABASE_NAME = "test-failover";
     private static final int FAILOVER_ITERATIONS = 10;
-    private static final int POST_KILL_WAIT_SECS = 5;
     private static final int PRIMARY_POLL_RETRIES = 20;
     private static final int PRIMARY_POLL_INTERVAL_SECS = 2;
-    private static final String CLUSTER_NODE_SCRIPT = "tool/test/cluster-server.sh";
+    private static final int PRIMARY_FAILOVER_RETRIES = 5;
+    private static final String CLUSTER_SERVER_SCRIPT = requireNonNull(
+            System.getenv("CLUSTER_SERVER_SCRIPT"), "CLUSTER_SERVER_SCRIPT environment variable must be set"
+    );
 
-    private static void clusterNode(String command, String nodeId) throws IOException, InterruptedException {
-        Process process = new ProcessBuilder(CLUSTER_NODE_SCRIPT, command, nodeId)
-                .inheritIO()
-                .start();
-        int exitCode = process.waitFor();
+    private static void clusterServer(String command, String nodeId) throws IOException, InterruptedException {
+        ProcessBuilder pb = new ProcessBuilder(CLUSTER_SERVER_SCRIPT, command, nodeId).inheritIO();
+        if (System.getenv("CLUSTER_DIR") == null && System.getenv("BUILD_WORKSPACE_DIRECTORY") != null) {
+            pb.environment().put("CLUSTER_DIR", System.getenv("BUILD_WORKSPACE_DIRECTORY"));
+        }
+        int exitCode = pb.start().waitFor();
         if (exitCode != 0) {
-            fail(CLUSTER_NODE_SCRIPT + " " + command + " " + nodeId + " failed with exit code " + exitCode);
+            fail(CLUSTER_SERVER_SCRIPT + " " + command + " " + nodeId + " failed with exit code " + exitCode);
+        }
+    }
+
+    private static void ensureAllNodesUp() throws IOException, InterruptedException {
+        for (int i = 1; i <= ADDRESSES.size(); i++) {
+            clusterServer("start", String.valueOf(i));
+            clusterServer("await", String.valueOf(i));
         }
     }
 
@@ -68,12 +79,29 @@ public class FailoverTest {
         return port.substring(0, 1);
     }
 
-    private static Driver createDriver() {
-        return TypeDB.driver(
-                ADDRESSES,
-                new Credentials(USERNAME, PASSWORD),
-                new DriverOptions(DriverTlsConfig.disabled())
-        );
+    private static Driver createDriver() throws InterruptedException {
+        String rootCA = System.getenv("ROOT_CA");
+        assertNotNull("ROOT_CA environment variable must be set", rootCA);
+        for (int attempt = 0; attempt < PRIMARY_POLL_RETRIES; attempt++) {
+            try {
+                return TypeDB.driver(
+                        ADDRESSES,
+                        new Credentials(USERNAME, PASSWORD),
+                        new DriverOptions(DriverTlsConfig.enabledWithRootCA(rootCA))
+                                .primaryFailoverRetries(PRIMARY_FAILOVER_RETRIES)
+                );
+            } catch (Exception e) {
+                if (attempt < PRIMARY_POLL_RETRIES - 1) {
+                    System.out.println("  Driver creation failed (attempt " + (attempt + 1) + "/"
+                            + PRIMARY_POLL_RETRIES + "): " + e.getMessage()
+                            + ". Retrying in " + PRIMARY_POLL_INTERVAL_SECS + "s...");
+                    Thread.sleep(PRIMARY_POLL_INTERVAL_SECS * 1000L);
+                } else {
+                    throw e;
+                }
+            }
+        }
+        throw new AssertionError("unreachable");
     }
 
     private static Server getPrimaryServer(Driver driver) throws InterruptedException {
@@ -92,8 +120,34 @@ public class FailoverTest {
         return null;
     }
 
+    private static void setupDatabase(Driver driver) throws InterruptedException {
+        for (int attempt = 0; attempt < PRIMARY_POLL_RETRIES; attempt++) {
+            try {
+                if (driver.databases().contains(DATABASE_NAME)) {
+                    driver.databases().get(DATABASE_NAME).delete();
+                }
+                driver.databases().create(DATABASE_NAME);
+                try (Transaction tx = driver.transaction(DATABASE_NAME, Transaction.Type.SCHEMA)) {
+                    tx.query("define entity person;").resolve();
+                    tx.commit();
+                }
+                return;
+            } catch (Exception e) {
+                if (attempt < PRIMARY_POLL_RETRIES - 1) {
+                    System.out.println("  Database setup failed (attempt " + (attempt + 1) + "/"
+                            + PRIMARY_POLL_RETRIES + "): " + e.getMessage()
+                            + ". Retrying in " + PRIMARY_POLL_INTERVAL_SECS + "s...");
+                    Thread.sleep(PRIMARY_POLL_INTERVAL_SECS * 1000L);
+                } else {
+                    throw e;
+                }
+            }
+        }
+    }
+
     @Before
-    public void setUp() {
+    public void setUp() throws IOException, InterruptedException {
+        ensureAllNodesUp();
         try {
             Driver driver = createDriver();
             if (driver.databases().contains(DATABASE_NAME)) {
@@ -122,23 +176,14 @@ public class FailoverTest {
     public void primaryFailover() throws Exception {
         System.out.println("=== Cluster Failover Test ===");
 
-        // Connect driver (cluster must already be running via start-cluster-servers.sh)
         System.out.println("Connecting driver...");
         Driver driver = createDriver();
 
-        // Setup database with schema
         System.out.println("Setting up database and schema...");
-        driver.databases().create(DATABASE_NAME);
-
-        try (Transaction tx = driver.transaction(DATABASE_NAME, Transaction.Type.SCHEMA)) {
-            tx.query("define entity person;").resolve();
-            tx.commit();
-        }
-
+        setupDatabase(driver);
         verifyReadQuery(driver);
         System.out.println("Initial setup verified.");
 
-        // Failover loop
         for (int iteration = 1; iteration <= FAILOVER_ITERATIONS; iteration++) {
             System.out.println("\n--- Failover iteration " + iteration + "/" + FAILOVER_ITERATIONS + " ---");
 
@@ -148,19 +193,28 @@ public class FailoverTest {
             String nodeId = nodeIdFromAddress(primaryAddress);
             System.out.println("  Primary server: " + primaryAddress + " (node " + nodeId + ")");
 
-            System.out.println("  Killing node " + nodeId + "...");
-            clusterNode("kill", nodeId);
-
-            System.out.println("  Waiting " + POST_KILL_WAIT_SECS + "s for re-election...");
-            Thread.sleep(POST_KILL_WAIT_SECS * 1000L);
-
-            System.out.println("  Verifying read query on new primary...");
+            System.out.println("  Read query before kill...");
             verifyReadQuery(driver);
-            System.out.println("  Read query succeeded.");
+
+            System.out.println("  Killing node " + nodeId + "...");
+            clusterServer("kill", nodeId);
+
+            System.out.println("  Read query immediately after kill (driver auto-failover)...");
+            verifyReadQuery(driver);
+            System.out.println("  Auto-failover read succeeded.");
+
+            System.out.println("  Confirming new primary...");
+            Server newPrimary = getPrimaryServer(driver);
+            System.out.println("  New primary: " + newPrimary.getAddress()
+                    + " (node " + nodeIdFromAddress(newPrimary.getAddress()) + ")");
+
+            System.out.println("  Read query on confirmed primary...");
+            verifyReadQuery(driver);
+            System.out.println("  Confirmed primary read succeeded.");
 
             System.out.println("  Restarting node " + nodeId + "...");
-            clusterNode("start", nodeId);
-            clusterNode("await", nodeId);
+            clusterServer("start", nodeId);
+            clusterServer("await", nodeId);
             System.out.println("  Node " + nodeId + " restarted.");
         }
 

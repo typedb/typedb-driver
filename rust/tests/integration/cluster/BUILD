@@ -36,6 +36,15 @@ rust_test(
         "@crates//:tokio",
         "@crates//:uuid",
     ],
+    data = [
+        "//tool/test:cluster-server.sh",
+        "//tool/test/resources:encryption/ext-grpc-root-ca.pem",
+    ],
+    env = {
+        "CLUSTER_SERVER_SCRIPT": "$(rootpath //tool/test:cluster-server.sh)",
+        "ROOT_CA": "$(rootpath //tool/test/resources:encryption/ext-grpc-root-ca.pem)",
+    },
+    size = "large",
 )
 
 checkstyle_test(

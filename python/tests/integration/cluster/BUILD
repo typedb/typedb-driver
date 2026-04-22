@@ -25,7 +25,16 @@ py_test(
     deps = [
         "//python:driver_python",
     ],
-    data = ["//python:native-driver-binary-link", "//python:native-driver-wrapper-link"],
+    data = [
+        "//python:native-driver-binary-link",
+        "//python:native-driver-wrapper-link",
+        "//tool/test:cluster-server.sh",
+        "//tool/test/resources:encryption/ext-grpc-root-ca.pem",
+    ],
+    env = {
+        "CLUSTER_SERVER_SCRIPT": "$(rootpath //tool/test:cluster-server.sh)",
+        "ROOT_CA": "$(rootpath //tool/test/resources:encryption/ext-grpc-root-ca.pem)",
+    },
     size = "large",
 )
 

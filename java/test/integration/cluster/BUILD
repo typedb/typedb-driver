@@ -39,6 +39,14 @@ typedb_java_test(
         # External dependencies
         "@maven//:org_slf4j_slf4j_api",
     ],
+    data = [
+        "//tool/test:cluster-server.sh",
+        "//tool/test/resources:encryption/ext-grpc-root-ca.pem",
+    ],
+    env = {
+        "CLUSTER_SERVER_SCRIPT": "$(rootpath //tool/test:cluster-server.sh)",
+        "ROOT_CA": "$(rootpath //tool/test/resources:encryption/ext-grpc-root-ca.pem)",
+    },
 )
 
 checkstyle_test(

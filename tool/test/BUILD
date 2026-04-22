@@ -20,6 +20,11 @@ load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("@typedb_bazel_distribution//artifact:rules.bzl", "artifact_extractor")
 load("@typedb_dependencies//builder/java:rules.bzl", "native_typedb_artifact")
 
+exports_files(
+    ["cluster-server.sh"],
+    visibility = ["//visibility:public"],
+)
+
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*"]),

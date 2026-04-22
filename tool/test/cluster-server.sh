@@ -26,6 +26,7 @@
 #   cluster-server.sh stop-all            - Stop all cluster nodes
 #
 # Environment:
+#   CLUSTER_DIR         - Directory containing numbered node dirs (default: CWD)
 #   ENCRYPTION_ENABLED  - Enable encryption (default: true)
 #   DEPLOYMENT_ID       - Deployment ID for diagnostics (default: test)
 #
@@ -34,6 +35,49 @@
 #   - Ports: admin=<id>1728, server=<id>1729, clustering=<id>1730, monitoring=<id>1731, http=<id>8000
 
 set -e
+
+# Ensure common sbin paths are available (lsof may live in /usr/sbin)
+export PATH="/usr/sbin:/usr/local/sbin:$PATH"
+
+# Check if a port is listening: returns 0 if listening, 1 otherwise
+port_is_listening() {
+  local port="$1"
+  if command -v lsof >/dev/null 2>&1; then
+    lsof -i :"${port}" -sTCP:LISTEN >/dev/null 2>&1
+  else
+    (echo > /dev/tcp/127.0.0.1/"${port}") >/dev/null 2>&1
+  fi
+}
+
+# Get PID listening on a port (empty string if none)
+pid_on_port() {
+  local port="$1"
+  if command -v lsof >/dev/null 2>&1; then
+    lsof -t -i :"${port}" -sTCP:LISTEN 2>/dev/null || true
+  elif [ -r /proc/net/tcp ] || [ -r /proc/net/tcp6 ]; then
+    local hex_port
+    hex_port=$(printf '%04X' "$port")
+    # Find matching lines in /proc/net/tcp{,6} in LISTEN state (0A), extract inode, then find PID
+    local inode
+    inode=$(awk -v hp="$hex_port" '$2 ~ ":"hp"$" && $4 == "0A" {print $10; exit}' /proc/net/tcp /proc/net/tcp6 2>/dev/null)
+    if [ -n "$inode" ] && [ "$inode" != "0" ]; then
+      # Search /proc/*/fd for the matching inode
+      for fd_dir in /proc/[0-9]*/fd; do
+        local pid_dir="${fd_dir%/fd}"
+        local pid="${pid_dir##*/}"
+        if ls -la "$fd_dir" 2>/dev/null | grep -q "socket:\[$inode\]"; then
+          echo "$pid"
+          return
+        fi
+      done
+    fi
+  fi
+}
+
+# Change to the cluster directory if specified (where numbered dirs 1/, 2/, 3/ live)
+if [ -n "${CLUSTER_DIR:-}" ]; then
+  cd "$CLUSTER_DIR"
+fi
 
 ENCRYPTION_ENABLED="${ENCRYPTION_ENABLED:-true}"
 DEPLOYMENT_ID="${DEPLOYMENT_ID:-test}"
@@ -65,6 +109,11 @@ server_start() {
   local data_dir="${node_dir}/data"
   local clustering_dir="${node_dir}/clustering"
 
+  if port_is_listening "${server_port}"; then
+    echo "Node ${node_id} already running on port ${server_port}"
+    return 0
+  fi
+
   if [ ! -x "${node_dir}/typedb" ]; then
     echo "Error: TypeDB binary not found at ${node_dir}/typedb"
     exit 1
@@ -75,7 +124,9 @@ server_start() {
     config_args="--config=${CONFIG_PATH}"
   fi
 
-  "${node_dir}/typedb" server \
+  local log_file="${node_dir}/server.log"
+
+  nohup "${node_dir}/typedb" server \
     ${config_args} \
     --diagnostics.deployment-id "${DEPLOYMENT_ID}" \
     --server.address="0.0.0.0:${server_port}" \
@@ -97,9 +148,10 @@ server_start() {
     --storage.data-directory="${data_dir}" \
     --storage.clustering-directory="${clustering_dir}" \
     --diagnostics.monitoring.port="${monitoring_port}" \
-    --development-mode.enabled=true &
+    --development-mode.enabled=true > "${log_file}" 2>&1 &
+  disown
 
-  echo "Started node ${node_id} (port ${server_port})"
+  echo "Started node ${node_id} (port ${server_port}, log ${log_file})"
 }
 
 server_kill() {
@@ -108,11 +160,11 @@ server_kill() {
   port=$(server_port "$node_id")
 
   local pid
-  pid=$(lsof -t -i :"${port}" -sTCP:LISTEN 2>/dev/null || true)
+  pid=$(pid_on_port "${port}")
 
   if [ -z "$pid" ]; then
     echo "No server found on port ${port} (node ${node_id})"
-    exit 1
+    return 0
   fi
 
   kill -9 "$pid"
@@ -124,7 +176,7 @@ server_status() {
   local port
   port=$(server_port "$node_id")
 
-  if lsof -i :"${port}" -sTCP:LISTEN >/dev/null 2>&1; then
+  if port_is_listening "${port}"; then
     exit 0
   else
     exit 1
@@ -138,7 +190,7 @@ server_await() {
 
   local retries=0
   while [ $retries -lt $MAX_RETRIES ]; do
-    if lsof -i :"${port}" -sTCP:LISTEN >/dev/null 2>&1; then
+    if port_is_listening "${port}"; then
       echo "Node ${node_id} is ready (port ${port})"
       exit 0
     fi
@@ -155,7 +207,7 @@ stop_all() {
     local port
     port=$(server_port "$i")
     local pid
-    pid=$(lsof -t -i :"${port}" -sTCP:LISTEN 2>/dev/null || true)
+    pid=$(pid_on_port "${port}")
     if [ -n "$pid" ]; then
       kill -9 "$pid" 2>/dev/null || true
       echo "Killed node ${i} (port ${port}, PID ${pid})"

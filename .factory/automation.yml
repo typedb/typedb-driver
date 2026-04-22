@@ -111,12 +111,11 @@ build:
         tool/test/stop-core-server.sh
         if [[ -n "$CORE_FAILED" ]]; then exit 1; fi
         
-        # TODO: Use cluster server artifact with 3 nodes for the same common tests when available
-        # source tool/test/start-cluster-servers.sh 3 &&
-        #   bazel test --config=ci //rust/tests/integration:all --test_output=streamed --test_arg=--nocapture &&
-        #   export CLUSTER_FAILED= || export CLUSTER_FAILED=1
-        # tool/test/stop-cluster-servers.sh
-        # if [[ -n "$CLUSTER_FAILED" ]]; then exit 1; fi
+        source tool/test/start-cluster-servers.sh 3 &&
+          bazel test --config=ci //rust/tests/integration/cluster:test_failover --test_env=CLUSTER_SERVER_SCRIPT=$CLUSTER_SERVER_SCRIPT --test_env=ROOT_CA=$ROOT_CA --test_env=CLUSTER_DIR=$CLUSTER_DIR --test_output=streamed --test_arg=--nocapture &&
+          export CLUSTER_FAILED= || export CLUSTER_FAILED=1
+        tool/test/stop-cluster-servers.sh
+        if [[ -n "$CLUSTER_FAILED" ]]; then exit 1; fi
 
     test-rust-behaviour-core:
       image: typedb-ubuntu-22.04
@@ -179,12 +178,11 @@ build:
         tool/test/stop-core-server.sh
         if [[ -n "$CORE_FAILED" ]]; then exit 1; fi
 
-        # TODO: Use cluster server artifact with 3 nodes for the same common tests when available
-        # source tool/test/start-cluster-servers.sh 3 &&
-        #   bazel test --config=ci //java/test/integration:all --test_output=streamed --jobs=1 &&
-        #   export CLUSTER_FAILED= || export CLUSTER_FAILED=1
-        # tool/test/stop-cluster-servers.sh
-        # if [[ -n "CLUSTER_FAILED" ]]; then exit 1; fi
+        source tool/test/start-cluster-servers.sh 3 &&
+          bazel test --config=ci //java/test/integration/cluster:test-failover --test_env=CLUSTER_SERVER_SCRIPT=$CLUSTER_SERVER_SCRIPT --test_env=ROOT_CA=$ROOT_CA --test_env=CLUSTER_DIR=$CLUSTER_DIR --test_output=streamed --jobs=1 &&
+          export CLUSTER_FAILED= || export CLUSTER_FAILED=1
+        tool/test/stop-cluster-servers.sh
+        if [[ -n "$CLUSTER_FAILED" ]]; then exit 1; fi
 
     test-java-behaviour-core:
       image: typedb-ubuntu-22.04
@@ -236,12 +234,11 @@ build:
         tool/test/stop-core-server.sh
         if [[ -n "$CORE_FAILED" ]]; then exit 1; fi
 
-        # TODO: Use cluster server artifact with 3 nodes when available
-        # source tool/test/start-cluster-servers.sh 3 &&
-        #   bazel test --config=ci //python/tests/integration:all --test_output=streamed --jobs=1 &&
-        #   export CLUSTER_FAILED= || export CLUSTER_FAILED=1
-        # tool/test/stop-cluster-servers.sh
-        # if [[ -n "$CLUSTER_FAILED" ]]; then exit 1; fi
+        source tool/test/start-cluster-servers.sh 3 &&
+          bazel test --config=ci //python/tests/integration/cluster:test_failover --test_env=CLUSTER_SERVER_SCRIPT=$CLUSTER_SERVER_SCRIPT --test_env=ROOT_CA=$ROOT_CA --test_env=CLUSTER_DIR=$CLUSTER_DIR --test_output=streamed --jobs=1 &&
+          export CLUSTER_FAILED= || export CLUSTER_FAILED=1
+        tool/test/stop-cluster-servers.sh
+        if [[ -n "$CLUSTER_FAILED" ]]; then exit 1; fi
 
     test-python-behaviour-core:
       image: typedb-ubuntu-22.04
@@ -339,6 +336,12 @@ build:
           export COMMUNITY_FAILED= || export COMMUNITY_FAILED=1
         tool/test/stop-core-server.sh
         if [[ -n "$COMMUNITY_FAILED" ]]; then exit 1; fi
+
+        source tool/test/start-cluster-servers.sh 3 &&
+          bazel test --config=ci //csharp/Test/Integration:test-failover --test_env=CLUSTER_SERVER_SCRIPT=$CLUSTER_SERVER_SCRIPT --test_env=ROOT_CA=$ROOT_CA --test_env=CLUSTER_DIR=$CLUSTER_DIR --test_output=streamed --jobs=1 &&
+          export CLUSTER_FAILED= || export CLUSTER_FAILED=1
+        tool/test/stop-cluster-servers.sh
+        if [[ -n "$CLUSTER_FAILED" ]]; then exit 1; fi
 
     test-csharp-behaviour-core:
       image: typedb-ubuntu-22.04

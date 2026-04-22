@@ -42,22 +42,39 @@ for i in $(seq 1 $NODE_COUNT); do
   "${CLUSTER_SERVER}" start $i
 done
 
-LEADER_SELF_ELECT_TIMEOUT=8
 for i in $(seq 1 $NODE_COUNT); do
   "${CLUSTER_SERVER}" await $i
 done
-
-sleep $LEADER_SELF_ELECT_TIMEOUT
 echo $NODE_COUNT TypeDB Cluster database servers started
 
-# Register peer replicas via admin tool on node 1
+# Register peer replicas via admin tool on node 1 (with retry for leader election)
+REGISTER_MAX_RETRIES=10
+REGISTER_RETRY_INTERVAL=2
 if [ "$NODE_COUNT" -gt 1 ]; then
   for i in $(seq 2 $NODE_COUNT); do
     clustering_port="${i}1730"
-    echo "Registering replica ${i} at 127.0.0.1:${clustering_port}..."
-    ./1/typedb admin --address=127.0.0.1:11728 --command "servers register ${i} 127.0.0.1:${clustering_port}"
+    for attempt in $(seq 1 $REGISTER_MAX_RETRIES); do
+      if ./1/typedb admin --address=127.0.0.1:11728 --command "servers register ${i} 127.0.0.1:${clustering_port}" 2>&1; then
+        break
+      fi
+      if [ "$attempt" -eq "$REGISTER_MAX_RETRIES" ]; then
+        echo "Failed to register replica ${i} after ${REGISTER_MAX_RETRIES} attempts"
+        exit 1
+      fi
+      echo "  Retrying registration of replica ${i} (attempt ${attempt}/${REGISTER_MAX_RETRIES})..."
+      sleep $REGISTER_RETRY_INTERVAL
+    done
   done
 fi
 
 ROOT_CA=$ROOT_CA_PATH
 export ROOT_CA
+export CLUSTER_SERVER_SCRIPT="${CLUSTER_SERVER}"
+export CLUSTER_DIR="$(pwd)"
+
+# Tail server logs in background so they appear in CI output
+for i in $(seq 1 $NODE_COUNT); do
+  if [ -f "./${i}/server.log" ]; then
+    tail -f "./${i}/server.log" | sed "s/^/[${i}] /" &
+  fi
+done
