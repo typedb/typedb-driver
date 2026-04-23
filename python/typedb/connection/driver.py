@@ -30,8 +30,8 @@ from typedb.common.validation import require_non_null, require_non_negative
 from typedb.database.database_manager import _DatabaseManager
 from typedb.connection.server import _Server
 from typedb.connection.transaction import _Transaction
-from typedb.native_driver_wrapper import driver_new_with_description, driver_new_with_addresses_with_description, \
-    driver_new_with_address_translation_with_description, driver_is_open, driver_force_close, \
+from typedb.native_driver_wrapper import driver_new, driver_new_with_addresses, \
+    driver_new_with_address_translation, driver_is_open, driver_force_close, \
     driver_servers, driver_primary_server, driver_server_version, \
     server_iterator_next, TypeDBDriver as NativeDriver, \
     TypeDBDriverExceptionNative
@@ -55,20 +55,20 @@ class _Driver(Driver, NativeWrapper[NativeDriver]):
 
         try:
             if isinstance(addresses, str):
-                native_driver = driver_new_with_description(addresses, credentials.native_object,
-                                                            driver_options.native_object,
-                                                            Driver.LANGUAGE)
+                native_driver = driver_new(addresses, credentials.native_object,
+                                           driver_options.native_object,
+                                           Driver.LANGUAGE)
             elif isinstance(addresses, list):
-                native_driver = driver_new_with_addresses_with_description(addresses, credentials.native_object,
-                                                                           driver_options.native_object,
-                                                                           Driver.LANGUAGE)
+                native_driver = driver_new_with_addresses(addresses, credentials.native_object,
+                                                          driver_options.native_object,
+                                                          Driver.LANGUAGE)
             elif isinstance(addresses, dict):
                 public_addresses, private_addresses = _Driver._get_translated_addresses(addresses)
-                native_driver = driver_new_with_address_translation_with_description(public_addresses,
-                                                                                     private_addresses,
-                                                                                     credentials.native_object,
-                                                                                     driver_options.native_object,
-                                                                                     Driver.LANGUAGE)
+                native_driver = driver_new_with_address_translation(public_addresses,
+                                                                    private_addresses,
+                                                                    credentials.native_object,
+                                                                    driver_options.native_object,
+                                                                    Driver.LANGUAGE)
             else:
                 raise TypeDBDriverException(INVALID_ADDRESS_FORMAT)
         except TypeDBDriverExceptionNative as e:

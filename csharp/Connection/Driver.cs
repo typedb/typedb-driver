@@ -63,7 +63,7 @@ namespace TypeDB.Driver.Connection
             Validator.RequireNonNull(driverOptions, nameof(driverOptions));
             try
             {
-                return Pinvoke.typedb_driver.driver_new_with_description(
+                return Pinvoke.typedb_driver.driver_new(
                     address,
                     credentials.NativeObject,
                     driverOptions.NativeObject,
@@ -82,7 +82,7 @@ namespace TypeDB.Driver.Connection
             Validator.RequireNonNull(driverOptions, nameof(driverOptions));
             try
             {
-                return Pinvoke.typedb_driver.driver_new_with_addresses_with_description(
+                return Pinvoke.typedb_driver.driver_new_with_addresses(
                     addresses.ToArray(),
                     credentials.NativeObject,
                     driverOptions.NativeObject,
@@ -103,7 +103,7 @@ namespace TypeDB.Driver.Connection
             {
                 string[] publicAddresses = addressTranslation.Keys.ToArray();
                 string[] privateAddresses = addressTranslation.Values.ToArray();
-                return Pinvoke.typedb_driver.driver_new_with_address_translation_with_description(
+                return Pinvoke.typedb_driver.driver_new_with_address_translation(
                     publicAddresses,
                     privateAddresses,
                     credentials.NativeObject,

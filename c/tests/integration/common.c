@@ -58,7 +58,7 @@ TypeDBDriver* driver_new_for_tests(const char* address, const char* username, co
     if (check_error_may_print(__FILE__, __LINE__)) goto cleanup;
     options = driver_options_new(tls_config);
     if (check_error_may_print(__FILE__, __LINE__)) goto cleanup;
-    TypeDBDriver* driver = driver_new_with_description(address, creds, options, DRIVER_LANG);
+    TypeDBDriver* driver = driver_new(address, creds, options, DRIVER_LANG);
 cleanup:
     driver_options_drop(options);
     credentials_drop(creds);

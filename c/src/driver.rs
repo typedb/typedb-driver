@@ -35,130 +35,71 @@ use crate::{
     },
 };
 
-const DRIVER_LANG: &'static str = "c";
+const DRIVER_LANG: &str = "c";
 
-// TODO: These constructors get out of hand. Consider driver builders based on a config!
+fn driver_lang_or_default(driver_lang: *const c_char) -> &'static str {
+    if driver_lang.is_null() { DRIVER_LANG } else { string_view(driver_lang) }
+}
 
-/// Open a TypeDB C Driver to a TypeDB server available at the provided address.
+/// Open a TypeDB Driver to a TypeDB server available at the provided address.
 ///
 /// @param address The address on which the TypeDB Server is running
 /// @param credentials The <code>Credentials</code> to connect with
 /// @param driver_options The <code>DriverOptions</code> to connect with
+/// @param driver_lang The language of the driver connecting to the server.
+///        Nullable: pass NULL to default to "c".
 #[no_mangle]
 pub extern "C" fn driver_new(
     address: *const c_char,
     credentials: *const Credentials,
     driver_options: *const DriverOptions,
-) -> *mut TypeDBDriver {
-    try_release(TypeDBDriver::new_with_description(
-        unwrap_or_default(Addresses::try_from_address_str(string_view(address))),
-        borrow(credentials).clone(),
-        borrow(driver_options).clone(),
-        DRIVER_LANG,
-    ))
-}
-
-/// Open a TypeDB Driver to a TypeDB server available at the provided address.
-/// This method allows driver language specification for drivers built on top of the native C layer.
-///
-/// @param address The address on which the TypeDB Server is running
-/// @param credentials The <code>Credentials</code> to connect with
-/// @param driver_options The <code>DriverOptions</code> to connect with
-/// @param driver_lang The language of the driver connecting to the server
-#[no_mangle]
-pub extern "C" fn driver_new_with_description(
-    address: *const c_char,
-    credentials: *const Credentials,
-    driver_options: *const DriverOptions,
     driver_lang: *const c_char,
 ) -> *mut TypeDBDriver {
     try_release(TypeDBDriver::new_with_description(
         unwrap_or_default(Addresses::try_from_address_str(string_view(address))),
         borrow(credentials).clone(),
         borrow(driver_options).clone(),
-        string_view(driver_lang),
+        driver_lang_or_default(driver_lang),
     ))
 }
 
-/// Open a TypeDB C Driver to a TypeDB cluster available at the provided addresses.
+/// Open a TypeDB Driver to a TypeDB cluster available at the provided addresses.
 ///
 /// @param addresses A null-terminated array holding the server addresses on for connection
 /// @param credentials The <code>Credentials</code> to connect with
 /// @param driver_options The <code>DriverOptions</code> to connect with
+/// @param driver_lang The language of the driver connecting to the server.
+///        Nullable: pass NULL to default to "c".
 #[no_mangle]
 pub extern "C" fn driver_new_with_addresses(
     addresses: *const *const c_char,
     credentials: *const Credentials,
     driver_options: *const DriverOptions,
-) -> *mut TypeDBDriver {
-    try_release(TypeDBDriver::new_with_description(
-        unwrap_or_default(Addresses::try_from_addresses_str(string_array_view(addresses))),
-        borrow(credentials).clone(),
-        borrow(driver_options).clone(),
-        DRIVER_LANG,
-    ))
-}
-
-/// Open a TypeDB Driver to a TypeDB cluster available at the provided addresses.
-/// This method allows driver language specification for drivers built on top of the native C layer.
-///
-/// @param addresses A null-terminated array holding the TypeDB cluster replica addresses on for connection
-/// @param credentials The <code>Credentials</code> to connect with
-/// @param driver_options The <code>DriverOptions</code> to connect with
-/// @param driver_lang The language of the driver connecting to the server
-#[no_mangle]
-pub extern "C" fn driver_new_with_addresses_with_description(
-    addresses: *const *const c_char,
-    credentials: *const Credentials,
-    driver_options: *const DriverOptions,
     driver_lang: *const c_char,
 ) -> *mut TypeDBDriver {
     try_release(TypeDBDriver::new_with_description(
         unwrap_or_default(Addresses::try_from_addresses_str(string_array_view(addresses))),
         borrow(credentials).clone(),
         borrow(driver_options).clone(),
-        string_view(driver_lang),
+        driver_lang_or_default(driver_lang),
     ))
 }
 
-/// Open a TypeDB C Driver to a TypeDB cluster, using the provided address translation.
+/// Open a TypeDB Driver to a TypeDB cluster, using the provided address translation.
 ///
 /// @param public_addresses A null-terminated array holding the replica addresses on for connection.
 /// @param private_addresses A null-terminated array holding the private replica addresses, configured on the server side.
 /// This array <i>must</i> have the same length as <code>public_addresses</code>.
 /// @param credentials The <code>Credentials</code> to connect with
 /// @param driver_options The <code>DriverOptions</code> to connect with
+/// @param driver_lang The language of the driver connecting to the server.
+///        Nullable: pass NULL to default to "c".
 #[no_mangle]
 pub extern "C" fn driver_new_with_address_translation(
     public_addresses: *const *const c_char,
     private_addresses: *const *const c_char,
     credentials: *const Credentials,
     driver_options: *const DriverOptions,
-) -> *mut TypeDBDriver {
-    let addresses = iterators_to_map(string_array_view(public_addresses), string_array_view(private_addresses));
-    try_release(TypeDBDriver::new_with_description(
-        unwrap_or_default(Addresses::try_from_translation_str(addresses)),
-        borrow(credentials).clone(),
-        borrow(driver_options).clone(),
-        DRIVER_LANG,
-    ))
-}
-
-/// Open a TypeDB Driver to a TypeDB cluster, using the provided address translation.
-/// This method allows driver language specification for drivers built on top of the native C layer.
-///
-/// @param public_addresses A null-terminated array holding the replica addresses on for connection.
-/// @param private_addresses A null-terminated array holding the private replica addresses, configured on the server side.
-/// This array <i>must</i> have the same length as <code>public_addresses</code>.
-/// @param credentials The <code>Credentials</code> to connect with
-/// @param driver_options The <code>DriverOptions</code> to connect with
-/// @param driver_lang The language of the driver connecting to the server
-#[no_mangle]
-pub extern "C" fn driver_new_with_address_translation_with_description(
-    public_addresses: *const *const c_char,
-    private_addresses: *const *const c_char,
-    credentials: *const Credentials,
-    driver_options: *const DriverOptions,
     driver_lang: *const c_char,
 ) -> *mut TypeDBDriver {
     let addresses = iterators_to_map(string_array_view(public_addresses), string_array_view(private_addresses));
@@ -166,7 +107,7 @@ pub extern "C" fn driver_new_with_address_translation_with_description(
         unwrap_or_default(Addresses::try_from_translation_str(addresses)),
         borrow(credentials).clone(),
         borrow(driver_options).clone(),
-        string_view(driver_lang),
+        driver_lang_or_default(driver_lang),
     ))
 }
 

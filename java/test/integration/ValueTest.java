@@ -102,7 +102,7 @@ public class ValueTest {
                 Map.entry("balance", "1234567890.0001234567890dec"),
                 Map.entry("birth-date", "2024-09-20"),
                 Map.entry("birth-time", "1999-02-26T12:15:05"),
-                Map.entry("current-time", "2024-09-20T16:40:05 Europe/London"),
+                Map.entry("current-time", "2024-09-20T16:40:05 Europe/Belfast"),
                 Map.entry("current-time-off", "2024-09-20T16:40:05.028129323+0545"),
                 Map.entry("expiration", "P1Y10M7DT15H44M5.00394892S")
         );
@@ -333,6 +333,130 @@ public class ValueTest {
             assertEquals(89999, typedbDuration.getSeconds());
             assertEquals(999999999, typedbDuration.getNano());
             assertEquals(Duration.parse("P999Y12M31DT24H59M59.999999999S"), typedbDuration);
+        }, Transaction.Type.WRITE);
+    }
+
+    @Test
+    public void datetimeNaive() {
+        Database db = typedbDriver.databases().get(DB_NAME);
+        db.delete();
+        typedbDriver.databases().create(DB_NAME);
+
+        localhostTypeDBTX(tx -> {
+            tx.query("define attribute dt, value datetime;").resolve();
+            tx.commit();
+        }, Transaction.Type.SCHEMA);
+
+        // Standard datetime
+        localhostTypeDBTX(tx -> {
+            QueryAnswer answer = tx.query("insert $dt isa dt 2024-10-09T13:07:38.123456789;").resolve();
+            Attribute attr = answer.asConceptRows().next().get("dt").get().asAttribute();
+            Value value = attr.getValue();
+            assertTrue(value.isDatetime());
+            assertEquals(LocalDateTime.of(2024, 10, 9, 13, 7, 38, 123456789), value.getDatetime());
+        }, Transaction.Type.WRITE);
+
+        // Unix epoch
+        localhostTypeDBTX(tx -> {
+            QueryAnswer answer = tx.query("insert $dt isa dt 1970-01-01T00:00:00;").resolve();
+            Value value = answer.asConceptRows().next().get("dt").get().asAttribute().getValue();
+            assertTrue(value.isDatetime());
+            assertEquals(LocalDateTime.of(1970, 1, 1, 0, 0, 0), value.getDatetime());
+        }, Transaction.Type.WRITE);
+
+        // Min boundary
+        localhostTypeDBTX(tx -> {
+            QueryAnswer answer = tx.query("insert $dt isa dt 0001-01-01T00:00:00.000000001;").resolve();
+            Value value = answer.asConceptRows().next().get("dt").get().asAttribute().getValue();
+            assertTrue(value.isDatetime());
+            assertEquals(LocalDateTime.of(1, 1, 1, 0, 0, 0, 1), value.getDatetime());
+        }, Transaction.Type.WRITE);
+
+        // Max boundary
+        localhostTypeDBTX(tx -> {
+            QueryAnswer answer = tx.query("insert $dt isa dt 9999-12-31T23:59:59.999999999;").resolve();
+            Value value = answer.asConceptRows().next().get("dt").get().asAttribute().getValue();
+            assertTrue(value.isDatetime());
+            assertEquals(LocalDateTime.of(9999, 12, 31, 23, 59, 59, 999999999), value.getDatetime());
+        }, Transaction.Type.WRITE);
+    }
+
+    @Test
+    public void datetimeTZIana() {
+        Database db = typedbDriver.databases().get(DB_NAME);
+        db.delete();
+        typedbDriver.databases().create(DB_NAME);
+
+        localhostTypeDBTX(tx -> {
+            tx.query("define attribute dtz, value datetime-tz;").resolve();
+            tx.commit();
+        }, Transaction.Type.SCHEMA);
+
+        localhostTypeDBTX(tx -> {
+            QueryAnswer answer = tx.query("insert $dtz isa dtz 2024-10-09T13:07:38.123456789 Asia/Calcutta;").resolve();
+            Value value = answer.asConceptRows().next().get("dtz").get().asAttribute().getValue();
+            assertTrue(value.isDatetimeTZ());
+            ZonedDateTime expected = LocalDateTime.of(2024, 10, 9, 13, 7, 38, 123456789).atZone(ZoneId.of("Asia/Calcutta"));
+            assertEquals(expected, value.getDatetimeTZ());
+        }, Transaction.Type.WRITE);
+    }
+
+    @Test
+    public void datetimeTZFixedOffset() {
+        Database db = typedbDriver.databases().get(DB_NAME);
+        db.delete();
+        typedbDriver.databases().create(DB_NAME);
+
+        localhostTypeDBTX(tx -> {
+            tx.query("define attribute dtz, value datetime-tz;").resolve();
+            tx.commit();
+        }, Transaction.Type.SCHEMA);
+
+        localhostTypeDBTX(tx -> {
+            QueryAnswer answer = tx.query("insert $dtz isa dtz 2024-09-20T16:40:05.028129323+0545;").resolve();
+            Value value = answer.asConceptRows().next().get("dtz").get().asAttribute().getValue();
+            assertTrue(value.isDatetimeTZ());
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSSZ");
+            ZonedDateTime expected = OffsetDateTime.parse("2024-09-20T16:40:05.028129323+0545", formatter).toZonedDateTime();
+            assertEquals(expected, value.getDatetimeTZ());
+        }, Transaction.Type.WRITE);
+    }
+
+    @Test
+    public void decimalViaDatabase() {
+        Database db = typedbDriver.databases().get(DB_NAME);
+        db.delete();
+        typedbDriver.databases().create(DB_NAME);
+
+        localhostTypeDBTX(tx -> {
+            tx.query("define attribute bal, value decimal;").resolve();
+            tx.commit();
+        }, Transaction.Type.SCHEMA);
+
+        // Positive decimal
+        localhostTypeDBTX(tx -> {
+            QueryAnswer answer = tx.query("insert $b isa bal 1234567890.0001234567890dec;").resolve();
+            Value value = answer.asConceptRows().next().get("b").get().asAttribute().getValue();
+            assertTrue(value.isDecimal());
+            BigDecimal expected = new BigDecimal("1234567890.0001234567890").setScale(value.getDecimal().scale(), RoundingMode.UNNECESSARY);
+            assertEquals(expected, value.getDecimal());
+        }, Transaction.Type.WRITE);
+
+        // Zero
+        localhostTypeDBTX(tx -> {
+            QueryAnswer answer = tx.query("insert $b isa bal 0.0dec;").resolve();
+            Value value = answer.asConceptRows().next().get("b").get().asAttribute().getValue();
+            assertTrue(value.isDecimal());
+            assertEquals(0, value.getDecimal().compareTo(BigDecimal.ZERO));
+        }, Transaction.Type.WRITE);
+
+        // Negative decimal
+        localhostTypeDBTX(tx -> {
+            QueryAnswer answer = tx.query("insert $b isa bal -99999.99999dec;").resolve();
+            Value value = answer.asConceptRows().next().get("b").get().asAttribute().getValue();
+            assertTrue(value.isDecimal());
+            BigDecimal expected = new BigDecimal("-99999.99999").setScale(value.getDecimal().scale(), RoundingMode.UNNECESSARY);
+            assertEquals(expected, value.getDecimal());
         }, Transaction.Type.WRITE);
     }
 

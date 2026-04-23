@@ -125,12 +125,12 @@ a| `driver` a| The ``TypeDBDriver`` object. a| `const struct TypeDBDriver*`
 
 [source,c]
 ----
-struct TypeDBDriver* driver_new(const char* address, const struct Credentials* credentials, const struct DriverOptions* driver_options)
+struct TypeDBDriver* driver_new(const char* address, const struct Credentials* credentials, const struct DriverOptions* driver_options, const char* driver_lang)
 ----
 
 
 
-Open a TypeDB C Driver to a TypeDB server available at the provided address.
+Open a TypeDB Driver to a TypeDB server available at the provided address.
 
 
 [caption=""]
@@ -142,6 +142,7 @@ Open a TypeDB C Driver to a TypeDB server available at the provided address.
 a| `address` a| The address on which the TypeDB Server is running a| `const char*`
 a| `credentials` a| The ``Credentials`` to connect with a| `const struct Credentials*`
 a| `driver_options` a| The ``DriverOptions`` to connect with a| `const struct DriverOptions*`
+a| `driver_lang` a| The language of the driver connecting to the server. Nullable: pass NULL to default to "c". a| `const char*`
 |===
 
 [caption=""]
@@ -153,12 +154,12 @@ a| `driver_options` a| The ``DriverOptions`` to connect with a| `const struct Dr
 
 [source,c]
 ----
-struct TypeDBDriver* driver_new_with_address_translation(const char*const* public_addresses, const char*const* private_addresses, const struct Credentials* credentials, const struct DriverOptions* driver_options)
+struct TypeDBDriver* driver_new_with_address_translation(const char*const* public_addresses, const char*const* private_addresses, const struct Credentials* credentials, const struct DriverOptions* driver_options, const char* driver_lang)
 ----
 
 
 
-Open a TypeDB C Driver to a TypeDB cluster, using the provided address translation.
+Open a TypeDB Driver to a TypeDB cluster, using the provided address translation.
 
 
 [caption=""]
@@ -171,36 +172,7 @@ a| `public_addresses` a| A null-terminated array holding the replica addresses o
 a| `private_addresses` a| A null-terminated array holding the private replica addresses, configured on the server side. This array _must_ have the same length as ``public_addresses``. a| `const char*const*`
 a| `credentials` a| The ``Credentials`` to connect with a| `const struct Credentials*`
 a| `driver_options` a| The ``DriverOptions`` to connect with a| `const struct DriverOptions*`
-|===
-
-[caption=""]
-.Returns
-`struct TypeDBDriver*`
-
-[#_driver_new_with_address_translation_with_description]
-==== function ``driver_new_with_address_translation_with_description``
-
-[source,c]
-----
-struct TypeDBDriver* driver_new_with_address_translation_with_description(const char*const* public_addresses, const char*const* private_addresses, const struct Credentials* credentials, const struct DriverOptions* driver_options, const char* driver_lang)
-----
-
-
-
-Open a TypeDB Driver to a TypeDB cluster, using the provided address translation. This method allows driver language specification for drivers built on top of the native C layer.
-
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `public_addresses` a| A null-terminated array holding the replica addresses on for connection. a| `const char*const*`
-a| `private_addresses` a| A null-terminated array holding the private replica addresses, configured on the server side. This array _must_ have the same length as ``public_addresses``. a| `const char*const*`
-a| `credentials` a| The ``Credentials`` to connect with a| `const struct Credentials*`
-a| `driver_options` a| The ``DriverOptions`` to connect with a| `const struct DriverOptions*`
-a| `driver_lang` a| The language of the driver connecting to the server a| `const char*`
+a| `driver_lang` a| The language of the driver connecting to the server. Nullable: pass NULL to default to "c". a| `const char*`
 |===
 
 [caption=""]
@@ -212,12 +184,12 @@ a| `driver_lang` a| The language of the driver connecting to the server a| `cons
 
 [source,c]
 ----
-struct TypeDBDriver* driver_new_with_addresses(const char*const* addresses, const struct Credentials* credentials, const struct DriverOptions* driver_options)
+struct TypeDBDriver* driver_new_with_addresses(const char*const* addresses, const struct Credentials* credentials, const struct DriverOptions* driver_options, const char* driver_lang)
 ----
 
 
 
-Open a TypeDB C Driver to a TypeDB cluster available at the provided addresses.
+Open a TypeDB Driver to a TypeDB cluster available at the provided addresses.
 
 
 [caption=""]
@@ -229,64 +201,7 @@ Open a TypeDB C Driver to a TypeDB cluster available at the provided addresses.
 a| `addresses` a| A null-terminated array holding the server addresses on for connection a| `const char*const*`
 a| `credentials` a| The ``Credentials`` to connect with a| `const struct Credentials*`
 a| `driver_options` a| The ``DriverOptions`` to connect with a| `const struct DriverOptions*`
-|===
-
-[caption=""]
-.Returns
-`struct TypeDBDriver*`
-
-[#_driver_new_with_addresses_with_description]
-==== function ``driver_new_with_addresses_with_description``
-
-[source,c]
-----
-struct TypeDBDriver* driver_new_with_addresses_with_description(const char*const* addresses, const struct Credentials* credentials, const struct DriverOptions* driver_options, const char* driver_lang)
-----
-
-
-
-Open a TypeDB Driver to a TypeDB cluster available at the provided addresses. This method allows driver language specification for drivers built on top of the native C layer.
-
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `addresses` a| A null-terminated array holding the TypeDB cluster replica addresses on for connection a| `const char*const*`
-a| `credentials` a| The ``Credentials`` to connect with a| `const struct Credentials*`
-a| `driver_options` a| The ``DriverOptions`` to connect with a| `const struct DriverOptions*`
-a| `driver_lang` a| The language of the driver connecting to the server a| `const char*`
-|===
-
-[caption=""]
-.Returns
-`struct TypeDBDriver*`
-
-[#_driver_new_with_description]
-==== function ``driver_new_with_description``
-
-[source,c]
-----
-struct TypeDBDriver* driver_new_with_description(const char* address, const struct Credentials* credentials, const struct DriverOptions* driver_options, const char* driver_lang)
-----
-
-
-
-Open a TypeDB Driver to a TypeDB server available at the provided address. This method allows driver language specification for drivers built on top of the native C layer.
-
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `address` a| The address on which the TypeDB Server is running a| `const char*`
-a| `credentials` a| The ``Credentials`` to connect with a| `const struct Credentials*`
-a| `driver_options` a| The ``DriverOptions`` to connect with a| `const struct DriverOptions*`
-a| `driver_lang` a| The language of the driver connecting to the server a| `const char*`
+a| `driver_lang` a| The language of the driver connecting to the server. Nullable: pass NULL to default to "c". a| `const char*`
 |===
 
 [caption=""]

@@ -34,7 +34,7 @@ int TYPEDB_EXAMPLE_FUNC() {
     Credentials* credentials = credentials_new("admin", "password");
     DriverTlsConfig* tls_config = driver_tls_config_new_disabled();
     DriverOptions* driver_options = driver_options_new(tls_config);
-    TypeDBDriver* driver = driver_new("127.0.0.1:1729", credentials, driver_options);
+    TypeDBDriver* driver = driver_new("127.0.0.1:1729", credentials, driver_options, NULL);
     credentials_drop(credentials);
     driver_options_drop(driver_options);
     driver_tls_config_drop(tls_config);
