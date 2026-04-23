@@ -496,6 +496,24 @@ namespace TypeDB.Driver.Test.Integration
                 Assert.AreEqual(123456789u, datetime.SubsecNanos);
             }
 
+            // Test: epoch boundary 0001-01-01T00:00:00.000000001
+            using (var tx = driver.Transaction(DatabaseName, TransactionType.Write))
+            {
+                var answer = tx.Query("insert $dt isa dt 0001-01-01T00:00:00.000000001;").Resolve()!;
+                var rows = answer.AsConceptRows().ToList();
+                var concept = rows[0].Get("dt");
+                var datetime = concept?.TryGetDatetime();
+
+                Assert.IsNotNull(datetime);
+                Assert.AreEqual(1, datetime!.DateTime.Year);
+                Assert.AreEqual(1, datetime.DateTime.Month);
+                Assert.AreEqual(1, datetime.DateTime.Day);
+                Assert.AreEqual(0, datetime.DateTime.Hour);
+                Assert.AreEqual(0, datetime.DateTime.Minute);
+                Assert.AreEqual(0, datetime.DateTime.Second);
+                Assert.AreEqual(1u, datetime.SubsecNanos);
+            }
+
             // Test: Unix epoch 1970-01-01T00:00:00
             using (var tx = driver.Transaction(DatabaseName, TransactionType.Write))
             {
@@ -550,7 +568,7 @@ namespace TypeDB.Driver.Test.Integration
             // Test: IANA timezone
             using (var tx = driver.Transaction(DatabaseName, TransactionType.Write))
             {
-                var answer = tx.Query("insert $dtz isa dtz 2024-10-09T13:07:38.123456789 Europe/London;").Resolve()!;
+                var answer = tx.Query("insert $dtz isa dtz 2024-10-09T13:07:38.123456789 Asia/Calcutta;").Resolve()!;
                 var rows = answer.AsConceptRows().ToList();
                 var concept = rows[0].Get("dtz");
                 var datetimeTz = concept?.TryGetDatetimeTZ();
@@ -696,6 +714,34 @@ namespace TypeDB.Driver.Test.Integration
                 Assert.AreEqual(0, duration!.Months);
                 Assert.AreEqual(0, duration.Days);
                 Assert.AreEqual(1L, duration.Nanos);
+            }
+
+            // Test: P0DT0.0000001S (100 nanoseconds)
+            using (var tx = driver.Transaction(DatabaseName, TransactionType.Write))
+            {
+                var answer = tx.Query("insert $d isa d P0DT0.0000001S;").Resolve()!;
+                var rows = answer.AsConceptRows().ToList();
+                var concept = rows[0].Get("d");
+                var duration = concept?.TryGetDuration();
+
+                Assert.IsNotNull(duration);
+                Assert.AreEqual(0, duration!.Months);
+                Assert.AreEqual(0, duration.Days);
+                Assert.AreEqual(100L, duration.Nanos);
+            }
+
+            // Test: P0DT0S (zero duration)
+            using (var tx = driver.Transaction(DatabaseName, TransactionType.Write))
+            {
+                var answer = tx.Query("insert $d isa d P0DT0S;").Resolve()!;
+                var rows = answer.AsConceptRows().ToList();
+                var concept = rows[0].Get("d");
+                var duration = concept?.TryGetDuration();
+
+                Assert.IsNotNull(duration);
+                Assert.AreEqual(0, duration!.Months);
+                Assert.AreEqual(0, duration.Days);
+                Assert.AreEqual(0L, duration.Nanos);
             }
 
             // Test: P7W (weeks)

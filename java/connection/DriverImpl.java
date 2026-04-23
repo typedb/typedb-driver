@@ -44,9 +44,9 @@ import java.util.Set;
 
 import static com.typedb.driver.jni.typedb_driver.driver_force_close;
 import static com.typedb.driver.jni.typedb_driver.driver_is_open;
-import static com.typedb.driver.jni.typedb_driver.driver_new_with_address_translation_with_description;
-import static com.typedb.driver.jni.typedb_driver.driver_new_with_addresses_with_description;
-import static com.typedb.driver.jni.typedb_driver.driver_new_with_description;
+import static com.typedb.driver.jni.typedb_driver.driver_new;
+import static com.typedb.driver.jni.typedb_driver.driver_new_with_addresses;
+import static com.typedb.driver.jni.typedb_driver.driver_new_with_address_translation;
 import static com.typedb.driver.jni.typedb_driver.driver_primary_server;
 import static com.typedb.driver.jni.typedb_driver.driver_servers;
 import static com.typedb.driver.jni.typedb_driver.driver_server_version;
@@ -75,7 +75,7 @@ public class DriverImpl extends NativeObject<com.typedb.driver.jni.TypeDBDriver>
         Validator.requireNonNull(credentials, "credentials");
         Validator.requireNonNull(driverOptions, "driverOptions");
         try {
-            return driver_new_with_description(address, credentials.nativeObject, driverOptions.nativeObject, LANGUAGE);
+            return driver_new(address, credentials.nativeObject, driverOptions.nativeObject, LANGUAGE);
         } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
@@ -86,7 +86,7 @@ public class DriverImpl extends NativeObject<com.typedb.driver.jni.TypeDBDriver>
         Validator.requireNonNull(credentials, "credentials");
         Validator.requireNonNull(driverOptions, "driverOptions");
         try {
-            return driver_new_with_addresses_with_description(addresses.toArray(new String[0]), credentials.nativeObject, driverOptions.nativeObject, LANGUAGE);
+            return driver_new_with_addresses(addresses.toArray(new String[0]), credentials.nativeObject, driverOptions.nativeObject, LANGUAGE);
         } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
@@ -98,7 +98,7 @@ public class DriverImpl extends NativeObject<com.typedb.driver.jni.TypeDBDriver>
         Validator.requireNonNull(driverOptions, "driverOptions");
         try {
             Map.Entry<String[], String[]> addresses = getTranslatedAddresses(addressTranslation);
-            return driver_new_with_address_translation_with_description(addresses.getKey(), addresses.getValue(), credentials.nativeObject, driverOptions.nativeObject, LANGUAGE);
+            return driver_new_with_address_translation(addresses.getKey(), addresses.getValue(), credentials.nativeObject, driverOptions.nativeObject, LANGUAGE);
         } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }

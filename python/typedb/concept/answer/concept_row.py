@@ -100,4 +100,4 @@ class _ConceptRow(ConceptRow, NativeWrapper[NativeConceptRow]):
         return concept_row_equals(self.native_object, other.native_object)
 
     def __hash__(self):
-        return hash((tuple(self.variables()), tuple(self.concepts())))
+        return hash(repr(self))

@@ -172,7 +172,7 @@ namespace TypeDB.Driver.Answer
 
         private int ComputeHash()
         {
-            return Concepts.GetHashCode();
+            return ToString().GetHashCode();
         }
     }
 }
