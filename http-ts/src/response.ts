@@ -130,6 +130,19 @@ export function isApiError(err: any): err is ApiError {
     return err != null && typeof err.code === "string" && typeof err.message === "string";
 }
 
+export interface MisdirectedError {
+    code: string;
+    message: string;
+    primaryHttpAddress: string;
+}
+
+export function isMisdirectedError(err: any): err is MisdirectedError {
+    return err != null
+        && typeof err.code === "string"
+        && typeof err.message === "string"
+        && typeof err.primaryHttpAddress === "string";
+}
+
 export type ApiResponse<OK_RES = {} | null> = ApiOkResponse<OK_RES> | ApiErrorResponse;
 
 export function isOkResponse<OK_RES>(res: ApiResponse<OK_RES>): res is ApiOkResponse<OK_RES> {

@@ -133,6 +133,7 @@ server_start() {
     --server.connection-address="127.0.0.1:${server_port}" \
     --server.http.enabled=true \
     --server.http.address="0.0.0.0:${http_port}" \
+    --server.http.connection-address="127.0.0.1:${http_port}" \
     --server.admin.enabled=true \
     --server.admin.port="${admin_port}" \
     --server.encryption.enabled="${ENCRYPTION_ENABLED}" \
