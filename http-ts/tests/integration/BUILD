@@ -22,10 +22,9 @@ load("//http-ts/tests/behaviour:rules.bzl", "behaviour_test_ts_config")
 
 ts_project(
     name = "cluster-failover-lib",
-    srcs = ["cluster-failover.ts"],
+    srcs = ["cluster-failover.ts"] + ["//http-ts:driver-lib"],
     tsconfig = behaviour_test_ts_config(),
     deps = [
-        "//http-ts:driver-lib",
         "//http-ts:node_modules/@types/node",
     ],
     transpiler = "tsc",
@@ -37,13 +36,7 @@ js_test(
     entry_point = ":cluster-failover.js",
     data = [
         ":cluster-failover-lib",
-        "//tool/test:cluster-server.sh",
-        "//tool/test/resources:certificates",
     ],
-    env = {
-        "CLUSTER_SERVER_SCRIPT": "$(rootpath //tool/test:cluster-server.sh)",
-        "ROOT_CA": "$(rootpath //tool/test/resources:encryption/ext-grpc-root-ca.pem)",
-    },
     size = "large",
 )
 
