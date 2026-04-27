@@ -103,10 +103,9 @@ export const CLUSTER_ADDRESSES = [
     "https://127.0.0.1:38000"
 ];
 
-// For cluster mode tests, replace global fetch with one that handles mTLS
-if (isClusterMode) {
+function setupMtlsFetch(): void {
     const rootCaPath = process.env.ROOT_CA;
-    if (!rootCaPath) throw new Error("ROOT_CA environment variable must be set for cluster mode tests");
+    if (!rootCaPath) throw new Error("ROOT_CA environment variable must be set");
     const certDir = path.dirname(rootCaPath);
     const ca = fs.readFileSync(rootCaPath);
     const cert = fs.readFileSync(path.join(certDir, "ext-grpc-certificate.pem"));
@@ -157,6 +156,8 @@ if (isClusterMode) {
 
     (globalThis as any).fetch = customFetch;
 }
+
+if (isClusterMode) setupMtlsFetch();
 
 export async function openAndTestConnection(username: string, password: string) {
     if (isClusterMode) {
