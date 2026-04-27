@@ -133,14 +133,14 @@ export function isApiError(err: any): err is ApiError {
 export interface MisdirectedError {
     code: string;
     message: string;
-    primaryHttpAddress: string;
+    primaryAddress: string;
 }
 
 export function isMisdirectedError(err: any): err is MisdirectedError {
     return err != null
         && typeof err.code === "string"
         && typeof err.message === "string"
-        && typeof err.primaryHttpAddress === "string";
+        && typeof err.primaryAddress === "string";
 }
 
 export type ApiResponse<OK_RES = {} | null> = ApiOkResponse<OK_RES> | ApiErrorResponse;

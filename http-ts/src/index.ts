@@ -186,59 +186,25 @@ export class TypeDBHttpDriver {
     }
 
     private async apiReq<BODY>(method: string, path: string, body?: BODY, options?: { headers?: Record<string, string> }): Promise<ApiErrorResponse | Response> {
-        // 1. Try current origin
         let result = await this.tryApiReq(method, path, body, options);
-
-        // 2. Connection error → try fallback origins
-        if (result === null) {
-            result = await this.tryFallbackOrigins(method, path, body, options);
-            if (result === null) {
-                return { err: { code: "HDR1", message: `Cannot connect to any server` }, status: 503 };
-            }
+        if (result !== null && result.status === HTTP_MISDIRECTED) {
+            result = await this.followMisdirected(result, method, path, body, options);
         }
-
-        // 3. 421 Misdirected → switch origin and retry once
-        if (result instanceof Response && result.status === HTTP_MISDIRECTED) {
-            const switched = await this.handleMisdirected(result);
-            if (switched) {
-                const retry = await this.tryApiReq(method, path, body, options);
-                if (retry !== null) return retry;
-            }
-            // If misdirected handling or retry failed, try all other origins
+        if (result === null || !result.ok) {
             const fallback = await this.tryFallbackOrigins(method, path, body, options);
-            if (fallback !== null) return fallback;
-            return { err: { code: "HDR1", message: `Cannot connect to any server` }, status: 503 };
-        }
-
-        // 4. Non-ok response in a multi-address cluster → try other origins
-        //    Handles cases like CSV8/CSV9 errors wrapped in 400 by transaction handlers,
-        //    where the server can't provide a 421 redirect.
-        if (result instanceof Response && !result.ok && allOrigins(this.params).length > 1) {
-            const fallback = await this.tryFallbackOrigins(method, path, body, options);
-            if (fallback !== null && fallback instanceof Response && fallback.ok) {
-                return fallback;
+            if (fallback !== null && (result === null || fallback.ok)) {
+                result = fallback;
             }
-            // No origin returned a success — return the original error.
-            // Note: tryFallbackOrigins may have updated currentOrigin, which helps
-            // subsequent calls cycle through addresses.
         }
-
-        return result;
+        return result ?? { err: { code: "HDR1", message: "Cannot connect to any server" }, status: 503 };
     }
 
-    /** Single request attempt on currentOrigin. Returns null on connection error. */
-    private async tryApiReq<BODY>(method: string, path: string, body?: BODY, options?: { headers?: Record<string, string> }): Promise<ApiErrorResponse | Response | null> {
+    private async tryApiReq<BODY>(method: string, path: string, body?: BODY, options?: { headers?: Record<string, string> }): Promise<Response | null> {
         const url = `${this.currentOrigin}${path}`;
         let tokenResp = await this.getToken();
-        if ("err" in tokenResp) {
-            // Signin failed on this origin. Treat as a connection-like error so the caller
-            // can try fallback origins. This covers both connection errors (503) and server
-            // state errors (e.g. SRV14 "Not yet initialised" on a recovering cluster node).
-            return null;
-        }
-        let bodyString = undefined;
-        if (body !== undefined) bodyString = JSON.stringify(body);
-        let headers = Object.assign({ "Authorization": `Bearer ${tokenResp.ok.token}`, "Content-Type": "application/json" }, options?.headers || {});
+        if ("err" in tokenResp) return null;
+        const bodyString = body !== undefined ? JSON.stringify(body) : undefined;
+        let headers = this.authHeaders(tokenResp.ok.token, options);
         let resp: Response;
         try {
             resp = await fetch(url, { method, body: bodyString, headers });
@@ -248,7 +214,7 @@ export class TypeDBHttpDriver {
         if (resp.status === HTTP_UNAUTHORIZED) {
             tokenResp = await this.refreshToken();
             if ("err" in tokenResp) return null;
-            headers = Object.assign({ "Authorization": `Bearer ${tokenResp.ok.token}`, "Content-Type": "application/json" }, options?.headers || {});
+            headers = this.authHeaders(tokenResp.ok.token, options);
             try {
                 resp = await fetch(url, { method, body: bodyString, headers });
             } catch {
@@ -258,8 +224,14 @@ export class TypeDBHttpDriver {
         return resp;
     }
 
-    /** Parse a 421 response body and switch currentOrigin to the indicated primary. Returns true if switch succeeded. */
-    private async handleMisdirected(resp: Response): Promise<boolean> {
+    private async followMisdirected<BODY>(resp: Response, method: string, path: string, body?: BODY, options?: { headers?: Record<string, string> }): Promise<Response | null> {
+        if (await this.switchToRedirectTarget(resp)) {
+            return await this.tryApiReq(method, path, body, options);
+        }
+        return null;
+    }
+
+    private async switchToRedirectTarget(resp: Response): Promise<boolean> {
         let json: any;
         try {
             json = await resp.json();
@@ -267,45 +239,38 @@ export class TypeDBHttpDriver {
             return false;
         }
         if (!isMisdirectedError(json)) return false;
-        const newOrigin = resolveOrigin(this.params, json.primaryHttpAddress);
+        const newOrigin = resolveOrigin(this.params, json.primaryAddress);
         if (newOrigin === this.currentOrigin) return false;
-        this.currentOrigin = newOrigin;
-        this.token = undefined;
+        this.switchOrigin(newOrigin);
         return true;
     }
 
-    /** Try all configured origins except the one already attempted. */
-    private async tryFallbackOrigins<BODY>(method: string, path: string, body?: BODY, options?: { headers?: Record<string, string> }): Promise<ApiErrorResponse | Response | null> {
+    private async tryFallbackOrigins<BODY>(method: string, path: string, body?: BODY, options?: { headers?: Record<string, string> }): Promise<Response | null> {
         const origins = allOrigins(this.params);
-        const alreadyTried = this.currentOrigin;
-        let lastResult: Response | null = null;
+        const failedOrigin = this.currentOrigin;
+        let lastError: Response | null = null;
         for (const origin of origins) {
-            if (origin === alreadyTried) continue;
-            this.currentOrigin = origin;
-            this.token = undefined;
-            const result = await this.tryApiReq(method, path, body, options);
+            if (origin === failedOrigin) continue;
+            this.switchOrigin(origin);
+            let result = await this.tryApiReq(method, path, body, options);
             if (result === null) continue;
-            // Got a response — if it's a 421, follow the redirect
-            if (result instanceof Response && result.status === HTTP_MISDIRECTED) {
-                const switched = await this.handleMisdirected(result);
-                if (switched) {
-                    const retry = await this.tryApiReq(method, path, body, options);
-                    if (retry !== null) return retry;
-                }
-                continue;
+            if (result.status === HTTP_MISDIRECTED) {
+                result = await this.followMisdirected(result, method, path, body, options);
+                if (result === null) continue;
             }
-            // Got a successful response — return immediately
-            if (result instanceof Response && result.ok) return result;
-            // Got a non-ok HTTP response — save it and try next origin.
-            // This allows us to find an origin that can handle the request, while
-            // still returning the last error if no origin succeeds.
-            if (result instanceof Response) {
-                lastResult = result;
-                continue;
-            }
-            return result;
+            if (result.ok) return result;
+            lastError = result;
         }
-        return lastResult;
+        return lastError;
+    }
+
+    private switchOrigin(origin: string): void {
+        this.currentOrigin = origin;
+        this.token = undefined;
+    }
+
+    private authHeaders(token: string, options?: { headers?: Record<string, string> }): Record<string, string> {
+        return { "Authorization": `Bearer ${token}`, "Content-Type": "application/json", ...options?.headers };
     }
 
     private getToken(): Promise<ApiResponse<SignInResponse>> {
