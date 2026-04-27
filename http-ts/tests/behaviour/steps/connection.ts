@@ -76,27 +76,27 @@ Then("connection has {int} server(s)", async (expectedCount: number) => {
 
 Then("connection primary server exists", async () => {
     const servers = await getServers();
-    const primary = servers.find(s => s.replicaStatus?.replicaRole === "primary");
+    const primary = servers.find(s => s.replicationStatus?.role === "primary");
     assert.ok(primary, "No primary server found");
 });
 
 Then("connection get server\\({word}) exists", async (address: string) => {
     const servers = await getServers();
     const server = servers.find(s => s.address === address);
-    assert.ok(server, `Replica with address ${address} not found`);
+    assert.ok(server, `Server with address ${address} not found`);
 });
 
 Then("connection get server\\({word}) does not exist", async (address: string) => {
     const servers = await getServers();
     const server = servers.find(s => s.address === address);
-    assert.ok(!server, `Replica with address ${address} should not exist`);
+    assert.ok(!server, `Server with address ${address} should not exist`);
 });
 
 Then("connection get server\\({word}) has term", async (address: string) => {
     const servers = await getServers();
     const server = servers.find(s => s.address === address);
-    assert.ok(server, `Replica with address ${address} not found`);
-    assert.ok(typeof server.replicaStatus?.term === 'number', `Replica ${address} has no term`);
+    assert.ok(server, `Server with address ${address} not found`);
+    assert.ok(typeof server.replicationStatus?.term === "number", `Server ${address} has no term`);
 });
 
 Then("connection servers have roles:", async (dataTable: DataTable) => {
@@ -108,9 +108,9 @@ Then("connection servers have roles:", async (dataTable: DataTable) => {
         const expectedIsPrimary = row['is_primary'] === 'true';
 
         const server = servers.find(s => s.address === expectedAddress);
-        assert.ok(server, `Replica with address ${expectedAddress} not found`);
-        const isPrimary = server.replicaStatus?.replicaRole === "primary";
+        assert.ok(server, `Server with address ${expectedAddress} not found`);
+        const isPrimary = server.replicationStatus?.role === "primary";
         assert.equal(isPrimary, expectedIsPrimary,
-            `Replica ${expectedAddress} isPrimary: expected ${expectedIsPrimary}, got ${isPrimary}`);
+            `Server ${expectedAddress} isPrimary: expected ${expectedIsPrimary}, got ${isPrimary}`);
     }
 });

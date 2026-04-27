@@ -45,17 +45,17 @@ export interface UsersListResponse {
     users: User[];
 }
 
-export type ReplicaRole = "primary" | "candidate" | "secondary";
+export type ReplicationRole = "primary" | "candidate" | "secondary";
 
-export interface ReplicaStatus {
-    replicaId: number;
-    replicaRole: ReplicaRole | null;
+export interface ReplicationStatus {
+    id: number;
+    role: ReplicationRole | null;
     term: number | null;
 }
 
 export interface Server {
     address: string | null;
-    replicaStatus: ReplicaStatus | null;
+    replicationStatus: ReplicationStatus | null;
 }
 
 export interface ServersListResponse {

@@ -131,7 +131,7 @@ async function getPrimaryServer(driver: TypeDBHttpDriver): Promise<Server> {
         const resp = await driver.getServers();
         if (isOkResponse(resp)) {
             const primary = resp.ok.servers.find(
-                s => s.replicaStatus?.replicaRole === "primary" && s.address != null
+                s => s.replicationStatus?.role === "primary" && s.address != null
             );
             if (primary) return primary;
         }
@@ -219,7 +219,7 @@ async function waitForClusterHealthy(driver: TypeDBHttpDriver): Promise<void> {
         const resp = await driver.getServers();
         if (isOkResponse(resp)) {
             const activeNodes = resp.ok.servers.filter(
-                (s: Server) => s.address != null && s.replicaStatus != null && s.replicaStatus.replicaRole != null
+                (s: Server) => s.address != null && s.replicationStatus != null && s.replicationStatus.role != null
             );
             if (activeNodes.length >= ADDRESSES.length) return;
             if (attempt % 10 === 0 && attempt > 0) {
