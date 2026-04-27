@@ -64,8 +64,6 @@ Then("connection has {int} user(s)", async (expectedUserCount: number) => {
 
 When("connection closes", closeConnection);
 
-// Cluster/Replica steps
-
 async function getServers(): Promise<Server[]> {
     const res = await driver.getServers().then(assertNotError);
     return res.ok.servers;

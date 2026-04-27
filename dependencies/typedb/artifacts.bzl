@@ -25,7 +25,7 @@ def typedb_artifact():
         artifact_name = "typedb-all-{platform}-{version}.{ext}",
         tag_source = deployment["artifact"]["release"]["download"],
         commit_source = deployment["artifact"]["snapshot"]["download"],
-        commit = "1eddf41e279e65fb96b71884b91f2bab5051b258"
+        commit = "b7dff0383c2c336cb9aca56fe336e14c6778be0c"
     )
 
 def typedb_cluster_artifact():
@@ -35,5 +35,5 @@ def typedb_cluster_artifact():
         artifact_name = "typedb-cluster-all-{platform}-{version}.tar.gz", # TODO: Make {ext} instead of tar.gz
         tag_source = deployment_private["artifact"]["release"]["download"],
         commit_source = deployment_private["artifact"]["snapshot"]["download"],
-        commit = "2ab679a207276a865b6ebb97d1d4f7b3e60b35a2",
+        commit = "19eb07ccf57758753fc32d12134c9a3a8705d0d2",
     )
