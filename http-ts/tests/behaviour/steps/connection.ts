@@ -65,12 +65,10 @@ Then("connection has {int} user(s)", async (expectedUserCount: number) => {
 When("connection closes", closeConnection);
 
 // Cluster/Replica steps
-let cachedServers: Server[] = [];
 
 async function getServers(): Promise<Server[]> {
     const res = await driver.getServers().then(assertNotError);
-    cachedServers = res.ok.servers;
-    return cachedServers;
+    return res.ok.servers;
 }
 
 Then("connection has {int} server(s)", async (expectedCount: number) => {

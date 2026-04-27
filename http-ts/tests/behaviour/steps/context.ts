@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import { After, Before, BeforeAll } from "@cucumber/cucumber";
+import { After, Before } from "@cucumber/cucumber";
 import { AnalyzeResponse, isOkResponse, QueryOptions, QueryResponse, TransactionOptions, TransactionType, TypeDBHttpDriver } from "../../../dist/index.cjs";
 import { assertNotError } from "./params";
 import * as https from "https";
@@ -105,67 +105,56 @@ export const CLUSTER_ADDRESSES = [
 
 // For cluster mode tests, replace global fetch with one that handles mTLS
 if (isClusterMode) {
-    // Load TLS certificates for mTLS - ROOT_CA env var points to the CA certificate
     const rootCaPath = process.env.ROOT_CA;
-    if (!rootCaPath) {
-        throw new Error("ROOT_CA environment variable must be set for cluster mode tests");
-    }
+    if (!rootCaPath) throw new Error("ROOT_CA environment variable must be set for cluster mode tests");
     const certDir = path.dirname(rootCaPath);
     const ca = fs.readFileSync(rootCaPath);
     const cert = fs.readFileSync(path.join(certDir, "ext-grpc-certificate.pem"));
     const key = fs.readFileSync(path.join(certDir, "ext-grpc-private-key.pem"));
 
-    console.log("Cluster mode: Using custom fetch with mTLS");
-
-    // Create a custom fetch that uses https module with client certificates
     const customFetch = async (input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
-        const url = typeof input === 'string' ? new URL(input) : input instanceof URL ? input : new URL(input.url);
-        const isHttps = url.protocol === 'https:';
+        const url = typeof input === "string" ? new URL(input) : input instanceof URL ? input : new URL(input.url);
+        const isHttps = url.protocol === "https:";
 
         return new Promise((resolve, reject) => {
             const options: https.RequestOptions = {
                 hostname: url.hostname,
                 port: url.port || (isHttps ? 443 : 80),
                 path: url.pathname + url.search,
-                method: init?.method || 'GET',
+                method: init?.method || "GET",
                 headers: init?.headers as Record<string, string>,
-                ca: ca,
-                cert: cert,
-                key: key,
+                ca,
+                cert,
+                key,
                 rejectUnauthorized: true,
             };
 
             const client = isHttps ? https : http;
             const req = client.request(options, (res) => {
                 const chunks: Buffer[] = [];
-                res.on('data', (chunk) => chunks.push(chunk));
-                res.on('end', () => {
+                res.on("data", (chunk) => chunks.push(chunk));
+                res.on("end", () => {
                     const body = Buffer.concat(chunks).toString();
                     const headers = new Headers();
-                    Object.entries(res.headers).forEach(([key, value]) => {
-                        if (value) headers.set(key, Array.isArray(value) ? value.join(', ') : value);
+                    Object.entries(res.headers).forEach(([k, value]) => {
+                        if (value) headers.set(k, Array.isArray(value) ? value.join(", ") : value);
                     });
                     const status = res.statusCode || 200;
-                    // Status codes 204 and 304 are "null body" statuses - Response constructor rejects body for these
                     const isNullBodyStatus = status === 204 || status === 304;
                     resolve(new Response(isNullBodyStatus ? null : body, {
                         status,
-                        statusText: res.statusMessage || '',
+                        statusText: res.statusMessage || "",
                         headers,
                     }));
                 });
             });
 
-            req.on('error', reject);
-
-            if (init?.body) {
-                req.write(init.body);
-            }
+            req.on("error", reject);
+            if (init?.body) req.write(init.body);
             req.end();
         });
     };
 
-    // Replace global fetch
     (globalThis as any).fetch = customFetch;
 }
 

@@ -48,3 +48,46 @@ export function remoteOrigin(params: DriverParams) {
     if (isBasicParams(params)) return `${params.addresses[0]}`;
     else return `${params.translatedAddresses[0].external}`;
 }
+
+/** Extract host:port from a URL string. "https://127.0.0.1:18000" → "127.0.0.1:18000" */
+export function hostPortFromOrigin(origin: string): string {
+    try {
+        const url = new URL(origin);
+        return url.host;
+    } catch {
+        return origin;
+    }
+}
+
+/** Resolve a bare primaryAddress (host:port) to a full URL using configured params. */
+export function resolveOrigin(params: DriverParams, primaryAddress: string): string {
+    if (isBasicParams(params)) {
+        for (const addr of params.addresses) {
+            if (hostPortFromOrigin(addr) === primaryAddress) return addr;
+        }
+        return deriveOriginWithScheme(params.addresses[0], primaryAddress);
+    } else {
+        for (const ta of params.translatedAddresses) {
+            if (hostPortFromOrigin(ta.internal) === primaryAddress
+                || hostPortFromOrigin(ta.external) === primaryAddress) {
+                return ta.external;
+            }
+        }
+        return deriveOriginWithScheme(params.translatedAddresses[0].external, primaryAddress);
+    }
+}
+
+function deriveOriginWithScheme(referenceUrl: string, hostPort: string): string {
+    try {
+        const url = new URL(referenceUrl);
+        return `${url.protocol}//${hostPort}`;
+    } catch {
+        return `https://${hostPort}`;
+    }
+}
+
+/** Return all configured origins for connection error fallback. */
+export function allOrigins(params: DriverParams): string[] {
+    if (isBasicParams(params)) return params.addresses;
+    else return params.translatedAddresses.map(ta => ta.external);
+}

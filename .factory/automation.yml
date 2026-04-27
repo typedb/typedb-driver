@@ -278,6 +278,24 @@ build:
         tool/test/stop-cluster-servers.sh
         exit $TEST_SUCCESS
 
+    test-http-ts-integration:
+      image: typedb-ubuntu-22.04
+      type: foreground
+      command: |
+        export PATH="$HOME/.local/bin:$PATH"
+        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
+        bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
+
+        tool/http-ts/install-deps.sh
+
+        source tool/test/start-cluster-servers.sh 3 &&
+          bazel test --config=ci //http-ts/tests/integration:cluster-failover --test_env=CLUSTER_SERVER_SCRIPT=$CLUSTER_SERVER_SCRIPT --test_env=ROOT_CA=$ROOT_CA --test_env=CLUSTER_DIR=$CLUSTER_DIR --test_output=streamed --jobs=1 &&
+          export CLUSTER_FAILED= || export CLUSTER_FAILED=1
+        tool/test/stop-cluster-servers.sh
+        if [[ -n "$CLUSTER_FAILED" ]]; then exit 1; fi
+
     test-http-ts-behaviour-core:
       image: typedb-ubuntu-22.04
       type: foreground
