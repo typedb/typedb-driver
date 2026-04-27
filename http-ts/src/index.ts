@@ -23,6 +23,7 @@ import {
     ApiErrorResponse,
     ApiResponse,
     DatabasesListResponse,
+    driverError,
     isApiError,
     isMisdirectedError,
     QueryResponse,
@@ -196,7 +197,7 @@ export class TypeDBHttpDriver {
                 result = fallback;
             }
         }
-        return result ?? { err: { code: "HDR1", message: "Cannot connect to any server" }, status: 503 };
+        return result ?? driverError("HDR1", "Cannot connect to any server");
     }
 
     private async tryApiReq<BODY>(method: string, path: string, body?: BODY, options?: { headers?: Record<string, string> }): Promise<Response | null> {
@@ -287,7 +288,7 @@ export class TypeDBHttpDriver {
         try {
             resp = await fetch(url, { method: "POST", body: JSON.stringify(body), headers: { "Content-Type": "application/json" } });
         } catch {
-            return { err: { code: "HDR2", message: `Cannot connect to server at ${this.currentOrigin}` }, status: 503 };
+            return driverError("HDR2", `Cannot connect to server at ${this.currentOrigin}`);
         }
         const json = await this.jsonOrNull(resp);
         if (resp.ok) {

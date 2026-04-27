@@ -143,6 +143,10 @@ export function isMisdirectedError(err: any): err is MisdirectedError {
         && typeof err.primaryAddress === "string";
 }
 
+export function driverError(code: string, message: string): ApiErrorResponse {
+    return { err: { code, message }, status: 503 };
+}
+
 export type ApiResponse<OK_RES = {} | null> = ApiOkResponse<OK_RES> | ApiErrorResponse;
 
 export function isOkResponse<OK_RES>(res: ApiResponse<OK_RES>): res is ApiOkResponse<OK_RES> {
