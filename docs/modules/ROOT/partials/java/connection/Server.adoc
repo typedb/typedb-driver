@@ -6,7 +6,7 @@
 
 *Package*: `com.typedb.driver.api.server`
 
-The metadata and state of an individual raft server of a driver connection.
+The metadata and state of an individual server of a driver connection.
 
 // tag::methods[]
 [#_Server_getAddress_]
@@ -48,7 +48,7 @@ Returns the id of this server.
 java.util.Optional<ReplicationRole> getRole()
 ----
 
-Returns whether this is the primary server of the raft cluster or any of the supporting roles.
+Returns whether this is the primary server of the cluster or any of the supporting roles.
 
 [caption=""]
 .Returns
@@ -63,7 +63,7 @@ Returns whether this is the primary server of the raft cluster or any of the sup
 java.util.Optional<java.lang.Long> getTerm()
 ----
 
-Returns the raft protocol 'term' of this server.
+Returns the cluster protocol 'term' of this server.
 
 [caption=""]
 .Returns
@@ -78,7 +78,7 @@ Returns the raft protocol 'term' of this server.
 java.lang.Boolean isPrimary()
 ----
 
-Checks whether this is the primary server of the raft cluster.
+Checks whether this is the primary server of the cluster.
 
 [caption=""]
 .Returns

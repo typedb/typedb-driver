@@ -94,7 +94,7 @@ public interface Driver extends AutoCloseable {
     UserManager users();
 
     /**
-     * Opens a communication tunnel (transaction) to the given database on the running TypeDB server.
+     * Opens a transaction to the given database on the running TypeDB server.
      *
      * <h3>Examples</h3>
      * <pre>
@@ -108,7 +108,7 @@ public interface Driver extends AutoCloseable {
     Transaction transaction(String database, Transaction.Type type) throws TypeDBDriverException;
 
     /**
-     * Opens a communication tunnel (transaction) to the given database on the running TypeDB server.
+     * Opens a transaction to the given database on the running TypeDB server.
      *
      * <h3>Examples</h3>
      * <pre>

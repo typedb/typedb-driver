@@ -8,7 +8,7 @@
 
 
 
-The metadata and state of an individual raft server of a driver connection.
+The metadata and state of an individual server of a driver connection.
 
 // tag::methods[]
 [#_string_TypeDB_Driver_Api_IServer_Address]
@@ -53,7 +53,7 @@ bool TypeDB.Driver.Api.IServer.IsPrimary
 
 
 
-Checks whether this is the primary server of the raft cluster.
+Checks whether this is the primary server of the cluster.
 
 [caption=""]
 .Returns
@@ -69,7 +69,7 @@ ReplicationRole? TypeDB.Driver.Api.IServer.Role
 
 
 
-Returns whether this is the primary server of the raft cluster or any of the supporting roles.
+Returns whether this is the primary server of the cluster or any of the supporting roles.
 
 [caption=""]
 .Returns
@@ -85,7 +85,7 @@ long? TypeDB.Driver.Api.IServer.Term
 
 
 
-Returns the raft protocol 'term' of this server.
+Returns the cluster protocol 'term' of this server.
 
 [caption=""]
 .Returns

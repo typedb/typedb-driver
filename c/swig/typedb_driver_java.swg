@@ -225,7 +225,7 @@
 %nojavaexception Duration::days;
 %nojavaexception Duration::nanos;
 
-%nojavaexception ServerRouting::tag;
+%nojavaexception ServerRouting::type_;
 %nojavaexception ServerRouting::address;
 
 /* director constructors do not throw */

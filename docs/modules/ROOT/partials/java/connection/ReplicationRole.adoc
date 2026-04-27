@@ -52,7 +52,7 @@ public int id()
 public boolean isCandidate()
 ----
 
-Checks whether this is a candidate server of the raft cluster.
+Checks whether this is a candidate server of the cluster.
 
 [caption=""]
 .Returns
@@ -66,7 +66,7 @@ Checks whether this is a candidate server of the raft cluster.
 public boolean isPrimary()
 ----
 
-Checks whether this is the primary server of the raft cluster.
+Checks whether this is the primary server of the cluster.
 
 [caption=""]
 .Returns
@@ -80,7 +80,7 @@ Checks whether this is the primary server of the raft cluster.
 public boolean isSecondary()
 ----
 
-Checks whether this is a secondary server of the raft cluster.
+Checks whether this is a secondary server of the cluster.
 
 [caption=""]
 .Returns

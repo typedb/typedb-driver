@@ -60,7 +60,7 @@ namespace TypeDB.Driver.Api
         IUserManager Users { get; }
 
         /// <summary>
-        /// Opens a communication tunnel (transaction) to the given database on the running TypeDB server.
+        /// Opens a transaction to the given database on the running TypeDB server.
         /// </summary>
         /// <param name="database">The name of the database with which the transaction connects.</param>
         /// <param name="type">The type of transaction to be created (READ, WRITE, or SCHEMA).</param>
@@ -72,7 +72,7 @@ namespace TypeDB.Driver.Api
         ITransaction Transaction(string database, TransactionType type);
 
         /// <summary>
-        /// Opens a communication tunnel (transaction) to the given database on the running TypeDB server.
+        /// Opens a transaction to the given database on the running TypeDB server.
         /// </summary>
         /// <param name="database">The name of the database with which the transaction connects.</param>
         /// <param name="type">The type of transaction to be created (READ, WRITE, or SCHEMA).</param>

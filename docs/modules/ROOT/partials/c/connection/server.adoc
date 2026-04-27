@@ -69,7 +69,7 @@ enum ReplicationRole server_get_role(const struct Server* server_info)
 
 
 
-Returns whether this is the primary server of the raft cluster or any of the supporting roles.
+Returns whether this is the primary server of the cluster or any of the supporting roles.
 
 [caption=""]
 .Returns
@@ -85,7 +85,7 @@ int64_t server_get_term(const struct Server* server_info)
 
 
 
-Returns the raft protocol 'term' of this server.
+Returns the cluster protocol 'term' of this server.
 
 [caption=""]
 .Returns
@@ -117,7 +117,7 @@ bool server_has_term(const struct Server* server_info)
 
 
 
-Returns whether the raft protocol 'term' of this server exists.
+Returns whether the cluster protocol 'term' of this server exists.
 
 [caption=""]
 .Returns
@@ -133,7 +133,7 @@ bool server_is_primary(const struct Server* server_info)
 
 
 
-Checks whether this is the primary server of the raft cluster.
+Checks whether this is the primary server of the cluster.
 
 [caption=""]
 .Returns

@@ -30,13 +30,13 @@ pub trait Replica: Clone {
     /// Returns the id of this replica. 0 (default) if it's not a part of a cluster.
     fn id(&self) -> u64;
 
-    /// Returns whether this is the primary replica of the raft cluster or any of the supporting roles.
+    /// Returns whether this is the primary replica of the cluster or any of the supporting roles.
     fn role(&self) -> Option<ReplicationRole>;
 
-    /// Checks whether this is the primary replica of the raft cluster.
+    /// Checks whether this is the primary replica of the cluster.
     fn is_primary(&self) -> bool;
 
-    /// Returns the raft protocol 'term' of this replica.
+    /// Returns the cluster protocol 'term' of this replica.
     fn term(&self) -> Option<u64>;
 }
 
@@ -89,17 +89,17 @@ impl Replica for Server {
         self.replication_status().map(|status| status.id).unwrap_or(DEFAULT_SERVER_ID)
     }
 
-    /// Returns whether this is the primary replica of the raft cluster or any of the supporting roles.
+    /// Returns whether this is the primary replica of the cluster or any of the supporting roles.
     fn role(&self) -> Option<ReplicationRole> {
         self.replication_status().map(|status| status.role).flatten()
     }
 
-    /// Checks whether this is the primary replica of the raft cluster.
+    /// Checks whether this is the primary replica of the cluster.
     fn is_primary(&self) -> bool {
         matches!(self.role(), Some(ReplicationRole::Primary))
     }
 
-    /// Returns the raft protocol 'term' of this replica.
+    /// Returns the cluster protocol 'term' of this replica.
     fn term(&self) -> Option<u64> {
         self.replication_status().map(|status| status.term).flatten()
     }
@@ -149,30 +149,30 @@ impl Replica for AvailableServer {
         self.replication_status().map(|status| status.id).unwrap_or(DEFAULT_SERVER_ID)
     }
 
-    /// Returns whether this is the primary replica of the raft cluster or any of the supporting roles.
+    /// Returns whether this is the primary replica of the cluster or any of the supporting roles.
     fn role(&self) -> Option<ReplicationRole> {
         self.replication_status().map(|status| status.role).flatten()
     }
 
-    /// Checks whether this is the primary replica of the raft cluster.
+    /// Checks whether this is the primary replica of the cluster.
     fn is_primary(&self) -> bool {
         matches!(self.role(), Some(ReplicationRole::Primary))
     }
 
-    /// Returns the raft protocol 'term' of this replica.
+    /// Returns the cluster protocol 'term' of this replica.
     fn term(&self) -> Option<u64> {
         self.replication_status().map(|status| status.term).flatten()
     }
 }
 
-/// The replication metadata and state of an individual server as a raft replica.
+/// The replication metadata and state of an individual server as a cluster replica.
 #[derive(Debug, PartialEq, Eq, Hash, Clone, Copy)]
 pub struct ReplicationStatus {
     /// The id of this replica.
     pub(crate) id: u64,
-    /// The role of this replica in the raft cluster. May be unknown when the server is unavailable.
+    /// The role of this replica in the cluster. May be unknown when the server is unavailable.
     pub(crate) role: Option<ReplicationRole>,
-    /// The raft protocol 'term' of this server. May be unknown when the server is unavailable.
+    /// The cluster protocol 'term' of this server. May be unknown when the server is unavailable.
     pub(crate) term: Option<u64>,
 }
 

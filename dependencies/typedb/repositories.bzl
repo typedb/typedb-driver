@@ -18,7 +18,7 @@
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 
 def typedb_dependencies():
-     # TODO: Return ref after merge to master, currently points to 'raft-dependencies-addition'
+     # TODO: Return ref after merge to master, currently points to 'cluster-support-feature-branch'
      git_repository(
          name = "typedb_dependencies",
          remote = "https://github.com/typedb/typedb-dependencies",

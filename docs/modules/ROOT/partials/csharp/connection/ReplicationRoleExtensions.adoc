@@ -17,7 +17,7 @@ static bool IsCandidate(this ReplicationRole role)
 
 
 
-Checks whether this is a candidate server of the raft cluster.
+Checks whether this is a candidate server of the cluster.
 
 [caption=""]
 .Returns
@@ -33,7 +33,7 @@ static bool IsPrimary(this ReplicationRole role)
 
 
 
-Checks whether this is the primary server of the raft cluster.
+Checks whether this is the primary server of the cluster.
 
 [caption=""]
 .Returns
@@ -49,7 +49,7 @@ static bool IsSecondary(this ReplicationRole role)
 
 
 
-Checks whether this is a secondary server of the raft cluster.
+Checks whether this is a secondary server of the cluster.
 
 [caption=""]
 .Returns

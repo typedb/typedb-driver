@@ -56,21 +56,21 @@ public enum ReplicationRole {
     }
 
     /**
-     * Checks whether this is the primary server of the raft cluster.
+     * Checks whether this is the primary server of the cluster.
      */
     public boolean isPrimary() {
         return nativeObject == com.typedb.driver.jni.ReplicationRole.Primary;
     }
 
     /**
-     * Checks whether this is a candidate server of the raft cluster.
+     * Checks whether this is a candidate server of the cluster.
      */
     public boolean isCandidate() {
         return nativeObject == com.typedb.driver.jni.ReplicationRole.Candidate;
     }
 
     /**
-     * Checks whether this is a secondary server of the raft cluster.
+     * Checks whether this is a secondary server of the cluster.
      */
     public boolean isSecondary() {
         return nativeObject == com.typedb.driver.jni.ReplicationRole.Secondary;

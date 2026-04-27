@@ -82,7 +82,7 @@ class Driver(ABC):
     def transaction(self, database_name: str, transaction_type: TransactionType,
                     options: Optional[TransactionOptions] = None) -> Transaction:
         """
-        Opens a communication tunnel (transaction) to the given database on the running TypeDB server.
+        Opens a transaction to the given database on the running TypeDB server.
 
         :param database_name: The name of the database with which the transaction connects
         :param transaction_type: The type of transaction to be created (READ, WRITE, or SCHEMA)

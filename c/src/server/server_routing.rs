@@ -25,40 +25,40 @@ use crate::common::{
     memory::{borrow_optional, free, release, release_string, string_free, string_view},
 };
 
-/// <code>ServerRoutingTag</code> is used to represent server routing directives in FFI.
+/// <code>ServerRoutingType</code> is used to represent server routing directives in FFI.
 /// It is the tag part, which is combined with optional fields to form an instance of the original
 /// enum.
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
-pub enum ServerRoutingTag {
+pub enum ServerRoutingType {
     Auto,
     Direct,
 }
 
 /// <code>ServerRouting</code> is used to represent server routing directives in FFI.
-/// It combines <code>ServerRoutingTag</code> and optional fields to form an instance of the
+/// It combines <code>ServerRoutingType</code> and optional fields to form an instance of the
 /// original enum.
 /// <code>address</code> is not null only when tag is <code>Direct</code>.
 #[repr(C)]
 #[derive(Debug, Clone)]
 pub struct ServerRouting {
-    pub(crate) tag: ServerRoutingTag,
+    pub(crate) type_: ServerRoutingType,
     pub(crate) address: *mut c_char,
 }
 
 impl ServerRouting {
     fn new_auto() -> Self {
-        ServerRouting { tag: ServerRoutingTag::Auto, address: std::ptr::null_mut() }
+        ServerRouting { type_: ServerRoutingType::Auto, address: std::ptr::null_mut() }
     }
 
     fn new_direct(address: *mut c_char) -> Self {
-        ServerRouting { tag: ServerRoutingTag::Direct, address }
+        ServerRouting { type_: ServerRoutingType::Direct, address }
     }
 
     fn to_native(&self) -> NativeServerRouting {
-        match self.tag {
-            ServerRoutingTag::Auto => NativeServerRouting::Auto,
-            ServerRoutingTag::Direct => {
+        match self.type_ {
+            ServerRoutingType::Auto => NativeServerRouting::Auto,
+            ServerRoutingType::Direct => {
                 let address = unwrap_or_default(string_view(self.address).parse());
                 NativeServerRouting::Direct { address }
             }

@@ -85,7 +85,7 @@ pub fn deregister_server(&self, replica_id: u64) -> Result
 --
 ====
 
-Deregisters a server from the cluster the driver is currently connected to. This server will no longer play a raft role in this cluster.
+Deregisters a server from the cluster the driver is currently connected to. This server will no longer play a role in this cluster.
 
 [caption=""]
 .Input parameters

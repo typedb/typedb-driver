@@ -48,7 +48,7 @@ driver.close()
 deregister_server(server_id: int) -> None
 ----
 
-Deregisters a server from the cluster the driver is currently connected to. This server will no longer play a raft role in this cluster.
+Deregisters a server from the cluster the driver is currently connected to. This server will no longer play a role in this cluster.
 
 [caption=""]
 .Input parameters
@@ -223,7 +223,7 @@ driver.servers(ServerRouting.Auto())
 transaction(database_name: str, transaction_type: TransactionType, options: TransactionOptions | None = None) -> Transaction
 ----
 
-Opens a communication tunnel (transaction) to the given database on the running TypeDB server.
+Opens a transaction to the given database on the running TypeDB server.
 
 [caption=""]
 .Input parameters

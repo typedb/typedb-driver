@@ -38,7 +38,11 @@ use crate::{
 const DRIVER_LANG: &str = "c";
 
 fn driver_lang_or_default(driver_lang: *const c_char) -> &'static str {
-    if driver_lang.is_null() { DRIVER_LANG } else { string_view(driver_lang) }
+    if driver_lang.is_null() {
+        DRIVER_LANG
+    } else {
+        string_view(driver_lang)
+    }
 }
 
 /// Open a TypeDB Driver to a TypeDB server available at the provided address.

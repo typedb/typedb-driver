@@ -29,7 +29,7 @@ class DatabaseManager;
 class Database;
 
 /**
- * \brief The metadata and state of an individual raft replica of a database.
+ * \brief The metadata and state of an individual cluster replica of a database.
  */
 class ReplicaInfo {
 public:
@@ -44,18 +44,18 @@ public:
     std::string server();
 
     /**
-     * Checks whether this is the primary replica of the raft cluster.
+     * Checks whether this is the primary replica of the cluster.
      */
     bool isPrimary();
 
     /**
-     * Checks whether this is the preferred replica of the raft cluster.
+     * Checks whether this is the preferred replica of the cluster.
      * If true, Operations which can be run on any replica will prefer to use this replica.
      */
     bool isPreferred();
 
     /**
-     * The raft protocol ‘term’ of this replica.
+     * The cluster protocol ‘term’ of this replica.
      */
     int64_t term();
 

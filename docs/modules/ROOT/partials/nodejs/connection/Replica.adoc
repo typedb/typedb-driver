@@ -1,7 +1,7 @@
 [#_Replica]
 === Replica
 
-The metadata and state of an individual raft replica of a database.
+The metadata and state of an individual cluster replica of a database.
 
 [caption=""]
 .Fields
@@ -11,10 +11,10 @@ The metadata and state of an individual raft replica of a database.
 |===
 |Name |Type |Description
 a| `databaseName` a| `string` a| The database for which this is a replica.
-a| `preferred` a| `boolean` a| Checks whether this is the preferred replica of the raft cluster. If true, Operations which can be run on any replica will prefer to use this replica.
-a| `primary` a| `boolean` a| Checks whether this is the primary replica of the raft cluster.
+a| `preferred` a| `boolean` a| Checks whether this is the preferred replica of the cluster. If true, Operations which can be run on any replica will prefer to use this replica.
+a| `primary` a| `boolean` a| Checks whether this is the primary replica of the cluster.
 a| `server` a| `string` a| The server hosting this replica
-a| `term` a| `number` a| The raft protocol ‘term’ of this replica.
+a| `term` a| `number` a| The cluster protocol ‘term’ of this replica.
 |===
 // end::properties[]
 

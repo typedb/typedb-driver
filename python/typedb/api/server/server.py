@@ -27,7 +27,7 @@ if TYPE_CHECKING:
 
 class Server(ABC):
     """
-    The metadata and state of an individual raft server of a driver connection.
+    The metadata and state of an individual server of a driver connection.
     """
 
     @property
@@ -62,7 +62,7 @@ class Server(ABC):
     @abstractmethod
     def role(self) -> Optional[ReplicationRole]:
         """
-        Returns whether this is the primary server of the raft cluster or any of the supporting roles.
+        Returns whether this is the primary server of the cluster or any of the supporting roles.
 
         Examples
         --------
@@ -75,7 +75,7 @@ class Server(ABC):
     @abstractmethod
     def is_primary(self) -> bool:
         """
-        Checks whether this is the primary server of the raft cluster.
+        Checks whether this is the primary server of the cluster.
 
         Examples
         --------
@@ -89,7 +89,7 @@ class Server(ABC):
     @abstractmethod
     def term(self) -> int:
         """
-        Returns the raft protocol ‘term’ of this server.
+        Returns the cluster protocol ‘term’ of this server.
 
         Examples
         --------

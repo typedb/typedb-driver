@@ -75,7 +75,7 @@ driver.databases();
 void deregisterServer​(long serverID)
 ----
 
-Deregisters a server from the cluster the driver is currently connected to. This server will no longer play a raft role in this cluster. 
+Deregisters a server from the cluster the driver is currently connected to. This server will no longer play a role in this cluster.
 
 
 [caption=""]
@@ -330,7 +330,7 @@ Transaction transaction​(java.lang.String database,
                  throws TypeDBDriverException
 ----
 
-Opens a communication tunnel (transaction) to the given database on the running TypeDB server. 
+Opens a transaction to the given database on the running TypeDB server.
 
 
 [caption=""]
@@ -365,7 +365,7 @@ Transaction transaction​(java.lang.String database,
                         TransactionOptions options)
 ----
 
-Opens a communication tunnel (transaction) to the given database on the running TypeDB server. 
+Opens a transaction to the given database on the running TypeDB server.
 
 
 [caption=""]

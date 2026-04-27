@@ -66,25 +66,25 @@ pub extern "C" fn server_has_role(server_info: *const Server) -> bool {
     borrow(server_info).role().is_some()
 }
 
-/// Returns whether this is the primary server of the raft cluster or any of the supporting roles.
+/// Returns whether this is the primary server of the cluster or any of the supporting roles.
 #[no_mangle]
 pub extern "C" fn server_get_role(server_info: *const Server) -> ReplicationRole {
     borrow(server_info).role().unwrap()
 }
 
-/// Checks whether this is the primary server of the raft cluster.
+/// Checks whether this is the primary server of the cluster.
 #[no_mangle]
 pub extern "C" fn server_is_primary(server_info: *const Server) -> bool {
     borrow(server_info).is_primary()
 }
 
-/// Returns whether the raft protocol 'term' of this server exists.
+/// Returns whether the cluster protocol 'term' of this server exists.
 #[no_mangle]
 pub extern "C" fn server_has_term(server_info: *const Server) -> bool {
     borrow(server_info).term().is_some()
 }
 
-/// Returns the raft protocol 'term' of this server.
+/// Returns the cluster protocol 'term' of this server.
 #[no_mangle]
 pub extern "C" fn server_get_term(server_info: *const Server) -> i64 {
     borrow(server_info).term().unwrap() as i64

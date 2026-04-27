@@ -52,17 +52,17 @@ namespace TypeDB.Driver.Api
         }
 
         /// <summary>
-        /// Checks whether this is the primary server of the raft cluster.
+        /// Checks whether this is the primary server of the cluster.
         /// </summary>
         public static bool IsPrimary(this ReplicationRole role) => role == ReplicationRole.Primary;
 
         /// <summary>
-        /// Checks whether this is a candidate server of the raft cluster.
+        /// Checks whether this is a candidate server of the cluster.
         /// </summary>
         public static bool IsCandidate(this ReplicationRole role) => role == ReplicationRole.Candidate;
 
         /// <summary>
-        /// Checks whether this is a secondary server of the raft cluster.
+        /// Checks whether this is a secondary server of the cluster.
         /// </summary>
         public static bool IsSecondary(this ReplicationRole role) => role == ReplicationRole.Secondary;
     }

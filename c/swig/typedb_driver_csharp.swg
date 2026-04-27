@@ -282,7 +282,7 @@
 %noexception ServerVersion::version;
 
 /* ServerRouting field accessors do not throw */
-%noexception ServerRouting::tag;
+%noexception ServerRouting::type_;
 %noexception ServerRouting::address;
 
 /* Struct field accessors do not throw */

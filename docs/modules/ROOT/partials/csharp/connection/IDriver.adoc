@@ -63,7 +63,7 @@ void DeregisterServer(long serverId)
 
 
 
-Deregisters a server from the cluster the driver is currently connected to. This server will no longer play a raft role in this cluster.
+Deregisters a server from the cluster the driver is currently connected to. This server will no longer play a role in this cluster.
 
 
 [caption=""]
@@ -252,7 +252,7 @@ ITransaction Transaction(string database, TransactionType type)
 
 
 
-Opens a communication tunnel (transaction) to the given database on the running TypeDB server.
+Opens a transaction to the given database on the running TypeDB server.
 
 
 [caption=""]
@@ -286,7 +286,7 @@ ITransaction Transaction(string database, TransactionType type, TransactionOptio
 
 
 
-Opens a communication tunnel (transaction) to the given database on the running TypeDB server.
+Opens a transaction to the given database on the running TypeDB server.
 
 
 [caption=""]

@@ -56,16 +56,16 @@ export interface Database {
 }
 
 export namespace Database {
-    /** The metadata and state of an individual raft replica of a database.*/
+    /** The metadata and state of an individual cluster replica of a database.*/
     export interface Replica {
         /** The database for which this is a replica. */
         readonly databaseName: string;
-        /** The raft protocol ‘term’ of this replica. */
+        /** The cluster protocol ‘term’ of this replica. */
         readonly term: number;
-        /** Checks whether this is the primary replica of the raft cluster.*/
+        /** Checks whether this is the primary replica of the cluster.*/
         readonly primary: boolean;
         /**
-         * Checks whether this is the preferred replica of the raft cluster.
+         * Checks whether this is the preferred replica of the cluster.
          * If true, Operations which can be run on any replica will prefer to use this replica.
          */
         readonly preferred: boolean;

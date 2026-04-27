@@ -25,7 +25,7 @@ import javax.annotation.CheckReturnValue;
 import java.util.Optional;
 
 /**
- * The metadata and state of an individual raft server of a driver connection.
+ * The metadata and state of an individual server of a driver connection.
  */
 public interface Server {
     // TODO: This is what u64 is converted to. This one feels weird, although I don't know what to do with it.
@@ -43,19 +43,19 @@ public interface Server {
     String getAddress();
 
     /**
-     * Returns whether this is the primary server of the raft cluster or any of the supporting roles.
+     * Returns whether this is the primary server of the cluster or any of the supporting roles.
      */
     @CheckReturnValue
     Optional<ReplicationRole> getRole();
 
     /**
-     * Checks whether this is the primary server of the raft cluster.
+     * Checks whether this is the primary server of the cluster.
      */
     @CheckReturnValue
     Boolean isPrimary();
 
     /**
-     * Returns the raft protocol 'term' of this server.
+     * Returns the cluster protocol 'term' of this server.
      */
     @CheckReturnValue
     Optional<Long> getTerm();

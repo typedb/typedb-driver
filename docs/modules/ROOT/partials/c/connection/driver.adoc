@@ -51,7 +51,7 @@ void driver_deregister_server(const struct TypeDBDriver* driver, int64_t server_
 
 
 
-Deregisters a server from the cluster the driver is currently connected to. This server will no longer play a raft role in this cluster.
+Deregisters a server from the cluster the driver is currently connected to. This server will no longer play a role in this cluster.
 
 
 [caption=""]
