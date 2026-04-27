@@ -231,9 +231,10 @@ export class TypeDBHttpDriver {
         const url = `${this.currentOrigin}${path}`;
         let tokenResp = await this.getToken();
         if ("err" in tokenResp) {
-            // Connection error during token refresh → signal as connection error for fallback
-            if (tokenResp.status === 503) return null;
-            return tokenResp;
+            // Signin failed on this origin. Treat as a connection-like error so the caller
+            // can try fallback origins. This covers both connection errors (503) and server
+            // state errors (e.g. SRV14 "Not yet initialised" on a recovering cluster node).
+            return null;
         }
         let bodyString = undefined;
         if (body !== undefined) bodyString = JSON.stringify(body);
@@ -246,7 +247,7 @@ export class TypeDBHttpDriver {
         }
         if (resp.status === HTTP_UNAUTHORIZED) {
             tokenResp = await this.refreshToken();
-            if ("err" in tokenResp) return tokenResp;
+            if ("err" in tokenResp) return null;
             headers = Object.assign({ "Authorization": `Bearer ${tokenResp.ok.token}`, "Content-Type": "application/json" }, options?.headers || {});
             try {
                 resp = await fetch(url, { method, body: bodyString, headers });
@@ -277,6 +278,7 @@ export class TypeDBHttpDriver {
     private async tryFallbackOrigins<BODY>(method: string, path: string, body?: BODY, options?: { headers?: Record<string, string> }): Promise<ApiErrorResponse | Response | null> {
         const origins = allOrigins(this.params);
         const alreadyTried = this.currentOrigin;
+        let lastResult: Response | null = null;
         for (const origin of origins) {
             if (origin === alreadyTried) continue;
             this.currentOrigin = origin;
@@ -292,9 +294,18 @@ export class TypeDBHttpDriver {
                 }
                 continue;
             }
+            // Got a successful response — return immediately
+            if (result instanceof Response && result.ok) return result;
+            // Got a non-ok HTTP response — save it and try next origin.
+            // This allows us to find an origin that can handle the request, while
+            // still returning the last error if no origin succeeds.
+            if (result instanceof Response) {
+                lastResult = result;
+                continue;
+            }
             return result;
         }
-        return null;
+        return lastResult;
     }
 
     private getToken(): Promise<ApiResponse<SignInResponse>> {

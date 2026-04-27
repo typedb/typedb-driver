@@ -127,7 +127,13 @@ server_start() {
   local log_file="${node_dir}/server.log"
   rm -f "${log_file}"
 
-  nohup "${node_dir}/typedb" server \
+  # Use setsid on Linux to start in a new session (prevents process group cleanup).
+  # On macOS, nohup + disown is sufficient.
+  local setsid_cmd=""
+  if command -v setsid >/dev/null 2>&1; then
+    setsid_cmd="setsid"
+  fi
+  $setsid_cmd nohup "${node_dir}/typedb" server \
     ${config_args} \
     --diagnostics.deployment-id "${DEPLOYMENT_ID}" \
     --server.listen-address="0.0.0.0:${server_port}" \

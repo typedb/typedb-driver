@@ -36,8 +36,21 @@ js_test(
     entry_point = ":cluster-failover.js",
     data = [
         ":cluster-failover-lib",
+        "//tool/test:cluster-server.sh",
+        "//tool/test/resources:certificates",
+        "//tool/test/resources:encryption/ext-grpc-root-ca.pem",
     ],
+    no_copy_to_bin = [
+        "//tool/test:cluster-server.sh",
+        "//tool/test/resources:certificates",
+        "//tool/test/resources:encryption/ext-grpc-root-ca.pem",
+    ],
+    env = {
+        "CLUSTER_SERVER_SCRIPT": "$(rootpath //tool/test:cluster-server.sh)",
+        "ROOT_CA": "$(rootpath //tool/test/resources:encryption/ext-grpc-root-ca.pem)",
+    },
     size = "large",
+    local = True,  # Test manages external server processes via CLUSTER_DIR
 )
 
 checkstyle_test(
