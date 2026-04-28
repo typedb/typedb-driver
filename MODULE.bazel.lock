@@ -725,6 +725,41 @@
         ]
       }
     },
+    "@@aspect_rules_ts+//ts:extensions.bzl%ext": {
+      "general": {
+        "bzlTransitiveDigest": "eElhS7M7sbjWaoklqpFSskS7FDCguj60PFwCGtkDLKY=",
+        "usagesDigest": "R88PyhtGTkjwAtfqREyDh2sghLChgDHykLmGFG28Gv0=",
+        "recordedFileInputs": {},
+        "recordedDirentsInputs": {},
+        "envVariables": {},
+        "generatedRepoSpecs": {
+          "npm_typescript": {
+            "repoRuleId": "@@aspect_rules_ts+//ts/private:npm_repositories.bzl%http_archive_version",
+            "attributes": {
+              "bzlmod": true,
+              "version": "",
+              "version_from": "@@typedb_protocol+//grpc/nodejs:package.json",
+              "integrity": "",
+              "build_file": "@@aspect_rules_ts+//ts:BUILD.typescript",
+              "build_file_substitutions": {
+                "bazel_worker_version": "5.4.2",
+                "google_protobuf_version": "3.20.1"
+              },
+              "urls": [
+                "https://registry.npmjs.org/typescript/-/typescript-{}.tgz"
+              ]
+            }
+          }
+        },
+        "recordedRepoMappingEntries": [
+          [
+            "aspect_rules_ts+",
+            "bazel_tools",
+            "bazel_tools"
+          ]
+        ]
+      }
+    },
     "@@rules_foreign_cc+//foreign_cc:extensions.bzl%tools": {
       "general": {
         "bzlTransitiveDigest": "Zyhrp9ZD1OkHXRpL1OG37IUnUmkiGpNNHJeqFTQ8aAM=",
