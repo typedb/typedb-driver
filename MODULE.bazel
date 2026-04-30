@@ -168,9 +168,9 @@ npm.npm_translate_lock(
 
 use_repo(npm, "nodejs_npm", "http-ts_npm")
 
-# TypeScript toolchain - import @npm_typescript from typedb_protocol module
-# The repo is created by typedb_protocol's rules_ts extension usage
+# TypeScript toolchain
 rules_ts_ext = use_extension("@aspect_rules_ts//ts:extensions.bzl", "ext")
+rules_ts_ext.deps(ts_version = "5.7.2")
 use_repo(rules_ts_ext, "npm_typescript")
 
 # Maven dependencies - use typedb_dependencies' custom maven extension
