@@ -215,7 +215,7 @@ native_artifact_files.artifact(
     name = "typedb_cluster_artifact",
     group_name = "typedb-cluster-all-{platform}",
     artifact_name = "typedb-cluster-all-{platform}-{version}.{ext}",
-    commit = "6f45d3bb132ce3c4f9e03cfc70fecde89bc35373",
+    commit = "68385c55d92cd0a71e1da3496ec9459ba58af197",
     private = True,
 )
 
