@@ -226,3 +226,12 @@ use_repo(
      "typedb_artifact_mac-arm64",
      "typedb_artifact_windows-x86_64",
 )
+
+use_repo(
+    native_artifact_files,
+     "typedb_cluster_artifact_linux-x86_64",
+     "typedb_cluster_artifact_linux-arm64",
+     "typedb_cluster_artifact_mac-x86_64",
+     "typedb_cluster_artifact_mac-arm64",
+     "typedb_cluster_artifact_windows-x86_64",
+)
