@@ -22,10 +22,9 @@ use std::{convert::Infallible, fmt, str::FromStr};
 use chrono::{FixedOffset, NaiveDate, NaiveDateTime, NaiveTime};
 use cucumber::Parameter;
 use typedb_driver::{
-    TransactionType as TypeDBTransactionType,
+    Address, ServerRouting as TypeDBServerRouting, TransactionType as TypeDBTransactionType,
     answer::QueryType as TypeDBQueryType,
     concept::{Value as TypeDBValue, ValueType as TypeDBValueType},
-    Address, ServerRouting as TypeDBServerRouting,
 };
 
 #[derive(Debug, Default, Parameter, Clone)]

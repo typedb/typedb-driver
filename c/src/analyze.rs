@@ -30,18 +30,18 @@ use typedb_driver::{
         pipeline::{Pipeline, PipelineStage, ReduceAssignment, Reducer, SortOrder, SortVariable},
     },
     box_stream,
-    concept::{type_::Type, Concept, Kind},
+    concept::{Concept, Kind, type_::Type},
 };
 
 use crate::{
     common::{
+        StringIterator,
         error::try_release,
-        iterator::{iterator_next, CIterator},
+        iterator::{CIterator, iterator_next},
         memory::{
             borrow, free, release, release_optional, release_optional_string, release_string, string_view,
             take_ownership,
         },
-        StringIterator,
     },
     concept::ConceptIterator,
 };

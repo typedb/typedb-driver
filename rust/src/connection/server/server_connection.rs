@@ -30,6 +30,7 @@ use tokio::{sync::mpsc::UnboundedSender, time::Instant};
 use uuid::Uuid;
 
 use crate::{
+    Credentials, DriverOptions, Result, TransactionOptions, TransactionType,
     common::address::Address,
     connection::{
         TransactionStream,
@@ -39,11 +40,10 @@ use crate::{
             DatabaseExportTransmitter, DatabaseImportTransmitter, RPCTransmitter, TransactionTransmitter,
         },
         runtime::BackgroundRuntime,
-        server::{server_version::ServerVersion, Server},
+        server::{Server, server_version::ServerVersion},
     },
     error::{ConnectionError, InternalError},
     info::{DatabaseInfo, UserInfo},
-    Credentials, DriverOptions, Result, TransactionOptions, TransactionType,
 };
 
 #[derive(Clone)]

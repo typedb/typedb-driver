@@ -30,10 +30,10 @@ use typedb_driver::{
 use crate::{
     analyze::ConjunctionIDIterator,
     common::{
+        StringIterator,
         error::{try_release, try_release_optional},
         iterator::CIterator,
         memory::{borrow, free, release, release_optional, release_string, string_view, take_ownership},
-        StringIterator,
     },
     concept::{ConceptIterator, ConceptRowIterator},
 };

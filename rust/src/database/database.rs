@@ -26,9 +26,9 @@ use std::{
 use prost::Message;
 
 use crate::{
-    common::{info::DatabaseInfo, Error, Result},
+    common::{Error, Result, info::DatabaseInfo},
     connection::server::{server_manager::ServerManager, server_routing::ServerRouting},
-    database::migration::{try_create_export_file, try_open_existing_export_file, DatabaseExportAnswer},
+    database::migration::{DatabaseExportAnswer, try_create_export_file, try_open_existing_export_file},
     error::MigrationError,
     resolve,
 };

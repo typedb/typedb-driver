@@ -19,8 +19,8 @@
 
 use itertools::Itertools;
 use typedb_protocol::{
-    authentication, connection, database, database_manager, migration, query::initial_res::Res, server, server_manager,
-    transaction, user, user_manager, ExtensionVersion::Extension, Version::Version,
+    ExtensionVersion::Extension, Version::Version, authentication, connection, database, database_manager, migration,
+    query::initial_res::Res, server, server_manager, transaction, user, user_manager,
 };
 use uuid::Uuid;
 
@@ -28,14 +28,14 @@ use super::{FromProto, IntoProto, TryFromProto, TryIntoProto};
 use crate::{
     Credentials,
     analyze::pipeline::Pipeline,
-    answer::{concept_document::ConceptDocumentHeader, concept_row::ConceptRowHeader, QueryType},
-    common::{info::DatabaseInfo, RequestID, Result},
+    answer::{QueryType, concept_document::ConceptDocumentHeader, concept_row::ConceptRowHeader},
+    common::{RequestID, Result, info::DatabaseInfo},
     connection::{
         message::{
             AnalyzeResponse, DatabaseExportResponse, DatabaseImportRequest, QueryRequest, QueryResponse, Request,
             Response, TransactionRequest, TransactionResponse,
         },
-        server::{server_version::ServerVersion, Server},
+        server::{Server, server_version::ServerVersion},
     },
     error::{ConnectionError, InternalError, ServerError},
     info::UserInfo,

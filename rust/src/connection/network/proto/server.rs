@@ -18,14 +18,14 @@
  */
 
 use typedb_protocol::{
-    server::{version::Res as VersionProto, ReplicationStatus as ReplicationStatusProto},
     Server as ServerProto,
+    server::{ReplicationStatus as ReplicationStatusProto, version::Res as VersionProto},
 };
 
 use super::TryFromProto;
 use crate::{
     common::Result,
-    connection::server::{server_version::ServerVersion, ReplicationRole, ReplicationStatus, Server},
+    connection::server::{ReplicationRole, ReplicationStatus, Server, server_version::ServerVersion},
     error::ConnectionError,
 };
 
@@ -42,11 +42,7 @@ impl TryFromProto<ServerProto> for Server {
 
 impl TryFromProto<ReplicationStatusProto> for ReplicationStatus {
     fn try_from_proto(proto: ReplicationStatusProto) -> Result<Self> {
-        Ok(Self {
-            id: proto.id,
-            role: Option::<ReplicationRole>::try_from_proto(proto.role)?,
-            term: proto.term,
-        })
+        Ok(Self { id: proto.id, role: Option::<ReplicationRole>::try_from_proto(proto.role)?, term: proto.term })
     }
 }
 

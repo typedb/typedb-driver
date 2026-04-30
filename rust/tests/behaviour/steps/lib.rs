@@ -36,12 +36,12 @@ use futures::{
     stream::{self, StreamExt},
 };
 use itertools::Itertools;
-use tokio::time::{sleep, Duration};
+use tokio::time::{Duration, sleep};
 use typedb_driver::{
-    analyze::AnalyzedQuery,
-    answer::{ConceptDocument, ConceptRow, QueryAnswer, QueryType},
     Addresses, BoxStream, Credentials, DriverOptions, DriverTlsConfig, QueryOptions, Result as TypeDBResult,
     ServerRouting, Transaction, TransactionOptions, TypeDBDriver,
+    analyze::AnalyzedQuery,
+    answer::{ConceptDocument, ConceptRow, QueryAnswer, QueryType},
 };
 
 use crate::{

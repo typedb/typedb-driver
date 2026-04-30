@@ -19,11 +19,11 @@
 
 use std::{ffi::c_char, path::Path, ptr::addr_of_mut, sync::Arc};
 
-use typedb_driver::{box_stream, Database, TypeDBDriver};
+use typedb_driver::{Database, TypeDBDriver, box_stream};
 
 use crate::common::{
     error::{try_release, try_release_arc, unwrap_or_default, unwrap_void},
-    iterator::{iterator_arc_next, CIterator},
+    iterator::{CIterator, iterator_arc_next},
     memory::{borrow, free, string_view},
 };
 

@@ -35,8 +35,8 @@ use prost::Message;
 use tokio::sync::oneshot::channel as oneshot;
 use tokio::{
     sync::{
-        mpsc::{unbounded_channel as unbounded_async, UnboundedReceiver, UnboundedSender},
-        oneshot::{channel as oneshot_async, Sender as AsyncOneshotSender},
+        mpsc::{UnboundedReceiver, UnboundedSender, unbounded_channel as unbounded_async},
+        oneshot::{Sender as AsyncOneshotSender, channel as oneshot_async},
     },
     task,
 };

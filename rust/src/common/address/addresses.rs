@@ -25,7 +25,7 @@ use std::{
 
 use itertools::Itertools;
 
-use crate::common::address::{address_translation::AddressTranslation, Address};
+use crate::common::address::{Address, address_translation::AddressTranslation};
 
 /// A collection of server addresses used for connection.
 #[derive(Debug, Clone, Eq, PartialEq)]

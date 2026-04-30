@@ -23,7 +23,7 @@ use typedb_driver::{BoxPromise, Promise, Result, answer::ConceptRow, concept::Co
 
 use crate::common::{
     error::try_release_optional,
-    iterator::{iterator_try_next, CIterator},
+    iterator::{CIterator, iterator_try_next},
     memory::{free, take_ownership},
 };
 

@@ -26,7 +26,7 @@ use super::Database;
 use crate::{
     common::Result,
     connection::server::{server_manager::ServerManager, server_routing::ServerRouting},
-    database::migration::{try_open_import_file, ProtoMessageIterator},
+    database::migration::{ProtoMessageIterator, try_open_import_file},
     info::DatabaseInfo,
     resolve,
 };

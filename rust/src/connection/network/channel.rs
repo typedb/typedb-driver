@@ -34,9 +34,9 @@ use tonic::{
 };
 
 use crate::{
-    common::{address::Address, Result, StdResult},
-    error::ConnectionError,
     Credentials, DriverOptions, Error,
+    common::{Result, StdResult, address::Address},
+    error::ConnectionError,
 };
 
 type ResponseFuture = InterceptorResponseFuture<ChannelResponseFuture>;

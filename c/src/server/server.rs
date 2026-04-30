@@ -22,7 +22,7 @@ use std::{ffi::c_char, ptr::addr_of_mut};
 use typedb_driver::{Replica, ReplicationRole, Server};
 
 use crate::common::{
-    iterator::{iterator_next, CIterator},
+    iterator::{CIterator, iterator_next},
     memory::{borrow, free, release_optional_string},
 };
 

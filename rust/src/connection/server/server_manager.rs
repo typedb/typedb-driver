@@ -30,15 +30,15 @@ use itertools::Itertools;
 use tracing::debug;
 
 use crate::{
-    common::address::{address_translation::AddressTranslation, Address, Addresses},
+    Credentials, DriverOptions, Error, Result,
+    common::address::{Address, Addresses, address_translation::AddressTranslation},
     connection::{
         runtime::BackgroundRuntime,
         server::{
-            server_connection::ServerConnection, server_routing::ServerRouting, AvailableServer, Replica, Server,
+            AvailableServer, Replica, Server, server_connection::ServerConnection, server_routing::ServerRouting,
         },
     },
     error::ConnectionError,
-    Credentials, DriverOptions, Error, Result,
 };
 
 macro_rules! filter_available_replicas {
@@ -51,9 +51,7 @@ macro_rules! filter_available_replicas {
 }
 
 macro_rules! find_primary_replica {
-    ($iter:expr) => {{
-        $iter.filter(|replica| replica.is_primary()).max_by_key(|replica| replica.term().unwrap_or_default())
-    }};
+    ($iter:expr) => {{ $iter.filter(|replica| replica.is_primary()).max_by_key(|replica| replica.term().unwrap_or_default()) }};
 }
 
 pub(crate) struct ServerManager {
@@ -142,11 +140,7 @@ impl ServerManager {
         replica_connections.retain(|address, _| replica_addresses.contains(address));
         replica_connections.extend(new_replica_connections);
 
-        if replica_connections.is_empty() {
-            Err(self.server_connection_failed_err(connection_errors))
-        } else {
-            Ok(())
-        }
+        if replica_connections.is_empty() { Err(self.server_connection_failed_err(connection_errors)) } else { Ok(()) }
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]

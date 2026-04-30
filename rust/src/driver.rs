@@ -21,15 +21,15 @@ use std::{collections::HashSet, fmt, sync::Arc};
 use tracing::{debug, error};
 
 use crate::{
+    Credentials, DatabaseManager, DriverOptions, Transaction, TransactionOptions, TransactionType, UserManager,
     common::{Addresses, Result},
     connection::{
         runtime::BackgroundRuntime,
         server::{
-            server_connection::ServerConnection, server_manager::ServerManager, server_routing::ServerRouting,
-            server_version::ServerVersion, AvailableServer, Server,
+            AvailableServer, Server, server_connection::ServerConnection, server_manager::ServerManager,
+            server_routing::ServerRouting, server_version::ServerVersion,
         },
     },
-    Credentials, DatabaseManager, DriverOptions, Transaction, TransactionOptions, TransactionType, UserManager,
 };
 
 /// A connection to a TypeDB server which serves as the starting point for all interaction.

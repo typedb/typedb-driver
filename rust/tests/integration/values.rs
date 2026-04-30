@@ -23,11 +23,11 @@ use chrono::{Datelike, NaiveDate, NaiveDateTime, Timelike};
 use futures::TryStreamExt;
 use serial_test::serial;
 use typedb_driver::{
-    concept::{
-        value::{Decimal, Duration, TimeZone},
-        Value,
-    },
     Addresses, Credentials, DriverOptions, DriverTlsConfig, TransactionType, TypeDBDriver,
+    concept::{
+        Value,
+        value::{Decimal, Duration, TimeZone},
+    },
 };
 
 const DATABASE_NAME: &str = "typedb";

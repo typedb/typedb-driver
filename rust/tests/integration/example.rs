@@ -25,13 +25,13 @@ use futures::{StreamExt, TryStreamExt};
 use serial_test::serial;
 // EXAMPLE START MARKER
 use typedb_driver::{
-    Credentials, DriverOptions, Error, QueryOptions, TransactionOptions, TransactionType, TypeDBDriver,
+    Addresses, Credentials, DriverOptions, DriverTlsConfig, Error, QueryOptions, TransactionOptions, TransactionType,
+    TypeDBDriver,
     answer::{
         ConceptRow, QueryAnswer,
         concept_document::{Leaf, Node},
     },
     concept::{Concept, ValueType},
-    Addresses, DriverTlsConfig
 };
 
 // EXAMPLE END MARKER

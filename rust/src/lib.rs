@@ -27,15 +27,15 @@
 
 pub use self::{
     common::{
-        box_stream, error, info, Address, Addresses, BoxPromise, BoxStream, Error, Promise, QueryOptions, Result,
-        TransactionOptions, TransactionType, IID,
+        Address, Addresses, BoxPromise, BoxStream, Error, IID, Promise, QueryOptions, Result, TransactionOptions,
+        TransactionType, box_stream, error, info,
     },
     connection::{
-        server::{
-            server_routing::ServerRouting, server_version::ServerVersion, AvailableServer, Replica, ReplicationRole,
-            Server,
-        },
         Credentials, DriverOptions, DriverTlsConfig,
+        server::{
+            AvailableServer, Replica, ReplicationRole, Server, server_routing::ServerRouting,
+            server_version::ServerVersion,
+        },
     },
     database::{Database, DatabaseManager},
     driver::TypeDBDriver,

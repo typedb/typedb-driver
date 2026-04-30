@@ -22,7 +22,7 @@ use cucumber::gherkin::Step;
 use macro_rules_attribute::apply;
 use typedb_driver::{Replica, ReplicationRole, Server, ServerVersion};
 
-use crate::{generic_step, params, params::check_boolean, util::iter_table, Context};
+use crate::{Context, generic_step, params, params::check_boolean, util::iter_table};
 
 mod database;
 mod transaction;

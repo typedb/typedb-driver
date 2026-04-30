@@ -32,9 +32,9 @@ use crate::{
         concept_document::{ConceptDocumentHeader, Node},
         concept_row::ConceptRowHeader,
     },
-    common::{info::DatabaseInfo, RequestID},
+    common::{RequestID, info::DatabaseInfo},
     concept::Concept,
-    connection::server::{server_version::ServerVersion, Server},
+    connection::server::{Server, server_version::ServerVersion},
     error::ServerError,
     info::UserInfo,
 };

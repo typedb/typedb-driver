@@ -19,7 +19,7 @@
 
 use std::ffi::c_char;
 
-use typedb_driver::{box_stream, Addresses, Credentials, DriverOptions, Server, TypeDBDriver};
+use typedb_driver::{Addresses, Credentials, DriverOptions, Server, TypeDBDriver, box_stream};
 
 use crate::{
     common::{
@@ -30,7 +30,7 @@ use crate::{
     },
     server::{
         server::ServerIterator,
-        server_routing::{native_server_routing, ServerRouting},
+        server_routing::{ServerRouting, native_server_routing},
         server_version::ServerVersion,
     },
 };
@@ -38,11 +38,7 @@ use crate::{
 const DRIVER_LANG: &str = "c";
 
 fn driver_lang_or_default(driver_lang: *const c_char) -> &'static str {
-    if driver_lang.is_null() {
-        DRIVER_LANG
-    } else {
-        string_view(driver_lang)
-    }
+    if driver_lang.is_null() { DRIVER_LANG } else { string_view(driver_lang) }
 }
 
 /// Open a TypeDB Driver to a TypeDB server available at the provided address.

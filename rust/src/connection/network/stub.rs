@@ -57,7 +57,7 @@ impl<Channel: GRPCChannel> RPCStub<Channel> {
                 .max_decoding_message_size(GRPC_MAX_MESSAGE_SIZE)
                 .max_encoding_message_size(GRPC_MAX_MESSAGE_SIZE),
             call_credentials,
-            request_timeout
+            request_timeout,
         }
     }
 

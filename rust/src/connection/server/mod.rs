@@ -22,7 +22,7 @@ pub(crate) mod server_manager;
 pub mod server_routing;
 pub mod server_version;
 
-use crate::common::address::{address_translation::AddressTranslation, Address};
+use crate::common::address::{Address, address_translation::AddressTranslation};
 
 pub const DEFAULT_SERVER_ID: u64 = 0;
 
