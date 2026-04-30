@@ -31,8 +31,7 @@ use typedb_driver::{
         concept_document::{Leaf, Node},
     },
     concept::{Concept, ValueType},
-    Addresses, Credentials, DriverOptions, DriverTlsConfig, Error, QueryOptions, TransactionOptions, TransactionType,
-    TypeDBDriver,
+    Addresses, DriverTlsConfig
 };
 
 // EXAMPLE END MARKER

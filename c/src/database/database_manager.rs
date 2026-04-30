@@ -32,13 +32,13 @@ pub struct DatabaseIterator(CIterator<Arc<Database>>);
 
 /// Forwards the <code>DatabaseIterator</code> and returns the next <code>Database</code> if it exists,
 /// or null if there are no more elements.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn database_iterator_next(it: *mut DatabaseIterator) -> *const Database {
     unsafe { iterator_arc_next(addr_of_mut!((*it).0)) }
 }
 
 /// Frees the native rust <code>DatabaseIterator</code> object.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn database_iterator_drop(it: *mut DatabaseIterator) {
     free(it);
 }
@@ -46,7 +46,7 @@ pub extern "C" fn database_iterator_drop(it: *mut DatabaseIterator) {
 /// Returns a <code>DatabaseIterator</code> over all databases present on the TypeDB server.
 ///
 /// @param driver The <code>TypeDBDriver</code> object.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn databases_all(driver: *mut TypeDBDriver) -> *mut DatabaseIterator {
     try_release(borrow(driver).databases().all().map(|dbs| DatabaseIterator(CIterator(box_stream(dbs.into_iter())))))
 }
@@ -55,7 +55,7 @@ pub extern "C" fn databases_all(driver: *mut TypeDBDriver) -> *mut DatabaseItera
 ///
 /// @param driver The <code>TypeDBDriver</code> object.
 /// @param name The name of the database.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn databases_contains(driver: *mut TypeDBDriver, name: *const c_char) -> bool {
     unwrap_or_default(borrow(driver).databases().contains(string_view(name)))
 }
@@ -64,7 +64,7 @@ pub extern "C" fn databases_contains(driver: *mut TypeDBDriver, name: *const c_c
 ///
 /// @param driver The <code>TypeDBDriver</code> object.
 /// @param name The name of the database.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn databases_get(driver: *mut TypeDBDriver, name: *const c_char) -> *const Database {
     try_release_arc(borrow(driver).databases().get(string_view(name)))
 }
@@ -73,7 +73,7 @@ pub extern "C" fn databases_get(driver: *mut TypeDBDriver, name: *const c_char) 
 ///
 /// @param driver The <code>TypeDBDriver</code> object.
 /// @param name The name of the database to be created.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn databases_create(driver: *mut TypeDBDriver, name: *const c_char) {
     unwrap_void(borrow(driver).databases().create(string_view(name)))
 }
@@ -87,7 +87,7 @@ pub extern "C" fn databases_create(driver: *mut TypeDBDriver, name: *const c_cha
 /// @param name The name of the database to be created.
 /// @param schema The schema definition query string for the database.
 /// @param data_file The exported database file path to import the data from.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn databases_import_from_file(
     driver: *mut TypeDBDriver,
     name: *const c_char,

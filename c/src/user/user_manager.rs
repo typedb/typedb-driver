@@ -32,13 +32,13 @@ pub struct UserIterator(CIterator<User>);
 
 /// Forwards the <code>UserIterator</code> and returns the next <code>User</code> if it exists,
 /// or null if there are no more elements.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn user_iterator_next(it: *mut UserIterator) -> *mut User {
     unsafe { iterator_next(addr_of_mut!((*it).0)) }
 }
 
 /// Frees the native rust <code>UserIterator</code> object.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn user_iterator_drop(it: *mut UserIterator) {
     free(it);
 }
@@ -46,7 +46,7 @@ pub extern "C" fn user_iterator_drop(it: *mut UserIterator) {
 /// Retrieves all users which exist on the TypeDB server.
 ///
 /// @param driver The <code>TypeDBDriver</code> object.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn users_all(driver: *const TypeDBDriver) -> *mut UserIterator {
     try_release(borrow(driver).users().all().map(|users| UserIterator(CIterator(box_stream(users.into_iter())))))
 }
@@ -55,7 +55,7 @@ pub extern "C" fn users_all(driver: *const TypeDBDriver) -> *mut UserIterator {
 ///
 /// @param driver The <code>TypeDBDriver</code> object.
 /// @param username The username of the user.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn users_contains(driver: *const TypeDBDriver, username: *const c_char) -> bool {
     unwrap_or_default(borrow(driver).users().contains(string_view(username)))
 }
@@ -64,7 +64,7 @@ pub extern "C" fn users_contains(driver: *const TypeDBDriver, username: *const c
 ///
 /// @param driver The <code>TypeDBDriver</code> object.
 /// @param username The username of the user.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn users_get(driver: *const TypeDBDriver, username: *const c_char) -> *mut User {
     try_release_optional(borrow(driver).users().get(string_view(username)).transpose())
 }
@@ -72,7 +72,7 @@ pub extern "C" fn users_get(driver: *const TypeDBDriver, username: *const c_char
 /// Retrieves the username of the user who opened this connection.
 ///
 /// @param driver The <code>TypeDBDriver</code> object.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn users_get_current(driver: *const TypeDBDriver) -> *mut User {
     try_release_optional(borrow(driver).users().get_current().transpose())
 }
@@ -81,7 +81,7 @@ pub extern "C" fn users_get_current(driver: *const TypeDBDriver) -> *mut User {
 ///
 /// @param username The username of the created user.
 /// @param password The password of the created user.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn users_create(driver: *const TypeDBDriver, username: *const c_char, password: *const c_char) {
     unwrap_void(borrow(driver).users().create(string_view(username), string_view(password)));
 }

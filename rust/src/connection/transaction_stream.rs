@@ -34,7 +34,7 @@ use crate::{
     },
     connection::message::{AnalyzeResponse, QueryRequest, QueryResponse, TransactionRequest, TransactionResponse},
     error::{ConnectionError, InternalError},
-    promisify, resolve, Error, QueryOptions, TransactionOptions, TransactionType,
+    promisify, resolve
 };
 
 macro_rules! require_transaction_response {

@@ -27,13 +27,13 @@ use crate::common::{
 };
 
 /// Frees the native rust <code>User</code> object.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn user_drop(user: *mut User) {
     free(user);
 }
 
 /// Returns the name of this user.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn user_get_name(user: *mut User) -> *mut c_char {
     release_string(borrow(user).name().to_string())
 }
@@ -42,7 +42,7 @@ pub extern "C" fn user_get_name(user: *mut User) -> *mut c_char {
 ///
 /// @param user The user to update the password of - must be the current user.
 /// @param password The new password.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn user_update_password(user: *mut User, password: *const c_char) {
     unwrap_void(borrow(user).update_password(string_view(password)));
 }
@@ -50,7 +50,7 @@ pub extern "C" fn user_update_password(user: *mut User, password: *const c_char)
 /// Deletes this user.
 ///
 /// @param user The <code>User</code> to delete.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn user_delete(user: *mut User) {
     unwrap_void(take_ownership(user).delete());
 }

@@ -34,8 +34,8 @@ public abstract class ServerRouting {
     public abstract com.typedb.driver.jni.ServerRouting nativeValue();
 
     public static ServerRouting of(com.typedb.driver.jni.ServerRouting nativeValue) {
-        if (nativeValue.getTag() == com.typedb.driver.jni.ServerRoutingType.Auto) return new Auto();
-        else if (nativeValue.getTag() == com.typedb.driver.jni.ServerRoutingType.Direct) {
+        if (nativeValue.getType_() == com.typedb.driver.jni.ServerRoutingType.Auto) return new Auto();
+        else if (nativeValue.getType_() == com.typedb.driver.jni.ServerRoutingType.Direct) {
             return new Direct(nativeValue.getAddress());
         }
         throw new TypeDBDriverException(UNEXPECTED_NATIVE_VALUE);

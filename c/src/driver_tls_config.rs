@@ -27,45 +27,45 @@ use crate::common::{
 };
 
 /// Creates a new <code>DriverTlsConfig</code> with TLS disabled.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn driver_tls_config_new_disabled() -> *mut DriverTlsConfig {
     release(DriverTlsConfig::disabled())
 }
 
 /// Creates a new <code>DriverTlsConfig</code> with TLS enabled using system native trust roots.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn driver_tls_config_new_enabled_with_native_root_ca() -> *mut DriverTlsConfig {
     release(DriverTlsConfig::enabled_with_native_root_ca())
 }
 
 /// Creates a new <code>DriverTlsConfig</code> with TLS enabled using a custom root CA certificate (PEM).
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn driver_tls_config_new_enabled_with_root_ca_path(tls_root_ca: *const c_char) -> *mut DriverTlsConfig {
     let tls_root_ca_path = Path::new(string_view(tls_root_ca));
     try_release(DriverTlsConfig::enabled_with_root_ca(tls_root_ca_path))
 }
 
 /// Frees the native rust <code>DriverTlsConfig</code> object.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn driver_tls_config_drop(tls_config: *mut DriverTlsConfig) {
     free(tls_config);
 }
 
 /// Returns whether TLS is enabled.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn driver_tls_config_is_enabled(tls_config: *const DriverTlsConfig) -> bool {
     borrow(tls_config).is_enabled()
 }
 
 /// Returns whether a custom root CA path is set.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn driver_tls_config_has_root_ca_path(tls_config: *const DriverTlsConfig) -> bool {
     borrow(tls_config).root_ca_path().is_some()
 }
 
 /// Returns the TLS root CA set in this <code>DriverTlsConfig</code> object.
 /// Panics if a custom root CA is absent.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn driver_tls_config_get_root_ca_path(tls_config: *const DriverTlsConfig) -> *mut c_char {
     release_string(borrow(tls_config).root_ca_path().unwrap().to_string_lossy().to_string())
 }

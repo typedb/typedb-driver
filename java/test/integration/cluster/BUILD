@@ -21,13 +21,6 @@ load("@typedb_dependencies//builder/java:rules.bzl", "typedb_java_test")
 typedb_java_test(
     name = "test-failover",
     srcs = ["FailoverTest.java"],
-    server_artifacts = {
-        "@typedb_bazel_distribution//platform:is_linux_arm64": "@typedb_cluster_artifact_linux-arm64//file",
-        "@typedb_bazel_distribution//platform:is_linux_x86_64": "@typedb_cluster_artifact_linux-x86_64//file",
-        "@typedb_bazel_distribution//platform:is_mac_arm64": "@typedb_cluster_artifact_mac-arm64//file",
-        "@typedb_bazel_distribution//platform:is_mac_x86_64": "@typedb_cluster_artifact_mac-x86_64//file",
-        "@typedb_bazel_distribution//platform:is_windows_x86_64": "@typedb_cluster_artifact_windows-x86_64//file",
-    },
     test_class = "com.typedb.driver.test.integration.cluster.FailoverTest",
     size = "large",
     deps = [

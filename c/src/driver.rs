@@ -52,7 +52,7 @@ fn driver_lang_or_default(driver_lang: *const c_char) -> &'static str {
 /// @param driver_options The <code>DriverOptions</code> to connect with
 /// @param driver_lang The language of the driver connecting to the server.
 ///        Nullable: pass NULL to default to "c".
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn driver_new(
     address: *const c_char,
     credentials: *const Credentials,
@@ -74,7 +74,7 @@ pub extern "C" fn driver_new(
 /// @param driver_options The <code>DriverOptions</code> to connect with
 /// @param driver_lang The language of the driver connecting to the server.
 ///        Nullable: pass NULL to default to "c".
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn driver_new_with_addresses(
     addresses: *const *const c_char,
     credentials: *const Credentials,
@@ -98,7 +98,7 @@ pub extern "C" fn driver_new_with_addresses(
 /// @param driver_options The <code>DriverOptions</code> to connect with
 /// @param driver_lang The language of the driver connecting to the server.
 ///        Nullable: pass NULL to default to "c".
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn driver_new_with_address_translation(
     public_addresses: *const *const c_char,
     private_addresses: *const *const c_char,
@@ -119,7 +119,7 @@ pub extern "C" fn driver_new_with_address_translation(
 /// Closing a driver frees the underlying Rust object.
 ///
 /// @param driver The <code>TypeDBDriver</code> object.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn driver_close(driver: *mut TypeDBDriver) {
     free(driver);
 }
@@ -127,7 +127,7 @@ pub extern "C" fn driver_close(driver: *mut TypeDBDriver) {
 /// Forcibly closes the <code>TypeDBDriver</code>. To be used in exceptional cases.
 ///
 /// @param driver The <code>TypeDBDriver</code> object.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn driver_force_close(driver: *mut TypeDBDriver) {
     unwrap_void(borrow(driver).force_close());
 }
@@ -135,7 +135,7 @@ pub extern "C" fn driver_force_close(driver: *mut TypeDBDriver) {
 /// Checks whether this connection is presently open.
 ///
 /// @param driver The <code>TypeDBDriver</code> object.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn driver_is_open(driver: *const TypeDBDriver) -> bool {
     borrow(driver).is_open()
 }
@@ -144,7 +144,7 @@ pub extern "C" fn driver_is_open(driver: *const TypeDBDriver) -> bool {
 ///
 /// @param driver The <code>TypeDBDriver</code> object.
 /// @param server_routing The server routing directive to use for the operation. Auto if null.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn driver_server_version(
     driver: *const TypeDBDriver,
     server_routing: *const ServerRouting,
@@ -163,7 +163,7 @@ pub extern "C" fn driver_server_version(
 ///
 /// @param driver The <code>TypeDBDriver</code> object.
 /// @param server_routing The server routing directive to use for the operation. Auto if null.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn driver_servers(
     driver: *const TypeDBDriver,
     server_routing: *const ServerRouting,
@@ -180,7 +180,7 @@ pub extern "C" fn driver_servers(
 ///
 /// @param driver The <code>TypeDBDriver</code> object.
 /// @param server_routing The server routing directive to use for the operation. Auto if null.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn driver_primary_server(
     driver: *const TypeDBDriver,
     server_routing: *const ServerRouting,

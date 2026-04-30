@@ -31,7 +31,6 @@ use typedb_driver::{
     },
     box_stream,
     concept::{type_::Type, Concept, Kind},
-    BoxPromise, Promise,
 };
 
 use crate::{

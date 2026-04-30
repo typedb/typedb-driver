@@ -37,9 +37,9 @@ class ServerRouting(NativeWrapper[NativeServerRouting], ABC):
         if native_value is None:
             return None
 
-        if native_value.tag == NativeAuto:
+        if native_value.type_ == NativeAuto:
             return Auto()
-        elif native_value.tag == NativeDirect:
+        elif native_value.type_ == NativeDirect:
             return Direct(native_value.address)
         else:
             raise TypeDBDriverException(UNEXPECTED_NATIVE_VALUE)

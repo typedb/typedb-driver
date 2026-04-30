@@ -49,7 +49,7 @@ impl Drop for ServerVersion {
 }
 
 /// Frees the native rust <code>ServerVersion</code> object
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn server_version_drop(server_version: *mut ServerVersion) {
     free(server_version);
 }

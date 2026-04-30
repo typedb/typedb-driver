@@ -20,9 +20,9 @@ use std::{collections::HashSet, time::Duration};
 
 use cucumber::gherkin::Step;
 use macro_rules_attribute::apply;
-use typedb_driver::{Replica, ReplicationRole, Server, ServerVersion, TypeDBDriver};
+use typedb_driver::{Replica, ReplicationRole, Server, ServerVersion};
 
-use crate::{assert_with_timeout, generic_step, params, params::check_boolean, util::iter_table, Context};
+use crate::{generic_step, params, params::check_boolean, util::iter_table, Context};
 
 mod database;
 mod transaction;
@@ -202,7 +202,6 @@ async fn connection_get_server_has_term(context: &mut Context, address: String) 
 #[step("connection servers have roles:")]
 async fn connection_servers_have_roles(context: &mut Context, step: &Step) {
     let servers = get_servers(context, params::MayError::False).await;
-    let table = step.table.as_ref().expect("Expected a table with server roles");
 
     let mut expected_primary_count = 0;
     let mut expected_secondary_count = 0;

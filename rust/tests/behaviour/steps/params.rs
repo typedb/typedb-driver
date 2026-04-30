@@ -25,7 +25,7 @@ use typedb_driver::{
     TransactionType as TypeDBTransactionType,
     answer::QueryType as TypeDBQueryType,
     concept::{Value as TypeDBValue, ValueType as TypeDBValueType},
-    Address, ServerRouting as TypeDBServerRouting, TransactionType as TypeDBTransactionType,
+    Address, ServerRouting as TypeDBServerRouting,
 };
 
 #[derive(Debug, Default, Parameter, Clone)]
@@ -430,6 +430,14 @@ pub enum ExistsOrDoesnt {
 }
 
 impl ExistsOrDoesnt {
+    pub fn check<T: fmt::Debug>(&self, scrutinee: &Option<T>, message: &str) {
+        match (self, scrutinee) {
+            (Self::Exists, Some(_)) | (Self::DoesNotExist, None) => (),
+            (Self::Exists, None) => panic!("Expected to exist, not found: {message}"),
+            (Self::DoesNotExist, Some(value)) => panic!("Expected not to exist, {value:?} is found: {message}"),
+        }
+    }
+
     pub fn check_bool(&self, contains: bool, message: &str) {
         match self {
             ExistsOrDoesnt::Exists => assert!(contains, "Expected to exist, not found: {message}"),

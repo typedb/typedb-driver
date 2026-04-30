@@ -370,7 +370,7 @@ impl TransactionTransmitter {
                         recorded_signal.send(()).expect("Failed to signal back that on_close callback was recorded.")
                     }
                 }
-            }
+            };
         }
         shutdown_sink.send(()).ok();
     }

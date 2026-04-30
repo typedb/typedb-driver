@@ -27,13 +27,13 @@ use crate::common::{
 };
 
 /// Frees the native rust <code>Database</code> object.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn database_close(database: *const Database) {
     decrement_arc(database)
 }
 
 /// The <code>Database</code> name as a string.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn database_get_name(database: *const Database) -> *mut c_char {
     release_string(borrow(database).name().to_owned())
 }
@@ -41,7 +41,7 @@ pub extern "C" fn database_get_name(database: *const Database) -> *mut c_char {
 /// Deletes this database.
 ///
 /// @param database The <code>Database</code> to delete.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn database_delete(database: *const Database) {
     unwrap_void(take_arc(database).delete());
 }
@@ -49,7 +49,7 @@ pub extern "C" fn database_delete(database: *const Database) {
 /// A full schema text as a valid TypeQL define query string.
 ///
 /// @param database The <code>Database</code> to get the schema from.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn database_schema(database: *const Database) -> *mut c_char {
     try_release_string(borrow(database).schema())
 }
@@ -57,7 +57,7 @@ pub extern "C" fn database_schema(database: *const Database) -> *mut c_char {
 /// The types in the schema as a valid TypeQL define query string.
 ///
 /// @param database The <code>Database</code> to get the type schema from.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn database_type_schema(database: *const Database) -> *mut c_char {
     try_release_string(borrow(database).type_schema())
 }
@@ -68,7 +68,7 @@ pub extern "C" fn database_type_schema(database: *const Database) -> *mut c_char
 /// @param database The <code>Database</code> object to export from.
 /// @param schema_file The path to the schema definition file to be created.
 /// @param data_file The path to the data file to be created.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn database_export_to_file(
     database: *const Database,
     schema_file: *const c_char,

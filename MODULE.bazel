@@ -47,32 +47,32 @@ bazel_dep(name = "aspect_rules_ts", version = "3.4.0")
 bazel_dep(name = "aspect_bazel_lib", version = "2.9.4")
 
 # typedb ecosystem dependencies
-bazel_dep(name = "typedb_dependencies", version = "0.0.0")
-git_override(
-    module_name = "typedb_dependencies",
-    remote = "https://github.com/typedb/dependencies",
-    commit = "32a7fde17ad17b775a8ccc0867c87f119749e7ea",
-)
-
 bazel_dep(name = "typedb_bazel_distribution", version = "0.0.0")
 git_override(
     module_name = "typedb_bazel_distribution",
     remote = "https://github.com/typedb/bazel-distribution",
-    commit = "1b2556e6cdf0ac839b3e64ee55986e1a592b8b97",
+    commit = "10c8e442f0507153125b7e3ab5005da8100a4d23",
+)
+
+bazel_dep(name = "typedb_dependencies", version = "0.0.0")
+git_override(
+    module_name = "typedb_dependencies",
+    remote = "https://github.com/typedb/dependencies",
+    commit = "4ca071467b43217ea1a7ce5b4939a3e51caacee2",
 )
 
 bazel_dep(name = "typedb_protocol", version = "0.0.0")
 git_override(
     module_name = "typedb_protocol",
     remote = "https://github.com/typedb/typedb-protocol",
-    commit = "da3e316cb0022cb284083996f0659ad22db13aca",
+    commit = "bbe3d61970817b34687eeb145890af6712b7eec6",
 )
 
 bazel_dep(name = "typedb_behaviour", version = "0.0.0")
 git_override(
     module_name = "typedb_behaviour",
     remote = "https://github.com/typedb/typedb-behaviour",
-    commit = "fa485602adda5f31d67c3b35e5de43caeb8ee91a",
+    commit = "b5fe6da7330bc3a446bb3c8c7b4e01c1f699253c",
 )
 
 # Rust rules need typedb_dependencies for patching
@@ -146,7 +146,6 @@ use_repo(node, "nodejs")
 # NPM dependencies
 npm = use_extension("@aspect_rules_js//npm:extensions.bzl", "npm")
 
-# Note: typedb_protocol_npm is defined by typedb_protocol module - do not redefine here
 
 # Node.js driver npm dependencies (2.x only, excluded from default build)
 npm.npm_translate_lock(
@@ -167,7 +166,7 @@ npm.npm_translate_lock(
     pnpm_lock = "//http-ts:pnpm-lock.yaml",
 )
 
-use_repo(npm, "typedb_protocol_npm", "nodejs_npm", "http-ts_npm")
+use_repo(npm, "nodejs_npm", "http-ts_npm")
 
 # TypeScript toolchain - import @npm_typescript from typedb_protocol module
 # The repo is created by typedb_protocol's rules_ts extension usage
@@ -210,8 +209,15 @@ native_artifact_files.artifact(
     name = "typedb_artifact",
     group_name = "typedb-all-{platform}",
     artifact_name = "typedb-all-{platform}-{version}.{ext}",
-    commit = "43498326502fb6abf67e0ef5b089bd350f241cdb",
+    commit = "813dec8a3e875b30edffe0162016dd8bce68ff9b",
 )
+native_artifact_files.artifact(
+    name = "typedb_cluster_artifact",
+    group_name = "typedb-cluster-all-{platform}",
+    artifact_name = "typedb-cluster-all-{platform}-{version}.{ext}",
+    commit = "14cff93ff6b5fc5b89b2680078824eeae504489c",
+)
+
 use_repo(
     native_artifact_files,
      "typedb_artifact_linux-x86_64",

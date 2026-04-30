@@ -27,13 +27,13 @@ use crate::common::memory::{free, release, string_view};
 ///
 /// @param username The name of the user to connect as
 /// @param password The password for the user
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn credentials_new(username: *const c_char, password: *const c_char) -> *mut Credentials {
     release(Credentials::new(string_view(username), string_view(password)))
 }
 
 /// Frees the native rust <code>Credentials</code> object
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn credentials_drop(credentials: *mut Credentials) {
     free(credentials);
 }

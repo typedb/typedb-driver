@@ -24,13 +24,14 @@ use macro_rules_attribute::apply;
 use typedb_driver::{
     answer::{ConceptRow, QueryAnswer},
     concept::{AttributeType, Concept, ConceptCategory, EntityType, RelationType, Value, ValueType},
-    error::ConceptError,
+    error::ConceptError, Transaction, QueryOptions, Result as TypeDBResult,
 };
 
 use crate::{
-    generic_step, params,
+    generic_step, params,  Context,
     params::check_boolean,
     util::{iter_table, list_contains_json, parse_json},
+    BehaviourTestOptionalError,
 };
 
 pub(crate) async fn run_query(

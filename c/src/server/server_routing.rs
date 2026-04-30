@@ -73,7 +73,7 @@ impl Drop for ServerRouting {
 }
 
 /// Creates an automatic <code>ServerRouting</code> object.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn server_routing_auto() -> *mut ServerRouting {
     release(ServerRouting::new_auto())
 }
@@ -81,13 +81,13 @@ pub extern "C" fn server_routing_auto() -> *mut ServerRouting {
 /// Creates a server-specific <code>ServerRouting</code> object.
 ///
 /// @param address The address of the server to route to.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn server_routing_direct(address: *const c_char) -> *mut ServerRouting {
     release(ServerRouting::new_direct(release_string(string_view(address.clone()).to_string())))
 }
 
 /// Drops the <code>ServerRouting</code> object.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn server_routing_drop(server_routing: *mut ServerRouting) {
     free(server_routing)
 }

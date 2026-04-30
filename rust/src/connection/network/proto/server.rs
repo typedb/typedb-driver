@@ -18,7 +18,7 @@
  */
 
 use typedb_protocol::{
-    server::{version::Res as VersionProto, ReplicaStatus as ReplicaStatusProto},
+    server::{version::Res as VersionProto, ReplicationStatus as ReplicationStatusProto},
     Server as ServerProto,
 };
 
@@ -32,7 +32,7 @@ use crate::{
 impl TryFromProto<ServerProto> for Server {
     fn try_from_proto(proto: ServerProto) -> Result<Server> {
         let replication_status =
-            proto.replica_status.map(|status| ReplicationStatus::try_from_proto(status)).transpose()?;
+            proto.replication_status.map(|status| ReplicationStatus::try_from_proto(status)).transpose()?;
         match proto.address {
             Some(address) => Ok(Server::available_from_private(address.parse()?, replication_status)),
             None => Ok(Server::Unavailable { replication_status }),
@@ -40,11 +40,11 @@ impl TryFromProto<ServerProto> for Server {
     }
 }
 
-impl TryFromProto<ReplicaStatusProto> for ReplicationStatus {
-    fn try_from_proto(proto: ReplicaStatusProto) -> Result<Self> {
+impl TryFromProto<ReplicationStatusProto> for ReplicationStatus {
+    fn try_from_proto(proto: ReplicationStatusProto) -> Result<Self> {
         Ok(Self {
-            id: proto.replica_id,
-            role: Option::<ReplicationRole>::try_from_proto(proto.replica_role)?,
+            id: proto.id,
+            role: Option::<ReplicationRole>::try_from_proto(proto.role)?,
             term: proto.term,
         })
     }

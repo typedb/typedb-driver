@@ -40,13 +40,6 @@ def typedb_behaviour_java_test(
 def typedb_behaviour_java_test_core(name, steps, runtime_deps = [], **kwargs):
     typedb_java_test(
         name = name + "-core",
-        server_artifacts = {
-            "@typedb_bazel_distribution//platform:is_linux_arm64": "@typedb_artifact_linux-arm64//file",
-            "@typedb_bazel_distribution//platform:is_linux_x86_64": "@typedb_artifact_linux-x86_64//file",
-            "@typedb_bazel_distribution//platform:is_mac_arm64": "@typedb_artifact_mac-arm64//file",
-            "@typedb_bazel_distribution//platform:is_mac_x86_64": "@typedb_artifact_mac-x86_64//file",
-            "@typedb_bazel_distribution//platform:is_windows_x86_64": "@typedb_artifact_windows-x86_64//file",
-        },
         runtime_deps = runtime_deps + ["//java/test/behaviour/connection:steps-core"] + steps,
         **kwargs,
     )
@@ -54,13 +47,6 @@ def typedb_behaviour_java_test_core(name, steps, runtime_deps = [], **kwargs):
 def typedb_behaviour_java_test_cluster(name, steps, runtime_deps = [], **kwargs):
     typedb_java_test(
         name = name + "-cluster",
-        server_artifacts = { # TODO: Uncomment all platforms
-            "@typedb_bazel_distribution//platform:is_linux_arm64": "@typedb_cluster_artifact_linux-arm64//file",
-            "@typedb_bazel_distribution//platform:is_linux_x86_64": "@typedb_cluster_artifact_linux-x86_64//file",
-            "@typedb_bazel_distribution//platform:is_mac_arm64": "@typedb_cluster_artifact_linux-arm64//file",
-            "@typedb_bazel_distribution//platform:is_mac_x86_64": "@typedb_cluster_artifact_linux-x86_64//file",
-#            "@typedb_bazel_distribution//platform:is_windows_x86_64": "@typedb_artifact_windows-x86_64//file",
-        },
         runtime_deps = runtime_deps + ["//java/test/behaviour/connection:steps-cluster"] + steps,
         **kwargs,
     )

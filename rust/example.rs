@@ -9,9 +9,8 @@ use typedb_driver::{
         ConceptRow, QueryAnswer,
         concept_document::{Leaf, Node},
     },
-    concept::{Concept, ValueType},
-    Addresses, Credentials, DriverOptions, DriverTlsConfig, Error, QueryOptions, TransactionOptions, TransactionType,
-    TypeDBDriver,
+    concept::{Concept},
+    Addresses, DriverTlsConfig,
 };
 
 fn main() {

@@ -470,7 +470,8 @@ impl ServerManager {
     }
 
     fn read_primary_replica(&self) -> Option<AvailableServer> {
-        find_primary_replica!(self.read_replicas().iter()).cloned()
+        let replicas = self.read_replicas();
+        find_primary_replica!(replicas.iter()).cloned()
     }
 
     fn server_connection_failed_err(&self, errors: HashMap<Address, Error>) -> Error {

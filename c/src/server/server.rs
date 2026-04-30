@@ -31,61 +31,61 @@ pub struct ServerIterator(pub(crate) CIterator<Server>);
 
 /// Forwards the <code>ServerIterator</code> and returns the next <code>Server</code> if it exists,
 /// or null if there are no more elements.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn server_iterator_next(it: *mut ServerIterator) -> *mut Server {
     unsafe { iterator_next(addr_of_mut!((*it).0)) }
 }
 
 /// Frees the native rust <code>ServerIterator</code> object.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn server_iterator_drop(it: *mut ServerIterator) {
     free(it);
 }
 
 /// Frees the native rust <code>Server</code> object.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn server_drop(server_info: *mut Server) {
     free(server_info);
 }
 
 /// Returns the id of this server.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn server_get_id(server_info: *const Server) -> i64 {
     borrow(server_info).id() as i64
 }
 
 /// Returns the address this server is hosted at.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn server_get_address(server_info: *const Server) -> *mut c_char {
     release_optional_string(borrow(server_info).address().map(|address| address.to_string()))
 }
 
 /// Returns whether the role of this server is set.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn server_has_role(server_info: *const Server) -> bool {
     borrow(server_info).role().is_some()
 }
 
 /// Returns whether this is the primary server of the cluster or any of the supporting roles.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn server_get_role(server_info: *const Server) -> ReplicationRole {
     borrow(server_info).role().unwrap()
 }
 
 /// Checks whether this is the primary server of the cluster.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn server_is_primary(server_info: *const Server) -> bool {
     borrow(server_info).is_primary()
 }
 
 /// Returns whether the cluster protocol 'term' of this server exists.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn server_has_term(server_info: *const Server) -> bool {
     borrow(server_info).term().is_some()
 }
 
 /// Returns the cluster protocol 'term' of this server.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn server_get_term(server_info: *const Server) -> i64 {
     borrow(server_info).term().unwrap() as i64
 }

@@ -42,8 +42,6 @@ use crate::{
         value::{Decimal, TimeZone},
         Attribute, AttributeType, Concept, Entity, EntityType, Kind, Relation, RelationType, RoleType, Value,
         ValueType,
-        type_::Type,
-        value::{Decimal, TimeZone},
     },
     error::{
         ConnectionError,

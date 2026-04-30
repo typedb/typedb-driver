@@ -193,7 +193,7 @@ public abstract class ConnectionStepsBase {
         }
     }
 
-    abstract void connection_opens_with_default_authentication();
+    abstract void connection_opens_with_default_authentication(Parameters.MayError mayError);
 
     abstract void connection_opens_with_username_password(String username, String password, Parameters.MayError mayError);
 
