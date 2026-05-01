@@ -171,7 +171,7 @@ namespace TypeDB.Driver.Test.Behaviour
         {
             ClearAnswers();
             var exception = Assert.ThrowsAny<Exception>(() => ExecuteQuery(query.Content));
-            Assert.Contains(expectedMessage, exception.Message);
+            Assert.Contains(expectedMessage.Replace("\\\"", "\""), exception.Message);
         }
 
         [Given(@"typeql schema query; parsing fails")]
@@ -232,7 +232,7 @@ namespace TypeDB.Driver.Test.Behaviour
         {
             ClearAnswers();
             var exception = Assert.ThrowsAny<Exception>(() => { _queryAnswer = ExecuteQuery(query.Content); });
-            Assert.Contains(expectedMessage, exception.Message);
+            Assert.Contains(expectedMessage.Replace("\\\"", "\""), exception.Message);
         }
 
         #endregion
