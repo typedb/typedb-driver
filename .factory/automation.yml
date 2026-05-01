@@ -341,64 +341,64 @@ build:
         exit $TEST_SUCCESS
 
     # Temporarily disabled: csharp is bazelignored (2.x-only driver, not yet migrated to Bzlmod)
-    test-csharp-integration:
-      image: typedb-ubuntu-22.04
-      type: foreground
-      command: |
-        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
-        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-        bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
-        bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
-
-        tool/test/start-core-server.sh &&
-          bazel test --config=ci //csharp/Test/Integration:all --test_output=streamed --jobs=1 &&
-          bazel test --config=ci //csharp/Test/Integration/Data:all --test_output=streamed --jobs=1 &&
-          export COMMUNITY_FAILED= || export COMMUNITY_FAILED=1
-        tool/test/stop-core-server.sh
-        if [[ -n "$COMMUNITY_FAILED" ]]; then exit 1; fi
-
-        source tool/test/start-cluster-servers.sh 3 &&
-          bazel test --config=ci //csharp/Test/Integration:test-failover --test_env=CLUSTER_SERVER_SCRIPT=$CLUSTER_SERVER_SCRIPT --test_env=ROOT_CA=$ROOT_CA --test_env=CLUSTER_DIR=$CLUSTER_DIR --test_output=streamed --jobs=1 &&
-          export CLUSTER_FAILED= || export CLUSTER_FAILED=1
-        tool/test/stop-cluster-servers.sh
-        if [[ -n "$CLUSTER_FAILED" ]]; then exit 1; fi
-
-    test-csharp-behaviour-core:
-      image: typedb-ubuntu-22.04
-      type: foreground
-      command: |
-        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
-        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-        bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
-        bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
-
-        tool/test/start-core-server.sh &&
-          .factory/test-core.sh //csharp/Test/Behaviour/... --test_output=streamed --jobs=1 &&
-          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
-        tool/test/stop-core-server.sh
-        exit $TEST_SUCCESS
-
-    test-csharp-behaviour-cluster:
-      image: typedb-ubuntu-22.04
-      type: foreground
-      command: |
-        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
-        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-        bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
-        bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
-
-        # TODO: run `.factory/test-cluster.sh //csharp/Test/Behaviour/...` instead of multiple tests (cannot do Clustered migration now)
-        source tool/test/start-cluster-servers.sh 3 &&
-          .factory/test-cluster.sh //csharp/Test/Behaviour/Connection/Database/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
-          .factory/test-cluster.sh //csharp/Test/Behaviour/Connection/Transaction/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
-          .factory/test-cluster.sh //csharp/Test/Behaviour/Driver/Concept/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
-          .factory/test-cluster.sh //csharp/Test/Behaviour/Driver/Connection/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
-          .factory/test-cluster.sh //csharp/Test/Behaviour/Driver/Query/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
-          .factory/test-cluster.sh //csharp/Test/Behaviour/Driver/User/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
-          .factory/test-cluster.sh //csharp/Test/Behaviour/Driver/Cluster/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
-          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
-        tool/test/stop-cluster-servers.sh
-        exit $TEST_SUCCESS
+#    test-csharp-integration:
+#      image: typedb-ubuntu-22.04
+#      type: foreground
+#      command: |
+#        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
+#        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
+#        bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+#        bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
+#
+#        tool/test/start-core-server.sh &&
+#          bazel test --config=ci //csharp/Test/Integration:all --test_output=streamed --jobs=1 &&
+#          bazel test --config=ci //csharp/Test/Integration/Data:all --test_output=streamed --jobs=1 &&
+#          export COMMUNITY_FAILED= || export COMMUNITY_FAILED=1
+#        tool/test/stop-core-server.sh
+#        if [[ -n "$COMMUNITY_FAILED" ]]; then exit 1; fi
+#
+#        source tool/test/start-cluster-servers.sh 3 &&
+#          bazel test --config=ci //csharp/Test/Integration:test-failover --test_env=CLUSTER_SERVER_SCRIPT=$CLUSTER_SERVER_SCRIPT --test_env=ROOT_CA=$ROOT_CA --test_env=CLUSTER_DIR=$CLUSTER_DIR --test_output=streamed --jobs=1 &&
+#          export CLUSTER_FAILED= || export CLUSTER_FAILED=1
+#        tool/test/stop-cluster-servers.sh
+#        if [[ -n "$CLUSTER_FAILED" ]]; then exit 1; fi
+#
+#    test-csharp-behaviour-core:
+#      image: typedb-ubuntu-22.04
+#      type: foreground
+#      command: |
+#        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
+#        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
+#        bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+#        bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
+#
+#        tool/test/start-core-server.sh &&
+#          .factory/test-core.sh //csharp/Test/Behaviour/... --test_output=streamed --jobs=1 &&
+#          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+#        tool/test/stop-core-server.sh
+#        exit $TEST_SUCCESS
+#
+#    test-csharp-behaviour-cluster:
+#      image: typedb-ubuntu-22.04
+#      type: foreground
+#      command: |
+#        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
+#        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
+#        bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+#        bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
+#
+#        # TODO: run `.factory/test-cluster.sh //csharp/Test/Behaviour/...` instead of multiple tests (cannot do Clustered migration now)
+#        source tool/test/start-cluster-servers.sh 3 &&
+#          .factory/test-cluster.sh //csharp/Test/Behaviour/Connection/Database/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
+#          .factory/test-cluster.sh //csharp/Test/Behaviour/Connection/Transaction/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
+#          .factory/test-cluster.sh //csharp/Test/Behaviour/Driver/Concept/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
+#          .factory/test-cluster.sh //csharp/Test/Behaviour/Driver/Connection/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
+#          .factory/test-cluster.sh //csharp/Test/Behaviour/Driver/Query/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
+#          .factory/test-cluster.sh //csharp/Test/Behaviour/Driver/User/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
+#          .factory/test-cluster.sh //csharp/Test/Behaviour/Driver/Cluster/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
+#          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+#        tool/test/stop-cluster-servers.sh
+#        exit $TEST_SUCCESS
 
 # TODO: Re-enable these tests when Node.js/C++ drivers are updated for 3.x
 #    test-nodejs-integration:

@@ -45,15 +45,13 @@ async function connectionOpensSingle(username: string, password: string, mayErro
 }
 Given("connection opens to single server with default authentication{may_error}", (mayError: MayError) => connectionOpensSingle(DEFAULT_USERNAME, DEFAULT_PASSWORD, mayError))
 
-When(`connection opens with a wrong host${EXPECT_ERROR_CONTAINING}`, (_: string) => {
-    assert.rejects(async () => {
-        await openAndTestConnectionWithHostPort(DEFAULT_USERNAME, DEFAULT_PASSWORD, "surely-not-localhost", DEFAULT_PORT);
-    });
+// The expected message (_) is the underlying network library's text, which differs
+// across drivers; we only assert that the connection failed.
+When(`connection opens with a wrong host${EXPECT_ERROR_CONTAINING}`, async (_: string) => {
+    await openAndTestConnectionWithHostPort(DEFAULT_USERNAME, DEFAULT_PASSWORD, "surely-not-localhost", DEFAULT_PORT).then(checkMayError(true));
 });
 When("connection opens with a wrong port; fails", async () => {
-    assert.rejects(async () => {
-        await openAndTestConnectionWithHostPort(DEFAULT_USERNAME, DEFAULT_PASSWORD, DEFAULT_HOST, 0);
-    });
+    await openAndTestConnectionWithHostPort(DEFAULT_USERNAME, DEFAULT_PASSWORD, DEFAULT_HOST, 0).then(checkMayError(true));
 });
 
 Then("connection has {int} user(s)", async (expectedUserCount: number) => {
