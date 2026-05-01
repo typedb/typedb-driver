@@ -40,7 +40,9 @@ use crate::common::{
 #[repr(C)]
 #[derive(Clone, Copy, Hash, PartialEq, Eq)]
 pub struct DatetimeInNanos {
+    /// Whole seconds since the Unix epoch.
     seconds: i64,
+    /// Nanoseconds elapsed since the last whole-second boundary.
     subsec_nanos: u32,
 }
 
@@ -55,9 +57,13 @@ impl DatetimeInNanos {
 /// Either the zone_name (is_fixed_offset == false) or offset (is_fixed_offset == true) is set.
 #[repr(C)]
 pub struct DatetimeAndTimeZone {
+    /// The datetime expressed as a (seconds, subsec_nanos) pair.
     datetime_in_nanos: DatetimeInNanos,
+    /// IANA time zone identifier (e.g. <code>"Europe/London"</code>); set when <code>is_fixed_offset</code> is false.
     zone_name: *mut c_char,
+    /// Offset from UTC in seconds; set when <code>is_fixed_offset</code> is true.
     local_minus_utc_offset: i32,
+    /// True if the time zone is a fixed offset, false if it is an IANA-named zone.
     is_fixed_offset: bool,
 }
 
@@ -110,7 +116,9 @@ pub extern "C" fn string_and_opt_value_iterator_drop(it: *mut StringAndOptValueI
 /// <code>_0</code> and <code>_1</code> are the owner and attribute variables respectively.
 #[repr(C)]
 pub struct StringAndOptValue {
+    /// The string component of the pair (e.g. a struct field name).
     string: *mut c_char,
+    /// Optional <code>Concept</code> value associated with the string; may be null.
     value: *mut Concept,
 }
 

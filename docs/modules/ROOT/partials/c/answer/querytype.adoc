@@ -23,6 +23,23 @@ This enum is used to specify the type of the query resulted in this answer.
 This enum is used to specify the type of the query resulted in this answer.
 
 
+A read-only query (e.g. ``match``).
+  
+  
+   WriteQuery&nbsp;
+   
+
+A data-modifying query (e.g. ``insert``, ``delete``, ``update``).
+  
+  
+   SchemaQuery&nbsp;
+   
+
+A schema-modifying query (e.g. ``define``, ``undefine``, ``redefine``).
+  
+ 
+
+
 [caption=""]
 .Enum constants
 // tag::enum_constants[]

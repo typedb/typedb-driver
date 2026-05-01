@@ -41,33 +41,6 @@ a| `driver` a| The ``TypeDBDriver`` object. a| `struct TypeDBDriver*`
 .Returns
 `void`
 
-[#_driver_deregister_server]
-==== function ``driver_deregister_server``
-
-[source,c]
-----
-void driver_deregister_server(const struct TypeDBDriver* driver, int64_t server_id)
-----
-
-
-
-Deregisters a server from the cluster the driver is currently connected to. This server will no longer play a role in this cluster.
-
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `driver` a| The ``TypeDBDriver`` object. a| `const struct TypeDBDriver*`
-a| `server_id` a| The numeric identifier of the deregistered server a| `int64_t`
-|===
-
-[caption=""]
-.Returns
-`void`
-
 [#_driver_force_close]
 ==== function ``driver_force_close``
 
@@ -234,34 +207,6 @@ a| `server_routing` a| The server routing directive to use for the operation. Au
 [caption=""]
 .Returns
 `struct Server*`
-
-[#_driver_register_server]
-==== function ``driver_register_server``
-
-[source,c]
-----
-void driver_register_server(const struct TypeDBDriver* driver, int64_t server_id, const char* address)
-----
-
-
-
-Registers a new server in the cluster the driver is currently connected to. The registered server will become available eventually, depending on the behavior of the whole cluster. To register a server, its clustering address should be passed, not the connection address.
-
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `driver` a| The ``TypeDBDriver`` object. a| `const struct TypeDBDriver*`
-a| `server_id` a| The numeric identifier of the new server a| `int64_t`
-a| `address` a| The address(es) of the TypeDB server as a string a| `const char*`
-|===
-
-[caption=""]
-.Returns
-`void`
 
 [#_driver_server_version]
 ==== function ``driver_server_version``

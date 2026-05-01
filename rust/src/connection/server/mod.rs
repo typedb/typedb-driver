@@ -186,7 +186,10 @@ impl Default for ReplicationStatus {
 #[repr(C)]
 #[derive(Debug, PartialEq, Eq, Hash, Clone, Copy)]
 pub enum ReplicationRole {
+    /// The primary (leader) server in a replicated cluster.
     Primary,
+    /// A candidate server eligible for promotion to primary.
     Candidate,
+    /// A secondary (follower) server.
     Secondary,
 }

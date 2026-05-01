@@ -67,37 +67,6 @@ The ``DatabaseManager`` for this connection, providing access to database manage
 driver.databases();
 ----
 
-[#_Driver_deregisterServer_long]
-==== method ``deregisterServer``
-
-[source,java]
-----
-void deregisterServer​(long serverID)
-----
-
-Deregisters a server from the cluster the driver is currently connected to. This server will no longer play a role in this cluster.
-
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `serverID` a| The numeric identifier of the deregistered server a| `long`
-|===
-
-[caption=""]
-.Returns
-`void`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-driver.deregisterServer(2);
-----
-
 [#_Driver_isOpen_]
 ==== method ``isOpen``
 
@@ -174,39 +143,6 @@ a| `serverRouting` a| The server routing to use for the operation a| `ServerRout
 [source,java]
 ----
 driver.primaryServer(new ServerRouting.Auto());
-----
-
-[#_Driver_registerServer_long_java_lang_String]
-==== method ``registerServer``
-
-[source,java]
-----
-void registerServer​(long serverID,
-                    java.lang.String address)
-----
-
-Registers a new server in the cluster the driver is currently connected to. The registered server will become available eventually, depending on the behavior of the whole cluster. To register a server, its clustering address should be passed, not the connection address. 
-
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `serverID` a| The numeric identifier of the new server a| `long`
-a| `address` a| The address(es) of the TypeDB server as a string a| `java.lang.String`
-|===
-
-[caption=""]
-.Returns
-`void`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-driver.registerServer(2, "127.0.0.1:11729");
 ----
 
 [#_Driver_serverVersion_]
@@ -330,7 +266,7 @@ Transaction transaction​(java.lang.String database,
                  throws TypeDBDriverException
 ----
 
-Opens a transaction to the given database on the running TypeDB server.
+Opens a transaction to the given database on the running TypeDB server. 
 
 
 [caption=""]
@@ -365,7 +301,7 @@ Transaction transaction​(java.lang.String database,
                         TransactionOptions options)
 ----
 
-Opens a transaction to the given database on the running TypeDB server.
+Opens a transaction to the given database on the running TypeDB server. 
 
 
 [caption=""]

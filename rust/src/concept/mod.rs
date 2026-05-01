@@ -407,9 +407,13 @@ impl fmt::Debug for Concept {
 #[repr(C)]
 #[derive(Copy, Clone, Hash, PartialEq, Eq)]
 pub enum Kind {
+    /// Entity type kind.
     Entity,
+    /// Attribute type kind.
     Attribute,
+    /// Relation type kind.
     Relation,
+    /// Role type kind (a role played in a relation).
     Role,
 }
 

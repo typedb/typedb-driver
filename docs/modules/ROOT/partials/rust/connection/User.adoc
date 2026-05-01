@@ -9,6 +9,8 @@
 * `Clone`
 * `Debug`
 
+A TypeDB server user, identified by a username.
+
 // tag::methods[]
 [#_struct_User_delete_]
 ==== delete

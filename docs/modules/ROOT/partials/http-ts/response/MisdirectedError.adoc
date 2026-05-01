@@ -1,6 +1,6 @@
-[#_Server]
+[#_MisdirectedError]
 [.doc-api-reference-driver]
-=== Server
+=== MisdirectedError
 
 `class`
 
@@ -11,8 +11,9 @@
 [options="header"]
 |===
 |Name |Type |Description
-a| `address` a| `string` a| 
-a| `replicationStatus` a| `ReplicationStatus` a| 
+a| `code` a| `string` a| 
+a| `message` a| `string` a| 
+a| `primaryAddress` a| `string` a| 
 |===
 // end::properties[]
 

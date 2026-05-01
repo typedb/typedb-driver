@@ -24,6 +24,7 @@ use crate::{
     info::UserInfo,
 };
 
+/// A TypeDB server user, identified by a username.
 #[derive(Clone, Debug)]
 pub struct User {
     name: String,

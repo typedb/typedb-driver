@@ -1,6 +1,16 @@
 [#_methods_connection_user]
 === user
 
+[#_Struct_User]
+[.doc-api-reference-driver]
+==== Struct User
+
+`rust struct (pointer)`
+
+
+
+A TypeDB server user, identified by a username.
+
 [#_user_delete]
 ==== function ``user_delete``
 

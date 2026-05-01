@@ -31,7 +31,9 @@ use crate::common::{
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub enum ServerRoutingType {
+    /// Routing decisions are made automatically by the driver.
     Auto,
+    /// The driver is pinned to a specific server address.
     Direct,
 }
 
@@ -42,7 +44,9 @@ pub enum ServerRoutingType {
 #[repr(C)]
 #[derive(Debug, Clone)]
 pub struct ServerRouting {
+    /// The routing variant.
     pub(crate) type_: ServerRoutingType,
+    /// Target server address; non-null only when <code>type_</code> is <code>Direct</code>.
     pub(crate) address: *mut c_char,
 }
 

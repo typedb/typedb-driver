@@ -21,6 +21,37 @@ Kind represents the base of a defined type to describe its capabilities. For exa
 
 Kind represents the base of a defined type to describe its capabilities. For example, "define entity person;" defines a type "person" of a kind "entity".
 
+ 
+  
+   Enumerator
+  
+  
+   Entity&nbsp;
+   
+
+Entity type kind.
+  
+  
+   Attribute&nbsp;
+   
+
+Attribute type kind.
+  
+  
+   Relation&nbsp;
+   
+
+Relation type kind.
+  
+  
+   Role&nbsp;
+   
+
+Role type kind (a role played in a relation).
+  
+ 
+
+
 [caption=""]
 .Enum constants
 // tag::enum_constants[]

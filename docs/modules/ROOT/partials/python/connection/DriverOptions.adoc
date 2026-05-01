@@ -25,7 +25,7 @@ options.request_timeout_millis = 6000
 [options="header"]
 |===
 |Name |Type |Description
-a| `primary_failover_retries` a| `int` a| Returns the value set for the primary failover retries limit in this ``DriverOptions`` object. Limits the number of attempts to redirect a request to another primary server in case of a failure due to the change of replication roles. Defaults to 1.
+a| `primary_failover_retries` a| `int` a| Returns the value set for the primary failover retries limit in this ``DriverOptions`` object. Sets the number of times the driver retries finding and re-routing to the primary server on connection failures. This value is used both for polling during leader election (up to N+1 attempts with a 2-second sleep between each) and for re-executing a failed request on a newly discovered primary. Defaults to 1.
 a| `request_timeout_millis` a| `int` a| Returns the request timeout in milliseconds set for this ``DriverOptions`` object. Specifies the maximum time to wait for a response to a unary RPC request. This applies to operations like database creation, user management, and initial transaction opening. It does NOT apply to operations within transactions (queries, commits).
 a| `tls_config` a| `DriverTlsConfig` a| Returns the TLS configuration associated with this ``DriverOptions``. Specifies the TLS configuration of the connection to TypeDB.
 |===

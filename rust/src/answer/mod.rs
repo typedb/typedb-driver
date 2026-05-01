@@ -134,7 +134,10 @@ impl fmt::Debug for QueryAnswer {
 #[repr(C)]
 #[derive(Clone, Copy, Hash, PartialEq, Eq, Debug)]
 pub enum QueryType {
+    /// A read-only query (e.g. <code>match</code>).
     ReadQuery,
+    /// A data-modifying query (e.g. <code>insert</code>, <code>delete</code>, <code>update</code>).
     WriteQuery,
+    /// A schema-modifying query (e.g. <code>define</code>, <code>undefine</code>, <code>redefine</code>).
     SchemaQuery,
 }

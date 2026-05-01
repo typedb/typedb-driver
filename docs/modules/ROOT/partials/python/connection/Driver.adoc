@@ -40,36 +40,6 @@ Closes the driver. Before instantiating a new driver, the driver that’s curren
 driver.close()
 ----
 
-[#_Driver_deregister_server_server_id_int]
-==== method ``deregister_server``
-
-[source,python]
-----
-deregister_server(server_id: int) -> None
-----
-
-Deregisters a server from the cluster the driver is currently connected to. This server will no longer play a role in this cluster.
-
-[caption=""]
-.Input parameters
-[cols=",,,"]
-[options="header"]
-|===
-|Name |Description |Type |Default Value
-a| `server_id` a| The numeric identifier of the deregistered server a| `int` a| 
-|===
-
-[caption=""]
-.Returns
-`None`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-driver.deregister_server(2)
-----
-
 [#_Driver_is_open_]
 ==== method ``is_open``
 
@@ -120,37 +90,6 @@ a| `server_routing` a| The server routing to use for the operation. Auto by defa
 ----
 driver.primary_server()
 driver.primary_server(ServerRouting.Auto())
-----
-
-[#_Driver_register_server_server_id_int_address_str]
-==== method ``register_server``
-
-[source,python]
-----
-register_server(server_id: int, address: str) -> None
-----
-
-Registers a new server in the cluster the driver is currently connected to. The registered server will become available eventually, depending on the behavior of the whole cluster. To register a server, its clustering address should be passed, not the connection address.
-
-[caption=""]
-.Input parameters
-[cols=",,,"]
-[options="header"]
-|===
-|Name |Description |Type |Default Value
-a| `server_id` a| The numeric identifier of the new server a| `int` a| 
-a| `address` a| The address(es) of the TypeDB server as a string a| `str` a| 
-|===
-
-[caption=""]
-.Returns
-`None`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-driver.register_server(2, "127.0.0.1:11729")
 ----
 
 [#_Driver_server_version_server_routing_ServerRouting_None]

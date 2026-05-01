@@ -20,12 +20,17 @@ static_function_mapping = {
 
     "isApiError": "response",
     "isApiErrorResponse": "response",
+    "isMisdirectedError": "response",
     "isOkResponse": "response",
     "isQueryResponseLegacy": "legacy",
+    "driverError": "response",
 
     "isBasicParams": "connection",
     "isTranslatedParams": "connection",
     "remoteOrigin": "connection",
+    "hostPortFromOrigin": "connection",
+    "resolveOrigin": "connection",
+    "allOrigins": "connection",
 }
 
 class_nesting_prefixes = [
@@ -111,8 +116,11 @@ dir_mapping = {
     "VariableId.adoc": "analyze",
     "VariableInfo.adoc": "analyze",
 
+    "MisdirectedError.adoc": "response",
     "Relation.adoc": "concept",
     "RelationType.adoc": "concept",
+    "ReplicationRole.adoc": "connection",
+    "ReplicationStatus.adoc": "connection",
     "RoleType.adoc": "concept",
     "SignInResponse.adoc": "response",
     "TransactionOpenResponse.adoc": "response",

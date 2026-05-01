@@ -1,0 +1,12 @@
+[#_ReplicationRole]
+[.doc-api-reference-driver]
+=== ReplicationRole
+
+`class`
+
+[source,typescript]
+----
+ReplicationRole: "primary" | "candidate" | "secondary"
+----
+
+

@@ -25,7 +25,9 @@ use crate::common::memory::{free, release_string, string_free};
 #[repr(C)]
 #[derive(Debug)]
 pub struct ServerVersion {
+    /// Distribution name (e.g. <code>"typedb"</code>, <code>"typedb-cluster"</code>).
     distribution: *mut c_char,
+    /// Distribution version string (e.g. <code>"3.7.0"</code>).
     version: *mut c_char,
 }
 

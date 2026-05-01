@@ -6,6 +6,8 @@
 
 The answer to a TypeDB query is a set of concepts which satisfy the <code>Constraints</code> in the query. A <code>ConstraintVertex</code> is either a variable, or some identifier of the concept.
 
+The types inferred for <code>Variable</code>, <code>Label</code> and <code>NamedRole</code> vertices can be read from the <code>variable_annotations</code> field of the <code>Conjunction</code> it is in.
+
 [caption=""]
 .Enum variants
 // tag::enum_constants[]

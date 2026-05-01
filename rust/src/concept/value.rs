@@ -397,12 +397,16 @@ impl chrono::TimeZone for TimeZone {
 #[repr(C)]
 #[derive(Clone, Copy, Hash, PartialEq, Eq)]
 pub struct Duration {
+    /// Number of calendar months in the duration.
     pub months: u32,
+    /// Number of calendar days in the duration.
     pub days: u32,
+    /// Number of nanoseconds in the duration.
     pub nanos: u64,
 }
 
 impl Duration {
+    /// Number of nanoseconds in one second.
     pub const NANOS_PER_SEC: u64 = 1_000_000_000;
     #[doc(hidden)]
     /// cbindgen:ignore
@@ -410,7 +414,9 @@ impl Duration {
     #[doc(hidden)]
     /// cbindgen:ignore
     pub const NANOS_PER_HOUR: u64 = 60 * 60 * Self::NANOS_PER_SEC;
+    /// Number of days in one week.
     pub const DAYS_PER_WEEK: u32 = 7;
+    /// Number of months in one year.
     pub const MONTHS_PER_YEAR: u32 = 12;
 
     pub fn new(months: u32, days: u32, nanos: u64) -> Self {

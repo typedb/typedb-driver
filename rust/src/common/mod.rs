@@ -57,7 +57,10 @@ pub(crate) type RequestID = id::ID;
 #[repr(C)]
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]
 pub enum TransactionType {
+    /// Read-only transaction.
     Read = 0,
+    /// Data-modifying transaction.
     Write = 1,
+    /// Schema-modifying transaction.
     Schema = 2,
 }

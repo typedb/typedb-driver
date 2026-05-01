@@ -1,6 +1,6 @@
-[#_Server]
+[#_ReplicationStatus]
 [.doc-api-reference-driver]
-=== Server
+=== ReplicationStatus
 
 `class`
 
@@ -11,8 +11,9 @@
 [options="header"]
 |===
 |Name |Type |Description
-a| `address` a| `string` a| 
-a| `replicationStatus` a| `ReplicationStatus` a| 
+a| `id` a| `number` a| 
+a| `role` a| `ReplicationRole` a| 
+a| `term` a| `number` a| 
 |===
 // end::properties[]
 
