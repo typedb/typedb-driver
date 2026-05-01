@@ -72,9 +72,15 @@ export ROOT_CA
 export CLUSTER_SERVER_SCRIPT="${CLUSTER_SERVER}"
 export CLUSTER_DIR="$(pwd)"
 
-# Tail server logs in background so they appear in CI output
+# Tail server logs in background so they appear in CI output. Track PIDs so
+# stop-cluster-servers.sh can reap them — orphaned `tail -f` processes inherit
+# the CI runner's stdout pipe and keep it open after the main command exits,
+# leaving the job hanging.
+declare -a _cluster_tail_pids=()
 for i in $(seq 1 $NODE_COUNT); do
   if [ -f "./${i}/server.log" ]; then
     tail -f "./${i}/server.log" | sed "s/^/[${i}] /" &
+    _cluster_tail_pids+=("$!")
   fi
 done
+export CLUSTER_TAIL_PIDS="${_cluster_tail_pids[*]}"

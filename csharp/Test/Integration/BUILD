@@ -66,6 +66,12 @@ csharp_integration_test(
         "//tool/test/resources:encryption/ext-grpc-root-ca.pem",
     ],
     # Pass these paths via --test_env: --test_env=CLUSTER_SERVER_SCRIPT=<path> --test_env=ROOT_CA=<path>
+    # The test drives an out-of-sandbox cluster started by start-cluster-servers.sh:
+    # it kills/restarts nodes via cluster-server.sh, which writes to log files and
+    # data directories under $CLUSTER_DIR (the outer workspace). The Bazel sandbox
+    # blocks writes to those paths, so this test must run unsandboxed and locally,
+    # and it relies on host-level state so cached results would be misleading.
+    tags = ["external", "no-cache", "no-sandbox"],
 )
 
 checkstyle_test(

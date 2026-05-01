@@ -19,4 +19,16 @@
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-exec "${SCRIPT_DIR}/cluster-server.sh" stop-all
+"${SCRIPT_DIR}/cluster-server.sh" stop-all
+
+# Reap log-tailing processes started by start-cluster-servers.sh. Without this,
+# orphaned `tail -f` processes hold the CI runner's stdout pipe open after the
+# main command exits and the job hangs. CLUSTER_TAIL_PIDS holds the rightmost
+# PID of each `tail -f | sed` pipeline; pkill catches the tail siblings (and
+# any pipeline whose PID we didn't capture).
+if [[ -n "${CLUSTER_TAIL_PIDS:-}" ]]; then
+  for pid in $CLUSTER_TAIL_PIDS; do
+    kill "$pid" 2>/dev/null || true
+  done
+fi
+pkill -f 'tail -f \./[0-9]+/server\.log' 2>/dev/null || true

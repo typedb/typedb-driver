@@ -125,7 +125,11 @@ server_start() {
   fi
 
   local log_file="${node_dir}/server.log"
-  rm -f "${log_file}"
+  # The `>` redirect below opens the log for writing in truncation mode, so any
+  # leftover content from a prior run is replaced. Avoid `rm`-ing the file
+  # explicitly: in sandboxed test runs (Bazel test on macOS) the file is owned
+  # by the outside-sandbox cluster start and the unlink fails with EPERM, even
+  # though typedb itself can still truncate-and-write via the existing path.
 
   # Use setsid on Linux to start in a new session (prevents process group cleanup).
   # On macOS, nohup + disown is sufficient.
