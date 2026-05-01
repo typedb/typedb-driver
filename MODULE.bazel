@@ -31,6 +31,7 @@ bazel_dep(name = "rules_python", version = "1.0.0")
 bazel_dep(name = "rules_kotlin", version = "2.0.0", repo_name = "io_bazel_rules_kotlin")
 bazel_dep(name = "rules_pkg", version = "1.0.1")
 bazel_dep(name = "rules_proto", version = "7.1.0")
+bazel_dep(name = "rules_dotnet", version = "0.14.0")
 bazel_dep(name = "protobuf", version = "29.3", repo_name = "com_google_protobuf")
 
 # gRPC dependencies
@@ -51,14 +52,14 @@ bazel_dep(name = "typedb_dependencies", version = "0.0.0")
 git_override(
     module_name = "typedb_dependencies",
     remote = "https://github.com/typedb/dependencies",
-    commit = "32a7fde17ad17b775a8ccc0867c87f119749e7ea",
+    commit = "233b0f90bf854f80ed4a06c293fe7826cbe03635",
 )
 
 bazel_dep(name = "typedb_bazel_distribution", version = "0.0.0")
 git_override(
     module_name = "typedb_bazel_distribution",
     remote = "https://github.com/typedb/bazel-distribution",
-    commit = "1b2556e6cdf0ac839b3e64ee55986e1a592b8b97",
+    commit = "78da2ec22d8c77ee6080c0579da0936b81eca8ac",
 )
 
 bazel_dep(name = "typedb_protocol", version = "0.0.0")
@@ -178,6 +179,29 @@ use_repo(rules_ts_ext, "npm_typescript")
 # which includes all versioned artifacts needed across TypeDB modules
 maven = use_extension("@typedb_dependencies//library/maven:maven_extension.bzl", "maven")
 use_repo(maven, "maven")
+
+# .NET toolchain (matches the WORKSPACE-era version)
+dotnet = use_extension("@rules_dotnet//dotnet:extensions.bzl", "dotnet")
+dotnet.toolchain(dotnet_version = "6.0.413")
+use_repo(dotnet, "dotnet_toolchains")
+register_toolchains("@dotnet_toolchains//:all")
+
+# rules_dotnet's own paket-based NuGet repos, referenced by csharp/build_opts.bzl
+rules_dotnet_nuget_packages_extension = use_extension(
+    "@rules_dotnet//dotnet:paket.rules_dotnet_nuget_packages_extension.bzl",
+    "rules_dotnet_nuget_packages_extension",
+)
+use_repo(rules_dotnet_nuget_packages_extension, "paket.rules_dotnet_nuget_packages")
+
+paket2bazel_dependencies_extension = use_extension(
+    "@rules_dotnet//dotnet:paket.paket2bazel_dependencies_extension.bzl",
+    "paket2bazel_dependencies_extension",
+)
+use_repo(paket2bazel_dependencies_extension, "paket.paket2bazel_dependencies")
+
+# Project-specific NuGet packages declared in csharp/nuget/paket.dependencies
+csharp_deps_extension = use_extension("//csharp/nuget:paket.csharp_deps_extension.bzl", "csharp_deps_extension")
+use_repo(csharp_deps_extension, "paket.csharp_deps")
 
 # Register Kotlin toolchain
 register_toolchains("@io_bazel_rules_kotlin//kotlin/internal:default_toolchain")
