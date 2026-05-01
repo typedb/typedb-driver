@@ -46,8 +46,13 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
     @Before
     public synchronized void before() {
         Parameters.setClusterMode(true);
-        driverOptions = driverOptions.tlsConfig(DriverTlsConfig.enabledWithRootCA(System.getenv("ROOT_CA")));
+        driverOptions = defaultDriverOptions();
         super.before();
+    }
+
+    @Override
+    DriverOptions defaultDriverOptions() {
+        return new DriverOptions(DriverTlsConfig.enabledWithRootCA(System.getenv("ROOT_CA")));
     }
 
     @After

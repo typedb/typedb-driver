@@ -94,6 +94,10 @@ public abstract class ConnectionStepsBase {
     void beforeAll() {
     } // Can add "before all" setup steps here
 
+    DriverOptions defaultDriverOptions() {
+        return new DriverOptions(DriverTlsConfig.disabled());
+    }
+
     void before() {
         try {
             // Sleep between scenarios to let the driver close completely
@@ -129,7 +133,7 @@ public abstract class ConnectionStepsBase {
             driver.close();
         }
         backgroundDriver.close();
-        driverOptions = new DriverOptions(DriverTlsConfig.disabled());
+        driverOptions = defaultDriverOptions();
         driver = createDefaultTypeDBDriver();
         driver.users().all().stream().filter(user -> !user.name().equals(ADMIN_USERNAME)).forEach(user -> driver.users().get(user.name()).delete());
         driver.users().get(ADMIN_USERNAME).updatePassword(ADMIN_PASSWORD);
