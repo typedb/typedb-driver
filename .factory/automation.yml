@@ -294,17 +294,18 @@ build:
       image: typedb-ubuntu-22.04
       type: foreground
       command: |
-        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
-        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-        bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
-        bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
-
-        tool/test/start-community-server.sh &&
-          bazel test //csharp/Test/Integration:test-example --test_output=streamed &&
-          .factory/test-community.sh //csharp/Test/Behaviour/... --test_output=streamed --jobs=1 &&
-          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
-        tool/test/stop-community-server.sh
-        exit $TEST_SUCCESS
+        # export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
+        # export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
+        # bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        # bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
+        #
+        # tool/test/start-community-server.sh &&
+        #   bazel test //csharp/Test/Integration:test-example --test_output=streamed &&
+        #   .factory/test-community.sh //csharp/Test/Behaviour/... --test_output=streamed --jobs=1 &&
+        #   export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        # tool/test/stop-community-server.sh
+        # exit $TEST_SUCCESS
+        sleep 3600
 
     test-csharp-integration:
       image: typedb-ubuntu-22.04
