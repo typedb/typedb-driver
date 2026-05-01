@@ -485,7 +485,6 @@ dependencies = [
  "iana-time-zone",
  "js-sys",
  "num-traits",
- "serde",
  "wasm-bindgen",
  "windows-link",
 ]
@@ -2236,7 +2235,6 @@ version = "1.0.149"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "83fc039473c5595ace860d8c4fafa220ff474b3fc6bfdb4293327f1a37e94d86"
 dependencies = [
- "indexmap 2.14.0",
  "itoa",
  "memchr",
  "serde",
@@ -2385,7 +2383,7 @@ dependencies = [
  "chrono",
  "cucumber",
  "futures",
- "itertools 0.10.5",
+ "itertools 0.14.0",
  "macro_rules_attribute",
  "regex",
  "serde_json",
@@ -2540,7 +2538,6 @@ dependencies = [
  "bytes",
  "libc",
  "mio",
- "parking_lot",
  "pin-project-lite",
  "signal-hook-registry",
  "socket2 0.6.3",
@@ -2787,7 +2784,7 @@ dependencies = [
  "crossbeam",
  "futures",
  "http",
- "itertools 0.10.5",
+ "itertools 0.14.0",
  "maybe-async",
  "prost",
  "rand 0.8.6",
@@ -2810,7 +2807,7 @@ dependencies = [
 [[package]]
 name = "typedb-protocol"
 version = "0.0.0"
-source = "git+https://github.com/typedb/typedb-protocol?rev=da3e316cb0022cb284083996f0659ad22db13aca#da3e316cb0022cb284083996f0659ad22db13aca"
+source = "git+https://github.com/typedb/typedb-protocol?tag=3.10.0-alpha-0#e234cf2df5f025afd6f694c05473448b8cef3697"
 dependencies = [
  "prost",
  "tonic",
@@ -2822,7 +2819,7 @@ name = "typedb_driver_clib"
 version = "0.0.0"
 dependencies = [
  "chrono",
- "itertools 0.10.5",
+ "itertools 0.14.0",
  "tracing",
  "tracing-subscriber",
  "typedb-driver",

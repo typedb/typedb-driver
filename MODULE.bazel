@@ -209,13 +209,13 @@ native_artifact_files.artifact(
     name = "typedb_artifact",
     group_name = "typedb-all-{platform}",
     artifact_name = "typedb-all-{platform}-{version}.{ext}",
-    commit = "15ebe70f428d610134e6d1d2f79671cad514d79b",
+    tag = "3.10.0-alpha-1",
 )
 native_artifact_files.artifact(
     name = "typedb_cluster_artifact",
     group_name = "typedb-cluster-all-{platform}",
     artifact_name = "typedb-cluster-all-{platform}-{version}.{ext}",
-    commit = "287db324b982c79002a026039c0865cdd3bdd700",
+    tag = "3.10.0-alpha-1",
     private = True,
 )
 
