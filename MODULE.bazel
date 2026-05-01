@@ -65,7 +65,7 @@ bazel_dep(name = "typedb_protocol", version = "0.0.0")
 git_override(
     module_name = "typedb_protocol",
     remote = "https://github.com/typedb/typedb-protocol",
-    commit = "c2e8fbbb3c67360630d4c331b5077ab21271285a",
+    tag = "3.10.0-alpha-0",
 )
 
 bazel_dep(name = "typedb_behaviour", version = "0.0.0")
