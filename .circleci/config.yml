@@ -809,8 +809,7 @@ jobs:
           bazel-arch: amd64
       - deploy-crate-release-unix
       - deploy-maven-release-unix
-# TODO: http-ts is disabled in the clustering branch
-#      - deploy-http-ts-npm-release-unix
+      - deploy-http-ts-npm-release-unix
 #      - deploy-npm-release-unix
 
   # Temporarily disabled: csharp is bazelignored (2.x-only driver, not yet migrated to Bzlmod)

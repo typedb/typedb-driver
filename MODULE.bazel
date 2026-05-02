@@ -65,14 +65,14 @@ bazel_dep(name = "typedb_protocol", version = "0.0.0")
 git_override(
     module_name = "typedb_protocol",
     remote = "https://github.com/typedb/typedb-protocol",
-    tag = "3.10.0-alpha-0",
+    commit = "25ab3fb02715062bd036f8b83908de92b106a202",
 )
 
 bazel_dep(name = "typedb_behaviour", version = "0.0.0")
 git_override(
     module_name = "typedb_behaviour",
     remote = "https://github.com/typedb/typedb-behaviour",
-    commit = "4a2cba4a84e8b90b361ec2501b90de3d85578787",
+    commit = "d3bb01333c67b41eeac23d2291e243b047cb518d",
 )
 
 # Rust rules need typedb_dependencies for patching
@@ -196,9 +196,9 @@ workspace_refs = use_repo_rule("@typedb_bazel_distribution//common/workspace_ref
 workspace_refs(
     name = "typedb_driver_workspace_refs",
     workspace_commit_dict = {
+        "typedb_protocol+": "25ab3fb02715062bd036f8b83908de92b106a202",
     },
     workspace_tag_dict = {
-        "typedb_protocol+": "3.10.0-alpha-0",
     },
 )
 
@@ -209,8 +209,9 @@ native_artifact_files.artifact(
     name = "typedb_artifact",
     group_name = "typedb-all-{platform}",
     artifact_name = "typedb-all-{platform}-{version}.{ext}",
-    tag = "3.10.0-alpha-1",
+    commit = "7cc4a3e9edcaaee2c8fa9cdce6ffef170eeed503",
 )
+# IMPORTANT: must be CLUSTERED typedb-cluster (with multi-node support)!
 native_artifact_files.artifact(
     name = "typedb_cluster_artifact",
     group_name = "typedb-cluster-all-{platform}",
