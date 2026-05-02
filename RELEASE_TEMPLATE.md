@@ -7,9 +7,6 @@ Documentation: https://typedb.com/docs/core-concepts/drivers/overview
 Available from https://crates.io/crates/typedb-driver
 Documentation: https://typedb.com/docs/drivers/rust/overview
 
-**ATTENTION:** since this is an alpha version of a clustered TypeDB, the API is unstable and may change significantly between versions.
-Use this driver only for the same `XYZ-alpha-A` version of the server.
-
 ```sh
 cargo add typedb-driver@{version}
 ```
@@ -19,9 +16,6 @@ cargo add typedb-driver@{version}
 
 Available through [https://repo.typedb.com](https://cloudsmith.io/~typedb/repos/public-release/packages/detail/maven/typedb-driver/{version}/a=noarch;xg=com.typedb/)
 Documentation: https://typedb.com/docs/drivers/java/overview
-
-**ATTENTION:** since this is an alpha version of a clustered TypeDB, the API is unstable and may change significantly between versions.
-Use this driver only for the same `XYZ-alpha-A` version of the server.
 
 ```xml
 <repositories>
@@ -45,9 +39,6 @@ PyPI package: https://pypi.org/project/typedb-driver
 Documentation: https://typedb.com/docs/drivers/python/overview
 
 Available through https://pypi.org
-
-**ATTENTION:** since this is an alpha version of a clustered TypeDB, the API is unstable and may change significantly between versions.
-Use this driver only for the same `XYZaA` version of the server.
 
 [//]: # (TODO: Python's RC/Alpha/Beta versions are formatted differently. Don't foget to update manually until we make an automation)
 ```
