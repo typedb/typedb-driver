@@ -32,7 +32,6 @@
     "https://bcr.bazel.build/modules/bazel_features/1.1.1/MODULE.bazel": "27b8c79ef57efe08efccbd9dd6ef70d61b4798320b8d3c134fd571f78963dbcd",
     "https://bcr.bazel.build/modules/bazel_features/1.10.0/MODULE.bazel": "f75e8807570484a99be90abcd52b5e1f390362c258bcb73106f4544957a48101",
     "https://bcr.bazel.build/modules/bazel_features/1.11.0/MODULE.bazel": "f9382337dd5a474c3b7d334c2f83e50b6eaedc284253334cf823044a26de03e8",
-    "https://bcr.bazel.build/modules/bazel_features/1.13.0/MODULE.bazel": "c14c33c7c3c730612bdbe14ebbb5e61936b6f11322ea95a6e91cd1ba962f94df",
     "https://bcr.bazel.build/modules/bazel_features/1.15.0/MODULE.bazel": "d38ff6e517149dc509406aca0db3ad1efdd890a85e049585b7234d04238e2a4d",
     "https://bcr.bazel.build/modules/bazel_features/1.17.0/MODULE.bazel": "039de32d21b816b47bd42c778e0454217e9c9caac4a3cf8e15c7231ee3ddee4d",
     "https://bcr.bazel.build/modules/bazel_features/1.18.0/MODULE.bazel": "1be0ae2557ab3a72a57aeb31b29be347bcdc5d2b1eb1e70f39e3851a7e97041a",
@@ -223,7 +222,6 @@
     "https://bcr.bazel.build/modules/rules_java/7.3.2/MODULE.bazel": "50dece891cfdf1741ea230d001aa9c14398062f2b7c066470accace78e412bc2",
     "https://bcr.bazel.build/modules/rules_java/7.4.0/MODULE.bazel": "a592852f8a3dd539e82ee6542013bf2cadfc4c6946be8941e189d224500a8934",
     "https://bcr.bazel.build/modules/rules_java/7.6.1/MODULE.bazel": "2f14b7e8a1aa2f67ae92bc69d1ec0fa8d9f827c4e17ff5e5f02e91caa3b2d0fe",
-    "https://bcr.bazel.build/modules/rules_java/7.6.5/MODULE.bazel": "481164be5e02e4cab6e77a36927683263be56b7e36fef918b458d7a8a1ebadb1",
     "https://bcr.bazel.build/modules/rules_java/8.14.0/MODULE.bazel": "717717ed40cc69994596a45aec6ea78135ea434b8402fb91b009b9151dd65615",
     "https://bcr.bazel.build/modules/rules_java/8.14.0/source.json": "8a88c4ca9e8759da53cddc88123880565c520503321e2566b4e33d0287a3d4bc",
     "https://bcr.bazel.build/modules/rules_java/8.3.2/MODULE.bazel": "7336d5511ad5af0b8615fdc7477535a2e4e723a357b6713af439fe8cf0195017",
@@ -235,12 +233,10 @@
     "https://bcr.bazel.build/modules/rules_jvm_external/5.3/MODULE.bazel": "bf93870767689637164657731849fb887ad086739bd5d360d90007a581d5527d",
     "https://bcr.bazel.build/modules/rules_jvm_external/6.0/MODULE.bazel": "37c93a5a78d32e895d52f86a8d0416176e915daabd029ccb5594db422e87c495",
     "https://bcr.bazel.build/modules/rules_jvm_external/6.1/MODULE.bazel": "75b5fec090dbd46cf9b7d8ea08cf84a0472d92ba3585b476f44c326eda8059c4",
-    "https://bcr.bazel.build/modules/rules_jvm_external/6.2/MODULE.bazel": "36a6e52487a855f33cb960724eb56547fa87e2c98a0474c3acad94339d7f8e99",
     "https://bcr.bazel.build/modules/rules_jvm_external/6.3/MODULE.bazel": "c998e060b85f71e00de5ec552019347c8bca255062c990ac02d051bb80a38df0",
     "https://bcr.bazel.build/modules/rules_jvm_external/6.6/MODULE.bazel": "153042249c7060536dc95b6bb9f9bb8063b8a0b0cb7acdb381bddbc2374aed55",
     "https://bcr.bazel.build/modules/rules_jvm_external/6.6/source.json": "b1d7ffc3877e5a76e6e48e6bce459cbb1712c90eba14861b112bd299587a534d",
     "https://bcr.bazel.build/modules/rules_kotlin/1.9.0/MODULE.bazel": "ef85697305025e5a61f395d4eaede272a5393cee479ace6686dba707de804d59",
-    "https://bcr.bazel.build/modules/rules_kotlin/1.9.5/MODULE.bazel": "043a16a572f610558ec2030db3ff0c9938574e7dd9f58bded1bb07c0192ef025",
     "https://bcr.bazel.build/modules/rules_kotlin/1.9.6/MODULE.bazel": "d269a01a18ee74d0335450b10f62c9ed81f2321d7958a2934e44272fe82dcef3",
     "https://bcr.bazel.build/modules/rules_kotlin/2.0.0/MODULE.bazel": "623488d3c43cacaf6ab1c0935b875d527d2746be906bb3cb063cd1f9713bcf19",
     "https://bcr.bazel.build/modules/rules_kotlin/2.0.0/source.json": "baad7a06ace3a0d3a3608b700b151c221458a877bb2e435ccb2ea242895166e1",
@@ -265,8 +261,6 @@
     "https://bcr.bazel.build/modules/rules_proto/7.1.0/source.json": "39f89066c12c24097854e8f57ab8558929f9c8d474d34b2c00ac04630ad8940e",
     "https://bcr.bazel.build/modules/rules_proto_grpc/5.0.1/MODULE.bazel": "af7a76546e6fb5cfb37d30ece061bad276ceb785eb4ea43d6f74fc35cff71dfc",
     "https://bcr.bazel.build/modules/rules_proto_grpc/5.0.1/source.json": "eb2a5cd4344970803514e64bce3bb16840fe9476a4e9695d95c6e0475d821606",
-    "https://bcr.bazel.build/modules/rules_proto_grpc_java/5.0.1/MODULE.bazel": "c8f46e6ca22461c1a5aa2ff2d85fd272d377990c6e57a826fb311c25b8ec1eb7",
-    "https://bcr.bazel.build/modules/rules_proto_grpc_java/5.0.1/source.json": "05f7bcae0cd09a0e15d591e55b48e472eac66aa8f8fb5c21b3dd8402de7ac37f",
     "https://bcr.bazel.build/modules/rules_python/0.10.2/MODULE.bazel": "cc82bc96f2997baa545ab3ce73f196d040ffb8756fd2d66125a530031cd90e5f",
     "https://bcr.bazel.build/modules/rules_python/0.20.0/MODULE.bazel": "bfe14d17f20e3fe900b9588f526f52c967a6f281e47a1d6b988679bd15082286",
     "https://bcr.bazel.build/modules/rules_python/0.22.0/MODULE.bazel": "b8057bafa11a9e0f4b08fc3b7cd7bee0dcbccea209ac6fc9a3ff051cd03e19e9",
@@ -728,7 +722,7 @@
     "@@aspect_rules_ts+//ts:extensions.bzl%ext": {
       "general": {
         "bzlTransitiveDigest": "eElhS7M7sbjWaoklqpFSskS7FDCguj60PFwCGtkDLKY=",
-        "usagesDigest": "R88PyhtGTkjwAtfqREyDh2sghLChgDHykLmGFG28Gv0=",
+        "usagesDigest": "+hS4SdRYTyMwVVS0eXYe7T1DJL8J/mE29mz19O3s2KM=",
         "recordedFileInputs": {},
         "recordedDirentsInputs": {},
         "envVariables": {},
@@ -737,8 +731,7 @@
             "repoRuleId": "@@aspect_rules_ts+//ts/private:npm_repositories.bzl%http_archive_version",
             "attributes": {
               "bzlmod": true,
-              "version": "",
-              "version_from": "@@typedb_protocol+//grpc/nodejs:package.json",
+              "version": "5.7.2",
               "integrity": "",
               "build_file": "@@aspect_rules_ts+//ts:BUILD.typescript",
               "build_file_substitutions": {
@@ -1158,7 +1151,7 @@
     "@@rules_nodejs+//nodejs:extensions.bzl%node": {
       "general": {
         "bzlTransitiveDigest": "rphcryfYrOY/P3emfTskC/GY5YuHcwMl2B2ncjaM8lY=",
-        "usagesDigest": "CXUSO+fccZ0LJIvMwcWc3tbvJv07bYiK4qj452ZJ8qY=",
+        "usagesDigest": "2D2IHF2rb+QOuFbBZpqosNkVLiFtX96MLiX577arqEg=",
         "recordedFileInputs": {},
         "recordedDirentsInputs": {},
         "envVariables": {},
@@ -1279,7 +1272,7 @@
     "@@rules_python+//python/extensions:pip.bzl%pip": {
       "general": {
         "bzlTransitiveDigest": "o2meppeINbZC/NCXoJIDvKwWZ/oENq7RFBRNAtlqXEI=",
-        "usagesDigest": "+nfoSaLHQl+ae6ZC0FuBpIm4Joa4UyxDMjA3UhyvADQ=",
+        "usagesDigest": "0+yXjWcclcz2ZWzv99ZNr2lHC2C5IwfOW/3Svlmam/8=",
         "recordedFileInputs": {
           "@@//python/requirements_dev.txt": "37f08ccffbd89cc63b7c7641f633336ab50c61614ad247dcb5d09587eab0bc2b",
           "@@grpc+//requirements.bazel.txt": "4c8c19a2a8f22108bf29feb5cc2694eb0c7e0c82ba0364df27fe5f5e4d7936e5",
@@ -11518,7 +11511,7 @@
     "@@typedb_dependencies+//distribution/artifact:rules.bzl%native_artifact_files": {
       "general": {
         "bzlTransitiveDigest": "G2tVfxi6pNMPwxLud5h67xKrwcp4+6MJIFRhSA7KBWo=",
-        "usagesDigest": "NHfAN1a+yr81kEpTcf7LxrfVxu2eR72s8dzJ65MEwIE=",
+        "usagesDigest": "8Si2pVYrYwuAcf7aYv0N+1BN8ttrG/LP/JFqC4F+BLk=",
         "recordedFileInputs": {},
         "recordedDirentsInputs": {},
         "envVariables": {},
@@ -11527,45 +11520,90 @@
             "repoRuleId": "@@bazel_tools//tools/build_defs/repo:http.bzl%http_file",
             "attributes": {
               "urls": [
-                "https://repo.typedb.com/public/public-snapshot/raw/names/typedb-all-linux-arm64/versions/43498326502fb6abf67e0ef5b089bd350f241cdb/typedb-all-linux-arm64-43498326502fb6abf67e0ef5b089bd350f241cdb.tar.gz"
+                "https://repo.typedb.com/public/public-release/raw/names/typedb-all-linux-arm64/versions/3.10.0-alpha-1/typedb-all-linux-arm64-3.10.0-alpha-1.tar.gz"
               ],
-              "downloaded_file_path": "typedb-all-linux-arm64-43498326502fb6abf67e0ef5b089bd350f241cdb.tar.gz"
+              "downloaded_file_path": "typedb-all-linux-arm64-3.10.0-alpha-1.tar.gz"
             }
           },
           "typedb_artifact_linux-x86_64": {
             "repoRuleId": "@@bazel_tools//tools/build_defs/repo:http.bzl%http_file",
             "attributes": {
               "urls": [
-                "https://repo.typedb.com/public/public-snapshot/raw/names/typedb-all-linux-x86_64/versions/43498326502fb6abf67e0ef5b089bd350f241cdb/typedb-all-linux-x86_64-43498326502fb6abf67e0ef5b089bd350f241cdb.tar.gz"
+                "https://repo.typedb.com/public/public-release/raw/names/typedb-all-linux-x86_64/versions/3.10.0-alpha-1/typedb-all-linux-x86_64-3.10.0-alpha-1.tar.gz"
               ],
-              "downloaded_file_path": "typedb-all-linux-x86_64-43498326502fb6abf67e0ef5b089bd350f241cdb.tar.gz"
+              "downloaded_file_path": "typedb-all-linux-x86_64-3.10.0-alpha-1.tar.gz"
             }
           },
           "typedb_artifact_mac-arm64": {
             "repoRuleId": "@@bazel_tools//tools/build_defs/repo:http.bzl%http_file",
             "attributes": {
               "urls": [
-                "https://repo.typedb.com/public/public-snapshot/raw/names/typedb-all-mac-arm64/versions/43498326502fb6abf67e0ef5b089bd350f241cdb/typedb-all-mac-arm64-43498326502fb6abf67e0ef5b089bd350f241cdb.zip"
+                "https://repo.typedb.com/public/public-release/raw/names/typedb-all-mac-arm64/versions/3.10.0-alpha-1/typedb-all-mac-arm64-3.10.0-alpha-1.zip"
               ],
-              "downloaded_file_path": "typedb-all-mac-arm64-43498326502fb6abf67e0ef5b089bd350f241cdb.zip"
+              "downloaded_file_path": "typedb-all-mac-arm64-3.10.0-alpha-1.zip"
             }
           },
           "typedb_artifact_mac-x86_64": {
             "repoRuleId": "@@bazel_tools//tools/build_defs/repo:http.bzl%http_file",
             "attributes": {
               "urls": [
-                "https://repo.typedb.com/public/public-snapshot/raw/names/typedb-all-mac-x86_64/versions/43498326502fb6abf67e0ef5b089bd350f241cdb/typedb-all-mac-x86_64-43498326502fb6abf67e0ef5b089bd350f241cdb.zip"
+                "https://repo.typedb.com/public/public-release/raw/names/typedb-all-mac-x86_64/versions/3.10.0-alpha-1/typedb-all-mac-x86_64-3.10.0-alpha-1.zip"
               ],
-              "downloaded_file_path": "typedb-all-mac-x86_64-43498326502fb6abf67e0ef5b089bd350f241cdb.zip"
+              "downloaded_file_path": "typedb-all-mac-x86_64-3.10.0-alpha-1.zip"
             }
           },
           "typedb_artifact_windows-x86_64": {
             "repoRuleId": "@@bazel_tools//tools/build_defs/repo:http.bzl%http_file",
             "attributes": {
               "urls": [
-                "https://repo.typedb.com/public/public-snapshot/raw/names/typedb-all-windows-x86_64/versions/43498326502fb6abf67e0ef5b089bd350f241cdb/typedb-all-windows-x86_64-43498326502fb6abf67e0ef5b089bd350f241cdb.zip"
+                "https://repo.typedb.com/public/public-release/raw/names/typedb-all-windows-x86_64/versions/3.10.0-alpha-1/typedb-all-windows-x86_64-3.10.0-alpha-1.zip"
               ],
-              "downloaded_file_path": "typedb-all-windows-x86_64-43498326502fb6abf67e0ef5b089bd350f241cdb.zip"
+              "downloaded_file_path": "typedb-all-windows-x86_64-3.10.0-alpha-1.zip"
+            }
+          },
+          "typedb_cluster_artifact_linux-arm64": {
+            "repoRuleId": "@@bazel_tools//tools/build_defs/repo:http.bzl%http_file",
+            "attributes": {
+              "urls": [
+                "https://repo.typedb.com/basic/private-release/raw/names/typedb-cluster-all-linux-arm64/versions/3.10.0-alpha-1/typedb-cluster-all-linux-arm64-3.10.0-alpha-1.tar.gz"
+              ],
+              "downloaded_file_path": "typedb-cluster-all-linux-arm64-3.10.0-alpha-1.tar.gz"
+            }
+          },
+          "typedb_cluster_artifact_linux-x86_64": {
+            "repoRuleId": "@@bazel_tools//tools/build_defs/repo:http.bzl%http_file",
+            "attributes": {
+              "urls": [
+                "https://repo.typedb.com/basic/private-release/raw/names/typedb-cluster-all-linux-x86_64/versions/3.10.0-alpha-1/typedb-cluster-all-linux-x86_64-3.10.0-alpha-1.tar.gz"
+              ],
+              "downloaded_file_path": "typedb-cluster-all-linux-x86_64-3.10.0-alpha-1.tar.gz"
+            }
+          },
+          "typedb_cluster_artifact_mac-arm64": {
+            "repoRuleId": "@@bazel_tools//tools/build_defs/repo:http.bzl%http_file",
+            "attributes": {
+              "urls": [
+                "https://repo.typedb.com/basic/private-release/raw/names/typedb-cluster-all-mac-arm64/versions/3.10.0-alpha-1/typedb-cluster-all-mac-arm64-3.10.0-alpha-1.zip"
+              ],
+              "downloaded_file_path": "typedb-cluster-all-mac-arm64-3.10.0-alpha-1.zip"
+            }
+          },
+          "typedb_cluster_artifact_mac-x86_64": {
+            "repoRuleId": "@@bazel_tools//tools/build_defs/repo:http.bzl%http_file",
+            "attributes": {
+              "urls": [
+                "https://repo.typedb.com/basic/private-release/raw/names/typedb-cluster-all-mac-x86_64/versions/3.10.0-alpha-1/typedb-cluster-all-mac-x86_64-3.10.0-alpha-1.zip"
+              ],
+              "downloaded_file_path": "typedb-cluster-all-mac-x86_64-3.10.0-alpha-1.zip"
+            }
+          },
+          "typedb_cluster_artifact_windows-x86_64": {
+            "repoRuleId": "@@bazel_tools//tools/build_defs/repo:http.bzl%http_file",
+            "attributes": {
+              "urls": [
+                "https://repo.typedb.com/basic/private-release/raw/names/typedb-cluster-all-windows-x86_64/versions/3.10.0-alpha-1/typedb-cluster-all-windows-x86_64-3.10.0-alpha-1.zip"
+              ],
+              "downloaded_file_path": "typedb-cluster-all-windows-x86_64-3.10.0-alpha-1.zip"
             }
           }
         },

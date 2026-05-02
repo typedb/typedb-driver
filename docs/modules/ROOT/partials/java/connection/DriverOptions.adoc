@@ -6,26 +6,63 @@
 
 *Package*: `com.typedb.driver.api`
 
-User connection settings (TLS encryption, etc.) for connecting to TypeDB Server. 
-
-
-[caption=""]
-.Examples
-[source,java]
-----
-DriverOptions driverOptions = new DriverOptions(true, Path.of("path/to/ca-certificate.pem"));
-----
+TypeDB driver options. ``DriverOptions`` are used to specify the driver's connection behavior.
 
 // tag::methods[]
-[#_DriverOptions_DriverOptions_boolean_java_lang_String]
+[#_DriverOptions_DriverOptions_DriverTlsConfig]
 ==== method ``DriverOptions``
 
 [source,java]
 ----
-public DriverOptions​(boolean isTlsEnabled,
-                     java.lang.String tlsRootCAPath)
+public DriverOptions​(DriverTlsConfig tlsConfig)
 ----
 
+Produces a new ``DriverOptions`` object for connecting to TypeDB Server using custom TLS settings. WARNING: Disabled TLS settings will make the driver sending passwords as plaintext. 
+
+
+[caption=""]
+.Returns
+`public`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+DriverOptions options = new DriverOptions(DriverTlsConfig.enabledWithNativeRootCA());
+----
+
+[#_DriverOptions_primaryFailoverRetries_]
+==== method ``primaryFailoverRetries``
+
+[source,java]
+----
+@CheckReturnValue
+public java.lang.Integer primaryFailoverRetries()
+----
+
+Returns the value set for the primary failover retries limit in this ``DriverOptions`` object. Sets the number of times the driver retries finding and re-routing to the primary server on connection failures. This value is used both for polling during leader election (up to N+1 attempts with a 2-second sleep between each) and for re-executing a failed request on a newly discovered primary. 
+
+
+[caption=""]
+.Returns
+`public java.lang.Integer`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+options.primaryFailoverRetries();
+----
+
+[#_DriverOptions_primaryFailoverRetries_int]
+==== method ``primaryFailoverRetries``
+
+[source,java]
+----
+public DriverOptions primaryFailoverRetries​(int primaryFailoverRetries)
+----
+
+Sets the number of times the driver retries finding and re-routing to the primary server on connection failures. This value is used both for polling during leader election (up to N+1 attempts with a 2-second sleep between each) and for re-executing a failed request on a newly discovered primary. Defaults to 1. 
 
 
 [caption=""]
@@ -34,13 +71,118 @@ public DriverOptions​(boolean isTlsEnabled,
 [options="header"]
 |===
 |Name |Description |Type
-a| `isTlsEnabled` a| Specify whether the connection to TypeDB Server must be done over TLS. a| `boolean`
-a| `tlsRootCAPath` a| Path to the CA certificate to use for authenticating server certificates. a| `java.lang.String`
+a| `primaryFailoverRetries` a| The limit of primary failover retries. a| `int`
 |===
 
 [caption=""]
 .Returns
-`public`
+`public DriverOptions`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+options.primaryFailoverRetries(1);
+----
+
+[#_DriverOptions_requestTimeoutMillis_]
+==== method ``requestTimeoutMillis``
+
+[source,java]
+----
+@CheckReturnValue
+public java.lang.Long requestTimeoutMillis()
+----
+
+Returns the request timeout in milliseconds set for this ``DriverOptions`` object. Specifies the maximum time to wait for a response to a unary RPC request. This applies to operations like database creation, user management, and initial transaction opening. It does NOT apply to operations within transactions (queries, commits). 
+
+
+[caption=""]
+.Returns
+`public java.lang.Long`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+options.requestTimeoutMillis();
+----
+
+[#_DriverOptions_requestTimeoutMillis_long]
+==== method ``requestTimeoutMillis``
+
+[source,java]
+----
+public DriverOptions requestTimeoutMillis​(long requestTimeoutMillis)
+----
+
+Sets the maximum time (in milliseconds) to wait for a response to a unary RPC request. This applies to operations like database creation, user management, and initial transaction opening. It does NOT apply to operations within transactions (queries, commits). Defaults to 2 hours (7200000 milliseconds). 
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `requestTimeoutMillis` a| The request timeout in milliseconds. Must be non-negative. a| `long`
+|===
+
+[caption=""]
+.Returns
+`public DriverOptions`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+options.requestTimeoutMillis(30000); // 30 seconds
+----
+
+[#_DriverOptions_tlsConfig_]
+==== method ``tlsConfig``
+
+[source,java]
+----
+@CheckReturnValue
+public DriverTlsConfig tlsConfig()
+----
+
+Returns the TLS configuration associated with this ``DriverOptions``. Specifies the TLS configuration of the connection to TypeDB. 
+
+
+[caption=""]
+.Returns
+`public DriverTlsConfig`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+options.tlsConfig();
+----
+
+[#_DriverOptions_tlsConfig_DriverTlsConfig]
+==== method ``tlsConfig``
+
+[source,java]
+----
+public DriverOptions tlsConfig​(DriverTlsConfig tlsConfig)
+----
+
+Overrides the TLS configuration associated with this ``DriverOptions``. WARNING: Disabled TLS settings will make the driver sending passwords as plaintext. 
+
+
+[caption=""]
+.Returns
+`public DriverOptions`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+options.tlsConfig(DriverTlsConfig.enabledWithNativeRootCA());
+----
 
 // end::methods[]
 

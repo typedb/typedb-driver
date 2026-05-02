@@ -78,7 +78,7 @@ public class DatabaseSteps {
 
     @When("connection create database: {non_semicolon}{may_error}")
     public void connection_create_database(String name, Parameters.MayError mayError) {
-        mayError.check(() -> createDatabases(driver, list(name)));
+        mayError.check(() -> driver.databases().create(name));
     }
 
     @When("connection create database with empty name{may_error}")
@@ -109,7 +109,7 @@ public class DatabaseSteps {
 
     @When("connection delete database: {word}{may_error}")
     public void connection_delete_database(String name, Parameters.MayError mayError) {
-        mayError.check(() -> deleteDatabases(driver, list(name)));
+        mayError.check(() -> driver.databases().get(name).delete());
     }
 
     @When("connection delete database(s):")
@@ -135,12 +135,14 @@ public class DatabaseSteps {
 
     @When("connection has database: {word}")
     public void connection_has_database(String name) {
-        connection_has_databases(list(name));
+        Parameters.ContainsOrDoesnt.DOES.check(driver.databases().contains(name));
     }
 
     @Then("connection has database(s):")
     public void connection_has_databases(List<String> names) {
-        assertTrue(names.stream().allMatch(name -> driver.databases().contains(name)));
+        for (String name : names) {
+            Parameters.ContainsOrDoesnt.DOES.check(driver.databases().contains(name));
+        }
     }
 
     @Then("connection does not have database: {word}")
@@ -150,9 +152,8 @@ public class DatabaseSteps {
 
     @Then("connection does not have database(s):")
     public void connection_does_not_have_databases(List<String> names) {
-        Set<String> databases = driver.databases().all().stream().map(Database::name).collect(Collectors.toSet());
         for (String databaseName : names) {
-            assertFalse(databases.contains(databaseName));
+            Parameters.ContainsOrDoesnt.DOES_NOT.check(driver.databases().contains(databaseName));
         }
     }
 

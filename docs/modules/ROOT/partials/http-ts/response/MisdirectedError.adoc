@@ -1,0 +1,19 @@
+[#_MisdirectedError]
+[.doc-api-reference-driver]
+=== MisdirectedError
+
+`class`
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `code` a| `string` a| 
+a| `message` a| `string` a| 
+a| `primaryAddress` a| `string` a| 
+|===
+// end::properties[]
+

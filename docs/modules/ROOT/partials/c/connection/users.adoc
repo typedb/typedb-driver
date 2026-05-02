@@ -13,6 +13,16 @@ struct UserIterator* users_all(const struct TypeDBDriver* driver)
 
 Retrieves all users which exist on the TypeDB server.
 
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `driver` a| The ``TypeDBDriver`` object. a| `const struct TypeDBDriver*`
+|===
+
 [caption=""]
 .Returns
 `struct UserIterator*`
@@ -28,6 +38,17 @@ bool users_contains(const struct TypeDBDriver* driver, const char* username)
 
 
 Checks if a user with the given name exists.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `driver` a| The ``TypeDBDriver`` object. a| `const struct TypeDBDriver*`
+a| `username` a| The username of the user. a| `const char*`
+|===
 
 [caption=""]
 .Returns
@@ -45,6 +66,17 @@ void users_create(const struct TypeDBDriver* driver, const char* username, const
 
 Creates a user with the given name &amp; password.
 
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `username` a| The username of the created user. a| `const char*`
+a| `password` a| The password of the created user. a| `const char*`
+|===
+
 [caption=""]
 .Returns
 `void`
@@ -61,21 +93,42 @@ struct User* users_get(const struct TypeDBDriver* driver, const char* username)
 
 Retrieves a user with the given name.
 
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `driver` a| The ``TypeDBDriver`` object. a| `const struct TypeDBDriver*`
+a| `username` a| The username of the user. a| `const char*`
+|===
+
 [caption=""]
 .Returns
 `struct User*`
 
-[#_users_get_current_user]
-==== function ``users_get_current_user``
+[#_users_get_current]
+==== function ``users_get_current``
 
 [source,c]
 ----
-struct User* users_get_current_user(const struct TypeDBDriver* driver)
+struct User* users_get_current(const struct TypeDBDriver* driver)
 ----
 
 
 
-Retrieves the username of the user who opened this connection
+Retrieves the username of the user who opened this connection.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `driver` a| The ``TypeDBDriver`` object. a| `const struct TypeDBDriver*`
+|===
 
 [caption=""]
 .Returns

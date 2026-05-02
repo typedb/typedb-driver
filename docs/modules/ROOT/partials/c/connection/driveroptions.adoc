@@ -9,5 +9,134 @@
 
 
 
-User connection settings for connecting to TypeDB.
+TypeDB driver connection options. ``DriverOptions`` object can be used to override the default driver behavior while connecting to TypeDB.
+
+
+[#_driver_options_drop]
+==== function ``driver_options_drop``
+
+[source,c]
+----
+void driver_options_drop(struct DriverOptions* driver_options)
+----
+
+
+
+Frees the native rust ``DriverOptions`` object.
+
+[caption=""]
+.Returns
+`void`
+
+[#_driver_options_get_primary_failover_retries]
+==== function ``driver_options_get_primary_failover_retries``
+
+[source,c]
+----
+int64_t driver_options_get_primary_failover_retries(const struct DriverOptions* options)
+----
+
+
+
+Returns the value set for the primary failover retries limit in this ``DriverOptions`` object. Sets the number of times the driver retries finding and re-routing to the primary replica on connection failures. This value is used both for polling during leader election (up to N+1 attempts with a 2-second sleep between each) and for re-executing a failed request on a newly discovered primary.
+
+[caption=""]
+.Returns
+`int64_t`
+
+[#_driver_options_get_request_timeout_millis]
+==== function ``driver_options_get_request_timeout_millis``
+
+[source,c]
+----
+int64_t driver_options_get_request_timeout_millis(const struct DriverOptions* options)
+----
+
+
+
+Returns the request timeout in milliseconds set for this ``DriverOptions`` object. Specifies the maximum time to wait for a response to a unary RPC request. This applies to operations like database creation, user management, and initial transaction opening. It does NOT apply to operations within transactions (queries, commits).
+
+[caption=""]
+.Returns
+`int64_t`
+
+[#_driver_options_get_tls_config]
+==== function ``driver_options_get_tls_config``
+
+[source,c]
+----
+struct DriverTlsConfig* driver_options_get_tls_config(const struct DriverOptions* options)
+----
+
+
+
+Returns the TLS Config set for this ``DriverOptions`` object. Specifies the TLS configuration of the connection to TypeDB.
+
+[caption=""]
+.Returns
+`struct DriverTlsConfig*`
+
+[#_driver_options_new]
+==== function ``driver_options_new``
+
+[source,c]
+----
+struct DriverOptions* driver_options_new(const struct DriverTlsConfig* tls_config)
+----
+
+
+
+Creates a new ``DriverOptions`` for connecting to TypeDB Server using custom TLS settings. WARNING: Disabled TLS settings will make the driver sending passwords as plaintext.
+
+[caption=""]
+.Returns
+`struct DriverOptions*`
+
+[#_driver_options_set_primary_failover_retries]
+==== function ``driver_options_set_primary_failover_retries``
+
+[source,c]
+----
+void driver_options_set_primary_failover_retries(struct DriverOptions* options, int64_t primary_failover_retries)
+----
+
+
+
+Sets the number of times the driver retries finding and re-routing to the primary replica on connection failures. This value is used both for polling during leader election (up to N+1 attempts with a 2-second sleep between each) and for re-executing a failed request on a newly discovered primary. Defaults to 1.
+
+[caption=""]
+.Returns
+`void`
+
+[#_driver_options_set_request_timeout_millis]
+==== function ``driver_options_set_request_timeout_millis``
+
+[source,c]
+----
+void driver_options_set_request_timeout_millis(struct DriverOptions* options, int64_t timeout_millis)
+----
+
+
+
+Sets the maximum time (in milliseconds) to wait for a response to a unary RPC request. This applies to operations like database creation, user management, and initial transaction opening. It does NOT apply to operations within transactions (queries, commits). Set to 0 to disable the timeout (not recommended for production use). Defaults to 2 hours (7200000 milliseconds).
+
+[caption=""]
+.Returns
+`void`
+
+[#_driver_options_set_tls_config]
+==== function ``driver_options_set_tls_config``
+
+[source,c]
+----
+void driver_options_set_tls_config(struct DriverOptions* options, const struct DriverTlsConfig* tls_config)
+----
+
+
+
+Overrides the TLS configuration on ``DriverOptions``. WARNING: Disabled TLS settings will make the driver sending passwords as plaintext.
+
+[caption=""]
+.Returns
+`void`
 

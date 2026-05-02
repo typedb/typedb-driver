@@ -29,25 +29,14 @@ import static com.typedb.driver.jni.typedb_driver.user_get_name;
 import static com.typedb.driver.jni.typedb_driver.user_update_password;
 
 public class UserImpl extends NativeObject<com.typedb.driver.jni.User> implements User {
-    private final UserManagerImpl users;
-
-    UserImpl(com.typedb.driver.jni.User user, UserManagerImpl users) {
+    UserImpl(com.typedb.driver.jni.User user) {
         super(user);
-        this.users = users;
     }
 
     @Override
     public String name() {
         return user_get_name(nativeObject);
     }
-
-// TODO: Not implemented
-//    @Override
-//    public Optional<Long> passwordExpirySeconds() {
-//        var res = user_get_password_expiry_seconds(nativeObject);
-//        if (res >= 0) return Optional.of(res);
-//        else return Optional.empty();
-//    }
 
     @Override
     public void updatePassword(String password) {
@@ -67,5 +56,4 @@ public class UserImpl extends NativeObject<com.typedb.driver.jni.User> implement
             throw new TypeDBDriverException(e);
         }
     }
-
 }

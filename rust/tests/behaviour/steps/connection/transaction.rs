@@ -53,7 +53,7 @@ pub async fn connection_open_transaction_for_database(
                 context.driver.as_ref().unwrap(),
                 &database_name,
                 type_.transaction_type,
-                context.transaction_options,
+                context.transaction_options(),
             )
             .await,
         ),
@@ -71,7 +71,7 @@ async fn connection_open_transactions_for_database(context: &mut Context, databa
                     context.driver.as_ref().unwrap(),
                     &database_name,
                     transaction_type,
-                    context.transaction_options,
+                    context.transaction_options(),
                 )
                 .await,
             )
@@ -88,7 +88,7 @@ pub async fn connection_open_transactions_in_parallel(context: &mut Context, dat
             context.driver.as_ref().unwrap(),
             &database_name,
             transaction_type,
-            context.transaction_options,
+            context.transaction_options(),
         )
     }))
     .await
@@ -113,7 +113,7 @@ pub async fn in_background_connection_open_transaction_for_database(
                     background,
                     &database_name,
                     type_.transaction_type,
-                    context.transaction_options,
+                    context.transaction_options(),
                 )
                 .await,
             ),
@@ -167,12 +167,12 @@ pub async fn transaction_rollbacks(context: &mut Context, may_error: params::May
 #[step(expr = "set transaction option transaction_timeout_millis to: {int}")]
 pub async fn set_transaction_option_transaction_timeout_millis(context: &mut Context, value: u64) {
     context.init_transaction_options_if_needed();
-    context.transaction_options.as_mut().unwrap().transaction_timeout = Some(Duration::from_millis(value));
+    context.transaction_options_mut().unwrap().transaction_timeout = Some(Duration::from_millis(value));
 }
 
 #[apply(generic_step)]
 #[step(expr = "set transaction option schema_lock_acquire_timeout_millis to: {int}")]
 pub async fn set_transaction_option_schema_lock_acquire_timeout_millis(context: &mut Context, value: u64) {
     context.init_transaction_options_if_needed();
-    context.transaction_options.as_mut().unwrap().schema_lock_acquire_timeout = Some(Duration::from_millis(value));
+    context.transaction_options_mut().unwrap().schema_lock_acquire_timeout = Some(Duration::from_millis(value));
 }

@@ -1,0 +1,88 @@
+[#_Server]
+[.doc-api-reference-driver]
+=== Server
+
+`class`
+
+*Package*: `com.typedb.driver.api.server`
+
+The metadata and state of an individual server of a driver connection.
+
+// tag::methods[]
+[#_Server_getAddress_]
+==== method ``getAddress``
+
+[source,java]
+----
+@CheckReturnValue
+java.lang.String getAddress()
+----
+
+Returns the address this server is hosted at.
+
+[caption=""]
+.Returns
+`java.lang.String`
+
+[#_Server_getID_]
+==== method ``getID``
+
+[source,java]
+----
+@CheckReturnValue
+long getID()
+----
+
+Returns the id of this server.
+
+[caption=""]
+.Returns
+`long`
+
+[#_Server_getRole_]
+==== method ``getRole``
+
+[source,java]
+----
+@CheckReturnValue
+java.util.Optional<ReplicationRole> getRole()
+----
+
+Returns whether this is the primary server of the cluster or any of the supporting roles.
+
+[caption=""]
+.Returns
+`java.util.Optional<ReplicationRole>`
+
+[#_Server_getTerm_]
+==== method ``getTerm``
+
+[source,java]
+----
+@CheckReturnValue
+java.util.Optional<java.lang.Long> getTerm()
+----
+
+Returns the cluster protocol 'term' of this server.
+
+[caption=""]
+.Returns
+`java.util.Optional<java.lang.Long>`
+
+[#_Server_isPrimary_]
+==== method ``isPrimary``
+
+[source,java]
+----
+@CheckReturnValue
+java.lang.Boolean isPrimary()
+----
+
+Checks whether this is the primary server of the cluster.
+
+[caption=""]
+.Returns
+`java.lang.Boolean`
+
+// end::methods[]
+

@@ -6,12 +6,28 @@
 
 *Package*: `typedb.api.connection.driver_options`
 
-User credentials and TLS encryption settings for connecting to TypeDB Server. Arguments: 1) is_tls_enabled: Specify whether the connection to TypeDB must be done over TLS. 2) tls_root_ca_path: Path to the CA certificate to use for authenticating server certificates.
+TypeDB driver options. ``DriverOptions`` are used to specify the driver’s connection behavior.
+
+Options could be specified either as constructor arguments or using properties assignment.
 
 [caption=""]
 .Examples
 [source,python]
 ----
-driver_options = DriverOptions(is_tls_enabled=True, tls_root_ca_path="path/to/ca-certificate.pem")
+options = DriverOptions(DriverTlsConfig.enabled_with_native_root_ca(), request_timeout_millis=6000)
+options.request_timeout_millis = 6000
 ----
+
+[caption=""]
+.Properties
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `primary_failover_retries` a| `int` a| Returns the value set for the primary failover retries limit in this ``DriverOptions`` object. Sets the number of times the driver retries finding and re-routing to the primary server on connection failures. This value is used both for polling during leader election (up to N+1 attempts with a 2-second sleep between each) and for re-executing a failed request on a newly discovered primary. Defaults to 1.
+a| `request_timeout_millis` a| `int` a| Returns the request timeout in milliseconds set for this ``DriverOptions`` object. Specifies the maximum time to wait for a response to a unary RPC request. This applies to operations like database creation, user management, and initial transaction opening. It does NOT apply to operations within transactions (queries, commits).
+a| `tls_config` a| `DriverTlsConfig` a| Returns the TLS configuration associated with this ``DriverOptions``. Specifies the TLS configuration of the connection to TypeDB.
+|===
+// end::properties[]
 

@@ -5,6 +5,30 @@
 `class`
 
 // tag::methods[]
+[#_driverError_driverError_code_string_message_string]
+==== method ``driverError``
+
+[source,typescript]
+----
+driverError(code: string, message: string): ApiErrorResponse
+----
+
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `code` a|  a| `string`
+a| `message` a|  a| `string`
+|===
+
+[caption=""]
+.Returns
+`ApiErrorResponse`
+
 [#_isApiError_isApiError_err_any]
 ==== method ``isApiError``
 
@@ -50,6 +74,29 @@ a| `res` a|  a| `ApiResponse`
 [caption=""]
 .Returns
 `res is ApiErrorResponse`
+
+[#_isMisdirectedError_isMisdirectedError_err_any]
+==== method ``isMisdirectedError``
+
+[source,typescript]
+----
+isMisdirectedError(err: any): err is MisdirectedError
+----
+
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `err` a|  a| `any`
+|===
+
+[caption=""]
+.Returns
+`err is MisdirectedError`
 
 [#_isOkResponse_isOkResponse_res_ApiResponse]
 ==== method ``isOkResponse``

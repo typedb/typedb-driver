@@ -1,0 +1,18 @@
+[#_Server]
+[.doc-api-reference-driver]
+=== Server
+
+`class`
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `address` a| `string` a| 
+a| `replicationStatus` a| `ReplicationStatus` a| 
+|===
+// end::properties[]
+

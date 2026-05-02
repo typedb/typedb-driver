@@ -49,6 +49,7 @@ namespace TypeDB.Driver.Connection
         /// <inheritdoc/>
         public IDatabase Get(string name)
         {
+            Validator.RequireNonNull(name, nameof(name));
             try
             {
                 return new Database(Pinvoke.typedb_driver.databases_get(_nativeDriver, name));
@@ -62,6 +63,7 @@ namespace TypeDB.Driver.Connection
         /// <inheritdoc/>
         public bool Contains(string name)
         {
+            Validator.RequireNonNull(name, nameof(name));
             try
             {
                 return Pinvoke.typedb_driver.databases_contains(_nativeDriver, name);
@@ -75,6 +77,7 @@ namespace TypeDB.Driver.Connection
         /// <inheritdoc/>
         public void Create(string name)
         {
+            Validator.RequireNonNull(name, nameof(name));
             try
             {
                 Pinvoke.typedb_driver.databases_create(_nativeDriver, name);
@@ -104,6 +107,9 @@ namespace TypeDB.Driver.Connection
         /// <inheritdoc/>
         public void ImportFromFile(string name, string schema, string dataFile)
         {
+            Validator.RequireNonNull(name, nameof(name));
+            Validator.RequireNonNull(schema, nameof(schema));
+            Validator.RequireNonNull(dataFile, nameof(dataFile));
             try
             {
                 Pinvoke.typedb_driver.databases_import_from_file(_nativeDriver, name, schema, dataFile);

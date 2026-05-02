@@ -32,8 +32,9 @@ use crate::{
         concept_document::{ConceptDocumentHeader, Node},
         concept_row::ConceptRowHeader,
     },
-    common::{RequestID, address::Address, info::DatabaseInfo},
+    common::{RequestID, info::DatabaseInfo},
     concept::Concept,
+    connection::server::{Server, server_version::ServerVersion},
     error::ServerError,
     info::UserInfo,
 };
@@ -43,6 +44,8 @@ pub(super) enum Request {
     ConnectionOpen { driver_lang: String, driver_version: String, credentials: Credentials },
 
     ServersAll,
+    ServersGet,
+    ServerVersion,
 
     DatabasesAll,
     DatabaseGet { database_name: String },
@@ -70,11 +73,17 @@ pub(super) enum Response {
     ConnectionOpen {
         connection_id: Uuid,
         server_duration_millis: u64,
-        databases: Vec<DatabaseInfo>,
+        servers: Vec<Server>,
     },
 
     ServersAll {
-        servers: Vec<Address>,
+        servers: Vec<Server>,
+    },
+    ServersGet {
+        server: Server,
+    },
+    ServerVersion {
+        server_version: ServerVersion,
     },
 
     DatabasesContains {

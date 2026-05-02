@@ -5,6 +5,52 @@
 `class`
 
 // tag::methods[]
+[#_allOrigins_allOrigins_params_DriverParams]
+==== method ``allOrigins``
+
+[source,typescript]
+----
+allOrigins(params: DriverParams): string[]
+----
+
+Return all configured origins for connection error fallback.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `params` a|  a| `DriverParams`
+|===
+
+[caption=""]
+.Returns
+`string[]`
+
+[#_hostPortFromOrigin_hostPortFromOrigin_origin_string]
+==== method ``hostPortFromOrigin``
+
+[source,typescript]
+----
+hostPortFromOrigin(origin: string): string
+----
+
+Extract host:port from a URL string. "https://127.0.0.1:18000" → "127.0.0.1:18000"
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `origin` a|  a| `string`
+|===
+
+[caption=""]
+.Returns
+`string`
+
 [#_isBasicParams_isBasicParams_params_DriverParams]
 ==== method ``isBasicParams``
 
@@ -68,6 +114,30 @@ remoteOrigin(params: DriverParams): string
 |===
 |Name |Description |Type
 a| `params` a|  a| `DriverParams`
+|===
+
+[caption=""]
+.Returns
+`string`
+
+[#_resolveOrigin_resolveOrigin_params_DriverParams_primaryAddress_string]
+==== method ``resolveOrigin``
+
+[source,typescript]
+----
+resolveOrigin(params: DriverParams, primaryAddress: string): string
+----
+
+Resolve a bare primaryAddress (host:port) to a full URL using configured params.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `params` a|  a| `DriverParams`
+a| `primaryAddress` a|  a| `string`
 |===
 
 [caption=""]

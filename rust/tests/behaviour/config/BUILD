@@ -24,13 +24,13 @@ load("//rust/tests/behaviour:defs.bzl", "crate_features_common")
 
 string_flag(
     name = "mode",
-    build_setting_default = "community",
+    build_setting_default = "core",
 )
 
 config_setting(
-    name = "community",
+    name = "core",
     flag_values = {
-        ":mode": "community",
+        ":mode": "core",
     },
 )
 
@@ -45,7 +45,7 @@ rust_library(
     name = "config",
     srcs = [":lib.rs"],
     crate_features = select({
-        ":community": crate_features_common,
+        ":core": crate_features_common,
         ":cluster": crate_features_common + ["cluster"],
     }),
 )

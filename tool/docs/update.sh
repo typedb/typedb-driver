@@ -24,4 +24,5 @@ bazel run //http-ts:docs_adoc
 #bazel run //nodejs:docs_adoc
 bazel run --action_env=PATH=$PATH //c:docs_adoc
 #bazel run //cpp:docs_adoc
-bazel run --action_env=PATH=$PATH //csharp:docs_adoc
+# TODO: Uncomment csharp when the build is fixed
+#bazel run --action_env=PATH=$PATH //csharp:docs_adoc

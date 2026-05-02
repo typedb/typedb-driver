@@ -1,6 +1,16 @@
 [#_methods_connection_user]
 === user
 
+[#_Struct_User]
+[.doc-api-reference-driver]
+==== Struct User
+
+`rust struct (pointer)`
+
+
+
+A TypeDB server user, identified by a username.
+
 [#_user_delete]
 ==== function ``user_delete``
 
@@ -11,7 +21,17 @@ void user_delete(struct User* user)
 
 
 
-Deletes this database.
+Deletes this user.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `user` a| The ``User`` to delete. a| `struct User*`
+|===
 
 [caption=""]
 .Returns
@@ -69,9 +89,7 @@ Updates the password for the current authenticated user.
 |===
 |Name |Description |Type
 a| `user` a| The user to update the password of - must be the current user. a| `struct User*`
-a| `user_manager` a| The ``UserManager`` object on this connection. a| 
-a| `password_old` a| The current password of this user a| 
-a| `password_new` a| The new password a| 
+a| `password` a| The new password. a| `const char*`
 |===
 
 [caption=""]

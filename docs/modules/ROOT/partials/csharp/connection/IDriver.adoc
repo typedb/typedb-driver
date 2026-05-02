@@ -6,10 +6,6 @@
 
 *Package*: `TypeDB.Driver.Api`
 
-
-
-A connection to a TypeDB server which serves as the starting point for all interaction.
-
 // tag::methods[]
 [#_void_TypeDB_Driver_Api_IDriver_Close_]
 ==== method ``Close``
@@ -44,7 +40,7 @@ IDatabaseManager TypeDB.Driver.Api.IDriver.Databases
 
 
 
-The IDatabaseManager for this connection, providing access to database management methods.
+The ``IDatabaseManager`` for this connection, providing access to database management methods.
 
 [caption=""]
 .Returns
@@ -54,7 +50,139 @@ The IDatabaseManager for this connection, providing access to database managemen
 .Code examples
 [source,cs]
 ----
-driver.Databases
+driver.Databases;
+----
+
+[#_void_TypeDB_Driver_Api_IDriver_DeregisterServer_long_serverId_]
+==== method ``DeregisterServer``
+
+[source,cs]
+----
+void DeregisterServer(long serverId)
+----
+
+
+
+Deregisters a server from the cluster the driver is currently connected to. This server will no longer play a role in this cluster.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `serverId` a| The numeric identifier of the deregistered server. a| `long`
+|===
+
+[caption=""]
+.Returns
+`void`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+driver.DeregisterServer(2);
+----
+
+[#_IServer_TypeDB_Driver_Api_IDriver_GetPrimaryServer_ServerRouting_serverRouting_null_]
+==== method ``GetPrimaryServer``
+
+[source,cs]
+----
+IServer? GetPrimaryServer(ServerRouting? serverRouting = null)
+----
+
+
+
+Returns the primary server for this driver connection.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `serverRouting` a| The server routing to use for the operation. a| 
+|===
+
+[caption=""]
+.Returns
+`IServer?`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+driver.GetPrimaryServer(new ServerRouting.Auto()); TypeDB.Driver.Api.ServerRouting.Auto Automatic server routing. Driver automatically selects the server (primary in clusters). Definition ServerRouting.cs:47 TypeDB.Driver.Api.ServerRouting Server routing directive for operations against a distributed server. All driver methods have default... Definition ServerRouting.cs:28
+----
+
+[#_ServerVersion_TypeDB_Driver_Api_IDriver_GetServerVersion_ServerRouting_serverRouting_null_]
+==== method ``GetServerVersion``
+
+[source,cs]
+----
+ServerVersion GetServerVersion(ServerRouting? serverRouting = null)
+----
+
+
+
+Retrieves the server's version.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `serverRouting` a| The server routing to use for the operation. a| 
+|===
+
+[caption=""]
+.Returns
+`ServerVersion`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+driver.GetServerVersion();
+----
+
+[#_ISet_IServer_TypeDB_Driver_Api_IDriver_GetServers_ServerRouting_serverRouting_null_]
+==== method ``GetServers``
+
+[source,cs]
+----
+ISet< IServer > GetServers(ServerRouting? serverRouting = null)
+----
+
+
+
+Set of servers for this driver connection.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `serverRouting` a| The server routing to use for the operation. a| 
+|===
+
+[caption=""]
+.Returns
+`ISet< IServer >`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+driver.GetServers(new ServerRouting.Auto());
 ----
 
 [#_bool_TypeDB_Driver_Api_IDriver_IsOpen_]
@@ -80,6 +208,40 @@ Checks whether this connection is presently open.
 driver.IsOpen();
 ----
 
+[#_void_TypeDB_Driver_Api_IDriver_RegisterServer_long_serverId_string_address_]
+==== method ``RegisterServer``
+
+[source,cs]
+----
+void RegisterServer(long serverId, string address)
+----
+
+
+
+Registers a new server in the cluster the driver is currently connected to. The registered server will become available eventually, depending on the behavior of the whole cluster. To register a server, its clustering address should be passed, not the connection address.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `serverId` a| The numeric identifier of the new server. a| `long`
+a| `address` a| The address(es) of the TypeDB server as a string. a| `string`
+|===
+
+[caption=""]
+.Returns
+`void`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+driver.RegisterServer(2, "127.0.0.1:11729");
+----
+
 [#_ITransaction_TypeDB_Driver_Api_IDriver_Transaction_string_database_TransactionType_type_]
 ==== method ``Transaction``
 
@@ -90,7 +252,7 @@ ITransaction Transaction(string database, TransactionType type)
 
 
 
-Opens a transaction to perform read or write queries on the database.
+Opens a transaction to the given database on the running TypeDB server.
 
 
 [caption=""]
@@ -99,8 +261,8 @@ Opens a transaction to perform read or write queries on the database.
 [options="header"]
 |===
 |Name |Description |Type
-a| `database` a| The name of the database to open a transaction for. a| `string`
-a| `type` a| The type of transaction to be created (Read, Write, or Schema). a| `TransactionType`
+a| `database` a| The name of the database with which the transaction connects. a| `string`
+a| `type` a| The type of transaction to be created (READ, WRITE, or SCHEMA). a| `TransactionType`
 |===
 
 [caption=""]
@@ -124,7 +286,7 @@ ITransaction Transaction(string database, TransactionType type, TransactionOptio
 
 
 
-Opens a transaction to perform read or write queries on the database with custom options.
+Opens a transaction to the given database on the running TypeDB server.
 
 
 [caption=""]
@@ -133,9 +295,9 @@ Opens a transaction to perform read or write queries on the database with custom
 [options="header"]
 |===
 |Name |Description |Type
-a| `database` a| The name of the database to open a transaction for. a| `string`
-a| `type` a| The type of transaction to be created (Read, Write, or Schema). a| `TransactionType`
-a| `options` a| Transaction options to configure the opened transaction. a| `TransactionOptions`
+a| `database` a| The name of the database with which the transaction connects. a| `string`
+a| `type` a| The type of transaction to be created (READ, WRITE, or SCHEMA). a| `TransactionType`
+a| `options` a| ``TransactionOptions`` to configure the opened transaction. a| `TransactionOptions`
 |===
 
 [caption=""]
@@ -159,7 +321,7 @@ IUserManager TypeDB.Driver.Api.IDriver.Users
 
 
 
-The IUserManager instance for this connection, providing access to user management methods.
+The ``IUserManager`` for this connection, providing access to user management methods.
 
 [caption=""]
 .Returns
@@ -169,7 +331,7 @@ The IUserManager instance for this connection, providing access to user manageme
 .Code examples
 [source,cs]
 ----
-driver.Users
+driver.Users;
 ----
 
 // end::methods[]

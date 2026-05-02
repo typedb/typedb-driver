@@ -23,6 +23,6 @@ extern const char* TYPEDB_CORE_PASSWORD;
 
 bool check_error_may_print(const char* filename, int lineno);
 
-TypeDBDriver* driver_open_for_tests(const char* address, const char* username, const char* password);
+TypeDBDriver* driver_new_for_tests(const char* address, const char* username, const char* password);
 
 void delete_database_if_exists(TypeDBDriver* driver, const char* name);

@@ -19,35 +19,135 @@
 
 package com.typedb.driver.api;
 
+import com.typedb.driver.api.DriverTlsConfig;
 import com.typedb.driver.common.NativeObject;
-import com.typedb.driver.common.exception.TypeDBDriverException;
+import com.typedb.driver.common.Validator;
 
-import javax.annotation.Nullable;
+import javax.annotation.CheckReturnValue;
 
+import static com.typedb.driver.jni.typedb_driver.driver_options_get_tls_config;
+import static com.typedb.driver.jni.typedb_driver.driver_options_get_primary_failover_retries;
+import static com.typedb.driver.jni.typedb_driver.driver_options_get_request_timeout_millis;
 import static com.typedb.driver.jni.typedb_driver.driver_options_new;
+import static com.typedb.driver.jni.typedb_driver.driver_options_set_tls_config;
+import static com.typedb.driver.jni.typedb_driver.driver_options_set_primary_failover_retries;
+import static com.typedb.driver.jni.typedb_driver.driver_options_set_request_timeout_millis;
 
 /**
- * User connection settings (TLS encryption, etc.) for connecting to TypeDB Server.
- *
- * <h3>Examples</h3>
- * <pre>
- * DriverOptions driverOptions = new DriverOptions(true, Path.of("path/to/ca-certificate.pem"));
- * </pre>
+ * TypeDB driver options. <code>DriverOptions</code> are used to specify the driver's connection behavior.
  */
 public class DriverOptions extends NativeObject<com.typedb.driver.jni.DriverOptions> {
     /**
-     * @param isTlsEnabled  Specify whether the connection to TypeDB Server must be done over TLS.
-     * @param tlsRootCAPath Path to the CA certificate to use for authenticating server certificates.
+     * Produces a new <code>DriverOptions</code> object for connecting to TypeDB Server using custom TLS settings.
+     * WARNING: Disabled TLS settings will make the driver sending passwords as plaintext.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * DriverOptions options = new DriverOptions(DriverTlsConfig.enabledWithNativeRootCA());
+     * </pre>
      */
-    public DriverOptions(boolean isTlsEnabled, String tlsRootCAPath) { // TODO: Maybe Optional<String>? Optional.of(Path.of(..))?..
-        super(newNative(isTlsEnabled, tlsRootCAPath));
+    public DriverOptions(DriverTlsConfig tlsConfig) {
+        super(driver_options_new(tlsConfig.nativeObject));
     }
 
-    private static com.typedb.driver.jni.DriverOptions newNative(boolean isTlsEnabled, @Nullable String tlsRootCAPath) {
-        try {
-            return driver_options_new(isTlsEnabled, tlsRootCAPath);
-        } catch (com.typedb.driver.jni.Error error) {
-            throw new TypeDBDriverException(error);
-        }
+    /**
+     * Returns the TLS configuration associated with this <code>DriverOptions</code>.
+     * Specifies the TLS configuration of the connection to TypeDB.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * options.tlsConfig();
+     * </pre>
+     */
+    @CheckReturnValue
+    public DriverTlsConfig tlsConfig() {
+        return new DriverTlsConfig(driver_options_get_tls_config(nativeObject));
     }
+
+    /**
+     * Overrides the TLS configuration associated with this {@code DriverOptions}.
+     * WARNING: Disabled TLS settings will make the driver sending passwords as plaintext.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * options.tlsConfig(DriverTlsConfig.enabledWithNativeRootCA());
+     * </pre>
+     */
+    public DriverOptions tlsConfig(DriverTlsConfig tlsConfig) {
+        Validator.requireNonNull(tlsConfig, "tlsConfig");
+        driver_options_set_tls_config(nativeObject, tlsConfig.nativeObject);
+        return this;
+    }
+
+    /**
+     * Returns the request timeout in milliseconds set for this ``DriverOptions`` object.
+     * Specifies the maximum time to wait for a response to a unary RPC request.
+     * This applies to operations like database creation, user management, and initial
+     * transaction opening. It does NOT apply to operations within transactions (queries, commits).
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * options.requestTimeoutMillis();
+     * </pre>
+     */
+    @CheckReturnValue
+    public Long requestTimeoutMillis() {
+        return driver_options_get_request_timeout_millis(nativeObject);
+    }
+
+    /**
+     * Sets the maximum time (in milliseconds) to wait for a response to a unary RPC request.
+     * This applies to operations like database creation, user management, and initial
+     * transaction opening. It does NOT apply to operations within transactions (queries, commits).
+     * Defaults to 2 hours (7200000 milliseconds).
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * options.requestTimeoutMillis(30000); // 30 seconds
+     * </pre>
+     *
+     * @param requestTimeoutMillis The request timeout in milliseconds. Must be non-negative.
+     */
+    public DriverOptions requestTimeoutMillis(long requestTimeoutMillis) {
+        Validator.requireNonNegative(requestTimeoutMillis, "requestTimeoutMillis");
+        driver_options_set_request_timeout_millis(nativeObject, requestTimeoutMillis);
+        return this;
+    }
+
+    /**
+     * Returns the value set for the primary failover retries limit in this <code>DriverOptions</code> object.
+     * Sets the number of times the driver retries finding and re-routing to the primary server
+     * on connection failures. This value is used both for polling during leader election (up to
+     * N+1 attempts with a 2-second sleep between each) and for re-executing a failed request on
+     * a newly discovered primary.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * options.primaryFailoverRetries();
+     * </pre>
+     */
+    @CheckReturnValue
+    public Integer primaryFailoverRetries() {
+        return (int) driver_options_get_primary_failover_retries(nativeObject);
+    }
+
+    /**
+     * Sets the number of times the driver retries finding and re-routing to the primary server
+     * on connection failures. This value is used both for polling during leader election (up to
+     * N+1 attempts with a 2-second sleep between each) and for re-executing a failed request on
+     * a newly discovered primary. Defaults to 1.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * options.primaryFailoverRetries(1);
+     * </pre>
+     *
+     * @param primaryFailoverRetries The limit of primary failover retries.
+     */
+    public DriverOptions primaryFailoverRetries(int primaryFailoverRetries) {
+        Validator.requireNonNegative(primaryFailoverRetries, "primaryFailoverRetries");
+        driver_options_set_primary_failover_retries(nativeObject, primaryFailoverRetries);
+        return this;
+    }
+
 }

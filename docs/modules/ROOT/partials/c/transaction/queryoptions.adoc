@@ -150,7 +150,7 @@ void query_options_set_include_instance_types(struct QueryOptions* options, bool
 
 
 
-Explicitly set the "include instance types" flag. If set, specifies if types should be included in instance structs returned in ConceptRow answers. This option allows reducing the amount of unnecessary data transmitted.
+Explicitly sets the "include instance types" flag. If set, specifies if types should be included in instance structs returned in ConceptRow answers. This option allows reducing the amount of unnecessary data transmitted.
 
 [caption=""]
 .Returns
@@ -182,7 +182,7 @@ void query_options_set_prefetch_size(struct QueryOptions* options, int64_t prefe
 
 
 
-Explicitly set the prefetch size. If set, specifies the number of extra query responses sent before the client side has to re-request more responses. Increasing this may increase performance for queries with a huge number of answers, as it can reduce the number of network round-trips at the cost of more resources on the server side. Minimal value: 1.
+Explicitly sets the prefetch size. If set, specifies the number of extra query responses sent before the client side has to re-request more responses. Increasing this may increase performance for queries with a huge number of answers, as it can reduce the number of network round-trips at the cost of more resources on the server side. Minimal value: 1.
 
 [caption=""]
 .Returns

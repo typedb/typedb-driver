@@ -30,7 +30,7 @@ a| `LANGUAGE` a| `static java.lang.String` a|
 void close()
 ----
 
-Closes the driver. Before instantiating a new driver, the driver that’s currently open should first be closed. 
+Closes the driver. Before instantiating a new driver, the driver that's currently open should first be closed. 
 
 
 [caption=""]
@@ -41,7 +41,7 @@ Closes the driver. Before instantiating a new driver, the driver that’s curren
 .Code examples
 [source,java]
 ----
-driver.close()
+driver.close();
 ----
 
 [#_Driver_databases_]
@@ -53,11 +53,19 @@ driver.close()
 DatabaseManager databases()
 ----
 
-The ``DatabaseManager`` for this connection, providing access to database management methods.
+The ``DatabaseManager`` for this connection, providing access to database management methods. 
+
 
 [caption=""]
 .Returns
 `DatabaseManager`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+driver.databases();
+----
 
 [#_Driver_isOpen_]
 ==== method ``isOpen``
@@ -82,6 +90,171 @@ Checks whether this connection is presently open.
 driver.isOpen();
 ----
 
+[#_Driver_primaryServer_]
+==== method ``primaryServer``
+
+[source,java]
+----
+@CheckReturnValue
+default java.util.Optional<? extends Server> primaryServer()
+----
+
+Returns the primary server for this driver connection, using default automatic routing. See <<#_primaryServer_com_typedb_driver_api_ServerRouting,``primaryServer(ServerRouting)``>> for more details and options. 
+
+
+[caption=""]
+.Returns
+`java.util.Optional<? extends Server>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+driver.primaryServer();
+----
+
+[#_Driver_primaryServer_ServerRouting]
+==== method ``primaryServer``
+
+[source,java]
+----
+@CheckReturnValue
+java.util.Optional<? extends Server> primaryServer​(ServerRouting serverRouting)
+----
+
+Returns the primary server for this driver connection. 
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `serverRouting` a| The server routing to use for the operation a| `ServerRouting`
+|===
+
+[caption=""]
+.Returns
+`java.util.Optional<? extends Server>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+driver.primaryServer(new ServerRouting.Auto());
+----
+
+[#_Driver_serverVersion_]
+==== method ``serverVersion``
+
+[source,java]
+----
+@CheckReturnValue
+default ServerVersion serverVersion()
+----
+
+Retrieves the server's version, using default automatic routing. See <<#_serverVersion_com_typedb_driver_api_ServerRouting,``serverVersion(ServerRouting)``>> for more details and options. 
+
+
+[caption=""]
+.Returns
+`ServerVersion`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+driver.serverVersion();
+----
+
+[#_Driver_serverVersion_ServerRouting]
+==== method ``serverVersion``
+
+[source,java]
+----
+@CheckReturnValue
+ServerVersion serverVersion​(ServerRouting serverRouting)
+----
+
+Retrieves the server's version. 
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `serverRouting` a| The server routing to use for the operation a| `ServerRouting`
+|===
+
+[caption=""]
+.Returns
+`ServerVersion`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+driver.serverVersion();
+----
+
+[#_Driver_servers_]
+==== method ``servers``
+
+[source,java]
+----
+@CheckReturnValue
+default java.util.Set<? extends Server> servers()
+----
+
+Set of servers for this driver connection, using default automatic routing. See <<#_servers_com_typedb_driver_api_ServerRouting,``servers(ServerRouting)``>> for more details and options. 
+
+
+[caption=""]
+.Returns
+`java.util.Set<? extends Server>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+driver.servers();
+----
+
+[#_Driver_servers_ServerRouting]
+==== method ``servers``
+
+[source,java]
+----
+@CheckReturnValue
+java.util.Set<? extends Server> servers​(ServerRouting serverRouting)
+----
+
+Set of servers for this driver connection. 
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `serverRouting` a| The server routing to use for the operation a| `ServerRouting`
+|===
+
+[caption=""]
+.Returns
+`java.util.Set<? extends Server>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+driver.servers(new ServerRouting.Auto());
+----
+
 [#_Driver_transaction_java_lang_String_Transaction_Type]
 ==== method ``transaction``
 
@@ -93,7 +266,7 @@ Transaction transaction​(java.lang.String database,
                  throws TypeDBDriverException
 ----
 
-Opens a communication tunnel (transaction) to the given database on the running TypeDB server. 
+Opens a transaction to the given database on the running TypeDB server. 
 
 
 [caption=""]
@@ -128,7 +301,7 @@ Transaction transaction​(java.lang.String database,
                         TransactionOptions options)
 ----
 
-Opens a communication tunnel (transaction) to the given database on the running TypeDB server. 
+Opens a transaction to the given database on the running TypeDB server. 
 
 
 [caption=""]
@@ -162,7 +335,7 @@ driver.transaction(database, sessionType);
 UserManager users()
 ----
 
-The ``UserManager`` instance for this connection, providing access to user management methods. 
+The ``UserManager`` for this connection, providing access to user management methods. 
 
 
 [caption=""]

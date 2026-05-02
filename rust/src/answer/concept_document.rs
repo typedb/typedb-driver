@@ -49,7 +49,7 @@ impl ConceptDocument {
         }
     }
 
-    /// Retrieve the executed query's type (shared by all elements in this stream).
+    /// Retrieves the executed query's type (shared by all elements in this stream).
     ///
     /// # Examples
     ///

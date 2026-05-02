@@ -5,7 +5,7 @@
 
 
 
-The metadata and state of an individual raft replica of a database.
+The metadata and state of an individual cluster replica of a database.
 
 // tag::methods[]
 [#_bool_TypeDBReplicaInfoisPreferred_]
@@ -18,7 +18,7 @@ bool TypeDB::ReplicaInfo::isPreferred()
 
 
 
-Checks whether this is the preferred replica of the raft cluster. If true, Operations which can be run on any replica will prefer to use this replica.
+Checks whether this is the preferred replica of the cluster. If true, Operations which can be run on any replica will prefer to use this replica.
 
 [caption=""]
 .Returns
@@ -34,7 +34,7 @@ bool TypeDB::ReplicaInfo::isPrimary()
 
 
 
-Checks whether this is the primary replica of the raft cluster.
+Checks whether this is the primary replica of the cluster.
 
 [caption=""]
 .Returns
@@ -66,7 +66,7 @@ int64_t TypeDB::ReplicaInfo::term()
 
 
 
-The raft protocol ‘term’ of this replica.
+The cluster protocol ‘term’ of this replica.
 
 [caption=""]
 .Returns

@@ -134,21 +134,21 @@ commands:
     steps:
       - install-pip-requirements
       - run: |
-          tool/test/start-community-server.sh
+          tool/test/start-core-server.sh
           python3 -m pip install wheel 
           python3 -m pip install --extra-index-url https://repo.typedb.com/public/public-snapshot/python/simple typedb-driver==0.0.0+$(git rev-parse HEAD)
           sleep 5
           pushd python/tests/deployment/
             python3 -m unittest test && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
           popd
-          tool/test/stop-community-server.sh
+          tool/test/stop-core-server.sh
           exit $TEST_SUCCESS
 
   test-pip-snapshot-mac-rosetta:
     steps:
       - install-brew-rosetta
       - run: |
-          tool/test/start-community-server.sh
+          tool/test/start-core-server.sh
           python3 -m pip install wheel 
           python3 -m pip install pip
           python3 -m pip install -r python/requirements_dev.txt
@@ -157,7 +157,7 @@ commands:
           pushd python/tests/deployment/
             python3 -m unittest test && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
           popd
-          tool/test/stop-community-server.sh
+          tool/test/stop-core-server.sh
           exit $TEST_SUCCESS
 
   deploy-pip-release-unix:
@@ -207,20 +207,20 @@ commands:
   test-maven-snapshot-unix:
     steps:
       - run: |
-          tool/test/start-community-server.sh
+          tool/test/start-core-server.sh
           sed -i -e "s/DRIVER_JAVA_VERSION_MARKER/0.0.0-$CIRCLE_SHA1/g" java/test/deployment/pom.xml
           cat java/test/deployment/pom.xml
           (cd java/test/deployment && mvn test)
-          tool/test/stop-community-server.sh
+          tool/test/stop-core-server.sh
 
   test-maven-snapshot-mac-rosetta:
     steps:
       - run: |
-          tool/test/start-community-server.sh
+          tool/test/start-core-server.sh
           sed -i -e "s/DRIVER_JAVA_VERSION_MARKER/0.0.0-$CIRCLE_SHA1/g" java/test/deployment/pom.xml
           cat java/test/deployment/pom.xml
           (cd java/test/deployment && /usr/local/bin/mvn test)
-          tool/test/stop-community-server.sh
+          tool/test/stop-core-server.sh
 
   deploy-maven-jni-release-unix:
     steps:
@@ -262,12 +262,12 @@ commands:
             cmake3 ../c/tests/assembly -DTYPEDB_ASSEMBLY=$(pwd)/$ASSEMBLY &&
             cmake3 --build . --config release
           popd
-          tool/test/start-community-server.sh
+          tool/test/start-core-server.sh
           sleep 5
           pushd test_assembly_clib
             LD_LIBRARY_PATH=$ASSEMBLY/lib ./test_assembly && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
           popd
-          tool/test/stop-community-server.sh
+          tool/test/stop-core-server.sh
           exit $TEST_SUCCESS
 
   test-clib-assembly-mac:
@@ -285,12 +285,12 @@ commands:
             cmake ../c/tests/assembly -DTYPEDB_ASSEMBLY=$(pwd)/$ASSEMBLY  -DCMAKE_OSX_ARCHITECTURES=<<parameters.target-arch>> &&
             cmake --build . --config release
           popd
-          tool/test/start-community-server.sh
+          tool/test/start-core-server.sh
           sleep 5
           pushd test_assembly_clib
             DYLD_LIBRARY_PATH=$ASSEMBLY/lib ./test_assembly && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
           popd
-          tool/test/stop-community-server.sh
+          tool/test/stop-core-server.sh
           exit $TEST_SUCCESS
 
   deploy-clib-release-unix:
@@ -326,12 +326,12 @@ commands:
             cmake3 ../cpp/test/assembly -DTYPEDB_ASSEMBLY=$(pwd)/$ASSEMBLY &&
             cmake3 --build . --config release
           popd
-          tool/test/start-community-server.sh
+          tool/test/start-core-server.sh
           sleep 5
           pushd test_assembly_cpp
             LD_LIBRARY_PATH=$ASSEMBLY/lib ./test_assembly && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
           popd
-          tool/test/stop-community-server.sh
+          tool/test/stop-core-server.sh
           exit $TEST_SUCCESS
 
   test-cpp-assembly-mac:
@@ -349,12 +349,12 @@ commands:
             cmake ../cpp/test/assembly -DTYPEDB_ASSEMBLY=$(pwd)/$ASSEMBLY -DCMAKE_OSX_ARCHITECTURES=<<parameters.target-arch>> &&
             cmake --build . --config release
           popd
-          tool/test/start-community-server.sh
+          tool/test/start-core-server.sh
           sleep 5
           pushd test_assembly_cpp
             DYLD_LIBRARY_PATH=$ASSEMBLY/lib ./test_assembly && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
           popd
-          tool/test/stop-community-server.sh
+          tool/test/stop-core-server.sh
           exit $TEST_SUCCESS
 
   deploy-cpp-release-unix:
@@ -410,22 +410,22 @@ commands:
   test-dotnet-snapshot-unix:
     steps:
       - run: |
-          tool/test/start-community-server.sh
+          tool/test/start-core-server.sh
           sleep 5
           sed -i -e "s/DRIVER_CSHARP_VERSION_MARKER/0.0.0-$CIRCLE_SHA1/g" csharp/Test/Deployment/NugetApplicationTest.csproj
           cat csharp/Test/Deployment/NugetApplicationTest.csproj
           (cd csharp/Test/Deployment && dotnet run NugetApplicationTest.csproj)
-          tool/test/stop-community-server.sh
+          tool/test/stop-core-server.sh
 
   test-dotnet-snapshot-mac-rosetta:
     steps:
       - run: |
-          tool/test/start-community-server.sh
+          tool/test/start-core-server.sh
           sleep 5
           sed -i -e "s/DRIVER_CSHARP_VERSION_MARKER/0.0.0-$CIRCLE_SHA1/g" csharp/Test/Deployment/NugetApplicationTest.csproj
           cat csharp/Test/Deployment/NugetApplicationTest.csproj
           (cd csharp/Test/Deployment && /usr/local/bin/dotnet run NugetApplicationTest.csproj)
-          tool/test/stop-community-server.sh
+          tool/test/stop-core-server.sh
 
   deploy-dotnet-runtime-release-unix:
     steps:
@@ -486,13 +486,13 @@ commands:
   test-npm-snapshot-unix:
     steps:
       - run: |
-          tool/test/start-community-server.sh
+          tool/test/start-core-server.sh
           cd nodejs/test/deployment/
           npm install --registry https://npm.cloudsmith.io/typedb/public-snapshot/ "typedb-driver@0.0.0-$CIRCLE_SHA1"
           npm install jest --global
           jest --detectOpenHandles application.test.js && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
           cd -
-          tool/test/stop-community-server.sh
+          tool/test/stop-core-server.sh
           exit $TEST_SUCCESS
 
   deploy-npm-release-unix:

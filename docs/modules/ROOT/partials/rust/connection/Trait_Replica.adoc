@@ -1,0 +1,81 @@
+[#_trait_Replica]
+[.doc-api-reference-driver]
+=== Trait Replica
+
+`struct`
+
+*Implementors:*
+
+* `AvailableServer`
+
+// tag::methods[]
+[#_trait_Replica_id_]
+==== id
+
+[source,rust]
+----
+fn id(&self) -> u64
+----
+
+Returns the id of this replica. 0 (default) if it’s not a part of a cluster.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+u64
+----
+
+[#_trait_Replica_is_primary_]
+==== is_primary
+
+[source,rust]
+----
+fn is_primary(&self) -> bool
+----
+
+Checks whether this is the primary replica of the cluster.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+bool
+----
+
+[#_trait_Replica_role_]
+==== role
+
+[source,rust]
+----
+fn role(&self) -> Option<ReplicationRole>
+----
+
+Returns whether this is the primary replica of the cluster or any of the supporting roles.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Option<ReplicationRole>
+----
+
+[#_trait_Replica_term_]
+==== term
+
+[source,rust]
+----
+fn term(&self) -> Option<u64>
+----
+
+Returns the cluster protocol ‘term’ of this replica.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Option<u64>
+----
+
+// end::methods[]
+

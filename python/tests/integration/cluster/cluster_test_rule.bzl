@@ -26,7 +26,7 @@ def _rule_implementation(ctx):
     # Store the path of the test source file. It is recommended to only have one source file.
     test_src = ctx.files.srcs[0].path
 
-    typedb_cloud_distro = str(ctx.files.native_typedb_cloud_artifact[0].short_path)
+    typedb_cloud_distro = str(ctx.files.native_typedb_cluster_artifact[0].short_path)
 
     # TODO: This code is, mostly, copied from our TypeDB behave test
     cmd = "set -xe && TYPEDB_ARCHIVE=%s" % typedb_cloud_distro
@@ -48,7 +48,7 @@ def _rule_implementation(ctx):
                 --server.peers.peer-3.internal-address.grpc=localhost:31731 \
                 --server.encryption.enable=true \
                 --diagnostics.monitoring.port=${1}1732 \
-                --development-mode.enable=true
+                --development-mode.enabled=true
             }
             if test -d typedb_distribution; then
              echo Existing distribution detected. Cleaning.
@@ -127,7 +127,7 @@ def _rule_implementation(ctx):
     # https://bazel.build/versions/master/docs/skylark/rules.html#runfiles
     return [DefaultInfo(
         # The shell executable - the output of this rule - can use these files at runtime.
-        runfiles = ctx.runfiles(files = ctx.files.srcs + ctx.files.deps + ctx.files.data + ctx.files.native_typedb_cloud_artifact)
+        runfiles = ctx.runfiles(files = ctx.files.srcs + ctx.files.deps + ctx.files.data + ctx.files.native_typedb_cluster_artifact)
     )]
 
 """
@@ -151,7 +151,7 @@ typedb_cloud_py_test = rule(
         "srcs": attr.label_list(mandatory=True,allow_empty=False,allow_files=True),
         "deps": attr.label_list(mandatory=True,allow_empty=False),
         "data": attr.label_list(),
-        "native_typedb_cloud_artifact": attr.label(mandatory=True)
+        "native_typedb_cluster_artifact": attr.label(mandatory=True)
     },
     test=True,
 )

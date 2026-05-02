@@ -4,7 +4,7 @@
 
 `class`
 
-*Package*: `typedb.api.connection.database`
+*Package*: `typedb.api.database.database`
 
 [caption=""]
 .Properties

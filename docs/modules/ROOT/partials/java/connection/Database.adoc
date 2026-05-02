@@ -73,11 +73,19 @@ database.exportToFile("schema.typeql", "data.typedb")
 java.lang.String name()
 ----
 
-The database name as a string.
+The database name as a string. 
+
 
 [caption=""]
 .Returns
 `java.lang.String`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+database.name()
+----
 
 [#_Database_schema_]
 ==== method ``schema``

@@ -25,6 +25,15 @@ Checks whether a substring is a part of this exception's message.
 
 
 [caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `subString` a| The substring to search for. a| `string`
+|===
+
+[caption=""]
 .Returns
 `bool`
 
@@ -32,22 +41,113 @@ Checks whether a substring is a part of this exception's message.
 .Code examples
 [source,cs]
 ----
-try
-{
-    ...
-}
-catch (TypeDBDriverException e)
-{
-    if (e.Contains("CSCO01"))
-    {
-        ...
-    }
-    else
-    {
-        ...
-    }
-}
+try { // ... } catch (TypeDBDriverException e) { if (e.Contains("CSCO01")) { // ... } } TypeDB.Driver.Common.TypeDBDriverException Exceptions raised by the driver. Definition TypeDBDriverException.cs:31 TypeDB.Driver.Common.TypeDBDriverException.Contains bool Contains(string subString) Checks whether a substring is a part of this exception's message. Definition TypeDBDriverException.cs:88
 ----
+
+[#_TypeDB_Driver_Common_TypeDBDriverException_TypeDBDriverException_ErrorMessage_error_params_object_errorParams_]
+==== method ``TypeDBDriverException``
+
+[source,cs]
+----
+TypeDBDriverException(ErrorMessage error, params object?[] errorParams)
+----
+
+
+
+Creates a new exception from a structured error message.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `error` a| The error message template. a| `ErrorMessage`
+a| `errorParams` a| The parameters for the error message. a| `params object?[]`
+|===
+
+[caption=""]
+.Returns
+`TypeDBDriverException`
+
+[#_TypeDB_Driver_Common_TypeDBDriverException_TypeDBDriverException_string_message_]
+==== method ``TypeDBDriverException``
+
+[source,cs]
+----
+TypeDBDriverException(string message)
+----
+
+
+
+Creates a new exception with the given message.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `message` a| The exception message. a| `string`
+|===
+
+[caption=""]
+.Returns
+`TypeDBDriverException`
+
+[#_TypeDB_Driver_Common_TypeDBDriverException_TypeDBDriverException_SystemException_error_]
+==== method ``TypeDBDriverException``
+
+[source,cs]
+----
+TypeDBDriverException(System::Exception error)
+----
+
+
+
+Creates a new exception wrapping an existing exception.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `error` a| The exception to wrap. a| `System::Exception`
+|===
+
+[caption=""]
+.Returns
+`TypeDBDriverException`
+
+[#_TypeDB_Driver_Common_TypeDBDriverException_TypeDBDriverException_PinvokeError_nativeError_]
+==== method ``TypeDBDriverException``
+
+[source,cs]
+----
+TypeDBDriverException(Pinvoke::Error nativeError)
+----
+
+
+
+Creates a new exception from a native error.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `nativeError` a| The native error. a| `Pinvoke::Error`
+|===
+
+[caption=""]
+.Returns
+`TypeDBDriverException`
 
 // end::methods[]
 

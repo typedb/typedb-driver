@@ -17,7 +17,7 @@ TypeDB user information
 void delete()
 ----
 
-Deletes a user with the given name. 
+Deletes this user. 
 
 
 [caption=""]
@@ -28,7 +28,7 @@ Deletes a user with the given name.
 .Code examples
 [source,java]
 ----
-driver.users().delete(username);
+user.delete();
 ----
 
 [#_User_name_]
@@ -54,7 +54,8 @@ Returns the name of this user.
 void updatePassword​(java.lang.String password)
 ----
 
-Updates the password for this user.
+Updates the password for this user. 
+
 
 [caption=""]
 .Input parameters
@@ -62,13 +63,19 @@ Updates the password for this user.
 [options="header"]
 |===
 |Name |Description |Type
-a| `passwordOld` a| The current password of this user a| 
-a| `passwordNew` a| The new password a| 
+a| `password` a| The new password a| `java.lang.String`
 |===
 
 [caption=""]
 .Returns
 `void`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+user.updatePassword("new-password");
+----
 
 // end::methods[]
 

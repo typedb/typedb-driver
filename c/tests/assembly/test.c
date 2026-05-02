@@ -42,28 +42,32 @@ bool check_error_may_print(const char* filename, int lineno) {
 }
 
 #define FAILED() check_error_may_print(__FILE__, __LINE__)
-TypeDBDriver* driver_open_for_tests(const char* address, const char* username, const char* password) {
+
+TypeDBDriver* driver_new_for_tests(const char* address, const char* username, const char* password) {
     DriverOptions* options = NULL;
+    DriverTlsConfig* tls_config = driver_tls_config_new_disabled();
     Credentials* creds = credentials_new(username, password);
     if (check_error_may_print(__FILE__, __LINE__)) goto cleanup;
-    options = driver_options_new(false, NULL);;
+
+    options = driver_options_new(tls_config);
     if (check_error_may_print(__FILE__, __LINE__)) goto cleanup;
-    TypeDBDriver* driver = driver_open_with_description(address, creds, options, DRIVER_LANG);
+
+    TypeDBDriver* driver = driver_new(address, creds, options, DRIVER_LANG);
+
 cleanup:
     driver_options_drop(options);
     credentials_drop(creds);
-
+    driver_tls_config_drop(tls_config);
     return driver;
 }
 
 int main() {
     const char databaseName[] = "test_assembly_clib";
 
-   TypeDBDriver* driver = NULL;
-
+    TypeDBDriver* driver = NULL;
     bool success = false;
 
-    driver = driver_open_for_tests(TYPEDB_CORE_ADDRESS, TYPEDB_CORE_USERNAME, TYPEDB_CORE_PASSWORD);
+    driver = driver_new_for_tests(TYPEDB_CORE_ADDRESS, TYPEDB_CORE_USERNAME, TYPEDB_CORE_PASSWORD);
     if (FAILED()) goto cleanup;
 
     databases_create(driver, databaseName);

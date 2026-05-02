@@ -23,6 +23,7 @@ import com.typedb.driver.TypeDB;
 import com.typedb.driver.api.Credentials;
 import com.typedb.driver.api.Driver;
 import com.typedb.driver.api.DriverOptions;
+import com.typedb.driver.api.DriverTlsConfig;
 import com.typedb.driver.api.Transaction;
 import com.typedb.driver.api.database.Database;
 import org.junit.AfterClass;
@@ -39,12 +40,12 @@ import static org.junit.Assert.assertTrue;
 @SuppressWarnings("Duplicates")
 public class DriverTest {
     private static final String DB_NAME = "typedb";
-    private static final String ADDRESS = "0.0.0.0:1729";
+    private static final String ADDRESS = "127.0.0.1:1729";
     private static Driver typedbDriver;
 
     @BeforeClass
     public static void setUpClass() {
-        typedbDriver = TypeDB.driver(ADDRESS, new Credentials("admin", "password"), new DriverOptions(false, null));
+        typedbDriver = TypeDB.driver(ADDRESS, new Credentials("admin", "password"), new DriverOptions(DriverTlsConfig.disabled()));
         if (typedbDriver.databases().contains(DB_NAME)) typedbDriver.databases().get(DB_NAME).delete();
         typedbDriver.databases().create(DB_NAME);
     }

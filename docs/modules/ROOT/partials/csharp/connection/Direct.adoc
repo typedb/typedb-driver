@@ -1,0 +1,93 @@
+[#_Direct]
+[.doc-api-reference-driver]
+=== Direct
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.ServerRouting`
+
+*Supertypes:*
+
+* `TypeDB.Driver.Api.ServerRouting`
+
+
+
+Route to a specific known server at the given address. Mostly used for debugging purposes.
+
+// tag::methods[]
+[#_string_TypeDB_Driver_Api_ServerRouting_Direct_Address]
+==== method ``Address``
+
+[source,cs]
+----
+string TypeDB.Driver.Api.ServerRouting.Direct.Address
+----
+
+
+
+Retrieves the address of the server this routing targets.
+
+[caption=""]
+.Returns
+`string`
+
+[#_TypeDB_Driver_Api_ServerRouting_Direct_Direct_string_address_]
+==== method ``Direct``
+
+[source,cs]
+----
+Direct(string address)
+----
+
+
+
+Creates a Direct routing to the specified server address.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `address` a| The address of the server to route to. a| `string`
+|===
+
+[caption=""]
+.Returns
+`Direct`
+
+[#_override_Pinvoke_ServerRouting_TypeDB_Driver_Api_ServerRouting_Direct_NativeValue_]
+==== method ``NativeValue``
+
+[source,cs]
+----
+override Pinvoke.ServerRouting NativeValue()
+----
+
+
+
+
+
+[caption=""]
+.Returns
+`override Pinvoke.ServerRouting`
+
+[#_override_string_TypeDB_Driver_Api_ServerRouting_Direct_ToString_]
+==== method ``ToString``
+
+[source,cs]
+----
+override string ToString()
+----
+
+
+
+
+
+[caption=""]
+.Returns
+`override string`
+
+// end::methods[]
+

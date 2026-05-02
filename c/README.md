@@ -280,17 +280,19 @@ cleanup:
 
 Functions parameters & return values are either primitives or pointers to opaque structs, e.g.:
 ```c
-struct TypeDBDriver *driver_open(const char *address,
+struct TypeDBDriver *driver_new(const char *address,
                                  const struct Credentials *credentials,
-                                 const struct DriverOptions *driver_options);
+                                 const struct DriverOptions *driver_options,
+                                 const char *driver_lang);
 ``` 
 
 These pointers are then used for further operations:
 ```c
     char* dbName = "hello";
-    DriverOptions* options = driver_options_new(false, NULL);;;
+    DriverTlsConfig* tls_config = driver_tls_config_new_disabled();
+    DriverOptions* options = driver_options_new(tls_config);
     Credentials* creds = credentials_new(username, password);
-    TypeDBDriver* driver = driver_open(address, creds, options);
+    TypeDBDriver* driver = driver_new(address, creds, options, NULL);
     databases_create(driver, dbName);
     Database* database = databases_get(driver, dbName);
     char* gotName = database_name(database);

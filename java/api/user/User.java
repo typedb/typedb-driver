@@ -19,7 +19,6 @@
 
 package com.typedb.driver.api.user;
 
-
 import javax.annotation.CheckReturnValue;
 
 /**
@@ -32,26 +31,24 @@ public interface User {
     @CheckReturnValue
     String name();
 
-    // TODO: Not implemented
-//    /**
-//     * Returns the number of seconds remaining till this user’s current password expires.
-//     */
-//    Optional<Long> passwordExpirySeconds();
-
     /**
      * Updates the password for this user.
      *
-     * @param passwordOld The current password of this user
-     * @param passwordNew The new password
+     * <h3>Examples</h3>
+     * <pre>
+     * user.updatePassword("new-password");
+     * </pre>
+     *
+     * @param password The new password
      */
     void updatePassword(String password);
 
     /**
-     * Deletes a user with the given name.
+     * Deletes this user.
      *
      * <h3>Examples</h3>
      * <pre>
-     * driver.users().delete(username);
+     * user.delete();
      * </pre>
      */
     void delete();

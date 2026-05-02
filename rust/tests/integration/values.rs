@@ -23,7 +23,7 @@ use chrono::{Datelike, NaiveDate, NaiveDateTime, Timelike};
 use futures::TryStreamExt;
 use serial_test::serial;
 use typedb_driver::{
-    Credentials, DriverOptions, TransactionType, TypeDBDriver,
+    Addresses, Credentials, DriverOptions, DriverTlsConfig, TransactionType, TypeDBDriver,
     concept::{
         Value,
         value::{Decimal, Duration, TimeZone},
@@ -34,9 +34,9 @@ const DATABASE_NAME: &str = "typedb";
 
 async fn cleanup() {
     let driver = TypeDBDriver::new(
-        TypeDBDriver::DEFAULT_ADDRESS,
+        Addresses::try_from_address_str(TypeDBDriver::DEFAULT_ADDRESS).unwrap(),
         Credentials::new("admin", "password"),
-        DriverOptions::new(false, None).unwrap(),
+        DriverOptions::new(DriverTlsConfig::disabled()),
     )
     .await
     .unwrap();
@@ -48,9 +48,9 @@ async fn cleanup() {
 async fn setup() -> TypeDBDriver {
     cleanup().await;
     let driver = TypeDBDriver::new(
-        TypeDBDriver::DEFAULT_ADDRESS,
+        Addresses::try_from_address_str(TypeDBDriver::DEFAULT_ADDRESS).unwrap(),
         Credentials::new("admin", "password"),
-        DriverOptions::new(false, None).unwrap(),
+        DriverOptions::new(DriverTlsConfig::disabled()),
     )
     .await
     .unwrap();
@@ -65,100 +65,100 @@ async fn setup() -> TypeDBDriver {
 #[test]
 fn duration_parse_years() {
     let duration = Duration::from_str("P1Y").unwrap();
-    assert_eq!(duration.months(), 12);
-    assert_eq!(duration.days(), 0);
-    assert_eq!(duration.nanos(), 0);
+    assert_eq!(duration.months, 12);
+    assert_eq!(duration.days, 0);
+    assert_eq!(duration.nanos, 0);
 }
 
 #[test]
 fn duration_parse_months() {
     let duration = Duration::from_str("P1M").unwrap();
-    assert_eq!(duration.months(), 1);
-    assert_eq!(duration.days(), 0);
-    assert_eq!(duration.nanos(), 0);
+    assert_eq!(duration.months, 1);
+    assert_eq!(duration.days, 0);
+    assert_eq!(duration.nanos, 0);
 }
 
 #[test]
 fn duration_parse_days() {
     let duration = Duration::from_str("P1D").unwrap();
-    assert_eq!(duration.months(), 0);
-    assert_eq!(duration.days(), 1);
-    assert_eq!(duration.nanos(), 0);
+    assert_eq!(duration.months, 0);
+    assert_eq!(duration.days, 1);
+    assert_eq!(duration.nanos, 0);
 }
 
 #[test]
 fn duration_parse_weeks() {
     let duration = Duration::from_str("P7W").unwrap();
-    assert_eq!(duration.months(), 0);
-    assert_eq!(duration.days(), 49);
-    assert_eq!(duration.nanos(), 0);
+    assert_eq!(duration.months, 0);
+    assert_eq!(duration.days, 49);
+    assert_eq!(duration.nanos, 0);
 }
 
 #[test]
 fn duration_parse_hours() {
     let duration = Duration::from_str("P0DT1H").unwrap();
-    assert_eq!(duration.months(), 0);
-    assert_eq!(duration.days(), 0);
-    assert_eq!(duration.nanos(), 3_600_000_000_000);
+    assert_eq!(duration.months, 0);
+    assert_eq!(duration.days, 0);
+    assert_eq!(duration.nanos, 3_600_000_000_000);
 }
 
 #[test]
 fn duration_parse_minutes() {
     let duration = Duration::from_str("P0DT1M").unwrap();
-    assert_eq!(duration.months(), 0);
-    assert_eq!(duration.days(), 0);
-    assert_eq!(duration.nanos(), 60_000_000_000);
+    assert_eq!(duration.months, 0);
+    assert_eq!(duration.days, 0);
+    assert_eq!(duration.nanos, 60_000_000_000);
 }
 
 #[test]
 fn duration_parse_seconds() {
     let duration = Duration::from_str("P0DT1S").unwrap();
-    assert_eq!(duration.months(), 0);
-    assert_eq!(duration.days(), 0);
-    assert_eq!(duration.nanos(), 1_000_000_000);
+    assert_eq!(duration.months, 0);
+    assert_eq!(duration.days, 0);
+    assert_eq!(duration.nanos, 1_000_000_000);
 }
 
 #[test]
 fn duration_parse_fractional_seconds() {
     let duration = Duration::from_str("P0DT0.000000001S").unwrap();
-    assert_eq!(duration.months(), 0);
-    assert_eq!(duration.days(), 0);
-    assert_eq!(duration.nanos(), 1);
+    assert_eq!(duration.months, 0);
+    assert_eq!(duration.days, 0);
+    assert_eq!(duration.nanos, 1);
 }
 
 #[test]
 fn duration_parse_fractional_seconds_100_nanos() {
     let duration = Duration::from_str("P0DT0.0000001S").unwrap();
-    assert_eq!(duration.months(), 0);
-    assert_eq!(duration.days(), 0);
-    assert_eq!(duration.nanos(), 100);
+    assert_eq!(duration.months, 0);
+    assert_eq!(duration.days, 0);
+    assert_eq!(duration.nanos, 100);
 }
 
 #[test]
 fn duration_parse_zero() {
     let duration = Duration::from_str("P0DT0S").unwrap();
-    assert_eq!(duration.months(), 0);
-    assert_eq!(duration.days(), 0);
-    assert_eq!(duration.nanos(), 0);
+    assert_eq!(duration.months, 0);
+    assert_eq!(duration.days, 0);
+    assert_eq!(duration.nanos, 0);
 }
 
 #[test]
 fn duration_parse_complex() {
     let duration = Duration::from_str("P1Y10M7DT15H44M5.00394892S").unwrap();
-    assert_eq!(duration.months(), 22); // 1*12 + 10
-    assert_eq!(duration.days(), 7);
+    assert_eq!(duration.months, 22); // 1*12 + 10
+    assert_eq!(duration.days, 7);
     // 15H * 3600 * 10^9 + 44M * 60 * 10^9 + 5S * 10^9 + 3948920 nanos
     let expected_nanos: u64 = 15 * 3600 * 1_000_000_000 + 44 * 60 * 1_000_000_000 + 5 * 1_000_000_000 + 3_948_920;
-    assert_eq!(duration.nanos(), expected_nanos);
+    assert_eq!(duration.nanos, expected_nanos);
 }
 
 #[test]
 fn duration_parse_max_complex() {
     let duration = Duration::from_str("P999Y12M31DT24H59M59.999999999S").unwrap();
-    assert_eq!(duration.months(), 12000); // 999*12 + 12
-    assert_eq!(duration.days(), 31);
+    assert_eq!(duration.months, 12000); // 999*12 + 12
+    assert_eq!(duration.days, 31);
     let expected_nanos: u64 = 24 * 3600 * 1_000_000_000 + 59 * 60 * 1_000_000_000 + 59 * 1_000_000_000 + 999_999_999;
-    assert_eq!(duration.nanos(), expected_nanos);
+    assert_eq!(duration.nanos, expected_nanos);
 }
 
 #[test]
@@ -213,8 +213,8 @@ fn duration_debug() {
 #[test]
 fn decimal_new() {
     let decimal = Decimal::new(123, 456);
-    assert_eq!(decimal.integer_part(), 123);
-    assert_eq!(decimal.fractional_part(), 456);
+    assert_eq!(decimal.integer, 123);
+    assert_eq!(decimal.fractional, 456);
 }
 
 #[test]
@@ -234,8 +234,8 @@ fn decimal_addition() {
     let a = Decimal::new(1, 5_000_000_000_000_000_000);
     let b = Decimal::new(2, 7_000_000_000_000_000_000);
     let c = a + b;
-    assert_eq!(c.integer_part(), 4);
-    assert_eq!(c.fractional_part(), 2_000_000_000_000_000_000);
+    assert_eq!(c.integer, 4);
+    assert_eq!(c.fractional, 2_000_000_000_000_000_000);
 }
 
 #[test]
@@ -243,16 +243,16 @@ fn decimal_subtraction() {
     let a = Decimal::new(5, 3_000_000_000_000_000_000);
     let b = Decimal::new(2, 7_000_000_000_000_000_000);
     let c = a - b;
-    assert_eq!(c.integer_part(), 2);
-    assert_eq!(c.fractional_part(), 6_000_000_000_000_000_000);
+    assert_eq!(c.integer, 2);
+    assert_eq!(c.fractional, 6_000_000_000_000_000_000);
 }
 
 #[test]
 fn decimal_negation() {
     let a = Decimal::new(5, 3_000_000_000_000_000_000);
     let neg_a = -a;
-    assert_eq!(neg_a.integer_part(), -6);
-    assert_eq!(neg_a.fractional_part(), 7_000_000_000_000_000_000);
+    assert_eq!(neg_a.integer, -6);
+    assert_eq!(neg_a.fractional, 7_000_000_000_000_000_000);
 }
 
 #[test]
@@ -647,9 +647,9 @@ fn test_duration_via_database() {
             let concept = rows[0].get("d").unwrap().unwrap();
             let duration = concept.try_get_duration().unwrap();
 
-            assert_eq!(duration.months(), 12);
-            assert_eq!(duration.days(), 0);
-            assert_eq!(duration.nanos(), 0);
+            assert_eq!(duration.months, 12);
+            assert_eq!(duration.days, 0);
+            assert_eq!(duration.nanos, 0);
             assert_eq!(format!("{:?}", duration), "months: 12, days: 0, nanos: 0");
         }
 
@@ -661,9 +661,9 @@ fn test_duration_via_database() {
             let concept = rows[0].get("d").unwrap().unwrap();
             let duration = concept.try_get_duration().unwrap();
 
-            assert_eq!(duration.months(), 1);
-            assert_eq!(duration.days(), 0);
-            assert_eq!(duration.nanos(), 0);
+            assert_eq!(duration.months, 1);
+            assert_eq!(duration.days, 0);
+            assert_eq!(duration.nanos, 0);
         }
 
         // Test: P1D
@@ -674,9 +674,9 @@ fn test_duration_via_database() {
             let concept = rows[0].get("d").unwrap().unwrap();
             let duration = concept.try_get_duration().unwrap();
 
-            assert_eq!(duration.months(), 0);
-            assert_eq!(duration.days(), 1);
-            assert_eq!(duration.nanos(), 0);
+            assert_eq!(duration.months, 0);
+            assert_eq!(duration.days, 1);
+            assert_eq!(duration.nanos, 0);
         }
 
         // Test: P0DT1H
@@ -687,9 +687,9 @@ fn test_duration_via_database() {
             let concept = rows[0].get("d").unwrap().unwrap();
             let duration = concept.try_get_duration().unwrap();
 
-            assert_eq!(duration.months(), 0);
-            assert_eq!(duration.days(), 0);
-            assert_eq!(duration.nanos(), 3_600_000_000_000);
+            assert_eq!(duration.months, 0);
+            assert_eq!(duration.days, 0);
+            assert_eq!(duration.nanos, 3_600_000_000_000);
         }
 
         // Test: P0DT1S
@@ -700,9 +700,9 @@ fn test_duration_via_database() {
             let concept = rows[0].get("d").unwrap().unwrap();
             let duration = concept.try_get_duration().unwrap();
 
-            assert_eq!(duration.months(), 0);
-            assert_eq!(duration.days(), 0);
-            assert_eq!(duration.nanos(), 1_000_000_000);
+            assert_eq!(duration.months, 0);
+            assert_eq!(duration.days, 0);
+            assert_eq!(duration.nanos, 1_000_000_000);
         }
 
         // Test: P0DT0.000000001S (1 nanosecond)
@@ -713,9 +713,9 @@ fn test_duration_via_database() {
             let concept = rows[0].get("d").unwrap().unwrap();
             let duration = concept.try_get_duration().unwrap();
 
-            assert_eq!(duration.months(), 0);
-            assert_eq!(duration.days(), 0);
-            assert_eq!(duration.nanos(), 1);
+            assert_eq!(duration.months, 0);
+            assert_eq!(duration.days, 0);
+            assert_eq!(duration.nanos, 1);
         }
 
         // Test: P0DT0.0000001S (100 nanoseconds)
@@ -726,9 +726,9 @@ fn test_duration_via_database() {
             let concept = rows[0].get("d").unwrap().unwrap();
             let duration = concept.try_get_duration().unwrap();
 
-            assert_eq!(duration.months(), 0);
-            assert_eq!(duration.days(), 0);
-            assert_eq!(duration.nanos(), 100);
+            assert_eq!(duration.months, 0);
+            assert_eq!(duration.days, 0);
+            assert_eq!(duration.nanos, 100);
         }
 
         // Test: P0DT0S (zero)
@@ -739,9 +739,9 @@ fn test_duration_via_database() {
             let concept = rows[0].get("d").unwrap().unwrap();
             let duration = concept.try_get_duration().unwrap();
 
-            assert_eq!(duration.months(), 0);
-            assert_eq!(duration.days(), 0);
-            assert_eq!(duration.nanos(), 0);
+            assert_eq!(duration.months, 0);
+            assert_eq!(duration.days, 0);
+            assert_eq!(duration.nanos, 0);
         }
 
         // Test: P7W (weeks)
@@ -752,9 +752,9 @@ fn test_duration_via_database() {
             let concept = rows[0].get("d").unwrap().unwrap();
             let duration = concept.try_get_duration().unwrap();
 
-            assert_eq!(duration.months(), 0);
-            assert_eq!(duration.days(), 49);
-            assert_eq!(duration.nanos(), 0);
+            assert_eq!(duration.months, 0);
+            assert_eq!(duration.days, 49);
+            assert_eq!(duration.nanos, 0);
         }
 
         // Test: P999Y12M31DT24H59M59.999999999S (complex)
@@ -765,9 +765,9 @@ fn test_duration_via_database() {
             let concept = rows[0].get("d").unwrap().unwrap();
             let duration = concept.try_get_duration().unwrap();
 
-            assert_eq!(duration.months(), 12000);
-            assert_eq!(duration.days(), 31);
-            assert_eq!(duration.nanos(), 89_999_999_999_999);
+            assert_eq!(duration.months, 12000);
+            assert_eq!(duration.days, 31);
+            assert_eq!(duration.nanos, 89999_999_999_999);
         }
 
         cleanup().await;
@@ -796,9 +796,9 @@ fn test_decimal_via_database() {
             let concept = rows[0].get("b").unwrap().unwrap();
             let decimal = concept.try_get_decimal().unwrap();
 
-            assert_eq!(decimal.integer_part(), 1234567890);
+            assert_eq!(decimal.integer, 1234567890);
             // The fractional part is 0001234567890 * 10^7 (to fill 19 digits)
-            assert_eq!(decimal.fractional_part(), 1_234_567_890_000_000);
+            assert_eq!(decimal.fractional, 1234567890_000_000);
         }
 
         // Test: Zero decimal
@@ -809,8 +809,8 @@ fn test_decimal_via_database() {
             let concept = rows[0].get("b").unwrap().unwrap();
             let decimal = concept.try_get_decimal().unwrap();
 
-            assert_eq!(decimal.integer_part(), 0);
-            assert_eq!(decimal.fractional_part(), 0);
+            assert_eq!(decimal.integer, 0);
+            assert_eq!(decimal.fractional, 0);
         }
 
         // Test: Negative decimal
@@ -821,7 +821,7 @@ fn test_decimal_via_database() {
             let concept = rows[0].get("b").unwrap().unwrap();
             let decimal = concept.try_get_decimal().unwrap();
 
-            assert_eq!(decimal.integer_part(), -124);
+            assert_eq!(decimal.integer, -124);
             // fractional should be FRACTIONAL_PART_DENOMINATOR - 0.456 * FRACTIONAL_PART_DENOMINATOR
         }
 

@@ -16,61 +16,49 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-use std::collections::HashMap;
+use std::sync::Arc;
 
 use crate::{
     User,
-    common::{Result, address::Address},
-    connection::server_connection::ServerConnection,
-    error::ConnectionError,
+    common::Result,
+    connection::server::{server_manager::ServerManager, server_routing::ServerRouting},
 };
 
 /// Provides access to all user management methods.
 #[derive(Debug)]
 pub struct UserManager {
-    server_connections: HashMap<Address, ServerConnection>,
+    server_manager: Arc<ServerManager>,
 }
 
 impl UserManager {
-    pub(crate) fn new(server_connections: HashMap<Address, ServerConnection>) -> Self {
-        Self { server_connections }
-    }
-
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn get_current_user(&self) -> Result<Option<User>> {
-        let (_, connection) = self
-            .server_connections
-            .iter()
-            .next()
-            .expect("Unexpected condition: the server connection collection is empty");
-        self.get(connection.username()).await
+    pub(crate) fn new(server_manager: Arc<ServerManager>) -> Self {
+        Self { server_manager }
     }
 
     /// Checks if a user with the given name exists.
     ///
     /// # Arguments
     ///
-    /// * `username` — The user name to be checked
+    /// * `username` — The username to be checked
     ///
     /// # Examples
     ///
     /// ```rust
-    /// driver.users.contains(username).await;
+    #[cfg_attr(feature = "sync", doc = "driver.users().contains(username);")]
+    #[cfg_attr(not(feature = "sync"), doc = "driver.users().contains(username).await;")]
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn contains(&self, username: impl Into<String>) -> Result<bool> {
         let username = username.into();
-        let mut error_buffer = Vec::with_capacity(self.server_connections.len());
-        for (server_id, server_connection) in self.server_connections.iter() {
-            match server_connection.contains_user(username.clone()).await {
-                Ok(res) => return Ok(res),
-                Err(err) => error_buffer.push(format!("- {}: {}", server_id, err)),
-            }
-        }
-        Err(ConnectionError::ServerConnectionFailedWithError { error: error_buffer.join("\n") })?
+        self.server_manager
+            .execute(ServerRouting::Auto, move |server_connection| {
+                let username = username.clone();
+                async move { server_connection.contains_user(username).await }
+            })
+            .await
     }
 
-    /// Retrieve a user with the given name.
+    /// Retrieves a user with the given name.
     ///
     /// # Arguments
     ///
@@ -79,25 +67,35 @@ impl UserManager {
     /// # Examples
     ///
     /// ```rust
-    /// driver.users.get(username).await;
+    #[cfg_attr(feature = "sync", doc = "driver.users().get(username);")]
+    #[cfg_attr(not(feature = "sync"), doc = "driver.users().get(username).await;")]
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn get(&self, username: impl Into<String>) -> Result<Option<User>> {
-        let uname = username.into();
-        let mut error_buffer = Vec::with_capacity(self.server_connections.len());
-        for (server_id, server_connection) in self.server_connections.iter() {
-            match server_connection.get_user(uname.clone()).await {
-                Ok(res) => {
-                    return Ok(res.map(|u_info| User {
-                        name: u_info.name,
-                        password: u_info.password,
-                        server_connections: self.server_connections.clone(),
-                    }));
+        let username = username.into();
+        self.server_manager
+            .execute(ServerRouting::Auto, |server_connection| {
+                let username = username.clone();
+                let server_manager = self.server_manager.clone();
+                async move {
+                    let user_info = server_connection.get_user(username).await?;
+                    Ok(user_info.map(|user_info| User::from_info(user_info, server_manager)))
                 }
-                Err(err) => error_buffer.push(format!("- {}: {}", server_id, err)),
-            }
-        }
-        Err(ConnectionError::ServerConnectionFailedWithError { error: error_buffer.join("\n") })?
+            })
+            .await
+    }
+
+    /// Returns the user of the current connection.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    #[cfg_attr(feature = "sync", doc = "driver.users().get_current();")]
+    #[cfg_attr(not(feature = "sync"), doc = "driver.users().get_current().await;")]
+    /// ```
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub async fn get_current(&self) -> Result<Option<User>> {
+        self.get(self.server_manager.username()?).await
     }
 
     /// Retrieves all users which exist on the TypeDB server.
@@ -105,30 +103,26 @@ impl UserManager {
     /// # Examples
     ///
     /// ```rust
-    /// driver.users.all().await;
+    #[cfg_attr(feature = "sync", doc = "driver.users().all();")]
+    #[cfg_attr(not(feature = "sync"), doc = "driver.users().all().await;")]
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn all(&self) -> Result<Vec<User>> {
-        let mut error_buffer = Vec::with_capacity(self.server_connections.len());
-        for (server_id, server_connection) in self.server_connections.iter() {
-            match server_connection.all_users().await {
-                Ok(res) => {
-                    return Ok(res
-                        .iter()
-                        .map(|u_info| User {
-                            name: u_info.name.clone(),
-                            password: u_info.password.clone(),
-                            server_connections: self.server_connections.clone(),
-                        })
-                        .collect());
+        self.server_manager
+            .execute(ServerRouting::Auto, |server_connection| {
+                let server_manager = self.server_manager.clone();
+                async move {
+                    let user_infos = server_connection.all_users().await?;
+                    Ok(user_infos
+                        .into_iter()
+                        .map(|user_info| User::from_info(user_info, server_manager.clone()))
+                        .collect())
                 }
-                Err(err) => error_buffer.push(format!("- {}: {}", server_id, err)),
-            }
-        }
-        Err(ConnectionError::ServerConnectionFailedWithError { error: error_buffer.join("\n") })?
+            })
+            .await
     }
 
-    /// Create a user with the given name &amp; password.
+    /// Creates a user with the given name &amp; password.
     ///
     /// # Arguments
     ///
@@ -138,19 +132,19 @@ impl UserManager {
     /// # Examples
     ///
     /// ```rust
-    /// driver.users.create(username, password).await;
+    #[cfg_attr(feature = "sync", doc = "driver.users().create(username, password);")]
+    #[cfg_attr(not(feature = "sync"), doc = "driver.users().create(username, password).await;")]
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn create(&self, username: impl Into<String>, password: impl Into<String>) -> Result {
-        let uname = username.into();
-        let passwd = password.into();
-        let mut error_buffer = Vec::with_capacity(self.server_connections.len());
-        for (server_id, server_connection) in self.server_connections.iter() {
-            match server_connection.create_user(uname.clone(), passwd.clone()).await {
-                Ok(res) => return Ok(res),
-                Err(err) => error_buffer.push(format!("- {}: {}", server_id, err)),
-            }
-        }
-        Err(ConnectionError::ServerConnectionFailedWithError { error: error_buffer.join("\n") })?
+        let username = username.into();
+        let password = password.into();
+        self.server_manager
+            .execute(ServerRouting::Auto, move |server_connection| {
+                let username = username.clone();
+                let password = password.clone();
+                async move { server_connection.create_user(username, password).await }
+            })
+            .await
     }
 }

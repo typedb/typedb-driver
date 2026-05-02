@@ -21,18 +21,16 @@ mod analyze;
 mod answer;
 mod common;
 mod concept;
-mod connection;
+mod credentials;
 mod database;
-mod database_manager;
-mod error;
-mod iterator;
-mod memory;
-mod promise;
+mod driver;
+mod driver_options;
+mod driver_tls_config;
 mod query_options;
+mod server;
 mod transaction;
 mod transaction_options;
 mod user;
-mod user_manager;
 
 use tracing_subscriber::{EnvFilter, filter::LevelFilter, fmt, layer::SubscriberExt, util::SubscriberInitExt};
 

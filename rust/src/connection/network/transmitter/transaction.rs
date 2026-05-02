@@ -28,6 +28,8 @@ use std::{future::Future, pin::Pin};
 
 use crossbeam::{atomic::AtomicCell, channel::Sender};
 use futures::StreamExt;
+#[cfg(not(feature = "sync"))]
+use futures::TryStreamExt;
 use prost::Message;
 #[cfg(not(feature = "sync"))]
 use tokio::sync::oneshot::channel as oneshot;
@@ -354,7 +356,7 @@ impl TransactionTransmitter {
         shutdown_sink: UnboundedSender<()>,
     ) {
         loop {
-            tokio::select! { biased;
+            let _result = tokio::select! { biased;
                 message = grpc_source.next() => {
                     match message {
                         Some(Ok(message)) => collector.collect(message).await,
@@ -368,7 +370,7 @@ impl TransactionTransmitter {
                         recorded_signal.send(()).expect("Failed to signal back that on_close callback was recorded.")
                     }
                 }
-            }
+            };
         }
         shutdown_sink.send(()).ok();
     }

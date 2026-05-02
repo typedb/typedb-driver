@@ -26,7 +26,8 @@ from typedb.native_driver_wrapper import transaction_options_new, \
     transaction_options_has_transaction_timeout_millis, transaction_options_get_transaction_timeout_millis, \
     transaction_options_set_transaction_timeout_millis, transaction_options_get_schema_lock_acquire_timeout_millis, \
     transaction_options_has_schema_lock_acquire_timeout_millis, \
-    transaction_options_set_schema_lock_acquire_timeout_millis, TransactionOptions as NativeOptions
+    transaction_options_set_schema_lock_acquire_timeout_millis, \
+    TransactionOptions as NativeOptions
 
 
 class TransactionOptions(NativeWrapper[NativeOptions]):

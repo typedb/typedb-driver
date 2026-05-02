@@ -49,6 +49,31 @@ csharp_integration_test(
     targeting_packs = targeting_packs,
 )
 
+csharp_integration_test(
+    name = "test-failover",
+    srcs = ["FailoverTest.cs"],
+    deps = [
+        "//csharp:driver-csharp",
+        "//csharp/Api:api",
+        "//csharp/Answer:answer",
+        "//csharp/Common:common",
+    ],
+    target_frameworks = target_frameworks,
+    targeting_packs = targeting_packs,
+    size = "large",
+    data = [
+        "//tool/test:cluster-server.sh",
+        "//tool/test/resources:encryption/ext-grpc-root-ca.pem",
+    ],
+    # Pass these paths via --test_env: --test_env=CLUSTER_SERVER_SCRIPT=<path> --test_env=ROOT_CA=<path>
+    # The test drives an out-of-sandbox cluster started by start-cluster-servers.sh:
+    # it kills/restarts nodes via cluster-server.sh, which writes to log files and
+    # data directories under $CLUSTER_DIR (the outer workspace). The Bazel sandbox
+    # blocks writes to those paths, so this test must run unsandboxed and locally,
+    # and it relies on host-level state so cached results would be misleading.
+    tags = ["external", "no-cache", "no-sandbox"],
+)
+
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*"]),

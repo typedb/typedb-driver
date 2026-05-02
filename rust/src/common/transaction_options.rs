@@ -20,7 +20,7 @@
 use std::time::Duration;
 
 /// TypeDB transaction options.
-/// `TransactionOptions` object can be used to override the default server behaviour for opened
+/// `TransactionOptions` object can be used to override the default behaviour for opened
 /// transactions.
 ///
 /// # Examples
@@ -28,7 +28,7 @@ use std::time::Duration;
 /// ```rust
 /// let options = TransactionOptions::new().transaction_timeout(Duration::from_secs(60));
 /// ```
-#[derive(Clone, Copy, Debug, Default)]
+#[derive(Copy, Clone, Debug, Default)]
 pub struct TransactionOptions {
     /// If set, specifies a timeout for killing transactions automatically, preventing memory leaks in unclosed transactions.
     pub transaction_timeout: Option<Duration>,

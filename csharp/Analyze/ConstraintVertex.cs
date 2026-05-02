@@ -17,11 +17,11 @@
  * under the License.
  */
 
-using System;
-
 using TypeDB.Driver.Api;
 using TypeDB.Driver.Api.Analyze;
 using TypeDB.Driver.Common;
+
+using AnalyzeError = TypeDB.Driver.Common.Error.Analyze;
 
 namespace TypeDB.Driver.Analyze
 {
@@ -56,7 +56,7 @@ namespace TypeDB.Driver.Analyze
         {
             if (!IsVariable)
             {
-                throw new InvalidOperationException("Constraint vertex is not a variable");
+                throw new TypeDBDriverException(AnalyzeError.INVALID_CONSTRAINT_VERTEX_CASTING, GetType().Name, "Variable");
             }
             return new Variable(Pinvoke.typedb_driver.constraint_vertex_as_variable(NativeObject));
         }
@@ -65,7 +65,7 @@ namespace TypeDB.Driver.Analyze
         {
             if (!IsLabel)
             {
-                throw new InvalidOperationException("Constraint vertex is not a label");
+                throw new TypeDBDriverException(AnalyzeError.INVALID_CONSTRAINT_VERTEX_CASTING, GetType().Name, "Label");
             }
             var nativeConcept = Pinvoke.typedb_driver.constraint_vertex_as_label(NativeObject);
             return (IType)Concept.Concept.ConceptOf(nativeConcept);
@@ -75,7 +75,7 @@ namespace TypeDB.Driver.Analyze
         {
             if (!IsValue)
             {
-                throw new InvalidOperationException("Constraint vertex is not a value");
+                throw new TypeDBDriverException(AnalyzeError.INVALID_CONSTRAINT_VERTEX_CASTING, GetType().Name, "Value");
             }
             var nativeConcept = Pinvoke.typedb_driver.constraint_vertex_as_value(NativeObject);
             return (Api.IValue)Concept.Concept.ConceptOf(nativeConcept);
@@ -85,7 +85,7 @@ namespace TypeDB.Driver.Analyze
         {
             if (!IsNamedRole)
             {
-                throw new InvalidOperationException("Constraint vertex is not a named role");
+                throw new TypeDBDriverException(AnalyzeError.INVALID_CONSTRAINT_VERTEX_CASTING, GetType().Name, "NamedRole");
             }
             return new NamedRole(Pinvoke.typedb_driver.constraint_vertex_as_named_role(NativeObject));
         }

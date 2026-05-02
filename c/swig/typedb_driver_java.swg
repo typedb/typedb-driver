@@ -88,10 +88,6 @@
 %nojavaexception transaction_options_get_schema_lock_acquire_timeout_millis;
 %nojavaexception transaction_options_set_schema_lock_acquire_timeout_millis;
 %nojavaexception transaction_options_has_schema_lock_acquire_timeout_millis;
-%nojavaexception transaction_options_get_parallel;
-%nojavaexception transaction_options_set_parallel;
-%nojavaexception transaction_options_has_parallel;
-
 %nojavaexception query_options_new;
 %nojavaexception query_options_get_include_instance_types;
 %nojavaexception query_options_set_include_instance_types;
@@ -108,20 +104,36 @@
 
 %nojavaexception driver_is_open;
 
+%nojavaexception driver_options_new;
+%nojavaexception driver_options_set_tls_config;
+%nojavaexception driver_options_get_tls_config;
+%nojavaexception driver_options_set_request_timeout_millis;
+%nojavaexception driver_options_get_request_timeout_millis;
+%nojavaexception driver_options_set_primary_failover_retries;
+%nojavaexception driver_options_get_primary_failover_retries;
+%nojavaexception driver_tls_config_new_disabled;
+%nojavaexception driver_tls_config_new_enabled_with_native_root_ca;
+%nojavaexception driver_tls_config_is_enabled;
+%nojavaexception driver_tls_config_has_root_ca_path;
+%nojavaexception driver_tls_config_get_root_ca_path;
+
 %nojavaexception transaction_is_open;
 
 %nojavaexception user_get_name;
 %nojavaexception user_get_password_expiry_seconds;
 
-//%nojavaexception replica_info_get_server;
-//%nojavaexception replica_info_is_primary;
-//%nojavaexception replica_info_is_preferred;
-//%nojavaexception replica_info_get_term;
+%nojavaexception server_get_address;
+%nojavaexception server_is_primary;
+%nojavaexception server_get_id;
+%nojavaexception server_get_role;
+%nojavaexception server_has_role;
+%nojavaexception server_get_term;
+%nojavaexception server_has_term;
 
 %nojavaexception database_get_name;
-//%nojavaexception database_get_replicas_info;
-//%nojavaexception database_get_primary_replica_info;
-//%nojavaexception database_get_preferred_replica_info;
+
+%nojavaexception server_routing_auto;
+%nojavaexception server_routing_direct;
 
 %nojavaexception concept_is_entity;
 %nojavaexception concept_is_relation;
@@ -138,16 +150,14 @@
 %nojavaexception concept_as_entity_type;
 %nojavaexception concept_as_relation_type;
 %nojavaexception concept_as_attribute_type;
-%nojavaexception concept_get_label;
-%nojavaexception concept_try_get_label;
-%nojavaexception concept_to_string;
-%nojavaexception concept_equals;
 
 %nojavaexception concept_get_label;
 %nojavaexception concept_try_get_label;
 %nojavaexception concept_try_get_iid;
 %nojavaexception concept_try_get_value_type;
 %nojavaexception concept_try_get_value;
+%nojavaexception concept_to_string;
+%nojavaexception concept_equals;
 
 %nojavaexception concept_is_boolean;
 %nojavaexception concept_is_date;
@@ -191,6 +201,9 @@
 %nojavaexception query_answer_is_concept_row_stream;
 %nojavaexception query_answer_is_concept_document_stream;
 
+%nojavaexception ServerVersion::distribution;
+%nojavaexception ServerVersion::version;
+
 %nojavaexception StringPair::_0;
 %nojavaexception StringPair::_1;
 
@@ -211,6 +224,9 @@
 %nojavaexception Duration::months;
 %nojavaexception Duration::days;
 %nojavaexception Duration::nanos;
+
+%nojavaexception ServerRouting::type_;
+%nojavaexception ServerRouting::address;
 
 /* director constructors do not throw */
 %nojavaexception TransactionCallbackDirector;
@@ -338,7 +354,9 @@
 %nojavaexception ~ConceptIterator;
 %nojavaexception ~ConceptRow;
 %nojavaexception ~ConceptRowIterator;
+%nojavaexception ~ServerRouting;
 %nojavaexception ~DriverOptions;
+%nojavaexception ~DriverTlsConfig;
 %nojavaexception ~Credentials;
 %nojavaexception ~Database;
 %nojavaexception ~DatabaseIterator;
@@ -347,7 +365,9 @@
 %nojavaexception ~Decimal;
 %nojavaexception ~Duration;
 %nojavaexception ~Error;
-//%nojavaexception ~ReplicaInfo;
+%nojavaexception ~Server;
+%nojavaexception ~ServerIterator;
+%nojavaexception ~ServerVersion;
 %nojavaexception ~StringIterator;
 %nojavaexception ~StringAndOptValue;
 %nojavaexception ~StringAndOptValueIterator;
@@ -388,7 +408,6 @@
 %nojavaexception ~VariableAnnotationsIterator;
 %nojavaexception ~Variable;
 %nojavaexception ~VariableIterator;
-
 
 %nojavaexception transaction_commit;
 %nojavaexception transaction_rollback;
@@ -439,8 +458,6 @@
 
 %promise(AnalyzedQuery, analyzed_query)
 %promise(QueryAnswer, query_answer)
-%promise(Concept, concept)
-%promise(Rule, rule)
 %promise(String, string)
 
 /* void promises require special handling */
@@ -536,7 +553,7 @@
 %iterator(StringAndOptValue, string_and_opt_value)
 %iterator(User, user)
 %iterator(Database, database)
-//%iterator(ReplicaInfo, replica_info)
+%iterator(Server, server)
 
 %iterator(ConjunctionID, conjunction_id)
 %iterator(ConstraintWithSpan, constraint_with_span)

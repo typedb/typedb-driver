@@ -136,6 +136,6 @@ public class ConceptRowImpl extends NativeObject<com.typedb.driver.jni.ConceptRo
     }
 
     private int computeHash() {
-        return concepts().hashCode(); // TODO: Will be the same for rows with empty cells and without ones
+        return toString().hashCode();
     }
 }

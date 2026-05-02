@@ -1,0 +1,17 @@
+[#_ServersListResponse]
+[.doc-api-reference-driver]
+=== ServersListResponse
+
+`class`
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `servers` a| `Server` a| 
+|===
+// end::properties[]
+

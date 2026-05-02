@@ -33,7 +33,6 @@ import static com.typedb.driver.jni.typedb_driver.transaction_options_new;
 import static com.typedb.driver.jni.typedb_driver.transaction_options_set_schema_lock_acquire_timeout_millis;
 import static com.typedb.driver.jni.typedb_driver.transaction_options_set_transaction_timeout_millis;
 
-
 /**
  * TypeDB transaction options. <code>TransactionOptions</code> object can be used to override
  * the default server behaviour for opened transactions.
@@ -68,7 +67,7 @@ public class TransactionOptions extends NativeObject<com.typedb.driver.jni.Trans
     }
 
     /**
-     * Explicitly set a transaction timeout.
+     * Explicitly sets a transaction timeout.
      * If set, specifies how long the driver should wait if opening a transaction is blocked by an exclusive schema write lock.
      *
      * <h3>Examples</h3>

@@ -15,111 +15,167 @@
 # specific language governing permissions and limitations
 # under the License.
 
-# TODO: When multiple notes for cluster are implemented, rewrite this test in BDDs for all the drivers and remove this
+import os
+import subprocess
+import unittest
+from time import sleep
 
-# import os
-# import subprocess
-# import unittest
-# from time import sleep
-# from unittest import TestCase
-#
-# from typedb.driver import *
-#
-# SCHEMA = SessionType.SCHEMA
-# WRITE = TransactionType.WRITE
-# READ = TransactionType.READ
-#
-#
-# class TestCloudFailover(TestCase):
-#
-#     def setUp(self):
-#         root_ca_path = os.environ["ROOT_CA"]
-#         credentials = Credentials("admin", "password", tls_root_ca_path=root_ca_path)
-#         print("SetUp", flush=True)
-#         with TypeDB.cloud_driver(["localhost:11729", "localhost:21729", "localhost:31729"], credential) as driver:
-#             if driver.databases.contains("typedb"):
-#                 driver.databases.get("typedb").delete()
-#             driver.databases.create("typedb")
-#
-#     @staticmethod
-#     def server_start(index):
-#         subprocess.Popen([
-#             "../%s/typedb" % index, "cloud",
-#             "--storage.data", "server/data",
-#             "--server.address", "localhost:%s1729" % index,
-#             "--server.internal-address.zeromq", "localhost:%s1730" % index,
-#             "--server.internal-address.grpc", "localhost:%s1731" % index,
-#             "--server.peers.peer-1.address", "localhost:11729",
-#             "--server.peers.peer-1.internal-address.zeromq", "localhost:11730",
-#             "--server.peers.peer-1.internal-address.grpc", "localhost:11731",
-#             "--server.peers.peer-2.address", "localhost:21729",
-#             "--server.peers.peer-2.internal-address.zeromq", "localhost:21730",
-#             "--server.peers.peer-2.internal-address.grpc", "localhost:21731",
-#             "--server.peers.peer-3.address", "localhost:31729",
-#             "--server.peers.peer-3.internal-address.zeromq", "localhost:31730",
-#             "--server.peers.peer-3.internal-address.grpc", "localhost:31731",
-#             "--server.encryption.enable", "true",
-#             "--diagnostics.monitoring.port", "%s1732" % index,
-#             "--development-mode.enable", "true"
-#         ])
-#
-#     def get_primary_replica(self, database_manager: DatabaseManager):
-#         retry_num = 0
-#         while retry_num < 10:
-#             print("Discovering replicas for database 'typedb'...")
-#             db = database_manager.get("typedb")
-#             print("Discovered " + str([str(replica) for replica in db.replicas()]))
-#             if db.primary_replica():
-#                 return db.primary_replica()
-#             else:
-#                 retry_num += 1
-#                 print("There is no primary replica yet. Retrying in 2s...")
-#                 sleep(2)
-#                 return self.get_primary_replica(database_manager)
-#         assert False, "Retry limit exceeded while seeking a primary replica."
-#
-#     def test_put_entity_type_to_crashed_primary_replica(self):
-#         root_ca_path = os.environ["ROOT_CA"]
-#         credential = Credentials("admin", "password", tls_root_ca_path=root_ca_path)
-#         with TypeDB.cloud_driver(["localhost:11729", "localhost:21729", "localhost:31729"], credential) as driver:
-#             assert driver.databases.contains("typedb")
-#             primary_replica = self.get_primary_replica(driver.databases)
-#             print("Performing operations against the primary replica " + str(primary_replica))
-#             with driver.session("typedb", SCHEMA) as session, session.transaction(WRITE) as tx:
-#                 tx.getQueryType.put_entity_type("person")
-#                 print("Put the entity type 'person'.")
-#                 tx.commit()
-#             with driver.session("typedb", SCHEMA) as session, session.transaction(READ) as tx:
-#                 person = tx.getQueryType.get_entity_type("person").resolve()
-#                 print("Retrieved entity type with label '%s' from primary replica." % person.get_label())
-#                 assert person.get_label() == "person"
-#             iteration = 0
-#             while iteration < 10:
-#                 iteration += 1
-#                 primary_replica = self.get_primary_replica(driver.databases)
-#                 print("Stopping primary replica (test %d/10)..." % iteration)
-#                 port = primary_replica.address()[10:15]
-#                 lsof = subprocess.check_output(["lsof", "-i", ":%s" % port])
-#                 primary_replica_server_pid = [conn.split()[1] for conn in lsof.decode("utf-8").split("\n") if "LISTEN" in conn][0]
-#                 print("Primary replica is hosted by server with PID %s" % primary_replica_server_pid)
-#                 subprocess.check_call(["kill", "-9", primary_replica_server_pid])
-#                 print("Primary replica stopped successfully.")
-#                 sleep(5)  # TODO: This ensures the server is actually shut down, but it's odd that it needs to be so long
-#                 with driver.session("typedb", SCHEMA) as session, session.transaction(READ) as tx:
-#                     person = tx.getQueryType.get_entity_type("person").resolve()
-#                     print("Retrieved entity type with label '%s' from new primary replica." % person.get_label())
-#                     assert person.get_label() == "person"
-#                 idx = str(primary_replica.address())[10]
-#                 self.server_start(idx)
-#                 lsof = None
-#                 live_check_iteration = 0
-#                 while not lsof and live_check_iteration < 60:
-#                     live_check_iteration += 1
-#                     try:
-#                         lsof = subprocess.check_output(["lsof", "-i", ":%s" % port])
-#                     except subprocess.CalledProcessError:
-#                         pass
-#
-#
-# if __name__ == "__main__":
-#     unittest.main(verbosity=2)
+from typedb.driver import TypeDB, Credentials, DriverOptions, DriverTlsConfig, TransactionType
+
+ADDRESSES = ["127.0.0.1:11729", "127.0.0.1:21729", "127.0.0.1:31729"]
+USERNAME = "admin"
+PASSWORD = "password"
+DATABASE_NAME = "test-failover"
+FAILOVER_ITERATIONS = 10
+PRIMARY_POLL_RETRIES = 20
+PRIMARY_POLL_INTERVAL_SECS = 2
+PRIMARY_FAILOVER_RETRIES = 5
+CLUSTER_SERVER_SCRIPT = os.environ["CLUSTER_SERVER_SCRIPT"]
+
+
+def cluster_server(command, node_id):
+    env = None
+    if "CLUSTER_DIR" not in os.environ and "BUILD_WORKSPACE_DIRECTORY" in os.environ:
+        env = {**os.environ, "CLUSTER_DIR": os.environ["BUILD_WORKSPACE_DIRECTORY"]}
+    result = subprocess.run(
+        [CLUSTER_SERVER_SCRIPT, command, str(node_id)],
+        capture_output=True, text=True, env=env
+    )
+    assert result.returncode == 0, (
+        f"{CLUSTER_SERVER_SCRIPT} {command} {node_id} failed: {result.stderr}"
+    )
+
+
+def ensure_all_nodes_up():
+    for i in range(1, len(ADDRESSES) + 1):
+        cluster_server("start", str(i))
+        cluster_server("await", str(i))
+
+
+def node_id_from_address(address):
+    port = address.rsplit(":", 1)[1]
+    return port[0]
+
+
+def create_driver():
+    for attempt in range(PRIMARY_POLL_RETRIES):
+        try:
+            root_ca = os.environ["ROOT_CA"]
+            options = DriverOptions(DriverTlsConfig.enabled_with_root_ca(root_ca))
+            options.primary_failover_retries = PRIMARY_FAILOVER_RETRIES
+            return TypeDB.driver(ADDRESSES, Credentials(USERNAME, PASSWORD), options)
+        except Exception as e:
+            if attempt < PRIMARY_POLL_RETRIES - 1:
+                print(f"  Driver creation failed (attempt {attempt + 1}/{PRIMARY_POLL_RETRIES}): "
+                      f"{e}. Retrying in {PRIMARY_POLL_INTERVAL_SECS}s...")
+                sleep(PRIMARY_POLL_INTERVAL_SECS)
+            else:
+                raise
+
+
+def get_primary_server(driver):
+    for attempt in range(PRIMARY_POLL_RETRIES):
+        primary = driver.primary_server()
+        if primary is not None:
+            return primary
+        if attempt < PRIMARY_POLL_RETRIES - 1:
+            print(f"  No primary server found (attempt {attempt + 1}/{PRIMARY_POLL_RETRIES}). "
+                  f"Retrying in {PRIMARY_POLL_INTERVAL_SECS}s...")
+            sleep(PRIMARY_POLL_INTERVAL_SECS)
+    raise AssertionError("Retry limit exceeded while seeking a primary server.")
+
+
+class TestClusterFailover(unittest.TestCase):
+
+    def setUp(self):
+        ensure_all_nodes_up()
+        try:
+            driver = create_driver()
+            if driver.databases.contains(DATABASE_NAME):
+                driver.databases.get(DATABASE_NAME).delete()
+            driver.close()
+        except Exception:
+            pass
+
+    def tearDown(self):
+        try:
+            driver = create_driver()
+            if driver.databases.contains(DATABASE_NAME):
+                driver.databases.get(DATABASE_NAME).delete()
+            driver.close()
+        except Exception:
+            pass
+
+    def test_primary_failover(self):
+        print("=== Cluster Failover Test ===")
+
+        print("Connecting driver...")
+        driver = create_driver()
+
+        print("Setting up database and schema...")
+        self._setup_database(driver)
+        self._verify_read_query(driver)
+        print("Initial setup verified.")
+
+        for iteration in range(1, FAILOVER_ITERATIONS + 1):
+            print(f"\n--- Failover iteration {iteration}/{FAILOVER_ITERATIONS} ---")
+
+            primary = get_primary_server(driver)
+            primary_address = primary.address
+            node_id = node_id_from_address(primary_address)
+            print(f"  Primary server: {primary_address} (node {node_id})")
+
+            print("  Read query before kill...")
+            self._verify_read_query(driver)
+
+            print(f"  Killing node {node_id}...")
+            cluster_server("kill", node_id)
+
+            print("  Read query immediately after kill (driver auto-failover)...")
+            self._verify_read_query(driver)
+            print("  Auto-failover read succeeded.")
+
+            print("  Confirming new primary...")
+            new_primary = get_primary_server(driver)
+            print(f"  New primary: {new_primary.address} "
+                  f"(node {node_id_from_address(new_primary.address)})")
+
+            print("  Read query on confirmed primary...")
+            self._verify_read_query(driver)
+            print("  Confirmed primary read succeeded.")
+
+            print(f"  Restarting node {node_id}...")
+            cluster_server("start", node_id)
+            cluster_server("await", node_id)
+            print(f"  Node {node_id} restarted.")
+
+        print(f"\n=== All {FAILOVER_ITERATIONS} failover iterations passed! ===")
+        driver.close()
+
+    def _setup_database(self, driver):
+        for attempt in range(PRIMARY_POLL_RETRIES):
+            try:
+                if driver.databases.contains(DATABASE_NAME):
+                    driver.databases.get(DATABASE_NAME).delete()
+                driver.databases.create(DATABASE_NAME)
+                tx = driver.transaction(DATABASE_NAME, TransactionType.SCHEMA)
+                tx.query("define entity person;").resolve()
+                tx.commit()
+                return
+            except Exception as e:
+                if attempt < PRIMARY_POLL_RETRIES - 1:
+                    print(f"  Database setup failed (attempt {attempt + 1}/{PRIMARY_POLL_RETRIES}): "
+                          f"{e}. Retrying in {PRIMARY_POLL_INTERVAL_SECS}s...")
+                    sleep(PRIMARY_POLL_INTERVAL_SECS)
+                else:
+                    raise
+
+    def _verify_read_query(self, driver):
+        tx = driver.transaction(DATABASE_NAME, TransactionType.READ)
+        answer = tx.query("match entity $t;").resolve()
+        rows = [row for row in answer.as_concept_rows()]
+        self.assertTrue(len(rows) > 0, "Expected at least one entity type in read query results")
+
+
+if __name__ == "__main__":
+    unittest.main(verbosity=2)

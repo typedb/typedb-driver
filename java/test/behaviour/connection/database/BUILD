@@ -49,8 +49,6 @@ typedb_behaviour_java_test(
     data = [
         "@typedb_behaviour//connection:database.feature",
     ],
-    connection_steps_community = "//java/test/behaviour/connection:steps-community",
-    connection_steps_cluster = "//java/test/behaviour/connection:steps-cluster",
     steps = [
         ":steps",
         "//java/test/behaviour/connection/transaction:steps",
@@ -67,7 +65,6 @@ typedb_behaviour_java_test(
     runtime_deps = [
         "//java/test/behaviour/config:parameters",
     ],
-    size = "large",
 )
 
 checkstyle_test(

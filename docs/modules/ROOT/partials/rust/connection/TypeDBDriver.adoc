@@ -11,6 +11,54 @@
 A connection to a TypeDB server which serves as the starting point for all interaction.
 
 // tag::methods[]
+[#_struct_TypeDBDriver_configured_addresses_]
+==== configured_addresses
+
+[source,rust]
+----
+pub fn configured_addresses(&self) -> &Addresses
+----
+
+The ``Addresses`` this connection is configured to.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+&Addresses
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+driver.configured_addresses()
+----
+
+[#_struct_TypeDBDriver_databases_]
+==== databases
+
+[source,rust]
+----
+pub fn databases(&self) -> &DatabaseManager
+----
+
+The ``DatabaseManager`` for this connection, providing access to database management methods.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+&DatabaseManager
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+driver.databases()
+----
+
 [#_struct_TypeDBDriver_force_close_]
 ==== force_close
 
@@ -59,7 +107,7 @@ bool
 driver.is_open()
 ----
 
-[#_struct_TypeDBDriver_new_address_impl_AsRef_str_credentials_Credentials_driver_options_DriverOptions]
+[#_struct_TypeDBDriver_new_addresses_Addresses_credentials_Credentials_driver_options_DriverOptions]
 ==== new
 
 [tabs]
@@ -70,7 +118,7 @@ async::
 [source,rust]
 ----
 pub async fn new(
-    address: impl AsRef<str>,
+    addresses: Addresses,
     credentials: Credentials,
     driver_options: DriverOptions,
 ) -> Result<Self>
@@ -84,7 +132,7 @@ sync::
 [source,rust]
 ----
 pub fn new(
-    address: impl AsRef<str>,
+    addresses: Addresses,
     credentials: Credentials,
     driver_options: DriverOptions,
 ) -> Result<Self>
@@ -101,7 +149,7 @@ Creates a new TypeDB Server connection.
 [options="header"]
 |===
 |Name |Description |Type
-a| `address` a|  — The address (host:port) on which the TypeDB Server is running a| `impl AsRef<str>`
+a| `addresses` a|  — The address(es) of the TypeDB Server(s), provided in a unified format a| `Addresses`
 a| `credentials` a|  — The Credentials to connect with a| `Credentials`
 a| `driver_options` a|  — The DriverOptions to connect with a| `DriverOptions`
 |===
@@ -122,7 +170,7 @@ async::
 --
 [source,rust]
 ----
-TypeDBDriver::new("127.0.0.1:1729", Credentials::new("username", "password"), DriverOptions::new(true, None)).await
+TypeDBDriver::new(Addresses::try_from_address_str("127.0.0.1:1729").unwrap(), Credentials::new("username", "password"), DriverOptions::new(true, None)).await
 ----
 
 --
@@ -132,13 +180,13 @@ sync::
 --
 [source,rust]
 ----
-TypeDBDriver::new("127.0.0.1:1729", Credentials::new("username", "password"), DriverOptions::new(true, None))
+TypeDBDriver::new(Addresses::try_from_address_str("127.0.0.1:1729").unwrap(), Credentials::new("username", "password"), DriverOptions::new(true, None))
 ----
 
 --
 ====
 
-[#_struct_TypeDBDriver_new_with_description_address_impl_AsRef_str_credentials_Credentials_driver_options_DriverOptions_driver_lang_impl_AsRef_str_]
+[#_struct_TypeDBDriver_new_with_description_addresses_Addresses_credentials_Credentials_driver_options_DriverOptions_driver_lang_impl_AsRef_str_]
 ==== new_with_description
 
 [tabs]
@@ -149,7 +197,7 @@ async::
 [source,rust]
 ----
 pub async fn new_with_description(
-    address: impl AsRef<str>,
+    addresses: Addresses,
     credentials: Credentials,
     driver_options: DriverOptions,
     driver_lang: impl AsRef<str>,
@@ -164,7 +212,7 @@ sync::
 [source,rust]
 ----
 pub fn new_with_description(
-    address: impl AsRef<str>,
+    addresses: Addresses,
     credentials: Credentials,
     driver_options: DriverOptions,
     driver_lang: impl AsRef<str>,
@@ -182,7 +230,7 @@ Creates a new TypeDB Server connection with a description. This method is genera
 [options="header"]
 |===
 |Name |Description |Type
-a| `address` a|  — The address (host:port) on which the TypeDB Server is running a| `impl AsRef<str>`
+a| `addresses` a|  — The address(es) of the TypeDB Server(s), provided in a unified format a| `Addresses`
 a| `credentials` a|  — The Credentials to connect with a| `Credentials`
 a| `driver_options` a|  — The DriverOptions to connect with a| `DriverOptions`
 a| `driver_lang` a|  — The language of the driver connecting to the server a| `impl AsRef<str>`
@@ -204,7 +252,7 @@ async::
 --
 [source,rust]
 ----
-TypeDBDriver::new_with_description("127.0.0.1:1729", Credentials::new("username", "password"), DriverOptions::new(true, None), "rust").await
+TypeDBDriver::new_with_description(Addresses::try_from_address_str("127.0.0.1:1729").unwrap(), Credentials::new("username", "password"), DriverOptions::new(true, None), "rust").await
 ----
 
 --
@@ -214,7 +262,444 @@ sync::
 --
 [source,rust]
 ----
-TypeDBDriver::new_with_description("127.0.0.1:1729", Credentials::new("username", "password"), DriverOptions::new(true, None), "rust")
+TypeDBDriver::new_with_description(Addresses::try_from_address_str("127.0.0.1:1729").unwrap(), Credentials::new("username", "password"), DriverOptions::new(true, None), "rust")
+----
+
+--
+====
+
+[#_struct_TypeDBDriver_options_]
+==== options
+
+[source,rust]
+----
+pub fn options(&self) -> &DriverOptions
+----
+
+Updates address translation of the driver. This lets you actualize new translation information without recreating the driver from scratch. Useful after registering new replicas requiring address translation. This operation will update existing connections using the provided addresses.
+
+The ``DriverOptions`` for this connection.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+&DriverOptions
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+driver.options()
+----
+
+[#_struct_TypeDBDriver_primary_server_]
+==== primary_server
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn primary_server(&self) -> Result<Option<AvailableServer>>
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn primary_server(&self) -> Result<Option<AvailableServer>>
+----
+
+--
+====
+
+Retrieves the primary server, if exists, using default automatic server routing.
+
+See <<#_struct_TypeDBDriver_method_primary_server_with_routing,`Self::primary_server_with_routing`>> for more details and options.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<Option<AvailableServer>>
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+driver.primary_server().await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+driver.primary_server();
+----
+
+--
+====
+
+[#_struct_TypeDBDriver_primary_server_with_routing_server_routing_ServerRouting]
+==== primary_server_with_routing
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn primary_server_with_routing(
+    &self,
+    server_routing: ServerRouting,
+) -> Result<Option<AvailableServer>>
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn primary_server_with_routing(
+    &self,
+    server_routing: ServerRouting,
+) -> Result<Option<AvailableServer>>
+----
+
+--
+====
+
+Retrieves the primary server, if exists.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `server_routing` a|  — The server routing directive to use for the operation a| `ServerRouting`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<Option<AvailableServer>>
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+driver.primary_server_with_routing(ServerRouting::Auto).await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+driver.primary_server_with_routing(ServerRouting::Auto);
+----
+
+--
+====
+
+[#_struct_TypeDBDriver_server_version_]
+==== server_version
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn server_version(&self) -> Result<ServerVersion>
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn server_version(&self) -> Result<ServerVersion>
+----
+
+--
+====
+
+Retrieves the server’s version, using default automatic server routing.
+
+See <<#_struct_TypeDBDriver_method_server_version_with_routing,`Self::server_version_with_routing`>> for more details and options.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<ServerVersion>
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+driver.server_version().await
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+driver.server_version()
+----
+
+--
+====
+
+[#_struct_TypeDBDriver_server_version_with_routing_server_routing_ServerRouting]
+==== server_version_with_routing
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn server_version_with_routing(
+    &self,
+    server_routing: ServerRouting,
+) -> Result<ServerVersion>
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn server_version_with_routing(
+    &self,
+    server_routing: ServerRouting,
+) -> Result<ServerVersion>
+----
+
+--
+====
+
+Retrieves the server’s version.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `server_routing` a|  — The server routing directive to use for the operation a| `ServerRouting`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<ServerVersion>
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+driver.server_version_with_routing(ServerRouting::Auto).await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+driver.server_version_with_routing(ServerRouting::Auto);
+----
+
+--
+====
+
+[#_struct_TypeDBDriver_servers_]
+==== servers
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn servers(&self) -> Result<HashSet<Server>>
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn servers(&self) -> Result<HashSet<Server>>
+----
+
+--
+====
+
+Retrieves the servers, using default automatic server routing.
+
+See <<#_struct_TypeDBDriver_method_servers_with_routing,`Self::servers_with_routing`>> for more details and options.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<HashSet<Server>>
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+driver.servers().await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+driver.servers();
+----
+
+--
+====
+
+[#_struct_TypeDBDriver_servers_with_routing_server_routing_ServerRouting]
+==== servers_with_routing
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn servers_with_routing(
+    &self,
+    server_routing: ServerRouting,
+) -> Result<HashSet<Server>>
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn servers_with_routing(
+    &self,
+    server_routing: ServerRouting,
+) -> Result<HashSet<Server>>
+----
+
+--
+====
+
+Retrieves the servers.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `server_routing` a|  — The server routing directive to use for the operation a| `ServerRouting`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<HashSet<Server>>
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+driver.servers_with_routing(ServerRouting::Auto).await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+driver.servers_with_routing(ServerRouting::Auto);
 ----
 
 --
@@ -254,7 +739,9 @@ pub fn transaction(
 --
 ====
 
-Opens a transaction with default options. See <<#_struct_TypeDBDriver_method_transaction_with_options,`TypeDBDriver::transaction_with_options`>>
+Opens a transaction with default options.
+
+See <<#_struct_TypeDBDriver_method_transaction_with_options,`TypeDBDriver::transaction_with_options`>> for more details.
 
 [caption=""]
 .Returns
@@ -262,6 +749,31 @@ Opens a transaction with default options. See <<#_struct_TypeDBDriver_method_tra
 ----
 Result<Transaction>
 ----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+driver.transaction(database_name, TransactionType::Read).await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+driver.transaction(database_name, TransactionType::Read);
+----
+
+--
+====
 
 [#_struct_TypeDBDriver_transaction_with_options_database_name_impl_AsRef_str_transaction_type_TransactionType_options_TransactionOptions]
 ==== transaction_with_options
@@ -299,7 +811,7 @@ pub fn transaction_with_options(
 --
 ====
 
-Performs a TypeQL query in this transaction.
+Opens a new transaction with custom transaction options.
 
 [caption=""]
 .Input parameters
@@ -321,9 +833,51 @@ Result<Transaction>
 
 [caption=""]
 .Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+transaction.transaction_with_options(database_name, transaction_type, options).await
+----
+
+--
+
+sync::
++
+--
 [source,rust]
 ----
 transaction.transaction_with_options(database_name, transaction_type, options)
+----
+
+--
+====
+
+[#_struct_TypeDBDriver_users_]
+==== users
+
+[source,rust]
+----
+pub fn users(&self) -> &UserManager
+----
+
+The ``UserManager`` for this connection, providing access to user management methods.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+&UserManager
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+driver.databases()
 ----
 
 // end::methods[]

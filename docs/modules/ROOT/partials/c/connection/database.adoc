@@ -9,7 +9,7 @@
 
 
 
-A TypeDB database
+A TypeDB database.
 
 [#_database_close]
 ==== function ``database_close``
@@ -21,7 +21,7 @@ void database_close(const struct Database* database)
 
 
 
-Frees the native rust ``Database`` object
+Frees the native rust ``Database`` object.
 
 [caption=""]
 .Returns
@@ -38,6 +38,16 @@ void database_delete(const struct Database* database)
 
 
 Deletes this database.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `database` a| The ``Database`` to delete. a| `const struct Database*`
+|===
 
 [caption=""]
 .Returns
@@ -81,7 +91,7 @@ char* database_get_name(const struct Database* database)
 
 
 
-The database name as a string.
+The ``Database`` name as a string.
 
 [caption=""]
 .Returns
@@ -98,6 +108,16 @@ char* database_type_schema(const struct Database* database)
 
 
 The types in the schema as a valid TypeQL define query string.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `database` a| The ``Database`` to get the type schema from. a| `const struct Database*`
+|===
 
 [caption=""]
 .Returns

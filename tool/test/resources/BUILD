@@ -17,6 +17,11 @@
 
 load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
+exports_files(
+    glob(["encryption/*"]),
+    visibility = ["//visibility:public"],
+)
+
 filegroup(
     name = "certificates",
     srcs = [
@@ -26,20 +31,14 @@ filegroup(
         ":encryption/int-grpc-root-ca.pem",
         ":encryption/int-grpc-private-key.pem",
         ":encryption/int-grpc-certificate.pem",
-        ":encryption/int-zmq-private-key",
-        ":encryption/int-zmq-public-key",
         ":encryption/keystore.pkcs12"
     ],
-    visibility = [
-        "//cpp/test:__subpackages__",
-        "//csharp/Test:__subpackages__",
-        "//common/test/encryption:__subpackages__"
-    ],
+    visibility = ["//visibility:public"],
 )
 
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*"]),
-    exclude = glob(["encryption/*"]),
+    exclude = glob(["encryption/*", "config.yml"]),
     license_type = "apache-header",
 )

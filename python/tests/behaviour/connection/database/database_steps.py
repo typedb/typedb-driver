@@ -64,7 +64,7 @@ def import_database(context: Context, name: str, schema: str, data_file: str, ma
 
 @step("connection create database: {name:NonSemicolon}{may_error:MayError}")
 def step_impl(context: Context, name: str, may_error: MayError):
-    may_error.check(lambda: create_databases(context.driver, [name]))
+    may_error.check(lambda: context.driver.databases.create(name))
 
 
 @step("connection create database with empty name{may_error:MayError}")
@@ -96,7 +96,7 @@ def step_impl(context: Context, name: str, may_error: MayError):
 
 @step("connection delete database: {name:NonSemicolon}{may_error:MayError}")
 def step_impl(context: Context, name: str, may_error: MayError):
-    may_error.check(lambda: delete_databases(context.driver, [name]))
+    may_error.check(lambda: context.driver.databases.get(name).delete())
 
 
 @step("connection delete databases")
@@ -122,12 +122,16 @@ def step_impl(context: Context, name: str, may_error: MayError):
 
 @step("connection has database: {name:NonSemicolon}")
 def step_impl(context: Context, name: str):
-    has_databases(context, [name])
+    assert_that(context.driver.databases.contains(name), equal_to(True),
+                f"Expected database {name} to exist")
 
 
 @step("connection has databases")
 def step_impl(context: Context):
-    has_databases(context, names=parse_list(context))
+    names = parse_list(context)
+    for name in names:
+        assert_that(context.driver.databases.contains(name), equal_to(True),
+                    f"Expected database {name} to exist")
 
 
 def does_not_have_databases(context: Context, names: list[str]):

@@ -116,11 +116,11 @@ class RustDocParser : Callable<Unit> {
             val html = it.readText(Charsets.UTF_8)
             val parsed = Jsoup.parse(html)
             val anchor = getAnchorFromUrl(it.toString())
-            val parsedClass = if (!parsed.select(".main-heading h1 a.struct").isNullOrEmpty()) {
+            val parsedClass = if (!parsed.select(".main-heading h1 .struct").isNullOrEmpty()) {
                 parseClass(parsed, anchor, mode)
-            } else if (!parsed.select(".main-heading h1 a.trait").isNullOrEmpty()) {
+            } else if (!parsed.select(".main-heading h1 .trait").isNullOrEmpty()) {
                 parseTrait(parsed, anchor, mode)
-            } else if (!parsed.select(".main-heading h1 a.enum").isNullOrEmpty()) {
+            } else if (!parsed.select(".main-heading h1 .enum").isNullOrEmpty()) {
                 parseEnum(parsed, anchor, mode)
             } else {
                 null
@@ -135,7 +135,7 @@ class RustDocParser : Callable<Unit> {
     }
 
     private fun parseClass(document: Element, classAnchor: String, mode: String): Class {
-        val className = document.selectFirst(".main-heading h1 a.struct")!!.text()
+        val className = document.selectFirst(".main-heading h1 .struct")!!.text()
         val classDescr =
             document.select(".item-decl + details.top-doc .docblock p").map { reformatTextWithCode(it.html()) }
 
@@ -167,7 +167,7 @@ class RustDocParser : Callable<Unit> {
     }
 
     private fun parseTrait(document: Element, classAnchor: String, mode: String): Class {
-        val className = document.selectFirst(".main-heading h1 a.trait")!!.text()
+        val className = document.selectFirst(".main-heading h1 .trait")!!.text()
         val classDescr =
             document.select(".item-decl + details.top-doc .docblock p").map { reformatTextWithCode(it.html()) }
         val examples = document.select(".top-doc .docblock .example-wrap").map { it.text() }
@@ -198,7 +198,7 @@ class RustDocParser : Callable<Unit> {
     }
 
     private fun parseEnum(document: Element, classAnchor: String, mode: String): Class {
-        val className = document.selectFirst(".main-heading h1 a.enum")!!.text()
+        val className = document.selectFirst(".main-heading h1 .enum")!!.text()
         val classDescr = document.select(".item-decl + details.top-doc .docblock p").map { it.html() }
 
         val variants = document.select("section.variant").map { parseEnumConstant(it) }
@@ -218,7 +218,7 @@ class RustDocParser : Callable<Unit> {
 
     private fun parseMethod(element: Element, classAnchor: String, mode: String): Method {
         val methodSignature = enhanceSignature(element.selectFirst("summary section h4")!!.wholeText())
-        val methodName = element.selectFirst("summary section h4 a.fn")!!.text()
+        val methodName = element.selectFirst("summary section h4 .fn")!!.text()
         val allArgs = getArgsFromSignature(methodSignature)
         val methodReturnType = if (methodSignature.contains(" -> ")) methodSignature.split(" -> ").last() else null
         val methodDescr = if (element.select("div.docblock p").isNotEmpty()) {

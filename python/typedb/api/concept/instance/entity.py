@@ -39,8 +39,6 @@ class Entity(Instance, ABC):
         """
         Checks if the concept is an ``Entity``.
 
-        :return:
-
         Examples
         --------
         ::
@@ -52,8 +50,6 @@ class Entity(Instance, ABC):
     def as_entity(self) -> Entity:
         """
         Casts the concept to ``Entity``.
-
-        :return:
 
         Examples
         --------
@@ -68,8 +64,6 @@ class Entity(Instance, ABC):
         """
         Retrieves the type which this ``Entity`` belongs to.
 
-        :return:
-
         Examples
         --------
         ::
@@ -82,8 +76,6 @@ class Entity(Instance, ABC):
     def get_iid(self) -> str:
         """
         Retrieves the unique id of the ``Entity``.
-
-        :return:
 
         Examples
         --------

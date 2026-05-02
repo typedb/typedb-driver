@@ -21,127 +21,117 @@
 # This key is used as the filename of the file their documentation will be appended to (unless `force_file` overrides it)
 # The value is the corresponding directory in which the file must sit.
 dir_mapping = {
-    # Connection
-    "driver": "connection",
-    "credential": "connection",
-    "driveroptions": "connection",
-
-    # Database
-    "database": "connection",
-    "databasemanager": "connection",
-
-    # User
-    "user": "connection",
-    "usermanager": "connection",
-
-    # Transaction
-    "transaction": "transaction",
-    "transactiontype": "transaction",
-    "transactionoptions": "transaction",
-    "queryoptions": "transaction",
+    # Analyze
+    "analyzed": "analyze",
+    "analyzedquery": "analyze",
+    "analyzedquerypromise": "analyze",
+    "comparator": "analyze",
+    "conjunction": "analyze",
+    "conjunctionid": "analyze",
+    "conjunctioniditerator": "analyze",
+    "constraint": "analyze",
+    "constraintexactness": "analyze",
+    "constraintspan": "analyze",
+    "constraintvertex": "analyze",
+    "constraintvertexiterator": "analyze",
+    "constraintwithspan": "analyze",
+    "constraintwithspaniterator": "analyze",
+    "fetch": "analyze",
+    "function": "analyze",
+    "functioniterator": "analyze",
+    "named": "analyze",
+    "namedrole": "analyze",
+    "pipeline": "analyze",
+    "pipelinestage": "analyze",
+    "pipelinestageiterator": "analyze",
+    "reduce": "analyze",
+    "reduceassignment": "analyze",
+    "reduceassignmentiterator": "analyze",
+    "reducer": "analyze",
+    "reduceriterator": "analyze",
+    "return": "analyze",
+    "returnoperation": "analyze",
+    "sort": "analyze",
+    "sortorder": "analyze",
+    "sortvariable": "analyze",
+    "sortvariableiterator": "analyze",
+    "variable": "analyze",
+    "variableannotations": "analyze",
+    "variableannotationsiterator": "analyze",
+    "variableiterator": "analyze",
 
     # Answer
+    "bool": "answer",
+    "boolpromise": "answer",
+    "conceptrowiterator": "answer",
+    "query": "answer",
     "queryanswer": "answer",
+    "queryanswerpromise": "answer",
     "querytype": "answer",
-    "conceptrow": "answer",
+    "string": "answer",
+    "stringiterator": "answer",
+    "stringpromise": "answer",
+    "void": "answer",
+    "voidpromise": "answer",
 
     # Concept
+    "attribute": "concept",
     "concept": "concept",
-    "datetimeinnanos": "concept",
+    "conceptiterator": "concept",
+    "datetime": "concept",
     "datetimeandtimezone": "concept",
+    "datetimeinnanos": "concept",
+    "entity": "concept",
+    "kind": "concept",
+    "relation": "concept",
     "stringandoptvalue": "concept",
+    "stringandoptvalueiterator": "concept",
+    "valuetype": "concept",
 
-    # Value types (re-exported from Rust driver)
+    # Connection
+    "credential": "connection",
+    "database": "connection",
+    "databaseiterator": "connection",
+    "databasemanager": "connection",
+    "databases": "connection",
+    "driver": "connection",
+    "driveroptions": "connection",
+    "init": "connection",
+    "initlogging": "connection",
+    "replicationrole": "connection",
+    "server": "connection",
+    "serveriterator": "connection",
+    "serverrouting": "connection",
+    "serverroutingtag": "connection",
+    "serverversion": "connection",
+    "typedbdriver": "connection",
+    "user": "connection",
+    "useriterator": "connection",
+    "usermanager": "connection",
+    "users": "connection",
+
+    # Errors
+    "checkerror": "errors",
+    "error": "errors",
+    "get": "errors",
+    "getlasterror": "errors",
+    "check": "errors",
+
+    # Transaction
+    "queryoptions": "transaction",
+    "transaction": "transaction",
+    "transactionoptions": "transaction",
+    "transactiontype": "transaction",
+
+    # Value
     "decimal": "value",
     "duration": "value",
     "timezone": "value",
-    "kind": "concept",
-    "valuetype": "concept",
-
-    # Analyze
-    "analyzedquery": "analyze",
-    "pipeline": "analyze",
-    "pipelinestage": "analyze",
-    "conjunction": "analyze",
-    "conjunctionid": "analyze",
-    "constraint": "analyze",
-    "constraintvertex": "analyze",
-    "constraintspan": "analyze",
-    "constraintwithspan": "analyze",
-    "variable": "analyze",
-    "variableannotations": "analyze",
-    "fetch": "analyze",
-    "function": "analyze",
-    "returnoperation": "analyze",
-    "reducer": "analyze",
-    "reduceassignment": "analyze",
-    "sortvariable": "analyze",
-    "sortorder": "analyze",
-    "namedrole": "analyze",
-    "comparator": "analyze",
-
-    # Additional types
-    "constraintexactness": "analyze",
-    "typedbdriver": "connection",
-
-    # Additional function prefixes
-    "databases": "connection",
-    "users": "connection",
-    "entity": "concept",
-    "relation": "concept",
-    "attribute": "concept",
-    "init": "connection",
-    "check": "errors",
-    "get": "errors",
-    "bool": "answer",
-    "void": "answer",
-    "datetime": "concept",
-    "query": "answer",
-    "named": "analyze",
-    "return": "analyze",
-    "sort": "analyze",
-    "analyzed": "analyze",
-    "string": "answer",
-    "reduce": "analyze",
-
-    # Errors
-    "error": "errors",
-    "checkerror": "errors",
-    "getlasterror": "errors",
-
-    # Iterators
-    "stringiterator": "answer",
-    "conceptiterator": "concept",
-    "conceptrowiterator": "answer",
-    "functioniterator": "analyze",
-    "conjunctioniditerator": "analyze",
-    "constraintwithspaniterator": "analyze",
-    "constraintvertexiterator": "analyze",
-    "pipelinestageiterator": "analyze",
-    "sortvariableiterator": "analyze",
-    "reduceassignmentiterator": "analyze",
-    "reduceriterator": "analyze",
-    "variableannotationsiterator": "analyze",
-    "variableiterator": "analyze",
-    "useriterator": "connection",
-    "stringandoptvalueiterator": "concept",
-
-    # Promise types
-    "voidpromise": "answer",
-    "boolpromise": "answer",
-    "stringpromise": "answer",
-    "conceptpromise": "answer",
-    "analyzedquerypromise": "analyze",
-    "queryanswerpromise": "answer",
-    "databaseiterator": "connection",
-
-    # Init logging goes to connection
-    "initlogging": "connection",
 }
 
 # If a function name 'matches', the value here is used as the filename instead.
 force_file = {
-    "initlogging": "driver",
     "checkerror": "error",
     "getlasterror": "error",
+    "initlogging": "driver",
 }

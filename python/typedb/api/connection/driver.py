@@ -18,13 +18,16 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, Optional, Set, Mapping
 
 if TYPE_CHECKING:
-    from typedb.api.connection.database import DatabaseManager
+    from typedb.api.connection.server_routing import ServerRouting
+    from typedb.api.database.database_manager import DatabaseManager
     from typedb.api.connection.transaction_options import TransactionOptions
     from typedb.api.connection.transaction import Transaction, TransactionType
-    from typedb.api.user.user import UserManager
+    from typedb.api.user.user_manager import UserManager
+    from typedb.api.server.server import Server
+    from typedb.api.server.server_version import ServerVersion
 
 
 class Driver(ABC):
@@ -34,8 +37,6 @@ class Driver(ABC):
     def is_open(self) -> bool:
         """
         Checks whether this connection is presently open.
-
-        :return:
 
         Examples:
         ---------
@@ -53,16 +54,39 @@ class Driver(ABC):
         """
         pass
 
+    @property
+    @abstractmethod
+    def users(self) -> UserManager:
+        """
+        The ``UserManager`` for this connection, providing access to user management methods.
+        """
+        pass
+
+    @abstractmethod
+    def server_version(self, server_routing: Optional[ServerRouting] = None) -> ServerVersion:
+        """
+        Retrieves the server's version.
+
+        :param server_routing: The server routing to use for the operation. Auto by default
+
+        Examples:
+        ---------
+        ::
+
+            driver.server_version()
+            driver.server_version(ServerRouting.Auto())
+        """
+        pass
+
     @abstractmethod
     def transaction(self, database_name: str, transaction_type: TransactionType,
                     options: Optional[TransactionOptions] = None) -> Transaction:
         """
-        Opens a communication tunnel (transaction) to the given database on the running TypeDB server.
+        Opens a transaction to the given database on the running TypeDB server.
 
         :param database_name: The name of the database with which the transaction connects
         :param transaction_type: The type of transaction to be created (READ, WRITE, or SCHEMA)
         :param options: ``TransactionOptions`` to configure the opened transaction
-        :return:
 
         Examples:
         ---------
@@ -73,26 +97,47 @@ class Driver(ABC):
         pass
 
     @abstractmethod
+    def servers(self, server_routing: Optional[ServerRouting] = None) -> Set[Server]:
+        """
+        Set of servers for this driver connection.
+
+        :param server_routing: The server routing to use for the operation. Auto by default
+
+        Examples:
+        ---------
+        ::
+
+            driver.servers()
+            driver.servers(ServerRouting.Auto())
+        """
+        pass
+
+    @abstractmethod
+    def primary_server(self, server_routing: Optional[ServerRouting] = None) -> Optional[Server]:
+        """
+        Returns the primary server for this driver connection.
+
+        :param server_routing: The server routing to use for the operation. Auto by default
+
+        Examples:
+        ---------
+        ::
+
+            driver.primary_server()
+            driver.primary_server(ServerRouting.Auto())
+        """
+        pass
+
+    @abstractmethod
     def close(self) -> None:
         """
-        Closes the driver. Before instantiating a new driver, the driver that’s currently open should first be closed.
-
-        :return:
+        Closes the driver. Before instantiating a new driver, the driver that's currently open should first be closed.
 
         Examples:
         ---------
         ::
 
             driver.close()
-        """
-        pass
-
-    @property
-    @abstractmethod
-    def users(self) -> UserManager:
-        """
-        The ``UserManager`` instance for this connection, providing access to user management methods.
-        Only for TypeDB Cloud.
         """
         pass
 

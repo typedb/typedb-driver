@@ -32,13 +32,22 @@ import static com.typedb.driver.jni.typedb_driver.users_all;
 import static com.typedb.driver.jni.typedb_driver.users_contains;
 import static com.typedb.driver.jni.typedb_driver.users_create;
 import static com.typedb.driver.jni.typedb_driver.users_get;
-import static com.typedb.driver.jni.typedb_driver.users_get_current_user;
+import static com.typedb.driver.jni.typedb_driver.users_get_current;
 
 public class UserManagerImpl implements UserManager {
     com.typedb.driver.jni.TypeDBDriver nativeDriver;
 
     public UserManagerImpl(com.typedb.driver.jni.TypeDBDriver driver) {
         nativeDriver = driver;
+    }
+
+    @Override
+    public Set<User> all() throws TypeDBDriverException {
+        try {
+            return new NativeIterator<>(users_all(nativeDriver)).stream().map(user -> new UserImpl(user)).collect(Collectors.toSet());
+        } catch (com.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
+        }
     }
 
     @Override
@@ -56,7 +65,7 @@ public class UserManagerImpl implements UserManager {
         Validator.requireNonNull(username, "username");
         try {
             com.typedb.driver.jni.User user = users_get(nativeDriver, username);
-            if (user != null) return new UserImpl(user, this);
+            if (user != null) return new UserImpl(user);
             else return null;
         } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
@@ -64,20 +73,11 @@ public class UserManagerImpl implements UserManager {
     }
 
     @Override
-    public User getCurrentUser() throws TypeDBDriverException {
-        try { // TODO: Make noexcept if we leave it returning just a String
-            com.typedb.driver.jni.User user = users_get_current_user(nativeDriver);
-            if (user != null) return new UserImpl(user, this);
-            else return null;
-        } catch (com.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
-    }
-
-    @Override
-    public Set<User> all() throws TypeDBDriverException {
+    public User getCurrent() throws TypeDBDriverException {
         try {
-            return new NativeIterator<>(users_all(nativeDriver)).stream().map(user -> new UserImpl(user, this)).collect(Collectors.toSet());
+            com.typedb.driver.jni.User user = users_get_current(nativeDriver);
+            if (user != null) return new UserImpl(user);
+            else return null;
         } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }

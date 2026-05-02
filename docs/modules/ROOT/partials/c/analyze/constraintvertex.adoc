@@ -14,8 +14,10 @@ The answer to a TypeDB query is a set of concepts which satisfy the ``Constraint
  A ``Variable`` is a vertex the query must match and return.
  A ``Label`` uniquely identifies a type
  A ``Value`` represents a primitive value literal in TypeDB.
- A ``NamedRole`` vertex is used in links &amp; relates constraints, as multiple relations may have roles with the same name. The types inferred for ``Variable``, ``Label`` and ``NamedRole`` vertices can be read from the ``variable_annotations`` field of the ``Conjunction`` it is in.
+ A ``NamedRole`` vertex is used in links &amp; relates constraints, as multiple relations may have roles with the same name.
 
+
+The types inferred for ``Variable``, ``Label`` and ``NamedRole`` vertices can be read from the ``variable_annotations`` field of the ``Conjunction`` it is in.
 
 [#_constraint_vertex_as_label]
 ==== function ``constraint_vertex_as_label``

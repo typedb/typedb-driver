@@ -21,10 +21,14 @@ use std::{ffi::c_char, ptr::null_mut};
 
 use typedb_driver::{Error, Promise, QueryOptions, Transaction, TransactionOptions, TransactionType, TypeDBDriver};
 
-use super::memory::{borrow, borrow_mut, free, release, take_ownership};
 use crate::{
-    analyze::AnalyzedQueryPromise, answer::QueryAnswerPromise, error::try_release, memory::string_view,
-    promise::VoidPromise,
+    analyze::AnalyzedQueryPromise,
+    answer::QueryAnswerPromise,
+    common::{
+        error::try_release,
+        memory::{borrow, borrow_mut, free, release, string_view, take_ownership},
+        promise::VoidPromise,
+    },
 };
 
 /// Opens a transaction to perform read or write queries on the database connected to the session.

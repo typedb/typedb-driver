@@ -20,10 +20,15 @@
 package com.typedb.driver.api;
 
 import com.typedb.driver.api.database.DatabaseManager;
+import com.typedb.driver.api.server.Server;
+import com.typedb.driver.api.server.ServerVersion;
 import com.typedb.driver.api.user.UserManager;
 import com.typedb.driver.common.exception.TypeDBDriverException;
 
 import javax.annotation.CheckReturnValue;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 public interface Driver extends AutoCloseable {
     String LANGUAGE = "java";
@@ -40,13 +45,56 @@ public interface Driver extends AutoCloseable {
     boolean isOpen();
 
     /**
+     * Retrieves the server's version, using default automatic routing.
+     * See {@link #serverVersion(ServerRouting)} for more details and options.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * driver.serverVersion();
+     * </pre>
+     */
+    @CheckReturnValue
+    default ServerVersion serverVersion() {
+        return serverVersion(null);
+    }
+
+    /**
+     * Retrieves the server's version.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * driver.serverVersion();
+     * </pre>
+     *
+     * @param serverRouting The server routing to use for the operation
+     */
+    @CheckReturnValue
+    ServerVersion serverVersion(ServerRouting serverRouting);
+
+    /**
      * The <code>DatabaseManager</code> for this connection, providing access to database management methods.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * driver.databases();
+     * </pre>
      */
     @CheckReturnValue
     DatabaseManager databases();
 
     /**
-     * Opens a communication tunnel (transaction) to the given database on the running TypeDB server.
+     * The <code>UserManager</code> for this connection, providing access to user management methods.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * driver.users();
+     * </pre>
+     */
+    @CheckReturnValue
+    UserManager users();
+
+    /**
+     * Opens a transaction to the given database on the running TypeDB server.
      *
      * <h3>Examples</h3>
      * <pre>
@@ -60,7 +108,7 @@ public interface Driver extends AutoCloseable {
     Transaction transaction(String database, Transaction.Type type) throws TypeDBDriverException;
 
     /**
-     * Opens a communication tunnel (transaction) to the given database on the running TypeDB server.
+     * Opens a transaction to the given database on the running TypeDB server.
      *
      * <h3>Examples</h3>
      * <pre>
@@ -75,23 +123,66 @@ public interface Driver extends AutoCloseable {
     Transaction transaction(String database, Transaction.Type type, TransactionOptions options);
 
     /**
-     * Closes the driver. Before instantiating a new driver, the driver that’s currently open should first be closed.
+     * Set of servers for this driver connection, using default automatic routing.
+     * See {@link #servers(ServerRouting)} for more details and options.
      *
      * <h3>Examples</h3>
      * <pre>
-     * driver.close()
-     * </pre>
-     */
-    void close();
-
-    /**
-     * The <code>UserManager</code> instance for this connection, providing access to user management methods.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * driver.users();
+     * driver.servers();
      * </pre>
      */
     @CheckReturnValue
-    UserManager users();
+    default Set<? extends Server> servers() {
+        return servers(null);
+    }
+
+    /**
+     * Set of servers for this driver connection.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * driver.servers(new ServerRouting.Auto());
+     * </pre>
+     *
+     * @param serverRouting The server routing to use for the operation
+     */
+    @CheckReturnValue
+    Set<? extends Server> servers(ServerRouting serverRouting);
+
+    /**
+     * Returns the primary server for this driver connection, using default automatic routing.
+     * See {@link #primaryServer(ServerRouting)} for more details and options.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * driver.primaryServer();
+     * </pre>
+     */
+    @CheckReturnValue
+    default Optional<? extends Server> primaryServer() {
+        return primaryServer(null);
+    }
+
+    /**
+     * Returns the primary server for this driver connection.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * driver.primaryServer(new ServerRouting.Auto());
+     * </pre>
+     *
+     * @param serverRouting The server routing to use for the operation
+     */
+    @CheckReturnValue
+    Optional<? extends Server> primaryServer(ServerRouting serverRouting);
+
+    /**
+     * Closes the driver. Before instantiating a new driver, the driver that's currently open should first be closed.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * driver.close();
+     * </pre>
+     */
+    void close();
 }

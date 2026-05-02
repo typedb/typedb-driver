@@ -18,8 +18,35 @@
 load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("@typedb_dependencies//builder/java:rules.bzl", "typedb_java_test")
 
-# TODO: This package can contain cluster-specific integration tests. Tests available for running for both community
-# edition and cluster should be run for both setups (and be limited: always prefer BDDs to integration tests)!
+typedb_java_test(
+    name = "test-failover",
+    srcs = ["FailoverTest.java"],
+    test_class = "com.typedb.driver.test.integration.cluster.FailoverTest",
+    size = "large",
+    deps = [
+        # Internal dependencies
+        "//java:driver-java",
+        "//java/api",
+        "//java/common",
+
+        # External dependencies
+        "@maven//:org_slf4j_slf4j_api",
+    ],
+    data = [
+        "//tool/test:cluster-server.sh",
+        "//tool/test/resources:encryption/ext-grpc-root-ca.pem",
+    ],
+    env = {
+        "CLUSTER_SERVER_SCRIPT": "$(rootpath //tool/test:cluster-server.sh)",
+        "ROOT_CA": "$(rootpath //tool/test/resources:encryption/ext-grpc-root-ca.pem)",
+    },
+    # The test drives an out-of-sandbox cluster started by start-cluster-servers.sh:
+    # it kills/restarts nodes via cluster-server.sh, which writes to log files and
+    # data directories under $CLUSTER_DIR (the outer workspace). The Bazel sandbox
+    # blocks writes to those paths, so this test must run unsandboxed and locally,
+    # and it relies on host-level state so cached results would be misleading.
+    tags = ["external", "no-cache", "no-sandbox"],
+)
 
 checkstyle_test(
     name = "checkstyle",

@@ -35,6 +35,7 @@ import static org.junit.Assert.assertTrue;
 
 public class AnalyzeSteps {
     private static AnalyzedQuery analyzedQuery;
+
     @When("get answers of typeql analyze")
     public void get_answers_of_typeql_analyze(String query) {
         analyzedQuery = null;
@@ -61,8 +62,8 @@ public class AnalyzeSteps {
         }).collect(Collectors.toList());
 
         assertTrue(
-            String.format("Did not find %s in %s", expectedFunctor, preambleFunctors.stream().collect(Collectors.joining(","))),
-            preambleFunctors.contains(expectedFunctor)
+                String.format("Did not find %s in %s", expectedFunctor, preambleFunctors.stream().collect(Collectors.joining(","))),
+                preambleFunctors.contains(expectedFunctor)
         );
     }
 

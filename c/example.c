@@ -7,10 +7,12 @@
 int main() {
     // Open a driver connection
     Credentials* credentials = credentials_new("admin", "password");
-    DriverOptions* driver_options = driver_options_new(false, NULL);
-    TypeDBDriver* driver = driver_open("127.0.0.1:1729", credentials, driver_options);
+    DriverTlsConfig* tls_config = driver_tls_config_new_disabled();
+    DriverOptions* driver_options = driver_options_new(tls_config);
+    TypeDBDriver* driver = driver_new("127.0.0.1:1729", credentials, driver_options, NULL);
     credentials_drop(credentials);
     driver_options_drop(driver_options);
+    driver_tls_config_drop(tls_config);
 
     if (check_error()) {
         Error* error = get_last_error();

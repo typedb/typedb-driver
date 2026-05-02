@@ -20,6 +20,7 @@
 package com.typedb.driver.test.behaviour.config;
 
 import com.typedb.driver.api.QueryType;
+import com.typedb.driver.api.ServerRouting;
 import com.typedb.driver.api.Transaction;
 import io.cucumber.java.DataTableType;
 import io.cucumber.java.ParameterType;
@@ -41,6 +42,14 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 
 public class Parameters {
+
+    private static boolean clusterMode = false;
+    private static final int RETRY_ATTEMPTS = 3;
+    private static final int RETRY_DELAY_MS = 500;
+
+    public static void setClusterMode(boolean isCluster) {
+        clusterMode = isCluster;
+    }
 
     @ParameterType("true|false")
     public Boolean bool(String bool) {
@@ -173,6 +182,11 @@ public class Parameters {
         return null;
     }
 
+    @ParameterType("auto|direct\\(.*\\)")
+    public Routing server_routing(String value) {
+        return Routing.parse(value);
+    }
+
     public enum ConceptKind {
         CONCEPT("concept"),
         TYPE("type"),
@@ -280,6 +294,8 @@ public class Parameters {
         }
 
         public void check(Runnable function) {
+            int attempts = clusterMode ? RETRY_ATTEMPTS : 1;
+
             if (mayError) {
                 if (message.isEmpty()) {
                     assertThrows(function);
@@ -287,7 +303,24 @@ public class Parameters {
                     assertThrowsWithMessage(function, message);
                 }
             } else {
-                function.run();
+                Exception lastException = null;
+                for (int i = 0; i < attempts; i++) {
+                    try {
+                        function.run();
+                        return;
+                    } catch (Exception e) {
+                        lastException = e;
+                        if (i < attempts - 1) {
+                            try {
+                                Thread.sleep(RETRY_DELAY_MS);
+                            } catch (InterruptedException ie) {
+                                Thread.currentThread().interrupt();
+                                throw new RuntimeException(ie);
+                            }
+                        }
+                    }
+                }
+                throw new RuntimeException(lastException);
             }
         }
     }
@@ -385,4 +418,32 @@ public class Parameters {
             DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS VV"),
             DateTimeFormatter.ISO_ZONED_DATE_TIME
     );
+
+    public static class Routing {
+        private final ServerRouting serverRouting;
+
+        public Routing(ServerRouting serverRouting) {
+            this.serverRouting = serverRouting;
+        }
+
+        public ServerRouting serverRouting() {
+            return serverRouting;
+        }
+
+        public static Routing parse(String value) {
+            if (value.equalsIgnoreCase("auto")) {
+                return new Routing(new ServerRouting.Auto());
+            } else if (value.toLowerCase().startsWith("direct(") && value.endsWith(")")) {
+                String address = value.substring("direct(".length(), value.length() - 1);
+                return new Routing(new ServerRouting.Direct(address));
+            } else {
+                throw new IllegalArgumentException("Unknown server routing: " + value);
+            }
+        }
+
+        @Override
+        public String toString() {
+            return "Routing(" + serverRouting + ")";
+        }
+    }
 }

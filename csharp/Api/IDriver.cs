@@ -18,12 +18,10 @@
  */
 
 using System;
+using System.Collections.Generic;
 
 namespace TypeDB.Driver.Api
 {
-    /// <summary>
-    /// A connection to a TypeDB server which serves as the starting point for all interaction.
-    /// </summary>
     public interface IDriver : IDisposable
     {
         /// <summary>
@@ -34,7 +32,6 @@ namespace TypeDB.Driver.Api
         /// <summary>
         /// Checks whether this connection is presently open.
         /// </summary>
-        /// <returns><c>true</c> if the connection is open, <c>false</c> otherwise.</returns>
         /// <example>
         /// <code>
         /// driver.IsOpen();
@@ -43,31 +40,30 @@ namespace TypeDB.Driver.Api
         bool IsOpen();
 
         /// <summary>
-        /// The <see cref="IDatabaseManager"/> for this connection, providing access to database management methods.
+        /// The <c>IDatabaseManager</c> for this connection, providing access to database management methods.
         /// </summary>
         /// <example>
         /// <code>
-        /// driver.Databases
+        /// driver.Databases;
         /// </code>
         /// </example>
         IDatabaseManager Databases { get; }
 
         /// <summary>
-        /// The <see cref="IUserManager"/> instance for this connection, providing access to user management methods.
+        /// The <c>IUserManager</c> for this connection, providing access to user management methods.
         /// </summary>
         /// <example>
         /// <code>
-        /// driver.Users
+        /// driver.Users;
         /// </code>
         /// </example>
         IUserManager Users { get; }
 
         /// <summary>
-        /// Opens a transaction to perform read or write queries on the database.
+        /// Opens a transaction to the given database on the running TypeDB server.
         /// </summary>
-        /// <param name="database">The name of the database to open a transaction for.</param>
-        /// <param name="type">The type of transaction to be created (Read, Write, or Schema).</param>
-        /// <returns>A new transaction.</returns>
+        /// <param name="database">The name of the database with which the transaction connects.</param>
+        /// <param name="type">The type of transaction to be created (READ, WRITE, or SCHEMA).</param>
         /// <example>
         /// <code>
         /// driver.Transaction(database, TransactionType.Read);
@@ -76,18 +72,50 @@ namespace TypeDB.Driver.Api
         ITransaction Transaction(string database, TransactionType type);
 
         /// <summary>
-        /// Opens a transaction to perform read or write queries on the database with custom options.
+        /// Opens a transaction to the given database on the running TypeDB server.
         /// </summary>
-        /// <param name="database">The name of the database to open a transaction for.</param>
-        /// <param name="type">The type of transaction to be created (Read, Write, or Schema).</param>
-        /// <param name="options">Transaction options to configure the opened transaction.</param>
-        /// <returns>A new transaction.</returns>
+        /// <param name="database">The name of the database with which the transaction connects.</param>
+        /// <param name="type">The type of transaction to be created (READ, WRITE, or SCHEMA).</param>
+        /// <param name="options"><c>TransactionOptions</c> to configure the opened transaction.</param>
         /// <example>
         /// <code>
         /// driver.Transaction(database, TransactionType.Read, options);
         /// </code>
         /// </example>
         ITransaction Transaction(string database, TransactionType type, TransactionOptions options);
+
+        /// <summary>
+        /// Retrieves the server's version.
+        /// </summary>
+        /// <param name="serverRouting">The server routing to use for the operation.</param>
+        /// <example>
+        /// <code>
+        /// driver.GetServerVersion();
+        /// </code>
+        /// </example>
+        ServerVersion GetServerVersion(ServerRouting? serverRouting = null);
+
+        /// <summary>
+        /// Set of servers for this driver connection.
+        /// </summary>
+        /// <param name="serverRouting">The server routing to use for the operation.</param>
+        /// <example>
+        /// <code>
+        /// driver.GetServers(new ServerRouting.Auto());
+        /// </code>
+        /// </example>
+        ISet<IServer> GetServers(ServerRouting? serverRouting = null);
+
+        /// <summary>
+        /// Returns the primary server for this driver connection.
+        /// </summary>
+        /// <param name="serverRouting">The server routing to use for the operation.</param>
+        /// <example>
+        /// <code>
+        /// driver.GetPrimaryServer(new ServerRouting.Auto());
+        /// </code>
+        /// </example>
+        IServer? GetPrimaryServer(ServerRouting? serverRouting = null);
 
         /// <summary>
         /// Closes the driver. Before instantiating a new driver, the driver that's currently open should first be closed.

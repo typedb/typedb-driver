@@ -18,13 +18,14 @@
  */
 
 pub(crate) use self::transaction_stream::TransactionStream;
-pub use self::{credentials::Credentials, driver_options::DriverOptions};
+pub use self::{credentials::Credentials, driver_options::DriverOptions, driver_tls_config::DriverTlsConfig};
 
 mod credentials;
 pub(crate) mod database;
 mod driver_options;
+mod driver_tls_config;
 mod message;
 mod network;
 pub(crate) mod runtime;
-pub(crate) mod server_connection;
+pub mod server;
 pub(crate) mod transaction_stream;

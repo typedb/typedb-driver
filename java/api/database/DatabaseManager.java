@@ -28,19 +28,16 @@ import java.util.List;
  * Provides access to all database management methods.
  */
 public interface DatabaseManager {
-
     /**
-     * Retrieve the database with the given name.
+     * Retrieves all databases present on the TypeDB server.
      *
      * <h3>Examples</h3>
      * <pre>
-     * driver.databases().get(name)
+     * driver.databases().all()
      * </pre>
-     *
-     * @param name The name of the database to retrieve
      */
     @CheckReturnValue
-    Database get(String name) throws TypeDBDriverException;
+    List<Database> all() throws TypeDBDriverException;
 
     /**
      * Checks if a database with the given name exists.
@@ -56,7 +53,20 @@ public interface DatabaseManager {
     boolean contains(String name) throws TypeDBDriverException;
 
     /**
-     * Create a database with the given name.
+     * Retrieves the database with the given name.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * driver.databases().get(name)
+     * </pre>
+     *
+     * @param name The name of the database to retrieve
+     */
+    @CheckReturnValue
+    Database get(String name) throws TypeDBDriverException;
+
+    /**
+     * Creates a database with the given name.
      *
      * <h3>Examples</h3>
      * <pre>
@@ -68,7 +78,7 @@ public interface DatabaseManager {
     void create(String name) throws TypeDBDriverException;
 
     /**
-     * Create a database with the given name based on previously exported another database's data loaded from a file.
+     * Creates a database with the given name based on previously exported another database's data loaded from a file.
      * This is a blocking operation and may take a significant amount of time depending on the database size.
      *
      * <h3>Examples</h3>
@@ -81,15 +91,4 @@ public interface DatabaseManager {
      * @param dataFilePath The exported database file path to import the data from
      */
     void importFromFile(String name, String schema, String dataFilePath) throws TypeDBDriverException;
-
-    /**
-     * Retrieves all databases present on the TypeDB server.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * driver.databases().all()
-     * </pre>
-     */
-    @CheckReturnValue
-    List<Database> all() throws TypeDBDriverException;
 }

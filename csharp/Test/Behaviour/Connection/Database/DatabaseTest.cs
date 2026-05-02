@@ -21,7 +21,7 @@ using Xunit.Gherkin.Quick;
 
 namespace TypeDB.Driver.Test.Behaviour
 {
-    [FeatureFile("external/typedb_behaviour/connection/database.feature")]
+    [FeatureFile("../typedb_behaviour+/connection/database.feature")]
     public partial class BehaviourSteps
     {
     }

@@ -20,6 +20,10 @@
 import { After, Before } from "@cucumber/cucumber";
 import { AnalyzeResponse, isOkResponse, QueryOptions, QueryResponse, TransactionOptions, TransactionType, TypeDBHttpDriver } from "../../../dist/index.cjs";
 import { assertNotError } from "./params";
+import * as https from "https";
+import * as http from "http";
+import * as fs from "fs";
+import * as path from "path";
 
 export let driver: TypeDBHttpDriver;
 let transactionID: string;
@@ -89,12 +93,95 @@ export function setConcurrentAnswers(answers: QueryResponse[]) {
 
 export const DEFAULT_USERNAME = "admin";
 export const DEFAULT_PASSWORD = "password";
-export const DEFAULT_HOST = "http://127.0.0.1";
-export const DEFAULT_PORT = 8000;
+export const DEFAULT_HOST = process.env.TYPEDB_HTTP_HOST || "http://127.0.0.1";
+export const DEFAULT_PORT = parseInt(process.env.TYPEDB_HTTP_PORT || "8000");
+
+export const isClusterMode = process.env.TYPEDB_CLUSTER_MODE === "true";
+export const CLUSTER_ADDRESSES = [
+    "https://127.0.0.1:18000",
+    "https://127.0.0.1:28000",
+    "https://127.0.0.1:38000"
+];
+
+function setupMtlsFetch(): void {
+    const rootCaPath = process.env.ROOT_CA;
+    if (!rootCaPath) throw new Error("ROOT_CA environment variable must be set");
+    const certDir = path.dirname(rootCaPath);
+    const ca = fs.readFileSync(rootCaPath);
+    const cert = fs.readFileSync(path.join(certDir, "ext-grpc-certificate.pem"));
+    const key = fs.readFileSync(path.join(certDir, "ext-grpc-private-key.pem"));
+
+    const customFetch = async (input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
+        const url = typeof input === "string" ? new URL(input) : input instanceof URL ? input : new URL(input.url);
+        const isHttps = url.protocol === "https:";
+
+        return new Promise((resolve, reject) => {
+            const options: https.RequestOptions = {
+                hostname: url.hostname,
+                port: url.port || (isHttps ? 443 : 80),
+                path: url.pathname + url.search,
+                method: init?.method || "GET",
+                headers: init?.headers as Record<string, string>,
+                ca,
+                cert,
+                key,
+                rejectUnauthorized: true,
+            };
+
+            const client = isHttps ? https : http;
+            const req = client.request(options, (res) => {
+                const chunks: Buffer[] = [];
+                res.on("data", (chunk) => chunks.push(chunk));
+                res.on("end", () => {
+                    const body = Buffer.concat(chunks).toString();
+                    const headers = new Headers();
+                    Object.entries(res.headers).forEach(([k, value]) => {
+                        if (value) headers.set(k, Array.isArray(value) ? value.join(", ") : value);
+                    });
+                    const status = res.statusCode || 200;
+                    const isNullBodyStatus = status === 204 || status === 304;
+                    resolve(new Response(isNullBodyStatus ? null : body, {
+                        status,
+                        statusText: res.statusMessage || "",
+                        headers,
+                    }));
+                });
+            });
+
+            req.on("error", reject);
+            if (init?.body) req.write(init.body);
+            req.end();
+        });
+    };
+
+    (globalThis as any).fetch = customFetch;
+}
+
+if (isClusterMode) setupMtlsFetch();
 
 export async function openAndTestConnection(username: string, password: string) {
+    if (isClusterMode) {
+        return openAndTestConnectionWithAddresses(username, password, CLUSTER_ADDRESSES);
+    }
     return openAndTestConnectionWithHostPort(username, password, DEFAULT_HOST, DEFAULT_PORT);
 }
+
+export async function openAndTestSingleConnection(username: string, password: string) {
+    if (isClusterMode) {
+        return openAndTestConnectionWithAddresses(username, password, [CLUSTER_ADDRESSES[0]]);
+    }
+    return openAndTestConnectionWithHostPort(username, password, DEFAULT_HOST, DEFAULT_PORT);
+}
+
+export async function openAndTestConnectionWithAddresses(username: string, password: string, addresses: string[]) {
+    const newDriver = new TypeDBHttpDriver({
+        username, password, addresses
+    });
+    const healthCheck = await newDriver.health();
+    if (isOkResponse(healthCheck)) driver = newDriver;
+    return healthCheck;
+}
+
 export async function openAndTestConnectionWithHostPort(username: string, password: string, host: string, port: number) {
     const newDriver = new TypeDBHttpDriver({
         username, password, addresses: [`${host}:${port}`]
@@ -103,6 +190,7 @@ export async function openAndTestConnectionWithHostPort(username: string, passwo
     if (isOkResponse(healthCheck)) driver = newDriver;
     return healthCheck;
 }
+
 export function closeConnection() {
     if (transactionID) driver.closeTransaction(transactionID).then(assertNotError);
     if (backgroundTransactionID) driver.closeTransaction(backgroundTransactionID).then(assertNotError);
@@ -110,7 +198,11 @@ export function closeConnection() {
 }
 
 export function setDefaultDriver() {
-    driver = new TypeDBHttpDriver({username: DEFAULT_USERNAME, password: DEFAULT_PASSWORD, addresses: [`${DEFAULT_HOST}:${DEFAULT_PORT}`]});
+    if (isClusterMode) {
+        driver = new TypeDBHttpDriver({username: DEFAULT_USERNAME, password: DEFAULT_PASSWORD, addresses: CLUSTER_ADDRESSES});
+    } else {
+        driver = new TypeDBHttpDriver({username: DEFAULT_USERNAME, password: DEFAULT_PASSWORD, addresses: [`${DEFAULT_HOST}:${DEFAULT_PORT}`]});
+    }
 }
 
 Before(resetDB);

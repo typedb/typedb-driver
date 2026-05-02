@@ -21,29 +21,14 @@ use std::ptr::addr_of_mut;
 
 use typedb_driver::{BoxPromise, Promise, Result, answer::ConceptRow, concept::Concept};
 
-use super::{iterator::iterator_try_next, memory::free};
-use crate::{error::try_release_optional, iterator::CIterator, memory::take_ownership};
+use crate::common::{
+    error::try_release_optional,
+    iterator::{CIterator, iterator_try_next},
+    memory::{free, take_ownership},
+};
 
 mod concept;
 mod instance;
-
-/// Promise object representing the result of an asynchronous operation.
-/// Use \ref concept_promise_resolve(ConceptPromise*) to wait for and retrieve the resulting boolean value.
-pub struct ConceptPromise(BoxPromise<'static, Result<Option<Concept>>>);
-
-/// Waits for and returns the result of the operation represented by the <code>ConceptPromise</code> object.
-/// In case the operation failed, the error flag will only be set when the promise is resolved.
-/// The native promise object is freed when it is resolved.
-#[unsafe(no_mangle)]
-pub extern "C" fn concept_promise_resolve(promise: *mut ConceptPromise) -> *mut Concept {
-    try_release_optional(take_ownership(promise).0.resolve().transpose())
-}
-
-/// Frees the native rust <code>ConceptPromise</code> object.
-#[unsafe(no_mangle)]
-pub extern "C" fn concept_promise_drop(promise: *mut ConceptPromise) {
-    drop(take_ownership(promise))
-}
 
 /// Iterator over the <code>ConceptRow</code>s returned by an API method or query.
 pub struct ConceptRowIterator(pub CIterator<Result<ConceptRow>>);

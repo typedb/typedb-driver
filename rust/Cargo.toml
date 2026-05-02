@@ -95,6 +95,10 @@
 		workspace = true
 
 [[test]]
+	path = "tests/integration/cluster/failover.rs"
+	name = "test_failover"
+
+[[test]]
 	path = "tests/integration/values.rs"
 	name = "test_values"
 
@@ -129,6 +133,10 @@
 [[test]]
 	path = "tests/behaviour/driver/user.rs"
 	name = "test_user"
+
+[[test]]
+	path = "tests/behaviour/driver/cluster.rs"
+	name = "test_cluster"
 
 [[test]]
 	path = "tests/behaviour/driver/migration.rs"

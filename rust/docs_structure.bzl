@@ -16,15 +16,16 @@
 # under the License.
 
 dir_mapping = {
+    # Analyze
     "AnalyzedQuery.adoc": "analyze",
     "Comparator.adoc": "analyze",
     "Conjunction.adoc": "analyze",
     "ConjunctionID.adoc": "analyze",
     "Constraint.adoc": "analyze",
     "ConstraintExactness.adoc": "analyze",
+    "ConstraintSpan.adoc": "analyze",
     "ConstraintVertex.adoc": "analyze",
     "ConstraintWithSpan.adoc": "analyze",
-    "ConstraintSpan.adoc": "analyze",
     "Fetch.adoc": "analyze",
     "FetchLeaf.adoc": "analyze",
     "Function.adoc": "analyze",
@@ -40,55 +41,76 @@ dir_mapping = {
     "Variable.adoc": "analyze",
     "VariableAnnotations.adoc": "analyze",
     "VariableInfo.adoc": "analyze",
-    "QueryAnswer.adoc": "answer",
-    "QueryType.adoc": "answer",
-    "OkQueryAnswer.adoc": "answer",
+
+    # Answer
     "ConceptDocument.adoc": "answer",
     "ConceptDocumentHeader.adoc": "answer",
     "ConceptRow.adoc": "answer",
     "ConceptRowHeader.adoc": "answer",
-    "Node.adoc": "answer",
-    "Leaf.adoc": "answer",
-    "Trait_Promise.adoc": "answer",
     "JSON.adoc": "answer",
-    "ValueGroup.adoc": "answer",
+    "Leaf.adoc": "answer",
+    "Node.adoc": "answer",
+    "QueryAnswer.adoc": "answer",
+    "QueryType.adoc": "answer",
+    "Trait_Promise.adoc": "answer",
+
+    # Concept
     "Concept.adoc": "concept",
     "ConceptCategory.adoc": "concept",
+    "Kind.adoc": "concept",
     "Type.adoc": "concept",
-    "TypeDBDriver.adoc": "connection",
+
+    # Connection
+    "Address.adoc": "connection",
+    "Addresses.adoc": "connection",
+    "AvailableServer.adoc": "connection",
+    "Credentials.adoc": "connection",
     "Database.adoc": "connection",
     "DatabaseManager.adoc": "connection",
     "DriverOptions.adoc": "connection",
-    "Credentials.adoc": "connection",
-    "Kind.adoc": "concept",
-    "ReplicaInfo.adoc": "connection",
+    "DriverTlsConfig.adoc": "connection",
+    "ReplicationRole.adoc": "connection",
+    "Server.adoc": "connection",
+    "ServerRouting.adoc": "connection",
+    "ServerVersion.adoc": "connection",
+    "Trait_Replica.adoc": "connection",
+    "TypeDBDriver.adoc": "connection",
     "User.adoc": "connection",
     "UserManager.adoc": "connection",
-    "Relation.adoc": "data",
-    "Entity.adoc": "data",
+
+    # Data
     "Attribute.adoc": "data",
+    "Entity.adoc": "data",
+    "Relation.adoc": "data",
     "Value.adoc": "data",
-    "Instance.adoc": "data",
-    "Error.adoc": "errors",
+
+    # Errors
     "AnalyzeError.adoc": "errors",
     "ConceptError.adoc": "errors",
     "ConnectionError.adoc": "errors",
+    "DurationParseError.adoc": "errors",
+    "Error.adoc": "errors",
     "InternalError.adoc": "errors",
     "MigrationError.adoc": "errors",
     "ServerError.adoc": "errors",
-    "DurationParseError.adoc": "errors",
-    "RelationType.adoc": "schema",
-    "ValueType.adoc": "schema",
+
+    # Schema
     "AttributeType.adoc": "schema",
-    "RoleType.adoc": "schema",
     "EntityType.adoc": "schema",
-    "Transaction.adoc": "transaction",
-    "TransactionType.adoc": "transaction",
-    "TransactionOptions.adoc": "transaction",
+    "RelationType.adoc": "schema",
+    "RoleType.adoc": "schema",
+    "ValueType.adoc": "schema",
+
+    # Transaction
     "QueryOptions.adoc": "transaction",
-    "Struct.adoc": "value",
+    "Transaction.adoc": "transaction",
+    "TransactionOptions.adoc": "transaction",
+    "TransactionType.adoc": "transaction",
+
+    # Value
     "Decimal.adoc": "value",
     "Duration.adoc": "value",
     "Offset.adoc": "value",
+    "Struct.adoc": "value",
     "TimeZone.adoc": "value",
 }

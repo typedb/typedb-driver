@@ -72,60 +72,66 @@ dir_mapping = {
     "IVariable.adoc": "analyze",
     "IVariableAnnotations.adoc": "analyze",
 
-    # Connection
-    "TypeDB.adoc": "connection",
-    "IDriver.adoc": "connection",
-    "Credentials.adoc": "connection",
-    "DriverOptions.adoc": "connection",
-    "IDatabaseManager.adoc": "connection",
-    "IDatabase.adoc": "connection",
-    "IUserManager.adoc": "connection",
-    "IUser.adoc": "connection",
-
-    # Transaction
-    "ITransaction.adoc": "transaction",
-    "TransactionType.adoc": "transaction",
-    "TransactionOptions.adoc": "transaction",
-    "QueryOptions.adoc": "transaction",
-
     # Answer
-    "IQueryAnswer.adoc": "answer",
-    "IOkQueryAnswer.adoc": "answer",
-    "IConceptRowIterator.adoc": "answer",
-    "IConceptRow.adoc": "answer",
     "IConceptDocumentIterator.adoc": "answer",
+    "IConceptRow.adoc": "answer",
+    "IConceptRowIterator.adoc": "answer",
     "IJSON.adoc": "answer",
+    "IOkQueryAnswer.adoc": "answer",
+    "IQueryAnswer.adoc": "answer",
+    "Promise__T__.adoc": "answer",
     "QueryType.adoc": "answer",
     "QueryTypeExtensions.adoc": "answer",
+    "VoidPromise.adoc": "answer",
 
     # Concept
     "IConcept.adoc": "concept",
     "Transitivity.adoc": "concept",
 
-    # Schema
-    "IType.adoc": "schema",
-    "IEntityType.adoc": "schema",
-    "IRelationType.adoc": "schema",
-    "IRoleType.adoc": "schema",
-    "IAttributeType.adoc": "schema",
+    # Connection
+    "Auto.adoc": "connection",
+    "Credentials.adoc": "connection",
+    "Direct.adoc": "connection",
+    "DriverOptions.adoc": "connection",
+    "DriverTlsConfig.adoc": "connection",
+    "IDatabase.adoc": "connection",
+    "IDatabaseManager.adoc": "connection",
+    "IDriver.adoc": "connection",
+    "IServer.adoc": "connection",
+    "IUser.adoc": "connection",
+    "IUserManager.adoc": "connection",
+    "ReplicationRole.adoc": "connection",
+    "ReplicationRoleExtensions.adoc": "connection",
+    "ServerRouting.adoc": "connection",
+    "ServerVersion.adoc": "connection",
+    "TypeDB.adoc": "connection",
 
     # Data
-    "IInstance.adoc": "data",
-    "IEntity.adoc": "data",
-    "IRelation.adoc": "data",
     "IAttribute.adoc": "data",
+    "IEntity.adoc": "data",
+    "IInstance.adoc": "data",
+    "IRelation.adoc": "data",
     "IValue.adoc": "data",
-
-    # Common
-    "Promise__T__.adoc": "answer",
-    "VoidPromise.adoc": "answer",
-    "Label.adoc": "schema",
-
-    # Value types
-    "Datetime.adoc": "value",
-    "DatetimeTZ.adoc": "value",
-    "Duration.adoc": "value",
 
     # Errors
     "TypeDBDriverException.adoc": "errors",
+
+    # Schema
+    "IAttributeType.adoc": "schema",
+    "IEntityType.adoc": "schema",
+    "IRelationType.adoc": "schema",
+    "IRoleType.adoc": "schema",
+    "IType.adoc": "schema",
+    "Label.adoc": "schema",
+
+    # Transaction
+    "ITransaction.adoc": "transaction",
+    "QueryOptions.adoc": "transaction",
+    "TransactionOptions.adoc": "transaction",
+    "TransactionType.adoc": "transaction",
+
+    # Value
+    "Datetime.adoc": "value",
+    "DatetimeTZ.adoc": "value",
+    "Duration.adoc": "value",
 }

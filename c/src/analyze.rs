@@ -34,13 +34,16 @@ use typedb_driver::{
 };
 
 use crate::{
-    common::StringIterator,
-    concept::ConceptIterator,
-    error::try_release,
-    iterator::{CIterator, iterator_next},
-    memory::{
-        borrow, free, release, release_optional, release_optional_string, release_string, string_view, take_ownership,
+    common::{
+        StringIterator,
+        error::try_release,
+        iterator::{CIterator, iterator_next},
+        memory::{
+            borrow, free, release, release_optional, release_optional_string, release_string, string_view,
+            take_ownership,
+        },
     },
+    concept::ConceptIterator,
 };
 
 // Iterators, promises & enums

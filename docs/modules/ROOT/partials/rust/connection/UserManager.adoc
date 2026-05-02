@@ -48,10 +48,28 @@ Result<Vec<User>>
 
 [caption=""]
 .Code examples
+[tabs]
+====
+async::
++
+--
 [source,rust]
 ----
-driver.users.all().await;
+driver.users().all().await;
 ----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+driver.users().all();
+----
+
+--
+====
 
 [#_struct_UserManager_contains_username_impl_Into_String_]
 ==== contains
@@ -87,7 +105,7 @@ Checks if a user with the given name exists.
 [options="header"]
 |===
 |Name |Description |Type
-a| `username` a|  — The user name to be checked a| `impl Into<String>`
+a| `username` a|  — The username to be checked a| `impl Into<String>`
 |===
 
 [caption=""]
@@ -99,10 +117,28 @@ Result<bool>
 
 [caption=""]
 .Code examples
+[tabs]
+====
+async::
++
+--
 [source,rust]
 ----
-driver.users.contains(username).await;
+driver.users().contains(username).await;
 ----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+driver.users().contains(username);
+----
+
+--
+====
 
 [#_struct_UserManager_create_username_impl_Into_String_password_impl_Into_String_]
 ==== create
@@ -138,7 +174,7 @@ pub fn create(
 --
 ====
 
-Create a user with the given name &amp; password.
+Creates a user with the given name &amp; password.
 
 [caption=""]
 .Input parameters
@@ -159,10 +195,28 @@ Result
 
 [caption=""]
 .Code examples
+[tabs]
+====
+async::
++
+--
 [source,rust]
 ----
-driver.users.create(username, password).await;
+driver.users().create(username, password).await;
 ----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+driver.users().create(username, password);
+----
+
+--
+====
 
 [#_struct_UserManager_get_username_impl_Into_String_]
 ==== get
@@ -190,7 +244,7 @@ pub fn get(&self, username: impl Into<String>) -> Result<Option<User>>
 --
 ====
 
-Retrieve a user with the given name.
+Retrieves a user with the given name.
 
 [caption=""]
 .Input parameters
@@ -210,10 +264,88 @@ Result<Option<User>>
 
 [caption=""]
 .Code examples
+[tabs]
+====
+async::
++
+--
 [source,rust]
 ----
-driver.users.get(username).await;
+driver.users().get(username).await;
 ----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+driver.users().get(username);
+----
+
+--
+====
+
+[#_struct_UserManager_get_current_]
+==== get_current
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn get_current(&self) -> Result<Option<User>>
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn get_current(&self) -> Result<Option<User>>
+----
+
+--
+====
+
+Returns the user of the current connection.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<Option<User>>
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+driver.users().get_current().await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+driver.users().get_current();
+----
+
+--
+====
 
 // end::methods[]
 

@@ -44,12 +44,6 @@ class _User(User, NativeWrapper[NativeUser]):
     def name(self) -> str:
         return user_get_name(self.native_object)
 
-    # TODO: Not implemented
-    # def password_expiry_seconds(self) -> Optional[int]:
-    #     if res := user_get_password_expiry_seconds(self.native_object) >= 0:
-    #         return res
-    #     return None
-
     def update_password(self, password: str) -> None:
         require_non_null(password, "password")
         try:

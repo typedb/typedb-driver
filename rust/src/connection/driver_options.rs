@@ -17,46 +17,79 @@
  * under the License.
  */
 
-use std::{fs, path::Path};
+use std::time::Duration;
 
-use tonic::transport::{Certificate, ClientTlsConfig};
+use crate::connection::driver_tls_config::DriverTlsConfig;
 
-/// User connection settings for connecting to TypeDB.
+// When changing these numbers, also update docs in DriverOptions
+const DEFAULT_REQUEST_TIMEOUT: Duration = Duration::from_secs(2 * 60 * 60); // 2 hours
+const DEFAULT_REDIRECT_FAILOVER_RETRIES: usize = 1;
+
+/// TypeDB driver connection options.
+/// `DriverOptions` object can be used to override the default driver behavior while connecting to
+/// TypeDB.
+///
+/// # Examples
+///
+/// ```rust
+/// let options = DriverOptions::new(DriverTlsConfig::default()).request_timeout(Duration::from_secs(30));
+/// ```
 #[derive(Debug, Clone)]
 pub struct DriverOptions {
-    is_tls_enabled: bool,
-    tls_config: Option<ClientTlsConfig>,
+    /// Specifies the TLS configuration of the connection to TypeDB.
+    /// WARNING: Disabled TLS settings will make the driver sending passwords as plaintext.
+    /// Defaults to an enabled TLS configuration based on the system's native trust roots.
+    pub tls_config: DriverTlsConfig,
+    /// Specifies the maximum time to wait for a response to a unary RPC request.
+    /// This applies to operations like database creation, user management, and initial
+    /// transaction opening. It does NOT apply to operations within transactions (queries, commits).
+    /// Defaults to 2 hours.
+    // TODO: What if the server does not respond on queries/commits?
+    // Shall we apply the same or a different timeout?
+    pub request_timeout: Duration,
+    /// Sets the number of times the driver retries finding and re-routing to the primary server
+    /// on connection failures. This value is used both for polling during leader election (up to
+    /// N+1 attempts with a 2-second sleep between each) and for re-executing a failed request on
+    /// a newly discovered primary. Defaults to 1.
+    pub primary_failover_retries: usize,
 }
 
 impl DriverOptions {
-    /// Creates a credentials with username and password. Specifies the connection must use TLS
-    ///
-    /// # Arguments
-    ///
-    /// * `is_tls_enabled` — Specify whether the connection to TypeDB Server must be done over TLS.
-    /// * `tls_root_ca` — Path to the CA certificate to use for authenticating server certificates.
-    ///
-    /// # Examples
-    ///
-    /// ```rust
-    /// DriverOptions::new(true, Some(&path_to_ca));
-    ///```
-    pub fn new(is_tls_enabled: bool, tls_root_ca: Option<&Path>) -> crate::Result<Self> {
-        let tls_config = Some(if let Some(tls_root_ca) = tls_root_ca {
-            ClientTlsConfig::new().ca_certificate(Certificate::from_pem(fs::read_to_string(tls_root_ca)?))
-        } else {
-            ClientTlsConfig::new().with_native_roots()
-        });
-
-        Ok(Self { is_tls_enabled, tls_config })
+    /// Creates new `DriverOptions` to configure connections to TypeDB using custom TLS settings.
+    /// WARNING: Disabled TLS settings will make the driver sending passwords as plaintext.
+    pub fn new(tls_config: DriverTlsConfig) -> Self {
+        Self { tls_config, ..Default::default() }
     }
 
-    /// Retrieves whether TLS is enabled for the connection.
-    pub fn is_tls_enabled(&self) -> bool {
-        self.is_tls_enabled
+    /// Override the existing TLS configuration.
+    /// WARNING: Disabled TLS settings will make the driver sending passwords as plaintext.
+    pub fn tls_config(self, tls_config: DriverTlsConfig) -> Self {
+        Self { tls_config, ..self }
     }
 
-    pub fn tls_config(&self) -> &Option<ClientTlsConfig> {
-        &self.tls_config
+    /// Specifies the maximum time to wait for a response to a unary RPC request.
+    /// This applies to operations like database creation, user management, and initial
+    /// transaction opening. It does NOT apply to operations within transactions (queries, commits).
+    /// Defaults to 2 hours.
+    pub fn request_timeout(self, request_timeout: Duration) -> Self {
+        Self { request_timeout, ..self }
+    }
+
+    /// Sets the number of times the driver retries finding and re-routing to the primary server
+    /// on connection failures. This value is used both for polling during leader election (up to
+    /// N+1 attempts with a 2-second sleep between each) and for re-executing a failed request on
+    /// a newly discovered primary. Defaults to 1.
+    pub fn primary_failover_retries(self, primary_failover_retries: usize) -> Self {
+        Self { primary_failover_retries, ..self }
+    }
+}
+
+impl Default for DriverOptions {
+    fn default() -> Self {
+        Self {
+            tls_config: DriverTlsConfig::default(),
+            request_timeout: DEFAULT_REQUEST_TIMEOUT,
+            primary_failover_retries: DEFAULT_REDIRECT_FAILOVER_RETRIES,
+        }
     }
 }

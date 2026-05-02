@@ -47,32 +47,32 @@ bazel_dep(name = "aspect_rules_ts", version = "3.4.0")
 bazel_dep(name = "aspect_bazel_lib", version = "2.9.4")
 
 # typedb ecosystem dependencies
-bazel_dep(name = "typedb_dependencies", version = "0.0.0")
-git_override(
-    module_name = "typedb_dependencies",
-    remote = "https://github.com/typedb/dependencies",
-    commit = "32a7fde17ad17b775a8ccc0867c87f119749e7ea",
-)
-
 bazel_dep(name = "typedb_bazel_distribution", version = "0.0.0")
 git_override(
     module_name = "typedb_bazel_distribution",
     remote = "https://github.com/typedb/bazel-distribution",
-    commit = "1b2556e6cdf0ac839b3e64ee55986e1a592b8b97",
+    commit = "6c81a5180ed94a11c989e06a4ff8215df6da163e",
+)
+
+bazel_dep(name = "typedb_dependencies", version = "0.0.0")
+git_override(
+    module_name = "typedb_dependencies",
+    remote = "https://github.com/typedb/dependencies",
+    commit = "48ef6e41f9f0deadc0d59bb0e9d4a58efd0099af",
 )
 
 bazel_dep(name = "typedb_protocol", version = "0.0.0")
 git_override(
     module_name = "typedb_protocol",
     remote = "https://github.com/typedb/typedb-protocol",
-    commit = "da3e316cb0022cb284083996f0659ad22db13aca",
+    commit = "25ab3fb02715062bd036f8b83908de92b106a202",
 )
 
 bazel_dep(name = "typedb_behaviour", version = "0.0.0")
 git_override(
     module_name = "typedb_behaviour",
     remote = "https://github.com/typedb/typedb-behaviour",
-    commit = "fa485602adda5f31d67c3b35e5de43caeb8ee91a",
+    commit = "d3bb01333c67b41eeac23d2291e243b047cb518d",
 )
 
 # Rust rules need typedb_dependencies for patching
@@ -146,7 +146,6 @@ use_repo(node, "nodejs")
 # NPM dependencies
 npm = use_extension("@aspect_rules_js//npm:extensions.bzl", "npm")
 
-# Note: typedb_protocol_npm is defined by typedb_protocol module - do not redefine here
 
 # Node.js driver npm dependencies (2.x only, excluded from default build)
 npm.npm_translate_lock(
@@ -167,11 +166,11 @@ npm.npm_translate_lock(
     pnpm_lock = "//http-ts:pnpm-lock.yaml",
 )
 
-use_repo(npm, "typedb_protocol_npm", "nodejs_npm", "http-ts_npm")
+use_repo(npm, "nodejs_npm", "http-ts_npm")
 
-# TypeScript toolchain - import @npm_typescript from typedb_protocol module
-# The repo is created by typedb_protocol's rules_ts extension usage
+# TypeScript toolchain
 rules_ts_ext = use_extension("@aspect_rules_ts//ts:extensions.bzl", "ext")
+rules_ts_ext.deps(ts_version = "5.7.2")
 use_repo(rules_ts_ext, "npm_typescript")
 
 # Maven dependencies - use typedb_dependencies' custom maven extension
@@ -197,7 +196,7 @@ workspace_refs = use_repo_rule("@typedb_bazel_distribution//common/workspace_ref
 workspace_refs(
     name = "typedb_driver_workspace_refs",
     workspace_commit_dict = {
-        "typedb_protocol+": "da3e316cb0022cb284083996f0659ad22db13aca",
+        "typedb_protocol+": "25ab3fb02715062bd036f8b83908de92b106a202",
     },
     workspace_tag_dict = {
     },
@@ -210,13 +209,31 @@ native_artifact_files.artifact(
     name = "typedb_artifact",
     group_name = "typedb-all-{platform}",
     artifact_name = "typedb-all-{platform}-{version}.{ext}",
-    commit = "43498326502fb6abf67e0ef5b089bd350f241cdb",
+    commit = "7cc4a3e9edcaaee2c8fa9cdce6ffef170eeed503",
 )
+# IMPORTANT: must be CLUSTERED typedb-cluster (with multi-node support)!
+native_artifact_files.artifact(
+    name = "typedb_cluster_artifact",
+    group_name = "typedb-cluster-all-{platform}",
+    artifact_name = "typedb-cluster-all-{platform}-{version}.{ext}",
+    tag = "3.10.0-alpha-1",
+    private = True,
+)
+
 use_repo(
     native_artifact_files,
-     "typedb_artifact_linux-x86_64",
-     "typedb_artifact_linux-arm64",
-     "typedb_artifact_mac-x86_64",
-     "typedb_artifact_mac-arm64",
-     "typedb_artifact_windows-x86_64",
+    "typedb_artifact_linux-x86_64",
+    "typedb_artifact_linux-arm64",
+    "typedb_artifact_mac-x86_64",
+    "typedb_artifact_mac-arm64",
+    "typedb_artifact_windows-x86_64",
+)
+
+use_repo(
+    native_artifact_files,
+    "typedb_cluster_artifact_linux-x86_64",
+    "typedb_cluster_artifact_linux-arm64",
+    "typedb_cluster_artifact_mac-x86_64",
+    "typedb_cluster_artifact_mac-arm64",
+    "typedb_cluster_artifact_windows-x86_64",
 )

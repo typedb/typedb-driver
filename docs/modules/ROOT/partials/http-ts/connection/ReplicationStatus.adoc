@@ -1,0 +1,19 @@
+[#_ReplicationStatus]
+[.doc-api-reference-driver]
+=== ReplicationStatus
+
+`class`
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `id` a| `number` a| 
+a| `role` a| `ReplicationRole` a| 
+a| `term` a| `number` a| 
+|===
+// end::properties[]
+

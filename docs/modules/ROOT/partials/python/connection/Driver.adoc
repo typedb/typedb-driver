@@ -14,7 +14,7 @@
 |===
 |Name |Type |Description
 a| `databases` a| `DatabaseManager` a| The ``DatabaseManager`` for this connection, providing access to database management methods.
-a| `users` a| `UserManager` a| The ``UserManager`` instance for this connection, providing access to user management methods. Only for TypeDB Cloud.
+a| `users` a| `UserManager` a| The ``UserManager`` for this connection, providing access to user management methods.
 |===
 // end::properties[]
 
@@ -61,6 +61,99 @@ Checks whether this connection is presently open.
 driver.is_open()
 ----
 
+[#_Driver_primary_server_server_routing_ServerRouting_None]
+==== method ``primary_server``
+
+[source,python]
+----
+primary_server(server_routing: ServerRouting | None = None) -> Server | None
+----
+
+Returns the primary server for this driver connection.
+
+[caption=""]
+.Input parameters
+[cols=",,,"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `server_routing` a| The server routing to use for the operation. Auto by default a| `ServerRouting \| None` a| `None`
+|===
+
+[caption=""]
+.Returns
+`Server | None`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+driver.primary_server()
+driver.primary_server(ServerRouting.Auto())
+----
+
+[#_Driver_server_version_server_routing_ServerRouting_None]
+==== method ``server_version``
+
+[source,python]
+----
+server_version(server_routing: ServerRouting | None = None) -> ServerVersion
+----
+
+Retrieves the server’s version.
+
+[caption=""]
+.Input parameters
+[cols=",,,"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `server_routing` a| The server routing to use for the operation. Auto by default a| `ServerRouting \| None` a| `None`
+|===
+
+[caption=""]
+.Returns
+`ServerVersion`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+driver.server_version()
+driver.server_version(ServerRouting.Auto())
+----
+
+[#_Driver_servers_server_routing_ServerRouting_None]
+==== method ``servers``
+
+[source,python]
+----
+servers(server_routing: ServerRouting | None = None) -> Set[Server]
+----
+
+Set of servers for this driver connection.
+
+[caption=""]
+.Input parameters
+[cols=",,,"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `server_routing` a| The server routing to use for the operation. Auto by default a| `ServerRouting \| None` a| `None`
+|===
+
+[caption=""]
+.Returns
+`Set[Server]`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+driver.servers()
+driver.servers(ServerRouting.Auto())
+----
+
 [#_Driver_transaction_database_name_str_transaction_type_TransactionType_options_TransactionOptions_None]
 ==== method ``transaction``
 
@@ -69,7 +162,7 @@ driver.is_open()
 transaction(database_name: str, transaction_type: TransactionType, options: TransactionOptions | None = None) -> Transaction
 ----
 
-Opens a communication tunnel (transaction) to the given database on the running TypeDB server.
+Opens a transaction to the given database on the running TypeDB server.
 
 [caption=""]
 .Input parameters

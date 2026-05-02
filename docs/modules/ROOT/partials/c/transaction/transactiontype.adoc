@@ -23,6 +23,23 @@ This enum is used to specify the type of transaction.
 This enum is used to specify the type of transaction.
 
 
+Read-only transaction.
+  
+  
+   Write&nbsp;
+   
+
+Data-modifying transaction.
+  
+  
+   Schema&nbsp;
+   
+
+Schema-modifying transaction.
+  
+ 
+
+
 [caption=""]
 .Enum constants
 // tag::enum_constants[]

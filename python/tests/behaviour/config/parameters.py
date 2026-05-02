@@ -18,16 +18,34 @@
 from __future__ import annotations
 
 import re
+import time
 from enum import Enum
 from typing import Callable, Optional
 
 import parse
+
+# Cluster mode retry settings
+_cluster_mode = False
+RETRY_ATTEMPTS = 3
+RETRY_DELAY_S = 0.5
+
+
+def set_cluster_mode(is_cluster: bool):
+    global _cluster_mode
+    _cluster_mode = is_cluster
+
+
+def is_cluster_mode() -> bool:
+    return _cluster_mode
+
+
 from behave import register_type
 from behave.model import Table, Row
 from behave.runner import Context
 from hamcrest import *
 from typedb.api.answer.query_type import QueryType
 from typedb.api.connection.transaction import TransactionType
+from typedb.api.connection.server_routing import ServerRouting as TypeDBServerRouting
 from typedb.common.exception import TypeDBDriverException
 from typedb.driver import *
 
@@ -242,7 +260,17 @@ class MayError:
         if self.may_error:
             assert_that(func, raises(exception, self.message))
         else:
-            func()
+            attempts = RETRY_ATTEMPTS if is_cluster_mode() else 1
+            last_exception = None
+            for i in range(attempts):
+                try:
+                    func()
+                    return
+                except Exception as e:
+                    last_exception = e
+                    if i < attempts - 1:
+                        time.sleep(RETRY_DELAY_S)
+            raise last_exception
 
     def __repr__(self):
         return f"MayError({self.may_error})"
@@ -328,3 +356,27 @@ def parse_by_index_of_variable_or_not(value: str) -> bool:
 
 
 register_type(IsByVarIndex=parse_by_index_of_variable_or_not)
+
+
+class ServerRouting:
+
+    def __init__(self, server_routing: TypeDBServerRouting):
+        self.server_routing = server_routing
+
+    def __repr__(self):
+        return f"ServerRouting({self.server_routing})"
+
+
+@parse.with_pattern("auto|direct\((?P<address>.*)\)")
+def parse_server_routing(value: str) -> ServerRouting:
+    if value == "auto":
+        return ServerRouting(TypeDBServerRouting.Auto())
+    else:
+        match = re.match(r'direct\((?P<address>.*)\)', value)
+        if match:
+            return ServerRouting(TypeDBServerRouting.Direct(match.group("address")))
+        else:
+            raise ValueError(f"Unrecognised ConsistencyLevel: {value}")
+
+
+register_type(ServerRouting=parse_server_routing)

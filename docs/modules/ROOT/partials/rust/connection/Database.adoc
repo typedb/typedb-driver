@@ -6,9 +6,10 @@
 
 *Implements traits:*
 
+* `Clone`
 * `Debug`
 
-A TypeDB database
+A TypeDB database.
 
 // tag::methods[]
 [#_struct_Database_delete_]
@@ -164,78 +165,6 @@ Retrieves the database name as a string.
 [source,rust]
 ----
 &str
-----
-
-[#_struct_Database_preferred_replica_info_]
-==== preferred_replica_info
-
-[source,rust]
-----
-pub fn preferred_replica_info(&self) -> Option<ReplicaInfo>
-----
-
-Returns the preferred replica for this database. Operations which can be run on any replica will prefer to use this replica. _Only works in TypeDB Cloud / Enterprise_
-
-[caption=""]
-.Returns
-[source,rust]
-----
-Option<ReplicaInfo>
-----
-
-[caption=""]
-.Code examples
-[source,rust]
-----
-database.preferred_replica_info();
-----
-
-[#_struct_Database_primary_replica_info_]
-==== primary_replica_info
-
-[source,rust]
-----
-pub fn primary_replica_info(&self) -> Option<ReplicaInfo>
-----
-
-Returns the primary replica for this database. _Only works in TypeDB Cloud / Enterprise_
-
-[caption=""]
-.Returns
-[source,rust]
-----
-Option<ReplicaInfo>
-----
-
-[caption=""]
-.Code examples
-[source,rust]
-----
-database.primary_replica_info()
-----
-
-[#_struct_Database_replicas_info_]
-==== replicas_info
-
-[source,rust]
-----
-pub fn replicas_info(&self) -> Vec<ReplicaInfo>
-----
-
-Returns the ``Replica`` instances for this database. _Only works in TypeDB Cloud / Enterprise_
-
-[caption=""]
-.Returns
-[source,rust]
-----
-Vec<ReplicaInfo>
-----
-
-[caption=""]
-.Code examples
-[source,rust]
-----
-database.replicas_info()
 ----
 
 [#_struct_Database_schema_]

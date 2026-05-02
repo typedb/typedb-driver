@@ -1,0 +1,75 @@
+[#_ReplicationRole]
+[.doc-api-reference-driver]
+=== ReplicationRole
+
+`class`
+
+*Package*: `typedb.api.server.replication_role`
+
+This class is used to specify the replication role of a server.
+
+[caption=""]
+.Examples
+[source,python]
+----
+server.role
+----
+
+[caption=""]
+.Enum constants
+// tag::enum_constants[]
+[cols=","]
+[options="header"]
+|===
+|Name |Value
+a| `CANDIDATE` a| `1`
+a| `PRIMARY` a| `0`
+a| `SECONDARY` a| `2`
+|===
+// end::enum_constants[]
+
+// tag::methods[]
+[#_ReplicationRole_is_candidate_]
+==== method ``is_candidate``
+
+[source,python]
+----
+is_candidate() -> bool
+----
+
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_ReplicationRole_is_primary_]
+==== method ``is_primary``
+
+[source,python]
+----
+is_primary() -> bool
+----
+
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_ReplicationRole_is_secondary_]
+==== method ``is_secondary``
+
+[source,python]
+----
+is_secondary() -> bool
+----
+
+
+
+[caption=""]
+.Returns
+`bool`
+
+// end::methods[]
+

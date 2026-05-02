@@ -18,71 +18,69 @@
 
 set -e
 
-export BAZEL_JAVA_HOME=$(bazel run //tool/test:echo-java-home)
-NODE_COUNT=${1:-1}
+NODE_COUNT="${1:-1}"
+ENCRYPTION_ENABLED="${2:-true}"
+export ENCRYPTION_ENABLED
 
-peers=
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+CLUSTER_SERVER="${SCRIPT_DIR}/cluster-server.sh"
+
+ROOT_CA_PATH="$(realpath tool/test/resources/encryption/ext-grpc-root-ca.pem)"
+
+rm -rf $(seq 1 $NODE_COUNT) typedb-cluster-all
+
+bazel run //tool/test:typedb-cluster-extractor -- typedb-cluster-all
+
+echo Successfully unarchived a TypeDB distribution. Creating $NODE_COUNT copies.
 for i in $(seq 1 $NODE_COUNT); do
-  peers="${peers} --server.peers.peer-${i}.address=localhost:${i}1729"
-  peers="${peers} --server.peers.peer-${i}.internal-address.zeromq=localhost:${i}1730"
-  peers="${peers} --server.peers.peer-${i}.internal-address.grpc=localhost:${i}1731"
+  rm -rf $i
+  cp -r typedb-cluster-all $i || exit 1
 done
 
-function server_start() {
-  JAVA_HOME=$BAZEL_JAVA_HOME ./${1}/typedb server \
-    --storage.data=server/data \
-    --server.address=localhost:${1}1729 \
-    --server.internal-address.zeromq=localhost:${1}1730 \
-    --server.internal-address.grpc=localhost:${1}1731 \
-    $(echo $peers) \
-    --server.encryption.enable=true \
-    --server.encryption.file.enable=true \
-    --server.encryption.file.external-grpc.private-key=`realpath tool/test/resources/encryption/ext-grpc-private-key.pem` \
-    --server.encryption.file.external-grpc.certificate=`realpath tool/test/resources/encryption/ext-grpc-certificate.pem` \
-    --server.encryption.file.external-grpc.root-ca=`realpath tool/test/resources/encryption/ext-grpc-root-ca.pem` \
-    --server.encryption.file.internal-grpc.private-key=`realpath tool/test/resources/encryption/int-grpc-private-key.pem` \
-    --server.encryption.file.internal-grpc.certificate=`realpath tool/test/resources/encryption/int-grpc-certificate.pem` \
-    --server.encryption.file.internal-grpc.root-ca=`realpath tool/test/resources/encryption/int-grpc-root-ca.pem` \
-    --server.encryption.file.internal-zmq.private-key=`realpath tool/test/resources/encryption/int-zmq-private-key` \
-    --server.encryption.file.internal-zmq.public-key=`realpath tool/test/resources/encryption/int-zmq-public-key` \
-    --diagnostics.monitoring.port=${1}1732 \
-    --development-mode.enable=true
-}
-
-rm -rf $(seq 1 $NODE_COUNT) typedb-cloud-all
-
-bazel run //tool/test:typedb-cloud-extractor -- typedb-cloud-all
-echo Successfully unarchived TypeDB distribution. Creating $NODE_COUNT copies.
+echo Starting a cluster consisting of $NODE_COUNT servers...
 for i in $(seq 1 $NODE_COUNT); do
-  cp -r typedb-cloud-all $i || exit 1
-done
-echo Starting a cloud consisting of $NODE_COUNT servers...
-for i in $(seq 1 $NODE_COUNT); do
-  server_start $i &
+  "${CLUSTER_SERVER}" start $i
 done
 
-ROOT_CA=`realpath tool/test/resources/encryption/ext-grpc-root-ca.pem`
-export ROOT_CA
+for i in $(seq 1 $NODE_COUNT); do
+  "${CLUSTER_SERVER}" await $i
+done
+echo $NODE_COUNT TypeDB Cluster database servers started
 
-POLL_INTERVAL_SECS=0.5
-MAX_RETRIES=60
-RETRY_NUM=0
-while [[ $RETRY_NUM -lt $MAX_RETRIES ]]; do
-  RETRY_NUM=$(($RETRY_NUM + 1))
-  if [[ $(($RETRY_NUM % 4)) -eq 0 ]]; then
-    echo Waiting for TypeDB Cloud servers to start \($(($RETRY_NUM / 2))s\)...
-  fi
-  ALL_STARTED=1
-  for i in $(seq 1 $NODE_COUNT); do
-    lsof -i :${i}1729 || ALL_STARTED=0
+# Register peer replicas via admin tool on node 1 (with retry for leader election)
+REGISTER_MAX_RETRIES=10
+REGISTER_RETRY_INTERVAL=2
+if [ "$NODE_COUNT" -gt 1 ]; then
+  for i in $(seq 2 $NODE_COUNT); do
+    clustering_port="${i}1730"
+    for attempt in $(seq 1 $REGISTER_MAX_RETRIES); do
+      if ./1/typedb admin --address=127.0.0.1:11728 --command "servers register ${i} 127.0.0.1:${clustering_port}" 2>&1; then
+        break
+      fi
+      if [ "$attempt" -eq "$REGISTER_MAX_RETRIES" ]; then
+        echo "Failed to register replica ${i} after ${REGISTER_MAX_RETRIES} attempts"
+        exit 1
+      fi
+      echo "  Retrying registration of replica ${i} (attempt ${attempt}/${REGISTER_MAX_RETRIES})..."
+      sleep $REGISTER_RETRY_INTERVAL
+    done
   done
-  if (( $ALL_STARTED )); then
-    break
-  fi
-  sleep $POLL_INTERVAL_SECS
-done
-if (( ! $ALL_STARTED )); then
-  echo Failed to start one or more TypeDB Cloud servers
-  exit 1
 fi
-echo $NODE_COUNT TypeDB Cloud database servers started
+
+ROOT_CA=$ROOT_CA_PATH
+export ROOT_CA
+export CLUSTER_SERVER_SCRIPT="${CLUSTER_SERVER}"
+export CLUSTER_DIR="$(pwd)"
+
+# Tail server logs in background so they appear in CI output. Track PIDs so
+# stop-cluster-servers.sh can reap them — orphaned `tail -f` processes inherit
+# the CI runner's stdout pipe and keep it open after the main command exits,
+# leaving the job hanging.
+declare -a _cluster_tail_pids=()
+for i in $(seq 1 $NODE_COUNT); do
+  if [ -f "./${i}/server.log" ]; then
+    tail -f "./${i}/server.log" | sed "s/^/[${i}] /" &
+    _cluster_tail_pids+=("$!")
+  fi
+done
+export CLUSTER_TAIL_PIDS="${_cluster_tail_pids[*]}"

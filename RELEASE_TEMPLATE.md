@@ -7,7 +7,6 @@ Documentation: https://typedb.com/docs/core-concepts/drivers/overview
 Available from https://crates.io/crates/typedb-driver
 Documentation: https://typedb.com/docs/drivers/rust/overview
 
-
 ```sh
 cargo add typedb-driver@{version}
 ```

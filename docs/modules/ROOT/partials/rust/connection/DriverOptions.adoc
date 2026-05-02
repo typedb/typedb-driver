@@ -8,59 +8,90 @@
 
 * `Clone`
 * `Debug`
+* `Default`
 
-User connection settings for connecting to TypeDB.
-
-// tag::methods[]
-[#_struct_DriverOptions_is_tls_enabled_]
-==== is_tls_enabled
-
-[source,rust]
-----
-pub fn is_tls_enabled(&self) -> bool
-----
-
-Retrieves whether TLS is enabled for the connection.
+TypeDB driver connection options. ``DriverOptions`` object can be used to override the default driver behavior while connecting to TypeDB.
 
 [caption=""]
-.Returns
-[source,rust]
-----
-bool
-----
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `primary_failover_retries` a| `usize` a| Sets the number of times the driver retries finding and re-routing to the primary server on connection failures. This value is used both for polling during leader election (up to N+1 attempts with a 2-second sleep between each) and for re-executing a failed request on a newly discovered primary. Defaults to 1.
+a| `request_timeout` a| `Duration` a| Specifies the maximum time to wait for a response to a unary RPC request. This applies to operations like database creation, user management, and initial transaction opening. It does NOT apply to operations within transactions (queries, commits). Defaults to 2 hours.
+a| `tls_config` a| `DriverTlsConfig` a| Specifies the TLS configuration of the connection to TypeDB. WARNING: Disabled TLS settings will make the driver sending passwords as plaintext. Defaults to an enabled TLS configuration based on the system’s native trust roots.
+|===
+// end::properties[]
 
-[#_struct_DriverOptions_new_is_tls_enabled_bool_tls_root_ca_Option_Path_]
+// tag::methods[]
+[#_struct_DriverOptions_new_]
 ==== new
 
 [source,rust]
 ----
-pub fn new(is_tls_enabled: bool, tls_root_ca: Option<&Path>) -> Result<Self>
+pub fn new(tls_config: DriverTlsConfig) -> Self
 ----
 
-Creates a credentials with username and password. Specifies the connection must use TLS
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `is_tls_enabled` a|  — Specify whether the connection to TypeDB Server must be done over TLS. a| `bool`
-a| `tls_root_ca` a|  — Path to the CA certificate to use for authenticating server certificates. a| `Option<&Path>`
-|===
+Creates new ``DriverOptions`` to configure connections to TypeDB using custom TLS settings. WARNING: Disabled TLS settings will make the driver sending passwords as plaintext.
 
 [caption=""]
 .Returns
 [source,rust]
 ----
-Result<Self>
+Self
 ----
 
-[caption=""]
-.Code examples
+[#_struct_DriverOptions_primary_failover_retries_]
+==== primary_failover_retries
+
 [source,rust]
 ----
-DriverOptions::new(true, Some(&path_to_ca));
+pub fn primary_failover_retries(self, primary_failover_retries: usize) -> Self
+----
+
+Sets the number of times the driver retries finding and re-routing to the primary server on connection failures. This value is used both for polling during leader election (up to N+1 attempts with a 2-second sleep between each) and for re-executing a failed request on a newly discovered primary. Defaults to 1.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Self
+----
+
+[#_struct_DriverOptions_request_timeout_]
+==== request_timeout
+
+[source,rust]
+----
+pub fn request_timeout(self, request_timeout: Duration) -> Self
+----
+
+Specifies the maximum time to wait for a response to a unary RPC request. This applies to operations like database creation, user management, and initial transaction opening. It does NOT apply to operations within transactions (queries, commits). Defaults to 2 hours.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Self
+----
+
+[#_struct_DriverOptions_tls_config_]
+==== tls_config
+
+[source,rust]
+----
+pub fn tls_config(self, tls_config: DriverTlsConfig) -> Self
+----
+
+Override the existing TLS configuration. WARNING: Disabled TLS settings will make the driver sending passwords as plaintext.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Self
 ----
 
 // end::methods[]

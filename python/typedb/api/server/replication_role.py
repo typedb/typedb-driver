@@ -1,0 +1,54 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+
+from __future__ import annotations
+
+import enum
+
+
+class ReplicationRole(enum.Enum):
+    """
+    This class is used to specify the replication role of a server.
+
+    Examples
+    --------
+    ::
+
+       server.role
+    """
+    PRIMARY = 0
+    CANDIDATE = 1
+    SECONDARY = 2
+
+    def is_primary(self) -> bool:
+        return self is ReplicationRole.PRIMARY
+
+    def is_candidate(self) -> bool:
+        return self is ReplicationRole.CANDIDATE
+
+    def is_secondary(self) -> bool:
+        return self is ReplicationRole.SECONDARY
+
+    def __repr__(self):
+        if self.is_primary:
+            return "ReplicationRole.PRIMARY"
+        elif self.is_candidate:
+            return "ReplicationRole.CANDIDATE"
+        elif self.is_secondary:
+            return "ReplicationRole.SECONDARY"
+        else:
+            return "UNKNOWN"

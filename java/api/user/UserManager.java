@@ -29,6 +29,16 @@ import java.util.Set;
  */
 public interface UserManager {
     /**
+     * Retrieves all users which exist on the TypeDB server.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * driver.users().all();
+     * </pre>
+     */
+    Set<User> all() throws TypeDBDriverException;
+
+    /**
      * Checks if a user with the given name exists.
      *
      * <h3>Examples</h3>
@@ -36,7 +46,7 @@ public interface UserManager {
      * driver.users().contains(username);
      * </pre>
      *
-     * @param username The user name to be checked
+     * @param username The username to be checked
      */
     @CheckReturnValue
     boolean contains(String username) throws TypeDBDriverException;
@@ -54,28 +64,16 @@ public interface UserManager {
     @CheckReturnValue
     User get(String username) throws TypeDBDriverException;
 
-    // TODO: I don't like this, leaving this way for now. Use driver.users().get(username)
-
     /**
      * Retrieves the name of the user who opened the current connection.
      *
      * <h3>Examples</h3>
      * <pre>
-     * driver.users().getCurrentUsername();
+     * driver.users().getCurrent();
      * </pre>
      */
     @CheckReturnValue
-    User getCurrentUser() throws TypeDBDriverException;
-
-    /**
-     * Retrieves all users which exist on the TypeDB server.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * driver.users().all();
-     * </pre>
-     */
-    Set<User> all() throws TypeDBDriverException;
+    User getCurrent() throws TypeDBDriverException;
 
     /**
      * Creates a user with the given name &amp; password.

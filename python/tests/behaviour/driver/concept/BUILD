@@ -37,7 +37,6 @@ typedb_behaviour_py_test(
         "//python/tests/behaviour/background",
     ],
     data = ["//python:native-driver-binary-link", "//python:native-driver-wrapper-link"],
-    size = "medium",
 )
 
 checkstyle_test(

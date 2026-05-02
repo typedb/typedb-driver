@@ -21,7 +21,7 @@ use std::time::Duration;
 
 use typedb_driver::TransactionOptions;
 
-use super::memory::{borrow, borrow_mut, free, release};
+use crate::common::memory::{borrow, borrow_mut, free, release};
 
 /// Produces a new <code>TransactionOptions</code> object.
 #[unsafe(no_mangle)]
@@ -35,7 +35,7 @@ pub extern "C" fn transaction_options_drop(options: *mut TransactionOptions) {
     free(options);
 }
 
-/// Explicitly set a transaction timeout.
+/// Explicitly sets a transaction timeout.
 /// If set, specifies a timeout for killing transactions automatically, preventing memory leaks in unclosed transactions.
 #[unsafe(no_mangle)]
 pub extern "C" fn transaction_options_set_transaction_timeout_millis(
