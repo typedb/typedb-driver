@@ -37,6 +37,12 @@ import {
 const HTTP_UNAUTHORIZED = 401;
 const HTTP_MISDIRECTED = 421;
 
+// SRV14 ("Not yet initialised") is briefly returned by `/v1/signin` on a node that just
+// became the new cluster primary.
+const SIGNIN_TRANSIENT_RETRY_BUDGET_MS = 30_000;
+const SIGNIN_TRANSIENT_RETRY_INTERVAL_MS = 200;
+const SIGNIN_TRANSIENT_ERROR_CODES = new Set(["SRV14"]);
+
 // Result of attempting a single request against a single origin.
 //   Response          - reached the server and got an HTTP response
 //   ApiErrorResponse  - reached the server but signin returned an error (e.g. 401);
@@ -54,6 +60,14 @@ function isApiErrResp(value: TryResult): value is ApiErrorResponse {
 // propagated, since fallback origins would reject the same credentials the same way.
 function tokenErrToResult(tokenResp: ApiErrorResponse): ApiErrorResponse | null {
     return tokenResp.err.code === "HDR2" ? null : tokenResp;
+}
+
+function isTransientSigninError(result: ApiResponse<SignInResponse>): boolean {
+    return "err" in result && SIGNIN_TRANSIENT_ERROR_CODES.has(result.err.code);
+}
+
+function sleep(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 export * from "./analyze";
@@ -318,6 +332,15 @@ export class TypeDBHttpDriver {
     }
 
     private async refreshToken(): Promise<ApiResponse<SignInResponse>> {
+        const deadline = Date.now() + SIGNIN_TRANSIENT_RETRY_BUDGET_MS;
+        while (true) {
+            const result = await this.signinOnce();
+            if (!isTransientSigninError(result) || Date.now() >= deadline) return result;
+            await sleep(SIGNIN_TRANSIENT_RETRY_INTERVAL_MS);
+        }
+    }
+
+    private async signinOnce(): Promise<ApiResponse<SignInResponse>> {
         const url = `${this.currentOrigin}/v1/signin`;
         const body = { username: this.params.username, password: this.params.password };
         let resp: Response;
@@ -330,9 +353,9 @@ export class TypeDBHttpDriver {
         if (resp.ok) {
             this.token = (json as SignInResponse).token;
             return { ok: json };
-        } else if (isApiError(json)) {
-            return { err: json, status: resp.status };
-        } else throw resp;
+        }
+        if (isApiError(json)) return { err: json, status: resp.status };
+        throw resp;
     }
 
     private async jsonOrNull(resp: Response) {
