@@ -67,6 +67,15 @@ async function getServers(): Promise<Server[]> {
     return res.ok.servers;
 }
 
+// The shared cluster.feature uses gRPC addresses (e.g. 127.0.0.1:11729) as canonical node
+// identifiers across drivers. The http-ts driver speaks HTTP, so its `Server.address` is
+// the HTTP advertise address (e.g. 127.0.0.1:18000). The test cluster fixture follows a
+// fixed port convention — gRPC `<id>1729`, HTTP `<id>8000` — so we translate gRPC→HTTP
+// at the test boundary rather than diverging from the shared feature file.
+function grpcAddressToHttp(address: string): string {
+    return address.replace(/:(\d)1729$/, (_, id) => `:${id}8000`);
+}
+
 Then("connection has {int} server(s)", async (expectedCount: number) => {
     const servers = await getServers();
     assert.equal(servers.length, expectedCount, `Expected ${expectedCount} servers but got ${servers.length}`);
@@ -80,35 +89,43 @@ Then("connection primary server exists", async () => {
 
 Then("connection get server\\({word}) exists", async (address: string) => {
     const servers = await getServers();
-    const server = servers.find(s => s.address === address);
-    assert.ok(server, `Server with address ${address} not found`);
+    const expected = grpcAddressToHttp(address);
+    const server = servers.find(s => s.address === expected);
+    assert.ok(server, `Server with address ${address} (mapped to ${expected}) not found`);
 });
 
 Then("connection get server\\({word}) does not exist", async (address: string) => {
     const servers = await getServers();
-    const server = servers.find(s => s.address === address);
-    assert.ok(!server, `Server with address ${address} should not exist`);
+    const expected = grpcAddressToHttp(address);
+    const server = servers.find(s => s.address === expected);
+    assert.ok(!server, `Server with address ${address} (mapped to ${expected}) should not exist`);
 });
 
 Then("connection get server\\({word}) has term", async (address: string) => {
     const servers = await getServers();
-    const server = servers.find(s => s.address === address);
-    assert.ok(server, `Server with address ${address} not found`);
+    const expected = grpcAddressToHttp(address);
+    const server = servers.find(s => s.address === expected);
+    assert.ok(server, `Server with address ${address} (mapped to ${expected}) not found`);
     assert.ok(typeof server.replicationStatus?.term === "number", `Server ${address} has no term`);
 });
 
+// The data table is a single column of role names with no header, e.g.:
+//     | primary   |
+//     | secondary |
+//     | secondary |
+// We count the expected occurrences of each role and compare to the actual counts —
+// matching the rust step's logic. We don't care which address has which role.
 Then("connection servers have roles:", async (dataTable: DataTable) => {
     const servers = await getServers();
-    const rows = dataTable.hashes();
-
-    for (const row of rows) {
-        const expectedAddress = row['address'];
-        const expectedIsPrimary = row['is_primary'] === 'true';
-
-        const server = servers.find(s => s.address === expectedAddress);
-        assert.ok(server, `Server with address ${expectedAddress} not found`);
-        const isPrimary = server.replicationStatus?.role === "primary";
-        assert.equal(isPrimary, expectedIsPrimary,
-            `Server ${expectedAddress} isPrimary: expected ${expectedIsPrimary}, got ${isPrimary}`);
+    const expected = { primary: 0, secondary: 0, candidate: 0 };
+    for (const [role] of dataTable.raw()) {
+        if (!(role in expected)) throw new Error(`Unknown server replication role: ${role}`);
+        expected[role as keyof typeof expected]++;
     }
+    const actual = { primary: 0, secondary: 0, candidate: 0 };
+    for (const s of servers) {
+        const role = s.replicationStatus?.role;
+        if (role && role in actual) actual[role]++;
+    }
+    assert.deepStrictEqual(actual, expected, `Server role counts mismatch: expected ${JSON.stringify(expected)}, got ${JSON.stringify(actual)}`);
 });
