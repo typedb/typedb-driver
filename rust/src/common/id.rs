@@ -30,6 +30,10 @@ impl ID {
     pub(crate) fn generate() -> Self {
         Uuid::new_v4().as_bytes().to_vec().into()
     }
+
+    pub(crate) fn bytes_cloned(&self) -> Vec<u8> {
+        self.0.clone()
+    }
 }
 
 impl From<ID> for Vec<u8> {

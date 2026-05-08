@@ -38,6 +38,8 @@ use crate::{
     error::ServerError,
     info::UserInfo,
 };
+use crate::concept::{Attribute, Entity, Relation, Value};
+use crate::transaction::QueryInputs;
 
 #[derive(Debug)]
 pub(super) enum Request {
@@ -177,7 +179,7 @@ pub(super) enum AnalyzeResponse {
 
 #[derive(Debug)]
 pub(super) enum QueryRequest {
-    Query { query: String, options: QueryOptions },
+    Query { query: String, options: QueryOptions, inputs: Option<QueryInputs> },
 }
 
 #[derive(Debug)]

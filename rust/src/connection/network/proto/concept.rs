@@ -19,7 +19,7 @@
 
 use std::{collections::HashMap, str::FromStr};
 
-use chrono::{DateTime, FixedOffset, NaiveDate, NaiveDateTime, TimeZone as ChronoTimeZone};
+use chrono::{Date, DateTime, FixedOffset, NaiveDate, NaiveDateTime, TimeZone as ChronoTimeZone};
 use chrono_tz::Tz;
 use itertools::Itertools;
 use typedb_protocol::{
@@ -33,11 +33,13 @@ use typedb_protocol::{
     value_type::ValueType as ValueTypeProto,
 };
 
-use super::{FromProto, TryFromProto};
+use super::{FromProto, IntoProto, TryFromProto};
 use crate::{
     Error, Result,
     answer::concept_document::{Leaf, Node},
     concept::{
+        type_::Type,
+        value::{Decimal, TimeZone},
         Attribute, AttributeType, Concept, Entity, EntityType, Kind, Relation, RelationType, RoleType, Value,
         ValueType,
         type_::Type,
@@ -51,6 +53,7 @@ use crate::{
         },
     },
 };
+use crate::concept::value::Duration;
 
 impl TryFromProto<ConceptRowProto> for (Vec<Option<Concept>>, Option<Vec<u8>>) {
     fn try_from_proto(proto: ConceptRowProto) -> Result<Self> {
@@ -344,3 +347,18 @@ impl TryFromProto<i32> for Kind {
 fn naive_datetime_from_timestamp(seconds: i64, nanos: u32) -> NaiveDateTime {
     DateTime::from_timestamp(seconds, nanos).unwrap().naive_utc()
 }
+//
+// macro_rules! into_proto_for_thing {
+//     ($t:ident => $type_field:ident { $($f:ident : $v:expr,)* } ) => {
+//         impl IntoProto<typedb_protocol::$t> for $t {
+//             fn into_proto(self) -> typedb_protocol::$t {
+//                 typedb_protocol::$t {
+//                     iid: self.iid.bytes_cloned(), $type_field: None, $($f: $v,)*
+//                 }
+//             }
+//         }
+//     };
+// }
+// into_proto_for_thing!(Entity => entity_type {});
+// into_proto_for_thing!(Relation => relation_type {});
+// into_proto_for_thing!(Attribute => attribute_type { value: None, });

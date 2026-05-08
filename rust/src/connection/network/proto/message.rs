@@ -20,9 +20,9 @@
 use itertools::Itertools;
 use typedb_protocol::{
     ExtensionVersion::Extension, Version::Version, authentication, connection, database, database_manager, migration,
+    row_entry::{Empty, Entry},
     query::initial_res::Res, server, server_manager, transaction, user, user_manager,
 };
-use uuid::Uuid;
 
 use super::{FromProto, IntoProto, TryFromProto, TryIntoProto};
 use crate::{
@@ -39,6 +39,7 @@ use crate::{
     },
     error::{ConnectionError, InternalError, ServerError},
     info::UserInfo,
+    transaction::{QueryInputEntry, QueryInputRow, QueryInputs};
 };
 
 impl TryIntoProto<connection::open::Req> for Request {
@@ -228,10 +229,42 @@ impl IntoProto<transaction::Req> for TransactionRequest {
 impl IntoProto<typedb_protocol::query::Req> for QueryRequest {
     fn into_proto(self) -> typedb_protocol::query::Req {
         match self {
-            QueryRequest::Query { query, options } => {
-                typedb_protocol::query::Req { query, options: Some(options.into_proto()) }
+            QueryRequest::Query { query, options, inputs } => {
+                typedb_protocol::query::Req {
+                    query,
+                    options: Some(options.into_proto()),
+                    input: inputs.map(|i| i.into_proto())
+                }
             }
         }
+    }
+}
+
+impl IntoProto<typedb_protocol::query::req::QueryInput> for QueryInputs {
+    fn into_proto(self) -> typedb_protocol::query::req::QueryInput {
+        typedb_protocol::query::req::QueryInput {
+            rows: self.0.into_iter().map(|row| row.into_proto()).collect()
+        }
+    }
+}
+
+
+impl IntoProto<typedb_protocol::query::req::QueryInputRow> for QueryInputRow {
+    fn into_proto(self) -> typedb_protocol::query::req::QueryInputRow {
+        let entries = self.0.into_iter().map(|entry| entry.into_proto()).collect();
+        typedb_protocol::query::req::QueryInputRow { entry: entries }
+    }
+}
+
+impl IntoProto<typedb_protocol::query::req::QueryInputEntry> for QueryInputEntry {
+    fn into_proto(self) -> typedb_protocol::query::req::QueryInputEntry {
+        use typedb_protocol::query::req::query_input_entry::Entry;
+        let inner = match self {
+            QueryInputEntry::Empty => Entry::Empty(typedb_protocol::query::req::QueryInputEmpty{}),
+            QueryInputEntry::Value(value) => Entry::Value(value),
+            QueryInputEntry::Thing(thing) => Entry::Thing(thing.into_proto()),
+        };
+        typedb_protocol::query::req::QueryInputEntry { entry: Some(inner) }
     }
 }
 

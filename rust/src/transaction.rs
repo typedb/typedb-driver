@@ -28,6 +28,7 @@ use crate::{
     common::{Promise, Result, TransactionType},
     connection::TransactionStream,
 };
+use crate::concept::{Attribute, Entity, Relation, Value};
 
 /// A transaction with a TypeDB database.
 pub struct Transaction {
@@ -68,7 +69,7 @@ impl Transaction {
     /// transaction.query(query)
     /// ```
     pub fn query(&self, query: impl AsRef<str>) -> impl Promise<'static, Result<QueryAnswer>> {
-        self.query_with_options(query, QueryOptions::new())
+        self.query_with_options_and_inputs(query, QueryOptions::new(), None)
     }
 
     /// Performs a TypeQL query in this transaction.
@@ -88,9 +89,22 @@ impl Transaction {
         query: impl AsRef<str>,
         options: QueryOptions,
     ) -> impl Promise<'static, Result<QueryAnswer>> {
+        self.query_with_options_and_inputs(query, options, None)
+    }
+
+    pub fn query_with_inputs(&self, query: impl AsRef<str>, inputs: QueryInputs) -> impl Promise<'static, Result<QueryAnswer>> {
+        self.query_with_options_and_inputs(query, QueryOptions::new(), Some(inputs))
+    }
+
+    pub fn query_with_options_and_inputs(
+        &self,
+        query: impl AsRef<str>,
+        options: QueryOptions,
+        inputs: Option<QueryInputs>
+    ) -> impl Promise<'static, Result<QueryAnswer>> {
         let query = query.as_ref();
         debug!("Transaction submitting query: {}", query);
-        self.transaction_stream.query(query, options)
+        self.transaction_stream.query(query, options, inputs)
     }
 
     /// Analyzes a TypeQL query in this transaction,
@@ -175,4 +189,20 @@ impl fmt::Debug for Transaction {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.debug_struct("Transaction").field("type_", &self.type_).field("options", &self.options).finish()
     }
+}
+
+
+#[derive(Debug)]
+pub struct QueryInputs(pub Vec<QueryInputRow>);
+
+#[derive(Debug)]
+pub struct QueryInputRow(pub Vec<QueryInputEntry>);
+
+#[derive(Debug)]
+pub enum QueryInputEntry {
+    Empty,
+    Entity(Entity),
+    Relation(Relation),
+    Attribute(Attribute),
+    Value(Value),
 }
