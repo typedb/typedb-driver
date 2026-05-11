@@ -21,13 +21,8 @@ use cucumber::gherkin::Step;
 use futures::{StreamExt, future::join_all};
 use itertools::Itertools;
 use macro_rules_attribute::apply;
-use typedb_driver::{
-    QueryOptions, Result as TypeDBResult, Transaction,
-    answer::{ConceptRow, QueryAnswer},
-    concept::{AttributeType, Concept, ConceptCategory, EntityType, RelationType, Value, ValueType},
-    error::ConceptError,
-};
-
+use typedb_driver::{QueryOptions, Result as TypeDBResult, Transaction, answer::{ConceptRow, QueryAnswer}, concept::{AttributeType, Concept, ConceptCategory, EntityType, RelationType, Value, ValueType}, error::ConceptError, IID};
+use typedb_driver::concept::{Attribute, Entity, Relation};
 use crate::{
     BehaviourTestOptionalError, Context, generic_step, params,
     params::check_boolean,
@@ -177,6 +172,18 @@ fn concept_get_type(concept: &Concept) -> Concept {
 pub async fn typeql_query(context: &mut Context, may_error: params::MayError, step: &Step) {
     context.cleanup_answers().await;
     may_error.check(run_query(context.transaction(), step.docstring().unwrap(), context.query_options).await);
+}
+
+
+#[cucumber::given("query is given rows")]
+#[cucumber::when("query is given rows")]
+async fn given_rows(context: &mut Context, step: &Step) {
+    let table = step.table.as_ref().expect("Expected table for given rows");
+    // Ignore the first row as a documentational header
+    let mut given_rows = table.rows[1..].iter().map(|row| {
+        row.iter().map(parse_query_given_row_entry).collect::<Vec<_>>()
+    }).collect();
+    context.given_rows = Some(given_rows)
 }
 
 #[apply(generic_step)]
@@ -995,4 +1002,73 @@ pub async fn answer_has_structure(context: &mut Context, step: &Step) {
     let context = functor_encoding::FunctorContext { structure: pipeline };
     let actual_functor = pipeline.encode_as_functor(&context);
     assert_eq!(normalize_functor_for_compare(&actual_functor), normalize_functor_for_compare(expected_functor));
+}
+
+
+fn parse_query_given_row(row: &[String]) -> Vec<Option<Concept>> {
+    row.iter().map(parse_query_given_row_entry).collect()
+}
+
+fn parse_query_given_row_entry(entry: &String) -> Option<Concept> {
+    let mut parts = entry.split(":");
+    match parts.next().unwrap() {
+        "none" => None,
+        "value" => {
+            let value_type_str = parts.next().expect("value:<value-type>:<value>");
+            let value_str = parts.next().expect("value:<value-type>:<value>");
+            Some(Concept::Value(parse_value(value_type_str, value_str)))
+        }
+        "iid" => {
+            let hex = parts.next().expect("Expected iid:<iid>").replace("0x", "");
+            let iid_bytes = (0..hex.len())
+                .step_by(2)
+                .map(|i| u8::from_str_radix(&hex[i..i + 2], 16))
+                .collect::<Result<Vec<_>, _>>()
+                .unwrap();
+            let prefix_byte = iid_bytes[0];
+            let iid = IID::from(iid_bytes);
+            let thing = match prefix_byte {
+                30 => {
+                    Concept::Entity(Entity { iid, type_: None })
+                }
+                31 => {
+                    Concept::Relation(Relation { iid, type_: None })
+                }
+                32 => {
+                    // TODO: Parse the value somehow?
+                    let value = Value::String("<dummy-value-by-bdd>".to_owned());
+                    Concept::Attribute(Attribute { iid, type_: None, value })
+                }
+                other => panic!("Invalid iid prefix: {other}"),
+            };
+            Some(thing)
+        }
+        other => panic!("Invalid entry type: {other}"),
+    }
+}
+
+fn parse_value(value_type_string: &str, value_string: &str) -> Value {
+    match value_type_string {
+        "boolean" => {
+            match value_string {
+                "true" => Value::Boolean(true),
+                "false" => Value::Boolean(false),
+                _ => panic!("Bad value for boolean")
+            }
+        },
+        "integer" => {
+            Value::Integer(
+                value_string.parse::<i64>().expect("Bad value for integer")
+            )
+        },
+        "double" => {
+            Value::Double(
+                value_string.parse::<f64>().expect("Bad value for double")
+            )
+        },
+        "string" => {
+            Value::String(value_string.to_owned())
+        },
+        _ => todo!("TypeQL test value type is not covered"),
+    }
 }

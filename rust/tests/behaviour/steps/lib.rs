@@ -110,6 +110,7 @@ pub struct Context {
     pub temp_dir: Option<TempDir>,
     pub transactions: VecDeque<Transaction>,
     pub background_transactions: VecDeque<Transaction>,
+    pub given_rows: Option<Vec<Vec<Option<Concept>>>>,
     pub analyzed: Option<AnalyzedQuery>,
     pub answer: Option<QueryAnswer>,
     pub(crate) answer_type: Option<QueryAnswerType>,
@@ -538,6 +539,7 @@ impl Default for Context {
             transactions: VecDeque::new(),
             background_transactions: VecDeque::new(),
             temp_dir: None,
+            given_rows: None,
             analyzed: None,
             answer: None,
             answer_type: None,
@@ -569,6 +571,7 @@ macro_rules! in_background {
     };
 }
 pub(crate) use in_background;
+use typedb_driver::concept::Concept;
 
 // Most of the drivers are error-driven, while the Rust driver returns Option::None in many cases instead.
 // These "fake" errors allow us to emulate error messages for generalised driver BDDs,

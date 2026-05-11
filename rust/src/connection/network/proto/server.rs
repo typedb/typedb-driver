@@ -18,14 +18,14 @@
  */
 
 use typedb_protocol::{
+    server::{version::Res as VersionProto, ReplicationStatus as ReplicationStatusProto},
     Server as ServerProto,
-    server::{ReplicationStatus as ReplicationStatusProto, version::Res as VersionProto},
 };
 
 use super::TryFromProto;
 use crate::{
     common::Result,
-    connection::server::{ReplicationRole, ReplicationStatus, Server, server_version::ServerVersion},
+    connection::server::{server_version::ServerVersion, ReplicationRole, ReplicationStatus, Server},
     error::ConnectionError,
 };
 
