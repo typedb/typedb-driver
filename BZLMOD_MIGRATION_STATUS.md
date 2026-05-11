@@ -11,10 +11,10 @@ Migration of `typedb-driver` from WORKSPACE-based Bazel 6.2.0 to Bzlmod with Baz
 - C FFI layer
 - Python driver (multi-version 3.9-3.13)
 - Java driver
+- C# driver (via SWIG/P/Invoke + paket NuGet)
 - TypeScript HTTP driver
 
 **Excluded from default build:**
-- C# (`csharp/`) - 2.x only, `rules_dotnet` has limited Bzlmod support
 - Node.js gRPC (`nodejs/`) - 2.x only, deprecated
 - C++ (`cpp/`) - 2.x only
 - Go (`go/`) - POC only, lower priority
@@ -27,6 +27,7 @@ Migration of `typedb-driver` from WORKSPACE-based Bazel 6.2.0 to Bzlmod with Baz
 | C FFI | `//c/...` | ✅ SUCCESS | Full build works |
 | Java | `//java/...` | ⚠️ PARTIAL | Core builds, `docs_html` fails (missing `unzip` - system env) |
 | Python | `//python/...` | ⚠️ PARTIAL | Core builds, `docs_html` fails (Sphinx timezone - system env) |
+| C# | `//csharp/...` | ✅ SUCCESS | All 90 targets build (driver-csharp + per-platform Pinvoke runtime NuGet packs) |
 | TypeScript HTTP | `//http-ts:driver-lib` | ✅ SUCCESS | Library builds |
 | TypeScript HTTP | `//http-ts/...` | ⚠️ PARTIAL | `npm-package` has jq stamping issue |
 

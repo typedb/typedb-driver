@@ -16,7 +16,7 @@ Multi-language client drivers for TypeDB.
 | **Java** | JNI/SWIG bindings → C FFI → Rust core | 3.x supported |
 | **TypeScript HTTP** | **Standalone** (pure TypeScript, HTTP API) | 3.x supported |
 | **C++** | Wrapper around Rust core | 2.x only |
-| **C#** | SWIG/P/Invoke → Rust core | 2.x only |
+| **C#** | SWIG/P/Invoke → Rust core | 3.x supported |
 | **Node.js** | gRPC driver (Rust-based) | 2.x only |
 | **Go** | Proof of concept | Not production-ready |
 
@@ -30,7 +30,7 @@ Multi-language client drivers for TypeDB.
 | `java/` | Java driver (via JNI/C FFI) |
 | `http-ts/` | TypeScript HTTP driver (**standalone, no FFI**) |
 | `cpp/` | C++ driver (2.x only) |
-| `csharp/` | C# driver (2.x only) |
+| `csharp/` | C# driver (via SWIG/C FFI) |
 | `nodejs/` | Node.js driver (2.x only) |
 | `go/` | Go driver (proof of concept) |
 | `docs/` | API documentation partials (AsciiDoc) |

@@ -54,7 +54,7 @@ namespace TypeDB.Driver.Test.Behaviour
             return TypeDB.Driver(
                 TypeDB.DefaultAddress,
                 DefaultCredentials,
-                new DriverOptions(DriverTlsConfig.Disabled()));
+                DriverOptions);
         }
 
         public override IDriver CreateTypeDBDriver(string address)
@@ -62,7 +62,7 @@ namespace TypeDB.Driver.Test.Behaviour
             return TypeDB.Driver(
                 address,
                 new Credentials(DefaultUsername, DefaultPassword),
-                new DriverOptions(DriverTlsConfig.Disabled()));
+                DriverOptions);
         }
 
         [Given(@"typedb starts")]
@@ -200,8 +200,8 @@ namespace TypeDB.Driver.Test.Behaviour
             {
                 var wrongPortDriver = TypeDB.Driver(
                     "localhost:9999",
-                    new Credentials("admin", "password"),
-                    new DriverOptions(DriverTlsConfig.Disabled()));
+                    DefaultCredentials,
+                    DriverOptions);
             });
         }
 
@@ -213,8 +213,8 @@ namespace TypeDB.Driver.Test.Behaviour
             {
                 var wrongHostDriver = TypeDB.Driver(
                     "nonexistent-host.invalid:1729",
-                    new Credentials("admin", "password"),
-                    new DriverOptions(DriverTlsConfig.Disabled()));
+                    DefaultCredentials,
+                    DriverOptions);
             });
             Assert.Contains(expectedMessage, exception.Message);
         }

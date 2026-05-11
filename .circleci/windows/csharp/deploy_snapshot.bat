@@ -22,6 +22,11 @@ CALL refreshenv
 ECHO Building and deploying windows package...
 SET DEPLOY_NUGET_API_KEY=%REPO_TYPEDB_PASSWORD%
 
+REM rules_dotnet runfiles tree is deep; keep TEMP short to stay under MAX_PATH
+IF NOT EXIST C:\T MKDIR C:\T
+SET TEMP=C:\T
+SET TMP=C:\T
+
 git rev-parse HEAD > version_snapshot.txt
 set /p VER=<version_snapshot.txt
 bazel --output_user_root=C:/b run --config=ci --verbose_failures --define version=0.0.0-%VER% //csharp:driver-csharp-runtime-push -- snapshot
