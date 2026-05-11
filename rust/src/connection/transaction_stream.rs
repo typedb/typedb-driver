@@ -36,7 +36,7 @@ use crate::{
     error::{ConnectionError, InternalError},
     promisify, resolve,
 };
-use crate::transaction::QueryInputs;
+use crate::transaction::QueryGivenRows;
 
 macro_rules! require_transaction_response {
     ($response:expr, $variant:ident(_)) => {
@@ -143,7 +143,7 @@ impl TransactionStream {
         &self,
         query: &str,
         options: QueryOptions,
-        inputs: Option<QueryInputs>,
+        inputs: Option<QueryGivenRows>,
     ) -> impl Promise<'static, Result<QueryAnswer>> + use<> {
         let stream = self.query_stream(QueryRequest::Query { query: query.to_owned(), options, inputs });
         promisify! {

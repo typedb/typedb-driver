@@ -201,6 +201,12 @@
 %nojavaexception query_answer_is_concept_row_stream;
 %nojavaexception query_answer_is_concept_document_stream;
 
+%nojavaexception given_row_new;
+%nojavaexception given_rows_new;
+%nojavaexception given_rows_push;
+%nojavaexception given_row_set_index_to_concept;
+%nojavaexception given_row_set_index_to_empty;
+
 %nojavaexception ServerVersion::distribution;
 %nojavaexception ServerVersion::version;
 

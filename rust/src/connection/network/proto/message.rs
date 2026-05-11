@@ -38,7 +38,7 @@ use crate::{
     },
     error::{ConnectionError, InternalError, ServerError},
     info::UserInfo,
-    transaction::{QueryInputEntry, QueryInputRow, QueryInputs},
+    transaction::{QueryGivenEntry, QueryGivenRow, QueryGivenRows},
     Credentials,
 };
 
@@ -238,37 +238,37 @@ impl IntoProto<typedb_protocol::query::Req> for QueryRequest {
     }
 }
 
-impl IntoProto<typedb_protocol::query::req::QueryInput> for QueryInputs {
+impl IntoProto<typedb_protocol::query::req::QueryInput> for QueryGivenRows {
     fn into_proto(self) -> typedb_protocol::query::req::QueryInput {
         typedb_protocol::query::req::QueryInput { rows: self.0.into_iter().map(|row| row.into_proto()).collect() }
     }
 }
 
-impl IntoProto<typedb_protocol::query::req::QueryInputRow> for QueryInputRow {
+impl IntoProto<typedb_protocol::query::req::QueryInputRow> for QueryGivenRow {
     fn into_proto(self) -> typedb_protocol::query::req::QueryInputRow {
         let entries = self.0.into_iter().map(|entry| entry.into_proto()).collect();
         typedb_protocol::query::req::QueryInputRow { entries }
     }
 }
 
-impl IntoProto<typedb_protocol::query::req::QueryInputEntry> for QueryInputEntry {
+impl IntoProto<typedb_protocol::query::req::QueryInputEntry> for QueryGivenEntry {
     fn into_proto(self) -> typedb_protocol::query::req::QueryInputEntry {
         use typedb_protocol::{
             query::req::query_input_entry::Entry as EntryProto, thing::Thing as ThingProtoInner, Thing as ThingProto,
         };
 
         let inner = match self {
-            QueryInputEntry::Empty => EntryProto::Empty(typedb_protocol::query::req::QueryInputEmpty {}),
-            QueryInputEntry::Value(value) => EntryProto::Value(value.into_proto()),
-            QueryInputEntry::Entity(entity) => {
+            QueryGivenEntry::Empty => EntryProto::Empty(typedb_protocol::query::req::QueryInputEmpty {}),
+            QueryGivenEntry::Value(value) => EntryProto::Value(value.into_proto()),
+            QueryGivenEntry::Entity(entity) => {
                 let thing = ThingProtoInner::Entity(entity.into_proto());
                 EntryProto::Thing(ThingProto { thing: Some(thing) })
             }
-            QueryInputEntry::Relation(relation) => {
+            QueryGivenEntry::Relation(relation) => {
                 let thing = ThingProtoInner::Relation(relation.into_proto());
                 EntryProto::Thing(ThingProto { thing: Some(thing) })
             }
-            QueryInputEntry::Attribute(attribute) => {
+            QueryGivenEntry::Attribute(attribute) => {
                 let thing = ThingProtoInner::Attribute(attribute.into_proto());
                 EntryProto::Thing(ThingProto { thing: Some(thing) })
             }

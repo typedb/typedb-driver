@@ -39,7 +39,7 @@ use crate::{
     info::UserInfo,
 };
 use crate::concept::{Attribute, Entity, Relation, Value};
-use crate::transaction::QueryInputs;
+use crate::transaction::QueryGivenRows;
 
 #[derive(Debug)]
 pub(super) enum Request {
@@ -179,7 +179,7 @@ pub(super) enum AnalyzeResponse {
 
 #[derive(Debug)]
 pub(super) enum QueryRequest {
-    Query { query: String, options: QueryOptions, inputs: Option<QueryInputs> },
+    Query { query: String, options: QueryOptions, inputs: Option<QueryGivenRows> },
 }
 
 #[derive(Debug)]

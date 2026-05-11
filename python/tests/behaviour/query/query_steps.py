@@ -44,27 +44,47 @@ from typedb.common.duration import Duration
 from typedb.driver import *
 
 
-def query(transaction: Transaction, query: str, options: Optional[QueryOptions]) -> 'Promise[QueryAnswer]':
+def query(transaction: Transaction, query: str, options: Optional[QueryOptions], given_rows=None) -> 'Promise[QueryAnswer]':
+    if given_rows is not None:
+        # TODO: Pass given_rows to the driver once query_with_inputs is implemented in the Python driver
+        raise NotImplementedError("query_with_inputs is not yet implemented in the Python driver")
     if options:
         return transaction.query(query=query, options=options)
     else:
         return transaction.query(query=query)
 
 
-@step("typeql write query{may_error:MayError}")
-@step("typeql read query{may_error:MayError}")
-@step("typeql schema query{may_error:MayError}")
-def step_impl(context: Context, may_error: MayError):
+@step("typeql write query{with_given:WithGiven}{may_error:MayError}")
+@step("typeql read query{with_given:WithGiven}{may_error:MayError}")
+@step("typeql schema query{with_given:WithGiven}{may_error:MayError}")
+def step_impl(context: Context, with_given: bool, may_error: MayError):
     context.clear_answers()
-    may_error.check(lambda: query(context.tx(), context.text, context.query_options).resolve())
+    given_rows = _take_given_rows(context) if with_given else None
+    may_error.check(lambda: query(context.tx(), context.text, context.query_options, given_rows).resolve())
 
 
-@step("get answers of typeql write query")
-@step("get answers of typeql read query")
-@step("get answers of typeql schema query")
-def step_impl(context: Context):
+@step("set answers of typeql read query as given rows with order: {var_list:VariableList}")
+def step_impl(context: Context, var_list: list):
+    answer = context.tx().query(query=context.text).resolve()
+    rows = list(answer.as_concept_rows())
+    # TODO: Convert to driver QueryInputs and call query_with_inputs once implemented in the Python driver
+    context.given_rows = [[row.get(v) for v in var_list] for row in rows]
+
+
+@step("get answers of typeql write query{with_given:WithGiven}")
+@step("get answers of typeql read query{with_given:WithGiven}")
+@step("get answers of typeql schema query{with_given:WithGiven}")
+def step_impl(context: Context, with_given: bool):
     context.clear_answers()
-    context.answer = query(context.tx(), context.text, context.query_options).resolve()
+    given_rows = _take_given_rows(context) if with_given else None
+    context.answer = query(context.tx(), context.text, context.query_options, given_rows).resolve()
+
+
+def _take_given_rows(context: Context):
+    assert context.given_rows is not None, "Expected given rows to be set"
+    rows = context.given_rows
+    context.given_rows = None
+    return rows
 
 
 @step("concurrently get answers of typeql write query {count:Int} times")

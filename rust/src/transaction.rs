@@ -92,7 +92,7 @@ impl Transaction {
         self.query_with_options_and_inputs(query, options, None)
     }
 
-    pub fn query_with_inputs(&self, query: impl AsRef<str>, inputs: QueryInputs) -> impl Promise<'static, Result<QueryAnswer>> {
+    pub fn query_with_inputs(&self, query: impl AsRef<str>, inputs: QueryGivenRows) -> impl Promise<'static, Result<QueryAnswer>> {
         self.query_with_options_and_inputs(query, QueryOptions::new(), Some(inputs))
     }
 
@@ -100,7 +100,7 @@ impl Transaction {
         &self,
         query: impl AsRef<str>,
         options: QueryOptions,
-        inputs: Option<QueryInputs>
+        inputs: Option<QueryGivenRows>
     ) -> impl Promise<'static, Result<QueryAnswer>> {
         let query = query.as_ref();
         debug!("Transaction submitting query: {}", query);
@@ -193,13 +193,13 @@ impl fmt::Debug for Transaction {
 
 
 #[derive(Debug)]
-pub struct QueryInputs(pub Vec<QueryInputRow>);
+pub struct QueryGivenRows(pub Vec<QueryGivenRow>);
 
 #[derive(Debug)]
-pub struct QueryInputRow(pub Vec<QueryInputEntry>);
+pub struct QueryGivenRow(pub Vec<QueryGivenEntry>);
 
-#[derive(Debug)]
-pub enum QueryInputEntry {
+#[derive(Debug, Clone)]
+pub enum QueryGivenEntry {
     Empty,
     Entity(Entity),
     Relation(Relation),

@@ -92,6 +92,9 @@ struct Type {};
 
 %dropproxy(QueryAnswer, query_answer)
 
+%dropproxy(QueryGivenRows, given_rows)
+%dropproxy(QueryGivenRow, given_row)
+
 %dropproxy(AnalyzedQuery, analyzed_query)
 %dropproxy(Conjunction, conjunction)
 %dropproxy(ConjunctionID, conjunction_id)
@@ -206,6 +209,7 @@ VoidPromise* transaction_on_close_register(const Transaction* transaction, Trans
 
 %newobject transaction_new;
 %newobject transaction_query;
+%newobject transaction_query_given_rows;
 %delobject transaction_commit;
 
 %typemap(newfree) char* "string_free($1);";
@@ -263,6 +267,9 @@ VoidPromise* transaction_on_close_register(const Transaction* transaction, Trans
 
 %newobject databases_all;
 %newobject databases_get;
+
+%newobject given_rows_new;
+%newobject given_row_new;
 
 %newobject analyzed_query_pipeline;
 %newobject analyzed_preamble;

@@ -42,7 +42,7 @@ use typedb_driver::{
     ServerRouting, Transaction, TransactionOptions, TypeDBDriver,
     analyze::AnalyzedQuery,
     answer::{ConceptDocument, ConceptRow, QueryAnswer, QueryType},
-    transaction::QueryInputs,
+    transaction::QueryGivenRows,
 };
 
 use crate::{
@@ -111,7 +111,7 @@ pub struct Context {
     pub temp_dir: Option<TempDir>,
     pub transactions: VecDeque<Transaction>,
     pub background_transactions: VecDeque<Transaction>,
-    pub given_rows: Option<QueryInputs>,
+    pub given_rows: Option<QueryGivenRows>,
     pub analyzed: Option<AnalyzedQuery>,
     pub answer: Option<QueryAnswer>,
     pub(crate) answer_type: Option<QueryAnswerType>,
