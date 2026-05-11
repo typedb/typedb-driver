@@ -192,6 +192,8 @@
     "https://bcr.bazel.build/modules/rules_cc/0.0.9/MODULE.bazel": "836e76439f354b89afe6a911a7adf59a6b2518fafb174483ad78a2a2fde7b1c5",
     "https://bcr.bazel.build/modules/rules_cc/0.1.1/MODULE.bazel": "2f0222a6f229f0bf44cd711dc13c858dad98c62d52bd51d8fc3a764a83125513",
     "https://bcr.bazel.build/modules/rules_cc/0.1.1/source.json": "d61627377bd7dd1da4652063e368d9366fc9a73920bfa396798ad92172cf645c",
+    "https://bcr.bazel.build/modules/rules_dotnet/0.14.0/MODULE.bazel": "f006f845f5e75c5a3e691947062bf33cfef66d2b66af9f1d5f6a35fc99d4ed78",
+    "https://bcr.bazel.build/modules/rules_dotnet/0.14.0/source.json": "0fd3ac33da1afa98261a99251396e99eab82261739aa81beee6c814cc83b897e",
     "https://bcr.bazel.build/modules/rules_foreign_cc/0.10.1/MODULE.bazel": "b9527010e5fef060af92b6724edb3691970a5b1f76f74b21d39f7d433641be60",
     "https://bcr.bazel.build/modules/rules_foreign_cc/0.10.1/source.json": "9300e71df0cdde0952f10afff1401fa664e9fc5d9ae6204660ba1b158d90d6a6",
     "https://bcr.bazel.build/modules/rules_foreign_cc/0.9.0/MODULE.bazel": "c9e8c682bf75b0e7c704166d79b599f93b72cfca5ad7477df596947891feeef6",
@@ -747,6 +749,72 @@
         "recordedRepoMappingEntries": [
           [
             "aspect_rules_ts+",
+            "bazel_tools",
+            "bazel_tools"
+          ]
+        ]
+      }
+    },
+    "@@rules_dotnet+//dotnet:extensions.bzl%dotnet": {
+      "general": {
+        "bzlTransitiveDigest": "X2wO7CG0ORd7g5s3i6sCjwVQC7gepYxVhhExOTGgfjY=",
+        "usagesDigest": "WvATE8LGNRI+rZXLRAR2Wf9E4/l4TVasjaFU1+C0rFg=",
+        "recordedFileInputs": {},
+        "recordedDirentsInputs": {},
+        "envVariables": {},
+        "generatedRepoSpecs": {
+          "dotnet_x86_64-apple-darwin": {
+            "repoRuleId": "@@rules_dotnet+//dotnet:repositories.bzl%dotnet_repositories",
+            "attributes": {
+              "platform": "x86_64-apple-darwin",
+              "dotnet_version": "6.0.413"
+            }
+          },
+          "dotnet_aarch64-apple-darwin": {
+            "repoRuleId": "@@rules_dotnet+//dotnet:repositories.bzl%dotnet_repositories",
+            "attributes": {
+              "platform": "aarch64-apple-darwin",
+              "dotnet_version": "6.0.413"
+            }
+          },
+          "dotnet_x86_64-unknown-linux-gnu": {
+            "repoRuleId": "@@rules_dotnet+//dotnet:repositories.bzl%dotnet_repositories",
+            "attributes": {
+              "platform": "x86_64-unknown-linux-gnu",
+              "dotnet_version": "6.0.413"
+            }
+          },
+          "dotnet_arm64-unknown-linux-gnu": {
+            "repoRuleId": "@@rules_dotnet+//dotnet:repositories.bzl%dotnet_repositories",
+            "attributes": {
+              "platform": "arm64-unknown-linux-gnu",
+              "dotnet_version": "6.0.413"
+            }
+          },
+          "dotnet_x86_64-pc-windows-msvc": {
+            "repoRuleId": "@@rules_dotnet+//dotnet:repositories.bzl%dotnet_repositories",
+            "attributes": {
+              "platform": "x86_64-pc-windows-msvc",
+              "dotnet_version": "6.0.413"
+            }
+          },
+          "dotnet_arm64-pc-windows-msvc": {
+            "repoRuleId": "@@rules_dotnet+//dotnet:repositories.bzl%dotnet_repositories",
+            "attributes": {
+              "platform": "arm64-pc-windows-msvc",
+              "dotnet_version": "6.0.413"
+            }
+          },
+          "dotnet_toolchains": {
+            "repoRuleId": "@@rules_dotnet+//dotnet/private:toolchains_repo.bzl%toolchains_repo",
+            "attributes": {
+              "user_repository_name": "dotnet"
+            }
+          }
+        },
+        "recordedRepoMappingEntries": [
+          [
+            "rules_dotnet+",
             "bazel_tools",
             "bazel_tools"
           ]
@@ -11511,7 +11579,7 @@
     "@@typedb_dependencies+//distribution/artifact:rules.bzl%native_artifact_files": {
       "general": {
         "bzlTransitiveDigest": "G2tVfxi6pNMPwxLud5h67xKrwcp4+6MJIFRhSA7KBWo=",
-        "usagesDigest": "8Si2pVYrYwuAcf7aYv0N+1BN8ttrG/LP/JFqC4F+BLk=",
+        "usagesDigest": "5bnyYS6ncQkbIbv1CioSYdxwLQ1Ksxp/LRyf1n9kfkw=",
         "recordedFileInputs": {},
         "recordedDirentsInputs": {},
         "envVariables": {},
@@ -11520,45 +11588,45 @@
             "repoRuleId": "@@bazel_tools//tools/build_defs/repo:http.bzl%http_file",
             "attributes": {
               "urls": [
-                "https://repo.typedb.com/public/public-release/raw/names/typedb-all-linux-arm64/versions/3.10.0-alpha-1/typedb-all-linux-arm64-3.10.0-alpha-1.tar.gz"
+                "https://repo.typedb.com/public/public-snapshot/raw/names/typedb-all-linux-arm64/versions/7cc4a3e9edcaaee2c8fa9cdce6ffef170eeed503/typedb-all-linux-arm64-7cc4a3e9edcaaee2c8fa9cdce6ffef170eeed503.tar.gz"
               ],
-              "downloaded_file_path": "typedb-all-linux-arm64-3.10.0-alpha-1.tar.gz"
+              "downloaded_file_path": "typedb-all-linux-arm64-7cc4a3e9edcaaee2c8fa9cdce6ffef170eeed503.tar.gz"
             }
           },
           "typedb_artifact_linux-x86_64": {
             "repoRuleId": "@@bazel_tools//tools/build_defs/repo:http.bzl%http_file",
             "attributes": {
               "urls": [
-                "https://repo.typedb.com/public/public-release/raw/names/typedb-all-linux-x86_64/versions/3.10.0-alpha-1/typedb-all-linux-x86_64-3.10.0-alpha-1.tar.gz"
+                "https://repo.typedb.com/public/public-snapshot/raw/names/typedb-all-linux-x86_64/versions/7cc4a3e9edcaaee2c8fa9cdce6ffef170eeed503/typedb-all-linux-x86_64-7cc4a3e9edcaaee2c8fa9cdce6ffef170eeed503.tar.gz"
               ],
-              "downloaded_file_path": "typedb-all-linux-x86_64-3.10.0-alpha-1.tar.gz"
+              "downloaded_file_path": "typedb-all-linux-x86_64-7cc4a3e9edcaaee2c8fa9cdce6ffef170eeed503.tar.gz"
             }
           },
           "typedb_artifact_mac-arm64": {
             "repoRuleId": "@@bazel_tools//tools/build_defs/repo:http.bzl%http_file",
             "attributes": {
               "urls": [
-                "https://repo.typedb.com/public/public-release/raw/names/typedb-all-mac-arm64/versions/3.10.0-alpha-1/typedb-all-mac-arm64-3.10.0-alpha-1.zip"
+                "https://repo.typedb.com/public/public-snapshot/raw/names/typedb-all-mac-arm64/versions/7cc4a3e9edcaaee2c8fa9cdce6ffef170eeed503/typedb-all-mac-arm64-7cc4a3e9edcaaee2c8fa9cdce6ffef170eeed503.zip"
               ],
-              "downloaded_file_path": "typedb-all-mac-arm64-3.10.0-alpha-1.zip"
+              "downloaded_file_path": "typedb-all-mac-arm64-7cc4a3e9edcaaee2c8fa9cdce6ffef170eeed503.zip"
             }
           },
           "typedb_artifact_mac-x86_64": {
             "repoRuleId": "@@bazel_tools//tools/build_defs/repo:http.bzl%http_file",
             "attributes": {
               "urls": [
-                "https://repo.typedb.com/public/public-release/raw/names/typedb-all-mac-x86_64/versions/3.10.0-alpha-1/typedb-all-mac-x86_64-3.10.0-alpha-1.zip"
+                "https://repo.typedb.com/public/public-snapshot/raw/names/typedb-all-mac-x86_64/versions/7cc4a3e9edcaaee2c8fa9cdce6ffef170eeed503/typedb-all-mac-x86_64-7cc4a3e9edcaaee2c8fa9cdce6ffef170eeed503.zip"
               ],
-              "downloaded_file_path": "typedb-all-mac-x86_64-3.10.0-alpha-1.zip"
+              "downloaded_file_path": "typedb-all-mac-x86_64-7cc4a3e9edcaaee2c8fa9cdce6ffef170eeed503.zip"
             }
           },
           "typedb_artifact_windows-x86_64": {
             "repoRuleId": "@@bazel_tools//tools/build_defs/repo:http.bzl%http_file",
             "attributes": {
               "urls": [
-                "https://repo.typedb.com/public/public-release/raw/names/typedb-all-windows-x86_64/versions/3.10.0-alpha-1/typedb-all-windows-x86_64-3.10.0-alpha-1.zip"
+                "https://repo.typedb.com/public/public-snapshot/raw/names/typedb-all-windows-x86_64/versions/7cc4a3e9edcaaee2c8fa9cdce6ffef170eeed503/typedb-all-windows-x86_64-7cc4a3e9edcaaee2c8fa9cdce6ffef170eeed503.zip"
               ],
-              "downloaded_file_path": "typedb-all-windows-x86_64-3.10.0-alpha-1.zip"
+              "downloaded_file_path": "typedb-all-windows-x86_64-7cc4a3e9edcaaee2c8fa9cdce6ffef170eeed503.zip"
             }
           },
           "typedb_cluster_artifact_linux-arm64": {
