@@ -23,20 +23,25 @@ use itertools::Itertools;
 use macro_rules_attribute::apply;
 use typedb_driver::{QueryOptions, Result as TypeDBResult, Transaction, answer::{ConceptRow, QueryAnswer}, concept::{AttributeType, Concept, ConceptCategory, EntityType, RelationType, Value, ValueType}, error::ConceptError, IID};
 use typedb_driver::concept::{Attribute, Entity, Relation};
+use typedb_driver::transaction::{QueryInputEntry, QueryInputRow, QueryInputs};
 use crate::{
     BehaviourTestOptionalError, Context, generic_step, params,
     params::check_boolean,
     util::{iter_table, list_contains_json, parse_json},
 };
+use crate::params::WithGiven;
 
 pub(crate) async fn run_query(
     transaction: &Transaction,
     query: impl AsRef<str>,
+    given_rows: Option<QueryInputs>,
     query_options: Option<QueryOptions>,
 ) -> TypeDBResult<QueryAnswer> {
-    match query_options {
-        None => transaction.query(query).await,
-        Some(options) => transaction.query_with_options(query, options).await,
+    match (given_rows, query_options) {
+        (None, None) => transaction.query(query).await,
+        (Some(inputs), None) => transaction.query_with_inputs(query, inputs).await,
+        (None, Some(options)) => transaction.query_with_options(query, options).await,
+        (Some(rows), Some(options)) => transaction.query_with_options_and_inputs(query, options, Some(rows)).await,
     }
 }
 
@@ -166,12 +171,13 @@ fn concept_get_type(concept: &Concept) -> Concept {
 }
 
 #[apply(generic_step)]
-#[step(expr = "typeql schema query{may_error}")]
-#[step(expr = "typeql write query{may_error}")]
-#[step(expr = "typeql read query{may_error}")]
-pub async fn typeql_query(context: &mut Context, may_error: params::MayError, step: &Step) {
+#[step(expr = "typeql schema query{with_given}{may_error}")]
+#[step(expr = "typeql write query{with_given}{may_error}")]
+#[step(expr = "typeql read query{with_given}{may_error}")]
+pub async fn typeql_query(context: &mut Context, with_given: WithGiven, may_error: params::MayError, step: &Step) {
     context.cleanup_answers().await;
-    may_error.check(run_query(context.transaction(), step.docstring().unwrap(), context.query_options).await);
+    let given_rows = may_take_given_rows(context, with_given);
+    may_error.check(run_query(context.transaction(), step.docstring().unwrap(), given_rows, context.query_options).await);
 }
 
 
@@ -180,20 +186,19 @@ pub async fn typeql_query(context: &mut Context, may_error: params::MayError, st
 async fn given_rows(context: &mut Context, step: &Step) {
     let table = step.table.as_ref().expect("Expected table for given rows");
     // Ignore the first row as a documentational header
-    let mut given_rows = table.rows[1..].iter().map(|row| {
-        row.iter().map(parse_query_given_row_entry).collect::<Vec<_>>()
-    }).collect();
-    context.given_rows = Some(given_rows)
+    let mut given_rows = table.rows[1..].iter().map(|row| parse_query_given_row(row.as_slice())).collect();
+    context.given_rows = Some(QueryInputs(given_rows))
 }
 
 #[apply(generic_step)]
-#[step(expr = "get answers of typeql schema query")]
-#[step(expr = "get answers of typeql write query")]
-#[step(expr = "get answers of typeql read query")]
-pub async fn get_answers_of_typeql_query(context: &mut Context, step: &Step) {
+#[step(expr = "get answers of typeql schema query{with_given}")]
+#[step(expr = "get answers of typeql write query{with_given}")]
+#[step(expr = "get answers of typeql read query{with_given}")]
+pub async fn get_answers_of_typeql_query(context: &mut Context, with_given: WithGiven, step: &Step) {
     context.cleanup_answers().await;
+    let given_rows = may_take_given_rows(context, with_given);
     context
-        .set_answer(run_query(context.transaction(), step.docstring().unwrap(), context.query_options).await)
+        .set_answer(run_query(context.transaction(), step.docstring().unwrap(), given_rows, context.query_options).await)
         .unwrap();
 }
 
@@ -206,7 +211,7 @@ pub async fn concurrently_get_answers_of_typeql_query_times(context: &mut Contex
 
     let queries = vec![step.docstring().unwrap(); count];
     let answers: Vec<QueryAnswer> =
-        join_all(queries.into_iter().map(|query| run_query(context.transaction(), query, context.query_options)))
+        join_all(queries.into_iter().map(|query| run_query(context.transaction(), query, None, context.query_options)))
             .await
             .into_iter()
             .map(|result| result.unwrap())
@@ -1005,18 +1010,22 @@ pub async fn answer_has_structure(context: &mut Context, step: &Step) {
 }
 
 
-fn parse_query_given_row(row: &[String]) -> Vec<Option<Concept>> {
-    row.iter().map(parse_query_given_row_entry).collect()
+fn may_take_given_rows(context: &mut Context, with_given: WithGiven) -> Option<QueryInputs> {
+    (with_given == WithGiven::True).then(|| context.given_rows.take().expect("Expected given rows available"))
 }
 
-fn parse_query_given_row_entry(entry: &String) -> Option<Concept> {
+fn parse_query_given_row(row: &[String]) -> QueryInputRow {
+    QueryInputRow(row.iter().map(parse_query_given_row_entry).collect())
+}
+
+fn parse_query_given_row_entry(entry: &String) -> QueryInputEntry {
     let mut parts = entry.split(":");
     match parts.next().unwrap() {
-        "none" => None,
+        "none" => QueryInputEntry::Empty,
         "value" => {
             let value_type_str = parts.next().expect("value:<value-type>:<value>");
             let value_str = parts.next().expect("value:<value-type>:<value>");
-            Some(Concept::Value(parse_value(value_type_str, value_str)))
+            QueryInputEntry::Value(parse_value(value_type_str, value_str))
         }
         "iid" => {
             let hex = parts.next().expect("Expected iid:<iid>").replace("0x", "");
@@ -1027,21 +1036,20 @@ fn parse_query_given_row_entry(entry: &String) -> Option<Concept> {
                 .unwrap();
             let prefix_byte = iid_bytes[0];
             let iid = IID::from(iid_bytes);
-            let thing = match prefix_byte {
+            match prefix_byte {
                 30 => {
-                    Concept::Entity(Entity { iid, type_: None })
+                    QueryInputEntry::Entity(Entity { iid, type_: None })
                 }
                 31 => {
-                    Concept::Relation(Relation { iid, type_: None })
+                    QueryInputEntry::Relation(Relation { iid, type_: None })
                 }
                 32 => {
                     // TODO: Parse the value somehow?
                     let value = Value::String("<dummy-value-by-bdd>".to_owned());
-                    Concept::Attribute(Attribute { iid, type_: None, value })
+                    QueryInputEntry::Attribute(Attribute { iid, type_: None, value })
                 }
                 other => panic!("Invalid iid prefix: {other}"),
-            };
-            Some(thing)
+            }
         }
         other => panic!("Invalid entry type: {other}"),
     }

@@ -73,7 +73,7 @@ bazel_dep(name = "typedb_behaviour", version = "0.0.0")
 git_override(
     module_name = "typedb_behaviour",
     remote = "https://github.com/krishnangovindraj/typedb-behaviour",
-    commit = "b52d0af53accb8b96d371f51e741dd7c2866e9ab",
+    commit = "01041e7874a016a8f6309faefdb06a993554f5ac",
 )
 
 # Rust rules need typedb_dependencies for patching

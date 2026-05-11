@@ -42,6 +42,7 @@ use typedb_driver::{
     ServerRouting, Transaction, TransactionOptions, TypeDBDriver,
     analyze::AnalyzedQuery,
     answer::{ConceptDocument, ConceptRow, QueryAnswer, QueryType},
+    transaction::QueryInputs,
 };
 
 use crate::{
@@ -110,7 +111,7 @@ pub struct Context {
     pub temp_dir: Option<TempDir>,
     pub transactions: VecDeque<Transaction>,
     pub background_transactions: VecDeque<Transaction>,
-    pub given_rows: Option<Vec<Vec<Option<Concept>>>>,
+    pub given_rows: Option<QueryInputs>,
     pub analyzed: Option<AnalyzedQuery>,
     pub answer: Option<QueryAnswer>,
     pub(crate) answer_type: Option<QueryAnswerType>,
@@ -571,7 +572,6 @@ macro_rules! in_background {
     };
 }
 pub(crate) use in_background;
-use typedb_driver::concept::Concept;
 
 // Most of the drivers are error-driven, while the Rust driver returns Option::None in many cases instead.
 // These "fake" errors allow us to emulate error messages for generalised driver BDDs,
