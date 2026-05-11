@@ -21,6 +21,7 @@ use std::{convert::Infallible, fmt, str::FromStr};
 
 use chrono::{FixedOffset, NaiveDate, NaiveDateTime, NaiveTime};
 use cucumber::Parameter;
+use futures::StreamExt;
 use typedb_driver::{
     Address, ServerRouting as TypeDBServerRouting, TransactionType as TypeDBTransactionType,
     answer::QueryType as TypeDBQueryType,
@@ -619,6 +620,17 @@ impl fmt::Display for ConceptKind {
             Self::Attribute => write!(f, "Attribute"),
             Self::Value => write!(f, "Value"),
         }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Parameter)]
+#[param(name = "variable_list", regex = r"(\$[a-zA-Z0-9\-_]+(, \$[a-zA-Z0-9\-_]+)*)")]
+pub struct VariableList(pub Vec<String>);
+
+impl FromStr for VariableList {
+    type Err = String;
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        Ok(Self(s.split(",").map(|s| s.replace("$", "").replace(" ", "")).collect()))
     }
 }
 

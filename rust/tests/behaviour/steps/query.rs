@@ -29,7 +29,7 @@ use crate::{
     params::check_boolean,
     util::{iter_table, list_contains_json, parse_json},
 };
-use crate::params::WithGiven;
+use crate::params::{VariableList, WithGiven};
 
 pub(crate) async fn run_query(
     transaction: &Transaction,
@@ -181,12 +181,27 @@ pub async fn typeql_query(context: &mut Context, with_given: WithGiven, may_erro
 }
 
 
-#[cucumber::given("query is given rows")]
-#[cucumber::when("query is given rows")]
-async fn given_rows(context: &mut Context, step: &Step) {
-    let table = step.table.as_ref().expect("Expected table for given rows");
-    // Ignore the first row as a documentational header
-    let mut given_rows = table.rows[1..].iter().map(|row| parse_query_given_row(row.as_slice())).collect();
+#[cucumber::given(expr = "set answers of typeql read query as given rows with order: {variable_list}")]
+#[cucumber::when(expr = "set answers of typeql read query as given rows with order: {variable_list}")]
+async fn set_given_rows(context: &mut Context, var_list: VariableList, step: &Step) {
+    let result = run_query(context.transaction(), step.docstring().unwrap(), None, context.query_options).await;
+    let mut given_rows = Vec::new();
+    let mut as_rows_result = result.unwrap().into_rows();
+    while let Some(row_result) = as_rows_result.next().await {
+        let answer_row = row_result.unwrap();
+        let given_row: Vec<QueryInputEntry> = var_list.0.iter().map(|v| {
+            match answer_row.get(v).unwrap() {
+                None => QueryInputEntry::Empty,
+                Some(Concept::Entity(entity)) => QueryInputEntry::Entity(entity.clone()),
+                Some(Concept::Relation(relation)) => QueryInputEntry::Relation(relation.clone()),
+                Some(Concept::Attribute(attribute)) => QueryInputEntry::Attribute(attribute.clone()),
+                Some(Concept::Value(value)) => QueryInputEntry::Value(value.clone()),
+                Some(_) => panic!("You can't have this in given rows. Use a select on the previous query")
+            }
+        }).collect();
+        given_rows.push(QueryInputRow(given_row));
+    }
+
     context.given_rows = Some(QueryInputs(given_rows))
 }
 
@@ -1009,74 +1024,6 @@ pub async fn answer_has_structure(context: &mut Context, step: &Step) {
     assert_eq!(normalize_functor_for_compare(&actual_functor), normalize_functor_for_compare(expected_functor));
 }
 
-
 fn may_take_given_rows(context: &mut Context, with_given: WithGiven) -> Option<QueryInputs> {
     (with_given == WithGiven::True).then(|| context.given_rows.take().expect("Expected given rows available"))
-}
-
-fn parse_query_given_row(row: &[String]) -> QueryInputRow {
-    QueryInputRow(row.iter().map(parse_query_given_row_entry).collect())
-}
-
-fn parse_query_given_row_entry(entry: &String) -> QueryInputEntry {
-    let mut parts = entry.split(":");
-    match parts.next().unwrap() {
-        "none" => QueryInputEntry::Empty,
-        "value" => {
-            let value_type_str = parts.next().expect("value:<value-type>:<value>");
-            let value_str = parts.next().expect("value:<value-type>:<value>");
-            QueryInputEntry::Value(parse_value(value_type_str, value_str))
-        }
-        "iid" => {
-            let hex = parts.next().expect("Expected iid:<iid>").replace("0x", "");
-            let iid_bytes = (0..hex.len())
-                .step_by(2)
-                .map(|i| u8::from_str_radix(&hex[i..i + 2], 16))
-                .collect::<Result<Vec<_>, _>>()
-                .unwrap();
-            let prefix_byte = iid_bytes[0];
-            let iid = IID::from(iid_bytes);
-            match prefix_byte {
-                30 => {
-                    QueryInputEntry::Entity(Entity { iid, type_: None })
-                }
-                31 => {
-                    QueryInputEntry::Relation(Relation { iid, type_: None })
-                }
-                32 => {
-                    // TODO: Parse the value somehow?
-                    let value = Value::String("<dummy-value-by-bdd>".to_owned());
-                    QueryInputEntry::Attribute(Attribute { iid, type_: None, value })
-                }
-                other => panic!("Invalid iid prefix: {other}"),
-            }
-        }
-        other => panic!("Invalid entry type: {other}"),
-    }
-}
-
-fn parse_value(value_type_string: &str, value_string: &str) -> Value {
-    match value_type_string {
-        "boolean" => {
-            match value_string {
-                "true" => Value::Boolean(true),
-                "false" => Value::Boolean(false),
-                _ => panic!("Bad value for boolean")
-            }
-        },
-        "integer" => {
-            Value::Integer(
-                value_string.parse::<i64>().expect("Bad value for integer")
-            )
-        },
-        "double" => {
-            Value::Double(
-                value_string.parse::<f64>().expect("Bad value for double")
-            )
-        },
-        "string" => {
-            Value::String(value_string.to_owned())
-        },
-        _ => todo!("TypeQL test value type is not covered"),
-    }
 }
