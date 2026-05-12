@@ -17,7 +17,7 @@
 
 from __future__ import annotations
 
-from abc import ABC,
+from abc import ABC
 from typing import Iterator, Optional, TYPE_CHECKING
 
 if TYPE_CHECKING:
