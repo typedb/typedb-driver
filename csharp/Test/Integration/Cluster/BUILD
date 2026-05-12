@@ -19,14 +19,9 @@ load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("//csharp:build_opts.bzl", "target_frameworks", "targeting_packs")
 load("//csharp/Test:rules.bzl", "csharp_integration_test")
 
-exports_files(
-    ["ExampleTest.cs"],
-    visibility = ["//csharp:__subpackages__"],
-)
-
 csharp_integration_test(
-    name = "test-example",
-    srcs = ["ExampleTest.cs"],
+    name = "test-failover",
+    srcs = ["FailoverTest.cs"],
     deps = [
         "//csharp:driver-csharp",
         "//csharp/Api:api",
@@ -35,18 +30,18 @@ csharp_integration_test(
     ],
     target_frameworks = target_frameworks,
     targeting_packs = targeting_packs,
-)
-
-csharp_integration_test(
-    name = "test-transaction-onclose-callback",
-    srcs = ["TransactionOnCloseCallbackTest.cs"],
-    deps = [
-        "//csharp:driver-csharp",
-        "//csharp/Api:api",
-        "//csharp/Common:common",
+    size = "large",
+    data = [
+        "//tool/test:cluster-server.sh",
+        "//tool/test/resources:encryption/ext-grpc-root-ca.pem",
     ],
-    target_frameworks = target_frameworks,
-    targeting_packs = targeting_packs,
+    # Pass these paths via --test_env: --test_env=CLUSTER_SERVER_SCRIPT=<path> --test_env=ROOT_CA=<path>
+    # The test drives an out-of-sandbox cluster started by start-cluster-servers.sh:
+    # it kills/restarts nodes via cluster-server.sh, which writes to log files and
+    # data directories under $CLUSTER_DIR (the outer workspace). The Bazel sandbox
+    # blocks writes to those paths, so this test must run unsandboxed and locally,
+    # and it relies on host-level state so cached results would be misleading.
+    tags = ["external", "no-cache", "no-sandbox"],
 )
 
 checkstyle_test(
