@@ -240,7 +240,7 @@ native_artifact_files.artifact(
     name = "typedb_cluster_artifact",
     group_name = "typedb-cluster-all-{platform}",
     artifact_name = "typedb-cluster-all-{platform}-{version}.{ext}",
-    tag = "3.10.0-alpha-1",
+    commit = "598c47cc13c8400ae64061b390bb035de46a64d0",
     private = True,
 )
 
