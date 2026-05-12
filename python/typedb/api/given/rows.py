@@ -17,13 +17,14 @@
 
 from __future__ import annotations
 
+from abc import ABC,
 from typing import Iterator, Optional, TYPE_CHECKING
 
 if TYPE_CHECKING:
     from typedb.api.concept.concept import Concept
 
 
-class GivenRows:
+class GivenRows(ABC):
     """
     Contains multiple input rows for a query.
     """
