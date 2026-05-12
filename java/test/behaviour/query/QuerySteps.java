@@ -22,7 +22,6 @@ package com.typedb.driver.test.behaviour.query;
 import com.typedb.driver.api.QueryOptions;
 import com.typedb.driver.api.QueryType;
 import com.typedb.driver.api.Transaction;
-import com.typedb.driver.api.given.GivenRows;
 import com.typedb.driver.api.analyze.Pipeline;
 import com.typedb.driver.api.answer.ConceptDocumentIterator;
 import com.typedb.driver.api.answer.ConceptRow;
@@ -79,11 +78,11 @@ public class QuerySteps {
     private static List<ConceptRow> collectedRows;
     private static List<JSON> collectedDocuments;
     private static List<CompletableFuture<QueryAnswer>> queryAnswersParallel = null;
-    private static List<List<Optional<Concept>>> givenRows = null;
+    private static List<List<Optional<? extends Concept>>> givenRows = null;
 
-    private Promise<? extends QueryAnswer> query(Transaction transaction, String query, Optional<QueryOptions> options, List<List<Optional<Concept>>> given) {
+    private Promise<? extends QueryAnswer> query(Transaction transaction, String query, Optional<QueryOptions> options, List<List<Optional<? extends Concept>>> given) {
         QueryOptions opts = options.orElseGet(QueryOptions::new);
-        if (given != null) return transaction.query(query, opts, GivenRows.build(given));
+        if (given != null) return transaction.query(query, opts, given);
         else if (options.isPresent()) return transaction.query(query, opts);
         else return transaction.query(query);
     }
@@ -92,9 +91,9 @@ public class QuerySteps {
         return query(transaction, query, options, null);
     }
 
-    private List<List<Optional<Concept>>> takeGivenRows() {
+    private List<List<Optional<? extends Concept>>> takeGivenRows() {
         assert givenRows != null : "Expected given rows to be set";
-        List<List<Optional<Concept>>> rows = givenRows;
+        List<List<Optional<? extends Concept>>> rows = givenRows;
         givenRows = null;
         return rows;
     }
@@ -870,16 +869,15 @@ public class QuerySteps {
     @Given("typeql schema query{with_given}{may_error}")
     public void typeql_query(boolean withGiven, Parameters.MayError mayError, String query) {
         clearAnswers();
-        List<List<Optional<Concept>>> given = withGiven ? takeGivenRows() : null;
+        List<List<Optional<? extends Concept>>> given = withGiven ? takeGivenRows() : null;
         mayError.check(() -> query(tx(), query, queryOptions, given).resolve());
     }
 
     @Given("set answers of typeql read query as given rows with order: {variable_list}")
-    @When("set answers of typeql read query as given rows with order: {variable_list}")
     public void set_answers_as_given_rows(List<String> varList, String query) {
         List<ConceptRow> rows = tx().query(query).resolve().asConceptRows().stream().collect(Collectors.toList());
         givenRows = rows.stream()
-                .map(row -> varList.stream().map(row::get).collect(Collectors.toList()))
+                .map(row -> varList.stream().<Optional<? extends Concept>>map(row::get).collect(Collectors.toList()))
                 .collect(Collectors.toList());
     }
 
@@ -888,7 +886,7 @@ public class QuerySteps {
     @Given("get answers of typeql schema query{with_given}{may_error}")
     public void get_answers_of_typeql_query(boolean withGiven, Parameters.MayError mayError, String query) {
         clearAnswers();
-        List<List<Optional<Concept>>> given = withGiven ? takeGivenRows() : null;
+        List<List<Optional<? extends Concept>>> given = withGiven ? takeGivenRows() : null;
         mayError.check(() -> queryAnswer = query(tx(), query, queryOptions, given).resolve());
     }
 

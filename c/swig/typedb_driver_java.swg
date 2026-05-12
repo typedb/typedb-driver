@@ -371,6 +371,8 @@
 %nojavaexception ~Decimal;
 %nojavaexception ~Duration;
 %nojavaexception ~Error;
+%nojavaexception ~QueryGivenRow;
+%nojavaexception ~QueryGivenRows;
 %nojavaexception ~Server;
 %nojavaexception ~ServerIterator;
 %nojavaexception ~ServerVersion;

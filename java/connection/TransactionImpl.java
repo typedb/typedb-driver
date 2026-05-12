@@ -31,11 +31,12 @@ import com.typedb.driver.common.Promise;
 import com.typedb.driver.common.Validator;
 import com.typedb.driver.common.exception.TypeDBDriverException;
 import com.typedb.driver.answer.QueryAnswerImpl;
-import com.typedb.driver.api.given.GivenRows;
-import com.typedb.driver.given.GivenRowsImpl;
+import com.typedb.driver.api.concept.Concept;
+import com.typedb.driver.concept.ConceptImpl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 import static com.typedb.driver.common.exception.ErrorMessage.Driver.TRANSACTION_CLOSED;
@@ -45,6 +46,12 @@ import static com.typedb.driver.jni.typedb_driver.transaction_close;
 import static com.typedb.driver.jni.typedb_driver.transaction_is_open;
 import static com.typedb.driver.jni.typedb_driver.transaction_new;
 import static com.typedb.driver.jni.typedb_driver.transaction_on_close;
+import static com.typedb.driver.common.exception.ErrorMessage.Driver.INVALID_TYPE_AS_GIVEN_INPUT;
+import static com.typedb.driver.jni.typedb_driver.given_row_new;
+import static com.typedb.driver.jni.typedb_driver.given_row_set_index_to_concept;
+import static com.typedb.driver.jni.typedb_driver.given_row_set_index_to_empty;
+import static com.typedb.driver.jni.typedb_driver.given_rows_new;
+import static com.typedb.driver.jni.typedb_driver.given_rows_push;
 import static com.typedb.driver.jni.typedb_driver.transaction_query;
 import static com.typedb.driver.jni.typedb_driver.transaction_query_given_rows;
 import static com.typedb.driver.jni.typedb_driver.transaction_rollback;
@@ -103,14 +110,41 @@ public class TransactionImpl extends NativeObject<com.typedb.driver.jni.Transact
     }
 
     @Override
-    public Promise<? extends QueryAnswer> query(String query, QueryOptions options, GivenRows givenRows) throws TypeDBDriverException {
+    public Promise<? extends QueryAnswer> query(String query, QueryOptions options, Iterable<? extends Iterable<Optional<? extends Concept>>> givenRows) throws TypeDBDriverException {
         Validator.requireNonNull(query, "query");
         try {
-            // NOTE: .released() relinquishes ownership of givenRows to the Rust side
-            return Promise.map(transaction_query_given_rows(nativeObject, query, options.nativeObject, ((GivenRowsImpl) givenRows).nativeObject.released()), QueryAnswerImpl::of);
+            // NOTE: .released() relinquishes ownership of the native rows to the Rust side
+            return Promise.map(transaction_query_given_rows(nativeObject, query, options.nativeObject, buildNativeGivenRows(givenRows).released()), QueryAnswerImpl::of);
         } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
+    }
+
+    private static com.typedb.driver.jni.QueryGivenRows buildNativeGivenRows(Iterable<? extends Iterable<Optional<? extends Concept>>> rows) {
+        List<List<Optional<? extends Concept>>> rowList = new ArrayList<>();
+        for (Iterable<Optional<? extends Concept>> row : rows) {
+            List<Optional<? extends Concept>> entries = new ArrayList<>();
+            for (Optional<? extends Concept> entry : row) entries.add(entry);
+            rowList.add(entries);
+        }
+        com.typedb.driver.jni.QueryGivenRows nativeRows = given_rows_new(rowList.size());
+        for (int rowIndex = 0; rowIndex < rowList.size(); rowIndex++) {
+            List<Optional<? extends Concept>> entries = rowList.get(rowIndex);
+            com.typedb.driver.jni.QueryGivenRow nativeRow = given_row_new(entries.size());
+            for (int i = 0; i < entries.size(); i++) {
+                Optional<? extends Concept> entry = entries.get(i);
+                if (entry.isEmpty()) {
+                    given_row_set_index_to_empty(nativeRow, i);
+                } else {
+                    Concept concept = entry.get();
+                    if (concept.isType()) throw new TypeDBDriverException(INVALID_TYPE_AS_GIVEN_INPUT, concept.getLabel(), rowIndex);
+                    given_row_set_index_to_concept(nativeRow, i, ((ConceptImpl) concept).nativeObject);
+                }
+            }
+            // NOTE: .released() relinquishes ownership of the native row to the Rust side
+            given_rows_push(nativeRows, nativeRow.released());
+        }
+        return nativeRows;
     }
 
     @Override

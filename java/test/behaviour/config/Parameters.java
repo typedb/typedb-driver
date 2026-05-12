@@ -188,14 +188,15 @@ public class Parameters {
     }
 
     @ParameterType("| with given rows")
-    public boolean with_given(String value) {
+    public Boolean with_given(String value) {
         return value.equals(" with given rows");
     }
 
-    @ParameterType("\\$[a-zA-Z0-9\\-_]+(, \\$[a-zA-Z0-9\\-_]+)*")
+    @ParameterType("(\\$[a-zA-Z0-9\\-_]+(, \\$[a-zA-Z0-9\\-_]+)*)")
     public List<String> variable_list(String value) {
         return Arrays.stream(value.split(","))
                 .map(v -> v.replace("$", "").trim())
+                .filter(s -> !s.isEmpty())
                 .collect(java.util.stream.Collectors.toList());
     }
 
