@@ -87,7 +87,7 @@ namespace TypeDB.Driver.Example
         public void Run()
         {
             // Open a driver connection. Using statements can be used for automatic driver connection management
-            using (var driver = TypeDB.Driver("127.0.0.1:1729", new Credentials("admin", "password"), new DriverOptions(DriverTlsConfig.Disabled())))
+            using (var driver = TypeDB.Driver(TypeDB.DefaultAddress, new Credentials("admin", "password"), new DriverOptions(DriverTlsConfig.Disabled())))
             {
                 // Create a database
                 driver.Databases.Create("typedb");
@@ -100,7 +100,7 @@ namespace TypeDB.Driver.Example
                 try
                 {
                     // Execute any TypeDB query using TypeQL. Wrong queries are rejected with an explicit exception
-                    var answer = tx.Query("define entity i-cannot-be-defined-in-read-transactions;");
+                    var answer = tx.Query("define entity i-cannot-be-defined-in-read-transactions;").Resolve();
 
                     Console.WriteLine("The query has been sent, iterating or committing will surface errors!");
                     // Iterating the answer would throw an exception
@@ -127,7 +127,7 @@ namespace TypeDB.Driver.Example
                         attribute name, value string;
                         attribute age, value integer;";
 
-                    var answer = transaction.Query(defineQuery);
+                    var answer = transaction.Query(defineQuery).Resolve();
 
                     // Commit automatically closes the transaction. It can still be safely called inside using blocks
                     transaction.Commit();
@@ -136,7 +136,7 @@ namespace TypeDB.Driver.Example
                 // Open a read transaction to safely read anything without database modifications
                 using (var transaction = driver.Transaction(database.Name, TransactionType.Read))
                 {
-                    var entityAnswer = transaction.Query("match entity $x;");
+                    var entityAnswer = transaction.Query("match entity $x;").Resolve();
 
                     // Collect concept rows that represent the answer as a table
                     var entityRows = entityAnswer.AsConceptRows().ToList();
@@ -144,6 +144,7 @@ namespace TypeDB.Driver.Example
 
                     // Collect column names to get concepts by index if the variable names are lost
                     var entityHeader = entityRow.ColumnNames.ToList();
+
                     var columnName = entityHeader[0];
 
                     // Get concept by the variable name (column name)
@@ -161,7 +162,7 @@ namespace TypeDB.Driver.Example
                     }
 
                     // Continue querying in the same transaction if needed
-                    var attributeAnswer = transaction.Query("match attribute $a;");
+                    var attributeAnswer = transaction.Query("match attribute $a;").Resolve();
 
                     // IConceptRowIterator can be used as any other IEnumerable
                     foreach (var attributeRow in attributeAnswer.AsConceptRows())
@@ -187,7 +188,7 @@ namespace TypeDB.Driver.Example
                 using (var transaction = driver.Transaction(database.Name, TransactionType.Write))
                 {
                     var insertQuery = "insert $z isa person, has age 10; $x isa person, has age 20, has name \"John\";";
-                    var answer = transaction.Query(insertQuery);
+                    var answer = transaction.Query(insertQuery).Resolve();
 
                     // Insert queries also return concept rows
                     var rows = answer.AsConceptRows().ToList();
@@ -209,7 +210,7 @@ namespace TypeDB.Driver.Example
                     Console.WriteLine($"As we expect an entity instance, we can try to get its IID (unique identification): {x?.TryGetIID()}. ");
                     if (x != null && x.IsEntity())
                     {
-                        Console.WriteLine("It can also be retrieved directly and safely after a cast: " + x.AsEntity().IID);
+                        Console.WriteLine("It can also be retrieved directly and safely after a cast: " + x.AsEntity().TryGetIID());
                     }
 
                     // Do not forget to commit if the changes should be persisted
@@ -225,7 +226,7 @@ namespace TypeDB.Driver.Example
                     var queries = new[] { "insert $a isa person, has name \"Alice\";", "insert $b isa person, has name \"Bob\";" };
                     foreach (var query in queries)
                     {
-                        transaction.Query(query);
+                        transaction.Query(query).Resolve();
                     }
                     transaction.Commit();
                 }
@@ -236,7 +237,7 @@ namespace TypeDB.Driver.Example
                     try
                     {
                         var invalidQuery = "insert $c isa not-person, has name \"Chris\";";
-                        transaction.Query(invalidQuery);
+                        transaction.Query(invalidQuery).Resolve();
                     }
                     catch (TypeDBDriverException expectedException)
                     {
@@ -253,19 +254,16 @@ namespace TypeDB.Driver.Example
                     var queryOptions = new QueryOptions { IncludeInstanceTypes = true };
                     // A match query can be used for concept row outputs
                     var varName = "x";
-                    var matchAnswer = transaction.Query($"match ${varName} isa person;", queryOptions);
+                    var matchAnswer = transaction.Query($"match ${varName} isa person;", queryOptions).Resolve();
 
                     // Simple match queries always return concept rows
                     var matchCount = 0;
                     foreach (var row in matchAnswer.AsConceptRows())
                     {
                         var x = row.Get(varName);
-                        if (x != null && x.IsEntity())
-                        {
-                            var xType = x.AsEntity().Type.AsEntityType();
-                            Console.WriteLine($"Found a person {x} of type {xType}");
-                        }
+                        var xType = x.AsEntity().Type.AsEntityType();
                         matchCount++;
+                        Console.WriteLine($"Found a person {x} of type {xType}");
                     }
                     Console.WriteLine("Total persons found: " + matchCount);
 
@@ -277,7 +275,7 @@ namespace TypeDB.Driver.Example
                             ""single attribute type"": $t,
                             ""single attribute"": $a,
                             ""all attributes"": { $x.* },
-                        };");
+                        };").Resolve();
 
                     // Fetch queries always return concept documents
                     var fetchCount = 0;
