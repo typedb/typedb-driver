@@ -23,6 +23,7 @@ from typing import TYPE_CHECKING, Optional, Callable
 
 if TYPE_CHECKING:
     from typedb.api.answer.query_answer import QueryAnswer
+    from typedb.api.concept.concept import Concept
     from typedb.api.connection.transaction_options import TransactionOptions
     from typedb.api.connection.query_options import QueryOptions
     from typedb.common import Promise
@@ -84,13 +85,13 @@ class Transaction(ABC):
         pass
 
     @abstractmethod
-    def query(self, query: str, options: Optional[QueryOptions] = None, given_rows: Optional[GivenRows] = None) -> Promise[QueryAnswer]:
+    def query(self, query: str, options: Optional[QueryOptions] = None, given_rows: Optional[Iterator[Iterator[Optional["Concept"]]]] = None) -> Promise[QueryAnswer]:
         """
         Execute a TypeQL query in this transaction.
 
         :param query: The query to execute.
         :param options: The ``QueryOptions`` to execute the query with..
-        :param given_rows: The ``GivenRows`` to supply as input to the query.
+        :param given_rows: Rows given to the query as input. Will throw an exception if a type is passed.
 
         Examples:
         ---------

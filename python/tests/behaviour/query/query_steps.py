@@ -44,14 +44,8 @@ from typedb.common.duration import Duration
 from typedb.driver import *
 
 
-def query(transaction: Transaction, query: str, options: Optional[QueryOptions], given_rows = None) -> 'Promise[QueryAnswer]':
-    if given_rows is not None:
-        from typedb.api.given.rows import GivenRows
-        native_given_rows = GivenRows.build(iter(given_rows)) if given_rows is not None else None
-    else:
-        native_given_rows = None
-
-    return transaction.query(query=query, options=options, given_rows=native_given_rows)
+def query(transaction: Transaction, query: str, options: Optional[QueryOptions], given_rows: Optional = None) -> 'Promise[QueryAnswer]':
+    return transaction.query(query=query, options=options, given_rows=given_rows)
 
 
 @step("typeql write query{with_given:WithGiven}{may_error:MayError}")

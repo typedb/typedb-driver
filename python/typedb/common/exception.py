@@ -108,6 +108,7 @@ class ConceptErrorMessage(ErrorMessage):
 INVALID_CONCEPT_CASTING = ConceptErrorMessage(1, "Invalid concept conversion from '%s' to '%s'.")
 INVALID_QUERY_ANSWER_CASTING = ConceptErrorMessage(2, "Invalid query answer conversion from '%s' to '%s'.")
 INVALID_VALUE_RETRIEVAL = ConceptErrorMessage(3, "Could not retrieve a '%s' value.")
+INVALID_TYPE_AS_GIVEN_INPUT = ConceptErrorMessage(4, "Types are not allowed as entries in a GivenRow. Found type: '%s' in row index: %d")
 
 
 class InternalErrorMessage(ErrorMessage):

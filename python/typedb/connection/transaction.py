@@ -17,14 +17,14 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional, Callable
+from typing import TYPE_CHECKING, Iterator, Optional, Callable
 
 from typedb.api.analyze.analyzed_query import AnalyzedQuery
 from typedb.api.answer.query_answer import QueryAnswer
 from typedb.api.connection.query_options import QueryOptions
 from typedb.api.connection.transaction import Transaction
 from typedb.api.connection.transaction_options import TransactionOptions
-from typedb.common.exception import TypeDBDriverException, TRANSACTION_CLOSED, TypeDBException
+from typedb.common.exception import TypeDBDriverException, INVALID_TYPE_AS_GIVEN_INPUT, TRANSACTION_CLOSED, TypeDBException
 from typedb.common.native_wrapper import NativeWrapper
 from typedb.common.promise import Promise
 from typedb.common.validation import require_non_null
@@ -33,9 +33,13 @@ from typedb.native_driver_wrapper import error_code, error_message, transaction_
     transaction_analyze, transaction_query, transaction_query_given_rows, \
     transaction_commit, transaction_rollback, transaction_is_open, transaction_on_close, transaction_close, \
     query_answer_promise_resolve, analyzed_query_promise_resolve, \
-    Transaction as NativeTransaction, TransactionCallbackDirector, TypeDBDriverExceptionNative, void_promise_resolve
+    Transaction as NativeTransaction, TransactionCallbackDirector, TypeDBDriverExceptionNative, void_promise_resolve, \
+    given_rows_new, given_rows_push, \
+    given_row_new, given_row_set_index_to_concept, given_row_set_index_to_empty, \
+    QueryGivenRows as NativeQueryGivenRows
 
 if TYPE_CHECKING:
+    from typedb.api.concept.concept import Concept
     from typedb.api.connection.transaction import TransactionType
     from typedb.native_driver_wrapper import Error as NativeError
 
@@ -72,15 +76,16 @@ class _Transaction(Transaction, NativeWrapper[NativeTransaction]):
         promise = transaction_analyze(self.native_object, query)
         return Promise.map(_AnalyzedQuery, lambda: analyzed_query_promise_resolve(promise))
 
-    def query(self, query: str, options: Optional[QueryOptions] = None, given_rows: Optional[GivenRows] = None) -> Promise[QueryAnswer]:
+    def query(self, query: str, options: Optional[QueryOptions] = None, given_rows: Optional[Iterator[Iterator[Optional["Concept"]]]] = None) -> Promise[QueryAnswer]:
         require_non_null(query, "query")
         if not options:
             options = QueryOptions()
         if given_rows is None:
             promise = transaction_query(self.native_object, query, options.native_object)
         else:
-            given_rows._native_object.thisown = 0
-            promise = transaction_query_given_rows(self.native_object, query, options.native_object, given_rows._native_object)
+            native_given_rows = _build_native_given_rows(given_rows)
+            native_given_rows.thisown = 0
+            promise = transaction_query_given_rows(self.native_object, query, options.native_object, native_given_rows)
         return Promise.map(wrap_query_answer, lambda: query_answer_promise_resolve(promise))
 
     def is_open(self) -> bool:
@@ -134,3 +139,20 @@ class _Transaction(Transaction, NativeWrapper[NativeTransaction]):
         self.close()
         if exc_tb is not None:
             return False
+
+
+def _build_native_given_rows(rows: Iterator[Iterator[Optional["Concept"]]]) -> NativeQueryGivenRows:
+    rows_list = [list(row) for row in rows]
+    native_rows = given_rows_new(len(rows_list))
+    for row_index, row_list in enumerate(rows_list):
+        native_row = given_row_new(len(row_list))
+        for i, concept in enumerate(row_list):
+            if concept is None:
+                given_row_set_index_to_empty(native_row, i)
+            elif concept.is_type():
+                raise TypeDBDriverException(INVALID_TYPE_AS_GIVEN_INPUT, (concept.get_label(), row_index))
+            else:
+                given_row_set_index_to_concept(native_row, i, concept._native_object)
+        native_row.thisown = 0
+        given_rows_push(native_rows, native_row)
+    return native_rows

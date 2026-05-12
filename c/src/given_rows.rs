@@ -18,7 +18,7 @@
  */
 use typedb_driver::concept::{Concept, Entity, Relation};
 use typedb_driver::transaction::{QueryGivenEntry, QueryGivenRow, QueryGivenRows};
-use crate::common::memory::{borrow_mut, free, release, take_ownership};
+use crate::common::memory::{borrow, borrow_mut, free, release, take_ownership};
 
 /// Creates a new <code>givenRow</code> of the specified capacity,
 #[unsafe(no_mangle)]
@@ -43,9 +43,9 @@ pub extern "C" fn given_row_new(width: usize) -> *mut QueryGivenRow {
 /// Sets the entry at `index` in the given row to the specified entity
 /// Will panic if out-of-bounds
 #[unsafe(no_mangle)]
-pub extern "C" fn given_row_set_index_to_concept(row: *mut QueryGivenRow, index: usize, concept: *mut Concept) {
+pub extern "C" fn given_row_set_index_to_concept(row: *mut QueryGivenRow, index: usize, concept: *const Concept) {
     let row_mut = &mut borrow_mut(row).0;
-    row_mut[index] = match take_ownership(concept) {
+    row_mut[index] = match borrow(concept).clone() {
         Concept::Entity(entity) => QueryGivenEntry::Entity(entity),
         Concept::Relation(relation) => QueryGivenEntry::Relation(relation),
         Concept::Attribute(attribute) => QueryGivenEntry::Attribute(attribute),
