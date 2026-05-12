@@ -100,6 +100,17 @@ class Transaction(ABC):
         pass
 
     @abstractmethod
+    def query_with_given_rows(self, query: str, given_rows: "GivenRows", options: Optional[QueryOptions] = None) -> Promise[QueryAnswer]:
+        """
+        Execute a TypeQL query with input rows in this transaction.
+
+        :param query: The query to execute.
+        :param given_rows: The ``GivenRows`` to supply as input to the query.
+        :param options: The ``QueryOptions`` to execute the query with.
+        """
+        pass
+
+    @abstractmethod
     def commit(self) -> None:
         """
         Commits the changes made via this transaction to the TypeDB database.

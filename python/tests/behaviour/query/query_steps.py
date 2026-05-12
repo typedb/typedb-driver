@@ -44,10 +44,11 @@ from typedb.common.duration import Duration
 from typedb.driver import *
 
 
-def query(transaction: Transaction, query: str, options: Optional[QueryOptions], given_rows=None) -> 'Promise[QueryAnswer]':
+def query(transaction: Transaction, query: str, options: Optional[QueryOptions], given_rows = None) -> 'Promise[QueryAnswer]':
     if given_rows is not None:
-        # TODO: Pass given_rows to the driver once query_with_inputs is implemented in the Python driver
-        raise NotImplementedError("query_with_inputs is not yet implemented in the Python driver")
+        from typedb.api.given.rows import GivenRows
+        native_given_rows = GivenRows.build(iter(given_rows))
+        return transaction.query_with_given_rows(query=query, given_rows=native_given_rows, options=options)
     if options:
         return transaction.query(query=query, options=options)
     else:
@@ -67,7 +68,6 @@ def step_impl(context: Context, with_given: bool, may_error: MayError):
 def step_impl(context: Context, var_list: list):
     answer = context.tx().query(query=context.text).resolve()
     rows = list(answer.as_concept_rows())
-    # TODO: Convert to driver QueryInputs and call query_with_inputs once implemented in the Python driver
     context.given_rows = [[row.get(v) for v in var_list] for row in rows]
 
 

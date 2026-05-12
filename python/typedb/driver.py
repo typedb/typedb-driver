@@ -42,6 +42,7 @@ from typedb.api.connection.driver_tls_config import *  # noqa # pylint: disable=
 from typedb.api.connection.query_options import *  # noqa # pylint: disable=unused-import
 from typedb.api.connection.transaction import *  # noqa # pylint: disable=unused-import
 from typedb.api.connection.transaction_options import *  # noqa # pylint: disable=unused-import
+from typedb.api.given.rows import *  # noqa # pylint: disable=unused-import
 from typedb.api.database.database import *  # noqa # pylint: disable=unused-import
 from typedb.api.database.database_manager import *  # noqa # pylint: disable=unused-import
 from typedb.api.user.user import *  # noqa # pylint: disable=unused-import
