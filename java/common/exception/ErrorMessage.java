@@ -88,7 +88,7 @@ public abstract class ErrorMessage {
         public static final Driver UNIMPLEMENTED =
                 new Driver(11, "This operation is not implemented yet.");
         public static final Driver INVALID_TYPE_AS_GIVEN_INPUT =
-                new Driver(12, "A type concept '%s' was passed as a given row entry (row index %d). Only instances and values are allowed.");
+                new Driver(12, "A type '%s' was passed as a given row entry (row: %d, column: %d). Only instances and values are allowed.");
 
         private static final String codePrefix = "JDR";
         private static final String messagePrefix = "Driver Error";

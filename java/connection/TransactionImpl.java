@@ -110,7 +110,7 @@ public class TransactionImpl extends NativeObject<com.typedb.driver.jni.Transact
     }
 
     @Override
-    public Promise<? extends QueryAnswer> query(String query, QueryOptions options, Iterable<? extends Iterable<Optional<? extends Concept>>> givenRows) throws TypeDBDriverException {
+    public Promise<? extends QueryAnswer> query(String query, QueryOptions options, List<? extends List<Optional<? extends Concept>>> givenRows) throws TypeDBDriverException {
         Validator.requireNonNull(query, "query");
         try {
             // NOTE: .released() relinquishes ownership of the native rows to the Rust side
@@ -120,29 +120,24 @@ public class TransactionImpl extends NativeObject<com.typedb.driver.jni.Transact
         }
     }
 
-    private static com.typedb.driver.jni.QueryGivenRows buildNativeGivenRows(Iterable<? extends Iterable<Optional<? extends Concept>>> rows) {
-        List<List<Optional<? extends Concept>>> rowList = new ArrayList<>();
-        for (Iterable<Optional<? extends Concept>> row : rows) {
-            List<Optional<? extends Concept>> entries = new ArrayList<>();
-            for (Optional<? extends Concept> entry : row) entries.add(entry);
-            rowList.add(entries);
-        }
-        com.typedb.driver.jni.QueryGivenRows nativeRows = given_rows_new(rowList.size());
-        for (int rowIndex = 0; rowIndex < rowList.size(); rowIndex++) {
-            List<Optional<? extends Concept>> entries = rowList.get(rowIndex);
-            com.typedb.driver.jni.QueryGivenRow nativeRow = given_row_new(entries.size());
-            for (int i = 0; i < entries.size(); i++) {
-                Optional<? extends Concept> entry = entries.get(i);
+    private static com.typedb.driver.jni.QueryGivenRows buildNativeGivenRows(List<? extends List<Optional<? extends Concept>>> rows) {
+        com.typedb.driver.jni.QueryGivenRows nativeRows = given_rows_new(rows.size());
+        int rowIndex = 0;
+        for (List<Optional<? extends Concept>> row : rows) {
+            int colIndex = 0;
+            com.typedb.driver.jni.QueryGivenRow nativeRow = given_row_new(row.size());
+            for (Optional<? extends Concept> entry : row) {
                 if (entry.isEmpty()) {
-                    given_row_set_index_to_empty(nativeRow, i);
+                    given_row_set_index_to_empty(nativeRow, colIndex);
                 } else {
                     Concept concept = entry.get();
-                    if (concept.isType()) throw new TypeDBDriverException(INVALID_TYPE_AS_GIVEN_INPUT, concept.getLabel(), rowIndex);
-                    given_row_set_index_to_concept(nativeRow, i, ((ConceptImpl) concept).nativeObject);
+                    if (concept.isType()) throw new TypeDBDriverException(INVALID_TYPE_AS_GIVEN_INPUT, concept.getLabel(), rowIndex, colIndex);
+                    given_row_set_index_to_concept(nativeRow, colIndex, ((ConceptImpl) concept).nativeObject);
                 }
+                colIndex += 1;
             }
-            // NOTE: .released() relinquishes ownership of the native row to the Rust side
             given_rows_push(nativeRows, nativeRow.released());
+            rowIndex += 1;
         }
         return nativeRows;
     }

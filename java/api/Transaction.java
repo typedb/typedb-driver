@@ -24,6 +24,7 @@ import com.typedb.driver.api.answer.QueryAnswer;
 import com.typedb.driver.common.Promise;
 import com.typedb.driver.api.concept.Concept;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.annotation.CheckReturnValue;
@@ -93,7 +94,7 @@ public interface Transaction extends AutoCloseable {
      * @param givenRows Input rows for the query; each inner iterable is one row, {@code Optional.empty()} entries represent empty variables.
      */
     @CheckReturnValue
-    Promise<? extends QueryAnswer> query(String query, QueryOptions options, Iterable<? extends Iterable<Optional<? extends Concept>>> givenRows) throws com.typedb.driver.common.exception.TypeDBDriverException;
+    Promise<? extends QueryAnswer> query(String query, QueryOptions options, List<? extends List<Optional<? extends Concept>>> givenRows) throws com.typedb.driver.common.exception.TypeDBDriverException;
 
     /**
      * Analayze a TypeQL query in this transaction.

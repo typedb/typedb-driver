@@ -76,7 +76,7 @@ class _Transaction(Transaction, NativeWrapper[NativeTransaction]):
         promise = transaction_analyze(self.native_object, query)
         return Promise.map(_AnalyzedQuery, lambda: analyzed_query_promise_resolve(promise))
 
-    def query(self, query: str, options: Optional[QueryOptions] = None, given_rows: Optional[Iterator[Iterator[Optional["Concept"]]]] = None) -> Promise[QueryAnswer]:
+    def query(self, query: str, options: Optional[QueryOptions] = None, given_rows: Optional[List[List[Optional["Concept"]]]] = None) -> Promise[QueryAnswer]:
         require_non_null(query, "query")
         if not options:
             options = QueryOptions()
@@ -141,16 +141,15 @@ class _Transaction(Transaction, NativeWrapper[NativeTransaction]):
             return False
 
 
-def _build_native_given_rows(rows: Iterator[Iterator[Optional["Concept"]]]) -> NativeQueryGivenRows:
-    rows_list = [list(row) for row in rows]
-    native_rows = given_rows_new(len(rows_list))
-    for row_index, row_list in enumerate(rows_list):
-        native_row = given_row_new(len(row_list))
-        for i, concept in enumerate(row_list):
+def _build_native_given_rows(rows: List[List[Optional["Concept"]]]) -> NativeQueryGivenRows:
+    native_rows = given_rows_new(len(rows))
+    for row_index, row in enumerate(rows):
+        native_row = given_row_new(len(row))
+        for i, concept in enumerate(row):
             if concept is None:
                 given_row_set_index_to_empty(native_row, i)
             elif concept.is_type():
-                raise TypeDBDriverException(INVALID_TYPE_AS_GIVEN_INPUT, (concept.get_label(), row_index))
+                raise TypeDBDriverException(INVALID_TYPE_AS_GIVEN_INPUT, (concept.get_label(), row_index, i))
             else:
                 given_row_set_index_to_concept(native_row, i, concept._native_object)
         native_row.thisown = 0
