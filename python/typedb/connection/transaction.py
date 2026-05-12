@@ -72,20 +72,15 @@ class _Transaction(Transaction, NativeWrapper[NativeTransaction]):
         promise = transaction_analyze(self.native_object, query)
         return Promise.map(_AnalyzedQuery, lambda: analyzed_query_promise_resolve(promise))
 
-    def query(self, query: str, options: Optional[QueryOptions] = None) -> Promise[QueryAnswer]:
+    def query(self, query: str, options: Optional[QueryOptions] = None, given_rows: Optional[GivenRows] = None) -> Promise[QueryAnswer]:
         require_non_null(query, "query")
         if not options:
             options = QueryOptions()
-        promise = transaction_query(self.native_object, query, options.native_object)
-        return Promise.map(wrap_query_answer, lambda: query_answer_promise_resolve(promise))
-
-    def query_with_given_rows(self, query: str, given_rows: "GivenRows", options: Optional[QueryOptions] = None) -> Promise[QueryAnswer]:
-        require_non_null(query, "query")
-        if not options:
-            options = QueryOptions()
-        # Disown given_rows: transaction_query_given_rows takes ownership via take_ownership()
-        given_rows._native_object.thisown = 0
-        promise = transaction_query_given_rows(self.native_object, query, options.native_object, given_rows._native_object)
+        if given_rows is None:
+            promise = transaction_query(self.native_object, query, options.native_object)
+        else:
+            given_rows._native_object.thisown = 0
+            promise = transaction_query_given_rows(self.native_object, query, options.native_object, given_rows._native_object)
         return Promise.map(wrap_query_answer, lambda: query_answer_promise_resolve(promise))
 
     def is_open(self) -> bool:
