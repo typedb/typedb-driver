@@ -22,6 +22,7 @@ package com.typedb.driver.test.behaviour.query;
 import com.typedb.driver.api.QueryOptions;
 import com.typedb.driver.api.QueryType;
 import com.typedb.driver.api.Transaction;
+import com.typedb.driver.api.given.GivenRows;
 import com.typedb.driver.api.analyze.Pipeline;
 import com.typedb.driver.api.answer.ConceptDocumentIterator;
 import com.typedb.driver.api.answer.ConceptRow;
@@ -78,10 +79,24 @@ public class QuerySteps {
     private static List<ConceptRow> collectedRows;
     private static List<JSON> collectedDocuments;
     private static List<CompletableFuture<QueryAnswer>> queryAnswersParallel = null;
+    private static List<List<Optional<Concept>>> givenRows = null;
+
+    private Promise<? extends QueryAnswer> query(Transaction transaction, String query, Optional<QueryOptions> options, List<List<Optional<Concept>>> given) {
+        QueryOptions opts = options.orElseGet(QueryOptions::new);
+        if (given != null) return transaction.query(query, opts, GivenRows.build(given));
+        else if (options.isPresent()) return transaction.query(query, opts);
+        else return transaction.query(query);
+    }
 
     private Promise<? extends QueryAnswer> query(Transaction transaction, String query, Optional<QueryOptions> options) {
-        if (options.isPresent()) return transaction.query(query, options.get());
-        else return transaction.query(query);
+        return query(transaction, query, options, null);
+    }
+
+    private List<List<Optional<Concept>>> takeGivenRows() {
+        assert givenRows != null : "Expected given rows to be set";
+        List<List<Optional<Concept>>> rows = givenRows;
+        givenRows = null;
+        return rows;
     }
 
     private void clearAnswers() {
@@ -850,20 +865,31 @@ public class QuerySteps {
         }
     }
 
-    @Given("typeql write query{may_error}")
-    @Given("typeql read query{may_error}")
-    @Given("typeql schema query{may_error}")
-    public void typeql_query(Parameters.MayError mayError, String query) {
+    @Given("typeql write query{with_given}{may_error}")
+    @Given("typeql read query{with_given}{may_error}")
+    @Given("typeql schema query{with_given}{may_error}")
+    public void typeql_query(boolean withGiven, Parameters.MayError mayError, String query) {
         clearAnswers();
-        mayError.check(() -> query(tx(), query, queryOptions).resolve());
+        List<List<Optional<Concept>>> given = withGiven ? takeGivenRows() : null;
+        mayError.check(() -> query(tx(), query, queryOptions, given).resolve());
     }
 
-    @Given("get answers of typeql write query{may_error}")
-    @Given("get answers of typeql read query{may_error}")
-    @Given("get answers of typeql schema query{may_error}")
-    public void get_answers_of_typeql_query(Parameters.MayError mayError, String query) {
+    @Given("set answers of typeql read query as given rows with order: {variable_list}")
+    @When("set answers of typeql read query as given rows with order: {variable_list}")
+    public void set_answers_as_given_rows(List<String> varList, String query) {
+        List<ConceptRow> rows = tx().query(query).resolve().asConceptRows().stream().collect(Collectors.toList());
+        givenRows = rows.stream()
+                .map(row -> varList.stream().map(row::get).collect(Collectors.toList()))
+                .collect(Collectors.toList());
+    }
+
+    @Given("get answers of typeql write query{with_given}{may_error}")
+    @Given("get answers of typeql read query{with_given}{may_error}")
+    @Given("get answers of typeql schema query{with_given}{may_error}")
+    public void get_answers_of_typeql_query(boolean withGiven, Parameters.MayError mayError, String query) {
         clearAnswers();
-        mayError.check(() -> queryAnswer = query(tx(), query, queryOptions).resolve());
+        List<List<Optional<Concept>>> given = withGiven ? takeGivenRows() : null;
+        mayError.check(() -> queryAnswer = query(tx(), query, queryOptions, given).resolve());
     }
 
     @Given("concurrently get answers of typeql write query {integer} times")

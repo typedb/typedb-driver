@@ -22,6 +22,7 @@ package com.typedb.driver.api;
 import com.typedb.driver.api.analyze.AnalyzedQuery;
 import com.typedb.driver.api.answer.QueryAnswer;
 import com.typedb.driver.common.Promise;
+import com.typedb.driver.api.given.GivenRows;
 
 import javax.annotation.CheckReturnValue;
 import java.util.function.Consumer;
@@ -81,6 +82,16 @@ public interface Transaction extends AutoCloseable {
      */
     @CheckReturnValue
     Promise<? extends QueryAnswer> query(String query, QueryOptions options) throws com.typedb.driver.common.exception.TypeDBDriverException;
+
+    /**
+     * Execute a TypeQL query with input rows in this transaction.
+     *
+     * @param query     The query to execute.
+     * @param options   The <code>QueryOptions</code> to execute the query with.
+     * @param givenRows The <code>GivenRows</code> to supply as input to the query.
+     */
+    @CheckReturnValue
+    Promise<? extends QueryAnswer> query(String query, QueryOptions options, GivenRows givenRows) throws com.typedb.driver.common.exception.TypeDBDriverException;
 
     /**
      * Analayze a TypeQL query in this transaction.

@@ -187,6 +187,18 @@ public class Parameters {
         return Routing.parse(value);
     }
 
+    @ParameterType("| with given rows")
+    public boolean with_given(String value) {
+        return value.equals(" with given rows");
+    }
+
+    @ParameterType("\\$[a-zA-Z0-9\\-_]+(, \\$[a-zA-Z0-9\\-_]+)*")
+    public List<String> variable_list(String value) {
+        return Arrays.stream(value.split(","))
+                .map(v -> v.replace("$", "").trim())
+                .collect(java.util.stream.Collectors.toList());
+    }
+
     public enum ConceptKind {
         CONCEPT("concept"),
         TYPE("type"),

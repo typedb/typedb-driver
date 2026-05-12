@@ -31,6 +31,8 @@ import com.typedb.driver.common.Promise;
 import com.typedb.driver.common.Validator;
 import com.typedb.driver.common.exception.TypeDBDriverException;
 import com.typedb.driver.answer.QueryAnswerImpl;
+import com.typedb.driver.api.given.GivenRows;
+import com.typedb.driver.given.GivenRowsImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +46,7 @@ import static com.typedb.driver.jni.typedb_driver.transaction_is_open;
 import static com.typedb.driver.jni.typedb_driver.transaction_new;
 import static com.typedb.driver.jni.typedb_driver.transaction_on_close;
 import static com.typedb.driver.jni.typedb_driver.transaction_query;
+import static com.typedb.driver.jni.typedb_driver.transaction_query_given_rows;
 import static com.typedb.driver.jni.typedb_driver.transaction_rollback;
 
 public class TransactionImpl extends NativeObject<com.typedb.driver.jni.Transaction> implements Transaction {
@@ -94,6 +97,17 @@ public class TransactionImpl extends NativeObject<com.typedb.driver.jni.Transact
         Validator.requireNonNull(query, "query");
         try {
             return Promise.map(transaction_query(nativeObject, query, options.nativeObject), QueryAnswerImpl::of);
+        } catch (com.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
+        }
+    }
+
+    @Override
+    public Promise<? extends QueryAnswer> query(String query, QueryOptions options, GivenRows givenRows) throws TypeDBDriverException {
+        Validator.requireNonNull(query, "query");
+        try {
+            // NOTE: .released() relinquishes ownership of givenRows to the Rust side
+            return Promise.map(transaction_query_given_rows(nativeObject, query, options.nativeObject, ((GivenRowsImpl) givenRows).nativeObject.released()), QueryAnswerImpl::of);
         } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
