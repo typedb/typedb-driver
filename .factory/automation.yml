@@ -347,18 +347,18 @@ build:
         bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
 
-        # tool/test/start-core-server.sh &&
-        #   bazel test --config=ci //csharp/Test/Integration:all --test_output=streamed --jobs=1 &&
-        #   bazel test --config=ci //csharp/Test/Integration/Data:all --test_output=streamed --jobs=1 &&
-        #   export CORE_FAILED= || export CORE_FAILED=1
-        # tool/test/stop-core-server.sh
-        # if [[ -n "$CORE_FAILED" ]]; then exit 1; fi
+        tool/test/start-core-server.sh &&
+          bazel test --config=ci //csharp/Test/Integration:all --test_output=streamed --jobs=1 &&
+          bazel test --config=ci //csharp/Test/Integration/Data:all --test_output=streamed --jobs=1 &&
+          export CORE_FAILED= || export CORE_FAILED=1
+        tool/test/stop-core-server.sh
+        if [[ -n "$CORE_FAILED" ]]; then exit 1; fi
 
         source tool/test/start-cluster-servers.sh 3 &&
           bazel test --config=ci //csharp/Test/Integration:test-failover --test_env=CLUSTER_SERVER_SCRIPT=$CLUSTER_SERVER_SCRIPT --test_env=ROOT_CA=$ROOT_CA --test_env=CLUSTER_DIR=$CLUSTER_DIR --test_output=streamed --jobs=1 &&
           export CLUSTER_FAILED= || export CLUSTER_FAILED=1
-        # tool/test/stop-cluster-servers.sh
-        # if [[ -n "$CLUSTER_FAILED" ]]; then exit 1; fi
+        tool/test/stop-cluster-servers.sh
+        if [[ -n "$CLUSTER_FAILED" ]]; then exit 1; fi
 
     test-csharp-behaviour-core:
       image: typedb-ubuntu-22.04
