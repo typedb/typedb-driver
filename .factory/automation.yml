@@ -355,7 +355,7 @@ build:
         if [[ -n "$CORE_FAILED" ]]; then exit 1; fi
 
         source tool/test/start-cluster-servers.sh 3 &&
-          bazel test --config=ci //csharp/Test/Integration:test-failover --test_env=CLUSTER_SERVER_SCRIPT=$CLUSTER_SERVER_SCRIPT --test_env=ROOT_CA=$ROOT_CA --test_env=CLUSTER_DIR=$CLUSTER_DIR --test_output=streamed --jobs=1 &&
+          bazel test --config=ci //csharp/Test/Integration/Cluster:test-failover --test_env=CLUSTER_SERVER_SCRIPT=$CLUSTER_SERVER_SCRIPT --test_env=ROOT_CA=$ROOT_CA --test_env=CLUSTER_DIR=$CLUSTER_DIR --test_output=streamed --jobs=1 &&
           export CLUSTER_FAILED= || export CLUSTER_FAILED=1
         tool/test/stop-cluster-servers.sh
         if [[ -n "$CLUSTER_FAILED" ]]; then exit 1; fi
