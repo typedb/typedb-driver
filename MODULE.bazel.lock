@@ -12956,45 +12956,45 @@
             "repoRuleId": "@@bazel_tools//tools/build_defs/repo:http.bzl%http_file",
             "attributes": {
               "urls": [
-                "https://repo.typedb.com/basic/private-release/raw/names/typedb-cluster-all-linux-arm64/versions/3.10.0-alpha-1/typedb-cluster-all-linux-arm64-3.10.0-alpha-1.tar.gz"
+                "https://repo.typedb.com/basic/private-snapshot/raw/names/typedb-cluster-all-linux-arm64/versions/598c47cc13c8400ae64061b390bb035de46a64d0/typedb-cluster-all-linux-arm64-598c47cc13c8400ae64061b390bb035de46a64d0.tar.gz"
               ],
-              "downloaded_file_path": "typedb-cluster-all-linux-arm64-3.10.0-alpha-1.tar.gz"
+              "downloaded_file_path": "typedb-cluster-all-linux-arm64-598c47cc13c8400ae64061b390bb035de46a64d0.tar.gz"
             }
           },
           "typedb_cluster_artifact_linux-x86_64": {
             "repoRuleId": "@@bazel_tools//tools/build_defs/repo:http.bzl%http_file",
             "attributes": {
               "urls": [
-                "https://repo.typedb.com/basic/private-release/raw/names/typedb-cluster-all-linux-x86_64/versions/3.10.0-alpha-1/typedb-cluster-all-linux-x86_64-3.10.0-alpha-1.tar.gz"
+                "https://repo.typedb.com/basic/private-snapshot/raw/names/typedb-cluster-all-linux-x86_64/versions/598c47cc13c8400ae64061b390bb035de46a64d0/typedb-cluster-all-linux-x86_64-598c47cc13c8400ae64061b390bb035de46a64d0.tar.gz"
               ],
-              "downloaded_file_path": "typedb-cluster-all-linux-x86_64-3.10.0-alpha-1.tar.gz"
+              "downloaded_file_path": "typedb-cluster-all-linux-x86_64-598c47cc13c8400ae64061b390bb035de46a64d0.tar.gz"
             }
           },
           "typedb_cluster_artifact_mac-arm64": {
             "repoRuleId": "@@bazel_tools//tools/build_defs/repo:http.bzl%http_file",
             "attributes": {
               "urls": [
-                "https://repo.typedb.com/basic/private-release/raw/names/typedb-cluster-all-mac-arm64/versions/3.10.0-alpha-1/typedb-cluster-all-mac-arm64-3.10.0-alpha-1.zip"
+                "https://repo.typedb.com/basic/private-snapshot/raw/names/typedb-cluster-all-mac-arm64/versions/598c47cc13c8400ae64061b390bb035de46a64d0/typedb-cluster-all-mac-arm64-598c47cc13c8400ae64061b390bb035de46a64d0.zip"
               ],
-              "downloaded_file_path": "typedb-cluster-all-mac-arm64-3.10.0-alpha-1.zip"
+              "downloaded_file_path": "typedb-cluster-all-mac-arm64-598c47cc13c8400ae64061b390bb035de46a64d0.zip"
             }
           },
           "typedb_cluster_artifact_mac-x86_64": {
             "repoRuleId": "@@bazel_tools//tools/build_defs/repo:http.bzl%http_file",
             "attributes": {
               "urls": [
-                "https://repo.typedb.com/basic/private-release/raw/names/typedb-cluster-all-mac-x86_64/versions/3.10.0-alpha-1/typedb-cluster-all-mac-x86_64-3.10.0-alpha-1.zip"
+                "https://repo.typedb.com/basic/private-snapshot/raw/names/typedb-cluster-all-mac-x86_64/versions/598c47cc13c8400ae64061b390bb035de46a64d0/typedb-cluster-all-mac-x86_64-598c47cc13c8400ae64061b390bb035de46a64d0.zip"
               ],
-              "downloaded_file_path": "typedb-cluster-all-mac-x86_64-3.10.0-alpha-1.zip"
+              "downloaded_file_path": "typedb-cluster-all-mac-x86_64-598c47cc13c8400ae64061b390bb035de46a64d0.zip"
             }
           },
           "typedb_cluster_artifact_windows-x86_64": {
             "repoRuleId": "@@bazel_tools//tools/build_defs/repo:http.bzl%http_file",
             "attributes": {
               "urls": [
-                "https://repo.typedb.com/basic/private-release/raw/names/typedb-cluster-all-windows-x86_64/versions/3.10.0-alpha-1/typedb-cluster-all-windows-x86_64-3.10.0-alpha-1.zip"
+                "https://repo.typedb.com/basic/private-snapshot/raw/names/typedb-cluster-all-windows-x86_64/versions/598c47cc13c8400ae64061b390bb035de46a64d0/typedb-cluster-all-windows-x86_64-598c47cc13c8400ae64061b390bb035de46a64d0.zip"
               ],
-              "downloaded_file_path": "typedb-cluster-all-windows-x86_64-3.10.0-alpha-1.zip"
+              "downloaded_file_path": "typedb-cluster-all-windows-x86_64-598c47cc13c8400ae64061b390bb035de46a64d0.zip"
             }
           }
         },

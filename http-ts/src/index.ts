@@ -37,11 +37,13 @@ import {
 const HTTP_UNAUTHORIZED = 401;
 const HTTP_MISDIRECTED = 421;
 
-// SRV14 ("Not yet initialised") is briefly returned by `/v1/signin` on a node that just
-// became the new cluster primary.
-const SIGNIN_TRANSIENT_RETRY_BUDGET_MS = 30_000;
-const SIGNIN_TRANSIENT_RETRY_INTERVAL_MS = 200;
-const SIGNIN_TRANSIENT_ERROR_CODES = new Set(["SRV14"]);
+// Codes that mean "this origin is not currently usable for signin" — treated like a
+// connection failure so the caller falls back to another origin instead of waiting:
+//   HDR2  - local driver error: could not reach the server
+//   SRV14 - server returned "Not yet initialised". Happens on a freshly restarted secondary
+//           that has not yet loaded the system DB, or briefly on a node mid-promotion. Either
+//           way another origin is likely healthy, so fall back rather than retry in place.
+const TRANSIENT_SIGNIN_ERROR_CODES = new Set(["HDR2", "SRV14"]);
 
 // Result of attempting a single request against a single origin.
 //   Response          - reached the server and got an HTTP response
@@ -54,20 +56,12 @@ function isApiErrResp(value: TryResult): value is ApiErrorResponse {
     return value !== null && "err" in value;
 }
 
-// HDR2 (driverError) is a connection failure raised inside refreshToken: surfacing it as
-// null lets tryApiReq's caller fall back to other origins. Any other err response was
-// returned by the server itself (e.g. 401 "Invalid credential supplied") and must be
-// propagated, since fallback origins would reject the same credentials the same way.
+// Surface transient signin errors as null so tryApiReq's caller falls back to other origins.
+// Any other err response was returned by the server itself (e.g. 401 "Invalid credential
+// supplied") and must be propagated, since fallback origins would reject the same credentials
+// the same way.
 function tokenErrToResult(tokenResp: ApiErrorResponse): ApiErrorResponse | null {
-    return tokenResp.err.code === "HDR2" ? null : tokenResp;
-}
-
-function isTransientSigninError(result: ApiResponse<SignInResponse>): boolean {
-    return "err" in result && SIGNIN_TRANSIENT_ERROR_CODES.has(result.err.code);
-}
-
-function sleep(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return TRANSIENT_SIGNIN_ERROR_CODES.has(tokenResp.err.code) ? null : tokenResp;
 }
 
 export * from "./analyze";
@@ -332,12 +326,7 @@ export class TypeDBHttpDriver {
     }
 
     private async refreshToken(): Promise<ApiResponse<SignInResponse>> {
-        const deadline = Date.now() + SIGNIN_TRANSIENT_RETRY_BUDGET_MS;
-        while (true) {
-            const result = await this.signinOnce();
-            if (!isTransientSigninError(result) || Date.now() >= deadline) return result;
-            await sleep(SIGNIN_TRANSIENT_RETRY_INTERVAL_MS);
-        }
+        return this.signinOnce();
     }
 
     private async signinOnce(): Promise<ApiResponse<SignInResponse>> {
