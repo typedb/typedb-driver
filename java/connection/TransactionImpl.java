@@ -40,21 +40,8 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 import static com.typedb.driver.common.exception.ErrorMessage.Driver.TRANSACTION_CLOSED;
-import static com.typedb.driver.jni.typedb_driver.transaction_analyze;
-import static com.typedb.driver.jni.typedb_driver.transaction_commit;
-import static com.typedb.driver.jni.typedb_driver.transaction_close;
-import static com.typedb.driver.jni.typedb_driver.transaction_is_open;
-import static com.typedb.driver.jni.typedb_driver.transaction_new;
-import static com.typedb.driver.jni.typedb_driver.transaction_on_close;
 import static com.typedb.driver.common.exception.ErrorMessage.Driver.INVALID_TYPE_AS_GIVEN_INPUT;
-import static com.typedb.driver.jni.typedb_driver.given_row_new;
-import static com.typedb.driver.jni.typedb_driver.given_row_set_index_to_concept;
-import static com.typedb.driver.jni.typedb_driver.given_row_set_index_to_empty;
-import static com.typedb.driver.jni.typedb_driver.given_rows_new;
-import static com.typedb.driver.jni.typedb_driver.given_rows_push;
-import static com.typedb.driver.jni.typedb_driver.transaction_query;
-import static com.typedb.driver.jni.typedb_driver.transaction_query_given_rows;
-import static com.typedb.driver.jni.typedb_driver.transaction_rollback;
+import static com.typedb.driver.jni.typedb_driver.*;
 
 public class TransactionImpl extends NativeObject<com.typedb.driver.jni.Transaction> implements Transaction {
     private final Transaction.Type type;
@@ -120,26 +107,27 @@ public class TransactionImpl extends NativeObject<com.typedb.driver.jni.Transact
         }
     }
 
-    private static com.typedb.driver.jni.QueryGivenRows buildNativeGivenRows(List<? extends List<Optional<? extends Concept>>> rows) {
-        com.typedb.driver.jni.QueryGivenRows nativeRows = given_rows_new(rows.size());
-        int rowIndex = 0;
-        for (List<Optional<? extends Concept>> row : rows) {
-            int colIndex = 0;
-            com.typedb.driver.jni.QueryGivenRow nativeRow = given_row_new(row.size());
-            for (Optional<? extends Concept> entry : row) {
-                if (entry.isEmpty()) {
-                    given_row_set_index_to_empty(nativeRow, colIndex);
-                } else {
-                    Concept concept = entry.get();
-                    if (concept.isType()) throw new TypeDBDriverException(INVALID_TYPE_AS_GIVEN_INPUT, concept.getLabel(), rowIndex, colIndex);
-                    given_row_set_index_to_concept(nativeRow, colIndex, ((ConceptImpl) concept).nativeObject);
+    private static com.typedb.driver.jni.QueryGivenRows buildNativeGivenRows(List<? extends List<Optional<? extends Concept>>> rows) throws TypeDBDriverException {
+        try{
+            com.typedb.driver.jni.QueryGivenRows nativeRows = given_rows_new(rows.size());
+            for (List<Optional<? extends Concept>> row : rows) {
+                int colIndex = 0;
+                com.typedb.driver.jni.QueryGivenRow nativeRow = given_row_new(row.size());
+                for (Optional<? extends Concept> entry : row) {
+                    if (entry.isEmpty()) {
+                        given_row_set_index_to_empty(nativeRow, colIndex);
+                    } else {
+                        Concept concept = entry.get();
+                        given_row_set_index_to_concept(nativeRow, colIndex, ((ConceptImpl) concept).nativeObject);
+                    }
+                    colIndex += 1;
                 }
-                colIndex += 1;
+                given_rows_push(nativeRows, nativeRow.released());
             }
-            given_rows_push(nativeRows, nativeRow.released());
-            rowIndex += 1;
+            return nativeRows;
+        } catch (com.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
         }
-        return nativeRows;
     }
 
     @Override

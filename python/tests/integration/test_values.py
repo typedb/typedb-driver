@@ -493,5 +493,41 @@ class TestValues(TestCase):
                 assert_that(Duration.fromstring("P999Y12M31DT24H59M59.999999999S"), is_(typedb_duration))
 
 
+    def test_roundtrips(self):
+        from typedb.concept.value.value import _Value
+
+        with (TypeDB.driver(TypeDB.DEFAULT_ADDRESS, Credentials("admin", "password"),
+                            DriverOptions(DriverTlsConfig.disabled())) as driver):
+            database = driver.databases.get(TYPEDB)
+
+            examples = [
+                ("boolean", _Value.new_boolean(True),  'true'),
+                ("boolean", _Value.new_boolean(False), 'false'),
+                ("integer", _Value.new_integer(25),    '25'),
+                ("double", _Value.new_double(66.6),   '66.6'),
+                ("decimal", _Value.new_decimal(Decimal('1234567890.0001234567890')), '1234567890.0001234567890dec'),
+                ("string", _Value.new_string('John'), '"John"'),
+                ("date", _Value.new_date(date(2024, 9, 20)),                      '2024-09-20'),
+                ("datetime", _Value.new_datetime(Datetime.utcfromstring("1999-02-26T12:15:05")),
+                 '1999-02-26T12:15:05'),
+                ("datetime-tz", _Value.new_datetime_tz(Datetime.utcfromstring("2024-09-20T16:40:05", tz_name="Europe/Belfast")),
+                 '2024-09-20T16:40:05 Europe/Belfast'),
+                (_Value.new_datetime_tz(Datetime.utcfromstring("2024-09-20T16:40:05.028129323",
+                                                               offset_seconds=Datetime.offset_seconds_fromstring("+0545"))),
+                 '2024-09-20T16:40:05.028129323+0545'),
+                ("duration", _Value.new_duration(Duration.fromstring("P1Y10M7DT15H44M5.00394892S")),
+                 'P1Y10M7DT15H44M5.00394892S'),
+            ]
+
+            with driver.transaction(database.name, READ) as tx:
+                for value_type, native_concept, typeql_literal in examples:
+                    answer = tx.query(f"given $native: {value_type}; match let $parsed = {typeql_literal};",
+                                      given_rows=[[native_concept]]).resolve()
+                    rows = list(answer.as_concept_rows())
+                    assert_that(len(rows), is_(1))
+                    assert_that(rows[0].get("native"), is_(rows[0].get("parsed")))
+
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)

@@ -441,7 +441,7 @@ pub extern "C" fn concept_new_integer(value: i64) -> *mut Concept {
 
 /// Creates a new <code>Concept</code> object wrapping the specified <code>String</code> value
 #[unsafe(no_mangle)]
-pub extern "C" fn concept_new_string(value: *const char) -> *mut Concept {
+pub extern "C" fn concept_new_string(value: *const c_char) -> *mut Concept {
     release(Concept::Value(Value::String(string_view(value).to_owned())))
 }
 
@@ -476,14 +476,14 @@ pub extern "C" fn concept_new_datetime(value: DatetimeInNanos) -> *mut Concept {
 #[unsafe(no_mangle)]
 pub extern "C" fn concept_new_datetime_tz(value: DatetimeAndTimeZone) -> *mut Concept {
     let naive_datetime = DateTime::from_timestamp(value.datetime_in_nanos.seconds, value.datetime_in_nanos.subsec_nanos).unwrap().naive_utc();
-    let rust_value = if value.is_fixed_offset {
+    let time_zone = if value.is_fixed_offset {
         let offset = FixedOffset::east_opt(value.local_minus_utc_offset).expect("Invalid offset");
-        DateTime::from_naive_utc_and_offset(naive_datetime, offset)
+        TimeZone::Fixed(offset)
     } else {
         let tz = chrono_tz::Tz::from_str_insensitive(string_view(value.zone_name)).expect("Invalid timezone");
-        DateTime::from_naive_utc_and_offset(naive_datetime, tz)
+        TimeZone::IANA(tz)
     };
-    release(Concept::Value(Value::DatetimeTZ(rust_value)))
+    release(Concept::Value(Value::DatetimeTZ(time_zone.from_utc_datetime(&naive_datetime))))
 }
 
 /// Creates a new <code>Concept</code> object wrapping the specified <code>Duration</code> value

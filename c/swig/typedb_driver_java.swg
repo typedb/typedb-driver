@@ -204,8 +204,9 @@
 %nojavaexception given_row_new;
 %nojavaexception given_rows_new;
 %nojavaexception given_rows_push;
-%nojavaexception given_row_set_index_to_concept;
-%nojavaexception given_row_set_index_to_empty;
+// The following do raise exceptions
+//      given_row_set_index_to_concept;
+//      given_row_set_index_to_empty;
 
 %nojavaexception ServerVersion::distribution;
 %nojavaexception ServerVersion::version;

@@ -236,6 +236,16 @@ VoidPromise* transaction_on_close_register(const Transaction* transaction, Trans
 %newobject relation_get_type;
 %newobject attribute_get_type;
 
+%newobject concept_new_boolean;
+%newobject concept_new_integer;
+%newobject concept_new_double;
+%newobject concept_new_decimal;
+%newobject concept_new_string;
+%newobject concept_new_date;
+%newobject concept_new_datetime;
+%newobject concept_new_datetime_tz;
+%newobject concept_new_duration;
+
 %newobject concept_get_label;
 %newobject concept_try_get_label;
 %newobject concept_try_get_iid;

@@ -16,8 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-use typedb_driver::concept::{Concept, Entity, Relation};
+use typedb_driver::concept::Concept;
 use typedb_driver::transaction::{QueryGivenEntry, QueryGivenRow, QueryGivenRows};
+use crate::common::error::record_ffi_error;
 use crate::common::memory::{borrow, borrow_mut, free, release, take_ownership};
 
 /// Creates a new <code>givenRow</code> of the specified capacity,
@@ -43,28 +44,41 @@ pub extern "C" fn given_row_new(width: usize) -> *mut QueryGivenRow {
 /// Sets the entry at `index` in the given row to the specified entity
 /// Will panic if out-of-bounds
 #[unsafe(no_mangle)]
-pub extern "C" fn given_row_set_index_to_concept(row: *mut QueryGivenRow, index: usize, concept: *const Concept) {
-    let row_mut = &mut borrow_mut(row).0;
-    row_mut[index] = match borrow(concept).clone() {
-        Concept::Entity(entity) => QueryGivenEntry::Entity(entity),
-        Concept::Relation(relation) => QueryGivenEntry::Relation(relation),
-        Concept::Attribute(attribute) => QueryGivenEntry::Attribute(attribute),
-        Concept::Value(value) => QueryGivenEntry::Value(value),
-        Concept::EntityType(_)
-        | Concept::RelationType(_)
-        | Concept::RoleType(_)
-        | Concept::AttributeType(_) => {
-            panic!("A type was passed as QueryInput. This should not be allowed by the language drivers")
-        }
+pub extern "C" fn given_row_set_index_to_concept(row: *mut QueryGivenRow, index: usize, concept: *const Concept) -> bool {
+    let mut row = &mut borrow_mut(row).0;
+    if let Some(entry_mut) = row.get_mut(index) {
+        *entry_mut = match borrow(concept).clone() {
+            Concept::Entity(entity) => QueryGivenEntry::Entity(entity),
+            Concept::Relation(relation) => QueryGivenEntry::Relation(relation),
+            Concept::Attribute(attribute) => QueryGivenEntry::Attribute(attribute),
+            Concept::Value(value) => QueryGivenEntry::Value(value),
+            Concept::EntityType(_)
+            | Concept::RelationType(_)
+            | Concept::RoleType(_)
+            | Concept::AttributeType(_) => {
+                record_ffi_error(format!("A type was passed as a given row entry at column: {index}. Only instances and values are allowed."));
+                return false;
+            }
+        };
+        true
+    } else {
+        record_ffi_error(format!("Given column index '{}' out of range for row of width '{}'", index, row.len()));
+        false
     }
 }
 
 /// Sets the entry at `index` in the given row to the Empty Optional value
 /// Will panic if out-of-bounds
 #[unsafe(no_mangle)]
-pub extern "C" fn given_row_set_index_to_empty(row: *mut QueryGivenRow, index: usize) {
-    let row_mut = &mut borrow_mut(row).0;
-    row_mut[index] = QueryGivenEntry::Empty;
+pub extern "C" fn given_row_set_index_to_empty(row: *mut QueryGivenRow, index: usize) -> bool {
+    let mut row = &mut borrow_mut(row).0;
+    if let Some(entry_mut) = row.get_mut(index) {
+        *entry_mut  = QueryGivenEntry::Empty;
+        true
+    } else {
+        record_ffi_error(format!("Given column index '{}' out of range for row of width '{}'", index, row.len()));
+        false
+    }
 }
 
 /// Frees the native rust <code>QueryGivenRows</code> object
