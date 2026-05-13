@@ -19,7 +19,7 @@
 
 use std::ffi::c_char;
 
-use chrono::{DateTime, NaiveTime, TimeZone as ChronoTimeZone};
+use chrono::{DateTime, FixedOffset, NaiveDate, NaiveDateTime, NaiveTime, TimeZone as ChronoTimeZone};
 use typedb_driver::{
     box_stream,
     concept::{
@@ -34,6 +34,7 @@ use crate::common::{
         borrow, borrow_mut, free, release, release_optional, release_optional_string, release_string, string_free,
     },
 };
+use crate::common::memory::{string_view, take_ownership};
 
 /// A <code>DatetimeInNanos</code> used to represent datetime as a pair of seconds part and
 /// a number of nanoseconds since the last seconds boundary.
@@ -422,6 +423,73 @@ pub extern "C" fn concept_is_value(concept: *const Concept) -> bool {
 #[unsafe(no_mangle)]
 pub extern "C" fn concept_to_string(concept: *const Concept) -> *mut c_char {
     release_string(format!("{:?}", borrow(concept)))
+}
+
+// Constructors
+
+/// Creates a new <code>Concept</code> object wrapping the specified <code>bool</code> value
+#[unsafe(no_mangle)]
+pub extern "C" fn concept_new_boolean(value: bool) -> *mut Concept {
+    release(Concept::Value(Value::Boolean(value)))
+}
+
+/// Creates a new <code>Concept</code> object wrapping the specified <code>i64</code> value
+#[unsafe(no_mangle)]
+pub extern "C" fn concept_new_integer(value: i64) -> *mut Concept {
+    release(Concept::Value(Value::Integer(value)))
+}
+
+/// Creates a new <code>Concept</code> object wrapping the specified <code>String</code> value
+#[unsafe(no_mangle)]
+pub extern "C" fn concept_new_string(value: *const char) -> *mut Concept {
+    release(Concept::Value(Value::String(string_view(value).to_owned())))
+}
+
+/// Creates a new <code>Concept</code> object wrapping the specified <code>f64</code> value
+#[unsafe(no_mangle)]
+pub extern "C" fn concept_new_double(value: f64) -> *mut Concept {
+    release(Concept::Value(Value::Double(value)))
+}
+
+/// Creates a new <code>Concept</code> object wrapping the specified <code>Decimal</code> value
+#[unsafe(no_mangle)]
+pub extern "C" fn concept_new_decimal(value: Decimal) -> *mut Concept {
+    release(Concept::Value(Value::Decimal(value)))
+}
+
+/// Creates a new <code>Concept</code> object wrapping a specified <code>NaiveDate</code> value
+/// The value must be seconds since the start of the UNIX epoch.
+#[unsafe(no_mangle)]
+pub extern "C" fn concept_new_date_from_seconds(seconds_since_epoch: i64) -> *mut Concept {
+    let naive_date = DateTime::from_timestamp(seconds_since_epoch, 0).unwrap().date_naive();
+    release(Concept::Value(Value::Date(naive_date)))
+}
+
+/// Creates a new <code>Concept</code> object wrapping the specified <code>DateTimeInNanos</code> value
+#[unsafe(no_mangle)]
+pub extern "C" fn concept_new_datetime(value: DatetimeInNanos) -> *mut Concept {
+    let naive_datetime = DateTime::from_timestamp(value.seconds, value.subsec_nanos).unwrap();
+    release(Concept::Value(Value::Datetime(naive_datetime.naive_utc())))
+}
+
+/// Creates a new <code>Concept</code> object wrapping the specified <code>DatetimeAndTimeZone</code> value
+#[unsafe(no_mangle)]
+pub extern "C" fn concept_new_datetime_tz(value: DatetimeAndTimeZone) -> *mut Concept {
+    let naive_datetime = DateTime::from_timestamp(value.datetime_in_nanos.seconds, value.datetime_in_nanos.subsec_nanos).unwrap().naive_utc();
+    let rust_value = if value.is_fixed_offset {
+        let offset = FixedOffset::east_opt(value.local_minus_utc_offset).expect("Invalid offset");
+        DateTime::from_naive_utc_and_offset(naive_datetime, offset)
+    } else {
+        let tz = chrono_tz::Tz::from_str_insensitive(string_view(value.zone_name)).expect("Invalid timezone");
+        DateTime::from_naive_utc_and_offset(naive_datetime, tz)
+    };
+    release(Concept::Value(Value::DatetimeTZ(rust_value)))
+}
+
+/// Creates a new <code>Concept</code> object wrapping the specified <code>Duration</code> value
+#[unsafe(no_mangle)]
+pub extern "C" fn concept_new_duration(value: Duration) -> *mut Concept {
+    release(Concept::Value(Value::Duration(value)))
 }
 
 pub(super) fn borrow_as_entity(concept: *const Concept) -> &'static Entity {

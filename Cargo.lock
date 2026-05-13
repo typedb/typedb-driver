@@ -2819,6 +2819,7 @@ name = "typedb_driver_clib"
 version = "0.0.0"
 dependencies = [
  "chrono",
+ "chrono-tz",
  "itertools 0.14.0",
  "tracing",
  "tracing-subscriber",
