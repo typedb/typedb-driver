@@ -220,9 +220,10 @@ workspace_refs = use_repo_rule("@typedb_bazel_distribution//common/workspace_ref
 workspace_refs(
     name = "typedb_driver_workspace_refs",
     workspace_commit_dict = {
-        "typedb_protocol+": "25ab3fb02715062bd036f8b83908de92b106a202",
+#        "typedb_protocol+": "25ab3fb02715062bd036f8b83908de92b106a202",
     },
     workspace_tag_dict = {
+        "typedb_protocol+": "3.11.0-rc0",
     },
 )
 
