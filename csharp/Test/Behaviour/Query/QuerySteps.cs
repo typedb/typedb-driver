@@ -749,6 +749,21 @@ namespace TypeDB.Driver.Test.Behaviour
             Assert.Equal(expectedValue.Replace("\\\"", "\""), value!.GetString());
         }
 
+        // Pattern: answer get row(N) get attribute(VAR) get value is: VALUE (non-quoted)
+        // This handles non-string values. String values (quoted) are handled in a diferent step.
+        [Then(@"answer get row\((\d+)\) get attribute\(([^)]+)\) get value is: ([^""].+)")]
+        public void AnswerGetRowGetAttributeGetValueIs(
+            int rowIndex, string variable, string expectedValue)
+        {
+            CollectRowsAnswerIfNeeded();
+            IConcept? concept = GetRowGetConcept(rowIndex, variable);
+            Assert.NotNull(concept);
+            IValue? value = concept!.AsAttribute().TryGetValue();
+            Assert.NotNull(value);
+            Assert.True(TestValueHelper.CompareValues(value!, expectedValue, null),
+                $"Expected value '{expectedValue}' but got '{value}'");
+        }
+
         [Then(@"answer get row\((\d+)\) get attribute by index of variable\(([^)]+)\) get value is: ""(.*)""")]
         public void AnswerGetRowGetAttributeByIndexGetValueIsString(int rowIndex, string variable, string expectedValue)
         {

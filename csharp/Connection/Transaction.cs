@@ -31,6 +31,7 @@ using TypeDB.Driver.Common;
 using TypeDB.Driver.Common.Validation;
 
 using DriverError = TypeDB.Driver.Common.Error.Driver;
+using TypeDB.Driver.Concept;
 
 namespace TypeDB.Driver.Connection
 {
@@ -176,23 +177,23 @@ namespace TypeDB.Driver.Connection
         private static Pinvoke.QueryGivenRows BuildNativeGivenRows(IEnumerable<IEnumerable<IConcept?>> rows)
         {
             var rowList = rows.Select(r => r.ToList()).ToList();
-            var nativeRows = Pinvoke.typedb_driver.given_rows_new((ulong)rowList.Count);
+            var nativeRows = Pinvoke.typedb_driver.given_rows_new((uint)rowList.Count);
             for (int rowIndex = 0; rowIndex < rowList.Count; rowIndex++)
             {
                 var rowEntries = rowList[rowIndex];
-                var nativeRow = Pinvoke.typedb_driver.given_row_new((ulong)rowEntries.Count);
+                var nativeRow = Pinvoke.typedb_driver.given_row_new((uint)rowEntries.Count);
                 for (int i = 0; i < rowEntries.Count; i++)
                 {
                     var concept = rowEntries[i];
                     if (concept == null)
                     {
-                        Pinvoke.typedb_driver.given_row_set_index_to_empty(nativeRow, (ulong)i);
+                        Pinvoke.typedb_driver.given_row_set_index_to_empty(nativeRow, (uint)i);
                     }
                     else
                     {
                         if (concept.IsType())
                             throw new TypeDBDriverException(DriverError.INVALID_TYPE_AS_GIVEN_INPUT, concept.GetLabel(), rowIndex);
-                        Pinvoke.typedb_driver.given_row_set_index_to_concept(nativeRow, (ulong)i, ((Concept.Concept)concept).NativeObject);
+                        Pinvoke.typedb_driver.given_row_set_index_to_concept(nativeRow, (uint)i, ((Concept.Concept)concept).NativeObject);
                     }
                 }
                 Pinvoke.typedb_driver.given_rows_push(nativeRows, nativeRow.Released());
