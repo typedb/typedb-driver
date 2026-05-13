@@ -216,3 +216,121 @@ class Value(Concept, ABC):
             value.get_struct()
         """
         pass
+
+    @abstractmethod
+    def new_boolean(self) -> "Value":
+        """
+        Returns a ``Value`` variant of ``Concept`` which holds the specified boolean value.
+        If the value has another type, raises an exception.
+
+        Examples
+        --------
+        ::
+
+            boolean_concept = Value::new_boolean(True)
+        """
+        pass
+
+    @abstractmethod
+    def new_integer(self) -> "Value":
+        """
+        Returns a ``Value`` variant of ``Concept`` which holds the specified integer value.
+
+        Examples
+        --------
+        ::
+
+            integer_concept = Value::new_integer(42)
+        """
+        pass
+
+    @abstractmethod
+    def new_double(self) -> "Value":
+        """
+        Returns a ``Value`` variant of ``Concept`` which holds the specified double value.
+
+        Examples
+        --------
+        ::
+
+            double_concept = Value::new_double(3.14)
+        """
+        pass
+
+    @abstractmethod
+    def new_decimal(self) -> "Value":
+        """
+        Returns a ``Value`` variant of ``Concept`` which holds the specified decimal value.
+
+        Examples
+        --------
+        ::
+
+            decimal_concept = Value::new_decimal(Decimal("3.14"))
+        """
+        pass
+
+    @abstractmethod
+    def new_string(self) -> "Value":
+        """
+        Returns a ``Value`` variant of ``Concept`` which holds the specified string value.
+
+        Examples
+        --------
+        ::
+
+            string_concept = Value::new_string("hello")
+        """
+        pass
+
+    @abstractmethod
+    def new_date(self) -> "Value":
+        """
+        Returns a ``Value`` variant of ``Concept`` which holds the specified date value.
+
+        Examples
+        --------
+        ::
+
+            date_concept = Value::new_date(date(2024, 1, 1))
+        """
+        pass
+
+    @abstractmethod
+    def new_datetime(self) -> "Value":
+        """
+        Returns a ``Value`` variant of ``Concept`` which holds the specified datetime value.
+
+        Examples
+        --------
+        ::
+
+            datetime_concept = Value::new_datetime(Datetime(2024, 1, 1, 0, 0, 0))
+        """
+        pass
+
+    @abstractmethod
+    def new_datetime_tz(self) -> "Value":
+        """
+        Returns a ``Value`` variant of ``Concept`` which holds the specified timezone-aware datetime value.
+
+        Examples
+        --------
+        ::
+
+            datetime_tz_concept = Value::new_datetime_tz(Datetime(2024, 1, 1, 0, 0, 0, tz="UTC"))
+        """
+        pass
+
+    @abstractmethod
+    def new_duration(self) -> "Value":
+        """
+        Returns a ``Value`` variant of ``Concept`` which holds the specified duration value.
+
+        Examples
+        --------
+        ::
+
+            duration_concept = Value::new_duration(Duration(months=1, days=0, nanos=0))
+        """
+        pass
