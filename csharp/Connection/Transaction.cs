@@ -19,13 +19,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using TypeDB.Driver;
 using TypeDB.Driver.Analyze;
 using TypeDB.Driver.Answer;
 using TypeDB.Driver.Api;
-using TypeDB.Driver.Api.Analyze;
 using TypeDB.Driver.Api.Answer;
+using TypeDB.Driver.Api.Analyze;
 using TypeDB.Driver.Common;
 using TypeDB.Driver.Common.Validation;
 
@@ -150,6 +151,53 @@ namespace TypeDB.Driver.Connection
             {
                 throw new TypeDBDriverException(e);
             }
+        }
+
+        /// <inheritdoc/>
+        public Promise<IQueryAnswer> Query(string query, QueryOptions options, IEnumerable<IEnumerable<IConcept?>> givenRows)
+        {
+            Validator.NonNull(query, DriverError.NON_NULL_VALUE_REQUIRED, "query");
+            Validator.ThrowIfFalse(NativeObject.IsOwned, DriverError.TRANSACTION_CLOSED);
+
+            try
+            {
+                var promise = Pinvoke.typedb_driver.transaction_query_given_rows(
+                    NativeObject, query, options.NativeObject, BuildNativeGivenRows(givenRows).Released());
+                return Promise<IQueryAnswer>.Map<Pinvoke.QueryAnswer, IQueryAnswer>(
+                    () => promise.Resolve(),
+                    QueryAnswer.Of);
+            }
+            catch (Pinvoke.Error e)
+            {
+                throw new TypeDBDriverException(e);
+            }
+        }
+
+        private static Pinvoke.QueryGivenRows BuildNativeGivenRows(IEnumerable<IEnumerable<IConcept?>> rows)
+        {
+            var rowList = rows.Select(r => r.ToList()).ToList();
+            var nativeRows = Pinvoke.typedb_driver.given_rows_new((ulong)rowList.Count);
+            for (int rowIndex = 0; rowIndex < rowList.Count; rowIndex++)
+            {
+                var rowEntries = rowList[rowIndex];
+                var nativeRow = Pinvoke.typedb_driver.given_row_new((ulong)rowEntries.Count);
+                for (int i = 0; i < rowEntries.Count; i++)
+                {
+                    var concept = rowEntries[i];
+                    if (concept == null)
+                    {
+                        Pinvoke.typedb_driver.given_row_set_index_to_empty(nativeRow, (ulong)i);
+                    }
+                    else
+                    {
+                        if (concept.IsType())
+                            throw new TypeDBDriverException(DriverError.INVALID_TYPE_AS_GIVEN_INPUT, concept.GetLabel(), rowIndex);
+                        Pinvoke.typedb_driver.given_row_set_index_to_concept(nativeRow, (ulong)i, ((Concept.Concept)concept).NativeObject);
+                    }
+                }
+                Pinvoke.typedb_driver.given_rows_push(nativeRows, nativeRow.Released());
+            }
+            return nativeRows;
         }
 
         /// <inheritdoc/>

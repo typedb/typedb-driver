@@ -40,6 +40,7 @@ namespace TypeDB.Driver.Test.Behaviour
         private static List<IConceptRow>? _collectedRows;
         private static List<IJSON>? _collectedDocuments;
         private static QueryOptions? _queryOptions;
+        private static List<List<IConcept?>>? _givenRows;
 
         // Concurrent query state
         private static List<IQueryAnswer>? _concurrentAnswers;
@@ -121,8 +122,18 @@ namespace TypeDB.Driver.Test.Behaviour
 
         #region Query Execution Steps
 
-        private IQueryAnswer ExecuteQuery(string queryText)
+        private List<List<IConcept?>> TakeGivenRows()
         {
+            Assert.NotNull(_givenRows);
+            var rows = _givenRows!;
+            _givenRows = null;
+            return rows;
+        }
+
+        private IQueryAnswer ExecuteQuery(string queryText, List<List<IConcept?>>? givenRows = null)
+        {
+            if (givenRows != null)
+                return Tx.Query(queryText, _queryOptions ?? new QueryOptions(), givenRows).Resolve()!;
             if (_queryOptions != null)
                 return Tx.Query(queryText, _queryOptions).Resolve()!;
             return Tx.Query(queryText).Resolve()!;
@@ -189,6 +200,63 @@ namespace TypeDB.Driver.Test.Behaviour
             Assert.ThrowsAny<Exception>(() => ExecuteQuery(query.Content));
         }
 
+        [Given(@"typeql schema query with given rows")]
+        [When(@"typeql schema query with given rows")]
+        [Then(@"typeql schema query with given rows")]
+        [Given(@"typeql write query with given rows")]
+        [When(@"typeql write query with given rows")]
+        [Then(@"typeql write query with given rows")]
+        [Given(@"typeql read query with given rows")]
+        [When(@"typeql read query with given rows")]
+        [Then(@"typeql read query with given rows")]
+        public void TypeqlQueryWithGivenRows(DocString query)
+        {
+            ClearAnswers();
+            ExecuteQuery(query.Content, TakeGivenRows());
+        }
+
+        [Given(@"typeql schema query with given rows; fails")]
+        [When(@"typeql schema query with given rows; fails")]
+        [Then(@"typeql schema query with given rows; fails")]
+        [Given(@"typeql write query with given rows; fails")]
+        [When(@"typeql write query with given rows; fails")]
+        [Then(@"typeql write query with given rows; fails")]
+        [Given(@"typeql read query with given rows; fails")]
+        [When(@"typeql read query with given rows; fails")]
+        [Then(@"typeql read query with given rows; fails")]
+        public void TypeqlQueryWithGivenRowsFails(DocString query)
+        {
+            ClearAnswers();
+            var given = TakeGivenRows();
+            Assert.ThrowsAny<Exception>(() => ExecuteQuery(query.Content, given));
+        }
+
+        [Given(@"typeql schema query with given rows; fails with a message containing: ""(.*)""")]
+        [When(@"typeql schema query with given rows; fails with a message containing: ""(.*)""")]
+        [Then(@"typeql schema query with given rows; fails with a message containing: ""(.*)""")]
+        [Given(@"typeql write query with given rows; fails with a message containing: ""(.*)""")]
+        [When(@"typeql write query with given rows; fails with a message containing: ""(.*)""")]
+        [Then(@"typeql write query with given rows; fails with a message containing: ""(.*)""")]
+        [Given(@"typeql read query with given rows; fails with a message containing: ""(.*)""")]
+        [When(@"typeql read query with given rows; fails with a message containing: ""(.*)""")]
+        [Then(@"typeql read query with given rows; fails with a message containing: ""(.*)""")]
+        public void TypeqlQueryWithGivenRowsFailsWithMessage(string expectedMessage, DocString query)
+        {
+            ClearAnswers();
+            var given = TakeGivenRows();
+            var exception = Assert.ThrowsAny<Exception>(() => ExecuteQuery(query.Content, given));
+            Assert.Contains(expectedMessage, exception.Message);
+        }
+
+        [Given(@"set answers of typeql read query as given rows with order: (\$[a-zA-Z0-9\-_]+(?:, \$[a-zA-Z0-9\-_]+)*)")]
+        [When(@"set answers of typeql read query as given rows with order: (\$[a-zA-Z0-9\-_]+(?:, \$[a-zA-Z0-9\-_]+)*)")]
+        public void SetAnswersAsGivenRows(string varListStr, DocString query)
+        {
+            var varList = varListStr.Split(',').Select(v => v.Replace("$", "").Trim()).ToList();
+            var rows = Tx.Query(query.Content).Resolve()!.AsConceptRows().ToList();
+            _givenRows = rows.Select(row => varList.Select(v => row.Get(v)).ToList()).ToList();
+        }
+
         [Given(@"get answers of typeql schema query")]
         [When(@"get answers of typeql schema query")]
         [Then(@"get answers of typeql schema query")]
@@ -233,6 +301,54 @@ namespace TypeDB.Driver.Test.Behaviour
             ClearAnswers();
             var exception = Assert.ThrowsAny<Exception>(() => { _queryAnswer = ExecuteQuery(query.Content); });
             Assert.Contains(expectedMessage.Replace("\\\"", "\""), exception.Message);
+        }
+
+        [Given(@"get answers of typeql schema query with given rows")]
+        [When(@"get answers of typeql schema query with given rows")]
+        [Then(@"get answers of typeql schema query with given rows")]
+        [Given(@"get answers of typeql write query with given rows")]
+        [When(@"get answers of typeql write query with given rows")]
+        [Then(@"get answers of typeql write query with given rows")]
+        [Given(@"get answers of typeql read query with given rows")]
+        [When(@"get answers of typeql read query with given rows")]
+        [Then(@"get answers of typeql read query with given rows")]
+        public void GetAnswersOfTypeqlQueryWithGivenRows(DocString query)
+        {
+            ClearAnswers();
+            _queryAnswer = ExecuteQuery(query.Content, TakeGivenRows());
+        }
+
+        [Given(@"get answers of typeql schema query with given rows; fails")]
+        [When(@"get answers of typeql schema query with given rows; fails")]
+        [Then(@"get answers of typeql schema query with given rows; fails")]
+        [Given(@"get answers of typeql write query with given rows; fails")]
+        [When(@"get answers of typeql write query with given rows; fails")]
+        [Then(@"get answers of typeql write query with given rows; fails")]
+        [Given(@"get answers of typeql read query with given rows; fails")]
+        [When(@"get answers of typeql read query with given rows; fails")]
+        [Then(@"get answers of typeql read query with given rows; fails")]
+        public void GetAnswersOfTypeqlQueryWithGivenRowsFails(DocString query)
+        {
+            ClearAnswers();
+            var given = TakeGivenRows();
+            Assert.ThrowsAny<Exception>(() => { _queryAnswer = ExecuteQuery(query.Content, given); });
+        }
+
+        [Given(@"get answers of typeql schema query with given rows; fails with a message containing: ""(.*)""")]
+        [When(@"get answers of typeql schema query with given rows; fails with a message containing: ""(.*)""")]
+        [Then(@"get answers of typeql schema query with given rows; fails with a message containing: ""(.*)""")]
+        [Given(@"get answers of typeql write query with given rows; fails with a message containing: ""(.*)""")]
+        [When(@"get answers of typeql write query with given rows; fails with a message containing: ""(.*)""")]
+        [Then(@"get answers of typeql write query with given rows; fails with a message containing: ""(.*)""")]
+        [Given(@"get answers of typeql read query with given rows; fails with a message containing: ""(.*)""")]
+        [When(@"get answers of typeql read query with given rows; fails with a message containing: ""(.*)""")]
+        [Then(@"get answers of typeql read query with given rows; fails with a message containing: ""(.*)""")]
+        public void GetAnswersOfTypeqlQueryWithGivenRowsFailsWithMessage(string expectedMessage, DocString query)
+        {
+            ClearAnswers();
+            var given = TakeGivenRows();
+            var exception = Assert.ThrowsAny<Exception>(() => { _queryAnswer = ExecuteQuery(query.Content, given); });
+            Assert.Contains(expectedMessage, exception.Message);
         }
 
         #endregion
