@@ -1,5 +1,8 @@
 Documentation: https://typedb.com/docs/core-concepts/drivers/overview
 
+## Breaking changes
+This release breaks backwards compatibility. Connections from this version (or newer) will be rejected by servers running older versions.
+
 ## Distribution
 
 #### Rust driver
