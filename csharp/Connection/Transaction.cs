@@ -19,8 +19,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-
 using TypeDB.Driver;
 using TypeDB.Driver.Analyze;
 using TypeDB.Driver.Answer;
@@ -155,7 +153,7 @@ namespace TypeDB.Driver.Connection
         }
 
         /// <inheritdoc/>
-        public Promise<IQueryAnswer> Query(string query, QueryOptions options, IEnumerable<IEnumerable<IConcept?>> givenRows)
+        public Promise<IQueryAnswer> Query(string query, QueryOptions options, List<List<IConcept?>> givenRows)
         {
             Validator.NonNull(query, DriverError.NON_NULL_VALUE_REQUIRED, "query");
             Validator.ThrowIfFalse(NativeObject.IsOwned, DriverError.TRANSACTION_CLOSED);
@@ -174,9 +172,9 @@ namespace TypeDB.Driver.Connection
             }
         }
 
-        private static Pinvoke.QueryGivenRows BuildNativeGivenRows(IEnumerable<IEnumerable<IConcept?>> rows)
+        private static Pinvoke.QueryGivenRows BuildNativeGivenRows(List<List<IConcept?>> rows)
         {
-            var rowList = rows.Select(r => r.ToList()).ToList();
+            var rowList = rows;
             var nativeRows = Pinvoke.typedb_driver.given_rows_new((uint)rowList.Count);
             for (int rowIndex = 0; rowIndex < rowList.Count; rowIndex++)
             {

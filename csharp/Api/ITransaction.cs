@@ -87,7 +87,7 @@ namespace TypeDB.Driver.Api
         /// <param name="options">Query options.</param>
         /// <param name="givenRows">Input rows; each inner enumerable is one row, <c>null</c> entries represent empty variables.</param>
         /// <returns>A promise that resolves to the query answer containing the results.</returns>
-        Promise<IQueryAnswer> Query(string query, QueryOptions options, IEnumerable<IEnumerable<IConcept?>> givenRows);
+        Promise<IQueryAnswer> Query(string query, QueryOptions options, List<List<IConcept?>> givenRows);
 
         /// <summary>
         /// Analyzes a TypeQL query and returns information about its structure and type inference results.
