@@ -23,6 +23,11 @@ CALL refreshenv
 ECHO Building and deploying windows package...
 SET DEPLOY_NUGET_API_KEY=%REPO_NUGET_TOKEN%
 
+REM rules_dotnet runfiles tree is deep; keep TEMP short to stay under MAX_PATH
+IF NOT EXIST C:\T MKDIR C:\T
+SET TEMP=C:\T
+SET TMP=C:\T
+
 SET /p VER=<VERSION
 bazel --output_user_root=C:/b run --config=ci --verbose_failures --define version=%VER% //csharp:driver-csharp-runtime-push --compilation_mode=opt -- release
 IF %errorlevel% NEQ 0 EXIT /b %errorlevel%
