@@ -217,8 +217,9 @@ class Value(Concept, ABC):
         """
         pass
 
+    @classmethod
     @abstractmethod
-    def new_boolean(self) -> "Value":
+    def new_boolean(cls, value) -> "Value":
         """
         Returns a ``Value`` variant of ``Concept`` which holds the specified boolean value.
         If the value has another type, raises an exception.
@@ -227,12 +228,13 @@ class Value(Concept, ABC):
         --------
         ::
 
-            boolean_concept = Value::new_boolean(True)
+            boolean_concept = Value.new_boolean(True)
         """
         pass
 
+    @classmethod
     @abstractmethod
-    def new_integer(self) -> "Value":
+    def new_integer(cls, value) -> "Value":
         """
         Returns a ``Value`` variant of ``Concept`` which holds the specified integer value.
 
@@ -240,12 +242,13 @@ class Value(Concept, ABC):
         --------
         ::
 
-            integer_concept = Value::new_integer(42)
+            integer_concept = Value.new_integer(42)
         """
         pass
 
+    @classmethod
     @abstractmethod
-    def new_double(self) -> "Value":
+    def new_double(cls, value) -> "Value":
         """
         Returns a ``Value`` variant of ``Concept`` which holds the specified double value.
 
@@ -253,12 +256,13 @@ class Value(Concept, ABC):
         --------
         ::
 
-            double_concept = Value::new_double(3.14)
+            double_concept = Value.new_double(3.14)
         """
         pass
 
+    @classmethod
     @abstractmethod
-    def new_decimal(self) -> "Value":
+    def new_decimal(cls, value) -> "Value":
         """
         Returns a ``Value`` variant of ``Concept`` which holds the specified decimal value.
 
@@ -266,12 +270,13 @@ class Value(Concept, ABC):
         --------
         ::
 
-            decimal_concept = Value::new_decimal(Decimal("3.14"))
+            decimal_concept = Value.new_decimal(Decimal("3.14"))
         """
         pass
 
+    @classmethod
     @abstractmethod
-    def new_string(self) -> "Value":
+    def new_string(cls, value) -> "Value":
         """
         Returns a ``Value`` variant of ``Concept`` which holds the specified string value.
 
@@ -279,12 +284,13 @@ class Value(Concept, ABC):
         --------
         ::
 
-            string_concept = Value::new_string("hello")
+            string_concept = Value.new_string("hello")
         """
         pass
 
+    @classmethod
     @abstractmethod
-    def new_date(self) -> "Value":
+    def new_date(cls, value) -> "Value":
         """
         Returns a ``Value`` variant of ``Concept`` which holds the specified date value.
 
@@ -292,12 +298,13 @@ class Value(Concept, ABC):
         --------
         ::
 
-            date_concept = Value::new_date(date(2024, 1, 1))
+            date_concept = Value.new_date(date(2024, 1, 1))
         """
         pass
 
+    @classmethod
     @abstractmethod
-    def new_datetime(self) -> "Value":
+    def new_datetime(cls, value) -> "Value":
         """
         Returns a ``Value`` variant of ``Concept`` which holds the specified datetime value.
 
@@ -305,12 +312,13 @@ class Value(Concept, ABC):
         --------
         ::
 
-            datetime_concept = Value::new_datetime(Datetime(2024, 1, 1, 0, 0, 0))
+            datetime_concept = Value.new_datetime(Datetime(2024, 1, 1, 0, 0, 0))
         """
         pass
 
+    @classmethod
     @abstractmethod
-    def new_datetime_tz(self) -> "Value":
+    def new_datetime_tz(cls, value) -> "Value":
         """
         Returns a ``Value`` variant of ``Concept`` which holds the specified timezone-aware datetime value.
 
@@ -318,12 +326,13 @@ class Value(Concept, ABC):
         --------
         ::
 
-            datetime_tz_concept = Value::new_datetime_tz(Datetime(2024, 1, 1, 0, 0, 0, tz="UTC"))
+            datetime_tz_concept = Value.new_datetime_tz(Datetime(2024, 1, 1, 0, 0, 0, tz="UTC"))
         """
         pass
 
+    @classmethod
     @abstractmethod
-    def new_duration(self) -> "Value":
+    def new_duration(cls, value) -> "Value":
         """
         Returns a ``Value`` variant of ``Concept`` which holds the specified duration value.
 
@@ -331,6 +340,6 @@ class Value(Concept, ABC):
         --------
         ::
 
-            duration_concept = Value::new_duration(Duration(months=1, days=0, nanos=0))
+            duration_concept = Value.new_duration(Duration(months=1, days=0, nanos=0))
         """
         pass

@@ -19,7 +19,7 @@ from __future__ import annotations
 
 import re
 from datetime import date, datetime, timezone, tzinfo, timedelta
-from typing import Optional
+from typing import Optional, Tuple
 from zoneinfo import ZoneInfo
 
 NANOS_DIGITS = 9
@@ -67,6 +67,9 @@ class Datetime:
             self._datetime_of_seconds = datetime.utcfromtimestamp(timestamp_seconds)
 
         self._nanos = subsec_nanos
+
+    def to_seconds_and_nanos(self) -> Tuple[int, int]:
+        return (int(self._datetime_of_seconds.timestamp()), self._nanos)
 
     @classmethod
     def utcfromtimestamp(cls, timestamp_seconds: int, subsec_nanos: int, tz_name: Optional[str] = None,

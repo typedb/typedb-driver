@@ -241,9 +241,10 @@ VoidPromise* transaction_on_close_register(const Transaction* transaction, Trans
 %newobject concept_new_double;
 %newobject concept_new_decimal;
 %newobject concept_new_string;
-%newobject concept_new_date;
+%newobject concept_new_date_from_seconds;
 %newobject concept_new_datetime;
-%newobject concept_new_datetime_tz;
+%newobject concept_new_datetime_tz_iana;
+%newobject concept_new_datetime_tz_offset;
 %newobject concept_new_duration;
 
 %newobject concept_get_label;

@@ -451,13 +451,14 @@ pub extern "C" fn concept_new_double(value: f64) -> *mut Concept {
     release(Concept::Value(Value::Double(value)))
 }
 
-/// Creates a new <code>Concept</code> object wrapping the specified <code>Decimal</code> value
+/// Creates a new <code>Concept</code> object wrapping the specified <code>Decimal</code> value,
+/// provided as its integer and fractional parts. The fractional part is in units of 10^-19.
 #[unsafe(no_mangle)]
-pub extern "C" fn concept_new_decimal(value: Decimal) -> *mut Concept {
-    release(Concept::Value(Value::Decimal(value)))
+pub extern "C" fn concept_new_decimal(integer: i64, fractional: u64) -> *mut Concept {
+    release(Concept::Value(Value::Decimal(Decimal::new(integer, fractional))))
 }
 
-/// Creates a new <code>Concept</code> object wrapping a specified <code>NaiveDate</code> value
+/// Creates a new <code>Concept</code> object wrapping a specified <code>NaiveDate</code> value.
 /// The value must be seconds since the start of the UNIX epoch.
 #[unsafe(no_mangle)]
 pub extern "C" fn concept_new_date_from_seconds(seconds_since_epoch: i64) -> *mut Concept {
@@ -465,31 +466,37 @@ pub extern "C" fn concept_new_date_from_seconds(seconds_since_epoch: i64) -> *mu
     release(Concept::Value(Value::Date(naive_date)))
 }
 
-/// Creates a new <code>Concept</code> object wrapping the specified <code>DateTimeInNanos</code> value
+/// Creates a new <code>Concept</code> object wrapping the specified naive datetime value,
+/// provided as seconds and nanoseconds since the Unix epoch.
 #[unsafe(no_mangle)]
-pub extern "C" fn concept_new_datetime(value: DatetimeInNanos) -> *mut Concept {
-    let naive_datetime = DateTime::from_timestamp(value.seconds, value.subsec_nanos).unwrap();
-    release(Concept::Value(Value::Datetime(naive_datetime.naive_utc())))
+pub extern "C" fn concept_new_datetime(seconds: i64, subsec_nanos: u32) -> *mut Concept {
+    let naive_datetime = DateTime::from_timestamp(seconds, subsec_nanos).unwrap().naive_utc();
+    release(Concept::Value(Value::Datetime(naive_datetime)))
 }
 
-/// Creates a new <code>Concept</code> object wrapping the specified <code>DatetimeAndTimeZone</code> value
+/// Creates a new <code>Concept</code> object wrapping the specified timezone-aware datetime value
+/// with an IANA timezone name, provided as seconds and nanoseconds since the Unix epoch.
 #[unsafe(no_mangle)]
-pub extern "C" fn concept_new_datetime_tz(value: DatetimeAndTimeZone) -> *mut Concept {
-    let naive_datetime = DateTime::from_timestamp(value.datetime_in_nanos.seconds, value.datetime_in_nanos.subsec_nanos).unwrap().naive_utc();
-    let time_zone = if value.is_fixed_offset {
-        let offset = FixedOffset::east_opt(value.local_minus_utc_offset).expect("Invalid offset");
-        TimeZone::Fixed(offset)
-    } else {
-        let tz = chrono_tz::Tz::from_str_insensitive(string_view(value.zone_name)).expect("Invalid timezone");
-        TimeZone::IANA(tz)
-    };
-    release(Concept::Value(Value::DatetimeTZ(time_zone.from_utc_datetime(&naive_datetime))))
+pub extern "C" fn concept_new_datetime_tz_iana(seconds: i64, subsec_nanos: u32, zone_name: *const c_char) -> *mut Concept {
+    let naive_datetime = DateTime::from_timestamp(seconds, subsec_nanos).unwrap().naive_utc();
+    let tz = chrono_tz::Tz::from_str_insensitive(string_view(zone_name)).expect("Invalid timezone");
+    release(Concept::Value(Value::DatetimeTZ(TimeZone::IANA(tz).from_utc_datetime(&naive_datetime))))
 }
 
-/// Creates a new <code>Concept</code> object wrapping the specified <code>Duration</code> value
+/// Creates a new <code>Concept</code> object wrapping the specified timezone-aware datetime value
+/// with a fixed UTC offset in seconds, provided as seconds and nanoseconds since the Unix epoch.
 #[unsafe(no_mangle)]
-pub extern "C" fn concept_new_duration(value: Duration) -> *mut Concept {
-    release(Concept::Value(Value::Duration(value)))
+pub extern "C" fn concept_new_datetime_tz_offset(seconds: i64, subsec_nanos: u32, offset_seconds: i32) -> *mut Concept {
+    let naive_datetime = DateTime::from_timestamp(seconds, subsec_nanos).unwrap().naive_utc();
+    let offset = FixedOffset::east_opt(offset_seconds).expect("Invalid offset");
+    release(Concept::Value(Value::DatetimeTZ(TimeZone::Fixed(offset).from_utc_datetime(&naive_datetime))))
+}
+
+/// Creates a new <code>Concept</code> object wrapping the specified <code>Duration</code> value,
+/// provided as its months, days, and nanoseconds components.
+#[unsafe(no_mangle)]
+pub extern "C" fn concept_new_duration(months: u32, days: u32, nanos: u64) -> *mut Concept {
+    release(Concept::Value(Value::Duration(Duration::new(months, days, nanos))))
 }
 
 pub(super) fn borrow_as_entity(concept: *const Concept) -> &'static Entity {
