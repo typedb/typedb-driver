@@ -494,9 +494,9 @@ public class ValueTest {
                 Value nativeValue = (Value) example[1];
                 String typeqlLiteral = (String) example[2];
                 try {
-                    ConceptRow[] result = runRoundtripTest(tx, valueType, nativeValue, typeqlLiteral);
-                    Value given = result[0].get("native").get().asValue();
-                    Value parsed = result[0].get("parsed").get().asValue();
+                    ConceptRow row = runRoundtripTest(tx, valueType, nativeValue, typeqlLiteral);
+                    Value given = row.get("native").get().asValue();
+                    Value parsed = row.get("parsed").get().asValue();
                     assertEquals(nativeValue, given);
                     assertEquals(given, parsed);
                 } catch (Exception e) {
@@ -506,12 +506,12 @@ public class ValueTest {
         }, Transaction.Type.READ);
     }
 
-    private ConceptRow[] runRoundtripTest(Transaction tx, String valueType, Value nativeValue, String typeqlLiteral) {
+    private ConceptRow runRoundtripTest(Transaction tx, String valueType, Value nativeValue, String typeqlLiteral) {
         String query = String.format("given $native: %s; match let $parsed = %s;", valueType, typeqlLiteral);
         List<ConceptRow> rows = tx.query(query, new QueryOptions(), List.of(List.of(Optional.of(nativeValue)))).resolve()
                 .asConceptRows().stream().collect(Collectors.toList());
         assertEquals(1, rows.size());
-        return new ConceptRow[]{rows.get(0)};
+        return rows.get(0);
     }
 
     private void localhostTypeDBTX(Consumer<Transaction> fn, Transaction.Type type/*, Options options*/) {
