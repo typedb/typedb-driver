@@ -182,6 +182,17 @@
 %nojavaexception concept_get_string;
 %nojavaexception concept_get_struct;
 
+%nojavaexception concept_new_boolean;
+%nojavaexception concept_new_integer;
+%nojavaexception concept_new_double;
+%nojavaexception concept_new_decimal;
+%nojavaexception concept_new_string;
+%nojavaexception concept_new_date_from_seconds;
+%nojavaexception concept_new_datetime;
+%nojavaexception concept_new_datetime_tz_iana;
+%nojavaexception concept_new_datetime_tz_offset;
+%nojavaexception concept_new_duration;
+
 %nojavaexception entity_get_type;
 %nojavaexception relation_get_type;
 %nojavaexception attribute_get_type;

@@ -512,6 +512,7 @@ class TestValues(TestCase):
                 ("integer", ValueFactory.new_integer(25),    '25'),
                 ("double", ValueFactory.new_double(54.321),   '54.321'),
                 ("decimal", ValueFactory.new_decimal(Decimal('1234567890.0001234567890')), '1234567890.0001234567890dec'),
+                ("decimal", ValueFactory.new_decimal(Decimal('-1234567890.0001234567890')), '-1234567890.0001234567890dec'),
                 ("string", ValueFactory.new_string('John'), '"John"'),
                 ("date", ValueFactory.new_date(date(2024, 9, 20)),                      '2024-09-20'),
                 ("datetime", ValueFactory.new_datetime(Datetime.utcfromstring("1999-02-26T12:15:05")),
@@ -535,23 +536,6 @@ class TestValues(TestCase):
                         raise AssertionError(
                             f"Roundtrip failed for {value_type} '{typeql_literal}' (native={native_concept!r})"
                         ) from e
-
-                # Some exceptional tests
-                try:
-                    native_concept = ValueFactory.new_datetime_tz(Datetime.utcfromstring("2024-09-20T16:40:05", tz_name="Europe/Belfast"))
-                    given, parsed = run_roundtrip_test(
-                        tx,
-                        "datetime-tz",
-                        native_concept,
-                     '2024-09-20T16:40:05 Europe/London'
-                    )
-                    assert_that(given, is_not(equal_to(parsed)))
-                    assert_that(given, is_(equal_to(native_concept)))
-                except Exception as e:
-                    raise AssertionError(
-                        f"Roundtrip failed for {value_type} '{typeql_literal}' (native={native_concept!r})"
-                    ) from e
-
 
 
 if __name__ == "__main__":

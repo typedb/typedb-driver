@@ -15,12 +15,15 @@
 # specific language governing permissions and limitations
 # under the License.
 
+from math import floor
 from datetime import date, datetime, timezone
 from decimal import Decimal
 
 from typedb.api.concept.concept import Concept
 from typedb.common.datetime import Datetime
 from typedb.common.duration import Duration
+from typedb.concept.concept import _Concept
+from typedb.concept.value.value import _Value
 from typedb.concept.concept_factory import wrap_value
 from typedb.native_driver_wrapper import (
     concept_new_boolean, concept_new_integer, concept_new_double, concept_new_decimal,
@@ -44,7 +47,7 @@ class ValueFactory:
 
     @staticmethod
     def new_decimal(value: Decimal) -> "_Value":
-        integer_part = math.floor(value)
+        integer_part = floor(value)
         fractional_part = int((value - Decimal(integer_part)) * Decimal(10 ** _Concept.DECIMAL_SCALE))
         return wrap_value(concept_new_decimal(integer_part, fractional_part))
 

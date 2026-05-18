@@ -64,6 +64,7 @@ typedb_java_test(
         "//java:driver-java",
         "//java/api",
         "//java/common",
+        "//java/concept",
 
         # External dependencies from @typedb
         "@maven//:org_slf4j_slf4j_api",
