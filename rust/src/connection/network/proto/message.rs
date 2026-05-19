@@ -232,33 +232,33 @@ impl IntoProto<typedb_protocol::query::Req> for QueryRequest {
             QueryRequest::Query { query, options, inputs } => typedb_protocol::query::Req {
                 query,
                 options: Some(options.into_proto()),
-                input: inputs.map(|i| i.into_proto()),
+                given: inputs.map(|i| i.into_proto()),
             },
         }
     }
 }
 
-impl IntoProto<typedb_protocol::query::req::QueryInput> for QueryGivenRows {
-    fn into_proto(self) -> typedb_protocol::query::req::QueryInput {
-        typedb_protocol::query::req::QueryInput { rows: self.0.into_iter().map(|row| row.into_proto()).collect() }
+impl IntoProto<typedb_protocol::query::req::GivenRows> for QueryGivenRows {
+    fn into_proto(self) -> typedb_protocol::query::req::GivenRows {
+        typedb_protocol::query::req::GivenRows { rows: self.0.into_iter().map(|row| row.into_proto()).collect() }
     }
 }
 
-impl IntoProto<typedb_protocol::query::req::QueryInputRow> for QueryGivenRow {
-    fn into_proto(self) -> typedb_protocol::query::req::QueryInputRow {
+impl IntoProto<typedb_protocol::query::req::GivenRow> for QueryGivenRow {
+    fn into_proto(self) -> typedb_protocol::query::req::GivenRow {
         let entries = self.0.into_iter().map(|entry| entry.into_proto()).collect();
-        typedb_protocol::query::req::QueryInputRow { entries }
+        typedb_protocol::query::req::GivenRow { entries }
     }
 }
 
-impl IntoProto<typedb_protocol::query::req::QueryInputEntry> for QueryGivenEntry {
-    fn into_proto(self) -> typedb_protocol::query::req::QueryInputEntry {
+impl IntoProto<typedb_protocol::query::req::GivenEntry> for QueryGivenEntry {
+    fn into_proto(self) -> typedb_protocol::query::req::GivenEntry {
         use typedb_protocol::{
-            query::req::query_input_entry::Entry as EntryProto, thing::Thing as ThingProtoInner, Thing as ThingProto,
+            query::req::given_entry::Entry as EntryProto, thing::Thing as ThingProtoInner, Thing as ThingProto,
         };
 
         let inner = match self {
-            QueryGivenEntry::Empty => EntryProto::Empty(typedb_protocol::query::req::QueryInputEmpty {}),
+            QueryGivenEntry::Empty => EntryProto::Empty(typedb_protocol::query::req::GivenEntryEmpty {}),
             QueryGivenEntry::Value(value) => EntryProto::Value(value.into_proto()),
             QueryGivenEntry::Entity(entity) => {
                 let thing = ThingProtoInner::Entity(entity.into_proto());
@@ -273,7 +273,7 @@ impl IntoProto<typedb_protocol::query::req::QueryInputEntry> for QueryGivenEntry
                 EntryProto::Thing(ThingProto { thing: Some(thing) })
             }
         };
-        typedb_protocol::query::req::QueryInputEntry { entry: Some(inner) }
+        typedb_protocol::query::req::GivenEntry { entry: Some(inner) }
     }
 }
 

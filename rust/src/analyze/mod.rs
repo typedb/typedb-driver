@@ -36,10 +36,12 @@ pub mod pipeline;
 pub struct AnalyzedQuery {
     /// The original TypeQL query string
     pub source: String,
-    /// A representation of the query as a <code>Pipeline</code>
-    pub query: Pipeline,
     /// A representation of the <code>Function</code>s in the preamble of the query
     pub preamble: Vec<Function>,
+    /// A representation of the <code>Given</code> stage of the query, if it has one
+    pub given: Option<Given>,
+    /// A representation of the query as a <code>Pipeline</code>
+    pub query: Pipeline,
     /// A representation of the <code>Fetch</code> stage of the query, if it has one
     pub fetch: Option<Fetch>,
 }
@@ -85,6 +87,15 @@ pub enum ReturnOperation {
         /// e.g. <code>return count($x), sum($y);</code>
         reducers: Vec<Reducer>,
     },
+}
+
+/// A representation of the 'given' stage of a query
+#[derive(Debug, Clone)]
+pub struct Given {
+    /// The <code>Variables</code> in the given stage.
+    pub variables: Vec<Variable>,
+    /// The inferred annotations of each variable in the given stage.
+    pub variable_annotations: HashMap<Variable, VariableAnnotations>,
 }
 
 /// A representation of the 'fetch' stage of a query

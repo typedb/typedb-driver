@@ -66,15 +66,19 @@ bazel_dep(name = "typedb_protocol", version = "0.0.0")
 git_override(
     module_name = "typedb_protocol",
     remote = "https://github.com/krishnangovindraj/typedb-protocol",
-    commit = "fc67229ec69f5b8908801fcb6f62cc52480c3460",
+    commit = "42ee0b9415728621e09ec3851b8a25a7b9f5fe0d",
 )
 
 bazel_dep(name = "typedb_behaviour", version = "0.0.0")
-git_override(
+local_path_override(
     module_name = "typedb_behaviour",
-    remote = "https://github.com/krishnangovindraj/typedb-behaviour",
-    commit = "a86af7054898ed2d5d20c8a81ecfdf00c56221de",
+    path = "../typedb-behaviour",
 )
+#git_override(
+#    module_name = "typedb_behaviour",
+#    remote = "https://github.com/krishnangovindraj/typedb-behaviour",
+#    commit = "a86af7054898ed2d5d20c8a81ecfdf00c56221de",
+#)
 
 # Rust rules need typedb_dependencies for patching
 bazel_dep(name = "rules_rust", version = "0.56.0")
@@ -220,7 +224,7 @@ workspace_refs = use_repo_rule("@typedb_bazel_distribution//common/workspace_ref
 workspace_refs(
     name = "typedb_driver_workspace_refs",
     workspace_commit_dict = {
-        "typedb_protocol+": "fc67229ec69f5b8908801fcb6f62cc52480c3460",
+        "typedb_protocol+": "42ee0b9415728621e09ec3851b8a25a7b9f5fe0d",
     },
     workspace_tag_dict = {
         "typedb_protocol+": "3.11.0",
