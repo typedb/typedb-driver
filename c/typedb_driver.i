@@ -102,6 +102,7 @@ struct Type {};
 %dropproxy(ConstraintVertex, constraint_vertex)
 %dropproxy(Fetch, fetch)
 %dropproxy(Function, function)
+%dropproxy(Given, given)
 %dropproxy(NamedRole, named_role)
 %dropproxy(Pipeline, pipeline)
 %dropproxy(PipelineStage, pipeline_stage)
@@ -285,6 +286,7 @@ VoidPromise* transaction_on_close_register(const Transaction* transaction, Trans
 %newobject analyzed_query_pipeline;
 %newobject analyzed_preamble;
 %newobject analyzed_fetch;
+%newobject analyzed_given;
 %newobject conjunction_get_variable_annotations;
 %newobject conjunction_get_constraints;
 %newobject conjunction_id_string_repr;
@@ -359,6 +361,8 @@ VoidPromise* transaction_on_close_register(const Transaction* transaction, Trans
 %newobject fetch_list_element;
 %newobject fetch_object_fields;
 %newobject fetch_object_get_field;
+%newobject given_variables;
+%newobject given_variable_annotations;
 
 %newobject pipeline_get_conjunction;
 %newobject pipeline_stages;

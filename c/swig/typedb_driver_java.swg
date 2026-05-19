@@ -252,6 +252,7 @@
 /* field accessors for analyze do not throw */
 %nojavaexception analyzed_query_pipeline;
 %nojavaexception analyzed_preamble;
+%nojavaexception analyzed_given;
 %nojavaexception analyzed_fetch;
 %nojavaexception comparator_get_name;
 
@@ -332,6 +333,9 @@
 %nojavaexception function_argument_annotations;
 %nojavaexception function_return_annotations;
 
+%nojavaexception given_variables;
+%nojavaexception given_variable_annotations;
+
 %nojavaexception pipeline_get_conjunction;
 %nojavaexception pipeline_stages;
 %nojavaexception pipeline_stage_variant;
@@ -408,6 +412,7 @@
 %nojavaexception ~ConstraintWithSpan;
 %nojavaexception ~ConstraintVertex;
 %nojavaexception ~Fetch;
+%nojavaexception ~Given;
 %nojavaexception ~Function;
 %nojavaexception ~NamedRole;
 %nojavaexception ~PipelineStage;

@@ -22,7 +22,7 @@ use std::{ffi::c_char, ptr::addr_of_mut};
 use typedb_driver::{
     BoxPromise, Promise,
     analyze::{
-        AnalyzedQuery, Fetch, Function, ReturnOperation, TypeAnnotations, VariableAnnotations,
+        AnalyzedQuery, Fetch, Function, Given, ReturnOperation, TypeAnnotations, VariableAnnotations,
         conjunction::{
             Comparator, Conjunction, ConjunctionID, Constraint, ConstraintExactness, ConstraintVertex,
             ConstraintWithSpan, NamedRole, Variable,
@@ -172,6 +172,12 @@ pub extern "C" fn analyzed_preamble(analyzed_query: *const AnalyzedQuery) -> *mu
     release(FunctionIterator(CIterator(box_stream(borrow(analyzed_query).preamble.clone().into_iter()))))
 }
 
+/// Returns the analyzed given stage, or null if the query has no given stage.
+#[unsafe(no_mangle)]
+pub extern "C" fn analyzed_given(analyzed_query: *const AnalyzedQuery) -> *mut Given {
+    release_optional(borrow(analyzed_query).given.clone())
+}
+
 /// Returns the analyzed fetch
 #[unsafe(no_mangle)]
 pub extern "C" fn analyzed_fetch(analyzed_query: *const AnalyzedQuery) -> *mut Fetch {
@@ -232,6 +238,22 @@ pub extern "C" fn fetch_object_get_field(fetch: *const Fetch, field: *const c_ch
         Fetch::Object(map) => release_optional(map.get(string_view(field)).cloned()),
         _ => unreachable!("Expected Fetch to be Object variant"),
     }
+}
+
+// Given
+/// Returns the variables declared in the given stage.
+#[unsafe(no_mangle)]
+pub extern "C" fn given_variables(given: *const Given) -> *mut VariableIterator {
+    release(VariableIterator(CIterator(box_stream(borrow(given).variables.clone().into_iter()))))
+}
+
+/// Returns the inferred types for the specified variable in the given stage.
+#[unsafe(no_mangle)]
+pub extern "C" fn given_variable_annotations(
+    given: *const Given,
+    variable: *const Variable,
+) -> *mut VariableAnnotations {
+    release_optional(borrow(given).variable_annotations.get(borrow(variable)).cloned())
 }
 
 // Functions
@@ -1367,6 +1389,12 @@ pub extern "C" fn constraint_with_span_drop(obj: *mut ConstraintWithSpan) {
 #[doc = "Frees the native rust <code>ConstraintVertex</code> object."]
 #[unsafe(no_mangle)]
 pub extern "C" fn constraint_vertex_drop(obj: *mut ConstraintVertex) {
+    free(obj);
+}
+
+#[doc = "Frees the native rust <code>Given</code> object."]
+#[unsafe(no_mangle)]
+pub extern "C" fn given_drop(obj: *mut Given) {
     free(obj);
 }
 
