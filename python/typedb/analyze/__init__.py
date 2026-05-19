@@ -21,6 +21,7 @@ from typedb.api.analyze.conjunction_id import *  # noqa # pylint: disable=unused
 from typedb.api.analyze.constraint import *  # noqa # pylint: disable=unused-import
 from typedb.api.analyze.constraint_vertex import *  # noqa # pylint: disable=unused-import
 from typedb.api.analyze.fetch import *  # noqa # pylint: disable=unused-import
+from typedb.api.analyze.given import *  # noqa # pylint: disable=unused-import
 from typedb.api.analyze.function import *  # noqa # pylint: disable=unused-import
 from typedb.api.analyze.named_role import *  # noqa # pylint: disable=unused-import
 from typedb.api.analyze.pipeline import *  # noqa # pylint: disable=unused-import

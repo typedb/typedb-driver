@@ -24,6 +24,7 @@ if TYPE_CHECKING:
     from typedb.analyze.pipeline import Pipeline
     from typedb.analyze.function import Function
     from typedb.analyze.fetch import Fetch
+    from typedb.analyze.given import Given
 
 
 class AnalyzedQuery(ABC):
@@ -47,6 +48,15 @@ class AnalyzedQuery(ABC):
         A representation of the Functions in the preamble of the query.
 
         :return: an iterator over the analyzed functions in the preamble.
+        """
+        pass
+
+    @abstractmethod
+    def given(self) -> Optional["Given"]:
+        """
+        A representation of the Given stage of the query, if it has one.
+
+        :return: the given stage if present, otherwise None
         """
         pass
 
