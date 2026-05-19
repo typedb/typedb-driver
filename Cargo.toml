@@ -58,7 +58,7 @@
 		[workspace.dependencies.typedb-protocol]
 			features = []
 			git = "https://github.com/typedb/typedb-protocol"
-			tag = "3.11.0-rc0"
+			tag = "3.11.0"
 			default-features = false
 
 		[workspace.dependencies.serde]
