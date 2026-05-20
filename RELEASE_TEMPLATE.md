@@ -1,5 +1,10 @@
 Documentation: https://typedb.com/docs/core-concepts/drivers/overview
 
+## Breaking changes
+This release breaks backwards compatibility.
+This version is only compatible with TypeDB server versions >= 3.11.0.
+Connections to older servers will be rejected.
+
 ## Distribution
 
 #### Rust driver
