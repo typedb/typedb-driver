@@ -24,7 +24,7 @@ use crate::{
         conjunction::Variable,
         pipeline::{Pipeline, Reducer},
     },
-    concept::{ValueType, type_::Type},
+    concept::{type_::Type, ValueType},
 };
 
 pub mod conjunction;

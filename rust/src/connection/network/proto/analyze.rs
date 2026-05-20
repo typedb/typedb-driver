@@ -20,6 +20,7 @@
 use std::collections::HashMap;
 
 use typedb_protocol::{analyze::res::analyzed_query as analyze_proto, analyzed_conjunction as conjunction_proto};
+
 use crate::{
     analyze::{
         conjunction::{
@@ -27,7 +28,7 @@ use crate::{
             ConstraintWithSpan, NamedRole, Variable,
         },
         pipeline::{Pipeline, PipelineStage, ReduceAssignment, Reducer, SortOrder, SortVariable, VariableInfo},
-        AnalyzedQuery, Fetch, FetchLeaf, Function, ReturnOperation, TypeAnnotations, VariableAnnotations,
+        AnalyzedQuery, Fetch, FetchLeaf, Function, Given, ReturnOperation, TypeAnnotations, VariableAnnotations,
     },
     common::Result,
     concept::{type_, Kind, Value, ValueType},
@@ -36,9 +37,8 @@ use crate::{
         network::proto::{FromProto, TryFromProto},
     },
     error::{AnalyzeError, ServerError},
+    transaction::QueryGivenRows,
 };
-use crate::analyze::Given;
-use crate::transaction::QueryGivenRows;
 
 pub(super) fn expect_try_from_proto<Src, Dst: TryFromProto<Src>>(x: Option<Src>, field: &'static str) -> Result<Dst> {
     Dst::try_from_proto(x.ok_or_else(|| crate::Error::Analyze(AnalyzeError::MissingResponseField { field }))?)

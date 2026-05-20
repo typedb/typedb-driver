@@ -25,21 +25,20 @@ use typedb_protocol::{database, database_manager, migration::Item, transaction};
 use uuid::Uuid;
 
 use crate::{
-    Credentials, QueryOptions, TransactionOptions, TransactionType,
     analyze::AnalyzedQuery,
     answer::{
-        QueryType,
         concept_document::{ConceptDocumentHeader, Node},
         concept_row::ConceptRowHeader,
+        QueryType,
     },
-    common::{RequestID, info::DatabaseInfo},
+    common::{info::DatabaseInfo, RequestID},
     concept::Concept,
-    connection::server::{Server, server_version::ServerVersion},
+    connection::server::{server_version::ServerVersion, Server},
     error::ServerError,
     info::UserInfo,
+    transaction::QueryGivenRows,
+    Credentials, QueryOptions, TransactionOptions, TransactionType,
 };
-use crate::concept::{Attribute, Entity, Relation, Value};
-use crate::transaction::QueryGivenRows;
 
 #[derive(Debug)]
 pub(super) enum Request {

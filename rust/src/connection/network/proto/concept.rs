@@ -35,11 +35,11 @@ use typedb_protocol::{
 };
 
 use super::{FromProto, IntoProto, TryFromProto};
-use crate::concept::value;
 use crate::{
     answer::concept_document::{Leaf, Node},
     concept::{
         type_::Type,
+        value,
         value::{Decimal, Duration, TimeZone},
         Attribute, AttributeType, Concept, Entity, EntityType, Kind, Relation, RelationType, RoleType, Value,
         ValueType,

@@ -20,23 +20,23 @@
 use std::{fmt, iter, pin::Pin, sync::Arc};
 
 #[cfg(not(feature = "sync"))]
-use futures::{StreamExt, stream};
+use futures::{stream, StreamExt};
 
 use super::network::transmitter::TransactionTransmitter;
 use crate::{
-    Error, QueryOptions, TransactionOptions, TransactionType,
     analyze::AnalyzedQuery,
-    answer::{ConceptRow, QueryAnswer, concept_document::ConceptDocument},
+    answer::{concept_document::ConceptDocument, ConceptRow, QueryAnswer},
     box_stream,
     common::{
-        Promise, Result,
         stream::{BoxStream, Stream},
+        Promise, Result,
     },
     connection::message::{AnalyzeResponse, QueryRequest, QueryResponse, TransactionRequest, TransactionResponse},
     error::{ConnectionError, InternalError},
     promisify, resolve,
+    transaction::QueryGivenRows,
+    Error, QueryOptions, TransactionOptions, TransactionType,
 };
-use crate::transaction::QueryGivenRows;
 
 macro_rules! require_transaction_response {
     ($response:expr, $variant:ident(_)) => {

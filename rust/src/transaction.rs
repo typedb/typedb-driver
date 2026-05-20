@@ -22,13 +22,13 @@ use std::{fmt, pin::Pin};
 use tracing::debug;
 
 use crate::{
-    Error, QueryOptions, TransactionOptions,
     analyze::AnalyzedQuery,
     answer::QueryAnswer,
     common::{Promise, Result, TransactionType},
+    concept::{Attribute, Entity, Relation, Value},
     connection::TransactionStream,
+    Error, QueryOptions, TransactionOptions,
 };
-use crate::concept::{Attribute, Entity, Relation, Value};
 
 /// A transaction with a TypeDB database.
 pub struct Transaction {
@@ -92,7 +92,11 @@ impl Transaction {
         self.query_with_options_and_inputs(query, options, None)
     }
 
-    pub fn query_with_inputs(&self, query: impl AsRef<str>, inputs: QueryGivenRows) -> impl Promise<'static, Result<QueryAnswer>> {
+    pub fn query_with_inputs(
+        &self,
+        query: impl AsRef<str>,
+        inputs: QueryGivenRows,
+    ) -> impl Promise<'static, Result<QueryAnswer>> {
         self.query_with_options_and_inputs(query, QueryOptions::new(), Some(inputs))
     }
 
@@ -100,7 +104,7 @@ impl Transaction {
         &self,
         query: impl AsRef<str>,
         options: QueryOptions,
-        inputs: Option<QueryGivenRows>
+        inputs: Option<QueryGivenRows>,
     ) -> impl Promise<'static, Result<QueryAnswer>> {
         let query = query.as_ref();
         debug!("Transaction submitting query: {}", query);
@@ -190,7 +194,6 @@ impl fmt::Debug for Transaction {
         f.debug_struct("Transaction").field("type_", &self.type_).field("options", &self.options).finish()
     }
 }
-
 
 #[derive(Debug)]
 pub struct QueryGivenRows(pub Vec<QueryGivenRow>);
