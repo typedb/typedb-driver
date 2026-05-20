@@ -55,6 +55,13 @@ python_versions = [
         "libpython": "@python_3_13//:libpython",
         "suffix": "313",
     },
+    {
+        "name": "python314",
+        "python_version": "3.14",
+        "python_headers": "@python_3_14//:python_headers",
+        "libpython": "@python_3_14//:libpython",
+        "suffix": "314",
+    },
 ]
 
 def register_all_toolchains():
