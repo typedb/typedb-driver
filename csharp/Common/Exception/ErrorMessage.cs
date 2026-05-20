@@ -68,8 +68,6 @@ namespace TypeDB.Driver.Common
                 new Driver(5, "Value of '{0}' should be positive, was: '{1}'.");
             public static readonly Driver NON_NEGATIVE_VALUE_REQUIRED =
                 new Driver(6, "Value of '{0}' should be non-negative, was: '{1}'.");
-            public static readonly Driver INVALID_TYPE_AS_GIVEN_INPUT =
-                new Driver(7, "A type concept '{0}' was passed as a given row entry (row index {1}). Only instances and values are allowed.");
         }
 
         public class Concept : ErrorMessage

@@ -189,8 +189,6 @@ namespace TypeDB.Driver.Connection
                     }
                     else
                     {
-                        if (concept.IsType())
-                            throw new TypeDBDriverException(DriverError.INVALID_TYPE_AS_GIVEN_INPUT, concept.GetLabel(), rowIndex);
                         Pinvoke.typedb_driver.given_row_set_index_to_concept(nativeRow, (uint)i, ((Concept.Concept)concept).NativeObject);
                     }
                 }

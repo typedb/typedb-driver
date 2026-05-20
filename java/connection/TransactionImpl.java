@@ -40,7 +40,6 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 import static com.typedb.driver.common.exception.ErrorMessage.Driver.TRANSACTION_CLOSED;
-import static com.typedb.driver.common.exception.ErrorMessage.Driver.INVALID_TYPE_AS_GIVEN_INPUT;
 import static com.typedb.driver.jni.typedb_driver.*;
 
 public class TransactionImpl extends NativeObject<com.typedb.driver.jni.Transaction> implements Transaction {

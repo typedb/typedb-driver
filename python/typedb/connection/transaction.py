@@ -24,7 +24,7 @@ from typedb.api.answer.query_answer import QueryAnswer
 from typedb.api.connection.query_options import QueryOptions
 from typedb.api.connection.transaction import Transaction
 from typedb.api.connection.transaction_options import TransactionOptions
-from typedb.common.exception import TypeDBDriverException, INVALID_TYPE_AS_GIVEN_INPUT, TRANSACTION_CLOSED, TypeDBException
+from typedb.common.exception import TypeDBDriverException, TRANSACTION_CLOSED, TypeDBException
 from typedb.common.native_wrapper import NativeWrapper
 from typedb.common.promise import Promise
 from typedb.common.validation import require_non_null
@@ -148,8 +148,6 @@ def _build_native_given_rows(rows: List[List[Optional["Concept"]]]) -> NativeQue
         for i, concept in enumerate(row):
             if concept is None:
                 given_row_set_index_to_empty(native_row, i)
-            elif concept.is_type():
-                raise TypeDBDriverException(INVALID_TYPE_AS_GIVEN_INPUT, (concept.get_label(), row_index, i))
             else:
                 given_row_set_index_to_concept(native_row, i, concept._native_object)
         native_row.thisown = 0
