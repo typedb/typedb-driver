@@ -23,7 +23,10 @@ import {
     answers,
     concurrentAnswers,
     makeQuery,
+    makeQueryWithGiven,
     setAnswers,
+    setGivenRows,
+    takeGivenRows,
     setConcurrentAnswers, setQueryAnswerCountLimit,
     setQueryIncludeInstanceTypes, setQueryIncludeQueryStructure,
 } from "./context";
@@ -34,7 +37,7 @@ import {
     EXPECT_ERROR_CONTAINING,
     MayError, parseValue
 } from "./params";
-import { Concept, ConceptDocument, QueryType, ValueType } from "../../../dist/index.cjs";
+import { Concept, ConceptDocument, GivenRowEntry, GivenRows, QueryType, ValueType } from "../../../dist/index.cjs";
 import assert from "assert";
 import {encodePipeline, FunctorEncoder, normalizeFunctorForCompare} from "./analyze";
 
@@ -74,7 +77,30 @@ function checkConceptKind(concept: Concept, kind: ConceptKind) {
     else return concept.kind === kind;
 }
 
+When('set answers of typeql read query as given rows with order: {variable_list}', async (varList: string[], query: string) => {
+    const results = await makeQuery(query).then(assertNotError);
+    if (results.ok.answerType === "ok" || results.ok.answerType === "conceptDocuments") assert.fail("Expected concept rows");
+    const rows = results.ok.answers.map(row => varList.map(v => row.data[v] as GivenRowEntry));
+    setGivenRows(rows as GivenRows);
+});
+
+const runQueryWithGiven = async (mayError: MayError, query: string) => {
+    const given = takeGivenRows();
+    await makeQueryWithGiven(query, given).then(checkMayError(mayError));
+};
+When("typeql schema query with given rows{may_error}", runQueryWithGiven);
+When("typeql write query with given rows{may_error}", runQueryWithGiven);
+When("typeql read query with given rows{may_error}", runQueryWithGiven);
+When(`typeql schema query with given rows${EXPECT_ERROR_CONTAINING}`, runQueryWithGiven);
+When(`typeql write query with given rows${EXPECT_ERROR_CONTAINING}`, runQueryWithGiven);
+When(`typeql read query with given rows${EXPECT_ERROR_CONTAINING}`, runQueryWithGiven);
+
 When('get answers of typeql {query_type} query', async (_: QueryType, query: string) => await getAnswers(query));
+When('get answers of typeql {query_type} query with given rows', async (_: QueryType, query: string) => {
+    const given = takeGivenRows();
+    const results = await makeQueryWithGiven(query, given).then(assertNotError);
+    setAnswers(results.ok);
+});
 When('concurrently get answers of typeql {query_type} query {int} times', async (_: QueryType, times: number, query: string) => {
     const queries = [];
     for (let i = 0; i < times; i++) {

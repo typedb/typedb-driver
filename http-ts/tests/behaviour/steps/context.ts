@@ -18,7 +18,7 @@
  */
 
 import { After, Before } from "@cucumber/cucumber";
-import { AnalyzeResponse, isOkResponse, QueryOptions, QueryResponse, TransactionOptions, TransactionType, TypeDBHttpDriver } from "../../../dist/index.cjs";
+import { AnalyzeResponse, GivenRows, isOkResponse, QueryOptions, QueryResponse, TransactionOptions, TransactionType, TypeDBHttpDriver } from "../../../dist/index.cjs";
 import { assertNotError } from "./params";
 import * as https from "https";
 import * as http from "http";
@@ -33,6 +33,7 @@ let queryOptions: QueryOptions = {};
 export let analyzed: AnalyzeResponse;
 export let answers: QueryResponse;
 export let concurrentAnswers: QueryResponse[];
+let givenRows: GivenRows | undefined;
 
 export async function openTransaction(database: string, type: TransactionType) {
     const res = await driver.openTransaction(database, type, transactionOptions);
@@ -53,6 +54,21 @@ export function tx() {
 
 export async function makeQuery(query: string) {
     return await driver.query(tx(), query, queryOptions);
+}
+
+export async function makeQueryWithGiven(query: string, given: GivenRows) {
+    return await driver.query(tx(), query, queryOptions, given);
+}
+
+export function setGivenRows(rows: GivenRows) {
+    givenRows = rows;
+}
+
+export function takeGivenRows(): GivenRows {
+    if (givenRows === undefined) throw new Error("Expected given rows to be set");
+    const rows = givenRows;
+    givenRows = undefined;
+    return rows;
 }
 
 export async function doAnalyze(query: string) {
@@ -232,4 +248,5 @@ async function resetDB() {
     queryOptions = {};
     answers = undefined;
     concurrentAnswers = undefined;
+    givenRows = undefined;
 }
