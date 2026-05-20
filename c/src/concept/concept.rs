@@ -362,7 +362,6 @@ pub extern "C" fn concept_get_struct(concept: *const Concept) -> *mut StringAndO
 /// Checks whether the provided <code>Concept</code> objects are equal
 #[unsafe(no_mangle)]
 pub extern "C" fn concept_equals(lhs: *const Concept, rhs: *const Concept) -> bool {
-    println!("CONCEPT EQUALS IS CALLED ACTUALLY!");
     borrow(lhs) == borrow(rhs)
 }
 
