@@ -182,6 +182,17 @@
 %nojavaexception concept_get_string;
 %nojavaexception concept_get_struct;
 
+%nojavaexception concept_new_boolean;
+%nojavaexception concept_new_integer;
+%nojavaexception concept_new_double;
+%nojavaexception concept_new_decimal;
+%nojavaexception concept_new_string;
+%nojavaexception concept_new_date_from_seconds;
+%nojavaexception concept_new_datetime;
+%nojavaexception concept_new_datetime_tz_iana;
+%nojavaexception concept_new_datetime_tz_offset;
+%nojavaexception concept_new_duration;
+
 %nojavaexception entity_get_type;
 %nojavaexception relation_get_type;
 %nojavaexception attribute_get_type;
@@ -200,6 +211,13 @@
 %nojavaexception query_answer_is_ok;
 %nojavaexception query_answer_is_concept_row_stream;
 %nojavaexception query_answer_is_concept_document_stream;
+
+%nojavaexception given_row_new;
+%nojavaexception given_rows_new;
+%nojavaexception given_rows_push;
+// The following do raise exceptions
+//      given_row_set_index_to_concept;
+//      given_row_set_index_to_empty;
 
 %nojavaexception ServerVersion::distribution;
 %nojavaexception ServerVersion::version;
@@ -234,6 +252,7 @@
 /* field accessors for analyze do not throw */
 %nojavaexception analyzed_query_pipeline;
 %nojavaexception analyzed_preamble;
+%nojavaexception analyzed_given;
 %nojavaexception analyzed_fetch;
 %nojavaexception comparator_get_name;
 
@@ -314,6 +333,9 @@
 %nojavaexception function_argument_annotations;
 %nojavaexception function_return_annotations;
 
+%nojavaexception given_variables;
+%nojavaexception given_variable_annotations;
+
 %nojavaexception pipeline_get_conjunction;
 %nojavaexception pipeline_stages;
 %nojavaexception pipeline_stage_variant;
@@ -365,6 +387,8 @@
 %nojavaexception ~Decimal;
 %nojavaexception ~Duration;
 %nojavaexception ~Error;
+%nojavaexception ~QueryGivenRow;
+%nojavaexception ~QueryGivenRows;
 %nojavaexception ~Server;
 %nojavaexception ~ServerIterator;
 %nojavaexception ~ServerVersion;
@@ -388,6 +412,7 @@
 %nojavaexception ~ConstraintWithSpan;
 %nojavaexception ~ConstraintVertex;
 %nojavaexception ~Fetch;
+%nojavaexception ~Given;
 %nojavaexception ~Function;
 %nojavaexception ~NamedRole;
 %nojavaexception ~PipelineStage;

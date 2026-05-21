@@ -493,5 +493,50 @@ class TestValues(TestCase):
                 assert_that(Duration.fromstring("P999Y12M31DT24H59M59.999999999S"), is_(typedb_duration))
 
 
+    def test_roundtrips(self):
+        from typedb.concept.value.value import _Value
+        def run_roundtrip_test(tx, value_type, native_concept, typeql_literal):
+            answer = tx.query(f"given $native: {value_type}; match let $parsed = {typeql_literal};",
+                              given_rows=[[native_concept]]).resolve()
+            rows = list(answer.as_concept_rows())
+            assert_that(len(rows), is_(1))
+            return (rows[0].get("native"), rows[0].get("parsed"))
+
+        with (TypeDB.driver(TypeDB.DEFAULT_ADDRESS, Credentials("admin", "password"),
+                            DriverOptions(DriverTlsConfig.disabled())) as driver):
+            database = driver.databases.get(TYPEDB)
+
+            examples = [
+                ("boolean", ValueFactory.new_boolean(True),  'true'),
+                ("boolean", ValueFactory.new_boolean(False), 'false'),
+                ("integer", ValueFactory.new_integer(25),    '25'),
+                ("double", ValueFactory.new_double(54.321),   '54.321'),
+                ("decimal", ValueFactory.new_decimal(Decimal('1234567890.0001234567890')), '1234567890.0001234567890dec'),
+                ("decimal", ValueFactory.new_decimal(Decimal('-1234567890.0001234567890')), '-1234567890.0001234567890dec'),
+                ("string", ValueFactory.new_string('John'), '"John"'),
+                ("date", ValueFactory.new_date(date(2024, 9, 20)),                      '2024-09-20'),
+                ("datetime", ValueFactory.new_datetime(Datetime.utcfromstring("1999-02-26T12:15:05")),
+                 '1999-02-26T12:15:05'),
+                ("datetime-tz", ValueFactory.new_datetime_tz(Datetime.utcfromstring("2024-09-20T16:40:05", tz_name="Europe/Belfast")),
+                 '2024-09-20T16:40:05 Europe/Belfast'),
+                ("datetime-tz", ValueFactory.new_datetime_tz(Datetime.utcfromstring("2024-09-20T16:40:05.028129323",
+                                                               offset_seconds=Datetime.offset_seconds_fromstring("+0545"))),
+                 '2024-09-20T16:40:05.028129323+0545'),
+                ("duration", ValueFactory.new_duration(Duration.fromstring("P1Y10M7DT15H44M5.00394892S")),
+                 'P1Y10M7DT15H44M5.00394892S'),
+            ]
+
+            with driver.transaction(database.name, READ) as tx:
+                for value_type, native_concept, typeql_literal in examples:
+                    try:
+                        given, parsed = run_roundtrip_test(tx, value_type, native_concept, typeql_literal)
+                        assert_that(given, is_(equal_to(native_concept)))
+                        assert_that(given, is_(equal_to(parsed)))
+                    except Exception as e:
+                        raise AssertionError(
+                            f"Roundtrip failed for {value_type} '{typeql_literal}' (native={native_concept!r})"
+                        ) from e
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)

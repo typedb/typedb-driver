@@ -19,9 +19,9 @@
 
 use std::{borrow::Cow, collections::HashMap, sync::Arc};
 
-use super::{JSON, QueryType};
+use super::{QueryType, JSON};
 use crate::concept::{
-    Attribute, AttributeType, Concept, EntityType, Kind, RelationType, RoleType, Value, ValueType, value::Struct,
+    value::Struct, Attribute, AttributeType, Concept, EntityType, Kind, RelationType, RoleType, Value, ValueType,
 };
 
 #[derive(Debug, PartialEq)]

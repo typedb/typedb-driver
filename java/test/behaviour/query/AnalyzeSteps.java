@@ -47,6 +47,18 @@ public class AnalyzeSteps {
         mayError.check(() -> tx().analyze(query).resolve());
     }
 
+    @Then("analyzed query given structure is:")
+    public void analyzed_query_given_structure_is(String expectedFunctor) {
+        String actualFunctor = new FunctorEncoder.StructureEncoder(analyzedQuery.pipeline()).encode(analyzedQuery.given().get());
+        assertEquals(FunctorEncoder.normalizeForCompare(expectedFunctor), FunctorEncoder.normalizeForCompare(actualFunctor));
+    }
+
+    @Then("analyzed query given annotations are:")
+    public void analyzed_query_given_annotations_are(String expectedFunctor) {
+        String actualFunctor = new FunctorEncoder.AnnotationsEncoder(analyzedQuery.pipeline()).encode(analyzedQuery.given().get());
+        assertEquals(FunctorEncoder.normalizeForCompare(expectedFunctor), FunctorEncoder.normalizeForCompare(actualFunctor));
+    }
+
     @Then("analyzed query pipeline structure is:")
     public void analyzed_query_pipeline_structure_is(String expectedFunctor) {
         String actualFunctor = new FunctorEncoder.StructureEncoder(analyzedQuery.pipeline()).encode(analyzedQuery.pipeline());

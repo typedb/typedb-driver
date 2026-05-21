@@ -20,21 +20,22 @@
 use std::{fmt, iter, pin::Pin, sync::Arc};
 
 #[cfg(not(feature = "sync"))]
-use futures::{StreamExt, stream};
+use futures::{stream, StreamExt};
 
 use super::network::transmitter::TransactionTransmitter;
 use crate::{
-    Error, QueryOptions, TransactionOptions, TransactionType,
     analyze::AnalyzedQuery,
-    answer::{ConceptRow, QueryAnswer, concept_document::ConceptDocument},
+    answer::{concept_document::ConceptDocument, ConceptRow, QueryAnswer},
     box_stream,
     common::{
-        Promise, Result,
         stream::{BoxStream, Stream},
+        Promise, Result,
     },
     connection::message::{AnalyzeResponse, QueryRequest, QueryResponse, TransactionRequest, TransactionResponse},
     error::{ConnectionError, InternalError},
     promisify, resolve,
+    transaction::QueryGivenRows,
+    Error, QueryOptions, TransactionOptions, TransactionType,
 };
 
 macro_rules! require_transaction_response {
@@ -142,8 +143,9 @@ impl TransactionStream {
         &self,
         query: &str,
         options: QueryOptions,
+        inputs: Option<QueryGivenRows>,
     ) -> impl Promise<'static, Result<QueryAnswer>> + use<> {
-        let stream = self.query_stream(QueryRequest::Query { query: query.to_owned(), options });
+        let stream = self.query_stream(QueryRequest::Query { query: query.to_owned(), options, inputs });
         promisify! {
             let mut stream = stream?;
 

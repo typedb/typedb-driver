@@ -92,6 +92,9 @@ struct Type {};
 
 %dropproxy(QueryAnswer, query_answer)
 
+%dropproxy(QueryGivenRows, given_rows)
+%dropproxy(QueryGivenRow, given_row)
+
 %dropproxy(AnalyzedQuery, analyzed_query)
 %dropproxy(Conjunction, conjunction)
 %dropproxy(ConjunctionID, conjunction_id)
@@ -99,6 +102,7 @@ struct Type {};
 %dropproxy(ConstraintVertex, constraint_vertex)
 %dropproxy(Fetch, fetch)
 %dropproxy(Function, function)
+%dropproxy(Given, given)
 %dropproxy(NamedRole, named_role)
 %dropproxy(Pipeline, pipeline)
 %dropproxy(PipelineStage, pipeline_stage)
@@ -206,6 +210,7 @@ VoidPromise* transaction_on_close_register(const Transaction* transaction, Trans
 
 %newobject transaction_new;
 %newobject transaction_query;
+%newobject transaction_query_given_rows;
 %delobject transaction_commit;
 
 %typemap(newfree) char* "string_free($1);";
@@ -231,6 +236,17 @@ VoidPromise* transaction_on_close_register(const Transaction* transaction, Trans
 %newobject entity_get_type;
 %newobject relation_get_type;
 %newobject attribute_get_type;
+
+%newobject concept_new_boolean;
+%newobject concept_new_integer;
+%newobject concept_new_double;
+%newobject concept_new_decimal;
+%newobject concept_new_string;
+%newobject concept_new_date_from_seconds;
+%newobject concept_new_datetime;
+%newobject concept_new_datetime_tz_iana;
+%newobject concept_new_datetime_tz_offset;
+%newobject concept_new_duration;
 
 %newobject concept_get_label;
 %newobject concept_try_get_label;
@@ -264,9 +280,13 @@ VoidPromise* transaction_on_close_register(const Transaction* transaction, Trans
 %newobject databases_all;
 %newobject databases_get;
 
+%newobject given_rows_new;
+%newobject given_row_new;
+
 %newobject analyzed_query_pipeline;
 %newobject analyzed_preamble;
 %newobject analyzed_fetch;
+%newobject analyzed_given;
 %newobject conjunction_get_variable_annotations;
 %newobject conjunction_get_constraints;
 %newobject conjunction_id_string_repr;
@@ -341,6 +361,8 @@ VoidPromise* transaction_on_close_register(const Transaction* transaction, Trans
 %newobject fetch_list_element;
 %newobject fetch_object_fields;
 %newobject fetch_object_get_field;
+%newobject given_variables;
+%newobject given_variable_annotations;
 
 %newobject pipeline_get_conjunction;
 %newobject pipeline_stages;

@@ -15,26 +15,31 @@
 # specific language governing permissions and limitations
 # under the License.
 
-load("//csharp:build_opts.bzl", "nullable_context", "target_frameworks", "targeting_packs")
-load("//csharp/Test:rules.bzl", "csharp_integration_test")
-load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+from __future__ import annotations
 
-csharp_integration_test(
-    name = "test-values",
-    srcs = ["ValuesTest.cs"],
-    deps = [
-        "//csharp:driver-csharp",
-        "//csharp/Api:api",
-        "//csharp/Common:common",
-        "//csharp/Answer:answer",
-        "//csharp/Concept:concept",
-    ],
-    target_frameworks = target_frameworks,
-    targeting_packs = targeting_packs,
-)
+from abc import ABC, abstractmethod
+from typing import TYPE_CHECKING, Iterator, Optional
 
-checkstyle_test(
-    name = "checkstyle",
-    include = glob(["*"]),
-    license_type = "apache-header",
-)
+if TYPE_CHECKING:
+    from typedb.api.analyze.variable import Variable
+    from typedb.api.analyze.variable_annotations import VariableAnnotations
+
+
+class Given(ABC):
+    """
+    A representation of the 'given' stage of a query.
+    """
+
+    @abstractmethod
+    def variables(self) -> Iterator["Variable"]:
+        """
+        :return: the variables declared in the given stage.
+        """
+        pass
+
+    @abstractmethod
+    def variable_annotations(self, variable: "Variable") -> Optional["VariableAnnotations"]:
+        """
+        :return: the inferred type annotations for the specified variable.
+        """
+        pass

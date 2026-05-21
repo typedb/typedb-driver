@@ -18,6 +18,9 @@ features = {}
 	[dependencies.tracing]
 		workspace = true
 
+	[dependencies.chrono-tz]
+		workspace = true
+
 	[dependencies.tracing-subscriber]
 		workspace = true
 

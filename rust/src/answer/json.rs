@@ -26,8 +26,8 @@ use std::{
 
 use itertools::Itertools;
 use serde::{
-    Deserialize, Serialize,
     ser::{SerializeMap, SerializeSeq},
+    Deserialize, Serialize,
 };
 
 #[derive(Clone, Debug, PartialEq)]
@@ -262,9 +262,8 @@ mod test {
     use std::{borrow::Cow, collections::HashMap, iter};
 
     use rand::{
-        Rng,
         distributions::{DistString, Distribution, Standard, WeightedIndex},
-        thread_rng,
+        thread_rng, Rng,
     };
     use serde_json::json;
 

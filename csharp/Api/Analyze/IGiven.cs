@@ -22,29 +22,18 @@ using System.Collections.Generic;
 namespace TypeDB.Driver.Api.Analyze
 {
     /// <summary>
-    /// An AnalyzedQuery contains the server's representation of the query and preamble functions,
-    /// as well as the result of types inferred for each variable by type-inference.
+    /// A representation of the 'given' stage of a query.
     /// </summary>
-    public interface IAnalyzedQuery
+    public interface IGiven
     {
         /// <summary>
-        /// Gets a representation of the query as a Pipeline.
+        /// Gets the variables declared in the given stage.
         /// </summary>
-        IPipeline Pipeline { get; }
+        IEnumerable<IVariable> Variables { get; }
 
         /// <summary>
-        /// Gets a representation of the Functions in the preamble of the query.
+        /// Gets the inferred type annotations for the specified variable.
         /// </summary>
-        IEnumerable<IFunction> Preamble { get; }
-
-        /// <summary>
-        /// Gets a representation of the Given stage of the query, if it has one.
-        /// </summary>
-        IGiven? Given { get; }
-
-        /// <summary>
-        /// Gets a representation of the Fetch stage of the query, if it has one.
-        /// </summary>
-        IFetch? Fetch { get; }
+        IVariableAnnotations GetVariableAnnotations(IVariable variable);
     }
 }

@@ -59,6 +59,7 @@ def before_scenario(context: Context, scenario):
     context.operation_server_routing = None
     context.transaction_options = None
     context.query_options = None
+    context.given_rows = None
     context.driver_options = DriverOptions(DriverTlsConfig.disabled())
 
 

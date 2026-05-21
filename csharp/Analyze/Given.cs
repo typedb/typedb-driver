@@ -25,31 +25,28 @@ using TypeDB.Driver.Common;
 
 namespace TypeDB.Driver.Analyze
 {
-    public class AnalyzedQuery : NativeObjectWrapper<Pinvoke.AnalyzedQuery>, IAnalyzedQuery
+    public class Given : NativeObjectWrapper<Pinvoke.Given>, IGiven
     {
-        public AnalyzedQuery(Pinvoke.AnalyzedQuery nativeObject)
+        internal Given(Pinvoke.Given nativeObject)
             : base(nativeObject)
         {
         }
 
-        public IPipeline Pipeline =>
-            new Pipeline(Pinvoke.typedb_driver.analyzed_query_pipeline(NativeObject));
-
-        public IEnumerable<IFunction> Preamble =>
-            new NativeEnumerable<Pinvoke.Function>(
-                Pinvoke.typedb_driver.analyzed_preamble(NativeObject))
-                .Select(f => new Function(f));
-
-        public IGiven? Given
+        public IEnumerable<IVariable> Variables
         {
             get
             {
-                var native = Pinvoke.typedb_driver.analyzed_given(NativeObject);
-                return native != null ? new Analyze.Given(native) : null;
+                return new NativeEnumerable<Pinvoke.Variable>(
+                    Pinvoke.typedb_driver.given_variables(NativeObject))
+                    .Select(v => new Variable(v));
             }
         }
 
-        public IFetch? Fetch =>
-            Analyze.Fetch.Of(Pinvoke.typedb_driver.analyzed_fetch(NativeObject));
+        public IVariableAnnotations GetVariableAnnotations(IVariable variable)
+        {
+            var varImpl = (Variable)variable;
+            return new VariableAnnotations(
+                Pinvoke.typedb_driver.given_variable_annotations(NativeObject, varImpl.NativeObject));
+        }
     }
 }

@@ -59,6 +59,34 @@ namespace TypeDB.Driver.Test.Behaviour
             Assert.Contains(expectedMessage, exception.Message);
         }
 
+        [Then(@"analyzed query given structure is:")]
+        public void AnalyzedQueryGivenStructureIs(DocString expectedFunctor)
+        {
+            Assert.NotNull(_analyzedQuery);
+            var given = _analyzedQuery!.Given;
+            Assert.NotNull(given);
+            var pipeline = _analyzedQuery!.Pipeline;
+            var encoder = new FunctorEncoder.StructureEncoder(pipeline);
+            var actualFunctor = encoder.Encode(given!);
+            Assert.Equal(
+                FunctorEncoder.NormalizeForCompare(expectedFunctor.Content),
+                FunctorEncoder.NormalizeForCompare(actualFunctor));
+        }
+
+        [Then(@"analyzed query given annotations are:")]
+        public void AnalyzedQueryGivenAnnotationsAre(DocString expectedFunctor)
+        {
+            Assert.NotNull(_analyzedQuery);
+            var given = _analyzedQuery!.Given;
+            Assert.NotNull(given);
+            var pipeline = _analyzedQuery!.Pipeline;
+            var encoder = new FunctorEncoder.AnnotationsEncoder(pipeline);
+            var actualFunctor = encoder.Encode(given!);
+            Assert.Equal(
+                FunctorEncoder.NormalizeForCompare(expectedFunctor.Content),
+                FunctorEncoder.NormalizeForCompare(actualFunctor));
+        }
+
         [Then(@"analyzed query pipeline structure is:")]
         public void AnalyzedQueryPipelineStructureIs(DocString expectedFunctor)
         {

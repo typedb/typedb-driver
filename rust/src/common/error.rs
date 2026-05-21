@@ -315,6 +315,7 @@ pub enum Error {
     Internal(InternalError),
     Server(ServerError),
     Other(String),
+    FFI(String),
 }
 
 impl Error {
@@ -326,6 +327,7 @@ impl Error {
             Self::Migration(error) => error.format_code(),
             Self::Internal(error) => error.format_code(),
             Self::Server(error) => error.format_code().to_owned(),
+            Self::FFI(_error) => String::new(),
             Self::Other(_error) => String::new(),
         }
     }
@@ -338,6 +340,7 @@ impl Error {
             Self::Migration(error) => error.message(),
             Self::Internal(error) => error.message(),
             Self::Server(error) => error.message(),
+            Self::FFI(_error) => String::new(),
             Self::Other(error) => error.clone(),
         }
     }
@@ -385,6 +388,7 @@ impl fmt::Display for Error {
             Self::Migration(error) => write!(f, "{error}"),
             Self::Internal(error) => write!(f, "{error}"),
             Self::Server(error) => write!(f, "{error}"),
+            Self::FFI(message) => write!(f, "{message}"),
             Self::Other(message) => write!(f, "{message}"),
         }
     }
@@ -399,6 +403,7 @@ impl StdError for Error {
             Self::Migration(error) => Some(error),
             Self::Internal(error) => Some(error),
             Self::Server(_) => None,
+            Self::FFI(_) => None,
             Self::Other(_) => None,
         }
     }

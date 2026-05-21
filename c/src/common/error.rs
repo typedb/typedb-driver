@@ -79,6 +79,11 @@ pub(crate) fn unwrap_void(result: Result) {
     ok_record(result);
 }
 
+pub(crate) fn record_ffi_error(message: String) {
+    debug!("Encountered ffi error in typedb-driver-rust: {message}");
+    LAST_ERROR.with(|prev| *prev.borrow_mut() = Some(Error::FFI(message)));
+}
+
 fn record_error(err: Error) {
     debug!("Encountered error {err} in typedb-driver-rust");
     LAST_ERROR.with(|prev| *prev.borrow_mut() = Some(err));

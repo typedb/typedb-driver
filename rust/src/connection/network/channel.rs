@@ -23,20 +23,20 @@ use std::{
 };
 
 use tonic::{
-    Request, Status,
     body::BoxBody,
     client::GrpcService,
     service::{
-        Interceptor,
         interceptor::{InterceptedService, ResponseFuture as InterceptorResponseFuture},
+        Interceptor,
     },
-    transport::{Channel, Error as TonicError, channel::ResponseFuture as ChannelResponseFuture},
+    transport::{channel::ResponseFuture as ChannelResponseFuture, Channel, Error as TonicError},
+    Request, Status,
 };
 
 use crate::{
-    Credentials, DriverOptions, Error,
-    common::{Result, StdResult, address::Address},
+    common::{address::Address, Result, StdResult},
     error::ConnectionError,
+    Credentials, DriverOptions, Error,
 };
 
 type ResponseFuture = InterceptorResponseFuture<ChannelResponseFuture>;

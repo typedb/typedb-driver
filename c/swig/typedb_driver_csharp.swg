@@ -306,6 +306,7 @@
 %noexception analyzed_query_pipeline;
 %noexception analyzed_preamble;
 %noexception analyzed_fetch;
+%noexception analyzed_given;
 %noexception comparator_get_name;
 
 %noexception conjunction_id_as_u32;
@@ -384,6 +385,9 @@
 %noexception function_return_operation;
 %noexception function_argument_annotations;
 %noexception function_return_annotations;
+
+%noexception given_variables;
+%noexception given_variable_annotations;
 
 %noexception pipeline_get_conjunction;
 %noexception pipeline_stages;

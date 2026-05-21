@@ -20,9 +20,9 @@
 pub use self::{
     address::{Address, Addresses},
     error::Error,
-    promise::{BoxPromise, Promise, box_promise},
+    promise::{box_promise, BoxPromise, Promise},
     query_options::QueryOptions,
-    stream::{BoxStream, box_stream},
+    stream::{box_stream, BoxStream},
     transaction_options::TransactionOptions,
 };
 

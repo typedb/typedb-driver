@@ -611,21 +611,6 @@ namespace TypeDB.Driver.Test.Behaviour
                 $"Value should not equal '{notExpectedValue}' but it does");
         }
 
-        // Pattern: answer get row(N) get attribute(VAR) get value is: VALUE (non-quoted)
-        // This handles non-string values. String values (quoted) are handled by QuerySteps.cs.
-        [Then(@"answer get row\((\d+)\) get attribute\(([^)]+)\) get value is: ([^""].+)")]
-        public void AnswerGetRowGetAttributeGetValueIs(
-            int rowIndex, string variable, string expectedValue)
-        {
-            CollectRowsAnswerIfNeeded();
-            IConcept? concept = GetRowGetConcept(rowIndex, variable);
-            Assert.NotNull(concept);
-            IValue? value = concept!.AsAttribute().TryGetValue();
-            Assert.NotNull(value);
-            Assert.True(TestValueHelper.CompareValues(value!, expectedValue, null),
-                $"Expected value '{expectedValue}' but got '{value}'");
-        }
-
         // Pattern: answer get row(N) get attribute(VAR) get value is not: VALUE
         [Then(@"answer get row\((\d+)\) get attribute\(([^)]+)\) get value is not: (.+)")]
         public void AnswerGetRowGetAttributeGetValueIsNot(

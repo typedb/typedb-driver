@@ -19,32 +19,25 @@
 
 package com.typedb.driver.analyze;
 
-import com.typedb.driver.api.analyze.AnalyzedQuery;
+import com.typedb.driver.api.analyze.Given;
+import com.typedb.driver.api.analyze.Variable;
 import com.typedb.driver.common.NativeIterator;
 import com.typedb.driver.common.NativeObject;
-import com.typedb.driver.jni.typedb_driver;
 
-import java.util.Optional;
 import java.util.stream.Stream;
 
-public class AnalyzedQueryImpl extends NativeObject<com.typedb.driver.jni.AnalyzedQuery> implements AnalyzedQuery {
-    public AnalyzedQueryImpl(com.typedb.driver.jni.AnalyzedQuery nativeObject) {
+public class GivenImpl extends NativeObject<com.typedb.driver.jni.Given> implements Given {
+    public GivenImpl(com.typedb.driver.jni.Given nativeObject) {
         super(nativeObject);
     }
 
-    public PipelineImpl pipeline() {
-        return new PipelineImpl(typedb_driver.analyzed_query_pipeline(nativeObject));
+    @Override
+    public Stream<VariableImpl> variables() {
+        return new NativeIterator<>(com.typedb.driver.jni.typedb_driver.given_variables(nativeObject)).stream().map(VariableImpl::new);
     }
 
-    public Stream<FunctionImpl> preamble() {
-        return new NativeIterator<>(typedb_driver.analyzed_preamble(nativeObject)).stream().map(FunctionImpl::new);
-    }
-
-    public Optional<GivenImpl> given() {
-        return Optional.ofNullable(typedb_driver.analyzed_given(nativeObject)).map(GivenImpl::new);
-    }
-
-    public Optional<FetchImpl> fetch() {
-        return Optional.ofNullable(typedb_driver.analyzed_fetch(nativeObject)).map(FetchImpl::of);
+    @Override
+    public VariableAnnotationsImpl variable_annotations(Variable variable) {
+        return new VariableAnnotationsImpl(com.typedb.driver.jni.typedb_driver.given_variable_annotations(nativeObject, ((VariableImpl) variable).nativeObject));
     }
 }

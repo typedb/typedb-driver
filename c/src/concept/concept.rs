@@ -19,7 +19,7 @@
 
 use std::ffi::c_char;
 
-use chrono::{DateTime, NaiveTime, TimeZone as ChronoTimeZone};
+use chrono::{DateTime, FixedOffset, NaiveDate, NaiveDateTime, NaiveTime, TimeZone as ChronoTimeZone};
 use typedb_driver::{
     box_stream,
     concept::{
@@ -34,6 +34,7 @@ use crate::common::{
         borrow, borrow_mut, free, release, release_optional, release_optional_string, release_string, string_free,
     },
 };
+use crate::common::memory::{string_view, take_ownership};
 
 /// A <code>DatetimeInNanos</code> used to represent datetime as a pair of seconds part and
 /// a number of nanoseconds since the last seconds boundary.
@@ -422,6 +423,80 @@ pub extern "C" fn concept_is_value(concept: *const Concept) -> bool {
 #[unsafe(no_mangle)]
 pub extern "C" fn concept_to_string(concept: *const Concept) -> *mut c_char {
     release_string(format!("{:?}", borrow(concept)))
+}
+
+// Constructors
+
+/// Creates a new <code>Concept</code> object wrapping the specified <code>bool</code> value
+#[unsafe(no_mangle)]
+pub extern "C" fn concept_new_boolean(value: bool) -> *mut Concept {
+    release(Concept::Value(Value::Boolean(value)))
+}
+
+/// Creates a new <code>Concept</code> object wrapping the specified <code>i64</code> value
+#[unsafe(no_mangle)]
+pub extern "C" fn concept_new_integer(value: i64) -> *mut Concept {
+    release(Concept::Value(Value::Integer(value)))
+}
+
+/// Creates a new <code>Concept</code> object wrapping the specified <code>String</code> value
+#[unsafe(no_mangle)]
+pub extern "C" fn concept_new_string(value: *const c_char) -> *mut Concept {
+    release(Concept::Value(Value::String(string_view(value).to_owned())))
+}
+
+/// Creates a new <code>Concept</code> object wrapping the specified <code>f64</code> value
+#[unsafe(no_mangle)]
+pub extern "C" fn concept_new_double(value: f64) -> *mut Concept {
+    release(Concept::Value(Value::Double(value)))
+}
+
+/// Creates a new <code>Concept</code> object wrapping the specified <code>Decimal</code> value,
+/// provided as its integer and fractional parts. The fractional part is in units of 10^-19.
+#[unsafe(no_mangle)]
+pub extern "C" fn concept_new_decimal(integer: i64, fractional: u64) -> *mut Concept {
+    release(Concept::Value(Value::Decimal(Decimal::new(integer, fractional))))
+}
+
+/// Creates a new <code>Concept</code> object wrapping a specified <code>NaiveDate</code> value.
+/// The value must be seconds since the start of the UNIX epoch.
+#[unsafe(no_mangle)]
+pub extern "C" fn concept_new_date_from_seconds(seconds_since_epoch: i64) -> *mut Concept {
+    let naive_date = DateTime::from_timestamp(seconds_since_epoch, 0).unwrap().date_naive();
+    release(Concept::Value(Value::Date(naive_date)))
+}
+
+/// Creates a new <code>Concept</code> object wrapping the specified naive datetime value,
+/// provided as seconds and nanoseconds since the Unix epoch.
+#[unsafe(no_mangle)]
+pub extern "C" fn concept_new_datetime(seconds: i64, subsec_nanos: u32) -> *mut Concept {
+    let naive_datetime = DateTime::from_timestamp(seconds, subsec_nanos).unwrap().naive_utc();
+    release(Concept::Value(Value::Datetime(naive_datetime)))
+}
+
+/// Creates a new <code>Concept</code> object wrapping the specified timezone-aware datetime value
+/// with an IANA timezone name, provided as seconds and nanoseconds since the Unix epoch.
+#[unsafe(no_mangle)]
+pub extern "C" fn concept_new_datetime_tz_iana(seconds: i64, subsec_nanos: u32, zone_name: *const c_char) -> *mut Concept {
+    let naive_datetime = DateTime::from_timestamp(seconds, subsec_nanos).unwrap().naive_utc();
+    let tz = chrono_tz::Tz::from_str_insensitive(string_view(zone_name)).expect("Invalid timezone");
+    release(Concept::Value(Value::DatetimeTZ(TimeZone::IANA(tz).from_utc_datetime(&naive_datetime))))
+}
+
+/// Creates a new <code>Concept</code> object wrapping the specified timezone-aware datetime value
+/// with a fixed UTC offset in seconds, provided as seconds and nanoseconds since the Unix epoch.
+#[unsafe(no_mangle)]
+pub extern "C" fn concept_new_datetime_tz_offset(seconds: i64, subsec_nanos: u32, offset_seconds: i32) -> *mut Concept {
+    let naive_datetime = DateTime::from_timestamp(seconds, subsec_nanos).unwrap().naive_utc();
+    let offset = FixedOffset::east_opt(offset_seconds).expect("Invalid offset");
+    release(Concept::Value(Value::DatetimeTZ(TimeZone::Fixed(offset).from_utc_datetime(&naive_datetime))))
+}
+
+/// Creates a new <code>Concept</code> object wrapping the specified <code>Duration</code> value,
+/// provided as its months, days, and nanoseconds components.
+#[unsafe(no_mangle)]
+pub extern "C" fn concept_new_duration(months: u32, days: u32, nanos: u64) -> *mut Concept {
+    release(Concept::Value(Value::Duration(Duration::new(months, days, nanos))))
 }
 
 pub(super) fn borrow_as_entity(concept: *const Concept) -> &'static Entity {

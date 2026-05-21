@@ -17,13 +17,21 @@
  * under the License.
  */
 
-use typedb_protocol::Database as DatabaseProto;
+package com.typedb.driver.api.analyze;
 
-use super::TryFromProto;
-use crate::common::{info::DatabaseInfo, Result};
+import java.util.stream.Stream;
 
-impl TryFromProto<DatabaseProto> for DatabaseInfo {
-    fn try_from_proto(proto: DatabaseProto) -> Result<Self> {
-        Ok(Self { name: proto.name })
-    }
+/**
+ * A representation of the 'given' stage of a query
+ */
+public interface Given {
+    /**
+     * @return The variables declared in the given stage.
+     */
+    Stream<? extends Variable> variables();
+
+    /**
+     * @return The inferred type annotations for the specified variable.
+     */
+    VariableAnnotations variable_annotations(Variable variable);
 }

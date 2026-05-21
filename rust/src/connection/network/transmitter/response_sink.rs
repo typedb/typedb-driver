@@ -26,9 +26,9 @@ use tokio::sync::oneshot::Sender as AsyncOneshotSender;
 use tracing::{debug, error};
 
 use crate::{
-    Error,
     common::{RequestID, Result},
     error::InternalError,
+    Error,
 };
 
 #[derive(Debug)]

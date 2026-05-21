@@ -25,6 +25,7 @@ import com.typedb.driver.api.analyze.Constraint;
 import com.typedb.driver.api.analyze.ConstraintVertex;
 import com.typedb.driver.api.analyze.Fetch;
 import com.typedb.driver.api.analyze.Function;
+import com.typedb.driver.api.analyze.Given;
 import com.typedb.driver.api.analyze.Pipeline;
 import com.typedb.driver.api.analyze.PipelineStage;
 import com.typedb.driver.api.analyze.Reducer;
@@ -278,6 +279,10 @@ public abstract class FunctorEncoder {
         private String encode(Reducer reducer) {
             return makeFunctor("Reducer", reducer.name(), encodeList(reducer.arguments().map(this::encode)));
         }
+
+        public String encode(Given given) {
+            return makeFunctor("Given", encodeList(given.variables().map(this::encode)));
+        }
     }
 
     public static class AnnotationsEncoder extends FunctorEncoder {
@@ -364,6 +369,12 @@ public abstract class FunctorEncoder {
                     FunctorEncoder.makeFunctor(returnStreamOrSingle, FunctorEncoder.encodeList(func.return_annotations().map(this::encode))),
                     encode(func.body())
             );
+        }
+
+        public String encode(Given given) {
+            Stream<String> varAnnotations = given.variables()
+                    .map(v -> this.encode(v) + ":" + encode(given.variable_annotations(v)));
+            return makeFunctor("Given", "{" + varAnnotations.sorted().collect(Collectors.joining(",")) + "}");
         }
 
         public String encode(Fetch fetch) {

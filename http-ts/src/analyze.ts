@@ -76,6 +76,11 @@ export interface ConjunctionAnnotations {
     variableAnnotations: { [name: VariableId]: VariableAnnotations }
 }
 
+export interface Given {
+    variables: VariableId[],
+    variable_annotations: { [name: VariableId]: VariableAnnotations }
+}
+
 export type AnalyzedFetch =
     { tag: "list", elements: AnalyzedFetch } |
     { tag: "object", possibleFields: FetchAnnotationFieldEntry[] } |

@@ -2807,7 +2807,7 @@ dependencies = [
 [[package]]
 name = "typedb-protocol"
 version = "0.0.0"
-source = "git+https://github.com/typedb/typedb-protocol?tag=3.11.0#1db5bdd6579352d31343da28be41844ed07da1b5"
+source = "git+https://github.com/typedb/typedb-protocol?rev=42ee0b9415728621e09ec3851b8a25a7b9f5fe0d#42ee0b9415728621e09ec3851b8a25a7b9f5fe0d"
 dependencies = [
  "prost",
  "tonic",
@@ -2819,6 +2819,7 @@ name = "typedb_driver_clib"
 version = "0.0.0"
 dependencies = [
  "chrono",
+ "chrono-tz",
  "itertools 0.14.0",
  "tracing",
  "tracing-subscriber",

@@ -19,7 +19,7 @@
 
 use std::collections::HashMap;
 
-use crate::{IID, analyze::VariableAnnotations, concept};
+use crate::{analyze::VariableAnnotations, concept, IID};
 
 /// Holds the index of the conjunction in a <code>Pipeline</code>'s <code>conjunctions</code> field.
 /// Used as indirection in the representation of a pipeline.

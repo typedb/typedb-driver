@@ -17,7 +17,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional, Callable
+from typing import TYPE_CHECKING, Iterator, Optional, Callable
 
 from typedb.api.analyze.analyzed_query import AnalyzedQuery
 from typedb.api.answer.query_answer import QueryAnswer
@@ -30,12 +30,16 @@ from typedb.common.promise import Promise
 from typedb.common.validation import require_non_null
 from typedb.concept.answer.query_answer_factory import wrap_query_answer
 from typedb.native_driver_wrapper import error_code, error_message, transaction_new, \
-    transaction_analyze, transaction_query, \
+    transaction_analyze, transaction_query, transaction_query_given_rows, \
     transaction_commit, transaction_rollback, transaction_is_open, transaction_on_close, transaction_close, \
     query_answer_promise_resolve, analyzed_query_promise_resolve, \
-    Transaction as NativeTransaction, TransactionCallbackDirector, TypeDBDriverExceptionNative, void_promise_resolve
+    Transaction as NativeTransaction, TransactionCallbackDirector, TypeDBDriverExceptionNative, void_promise_resolve, \
+    given_rows_new, given_rows_push, \
+    given_row_new, given_row_set_index_to_concept, given_row_set_index_to_empty, \
+    QueryGivenRows as NativeQueryGivenRows
 
 if TYPE_CHECKING:
+    from typedb.api.concept.concept import Concept
     from typedb.api.connection.transaction import TransactionType
     from typedb.native_driver_wrapper import Error as NativeError
 
@@ -72,11 +76,16 @@ class _Transaction(Transaction, NativeWrapper[NativeTransaction]):
         promise = transaction_analyze(self.native_object, query)
         return Promise.map(_AnalyzedQuery, lambda: analyzed_query_promise_resolve(promise))
 
-    def query(self, query: str, options: Optional[QueryOptions] = None) -> Promise[QueryAnswer]:
+    def query(self, query: str, options: Optional[QueryOptions] = None, given_rows: Optional[List[List[Optional["Concept"]]]] = None) -> Promise[QueryAnswer]:
         require_non_null(query, "query")
         if not options:
             options = QueryOptions()
-        promise = transaction_query(self.native_object, query, options.native_object)
+        if given_rows is None:
+            promise = transaction_query(self.native_object, query, options.native_object)
+        else:
+            native_given_rows = _build_native_given_rows(given_rows)
+            native_given_rows.thisown = 0
+            promise = transaction_query_given_rows(self.native_object, query, options.native_object, native_given_rows)
         return Promise.map(wrap_query_answer, lambda: query_answer_promise_resolve(promise))
 
     def is_open(self) -> bool:
@@ -130,3 +139,17 @@ class _Transaction(Transaction, NativeWrapper[NativeTransaction]):
         self.close()
         if exc_tb is not None:
             return False
+
+
+def _build_native_given_rows(rows: List[List[Optional["Concept"]]]) -> NativeQueryGivenRows:
+    native_rows = given_rows_new(len(rows))
+    for row_index, row in enumerate(rows):
+        native_row = given_row_new(len(row))
+        for i, concept in enumerate(row):
+            if concept is None:
+                given_row_set_index_to_empty(native_row, i)
+            else:
+                given_row_set_index_to_concept(native_row, i, concept._native_object)
+        native_row.thisown = 0
+        given_rows_push(native_rows, native_row)
+    return native_rows
