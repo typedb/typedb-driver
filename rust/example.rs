@@ -4,13 +4,13 @@ use std::time::Duration;
 
 use futures::{StreamExt, TryStreamExt};
 use typedb_driver::{
-    Credentials, DriverOptions, Error, QueryOptions, TransactionOptions, TransactionType, TypeDBDriver,
+    Addresses, Credentials, DriverOptions, DriverTlsConfig, Error, QueryOptions, TransactionOptions, TransactionType,
+    TypeDBDriver,
     answer::{
         ConceptRow, QueryAnswer,
         concept_document::{Leaf, Node},
     },
-    concept::{Concept},
-    Addresses, DriverTlsConfig,
+    concept::Concept,
 };
 
 fn main() {

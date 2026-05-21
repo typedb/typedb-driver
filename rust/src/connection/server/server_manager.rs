@@ -393,7 +393,8 @@ impl ServerManager {
             match replica_connection {
                 Ok((replica_connection, replicas)) => {
                     debug!("Fetched replicas from configured address '{address}': {replicas:?}");
-                    let translated_replicas = Self::translate_replicas(replicas, &address_translation);
+                    let translated_replicas =
+                        Self::translate_replicas(replicas, &address_translation, &replica_connection);
                     let mut source_connections = HashMap::with_capacity(translated_replicas.len());
                     source_connections.insert(address.clone(), replica_connection);
                     return Ok((source_connections, translated_replicas));
@@ -438,14 +439,28 @@ impl ServerManager {
         replica_connection: &ServerConnection,
         address_translation: &AddressTranslation,
     ) -> Result<HashSet<Server>> {
-        replica_connection.servers_all().await.map(|replicas| Self::translate_replicas(replicas, address_translation))
+        replica_connection
+            .servers_all()
+            .await
+            .map(|replicas| Self::translate_replicas(replicas, address_translation, replica_connection))
     }
 
     fn translate_replicas(
         replicas: impl IntoIterator<Item = Server>,
         address_translation: &AddressTranslation,
+        source: &ServerConnection,
     ) -> HashSet<Server> {
-        replicas.into_iter().map(|replica| replica.translated(address_translation)).collect()
+        replicas
+            .into_iter()
+            .map(|replica| match replica {
+                // standalone server without advertised address: use connection address directly
+                Server::Unavailable { replication_status: None } => {
+                    Server::available_from_private(source.address().clone(), None)
+                }
+                other => other,
+            })
+            .map(|replica| replica.translated(address_translation))
+            .collect()
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]

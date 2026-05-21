@@ -49,6 +49,7 @@ use crate::{
 #[derive(Clone)]
 pub(crate) struct ServerConnection {
     background_runtime: Arc<BackgroundRuntime>,
+    address: Address,
     username: String,
     connection_id: Uuid,
     request_transmitter: Arc<RPCTransmitter>,
@@ -68,12 +69,13 @@ impl ServerConnection {
     ) -> Result<(Self, Vec<Server>)> {
         let username = credentials.username().to_string();
         let request_transmitter =
-            Arc::new(RPCTransmitter::start(address, credentials.clone(), driver_options, &background_runtime)?);
+            Arc::new(RPCTransmitter::start(address.clone(), credentials.clone(), driver_options, &background_runtime)?);
         let (connection_id, latency, servers) =
             Self::open_connection(&request_transmitter, driver_lang, driver_version, credentials).await?;
         let latency_tracker = LatencyTracker::new(latency);
         let server_connection = Self {
             background_runtime,
+            address,
             username,
             connection_id,
             request_transmitter,
@@ -81,6 +83,10 @@ impl ServerConnection {
             latency_tracker,
         };
         Ok((server_connection, servers))
+    }
+
+    pub(crate) fn address(&self) -> &Address {
+        &self.address
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
