@@ -40,7 +40,20 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 import static com.typedb.driver.common.exception.ErrorMessage.Driver.TRANSACTION_CLOSED;
-import static com.typedb.driver.jni.typedb_driver.*;
+import static com.typedb.driver.jni.typedb_driver.given_row_new;
+import static com.typedb.driver.jni.typedb_driver.given_row_set_index_to_concept;
+import static com.typedb.driver.jni.typedb_driver.given_row_set_index_to_empty;
+import static com.typedb.driver.jni.typedb_driver.given_rows_new;
+import static com.typedb.driver.jni.typedb_driver.given_rows_push;
+import static com.typedb.driver.jni.typedb_driver.transaction_analyze;
+import static com.typedb.driver.jni.typedb_driver.transaction_commit;
+import static com.typedb.driver.jni.typedb_driver.transaction_close;
+import static com.typedb.driver.jni.typedb_driver.transaction_is_open;
+import static com.typedb.driver.jni.typedb_driver.transaction_new;
+import static com.typedb.driver.jni.typedb_driver.transaction_on_close;
+import static com.typedb.driver.jni.typedb_driver.transaction_query;
+import static com.typedb.driver.jni.typedb_driver.transaction_query_given_rows;
+import static com.typedb.driver.jni.typedb_driver.transaction_rollback;
 
 public class TransactionImpl extends NativeObject<com.typedb.driver.jni.Transaction> implements Transaction {
     private final Transaction.Type type;
