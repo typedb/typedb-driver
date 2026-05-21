@@ -82,6 +82,7 @@ rust_shared_library(
         "//rust:typedb_driver_sync",
 
         "@crates//:chrono",
+        "@crates//:chrono-tz",
         "@crates//:itertools",
         "@crates//:tracing",
         "@crates//:tracing-subscriber",
