@@ -15596,8 +15596,8 @@
     },
     "@@typedb_dependencies+//library/maven:maven_extension.bzl%maven": {
       "general": {
-        "bzlTransitiveDigest": "xYfcV5GCvcArBk+YmbDDOlMr6efbtclgFFOFQZSmCJQ=",
-        "usagesDigest": "wxFHzqa/n1iKwIFIt3TwaoouMlDgnSCewOy8vB6jKt4=",
+        "bzlTransitiveDigest": "cTg5+JwiIgzF+hfytOujmT4cL3esuByuJOdHCN4u2JI=",
+        "usagesDigest": "/qhOXFBkRPnkE2l8SNYUcX3HVDup+AA/b8BH7738lSI=",
         "recordedFileInputs": {},
         "recordedDirentsInputs": {},
         "envVariables": {},
@@ -15618,7 +15618,35 @@
                 "{ \"group\": \"org.hamcrest\", \"artifact\": \"hamcrest-library\", \"version\": \"1.3\" }",
                 "{ \"group\": \"org.slf4j\", \"artifact\": \"slf4j-api\", \"version\": \"2.0.0\" }",
                 "{ \"group\": \"info.picocli\", \"artifact\": \"picocli\", \"version\": \"4.6.1\" }",
-                "{ \"group\": \"org.jsoup\", \"artifact\": \"jsoup\", \"version\": \"1.16.1\" }",
+                "{ \"group\": \"org.jsoup\", \"artifact\": \"jsoup\", \"version\": \"1.16.1\" }"
+              ],
+              "excluded_artifacts": [
+                "{ \"group\": \"com.github.jnr\", \"artifact\": \"jnr-ffi\" }",
+                "{ \"group\": \"com.google.ortools\", \"artifact\": \"ortools-darwin-x86-64\" }",
+                "{ \"group\": \"com.google.ortools\", \"artifact\": \"ortools-darwin-aarch64\" }",
+                "{ \"group\": \"com.google.ortools\", \"artifact\": \"ortools-linux-x86-64\" }",
+                "{ \"group\": \"com.google.ortools\", \"artifact\": \"ortools-linux-aarch64\" }",
+                "{ \"group\": \"com.google.ortools\", \"artifact\": \"ortools-win32-x86-64\" }",
+                "{ \"group\": \"com.google.android.tools\", \"artifact\": \"dx\" }",
+                "{ \"group\": \"com.github.stefanbirkner\", \"artifact\": \"system-rules\" }"
+              ],
+              "repositories": [
+                "{ \"repo_url\": \"https://repo1.maven.org/maven2\" }",
+                "{ \"repo_url\": \"https://repo.maven.apache.org/maven2/\" }",
+                "{ \"repo_url\": \"https://repo.typedb.com/public/public-release/maven/\" }",
+                "{ \"repo_url\": \"https://repo.typedb.com/public/public-snapshot/maven/\" }",
+                "{ \"repo_url\": \"https://dl.google.com/dl/android/maven2\" }",
+                "{ \"repo_url\": \"https://maven.pkg.jetbrains.space/public/p/compose/dev\" }"
+              ],
+              "strict_visibility": true,
+              "version_conflict_policy": "pinned"
+            }
+          },
+          "typedb_maven": {
+            "repoRuleId": "@@rules_jvm_external+//private/rules:coursier.bzl%coursier_fetch",
+            "attributes": {
+              "user_provided_name": "typedb_maven",
+              "artifacts": [
                 "{ \"group\": \"com.eclipsesource.minimal-json\", \"artifact\": \"minimal-json\", \"version\": \"0.9.5\" }",
                 "{ \"group\": \"com.electronwill.night-config\", \"artifact\": \"core\", \"version\": \"3.6.5\" }",
                 "{ \"group\": \"com.electronwill.night-config\", \"artifact\": \"toml\", \"version\": \"3.6.5\" }",

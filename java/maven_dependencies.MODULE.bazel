@@ -1,5 +1,5 @@
 maven = use_extension("@typedb_dependencies//library/maven:maven_extension.bzl", "maven")
-maven.artifacts(artifacts = [
+maven.namespace(artifacts = [
     "ch.qos.logback:logback-classic",                  # //java/user, //java/connection
     "ch.qos.logback:logback-core",                     # //java/user, //java/connection
     "com.eclipsesource.minimal-json:minimal-json",     # //java/api
