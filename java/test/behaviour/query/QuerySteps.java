@@ -1006,7 +1006,7 @@ public class QuerySteps {
     public void answer_get_row_get_variable_by_index(int rowIndex, int varIndex, Parameters.MayError mayError) {
         collectRowsAnswerIfNeeded();
         ConceptRow row = collectedRows.get(rowIndex);
-        mayError.check(() -> { var unused = row.getIndex(varIndex); });
+        mayError.check(() -> { var _unused = row.getIndex(varIndex); });
     }
 
     @Then("answer get row\\({integer}) get variable by index\\({integer}) {is_or_not} empty")
