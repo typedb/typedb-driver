@@ -32,7 +32,7 @@ bazel_dep(name = "rules_kotlin", version = "2.0.0", repo_name = "io_bazel_rules_
 bazel_dep(name = "rules_pkg", version = "1.0.1")
 bazel_dep(name = "rules_proto", version = "7.1.0")
 bazel_dep(name = "rules_dotnet", version = "0.14.0")
-bazel_dep(name = "protobuf", version = "29.3", repo_name = "com_google_protobuf")
+bazel_dep(name = "protobuf", version = "35.0", repo_name = "com_google_protobuf")
 
 # gRPC dependencies
 bazel_dep(name = "grpc", version = "1.69.0")
@@ -59,14 +59,14 @@ bazel_dep(name = "typedb_dependencies", version = "0.0.0")
 git_override(
     module_name = "typedb_dependencies",
     remote = "https://github.com/typedb/dependencies",
-    commit = "7385e26ab7f5f781b50469b926471bbf096cab56",
+    commit = "c8dc8480365c02898f4177b6143a0d22733da4f3",
 )
 
 bazel_dep(name = "typedb_protocol", version = "0.0.0")
 git_override(
     module_name = "typedb_protocol",
     remote = "https://github.com/typedb/typedb-protocol",
-    tag = "3.11.0",
+    commit = "7b91e3723b637d4b4bedd47c60d8a8c025500920",
 )
 
 bazel_dep(name = "typedb_behaviour", version = "0.0.0")
