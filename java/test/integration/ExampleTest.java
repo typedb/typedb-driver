@@ -239,7 +239,7 @@ public class ExampleTest {
                 // just call `commit`, which will wait for all ongoing operations to finish before executing.
                 List<String> queries = List.of("insert $a isa person, has name \"Alice\";", "insert $b isa person, has name \"Bob\";");
                 for (String query : queries) {
-                    transaction.query(query);
+                    transaction.query(query).resolve();
                 }
                 transaction.commit();
             }

@@ -53,7 +53,7 @@ public class UserSteps {
 
     @Then("get user: {non_semicolon}{may_error}")
     public void get_user_error(String username, Parameters.MayError mayError) {
-        mayError.check(() -> driver.users().get(username));
+        mayError.check(() -> {var unused = driver.users().get(username);});
     }
 
     @Then("get user\\({non_semicolon}) get name: {non_semicolon}")
