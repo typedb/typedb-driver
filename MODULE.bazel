@@ -51,26 +51,22 @@ bazel_dep(name = "aspect_bazel_lib", version = "2.9.4")
 bazel_dep(name = "typedb_bazel_distribution", version = "0.0.0")
 git_override(
     module_name = "typedb_bazel_distribution",
-    remote = "https://github.com/typedb/bazel-distribution",
-    commit = "b676760fcad45e35f4acb420322ef674404ffe70",
+    remote = "https://github.com/krishnangovindraj/bazel-distribution",
+    commit = "4bc6dace133be594a93ac33cd59b4f7dd94ba629",
 )
 
 bazel_dep(name = "typedb_dependencies", version = "0.0.0")
-#local_path_override(
-#        module_name = "typedb_dependencies",
-#        path = "../vaticle_minor/dependencies",
-#)
 git_override(
     module_name = "typedb_dependencies",
-    remote = "https://github.com/typedb/dependencies",
-    commit = "e532624cf4c634246d76e446e763cc1870b4851a",
+    remote = "https://github.com/krishnangovindraj/dependencies",
+    commit = "2f92bedd6e05d2a9a64f47d574aa21deb970824a",
 )
 
 bazel_dep(name = "typedb_protocol", version = "0.0.0")
 git_override(
     module_name = "typedb_protocol",
-    remote = "https://github.com/typedb/typedb-protocol",
-    commit = "cb3ba32ba5c8ad1e61a1918376939d106b2fb6dd",
+    remote = "https://github.com/krishnangovindraj/typedb-protocol",
+    commit = "ba672ba7f9283e1a51a239b41837c818c2fb024c",
 )
 
 bazel_dep(name = "typedb_behaviour", version = "0.0.0")

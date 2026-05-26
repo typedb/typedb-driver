@@ -399,13 +399,13 @@ commands:
     steps:
       - run: |
           export DEPLOY_NUGET_API_KEY=$REPO_TYPEDB_PASSWORD
-          bazel run --config=ci --jobs=8 --define version=0.0.0-$(git rev-parse HEAD) //csharp:driver-csharp-runtime-push -- snapshot
+          bazel run --config=ci --jobs=8 --define version=$(git rev-parse HEAD) //csharp:driver-csharp-runtime-push -- snapshot
 
   deploy-dotnet-snapshot-unix:
     steps:
       - run: |
           export DEPLOY_NUGET_API_KEY=$REPO_TYPEDB_PASSWORD
-          bazel run --config=ci --jobs=8 --define version=0.0.0-$(git rev-parse HEAD) //csharp:driver-csharp-push -- snapshot
+          bazel run --config=ci --jobs=8 --define version=$(git rev-parse HEAD) //csharp:driver-csharp-push -- snapshot
 
   test-dotnet-snapshot-unix:
     steps:
