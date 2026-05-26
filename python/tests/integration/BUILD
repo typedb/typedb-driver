@@ -52,6 +52,7 @@ py_test(
     deps = [
         "//python:driver_python",
         requirement("PyHamcrest"),
+        "@rules_python//python/cc:current_py_cc_libs",
     ],
     data = ["//python:native-driver-binary-link", "//python:native-driver-wrapper-link"],
     python_version = "PY3"
