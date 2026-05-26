@@ -832,32 +832,32 @@ workflows:
       - deploy-snapshot-linux-arm64:
           filters:
             branches:
-              only: [master, ci-speedup-202605]
+              only: [master]
 
       - deploy-snapshot-linux-x86_64:
           filters:
             branches:
-              only: [master, ci-speedup-202605]
+              only: [master]
 
       - deploy-snapshot-mac-arm64:
           filters:
             branches:
-              only: [master, ci-speedup-202605]
+              only: [master]
 
       - deploy-snapshot-mac-x86_64:
           filters:
             branches:
-              only: [master, ci-speedup-202605]
+              only: [master]
 
       - deploy-snapshot-windows-x86_64:
           filters:
             branches:
-              only: [master, ci-speedup-202605]
+              only: [master]
 
       - deploy-snapshot-any:
           filters:
             branches:
-              only: [master, ci-speedup-202605]
+              only: [master]
           requires:
             - deploy-snapshot-linux-arm64
             - deploy-snapshot-linux-x86_64
@@ -868,7 +868,7 @@ workflows:
       - deploy-snapshot-dotnet-any:
           filters:
             branches:
-              only: [master, ci-speedup-202605]
+              only: [master]
           requires:
             - deploy-snapshot-linux-arm64
             - deploy-snapshot-linux-x86_64
@@ -879,7 +879,7 @@ workflows:
       - test-snapshot-linux-arm64:
           filters:
             branches:
-              only: [master, ci-speedup-202605]
+              only: [master]
           requires:
             - deploy-snapshot-linux-arm64
             - deploy-snapshot-any
@@ -888,7 +888,7 @@ workflows:
       - test-snapshot-linux-x86_64:
           filters:
             branches:
-              only: [master, ci-speedup-202605]
+              only: [master]
           requires:
             - deploy-snapshot-linux-x86_64
             - deploy-snapshot-any
@@ -897,7 +897,7 @@ workflows:
       - test-snapshot-mac-arm64:
           filters:
             branches:
-              only: [master, ci-speedup-202605]
+              only: [master]
           requires:
             - deploy-snapshot-mac-arm64
             - deploy-snapshot-any
@@ -906,7 +906,7 @@ workflows:
       - test-snapshot-mac-x86_64:
           filters:
             branches:
-              only: [master, ci-speedup-202605]
+              only: [master]
           requires:
             - deploy-snapshot-mac-x86_64
             - deploy-snapshot-any
@@ -915,7 +915,7 @@ workflows:
       - test-snapshot-windows-x86_64:
           filters:
             branches:
-              only: [master, ci-speedup-202605]
+              only: [master]
           requires:
             - deploy-snapshot-windows-x86_64
             - deploy-snapshot-any
@@ -925,7 +925,7 @@ workflows:
 #      - test-snapshot-any:
 #          filters:
 #            branches:
-#              only: [master, ci-speedup-202605]
+#              only: [master]
 #          requires:
 #            - deploy-snapshot-any
 
