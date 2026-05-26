@@ -34,7 +34,7 @@ def native_driver_versioned(python_versions):
             python_headers = version["python_headers"],
             libpython = version["libpython"],
             link_flags = select({
-                 "@typedb_bazel_distribution//platform:is_linux": ["-lpython" + version["suffix"]],
+                 "@typedb_bazel_distribution//platform:is_linux": ["-lpython" + version["python_version"]],
                  "//conditions:default": [],
              }),
             visibility = ["//visibility:public"]
