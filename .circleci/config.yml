@@ -245,7 +245,7 @@ commands:
       - run: |
           export DEPLOY_ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
           export DEPLOY_ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-          bazel run --config=ci --jobs=8 --define version=$(git rev-parse HEAD) //c:deploy-clib-driver --compilation_mode=opt -- snapshot
+          bazel run --config=ci --jobs=8 --define version=$(git rev-parse HEAD) //c:deploy-clib-driver -- snapshot
 
   test-clib-assembly-linux:
     parameters:
@@ -309,7 +309,7 @@ commands:
       - run: |
           export DEPLOY_ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
           export DEPLOY_ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-          bazel run --config=ci --jobs=8 --define version=$(git rev-parse HEAD) //cpp:deploy-cpp-driver --compilation_mode=opt -- snapshot
+          bazel run --config=ci --jobs=8 --define version=$(git rev-parse HEAD) //cpp:deploy-cpp-driver -- snapshot
 
   test-cpp-assembly-linux:
     parameters:
@@ -524,7 +524,7 @@ jobs:
       - checkout
       - install-bazel-yum:
           bazel-arch: arm64
-
+      - install-libicu-linux
       - deploy-pip-snapshot-unix
 
       - deploy-maven-jni-snapshot-unix
@@ -537,7 +537,6 @@ jobs:
 #      - test-cpp-assembly-linux:
 #          target-arch: arm64
 
-      - install-libicu-linux
       - deploy-dotnet-runtime-snapshot-unix
 
   deploy-snapshot-linux-x86_64:
@@ -546,7 +545,7 @@ jobs:
       - checkout
       - install-bazel-yum:
           bazel-arch: amd64
-
+      - install-libicu-linux
       - deploy-pip-snapshot-unix
 
       - deploy-maven-jni-snapshot-unix
@@ -559,7 +558,6 @@ jobs:
 #      - test-cpp-assembly-linux:
 #          target-arch: x86_64
 
-      - install-libicu-linux
       - deploy-dotnet-runtime-snapshot-unix
 
   deploy-snapshot-mac-arm64:
@@ -653,11 +651,11 @@ jobs:
       - checkout
       - install-bazel-yum:
           bazel-arch: arm64
-      - test-pip-snapshot-unix
       - install-maven-linux
-      - test-maven-snapshot-unix
       - install-dotnet-linux
       - install-libicu-linux
+      - test-pip-snapshot-unix
+      - test-maven-snapshot-unix
       - test-dotnet-snapshot-unix
 
   test-snapshot-linux-x86_64:
@@ -666,10 +664,10 @@ jobs:
       - checkout
       - install-bazel-yum:
           bazel-arch: amd64
-      - test-pip-snapshot-unix
       - install-maven-linux
-      - test-maven-snapshot-unix
       - install-dotnet-linux
+      - test-pip-snapshot-unix
+      - test-maven-snapshot-unix
       - test-dotnet-snapshot-unix
 
   test-snapshot-mac-arm64:
@@ -678,10 +676,10 @@ jobs:
       - checkout
       - install-bazel-brew:
           bazel-arch: arm64
-      - test-pip-snapshot-unix
       - install-maven-mac
-      - test-maven-snapshot-unix
       - install-dotnet-mac
+      - test-pip-snapshot-unix
+      - test-maven-snapshot-unix
       - test-dotnet-snapshot-unix
 
   test-snapshot-mac-x86_64:
@@ -691,10 +689,10 @@ jobs:
       - checkout
       - install-bazel-brew:
           bazel-arch: amd64
-      - test-pip-snapshot-mac-rosetta
       - install-maven-mac-rosetta
-      - test-maven-snapshot-mac-rosetta
       - install-dotnet-mac-rosetta
+      - test-pip-snapshot-mac-rosetta
+      - test-maven-snapshot-mac-rosetta
       - test-dotnet-snapshot-mac-rosetta
 
   test-snapshot-windows-x86_64:
@@ -726,12 +724,12 @@ jobs:
       - checkout
       - install-bazel-yum:
           bazel-arch: arm64
+      - install-libicu-linux
       - deploy-pip-release-unix
       - deploy-maven-jni-release-unix
       - deploy-clib-release-unix
 #      - deploy-cpp-release-unix
 
-      - install-libicu-linux
       - deploy-dotnet-runtime-release-unix
 
   deploy-release-linux-x86_64:
@@ -740,12 +738,11 @@ jobs:
       - checkout
       - install-bazel-yum:
           bazel-arch: amd64
+      - install-libicu-linux
       - deploy-pip-release-unix
       - deploy-maven-jni-release-unix
       - deploy-clib-release-unix
 #      - deploy-cpp-release-unix
-
-      - install-libicu-linux
       - deploy-dotnet-runtime-release-unix
 
   deploy-release-mac-arm64:
