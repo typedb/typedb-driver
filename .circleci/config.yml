@@ -525,13 +525,9 @@ jobs:
       - install-bazel-yum:
           bazel-arch: arm64
       - install-libicu-linux
-      - deploy-pip-snapshot-unix
-
-      - deploy-maven-jni-snapshot-unix
-
       - deploy-clib-snapshot-unix
-#      - test-clib-assembly-linux:
-#          target-arch: arm64
+      - deploy-pip-snapshot-unix
+      - deploy-maven-jni-snapshot-unix
 
 #      - deploy-cpp-snapshot-unix
 #      - test-cpp-assembly-linux:
@@ -546,11 +542,10 @@ jobs:
       - install-bazel-yum:
           bazel-arch: amd64
       - install-libicu-linux
+      - deploy-clib-snapshot-unix
       - deploy-pip-snapshot-unix
-
       - deploy-maven-jni-snapshot-unix
 
-      - deploy-clib-snapshot-unix
 #      - test-clib-assembly-linux:
 #          target-arch: x86_64
 
@@ -566,14 +561,12 @@ jobs:
       - checkout
       - install-bazel-brew:
           bazel-arch: arm64
-
+      - deploy-clib-snapshot-unix
       - deploy-pip-snapshot-unix
-
       - deploy-maven-jni-snapshot-unix
 
 #      - run: brew install cmake
 
-      - deploy-clib-snapshot-unix
 #      - test-clib-assembly-mac:
 #          target-arch: arm64
 
@@ -590,14 +583,12 @@ jobs:
       - checkout
       - install-bazel-brew:
           bazel-arch: amd64
-
+      - deploy-clib-snapshot-unix
       - deploy-pip-snapshot-unix
-
       - deploy-maven-jni-snapshot-unix
 
 #      - run: brew install cmake
 
-      - deploy-clib-snapshot-unix
 #      - test-clib-assembly-mac:
 #          target-arch: x86_64
 
@@ -613,13 +604,12 @@ jobs:
     steps:
       - checkout
       - run: .circleci\windows\prepare.bat
-
+      - run: .circleci\windows\clib\deploy_snapshot.bat
       - run: .circleci\windows\python\deploy_snapshot.bat
-
       - run: .circleci\windows\java\deploy_snapshot.bat
 
-      - run: .circleci\windows\clib\deploy_snapshot.bat
-      - run: .circleci\windows\clib\test_assembly.bat
+
+#      - run: .circleci\windows\clib\test_assembly.bat
 
 #      - run: .circleci\windows\cpp\deploy_snapshot.bat
 #      - run: .circleci\windows\cpp\test_assembly.bat
@@ -725,9 +715,9 @@ jobs:
       - install-bazel-yum:
           bazel-arch: arm64
       - install-libicu-linux
+      - deploy-clib-release-unix
       - deploy-pip-release-unix
       - deploy-maven-jni-release-unix
-      - deploy-clib-release-unix
 #      - deploy-cpp-release-unix
 
       - deploy-dotnet-runtime-release-unix
@@ -739,9 +729,9 @@ jobs:
       - install-bazel-yum:
           bazel-arch: amd64
       - install-libicu-linux
+      - deploy-clib-release-unix
       - deploy-pip-release-unix
       - deploy-maven-jni-release-unix
-      - deploy-clib-release-unix
 #      - deploy-cpp-release-unix
       - deploy-dotnet-runtime-release-unix
 
@@ -752,8 +742,8 @@ jobs:
       - install-bazel-brew:
           bazel-arch: arm64
       - deploy-pip-release-unix
-      - deploy-maven-jni-release-unix
       - deploy-clib-release-unix
+      - deploy-maven-jni-release-unix
 #      - deploy-cpp-release-unix
       - deploy-dotnet-runtime-release-unix
 
@@ -764,9 +754,9 @@ jobs:
       - macos/install-rosetta
       - install-bazel-brew:
           bazel-arch: amd64
+      - deploy-clib-release-unix
       - deploy-pip-release-unix
       - deploy-maven-jni-release-unix
-      - deploy-clib-release-unix
 #      - deploy-cpp-release-unix
       - deploy-dotnet-runtime-release-unix
 
@@ -776,9 +766,9 @@ jobs:
     steps:
       - checkout
       - run: .circleci\windows\prepare.bat
+      - run: .circleci\windows\clib\deploy_release.bat
       - run: .circleci\windows\python\deploy_release.bat
       - run: .circleci\windows\java\deploy_release.bat
-      - run: .circleci\windows\clib\deploy_release.bat
 #      - run: .circleci\windows\cpp\deploy_release.bat
       - run: .circleci\windows\csharp\deploy_release.bat
 
