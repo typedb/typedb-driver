@@ -56,10 +56,14 @@ git_override(
 )
 
 bazel_dep(name = "typedb_dependencies", version = "0.0.0")
+#local_path_override(
+#        module_name = "typedb_dependencies",
+#        path = "../vaticle_minor/dependencies",
+#)
 git_override(
     module_name = "typedb_dependencies",
     remote = "https://github.com/typedb/dependencies",
-    commit = "aa37a8891f08a937b2e0bbd84ccbffab1bf86ba2",
+    commit = "e59ae7800ba779c71044fc137e54bae18aa44e97",
 )
 
 bazel_dep(name = "typedb_protocol", version = "0.0.0")
