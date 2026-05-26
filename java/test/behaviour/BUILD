@@ -23,8 +23,8 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         # External Maven Dependencies
-        "@maven//:junit_junit",
-#        "@maven//:com_typedb_typedb_runner",
+        "@typedb_maven//:junit_junit",
+#        "@typedb_maven//:com_typedb_typedb_runner",
     ],
 )
 

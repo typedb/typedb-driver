@@ -179,7 +179,7 @@ maven = use_extension("@typedb_dependencies//library/maven:maven_extension.bzl",
 include("//java:maven_dependencies.MODULE.bazel")
 include("//java/test:maven_dependencies.MODULE.bazel")
 include("//tool/docs:maven_dependencies.MODULE.bazel")
-use_repo(maven, "maven")
+use_repo(maven, "typedb_maven")
 
 # .NET toolchain (matches the WORKSPACE-era version)
 dotnet = use_extension("@rules_dotnet//dotnet:extensions.bzl", "dotnet")

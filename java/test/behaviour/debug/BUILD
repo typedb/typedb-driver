@@ -37,8 +37,8 @@ typedb_java_test(
         # e.g. "//java/test/behaviour/connection/steps:connection-database",
 
         # External dependencies from Maven
-        "@maven//:io_cucumber_cucumber_java",
-        "@maven//:io_cucumber_cucumber_junit",
+        "@typedb_maven//:io_cucumber_cucumber_java",
+        "@typedb_maven//:io_cucumber_cucumber_junit",
     ],
     runtime_deps = [
         "//java/test/behaviour/connection:steps-core",

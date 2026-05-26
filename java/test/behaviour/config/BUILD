@@ -26,8 +26,8 @@ java_library(
         "//java/common:common",
         "//java/test/behaviour/util:util",
 
-        "@maven//:junit_junit",
-        "@maven//:io_cucumber_cucumber_java"
+        "@typedb_maven//:junit_junit",
+        "@typedb_maven//:io_cucumber_cucumber_java"
     ],
     visibility = ["//visibility:public"],
 )

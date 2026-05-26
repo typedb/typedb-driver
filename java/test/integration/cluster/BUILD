@@ -30,7 +30,7 @@ typedb_java_test(
         "//java/common",
 
         # External dependencies
-        "@maven//:org_slf4j_slf4j_api",
+        "@typedb_maven//:org_slf4j_slf4j_api",
     ],
     data = [
         "//tool/test:cluster-server.sh",

@@ -32,7 +32,7 @@ java_library(
         "//java:typedb_driver_jni",
 
         # External dependencies from Maven
-        "@maven//:com_google_code_findbugs_jsr305",
+        "@typedb_maven//:com_google_code_findbugs_jsr305",
     ],
 )
 

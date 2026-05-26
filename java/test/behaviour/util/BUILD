@@ -29,7 +29,7 @@ java_library(
         "//java/common",
 
         # External Maven Dependencies
-        "@maven//:junit_junit",
+        "@typedb_maven//:junit_junit",
     ],
 )
 
@@ -45,7 +45,7 @@ java_library(
         "//java:typedb_driver_jni",
 
         # External Maven Dependencies
-        "@maven//:junit_junit",
+        "@typedb_maven//:junit_junit",
     ],
 )
 
@@ -60,8 +60,8 @@ java_library(
         ":util",
 
         # External Maven Dependencies
-        "@maven//:io_cucumber_cucumber_java",
-        "@maven//:junit_junit",
+        "@typedb_maven//:io_cucumber_cucumber_java",
+        "@typedb_maven//:junit_junit",
     ],
 )
 

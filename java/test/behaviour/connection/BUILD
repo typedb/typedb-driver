@@ -31,9 +31,9 @@ java_library(
         "//java/test/behaviour/util:util",
 
         # External dependencies from Maven
-        "@maven//:junit_junit",
-#        "@maven//:com_typedb_typedb_runner",
-        "@maven//:io_cucumber_cucumber_java",
+        "@typedb_maven//:junit_junit",
+#        "@typedb_maven//:com_typedb_typedb_runner",
+        "@typedb_maven//:io_cucumber_cucumber_java",
     ],
 )
 
@@ -49,8 +49,8 @@ java_library(
         "//java/test/behaviour/config:parameters",
         "//java:driver-java",
         "//java/api",
-#        "@maven//:com_typedb_typedb_runner",
-        "@maven//:io_cucumber_cucumber_java",
+#        "@typedb_maven//:com_typedb_typedb_runner",
+        "@typedb_maven//:io_cucumber_cucumber_java",
     ],
 )
 
@@ -66,8 +66,8 @@ java_library(
         "//java/test/behaviour/config:parameters",
         "//java:driver-java",
         "//java/api",
-#        "@maven//:com_typedb_typedb_runner",
-        "@maven//:io_cucumber_cucumber_java",
+#        "@typedb_maven//:com_typedb_typedb_runner",
+        "@typedb_maven//:io_cucumber_cucumber_java",
     ],
 )
 

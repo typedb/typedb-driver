@@ -34,8 +34,8 @@ java_library(
         "//java/test/behaviour/util",
 
         # External Maven Dependencies
-        "@maven//:junit_junit",
-        "@maven//:io_cucumber_cucumber_java",
+        "@typedb_maven//:junit_junit",
+        "@typedb_maven//:io_cucumber_cucumber_java",
     ],
 )
 

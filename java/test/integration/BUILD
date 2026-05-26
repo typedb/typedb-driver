@@ -34,8 +34,8 @@ typedb_java_test(
         "//java/common",
 
         # External dependencies from @typedb
-        "@maven//:org_slf4j_slf4j_api",
-#        "@maven//:com_typedb_typedb_runner",
+        "@typedb_maven//:org_slf4j_slf4j_api",
+#        "@typedb_maven//:com_typedb_typedb_runner",
     ],
 )
 
@@ -50,8 +50,8 @@ typedb_java_test(
         "//java/common",
 
         # External dependencies from @typedb
-        "@maven//:org_slf4j_slf4j_api",
-#        "@maven//:com_typedb_typedb_runner",
+        "@typedb_maven//:org_slf4j_slf4j_api",
+#        "@typedb_maven//:com_typedb_typedb_runner",
     ],
 )
 
@@ -66,8 +66,8 @@ typedb_java_test(
         "//java/common",
 
         # External dependencies from @typedb
-        "@maven//:org_slf4j_slf4j_api",
-#        "@maven//:com_typedb_typedb_runner",
+        "@typedb_maven//:org_slf4j_slf4j_api",
+#        "@typedb_maven//:com_typedb_typedb_runner",
     ],
 )
 

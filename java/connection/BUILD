@@ -30,9 +30,9 @@ java_library(
         allow_empty = True,
     ),
     runtime_deps = [
-        "@maven//:ch_qos_logback_logback_classic",
-        "@maven//:ch_qos_logback_logback_core",
-        "@maven//:io_netty_netty_tcnative_boringssl_static",
+        "@typedb_maven//:ch_qos_logback_logback_classic",
+        "@typedb_maven//:ch_qos_logback_logback_core",
+        "@typedb_maven//:io_netty_netty_tcnative_boringssl_static",
     ],
     deps = [
         # Internal dependencies

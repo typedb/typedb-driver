@@ -16,7 +16,7 @@
 # under the License.
 
 maven = use_extension("@typedb_dependencies//library/maven:maven_extension.bzl", "maven")
-maven.namespace(artifacts = [
+maven.namespace(name = "typedb_maven", artifacts = [
     "info.picocli:picocli",  # //tool/docs/java, //tool/docs/nodejs, //tool/docs/python, //tool/docs/rust, //tool/docs/cpp, //tool/docs/csharp, //tool/docs/c, //tool/docs/httpts, //tool/docs/examples
     "org.jsoup:jsoup",       # //tool/docs/java, //tool/docs/nodejs, //tool/docs/python, //tool/docs/rust, //tool/docs/cpp, //tool/docs/csharp, //tool/docs/c, //tool/docs/httpts
 ])

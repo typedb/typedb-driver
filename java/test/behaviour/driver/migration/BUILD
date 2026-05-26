@@ -37,7 +37,7 @@ typedb_behaviour_java_test(
         "//java/test/behaviour:behaviour",
 
         # External dependencies from Maven
-        "@maven//:io_cucumber_cucumber_junit",
+        "@typedb_maven//:io_cucumber_cucumber_junit",
     ],
     runtime_deps = [
         "//java/test/behaviour/config:parameters",

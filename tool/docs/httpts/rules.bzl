@@ -38,8 +38,8 @@ def typedoc_to_adoc(name, data, docs_dirs, static_functions, nested_classes):
         args = args,
         deps = [
             "//tool/docs:html_docs_to_adoc_lib",
-            "@maven//:org_jsoup_jsoup",
-            "@maven//:info_picocli_picocli",
+            "@typedb_maven//:org_jsoup_jsoup",
+            "@typedb_maven//:info_picocli_picocli",
         ],
         data = data,
         visibility = ["//visibility:public"],

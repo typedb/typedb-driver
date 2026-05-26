@@ -39,7 +39,7 @@ def test_to_example(name, input, output, removed_lines, changed_words, header_co
         main_class = "com.typedb.driver.tool.docs.examples.TestExamplesParserKt",
         args = args,
         deps = [
-            "@maven//:info_picocli_picocli",
+            "@typedb_maven//:info_picocli_picocli",
         ],
         data = [input],
         visibility = ["//visibility:public"],
@@ -66,7 +66,7 @@ def update_markdown_example(name, input, output, start_marker, end_marker, langu
         main_class = "com.typedb.driver.tool.docs.examples.MarkdownCodeUpdaterKt",
         args = args,
         deps = [
-            "@maven//:info_picocli_picocli",
+            "@typedb_maven//:info_picocli_picocli",
         ],
         data = [input, output],
         visibility = ["//visibility:public"],

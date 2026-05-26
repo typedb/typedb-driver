@@ -34,9 +34,9 @@ java_library(
         "//java/test/behaviour/util:util",
 
         # External Maven Dependencies
-        "@maven//:junit_junit",
-        "@maven//:io_cucumber_cucumber_java",
-        "@maven//:org_hamcrest_hamcrest_library",
+        "@typedb_maven//:junit_junit",
+        "@typedb_maven//:io_cucumber_cucumber_java",
+        "@typedb_maven//:org_hamcrest_hamcrest_library",
     ],
 )
 
@@ -61,7 +61,7 @@ typedb_behaviour_java_test(
         "//java/test/behaviour:behaviour",
 
         # External dependencies from Maven
-        "@maven//:io_cucumber_cucumber_junit",
+        "@typedb_maven//:io_cucumber_cucumber_junit",
     ],
     runtime_deps = [
         "//java/test/behaviour/config:parameters",
