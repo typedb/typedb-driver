@@ -29,5 +29,5 @@ SET TMP=C:\T
 
 git rev-parse HEAD > version_snapshot.txt
 set /p VER=<version_snapshot.txt
-bazel --output_user_root=C:/b run --config=ci --verbose_failures --define version=0.0.0-%VER% //csharp:driver-csharp-runtime-push -- snapshot
+bazel --output_user_root=C:/b run --config=ci --verbose_failures --define version=%VER% //csharp:driver-csharp-runtime-push -- snapshot
 IF %errorlevel% NEQ 0 EXIT /b %errorlevel%
