@@ -22,7 +22,7 @@ CALL refreshenv
 git rev-parse HEAD > version_temp.txt
 set /p VER=<version_temp.txt
 
-bazel --output_user_root=C:\b build --config=ci @typedb_artifact_windows-x86_64//file
+bazel --output_base=C:\b build --config=ci @typedb_artifact_windows-x86_64//file
 powershell -Command "Move-Item -Path (Get-ChildItem -Path bazel-typedb-driver\external\*typedb_artifact_windows-x86_64\file\typedb-all-windows*) -Destination typedb-all-windows.zip"
 7z x typedb-all-windows.zip
 RD /S /Q typedb-all-windows

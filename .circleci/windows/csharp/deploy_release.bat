@@ -29,5 +29,5 @@ SET TEMP=C:\T
 SET TMP=C:\T
 
 SET /p VER=<VERSION
-bazel --output_user_root=C:/b run --config=ci --verbose_failures --define version=%VER% //csharp:driver-csharp-runtime-push --compilation_mode=opt -- release
+bazel --output_base=C:/b run --config=ci --verbose_failures --define version=%VER% //csharp:driver-csharp-runtime-push --compilation_mode=opt -- release
 IF %errorlevel% NEQ 0 EXIT /b %errorlevel%
