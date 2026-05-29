@@ -17,6 +17,10 @@ REM specific language governing permissions and limitations
 REM under the License.
 
 REM shorten the workspace name so that we can avoid the long path restriction
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\FileSystem" /v LongPathsEnabled /t REG_DWORD /d 1 /f
+
+call refreshenv
+
 git apply .circleci\windows\git.patch
 IF %ERRORLEVEL% NEQ 0 EXIT /B %ERRORLEVEL%
 
