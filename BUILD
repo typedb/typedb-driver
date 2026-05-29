@@ -17,12 +17,16 @@
 
 package(default_visibility = ["//visibility:public"])
 
+load("@typedb_bazel_distribution//common:rules.bzl", "package_version_vars")
+
 load("@typedb_dependencies//tool/release/deps:rules.bzl", "release_validate_deps")
 load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 exports_files([
     "VERSION",
 ])
+
+package_version_vars(name = "driver-version-vars")
 
 checkstyle_test(
     name = "checkstyle",

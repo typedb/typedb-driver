@@ -21,12 +21,12 @@ load("@rules_rust//rust:defs.bzl", "rust_static_library", "rust_shared_library",
 load("@typedb_dependencies//builder/rust:rules.bzl", "rust_cbindgen")
 load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
-load("@typedb_bazel_distribution//common:rules.bzl", "assemble_targz", "assemble_zip", "checksum", "assemble_versioned")
+load("@typedb_bazel_distribution//common:rules.bzl", "checksum", "assemble_versioned")
 load("@typedb_bazel_distribution//docs/doxygen:rules.bzl", "doxygen_docs")
 load("@typedb_bazel_distribution//artifact:rules.bzl", "deploy_artifact")
 load("@typedb_dependencies//distribution:deployment.bzl", "deployment")
-load("@rules_pkg//:pkg.bzl", "pkg_tar")
-load("@rules_pkg//pkg:mappings.bzl", "pkg_files", "strip_prefix")
+load("@rules_pkg//:pkg.bzl", "pkg_tar", "pkg_zip")
+load("@rules_pkg//pkg:mappings.bzl", "pkg_files", "pkg_filegroup")
 load("@typedb_bazel_distribution//platform:constraints.bzl", "constraint_linux_arm64", "constraint_linux_x86_64",
      "constraint_mac_arm64", "constraint_mac_x86_64", "constraint_win_x86_64")
 load("//c:docs_structure.bzl", "dir_mapping", "force_file")
@@ -107,53 +107,53 @@ pkg_files(
     prefix = "lib",
 )
 
-pkg_tar(
-    name = "typedb-driver-clib-tar",
+pkg_filegroup(
+    name = "typedb-driver-clib-packaged",
     srcs = [":typedb-driver-clib-headers", ":typedb-driver-clib-libraries"],
 )
 
-assemble_targz(
+pkg_tar(
     name = "assemble-linux-arm64-targz",
-    targets = [
-        ":typedb-driver-clib-tar"
-    ],
-    output_filename = "typedb-driver-clib-linux-arm64",
+    srcs = [":typedb-driver-clib-packaged"],
+    package_dir = "typedb-driver-clib-linux-arm64-{version}",
+    out = "typedb-driver-clib-linux-arm64.tar.gz",
+    package_variables = "//:driver-version-vars",
     target_compatible_with = constraint_linux_arm64,
 )
 
-assemble_targz(
+pkg_tar(
     name = "assemble-linux-x86_64-targz",
-    targets = [
-        ":typedb-driver-clib-tar"
-    ],
-    output_filename = "typedb-driver-clib-linux-x86_64",
+    srcs = [":typedb-driver-clib-packaged"],
+    package_dir = "typedb-driver-clib-linux-x86_64-{version}",
+    out = "typedb-driver-clib-linux-x86_64.tar.gz",
+    package_variables = "//:driver-version-vars",
     target_compatible_with = constraint_linux_x86_64,
 )
 
-assemble_zip(
+pkg_zip(
     name = "assemble-mac-arm64-zip",
-    targets = [
-        ":typedb-driver-clib-tar"
-    ],
-    output_filename = "typedb-driver-clib-mac-arm64",
+    srcs = [":typedb-driver-clib-packaged"],
+    package_dir = "typedb-driver-clib-mac-arm64-{version}",
+    out = "typedb-driver-clib-mac-arm64.zip",
+    package_variables = "//:driver-version-vars",
     target_compatible_with = constraint_mac_arm64,
 )
 
-assemble_zip(
+pkg_zip(
     name = "assemble-mac-x86_64-zip",
-    targets = [
-        ":typedb-driver-clib-tar"
-    ],
-    output_filename = "typedb-driver-clib-mac-x86_64",
+    srcs = [":typedb-driver-clib-packaged"],
+    package_dir = "typedb-driver-clib-mac-x86_64-{version}",
+    out = "typedb-driver-clib-mac-x86_64.zip",
+    package_variables = "//:driver-version-vars",
     target_compatible_with = constraint_mac_x86_64,
 )
 
-assemble_zip(
+pkg_zip(
     name = "assemble-windows-x86_64-zip",
-    targets = [
-        ":typedb-driver-clib-tar"
-    ],
-    output_filename = "typedb-driver-clib-windows-x86_64",
+    srcs = [":typedb-driver-clib-packaged"],
+    package_dir = "typedb-driver-clib-windows-x86_64-{version}",
+    out = "typedb-driver-clib-windows-x86_64.zip",
+    package_variables = "//:driver-version-vars",
     target_compatible_with = constraint_win_x86_64,
 )
 
