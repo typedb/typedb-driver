@@ -16,11 +16,11 @@ REM KIND, either express or implied.  See the License for the
 REM specific language governing permissions and limitations
 REM under the License.
 
-REM shorten the workspace name so that we can avoid the long path restriction
+REM Remove long path restriction from windows, though specific programs may still have it.
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\FileSystem" /v LongPathsEnabled /t REG_DWORD /d 1 /f
-
 call refreshenv
 
+REM shorten the workspace name so that we can avoid the long path restriction
 git apply .circleci\windows\git.patch
 IF %ERRORLEVEL% NEQ 0 EXIT /B %ERRORLEVEL%
 
