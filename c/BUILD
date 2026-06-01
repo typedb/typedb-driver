@@ -108,13 +108,13 @@ pkg_files(
 )
 
 pkg_filegroup(
-    name = "typedb-driver-clib-packaged",
+    name = "package-typedb-driver-clib",
     srcs = [":typedb-driver-clib-headers", ":typedb-driver-clib-libraries"],
 )
 
 pkg_tar(
     name = "assemble-linux-arm64-targz",
-    srcs = [":typedb-driver-clib-packaged"],
+    srcs = [":package-typedb-driver-clib"],
     package_dir = "typedb-driver-clib-linux-arm64-{version}",
     out = "typedb-driver-clib-linux-arm64.tar.gz",
     package_variables = "//:driver-version-vars",
@@ -123,7 +123,7 @@ pkg_tar(
 
 pkg_tar(
     name = "assemble-linux-x86_64-targz",
-    srcs = [":typedb-driver-clib-packaged"],
+    srcs = [":package-typedb-driver-clib"],
     package_dir = "typedb-driver-clib-linux-x86_64-{version}",
     out = "typedb-driver-clib-linux-x86_64.tar.gz",
     package_variables = "//:driver-version-vars",
@@ -132,7 +132,7 @@ pkg_tar(
 
 pkg_zip(
     name = "assemble-mac-arm64-zip",
-    srcs = [":typedb-driver-clib-packaged"],
+    srcs = [":package-typedb-driver-clib"],
     package_dir = "typedb-driver-clib-mac-arm64-{version}",
     out = "typedb-driver-clib-mac-arm64.zip",
     package_variables = "//:driver-version-vars",
@@ -141,7 +141,7 @@ pkg_zip(
 
 pkg_zip(
     name = "assemble-mac-x86_64-zip",
-    srcs = [":typedb-driver-clib-packaged"],
+    srcs = [":package-typedb-driver-clib"],
     package_dir = "typedb-driver-clib-mac-x86_64-{version}",
     out = "typedb-driver-clib-mac-x86_64.zip",
     package_variables = "//:driver-version-vars",
@@ -150,7 +150,7 @@ pkg_zip(
 
 pkg_zip(
     name = "assemble-windows-x86_64-zip",
-    srcs = [":typedb-driver-clib-packaged"],
+    srcs = [":package-typedb-driver-clib"],
     package_dir = "typedb-driver-clib-windows-x86_64-{version}",
     out = "typedb-driver-clib-windows-x86_64.zip",
     package_variables = "//:driver-version-vars",
