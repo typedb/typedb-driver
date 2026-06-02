@@ -199,3 +199,9 @@ defineParameterType({
     regexp: /boolean|integer|double|decimal|string|date|datetime|datetime-tz|duration|struct/,
     transformer: s => s as ValueType,
 });
+
+defineParameterType({
+    name: "variable_list",
+    regexp: /\$[a-zA-Z0-9\-_]+(?:, \$[a-zA-Z0-9\-_]+)*/,
+    transformer: s => s.split(",").map(v => v.replace("$", "").trim()),
+});

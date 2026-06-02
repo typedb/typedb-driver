@@ -26,12 +26,12 @@ use std::{
 };
 
 use prost::{
-    Message,
     bytes::{Buf, BytesMut},
+    Message,
 };
 use typedb_protocol::migration::Item as MigrationItemProto;
 
-use crate::{Error, Result, error::MigrationError};
+use crate::{error::MigrationError, Error, Result};
 
 #[derive(Debug)]
 pub(crate) enum DatabaseExportAnswer {

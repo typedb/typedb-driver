@@ -48,6 +48,18 @@ const analyzeMayError = async function (mayError: MayError, query: string) {
 When('typeql analyze{may_error}', analyzeMayError);
 When(`typeql analyze${EXPECT_ERROR_CONTAINING}`, analyzeMayError);
 
+Then('analyzed query given structure is:', function (expectedFunctor: string) {
+    const context = new FunctorEncoder(analyzed.query);
+    const actualFunctor = encodeGivenStructure(analyzed, context);
+    assert.equal(normalizeFunctorForCompare(actualFunctor), normalizeFunctorForCompare(expectedFunctor))
+});
+
+Then('analyzed query given annotations are:', function (expectedFunctor: string) {
+    const context = new FunctorEncoder(analyzed.query);
+    const actualFunctor = encodeGivenAnnotations(analyzed, context);
+    assert.equal(normalizeFunctorForCompare(actualFunctor), normalizeFunctorForCompare(expectedFunctor))
+});
+
 Then('analyzed query pipeline structure is:', function (expectedFunctor: string) {
     const context = new FunctorEncoder(analyzed.query);
     const actualFunctor = encodePipeline(analyzed.query, context);
@@ -315,6 +327,21 @@ function encodeReturnOperation(returnOp: FunctionReturnStructure, encoder: Funct
                 encoder.encodeAsList(returnOp.reducers.map(r => encodeReducer(r, encoder)))
             );
     }
+}
+
+function encodeGivenStructure(analyzed: { query: AnalyzedPipeline, given: { variables: string[] } | null }, encoder: FunctorEncoder): string {
+    const given = analyzed.given!;
+    const variables = given.variables.map(v => encodeVariable(v, encoder));
+    return encoder.makeFunctor("Given", encoder.encodeAsList(variables));
+}
+
+function encodeGivenAnnotations(analyzed: { query: AnalyzedPipeline, given: { variableAnnotations: { [name: string]: VariableAnnotations } } | null }, encoder: FunctorEncoder): string {
+    const given = analyzed.given!;
+    const variableAnnotations = Object.keys(given.variableAnnotations).map(v => {
+        const annotations = given.variableAnnotations[v];
+        return [encodeVariable(v, encoder), encodeVariableAnnotations(annotations, encoder)];
+    }).sort().map(([k, v]) => `${k} : ${v}`);
+    return encoder.makeFunctor("Given", "{" + variableAnnotations.join(",") + "}");
 }
 
 export function encodePipeline(pipeline: AnalyzedPipeline, encoder: FunctorEncoder): string {

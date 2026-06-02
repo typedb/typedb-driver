@@ -1,0 +1,41 @@
+[#_Given]
+[.doc-api-reference-driver]
+=== Given
+
+`class`
+
+*Package*: `typedb.api.analyze.given`
+
+A representation of the ‘given’ stage of a query.
+
+// tag::methods[]
+[#_Given_variable_annotations_]
+==== method ``variable_annotations``
+
+[source,python]
+----
+variable_annotations(variable: Variable) -> 'VariableAnnotations' | None
+----
+
+
+
+[caption=""]
+.Returns
+`'VariableAnnotations' | None`
+
+[#_Given_variables_]
+==== method ``variables``
+
+[source,python]
+----
+variables() -> Iterator['Variable']
+----
+
+
+
+[caption=""]
+.Returns
+`Iterator['Variable']`
+
+// end::methods[]
+

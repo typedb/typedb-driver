@@ -29,6 +29,7 @@ dir_mapping = {
     "Fetch.adoc": "analyze",
     "FetchLeaf.adoc": "analyze",
     "Function.adoc": "analyze",
+    "Given.adoc": "analyze",
     "NamedRole.adoc": "analyze",
     "Pipeline.adoc": "analyze",
     "PipelineStage.adoc": "analyze",
@@ -103,6 +104,9 @@ dir_mapping = {
 
     # Transaction
     "QueryOptions.adoc": "transaction",
+    "QueryGivenEntry.adoc": "transaction",
+    "QueryGivenRow.adoc": "transaction",
+    "QueryGivenRows.adoc": "transaction",
     "Transaction.adoc": "transaction",
     "TransactionOptions.adoc": "transaction",
     "TransactionType.adoc": "transaction",

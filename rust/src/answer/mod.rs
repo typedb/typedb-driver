@@ -21,8 +21,8 @@ use std::{fmt, sync::Arc};
 
 pub use self::{concept_document::ConceptDocument, concept_row::ConceptRow, json::JSON};
 use crate::{
-    BoxStream, Result,
     answer::{concept_document::ConceptDocumentHeader, concept_row::ConceptRowHeader},
+    BoxStream, Result,
 };
 
 pub mod concept_document;

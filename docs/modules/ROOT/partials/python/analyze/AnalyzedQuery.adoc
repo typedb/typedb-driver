@@ -23,6 +23,20 @@ A representation of the Fetch stage of the query, if it has one.
 .Returns
 `'Fetch' | None`
 
+[#_AnalyzedQuery_given_]
+==== method ``given``
+
+[source,python]
+----
+given() -> 'Given' | None
+----
+
+A representation of the Given stage of the query, if it has one.
+
+[caption=""]
+.Returns
+`'Given' | None`
+
 [#_AnalyzedQuery_pipeline_]
 ==== method ``pipeline``
 

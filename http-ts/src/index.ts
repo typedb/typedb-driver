@@ -33,6 +33,7 @@ import {
     UsersListResponse,
     VersionResponse
 } from "./response";
+import {Attribute, Entity, Relation, Value} from "./concept";
 
 const HTTP_UNAUTHORIZED = 401;
 const HTTP_MISDIRECTED = 421;
@@ -149,12 +150,12 @@ export class TypeDBHttpDriver {
         return this.apiPost<AnalyzeResponse>(`/v1/transactions/${encodeURIComponent(transactionId)}/analyze`, { query, analyzeOptions });
     }
 
-    query(transactionId: string, query: string, queryOptions?: QueryOptions): Promise<ApiResponse<QueryResponse>> {
-        return this.apiPost<QueryResponse>(`/v1/transactions/${encodeURIComponent(transactionId)}/query`, { query, queryOptions });
+    query(transactionId: string, query: string, queryOptions?: QueryOptions, givenRows?: GivenRows): Promise<ApiResponse<QueryResponse>> {
+        return this.apiPost<QueryResponse>(`/v1/transactions/${encodeURIComponent(transactionId)}/query`, { query, queryOptions, givenRows });
     }
 
-    oneShotQuery(query: string, commit: boolean, databaseName: string, transactionType: TransactionType, transactionOptions?: TransactionOptions, queryOptions?: QueryOptions) {
-        return this.apiPost<QueryResponse>(`/v1/query`, { query, commit, databaseName, transactionType, transactionOptions, queryOptions });
+    oneShotQuery(query: string, commit: boolean, databaseName: string, transactionType: TransactionType, transactionOptions?: TransactionOptions, queryOptions?: QueryOptions, givenRows?: GivenRows) {
+        return this.apiPost<QueryResponse>(`/v1/query`, { query, commit, databaseName, transactionType, transactionOptions, queryOptions, givenRows });
     }
 
     health(): Promise<ApiResponse> {
@@ -388,3 +389,7 @@ export interface AnalyzeOptions {
 export interface User {
     username: string;
 }
+
+export type GivenRowEntry = Value | Entity | Relation | Attribute;
+export type GivenRow = GivenRowEntry[];
+export type GivenRows = GivenRow[][];

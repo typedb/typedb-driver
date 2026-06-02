@@ -33,6 +33,7 @@ dir_mapping = {
     "IFetchObject.adoc": "analyze",
     "IFunction.adoc": "analyze",
     "IFunctionCall.adoc": "analyze",
+    "IGiven.adoc": "analyze",
     "IHas.adoc": "analyze",
     "IIid.adoc": "analyze",
     "IInsertStage.adoc": "analyze",

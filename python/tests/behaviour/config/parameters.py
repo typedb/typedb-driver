@@ -380,3 +380,19 @@ def parse_server_routing(value: str) -> ServerRouting:
 
 
 register_type(ServerRouting=parse_server_routing)
+
+
+@parse.with_pattern("| with given rows")
+def parse_with_given(value: str) -> bool:
+    return value == " with given rows"
+
+
+register_type(WithGiven=parse_with_given)
+
+
+@parse.with_pattern(r"\$[a-zA-Z0-9\-_]+(, \$[a-zA-Z0-9\-_]+)*")
+def parse_variable_list(value: str) -> list:
+    return [v.replace("$", "").strip() for v in value.split(",")]
+
+
+register_type(VariableList=parse_variable_list)

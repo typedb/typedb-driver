@@ -112,12 +112,12 @@ a| `function` a| The callback function. a| `Callable` a|
 transaction.on_close(function)
 ----
 
-[#_Transaction_query_query_str_options_QueryOptions_None]
+[#_Transaction_query_query_str_options_QueryOptions_None_given_rows_Iterator_Iterator_Concept_None_None]
 ==== method ``query``
 
 [source,python]
 ----
-query(query: str, options: QueryOptions | None = None) -> Promise[QueryAnswer]
+query(query: str, options: QueryOptions | None = None, given_rows: Iterator[Iterator['Concept' | None]] | None = None) -> Promise[QueryAnswer]
 ----
 
 Execute a TypeQL query in this transaction.
@@ -130,6 +130,7 @@ Execute a TypeQL query in this transaction.
 |Name |Description |Type |Default Value
 a| `query` a| The query to execute. a| `str` a| 
 a| `options` a| The ``QueryOptions`` to execute the query with.. a| `QueryOptions \| None` a| `None`
+a| `given_rows` a| Rows given to the query as input. Will throw an exception if a type is passed. a| `Iterator[Iterator['Concept' \| None]] \| None` a| `None`
 |===
 
 [caption=""]

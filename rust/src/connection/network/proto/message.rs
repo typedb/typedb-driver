@@ -19,26 +19,27 @@
 
 use itertools::Itertools;
 use typedb_protocol::{
-    ExtensionVersion::Extension, Version::Version, authentication, connection, database, database_manager, migration,
-    query::initial_res::Res, server, server_manager, transaction, user, user_manager,
+    authentication, connection, database, database_manager, migration, query::initial_res::Res, server, server_manager,
+    transaction, user, user_manager, ExtensionVersion::Extension, Version::Version,
 };
 use uuid::Uuid;
 
 use super::{FromProto, IntoProto, TryFromProto, TryIntoProto};
 use crate::{
-    Credentials,
     analyze::pipeline::Pipeline,
-    answer::{QueryType, concept_document::ConceptDocumentHeader, concept_row::ConceptRowHeader},
-    common::{RequestID, Result, info::DatabaseInfo},
+    answer::{concept_document::ConceptDocumentHeader, concept_row::ConceptRowHeader, QueryType},
+    common::{info::DatabaseInfo, RequestID, Result},
     connection::{
         message::{
             AnalyzeResponse, DatabaseExportResponse, DatabaseImportRequest, QueryRequest, QueryResponse, Request,
             Response, TransactionRequest, TransactionResponse,
         },
-        server::{Server, server_version::ServerVersion},
+        server::{server_version::ServerVersion, Server},
     },
     error::{ConnectionError, InternalError, ServerError},
     info::UserInfo,
+    transaction::{QueryGivenEntry, QueryGivenRow, QueryGivenRows},
+    Credentials,
 };
 
 impl TryIntoProto<connection::open::Req> for Request {
@@ -228,10 +229,51 @@ impl IntoProto<transaction::Req> for TransactionRequest {
 impl IntoProto<typedb_protocol::query::Req> for QueryRequest {
     fn into_proto(self) -> typedb_protocol::query::Req {
         match self {
-            QueryRequest::Query { query, options } => {
-                typedb_protocol::query::Req { query, options: Some(options.into_proto()) }
-            }
+            QueryRequest::Query { query, options, inputs } => typedb_protocol::query::Req {
+                query,
+                options: Some(options.into_proto()),
+                given: inputs.map(|i| i.into_proto()),
+            },
         }
+    }
+}
+
+impl IntoProto<typedb_protocol::query::req::GivenRows> for QueryGivenRows {
+    fn into_proto(self) -> typedb_protocol::query::req::GivenRows {
+        typedb_protocol::query::req::GivenRows { rows: self.0.into_iter().map(|row| row.into_proto()).collect() }
+    }
+}
+
+impl IntoProto<typedb_protocol::query::req::GivenRow> for QueryGivenRow {
+    fn into_proto(self) -> typedb_protocol::query::req::GivenRow {
+        let entries = self.0.into_iter().map(|entry| entry.into_proto()).collect();
+        typedb_protocol::query::req::GivenRow { entries }
+    }
+}
+
+impl IntoProto<typedb_protocol::query::req::GivenEntry> for QueryGivenEntry {
+    fn into_proto(self) -> typedb_protocol::query::req::GivenEntry {
+        use typedb_protocol::{
+            query::req::given_entry::Entry as EntryProto, thing::Thing as ThingProtoInner, Thing as ThingProto,
+        };
+
+        let inner = match self {
+            QueryGivenEntry::Empty => EntryProto::Empty(typedb_protocol::query::req::GivenEntryEmpty {}),
+            QueryGivenEntry::Value(value) => EntryProto::Value(value.into_proto()),
+            QueryGivenEntry::Entity(entity) => {
+                let thing = ThingProtoInner::Entity(entity.into_proto());
+                EntryProto::Thing(ThingProto { thing: Some(thing) })
+            }
+            QueryGivenEntry::Relation(relation) => {
+                let thing = ThingProtoInner::Relation(relation.into_proto());
+                EntryProto::Thing(ThingProto { thing: Some(thing) })
+            }
+            QueryGivenEntry::Attribute(attribute) => {
+                let thing = ThingProtoInner::Attribute(attribute.into_proto());
+                EntryProto::Thing(ThingProto { thing: Some(thing) })
+            }
+        };
+        typedb_protocol::query::req::GivenEntry { entry: Some(inner) }
     }
 }
 
@@ -407,7 +449,7 @@ impl FromProto<database::type_schema::Res> for Response {
 
 impl TryFromProto<database::export::Server> for DatabaseExportResponse {
     fn try_from_proto(proto: database::export::Server) -> Result<Self> {
-        use migration::export::{Done, InitialRes, ResPart, server::Server};
+        use migration::export::{server::Server, Done, InitialRes, ResPart};
         match proto.server {
             Some(server) => match server.server {
                 Some(Server::InitialRes(InitialRes { schema })) => Ok(Self::Schema(schema)),

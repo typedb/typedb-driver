@@ -24,7 +24,8 @@ from tests.behaviour.config.parameters import MayError
 from tests.behaviour.util.functor_encoder import (
     FunctorEncoder, normalize_functor_for_compare,
     _encode_pipeline, _encode_function,
-    _encode_pipeline_annotations, _encode_function_annotations, _encode_fetch_annotations
+    _encode_pipeline_annotations, _encode_function_annotations,
+    _encode_given_structure, _encode_given_annotations, _encode_fetch_annotations
 )
 
 
@@ -37,6 +38,26 @@ def step_impl(context: Context):
 @step("typeql analyze{may_error:MayError}")
 def step_impl(context, may_error: MayError):
     may_error.check(lambda: context.tx().analyze(context.text).resolve())
+
+
+@step("analyzed query given structure is")
+def step_impl(context: Context):
+    pipeline = context.analyzed.pipeline()
+    actual_functor = _encode_given_structure(context.analyzed.given(), FunctorEncoder(pipeline))
+    assert_that(
+        normalize_functor_for_compare(actual_functor),
+        is_(equal_to(normalize_functor_for_compare(context.text)))
+    )
+
+
+@step("analyzed query given annotations are")
+def step_impl(context: Context):
+    pipeline = context.analyzed.pipeline()
+    actual_functor = _encode_given_annotations(context.analyzed.given(), FunctorEncoder(pipeline))
+    assert_that(
+        normalize_functor_for_compare(actual_functor),
+        is_(equal_to(normalize_functor_for_compare(context.text)))
+    )
 
 
 @step("analyzed query pipeline structure is")

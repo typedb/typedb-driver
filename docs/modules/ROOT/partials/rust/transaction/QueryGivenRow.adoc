@@ -1,0 +1,21 @@
+[#_struct_QueryGivenRow]
+[.doc-api-reference-driver]
+=== QueryGivenRow
+
+`struct`
+
+*Implements traits:*
+
+* `Debug`
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `0` a| `Vec<QueryGivenEntry>` a| 
+|===
+// end::properties[]
+

@@ -27,6 +27,22 @@ Gets a representation of the Fetch stage of the query, if it has one.
 .Returns
 `IFetch?`
 
+[#_IGiven_TypeDB_Driver_Api_Analyze_IAnalyzedQuery_Given]
+==== method ``Given``
+
+[source,cs]
+----
+IGiven? TypeDB.Driver.Api.Analyze.IAnalyzedQuery.Given
+----
+
+
+
+Gets a representation of the Given stage of the query, if it has one.
+
+[caption=""]
+.Returns
+`IGiven?`
+
 [#_IPipeline_TypeDB_Driver_Api_Analyze_IAnalyzedQuery_Pipeline]
 ==== method ``Pipeline``
 

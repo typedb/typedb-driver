@@ -164,6 +164,34 @@ a| `options` a| Query options. a| `QueryOptions`
 .Returns
 `Promise< IQueryAnswer >`
 
+[#_Promise_IQueryAnswer_TypeDB_Driver_Api_ITransaction_Query_string_query_QueryOptions_options_List_List_IConcept_givenRows_]
+==== method ``Query``
+
+[source,cs]
+----
+Promise< IQueryAnswer > Query(string query, QueryOptions options, List< List< IConcept? > > givenRows)
+----
+
+
+
+Executes a TypeQL query with input rows in this transaction.
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `query` a| The TypeQL query string to execute. a| `string`
+a| `options` a| Query options. a| `QueryOptions`
+a| `givenRows` a| Input rows; each inner enumerable is one row, ``null`` entries represent empty variables. a| `List< List< IConcept? > >`
+|===
+
+[caption=""]
+.Returns
+`Promise< IQueryAnswer >`
+
 [#_void_TypeDB_Driver_Api_ITransaction_Rollback_]
 ==== method ``Rollback``
 

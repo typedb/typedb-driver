@@ -38,6 +38,11 @@ namespace TypeDB.Driver.Api.Analyze
         IEnumerable<IFunction> Preamble { get; }
 
         /// <summary>
+        /// Gets a representation of the Given stage of the query, if it has one.
+        /// </summary>
+        IGiven? Given { get; }
+
+        /// <summary>
         /// Gets a representation of the Fetch stage of the query, if it has one.
         /// </summary>
         IFetch? Fetch { get; }

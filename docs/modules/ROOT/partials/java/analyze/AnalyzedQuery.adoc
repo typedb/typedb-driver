@@ -21,6 +21,20 @@ A representation of the ``Fetch`` stage of the query, if it has one
 .Returns
 `java.util.Optional<? extends Fetch>`
 
+[#_AnalyzedQuery_given_]
+==== method ``given``
+
+[source,java]
+----
+java.util.Optional<? extends Given> given()
+----
+
+A representation of the ``Given`` stage of the query, if it has one
+
+[caption=""]
+.Returns
+`java.util.Optional<? extends Given>`
+
 [#_AnalyzedQuery_pipeline_]
 ==== method ``pipeline``
 

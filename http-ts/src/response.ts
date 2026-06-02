@@ -22,7 +22,8 @@ import {Concept} from "./concept";
 import {
     AnalyzedFetch,
     AnalyzedFunction,
-    AnalyzedPipeline
+    AnalyzedPipeline,
+    Given
 } from "./analyze";
 import {ConceptRowsQueryResponseLegacy} from "./legacy";
 
@@ -113,6 +114,7 @@ export type QueryResponse =
 export interface AnalyzeResponse {
     source: string,
     preamble: AnalyzedFunction[],
+    given: Given | null,
     query: AnalyzedPipeline,
     fetch: AnalyzedFetch | null,
 }

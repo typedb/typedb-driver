@@ -20,7 +20,7 @@
 use typedb_protocol::Database as DatabaseProto;
 
 use super::TryFromProto;
-use crate::common::{Result, info::DatabaseInfo};
+use crate::common::{info::DatabaseInfo, Result};
 
 impl TryFromProto<DatabaseProto> for DatabaseInfo {
     fn try_from_proto(proto: DatabaseProto) -> Result<Self> {

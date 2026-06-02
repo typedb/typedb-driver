@@ -25,7 +25,8 @@ use typedb_driver::{Result as TypeDBResult, Transaction, analyze::AnalyzedQuery}
 use crate::{
     Context,
     analyze::functor_encoding::{
-        encode_fetch_annotations_as_functor, encode_query_annotations_as_functor, encode_query_structure_as_functor,
+        encode_fetch_annotations_as_functor, encode_given_annotations_as_functor, encode_query_annotations_as_functor,
+        encode_given_structure_as_functor, encode_query_structure_as_functor,
     },
     generic_step, params,
 };
@@ -48,6 +49,15 @@ pub async fn get_answers_of_typeql_analyze(context: &mut Context, step: &Step) {
 async fn typeql_analyze_may_error(context: &mut Context, may_error: params::MayError, step: &Step) {
     let result = run_analyze_query(context.transaction(), step.docstring().unwrap()).await;
     may_error.check(result);
+}
+
+#[cucumber::then("analyzed query given structure is:")]
+async fn analyzed_query_given_is(context: &mut Context, step: &Step) {
+    let expected_functor = step.docstring().unwrap();
+    let analyzed = context.analyzed.as_ref().unwrap();
+    let actual_functor = encode_given_structure_as_functor(&analyzed);
+
+    assert_eq!(normalize_functor_for_compare(&actual_functor), normalize_functor_for_compare(&expected_functor));
 }
 
 #[apply(generic_step)]
@@ -74,6 +84,15 @@ async fn analyzed_query_preamble_contains(context: &mut Context, step: &Step) {
         normalize_functor_for_compare(expected_functor),
         preamble_functors.iter().map(|s| normalize_functor_for_compare(s)).join("\n\t")
     );
+}
+
+#[cucumber::then("analyzed query given annotations are:")]
+async fn analyzed_query_given_annotations_is(context: &mut Context, step: &Step) {
+    let expected_functor = step.docstring().unwrap();
+    let analyzed = context.analyzed.as_ref().unwrap();
+    let actual_functor = encode_given_annotations_as_functor(&analyzed);
+
+    assert_eq!(normalize_functor_for_compare(&actual_functor), normalize_functor_for_compare(expected_functor));
 }
 
 #[apply(generic_step)]
@@ -259,7 +278,7 @@ pub mod functor_encoding {
         },
         concept::{type_::Type, Value, ValueType},
     };
-    use typedb_driver::analyze::{Fetch, FetchLeaf, TypeAnnotations, VariableAnnotations};
+    use typedb_driver::analyze::{Fetch, FetchLeaf, Given, TypeAnnotations, VariableAnnotations};
     use typedb_driver::analyze::conjunction::ConstraintWithSpan;
 
     use crate::analyze::functor_encoding::functor_macros::{impl_functor_for, impl_functor_for_impl};
@@ -423,9 +442,26 @@ pub mod functor_encoding {
         (query, preamble)
     }
 
+    pub fn encode_given_structure_as_functor(analyzed: &AnalyzedQuery) -> String {
+        let context_ = FunctorContext { structure: &analyzed.query };
+        let context = &context_;
+        let variables = &analyzed.given.as_ref().unwrap().variables;
+        encode_functor_impl!(context, Given { variables, })
+    }
+
     // annotations
     struct FunctionAnnotations<'a>(&'a Function);
     struct PipelineAnnotations<'a>(&'a Pipeline);
+
+    pub fn encode_given_annotations_as_functor(analyzed: &AnalyzedQuery) -> String {
+        let Given { variable_annotations, .. } = analyzed.given.as_ref().unwrap();
+        let context_ = FunctorContext { structure: &analyzed.query };
+        let context = &context_;
+        encode_functor_impl!(
+            context,
+            Given { variable_annotations, }
+        )
+    }
 
     pub fn encode_query_annotations_as_functor(analyzed: &AnalyzedQuery) -> (String, Vec<String>) {
         let context = FunctorContext { structure: &analyzed.query };
@@ -531,7 +567,6 @@ pub mod functor_encoding {
     }
 
     impl_functor_for!(enum SubBlockAnnotation [ Or { branches, } | Not { conjunction, } | Try { conjunction, } | ]);
-    impl_functor_for!(enum TypeAnnotations [ Instance (annotations,) | Type (annotations,) | Value (value_types,) | ]);
     impl_functor_for_multi!(|self, context| [
         TrunkAnnotationToEncode => {
             context.structure.conjunctions[self.0].variable_annotations.encode_as_functor(context)
@@ -540,6 +575,20 @@ pub mod functor_encoding {
             self.types.encode_as_functor(context)
         }
     ]);
+
+    impl FunctorEncoded for TypeAnnotations {
+        fn encode_as_functor<'a>(&self, context: &FunctorContext<'a>) -> String {
+            match self {
+                TypeAnnotations::Instance(annotations) => encode_functor_impl!(context, Instance (annotations,)),
+                TypeAnnotations::Type(annotations) => encode_functor_impl!(context, Type (annotations,)),
+                TypeAnnotations::Value(annotations) => {
+                    let annotations = vec![annotations.clone()];
+                    let annotations = &annotations;
+                    encode_functor_impl!(context, Value (annotations,))
+                },
+            }
+        }
+    }
 
     // Fetch
     pub fn encode_fetch_annotations_as_functor(analyzed: &AnalyzedQuery) -> String {

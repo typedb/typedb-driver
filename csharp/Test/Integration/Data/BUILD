@@ -26,6 +26,8 @@ csharp_integration_test(
         "//csharp:driver-csharp",
         "//csharp/Api:api",
         "//csharp/Common:common",
+        "//csharp/Answer:answer",
+        "//csharp/Concept:concept",
     ],
     target_frameworks = target_frameworks,
     targeting_packs = targeting_packs,

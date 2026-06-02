@@ -40,6 +40,13 @@ public interface AnalyzedQuery {
     Stream<? extends Function> preamble();
 
     /**
+     * A representation of the <code>Given</code> stage of the query, if it has one
+     *
+     * @return an Optional containing the given stage if present, empty otherwise
+     */
+    Optional<? extends Given> given();
+
+    /**
      * A representation of the <code>Fetch</code> stage of the query, if it has one
      *
      * @return an Optional containing the fetch stage if present, empty otherwise

@@ -20,7 +20,7 @@ from enum import Enum
 
 from typedb.analyze import (
     Constraint, ConstraintVertex, Variable,
-    ConjunctionID, Pipeline, PipelineStage, Fetch,
+    ConjunctionID, Pipeline, PipelineStage, Fetch, Given,
     Function, ReturnOperation,
     ReduceStage, Reducer, SortStage, VariableAnnotations,
 )
@@ -308,6 +308,15 @@ def _encode_function_annotations(self: Function, encoder: FunctorEncoder) -> str
     return_annotations = encoder.make_functor(return_op_name, self.return_annotations())
     body_annotations = _encode_pipeline_annotations(self.body(), encoder)
     return encoder.make_functor("Function", argument_annotations, return_annotations, body_annotations)
+
+
+def _encode_given_structure(self: Given, encoder: FunctorEncoder) -> str:
+    return encoder.make_functor("Given", self.variables())
+
+
+def _encode_given_annotations(self: Given, encoder: FunctorEncoder) -> str:
+    variable_annotations = {var: self.variable_annotations(var) for var in self.variables()}
+    return encoder.make_functor("Given", variable_annotations)
 
 
 def _encode_fetch_annotations(self: Fetch, encoder: FunctorEncoder) -> str:

@@ -30,6 +30,7 @@ csharp_library(
         "//csharp/Answer:answer",
         "//csharp/Api:api",
         "//csharp/Common:common",
+        "//csharp/Concept:concept",
         "//csharp/User:user",
         "//csharp:typedb_driver_pinvoke",
     ],

@@ -62,7 +62,7 @@ async fn create_temporary_database_with_schema(driver: &TypeDBDriver, schema_que
     let transaction = open_transaction_for_database(driver, &name, TransactionType::Schema, None)
         .await
         .expect("Expected transaction");
-    run_query(&transaction, &schema_query, None).await.expect("Expected successful query");
+    run_query(&transaction, &schema_query, None, None).await.expect("Expected successful query");
     transaction.commit().await.expect("Expected successful commit");
     name
 }

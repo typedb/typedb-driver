@@ -314,6 +314,11 @@ namespace TypeDB.Driver.Test.Behaviour
                     Encode(func.Body));
             }
 
+            public string Encode(IGiven given)
+            {
+                return MakeFunctor("Given", EncodeList(given.Variables.Select(Encode)));
+            }
+
             private string Encode(IReturnOperation returnOp)
             {
                 if (returnOp.IsStream)
@@ -479,6 +484,14 @@ namespace TypeDB.Driver.Test.Behaviour
                     EncodeList(func.ArgumentAnnotations.Select(Encode)),
                     MakeFunctor(returnStreamOrSingle, EncodeList(func.ReturnAnnotations.Select(Encode))),
                     Encode(func.Body));
+            }
+
+            public string Encode(IGiven given)
+            {
+                var varAnnotations = given.Variables
+                    .Select(v => base.Encode(v) + ":" + Encode(given.GetVariableAnnotations(v)))
+                    .OrderBy(x => x);
+                return MakeFunctor("Given", "{" + string.Join(",", varAnnotations) + "}");
             }
 
             public string Encode(IFetch fetch)

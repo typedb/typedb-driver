@@ -1,0 +1,41 @@
+[#_Given]
+[.doc-api-reference-driver]
+=== Given
+
+`class`
+
+*Package*: `com.typedb.driver.api.analyze`
+
+A representation of the 'given' stage of a query
+
+// tag::methods[]
+[#_Given_variable_annotations_Variable]
+==== method ``variable_annotations``
+
+[source,java]
+----
+VariableAnnotations variable_annotations​(Variable variable)
+----
+
+
+
+[caption=""]
+.Returns
+`VariableAnnotations`
+
+[#_Given_variables_]
+==== method ``variables``
+
+[source,java]
+----
+java.util.stream.Stream<? extends Variable> variables()
+----
+
+
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<? extends Variable>`
+
+// end::methods[]
+

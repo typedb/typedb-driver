@@ -16,6 +16,7 @@ Represents errors encountered during operation.
 a| `Analyze(AnalyzeError)`
 a| `Concept(ConceptError)`
 a| `Connection(ConnectionError)`
+a| `FFI(String)`
 a| `Internal(InternalError)`
 a| `Migration(MigrationError)`
 a| `Other(String)`

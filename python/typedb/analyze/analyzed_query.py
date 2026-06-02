@@ -25,15 +25,17 @@ from typedb.common.native_wrapper import NativeWrapper
 from typedb.analyze.pipeline import _Pipeline
 from typedb.analyze.function import _Function
 from typedb.analyze.fetch import _Fetch
+from typedb.analyze.given import _Given
 
 from typedb.native_driver_wrapper import AnalyzedQuery as NativeAnalyzedQuery, \
-    analyzed_preamble, analyzed_query_pipeline, analyzed_fetch, \
+    analyzed_preamble, analyzed_query_pipeline, analyzed_fetch, analyzed_given, \
     function_iterator_next
 
 if TYPE_CHECKING:
     from typedb.api.analyze.pipeline import Pipeline
     from typedb.api.analyze.function import Function
     from typedb.api.analyze.fetch import Fetch
+    from typedb.api.analyze.given import Given
 
 
 class _AnalyzedQuery(AnalyzedQuery, NativeWrapper[NativeAnalyzedQuery]):
@@ -52,9 +54,10 @@ class _AnalyzedQuery(AnalyzedQuery, NativeWrapper[NativeAnalyzedQuery]):
     def preamble(self) -> Iterator["Function"]:
         return map(_Function, IteratorWrapper(analyzed_preamble(self.native_object), function_iterator_next))
 
+    def given(self) -> Optional["Given"]:
+        native_given = analyzed_given(self.native_object)
+        return None if native_given is None else _Given(native_given)
+
     def fetch(self) -> Optional["Fetch"]:
         native_fetch = analyzed_fetch(self.native_object)
-        if native_fetch is None:
-            return None
-        else:
-            return _Fetch.of(native_fetch)
+        return None if native_fetch is None else _Fetch.of(native_fetch)

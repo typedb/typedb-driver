@@ -142,6 +142,20 @@ a| `offset` a| A string representing the timezone offset in the format +HHMM or 
 Datetime.fromstring("2024-09-21T18:34:22.009257123", offset_seconds=Datetime.offset_seconds_fromstring("+0100"))
 ----
 
+[#_Datetime_to_seconds_and_nanos_]
+==== method ``to_seconds_and_nanos``
+
+[source,python]
+----
+to_seconds_and_nanos() -> Tuple[int, int]
+----
+
+
+
+[caption=""]
+.Returns
+`Tuple[int, int]`
+
 [#_Datetime_utcfromstring_datetime_str_str_tz_name_str_None_offset_seconds_int_None_datetime_fmt_str]
 ==== method ``utcfromstring``
 

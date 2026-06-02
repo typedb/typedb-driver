@@ -19,7 +19,7 @@
 
 use std::{fmt, str::FromStr};
 
-use http::{Uri, uri::PathAndQuery};
+use http::{uri::PathAndQuery, Uri};
 
 use crate::{
     common::{Error, Result},

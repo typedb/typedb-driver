@@ -40,6 +40,10 @@ public class AnalyzedQueryImpl extends NativeObject<com.typedb.driver.jni.Analyz
         return new NativeIterator<>(typedb_driver.analyzed_preamble(nativeObject)).stream().map(FunctionImpl::new);
     }
 
+    public Optional<GivenImpl> given() {
+        return Optional.ofNullable(typedb_driver.analyzed_given(nativeObject)).map(GivenImpl::new);
+    }
+
     public Optional<FetchImpl> fetch() {
         return Optional.ofNullable(typedb_driver.analyzed_fetch(nativeObject)).map(FetchImpl::of);
     }

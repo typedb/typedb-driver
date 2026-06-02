@@ -31,6 +31,7 @@ mod server;
 mod transaction;
 mod transaction_options;
 mod user;
+mod given_rows;
 
 use tracing_subscriber::{EnvFilter, filter::LevelFilter, fmt, layer::SubscriberExt, util::SubscriberInitExt};
 

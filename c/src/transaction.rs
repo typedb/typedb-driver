@@ -20,7 +20,7 @@
 use std::{ffi::c_char, ptr::null_mut};
 
 use typedb_driver::{Error, Promise, QueryOptions, Transaction, TransactionOptions, TransactionType, TypeDBDriver};
-
+use typedb_driver::transaction::QueryGivenRows;
 use crate::{
     analyze::AnalyzedQueryPromise,
     answer::QueryAnswerPromise,
@@ -60,6 +60,24 @@ pub extern "C" fn transaction_query(
 ) -> *mut QueryAnswerPromise {
     release(QueryAnswerPromise::new(Box::new(
         borrow(transaction).query_with_options(string_view(query), *borrow(options)),
+    )))
+}
+
+/// Performs a TypeQL query in the transaction with the given rows
+///
+/// @param transaction The <code>Transaction</code> to execute the query within.
+/// @param query The query string.
+/// @param options <code>QueryOptions</code> to configure the executed query.
+/// @param given_rows <code>QueryGivenRows</code> the rows given as input to the query.
+#[unsafe(no_mangle)]
+pub extern "C" fn transaction_query_given_rows(
+    transaction: *mut Transaction,
+    query: *const c_char,
+    options: *const QueryOptions,
+    given_rows: *mut QueryGivenRows,
+) -> *mut QueryAnswerPromise {
+    release(QueryAnswerPromise::new(Box::new(
+        borrow(transaction).query_with_options_and_inputs(string_view(query), *borrow(options), Some(take_ownership(given_rows))),
     )))
 }
 

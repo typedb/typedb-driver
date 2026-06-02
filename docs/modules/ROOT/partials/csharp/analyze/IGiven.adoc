@@ -1,0 +1,47 @@
+[#_IGiven]
+[.doc-api-reference-driver]
+=== IGiven
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+
+
+A representation of the 'given' stage of a query.
+
+// tag::methods[]
+[#_IVariableAnnotations_TypeDB_Driver_Api_Analyze_IGiven_GetVariableAnnotations_IVariable_variable_]
+==== method ``GetVariableAnnotations``
+
+[source,cs]
+----
+IVariableAnnotations GetVariableAnnotations(IVariable variable)
+----
+
+
+
+Gets the inferred type annotations for the specified variable.
+
+[caption=""]
+.Returns
+`IVariableAnnotations`
+
+[#_IEnumerable_IVariable_TypeDB_Driver_Api_Analyze_IGiven_Variables]
+==== method ``Variables``
+
+[source,cs]
+----
+IEnumerable< IVariable > TypeDB.Driver.Api.Analyze.IGiven.Variables
+----
+
+
+
+Gets the variables declared in the given stage.
+
+[caption=""]
+.Returns
+`IEnumerable< IVariable >`
+
+// end::methods[]
+

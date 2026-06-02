@@ -37,6 +37,7 @@ dir_mapping = {
     "FetchVariant.adoc": "analyze",
     "Function.adoc": "analyze",
     "FunctionCall.adoc": "analyze",
+    "Given.adoc" : "analyze",
     "Has.adoc": "analyze",
     "Iid.adoc": "analyze",
     "InsertStage.adoc": "analyze",
@@ -123,6 +124,7 @@ dir_mapping = {
     "Instance.adoc": "data",
     "Relation.adoc": "data",
     "Value.adoc": "data",
+    "ValueFactory.adoc": "data",
 
     # Errors
     "TypeDBDriverException.adoc": "errors",

@@ -354,12 +354,12 @@ health(): Promise<ApiResponse>
 .Returns
 `Promise<ApiResponse>`
 
-[#_TypeDBHttpDriver_oneShotQuery_query_string_commit_boolean_databaseName_string_transactionType_TransactionType_transactionOptions_TransactionOptions_queryOptions_QueryOptions]
+[#_TypeDBHttpDriver_oneShotQuery_query_string_commit_boolean_databaseName_string_transactionType_TransactionType_transactionOptions_TransactionOptions_queryOptions_QueryOptions_givenRows_GivenRows]
 ==== method ``oneShotQuery``
 
 [source,typescript]
 ----
-oneShotQuery( query: string, commit: boolean, databaseName: string, transactionType: TransactionType, transactionOptions?: TransactionOptions, queryOptions?: QueryOptions, ): Promise<ApiResponse<QueryResponse>>
+oneShotQuery( query: string, commit: boolean, databaseName: string, transactionType: TransactionType, transactionOptions?: TransactionOptions, queryOptions?: QueryOptions, givenRows?: GivenRows, ): Promise<ApiResponse<QueryResponse>>
 ----
 
 
@@ -376,6 +376,7 @@ a| `databaseName` a|  a| `string`
 a| `transactionType` a|  a| `TransactionType`
 a| `transactionOptions` a|  a| `TransactionOptions`
 a| `queryOptions` a|  a| `QueryOptions`
+a| `givenRows` a|  a| `GivenRows`
 |===
 
 [caption=""]
@@ -407,12 +408,12 @@ a| `transactionOptions` a|  a| `TransactionOptions`
 .Returns
 `Promise<ApiResponse<TransactionOpenResponse>>`
 
-[#_TypeDBHttpDriver_query_transactionId_string_query_string_queryOptions_QueryOptions]
+[#_TypeDBHttpDriver_query_transactionId_string_query_string_queryOptions_QueryOptions_givenRows_GivenRows]
 ==== method ``query``
 
 [source,typescript]
 ----
-query( transactionId: string, query: string, queryOptions?: QueryOptions, ): Promise<ApiResponse<QueryResponse>>
+query( transactionId: string, query: string, queryOptions?: QueryOptions, givenRows?: GivenRows, ): Promise<ApiResponse<QueryResponse>>
 ----
 
 
@@ -426,6 +427,7 @@ query( transactionId: string, query: string, queryOptions?: QueryOptions, ): Pro
 a| `transactionId` a|  a| `string`
 a| `query` a|  a| `string`
 a| `queryOptions` a|  a| `QueryOptions`
+a| `givenRows` a|  a| `GivenRows`
 |===
 
 [caption=""]

@@ -54,6 +54,27 @@ js_test(
     tags = ["exclusive"],
 )
 
+ts_project(
+    name = "test-given-lib",
+    srcs = ["test-given.ts"] + ["//http-ts:driver-lib"],
+    tsconfig = behaviour_test_ts_config(),
+    deps = [
+        "//http-ts:node_modules/@types/node",
+    ],
+    transpiler = "tsc",
+    declaration = True,
+)
+
+js_test(
+    name = "test-given",
+    entry_point = ":test-given.js",
+    data = [
+        ":test-given-lib",
+    ],
+    size = "medium",
+    local = True,
+)
+
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*"]),

@@ -40,6 +40,15 @@ namespace TypeDB.Driver.Analyze
                 Pinvoke.typedb_driver.analyzed_preamble(NativeObject))
                 .Select(f => new Function(f));
 
+        public IGiven? Given
+        {
+            get
+            {
+                var native = Pinvoke.typedb_driver.analyzed_given(NativeObject);
+                return native != null ? new Analyze.Given(native) : null;
+            }
+        }
+
         public IFetch? Fetch =>
             Analyze.Fetch.Of(Pinvoke.typedb_driver.analyzed_fetch(NativeObject));
     }

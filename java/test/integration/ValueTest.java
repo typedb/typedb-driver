@@ -24,6 +24,7 @@ import com.typedb.driver.api.Credentials;
 import com.typedb.driver.api.Driver;
 import com.typedb.driver.api.DriverOptions;
 import com.typedb.driver.api.DriverTlsConfig;
+import com.typedb.driver.api.QueryOptions;
 import com.typedb.driver.api.Transaction;
 import com.typedb.driver.api.answer.ConceptRow;
 import com.typedb.driver.api.answer.QueryAnswer;
@@ -33,6 +34,7 @@ import com.typedb.driver.api.concept.type.AttributeType;
 import com.typedb.driver.api.concept.value.Value;
 import com.typedb.driver.api.database.Database;
 import com.typedb.driver.common.Duration;
+import com.typedb.driver.concept.ValueFactory;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -48,6 +50,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -458,6 +461,57 @@ public class ValueTest {
             BigDecimal expected = new BigDecimal("-99999.99999").setScale(value.getDecimal().scale(), RoundingMode.UNNECESSARY);
             assertEquals(expected, value.getDecimal());
         }, Transaction.Type.WRITE);
+    }
+
+    @Test
+    public void testRoundTrips() {
+        Database db = typedbDriver.databases().get(DB_NAME);
+        db.delete();
+        typedbDriver.databases().create(DB_NAME);
+
+        DateTimeFormatter offsetFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSSZ");
+        ZonedDateTime belfastDT = LocalDateTime.parse("2024-09-20T16:40:05").atZone(ZoneId.of("Europe/Belfast"));
+        ZonedDateTime offsetDT = OffsetDateTime.parse("2024-09-20T16:40:05.028129323+0545", offsetFormatter).toZonedDateTime();
+
+        Object[][] examples = {
+                {"boolean",     ValueFactory.newBoolean(true),                                              "true"},
+                {"boolean",     ValueFactory.newBoolean(false),                                             "false"},
+                {"integer",     ValueFactory.newInteger(25),                                                "25"},
+                {"double",      ValueFactory.newDouble(54.321),                                             "54.321"},
+                {"decimal",     ValueFactory.newDecimal(new BigDecimal("1234567890.0001234567890")),        "1234567890.0001234567890dec"},
+                {"decimal",     ValueFactory.newDecimal(new BigDecimal("-1234567890.0001234567890")),        "-1234567890.0001234567890dec"},
+                {"string",      ValueFactory.newString("John"),                                             "\"John\""},
+                {"date",        ValueFactory.newDate(LocalDate.of(2024, 9, 20)),                            "2024-09-20"},
+                {"datetime",    ValueFactory.newDatetime(LocalDateTime.parse("1999-02-26T12:15:05")),       "1999-02-26T12:15:05"},
+                {"datetime-tz", ValueFactory.newDatetimeTz(belfastDT),                                     "2024-09-20T16:40:05 Europe/Belfast"},
+                {"datetime-tz", ValueFactory.newDatetimeTz(offsetDT),                                      "2024-09-20T16:40:05.028129323+0545"},
+                {"duration",    ValueFactory.newDuration(Duration.parse("P1Y10M7DT15H44M5.00394892S")),     "P1Y10M7DT15H44M5.00394892S"},
+        };
+
+        localhostTypeDBTX(tx -> {
+            for (Object[] example : examples) {
+                String valueType = (String) example[0];
+                Value nativeValue = (Value) example[1];
+                String typeqlLiteral = (String) example[2];
+                try {
+                    ConceptRow row = runRoundtripTest(tx, valueType, nativeValue, typeqlLiteral);
+                    Value given = row.get("native").get().asValue();
+                    Value parsed = row.get("parsed").get().asValue();
+                    assertEquals(nativeValue, given);
+                    assertEquals(given, parsed);
+                } catch (Exception e) {
+                    throw new AssertionError("Roundtrip failed for " + valueType + " '" + typeqlLiteral + "'", e);
+                }
+            }
+        }, Transaction.Type.READ);
+    }
+
+    private ConceptRow runRoundtripTest(Transaction tx, String valueType, Value nativeValue, String typeqlLiteral) {
+        String query = String.format("given $native: %s; match let $parsed = %s;", valueType, typeqlLiteral);
+        List<ConceptRow> rows = tx.query(query, new QueryOptions(), List.of(List.of(Optional.of(nativeValue)))).resolve()
+                .asConceptRows().stream().collect(Collectors.toList());
+        assertEquals(1, rows.size());
+        return rows.get(0);
     }
 
     private void localhostTypeDBTX(Consumer<Transaction> fn, Transaction.Type type/*, Options options*/) {

@@ -1,0 +1,25 @@
+[#_struct_Given]
+[.doc-api-reference-driver]
+=== Given
+
+`struct`
+
+*Implements traits:*
+
+* `Clone`
+* `Debug`
+
+A representation of the ‘given’ stage of a query
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `variable_annotations` a| `HashMap<Variable, VariableAnnotations>` a| The inferred annotations of each variable in the given stage.
+a| `variables` a| `Vec<Variable>` a| The ``Variables`` in the given stage.
+|===
+// end::properties[]
+
