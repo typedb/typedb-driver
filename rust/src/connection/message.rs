@@ -178,7 +178,7 @@ pub(super) enum AnalyzeResponse {
 
 #[derive(Debug)]
 pub(super) enum QueryRequest {
-    Query { query: String, options: QueryOptions, inputs: Option<QueryGivenRows> },
+    Query { query: String, options: QueryOptions, rows: Option<QueryGivenRows> },
 }
 
 #[derive(Debug)]

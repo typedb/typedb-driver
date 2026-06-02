@@ -229,10 +229,10 @@ impl IntoProto<transaction::Req> for TransactionRequest {
 impl IntoProto<typedb_protocol::query::Req> for QueryRequest {
     fn into_proto(self) -> typedb_protocol::query::Req {
         match self {
-            QueryRequest::Query { query, options, inputs } => typedb_protocol::query::Req {
+            QueryRequest::Query { query, options, rows: rows } => typedb_protocol::query::Req {
                 query,
                 options: Some(options.into_proto()),
-                given: inputs.map(|i| i.into_proto()),
+                given: rows.map(|i| i.into_proto()),
             },
         }
     }

@@ -39,9 +39,9 @@ pub(crate) async fn run_query(
 ) -> TypeDBResult<QueryAnswer> {
     match (given_rows, query_options) {
         (None, None) => transaction.query(query).await,
-        (Some(inputs), None) => transaction.query_with_inputs(query, inputs).await,
+        (Some(rows), None) => transaction.query_with_rows(query, rows).await,
         (None, Some(options)) => transaction.query_with_options(query, options).await,
-        (Some(rows), Some(options)) => transaction.query_with_options_and_inputs(query, options, Some(rows)).await,
+        (Some(rows), Some(options)) => transaction.query_with_options_and_rows(query, options, Some(rows)).await,
     }
 }
 

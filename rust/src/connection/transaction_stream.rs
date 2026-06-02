@@ -143,9 +143,9 @@ impl TransactionStream {
         &self,
         query: &str,
         options: QueryOptions,
-        inputs: Option<QueryGivenRows>,
+        rows: Option<QueryGivenRows>,
     ) -> impl Promise<'static, Result<QueryAnswer>> + use<> {
-        let stream = self.query_stream(QueryRequest::Query { query: query.to_owned(), options, inputs });
+        let stream = self.query_stream(QueryRequest::Query { query: query.to_owned(), options, rows });
         promisify! {
             let mut stream = stream?;
 

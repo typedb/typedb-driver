@@ -77,7 +77,7 @@ pub extern "C" fn transaction_query_given_rows(
     given_rows: *mut QueryGivenRows,
 ) -> *mut QueryAnswerPromise {
     release(QueryAnswerPromise::new(Box::new(
-        borrow(transaction).query_with_options_and_inputs(string_view(query), *borrow(options), Some(take_ownership(given_rows))),
+        borrow(transaction).query_with_options_and_rows(string_view(query), *borrow(options), Some(take_ownership(given_rows))),
     )))
 }
 

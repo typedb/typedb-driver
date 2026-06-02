@@ -69,7 +69,7 @@ impl Transaction {
     /// transaction.query(query)
     /// ```
     pub fn query(&self, query: impl AsRef<str>) -> impl Promise<'static, Result<QueryAnswer>> {
-        self.query_with_options_and_inputs(query, QueryOptions::new(), None)
+        self.query_with_options_and_rows(query, QueryOptions::new(), None)
     }
 
     /// Performs a TypeQL query in this transaction.
@@ -89,26 +89,26 @@ impl Transaction {
         query: impl AsRef<str>,
         options: QueryOptions,
     ) -> impl Promise<'static, Result<QueryAnswer>> {
-        self.query_with_options_and_inputs(query, options, None)
+        self.query_with_options_and_rows(query, options, None)
     }
 
-    pub fn query_with_inputs(
+    pub fn query_with_rows(
         &self,
         query: impl AsRef<str>,
-        inputs: QueryGivenRows,
+        rows: QueryGivenRows,
     ) -> impl Promise<'static, Result<QueryAnswer>> {
-        self.query_with_options_and_inputs(query, QueryOptions::new(), Some(inputs))
+        self.query_with_options_and_rows(query, QueryOptions::new(), Some(rows))
     }
 
-    pub fn query_with_options_and_inputs(
+    pub fn query_with_options_and_rows(
         &self,
         query: impl AsRef<str>,
         options: QueryOptions,
-        inputs: Option<QueryGivenRows>,
+        rows: Option<QueryGivenRows>,
     ) -> impl Promise<'static, Result<QueryAnswer>> {
         let query = query.as_ref();
         debug!("Transaction submitting query: {}", query);
-        self.transaction_stream.query(query, options, inputs)
+        self.transaction_stream.query(query, options, rows)
     }
 
     /// Analyzes a TypeQL query in this transaction,
