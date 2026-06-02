@@ -25,8 +25,8 @@ use crate::{
     analyze::AnalyzedQuery,
     answer::QueryAnswer,
     common::{Promise, Result, TransactionType},
-    concept::{Attribute, Entity, Relation, Value},
     connection::TransactionStream,
+    given::QueryGivenRows,
     Error, QueryOptions, TransactionOptions,
 };
 
@@ -193,19 +193,4 @@ impl fmt::Debug for Transaction {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.debug_struct("Transaction").field("type_", &self.type_).field("options", &self.options).finish()
     }
-}
-
-#[derive(Debug)]
-pub struct QueryGivenRows(pub Vec<QueryGivenRow>);
-
-#[derive(Debug)]
-pub struct QueryGivenRow(pub Vec<QueryGivenEntry>);
-
-#[derive(Debug, Clone)]
-pub enum QueryGivenEntry {
-    Empty,
-    Entity(Entity),
-    Relation(Relation),
-    Attribute(Attribute),
-    Value(Value),
 }

@@ -265,6 +265,14 @@ error_messages! { InternalError
         5: "Unimplemented feature: {details}.",
 }
 
+error_messages! { QueryError
+    code: "QRY", type: "Internal Error",
+    GivenRowIndexOutOfBounds { index: usize, width: usize } =
+        1: "Attempted to set a row entry at index: {index}. Row width is {width}.",
+    GivenRowUnknownVariable { variable: String } =
+        2: "Attempted to set a row entry for a variable {variable} which was not in the header.",
+}
+
 #[derive(Clone, PartialEq, Eq)]
 pub struct ServerError {
     error_code: String,
@@ -311,6 +319,7 @@ pub enum Error {
     Concept(ConceptError),
     Migration(MigrationError),
     Internal(InternalError),
+    Query(QueryError),
     Server(ServerError),
     Other(String),
     FFI(String),
@@ -324,6 +333,7 @@ impl Error {
             Self::Concept(error) => error.format_code(),
             Self::Migration(error) => error.format_code(),
             Self::Internal(error) => error.format_code(),
+            Self::Query(error) => error.format_code(),
             Self::Server(error) => error.format_code().to_owned(),
             Self::FFI(_error) => String::new(),
             Self::Other(_error) => String::new(),
@@ -337,6 +347,7 @@ impl Error {
             Self::Concept(error) => error.message(),
             Self::Migration(error) => error.message(),
             Self::Internal(error) => error.message(),
+            Self::Query(error) => error.message(),
             Self::Server(error) => error.message(),
             Self::FFI(_error) => String::new(),
             Self::Other(error) => error.clone(),
@@ -388,6 +399,7 @@ impl fmt::Display for Error {
             Self::Concept(error) => write!(f, "{error}"),
             Self::Migration(error) => write!(f, "{error}"),
             Self::Internal(error) => write!(f, "{error}"),
+            Self::Query(error) => write!(f, "{error}"),
             Self::Server(error) => write!(f, "{error}"),
             Self::FFI(message) => write!(f, "{message}"),
             Self::Other(message) => write!(f, "{message}"),
@@ -403,6 +415,7 @@ impl StdError for Error {
             Self::Concept(error) => Some(error),
             Self::Migration(error) => Some(error),
             Self::Internal(error) => Some(error),
+            Self::Query(_) => None,
             Self::Server(_) => None,
             Self::FFI(_) => None,
             Self::Other(_) => None,
