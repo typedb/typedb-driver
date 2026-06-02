@@ -42,7 +42,6 @@ pub extern "C" fn given_row_new(width: usize) -> *mut QueryGivenRow {
 }
 
 /// Sets the entry at `index` in the given row to the specified entity
-/// Will panic if out-of-bounds
 #[unsafe(no_mangle)]
 pub extern "C" fn given_row_set_index_to_concept(row: *mut QueryGivenRow, index: usize, concept: *const Concept) -> bool {
     let mut row = &mut borrow_mut(row).0;
@@ -68,7 +67,6 @@ pub extern "C" fn given_row_set_index_to_concept(row: *mut QueryGivenRow, index:
 }
 
 /// Sets the entry at `index` in the given row to the Empty Optional value
-/// Will panic if out-of-bounds
 #[unsafe(no_mangle)]
 pub extern "C" fn given_row_set_index_to_empty(row: *mut QueryGivenRow, index: usize) -> bool {
     let mut row = &mut borrow_mut(row).0;
