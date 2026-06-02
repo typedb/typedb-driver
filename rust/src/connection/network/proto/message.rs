@@ -240,7 +240,9 @@ impl IntoProto<typedb_protocol::query::Req> for QueryRequest {
 
 impl IntoProto<typedb_protocol::query::req::GivenRows> for QueryGivenRows {
     fn into_proto(self) -> typedb_protocol::query::req::GivenRows {
-        typedb_protocol::query::req::GivenRows { rows: self.0.into_iter().map(|row| row.into_proto()).collect() }
+        let variables = vec![]; // TODO?
+        let rows = self.0.into_iter().map(|row| row.into_proto()).collect();
+        typedb_protocol::query::req::GivenRows { variables, rows }
     }
 }
 
