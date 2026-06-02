@@ -37,7 +37,6 @@ use crate::{
         network::proto::{FromProto, TryFromProto},
     },
     error::{AnalyzeError, ServerError},
-    transaction::QueryGivenRows,
 };
 
 pub(super) fn expect_try_from_proto<Src, Dst: TryFromProto<Src>>(x: Option<Src>, field: &'static str) -> Result<Dst> {

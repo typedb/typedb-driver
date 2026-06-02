@@ -36,7 +36,7 @@ use crate::{
     connection::server::{server_version::ServerVersion, Server},
     error::ServerError,
     info::UserInfo,
-    transaction::QueryGivenRows,
+    given::QueryGivenRows,
     Credentials, QueryOptions, TransactionOptions, TransactionType,
 };
 

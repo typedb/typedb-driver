@@ -21,9 +21,13 @@ use cucumber::gherkin::Step;
 use futures::{StreamExt, future::join_all};
 use itertools::Itertools;
 use macro_rules_attribute::apply;
-use typedb_driver::{QueryOptions, Result as TypeDBResult, Transaction, answer::{ConceptRow, QueryAnswer}, concept::{AttributeType, Concept, ConceptCategory, EntityType, RelationType, Value, ValueType}, error::ConceptError, IID};
-use typedb_driver::concept::{Attribute, Entity, Relation};
-use typedb_driver::transaction::{QueryGivenEntry, QueryGivenRow, QueryGivenRows};
+use typedb_driver::{
+    QueryOptions, Result as TypeDBResult, Transaction, IID,
+    answer::{ConceptRow, QueryAnswer},
+    concept::{Attribute, AttributeType, Concept, ConceptCategory, Entity, EntityType, Relation, RelationType, Value, ValueType},
+    error::ConceptError,
+    given::{QueryGivenEntry, QueryGivenRow, QueryGivenRows},
+};
 use crate::{
     BehaviourTestOptionalError, Context, generic_step, params,
     params::check_boolean,
@@ -185,8 +189,9 @@ pub async fn typeql_query(context: &mut Context, with_given: WithGiven, may_erro
 #[cucumber::when(expr = "set answers of typeql read query as given rows with order: {variable_list}")]
 async fn set_given_rows(context: &mut Context, var_list: VariableList, step: &Step) {
     let result = run_query(context.transaction(), step.docstring().unwrap(), None, context.query_options).await;
-    let mut given_rows = Vec::new();
+    let mut given_rows = QueryGivenRows::new(var_list.0.clone());
     let mut as_rows_result = result.unwrap().into_rows();
+
     while let Some(row_result) = as_rows_result.next().await {
         let answer_row = row_result.unwrap();
         let given_row: Vec<QueryGivenEntry> = var_list.0.iter().map(|v| {
@@ -199,10 +204,10 @@ async fn set_given_rows(context: &mut Context, var_list: VariableList, step: &St
                 Some(_) => panic!("You can't have this in given rows. Use a select on the previous query")
             }
         }).collect();
-        given_rows.push(QueryGivenRow(given_row));
+        given_rows.push_row(given_row).unwrap();
     }
 
-    context.given_rows = Some(QueryGivenRows(given_rows))
+    context.given_rows = Some(given_rows)
 }
 
 #[apply(generic_step)]

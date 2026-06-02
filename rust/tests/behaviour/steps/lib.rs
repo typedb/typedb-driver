@@ -42,7 +42,7 @@ use typedb_driver::{
     ServerRouting, Transaction, TransactionOptions, TypeDBDriver,
     analyze::AnalyzedQuery,
     answer::{ConceptDocument, ConceptRow, QueryAnswer, QueryType},
-    transaction::QueryGivenRows,
+    given::QueryGivenRows,
 };
 
 use crate::{

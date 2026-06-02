@@ -52,4 +52,4 @@ mod database;
 pub mod driver;
 pub mod transaction;
 mod user;
-mod given;
+pub mod given;

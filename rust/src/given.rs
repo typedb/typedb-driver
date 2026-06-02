@@ -36,21 +36,42 @@ pub enum QueryGivenEntry {
 
 #[derive(Debug, Clone)]
 pub struct QueryGivenRows {
-    header: GivenRowsHeader,
-    rows: Vec<Vec<QueryGivenEntry>>,
+    pub(crate) header: Arc<GivenRowsHeader>,
+    pub(crate) rows: Vec<Vec<QueryGivenEntry>>,
 }
 
 impl QueryGivenRows {
     pub fn new(variables: Vec<String>) -> Self {
-        Self::new_with_headers(GivenRowsHeader::new(variables))
+        Self::new_with_headers(Arc::new(GivenRowsHeader::new(variables)))
     }
 
-    fn new_with_headers(header: GivenRowsHeader) -> Self {
+    fn new_with_headers(header: Arc<GivenRowsHeader>) -> Self {
         let rows = Vec::new();
         Self { header, rows }
     }
 
-    pub fn append_new_row(&mut self) -> QueryGivenRow<'_> {
+    pub fn into_parts(self) -> (Arc<GivenRowsHeader>, Vec<Vec<QueryGivenEntry>>) {
+        let Self { header, rows } = self;
+        (header, rows)
+    }
+
+    pub fn push_row(&mut self, row: Vec<QueryGivenEntry>) -> Result<()> {
+        if row.len() == self.header.width() {
+            self.rows.push(row);
+            Ok(())
+        } else {
+            Err(Error::Query(QueryError::GivenRowsSizeMismatch { actual: row.len(), expected: self.header.width() }))
+        }
+    }
+
+    pub fn push_map(&mut self, values: impl IntoIterator<Item=(String, QueryGivenEntry)>) -> Result<()> {
+        let mut row = self.append_and_get_empty_row();
+        values.into_iter().try_for_each(|(var, entry)| {
+            row.set(var, entry)
+        })
+    }
+
+    pub fn append_and_get_empty_row(&mut self) -> QueryGivenRow<'_> {
         let mut row = Vec::with_capacity(self.header.width());
         row.resize(self.header.width(), QueryGivenEntry::Empty);
         self.rows.push(row);
@@ -59,34 +80,29 @@ impl QueryGivenRows {
 }
 
 #[derive(Debug, Clone)]
-struct GivenRowsHeaderImpl {
-    variables: Vec<String>,
-    index: HashMap<String, usize>,
+pub struct GivenRowsHeader {
+    pub(crate) variables: Vec<String>,
+    pub(crate) index: HashMap<String, usize>,
 }
-
-#[derive(Debug, Clone)]
-pub struct GivenRowsHeader(Arc<GivenRowsHeaderImpl>);
 
 impl GivenRowsHeader {
     fn new(variables: Vec<String>) -> Self {
         let index = variables.iter().cloned().enumerate().map(|(i, v)| (v, i)).collect();
-        Self(Arc::new(GivenRowsHeaderImpl { variables, index }))
+        Self { variables, index }
     }
 
-    pub fn new_batch(&self) -> QueryGivenRows {
-        QueryGivenRows::new_with_headers(self.clone())
+    pub fn new_batch(arced_self: &Arc<Self>) -> QueryGivenRows {
+        QueryGivenRows::new_with_headers(arced_self.clone())
     }
 
     pub fn width(&self) -> usize {
-        self.0.variables.len()
+        self.variables.len()
     }
 }
 
-
-
 #[derive(Debug, Clone)]
 pub struct QueryGivenRowImpl<T> {
-    header: GivenRowsHeader,
+    header: Arc<GivenRowsHeader>,
     row: T,
 }
 
@@ -95,7 +111,7 @@ pub type QueryGivenRow<'a> = QueryGivenRowImpl<&'a mut Vec<QueryGivenEntry>>;
 impl<'a> QueryGivenRow<'a> {
 
     pub fn set(&mut self, variable: String, entry: QueryGivenEntry) -> Result<()> {
-        let index = self.header.0.index.get(&variable).ok_or(
+        let index = self.header.index.get(&variable).ok_or(
             Error::Query(QueryError::GivenRowUnknownVariable { variable })
         )?;
         self.set_at(*index, entry)

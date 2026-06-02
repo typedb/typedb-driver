@@ -34,7 +34,7 @@ use crate::{
     connection::message::{AnalyzeResponse, QueryRequest, QueryResponse, TransactionRequest, TransactionResponse},
     error::{ConnectionError, InternalError},
     promisify, resolve,
-    transaction::QueryGivenRows,
+    given::QueryGivenRows,
     Error, QueryOptions, TransactionOptions, TransactionType,
 };
 

@@ -271,6 +271,8 @@ error_messages! { QueryError
         1: "Attempted to set a row entry at index: {index}. Row width is {width}.",
     GivenRowUnknownVariable { variable: String } =
         2: "Attempted to set a row entry for a variable {variable} which was not in the header.",
+    GivenRowsSizeMismatch { actual: usize, expected: usize } =
+        3: "Cannot push a row of width: {actual} . Expected width: {expected}",
 }
 
 #[derive(Clone, PartialEq, Eq)]

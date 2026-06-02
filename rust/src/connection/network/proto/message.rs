@@ -229,10 +229,10 @@ impl IntoProto<transaction::Req> for TransactionRequest {
 impl IntoProto<typedb_protocol::query::Req> for QueryRequest {
     fn into_proto(self) -> typedb_protocol::query::Req {
         match self {
-            QueryRequest::Query { query, options, rows: rows } => typedb_protocol::query::Req {
+            QueryRequest::Query { query, options, rows } => typedb_protocol::query::Req {
                 query,
                 options: Some(options.into_proto()),
-                given: rows.map(|i| i.into_proto()),
+                given: rows.map(|r| r.into_proto()),
             },
         }
     }
@@ -240,15 +240,15 @@ impl IntoProto<typedb_protocol::query::Req> for QueryRequest {
 
 impl IntoProto<typedb_protocol::query::req::GivenRows> for QueryGivenRows {
     fn into_proto(self) -> typedb_protocol::query::req::GivenRows {
-        let variables = vec![]; // TODO?
-        let rows = self.0.into_iter().map(|row| row.into_proto()).collect();
+        let variables = self.header.variables.clone();
+        let rows = self.rows.into_iter().map(|row| row.into_proto()).collect();
         typedb_protocol::query::req::GivenRows { variables, rows }
     }
 }
 
-impl IntoProto<typedb_protocol::query::req::GivenRow> for QueryGivenRow {
+impl IntoProto<typedb_protocol::query::req::GivenRow> for Vec<QueryGivenEntry> {
     fn into_proto(self) -> typedb_protocol::query::req::GivenRow {
-        let entries = self.0.into_iter().map(|entry| entry.into_proto()).collect();
+        let entries = self.into_iter().map(|entry| entry.into_proto()).collect();
         typedb_protocol::query::req::GivenRow { entries }
     }
 }
@@ -260,7 +260,7 @@ impl IntoProto<typedb_protocol::query::req::GivenEntry> for QueryGivenEntry {
         };
 
         let inner = match self {
-            QueryGivenEntry::Empty => EntryProto::Empty(typedb_protocol::query::req::GivenEntryEmpty {}),
+            QueryGivenEntry::Empty => EntryProto::Empty(typedb_protocol::query::req::given_entry::EmptyEntry {}),
             QueryGivenEntry::Value(value) => EntryProto::Value(value.into_proto()),
             QueryGivenEntry::Entity(entity) => {
                 let thing = ThingProtoInner::Entity(entity.into_proto());
