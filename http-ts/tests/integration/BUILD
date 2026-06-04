@@ -51,6 +51,7 @@ js_test(
     },
     size = "large",
     local = True,  # Test manages external server processes via CLUSTER_DIR
+    tags = ["exclusive"],
 )
 
 checkstyle_test(

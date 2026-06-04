@@ -37,16 +37,18 @@ def typedb_behaviour_java_test(
         **kwargs
     )
 
-def typedb_behaviour_java_test_core(name, steps, runtime_deps = [], **kwargs):
+def typedb_behaviour_java_test_core(name, steps, runtime_deps = [], tags = [], **kwargs):
     typedb_java_test(
         name = name + "-core",
         runtime_deps = runtime_deps + ["//java/test/behaviour/connection:steps-core"] + steps,
+        tags = tags + ["exclusive"],
         **kwargs,
     )
 
-def typedb_behaviour_java_test_cluster(name, steps, runtime_deps = [], **kwargs):
+def typedb_behaviour_java_test_cluster(name, steps, runtime_deps = [], tags = [], **kwargs):
     typedb_java_test(
         name = name + "-cluster",
         runtime_deps = runtime_deps + ["//java/test/behaviour/connection:steps-cluster"] + steps,
+        tags = tags + ["exclusive"],
         **kwargs,
     )

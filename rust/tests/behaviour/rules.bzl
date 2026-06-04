@@ -27,12 +27,13 @@ behaviour_test_deps = [
     "@crates//:serial_test",
 ];
 
-def rust_behaviour_test(name, srcs, data, deps=[], crate_features=[], **kwargs):
+def rust_behaviour_test(name, srcs, data, deps=[], crate_features=[], tags=[], **kwargs):
     rust_test(
         name = name,
         srcs = srcs,
         data = data,
         deps = behaviour_test_deps + deps,
         crate_features = crate_features_common + crate_features,
+        tags = tags + ["exclusive"],
         **kwargs,
     )

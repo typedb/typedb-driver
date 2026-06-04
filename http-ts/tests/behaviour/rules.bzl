@@ -34,7 +34,7 @@ def typedb_behaviour_http_ts_test(name, **kwargs):
     typedb_behaviour_http_ts_core_test(name, **kwargs)
     typedb_behaviour_http_ts_cluster_test(name, **kwargs)
 
-def typedb_behaviour_http_ts_core_test(name, features, data = [], **kwargs):
+def typedb_behaviour_http_ts_core_test(name, features, data = [], tags = [], **kwargs):
     cucumber_bin.cucumber_js_test(
         name = name + "-core",
         data = [
@@ -46,10 +46,11 @@ def typedb_behaviour_http_ts_core_test(name, features, data = [], **kwargs):
             "--tags 'not @ignore and not @ignore-typedb-driver and not @ignore-typedb-driver-nodejs and not @ignore-typedb-http'",
             "--require", "http-ts/tests/**/*.js",
         ] + ["$(location {})".format(feature) for feature in features],
+        tags = tags + ["exclusive"],
         **kwargs,
     )
 
-def typedb_behaviour_http_ts_cluster_test(name, features, data = [], **kwargs):
+def typedb_behaviour_http_ts_cluster_test(name, features, data = [], tags = [], **kwargs):
     cucumber_bin.cucumber_js_test(
         name = name + "-cluster",
         data = [
@@ -65,5 +66,6 @@ def typedb_behaviour_http_ts_cluster_test(name, features, data = [], **kwargs):
         env = {
             "TYPEDB_CLUSTER_MODE": "true",
         },
+        tags = tags + ["exclusive"],
         **kwargs,
     )

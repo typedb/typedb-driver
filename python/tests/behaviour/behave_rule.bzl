@@ -18,7 +18,7 @@
 load("@typedb_driver_pip//:requirements.bzl", "requirement")
 
 
-def py_behave_test(*, name, background, steps, feats, deps, data=[], typedb_port, **kwargs):
+def py_behave_test(*, name, background, steps, feats, deps, data=[], typedb_port, tags=[], **kwargs):
     prepare_py_behave_directory(
         name = name + "_features",
         background = background,
@@ -32,6 +32,7 @@ def py_behave_test(*, name, background, steps, feats, deps, data=[], typedb_port
         srcs = ["//python/tests/behaviour:entry_point_behave.py"],
         args = ["$(location :" + name + "_features)", "--no-capture", "-D", "port=" + typedb_port],
         main = "//python/tests/behaviour:entry_point_behave.py",
+        tags = tags + ["exclusive"],
         **kwargs,
     )
 

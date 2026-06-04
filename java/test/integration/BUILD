@@ -37,6 +37,7 @@ typedb_java_test(
         "@typedb_maven//:org_slf4j_slf4j_api",
 #        "@typedb_maven//:com_typedb_typedb_runner",
     ],
+    tags = ["exclusive"],
 )
 
 typedb_java_test(
@@ -53,6 +54,7 @@ typedb_java_test(
         "@typedb_maven//:org_slf4j_slf4j_api",
 #        "@typedb_maven//:com_typedb_typedb_runner",
     ],
+    tags = ["exclusive"],
 )
 
 typedb_java_test(
@@ -69,6 +71,7 @@ typedb_java_test(
         "@typedb_maven//:org_slf4j_slf4j_api",
 #        "@typedb_maven//:com_typedb_typedb_runner",
     ],
+    tags = ["exclusive"],
 )
 
 checkstyle_test(

@@ -45,7 +45,7 @@ typedb_java_test(
     # data directories under $CLUSTER_DIR (the outer workspace). The Bazel sandbox
     # blocks writes to those paths, so this test must run unsandboxed and locally,
     # and it relies on host-level state so cached results would be misleading.
-    tags = ["external", "no-cache", "no-sandbox"],
+    tags = ["external", "no-cache", "no-sandbox", "exclusive"],
 )
 
 checkstyle_test(

@@ -62,6 +62,7 @@ def csharp_behaviour_test(
         target_frameworks,
         targeting_packs,
         add_certificates = False,
+        tags = [],
         **kwargs):
     certificates = ["//tool/test/resources:certificates"] if add_certificates else []
 
@@ -78,11 +79,12 @@ def csharp_behaviour_test(
         runtime_identifier = "any",
         nullable = nullable_context,
         visibility = ["//visibility:public"],
+        tags = tags + ["exclusive"],
         **kwargs,
     )
 
 
-def csharp_integration_test(name, srcs, deps, target_frameworks, targeting_packs, **kwargs):
+def csharp_integration_test(name, srcs, deps, target_frameworks, targeting_packs, tags = [], **kwargs):
     csharp_nunit_test(
         name = name,
         srcs = srcs,
@@ -92,5 +94,6 @@ def csharp_integration_test(name, srcs, deps, target_frameworks, targeting_packs
         runtime_identifier = "any",
         nullable = nullable_context,
         visibility = ["//visibility:public"],
+        tags = tags + ["exclusive"],
         **kwargs,
     )

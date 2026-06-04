@@ -32,7 +32,8 @@ py_test(
         requirement("PyHamcrest"),
     ],
     data = ["//python:native-driver-binary-link", "//python:native-driver-wrapper-link"],
-    python_version = "PY3"
+    python_version = "PY3",
+    tags = ["exclusive"],
 )
 
 py_test(
@@ -43,7 +44,8 @@ py_test(
         requirement("PyHamcrest"),
     ],
     data = ["//python:native-driver-binary-link", "//python:native-driver-wrapper-link"],
-    python_version = "PY3"
+    python_version = "PY3",
+    tags = ["exclusive"],
 )
 
 py_test(
@@ -55,7 +57,8 @@ py_test(
         "@rules_python//python/cc:current_py_cc_libs",
     ],
     data = ["//python:native-driver-binary-link", "//python:native-driver-wrapper-link"],
-    python_version = "PY3"
+    python_version = "PY3",
+    tags = ["exclusive"],
 )
 
 py_test(
@@ -65,7 +68,8 @@ py_test(
         "//python:driver_python",
     ],
     data = ["//python:native-driver-binary-link", "//python:native-driver-wrapper-link"],
-    python_version = "PY3"
+    python_version = "PY3",
+    tags = ["exclusive"],
 )
 
 checkstyle_test(
