@@ -118,6 +118,7 @@ pkg_tar(
     package_dir = "typedb-driver-clib-linux-arm64-{version}",
     out = "typedb-driver-clib-linux-arm64.tar.gz",
     package_variables = "//:driver-version-vars",
+    extension = "tar.gz",
     target_compatible_with = constraint_linux_arm64,
 )
 
@@ -127,6 +128,7 @@ pkg_tar(
     package_dir = "typedb-driver-clib-linux-x86_64-{version}",
     out = "typedb-driver-clib-linux-x86_64.tar.gz",
     package_variables = "//:driver-version-vars",
+    extension = "tar.gz",
     target_compatible_with = constraint_linux_x86_64,
 )
 
