@@ -40,3 +40,6 @@ IF %errorlevel% NEQ 0 EXIT /b %errorlevel%
 
 bazel --output_base=C:\b run --config=ci --verbose_failures --define version=%VER% //python:deploy-pip313 --compilation_mode=opt -- release
 IF %errorlevel% NEQ 0 EXIT /b %errorlevel%
+
+bazel --output_base=C:\b run --config=ci --verbose_failures --define version=%VER% //python:deploy-pip314 --compilation_mode=opt -- release
+IF %errorlevel% NEQ 0 EXIT /b %errorlevel%
