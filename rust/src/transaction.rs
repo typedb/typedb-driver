@@ -26,7 +26,7 @@ use crate::{
     answer::QueryAnswer,
     common::{Promise, Result, TransactionType},
     connection::TransactionStream,
-    given::QueryGivenRows,
+    given::GivenRows,
     Error, QueryOptions, TransactionOptions,
 };
 
@@ -95,7 +95,7 @@ impl Transaction {
     pub fn query_with_rows(
         &self,
         query: impl AsRef<str>,
-        rows: QueryGivenRows,
+        rows: GivenRows,
     ) -> impl Promise<'static, Result<QueryAnswer>> {
         self.query_with_options_and_rows(query, QueryOptions::new(), Some(rows))
     }
@@ -104,7 +104,7 @@ impl Transaction {
         &self,
         query: impl AsRef<str>,
         options: QueryOptions,
-        rows: Option<QueryGivenRows>,
+        rows: Option<GivenRows>,
     ) -> impl Promise<'static, Result<QueryAnswer>> {
         let query = query.as_ref();
         debug!("Transaction submitting query: {}", query);

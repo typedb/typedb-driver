@@ -26,7 +26,7 @@ use typedb_driver::{
     answer::{ConceptRow, QueryAnswer},
     concept::{Attribute, AttributeType, Concept, ConceptCategory, Entity, EntityType, Relation, RelationType, Value, ValueType},
     error::ConceptError,
-    given::{QueryGivenEntry, QueryGivenRow, QueryGivenRows},
+    given::{GivenRowEntry, GivenRow, GivenRows},
 };
 use crate::{
     BehaviourTestOptionalError, Context, generic_step, params,
@@ -38,7 +38,7 @@ use crate::params::{VariableList, WithGiven};
 pub(crate) async fn run_query(
     transaction: &Transaction,
     query: impl AsRef<str>,
-    given_rows: Option<QueryGivenRows>,
+    given_rows: Option<GivenRows>,
     query_options: Option<QueryOptions>,
 ) -> TypeDBResult<QueryAnswer> {
     match (given_rows, query_options) {
@@ -189,18 +189,18 @@ pub async fn typeql_query(context: &mut Context, with_given: WithGiven, may_erro
 #[cucumber::when(expr = "set answers of typeql read query as given rows with order: {variable_list}")]
 async fn set_given_rows(context: &mut Context, var_list: VariableList, step: &Step) {
     let result = run_query(context.transaction(), step.docstring().unwrap(), None, context.query_options).await;
-    let mut given_rows = QueryGivenRows::new(var_list.0.clone());
+    let mut given_rows = GivenRows::new(var_list.0.clone());
     let mut as_rows_result = result.unwrap().into_rows();
 
     while let Some(row_result) = as_rows_result.next().await {
         let answer_row = row_result.unwrap();
-        let given_row: Vec<QueryGivenEntry> = var_list.0.iter().map(|v| {
+        let given_row: Vec<GivenRowEntry> = var_list.0.iter().map(|v| {
             match answer_row.get(v).unwrap() {
-                None => QueryGivenEntry::Empty,
-                Some(Concept::Entity(entity)) => QueryGivenEntry::Entity(entity.clone()),
-                Some(Concept::Relation(relation)) => QueryGivenEntry::Relation(relation.clone()),
-                Some(Concept::Attribute(attribute)) => QueryGivenEntry::Attribute(attribute.clone()),
-                Some(Concept::Value(value)) => QueryGivenEntry::Value(value.clone()),
+                None => GivenRowEntry::Empty,
+                Some(Concept::Entity(entity)) => GivenRowEntry::Entity(entity.clone()),
+                Some(Concept::Relation(relation)) => GivenRowEntry::Relation(relation.clone()),
+                Some(Concept::Attribute(attribute)) => GivenRowEntry::Attribute(attribute.clone()),
+                Some(Concept::Value(value)) => GivenRowEntry::Value(value.clone()),
                 Some(_) => panic!("You can't have this in given rows. Use a select on the previous query")
             }
         }).collect();
@@ -1029,6 +1029,6 @@ pub async fn answer_has_structure(context: &mut Context, step: &Step) {
     assert_eq!(normalize_functor_for_compare(&actual_functor), normalize_functor_for_compare(expected_functor));
 }
 
-fn may_take_given_rows(context: &mut Context, with_given: WithGiven) -> Option<QueryGivenRows> {
+fn may_take_given_rows(context: &mut Context, with_given: WithGiven) -> Option<GivenRows> {
     (with_given == WithGiven::True).then(|| context.given_rows.take().expect("Expected given rows available"))
 }

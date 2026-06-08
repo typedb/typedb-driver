@@ -36,7 +36,7 @@ use crate::{
     connection::server::{server_version::ServerVersion, Server},
     error::ServerError,
     info::UserInfo,
-    given::QueryGivenRows,
+    given::GivenRows,
     Credentials, QueryOptions, TransactionOptions, TransactionType,
 };
 
@@ -178,7 +178,7 @@ pub(super) enum AnalyzeResponse {
 
 #[derive(Debug)]
 pub(super) enum QueryRequest {
-    Query { query: String, options: QueryOptions, rows: Option<QueryGivenRows> },
+    Query { query: String, options: QueryOptions, rows: Option<GivenRows> },
 }
 
 #[derive(Debug)]

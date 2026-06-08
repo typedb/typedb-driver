@@ -92,8 +92,10 @@ struct Type {};
 
 %dropproxy(QueryAnswer, query_answer)
 
-%dropproxy(QueryGivenRows, given_rows)
-%dropproxy(QueryGivenRow, given_row)
+%dropproxy(GivenRows, given_rows)
+%dropproxy(GivenRowsBuilder, given_rows_builder)
+%dropproxy(GivenRowsHeaderBuilder, given_rows_header_builder)
+%dropproxy(GivenRowsHeader, given_rows_header)
 
 %dropproxy(AnalyzedQuery, analyzed_query)
 %dropproxy(Conjunction, conjunction)
@@ -280,8 +282,14 @@ VoidPromise* transaction_on_close_register(const Transaction* transaction, Trans
 %newobject databases_all;
 %newobject databases_get;
 
-%newobject given_rows_new;
-%newobject given_row_new;
+%newobject given_rows_header_builder_new;
+%delobject given_rows_header_builder_finish;
+%newobject given_rows_header_builder_finish;
+%newobject given_rows_builder_new;
+%delobject given_rows_builder_finish;
+%newobject given_rows_builder_finish;
+// GivenRows is consumed by any function that takes it (transaction_query_given_rows)
+%apply SWIGTYPE *DISOWN { GivenRows *given_rows };
 
 %newobject analyzed_query_pipeline;
 %newobject analyzed_preamble;

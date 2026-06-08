@@ -20,7 +20,7 @@
 use std::{ffi::c_char, ptr::null_mut};
 
 use typedb_driver::{Error, Promise, QueryOptions, Transaction, TransactionOptions, TransactionType, TypeDBDriver};
-use typedb_driver::transaction::QueryGivenRows;
+use typedb_driver::given::GivenRows;
 use crate::{
     analyze::AnalyzedQueryPromise,
     answer::QueryAnswerPromise,
@@ -74,7 +74,7 @@ pub extern "C" fn transaction_query_given_rows(
     transaction: *mut Transaction,
     query: *const c_char,
     options: *const QueryOptions,
-    given_rows: *mut QueryGivenRows,
+    given_rows: *mut GivenRows,
 ) -> *mut QueryAnswerPromise {
     release(QueryAnswerPromise::new(Box::new(
         borrow(transaction).query_with_options_and_rows(string_view(query), *borrow(options), Some(take_ownership(given_rows))),
