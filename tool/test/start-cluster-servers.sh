@@ -31,6 +31,23 @@ rm -rf $(seq 1 $NODE_COUNT) typedb-cluster-all
 
 bazel run //tool/test:typedb-cluster-extractor -- typedb-cluster-all
 
+# Local-binary override (session-only): if TYPEDB_CLUSTER_SERVER_BIN / TYPEDB_CLUSTER_ADMIN_BIN
+# point at executables, replace the bundled binaries before copying to node dirs.
+if [ -n "${TYPEDB_CLUSTER_SERVER_BIN:-}" ]; then
+  if [ ! -x "$TYPEDB_CLUSTER_SERVER_BIN" ]; then
+    echo "TYPEDB_CLUSTER_SERVER_BIN='$TYPEDB_CLUSTER_SERVER_BIN' is not executable"; exit 1
+  fi
+  echo "Overriding bundled typedb_server_bin with $TYPEDB_CLUSTER_SERVER_BIN"
+  cp -f "$TYPEDB_CLUSTER_SERVER_BIN" typedb-cluster-all/server/typedb_server_bin
+fi
+if [ -n "${TYPEDB_CLUSTER_ADMIN_BIN:-}" ]; then
+  if [ ! -x "$TYPEDB_CLUSTER_ADMIN_BIN" ]; then
+    echo "TYPEDB_CLUSTER_ADMIN_BIN='$TYPEDB_CLUSTER_ADMIN_BIN' is not executable"; exit 1
+  fi
+  echo "Overriding bundled typedb_admin_bin with $TYPEDB_CLUSTER_ADMIN_BIN"
+  cp -f "$TYPEDB_CLUSTER_ADMIN_BIN" typedb-cluster-all/admin/typedb_admin_bin
+fi
+
 echo Successfully unarchived a TypeDB distribution. Creating $NODE_COUNT copies.
 for i in $(seq 1 $NODE_COUNT); do
   rm -rf $i
@@ -54,7 +71,7 @@ if [ "$NODE_COUNT" -gt 1 ]; then
   for i in $(seq 2 $NODE_COUNT); do
     clustering_port="${i}1730"
     for attempt in $(seq 1 $REGISTER_MAX_RETRIES); do
-      if ./1/typedb admin --address=127.0.0.1:11728 --command "servers register ${i} 127.0.0.1:${clustering_port}" 2>&1; then
+      if ./1/typedb admin --socket-path=./1/data/admin.sock --command "servers register ${i} 127.0.0.1:${clustering_port}" 2>&1; then
         break
       fi
       if [ "$attempt" -eq "$REGISTER_MAX_RETRIES" ]; then

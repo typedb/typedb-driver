@@ -146,7 +146,7 @@ server_start() {
     --server.http.listen-address="0.0.0.0:${http_port}" \
     --server.http.advertise-address="127.0.0.1:${http_port}" \
     --server.admin.enabled=true \
-    --server.admin.port="${admin_port}" \
+    --server.admin.socket-path="${data_dir}/admin.sock" \
     --server.encryption.enabled="${ENCRYPTION_ENABLED}" \
     --server.encryption.certificate="${CERT_PATH}" \
     --server.encryption.certificate-key="${KEY_PATH}" \
