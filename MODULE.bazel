@@ -59,7 +59,7 @@ bazel_dep(name = "typedb_dependencies", version = "0.0.0")
 git_override(
     module_name = "typedb_dependencies",
     remote = "https://github.com/typedb/dependencies",
-    commit = "c03bcfb0d8f047fd386573ad4429a2af039784ed",
+    commit = "75fccc8a9995bcd6a22a96f43aa5144a7eccd916",
 )
 
 bazel_dep(name = "typedb_protocol", version = "0.0.0")
@@ -176,9 +176,27 @@ use_repo(rules_ts_ext, "npm_typescript")
 
 # Maven
 maven = use_extension("@typedb_dependencies//library/maven:maven_extension.bzl", "maven")
-include("//java:maven_dependencies.MODULE.bazel")
-include("//java/test:maven_dependencies.MODULE.bazel")
-include("//tool/docs:maven_dependencies.MODULE.bazel")
+maven.namespace(name = "typedb_maven", artifacts = [
+    # Java driver
+    "ch.qos.logback:logback-classic",
+    "ch.qos.logback:logback-core",
+    "com.eclipsesource.minimal-json:minimal-json",
+    "com.google.code.findbugs:jsr305",
+    "io.netty:netty-tcnative-boringssl-static",
+])
+maven.namespace(name = "typedb_maven", artifacts = [
+    # Java BDD & integration tests
+    "io.cucumber:cucumber-java",
+    "io.cucumber:cucumber-junit",
+    "junit:junit",
+    "org.hamcrest:hamcrest-library",
+    "org.slf4j:slf4j-api",
+])
+maven.namespace(name = "typedb_maven", artifacts = [
+    # //tool/docs
+    "info.picocli:picocli",
+    "org.jsoup:jsoup",
+])
 use_repo(maven, "typedb_maven")
 
 # .NET toolchain (matches the WORKSPACE-era version)
