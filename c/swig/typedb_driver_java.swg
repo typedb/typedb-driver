@@ -216,12 +216,13 @@
 %nojavaexception query_answer_is_concept_row_stream;
 %nojavaexception query_answer_is_concept_document_stream;
 
-%nojavaexception given_row_new;
-%nojavaexception given_rows_new;
-%nojavaexception given_rows_push;
-// The following do raise exceptions
-//      given_row_set_index_to_concept;
-//      given_row_set_index_to_empty;
+%nojavaexception given_rows_header_builder_new;
+%nojavaexception given_rows_header_builder_push;
+%nojavaexception given_rows_header_builder_finish;
+%nojavaexception given_rows_builder_new;
+%nojavaexception given_rows_builder_start_new_row;
+%nojavaexception given_rows_builder_commit_row;
+
 
 %nojavaexception ServerVersion::distribution;
 %nojavaexception ServerVersion::version;
@@ -391,8 +392,10 @@
 %nojavaexception ~Decimal;
 %nojavaexception ~Duration;
 %nojavaexception ~Error;
-%nojavaexception ~QueryGivenRow;
-%nojavaexception ~QueryGivenRows;
+%nojavaexception ~GivenRowsHeaderBuilder;
+%nojavaexception ~GivenRowsHeader;
+%nojavaexception ~GivenRowsBuilder;
+%nojavaexception ~GivenRows;
 %nojavaexception ~Server;
 %nojavaexception ~ServerIterator;
 %nojavaexception ~ServerVersion;

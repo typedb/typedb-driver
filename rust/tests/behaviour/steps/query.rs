@@ -189,7 +189,7 @@ pub async fn typeql_query(context: &mut Context, with_given: WithGiven, may_erro
 #[cucumber::when(expr = "set answers of typeql read query as given rows with order: {variable_list}")]
 async fn set_given_rows(context: &mut Context, var_list: VariableList, step: &Step) {
     let result = run_query(context.transaction(), step.docstring().unwrap(), None, context.query_options).await;
-    let mut given_rows = GivenRows::new(var_list.0.clone());
+    let mut given_rows = GivenRows::new(var_list.0.clone(), 0);
     let mut as_rows_result = result.unwrap().into_rows();
 
     while let Some(row_result) = as_rows_result.next().await {

@@ -25,6 +25,7 @@ import com.typedb.driver.common.Promise;
 import com.typedb.driver.api.concept.Concept;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.annotation.CheckReturnValue;
@@ -91,10 +92,22 @@ public interface Transaction extends AutoCloseable {
      *
      * @param query     The query to execute.
      * @param options   The <code>QueryOptions</code> to execute the query with.
+     * @param givenVariables The variables describing the content of the givenRows.
      * @param givenRows Input rows for the query; each inner iterable is one row, {@code Optional.empty()} entries represent empty variables.
      */
     @CheckReturnValue
-    Promise<? extends QueryAnswer> query(String query, QueryOptions options, List<? extends List<Optional<? extends Concept>>> givenRows) throws com.typedb.driver.common.exception.TypeDBDriverException;
+    Promise<? extends QueryAnswer> query(String query, QueryOptions options, List<? extends Map<String, Optional<? extends Concept>>> givenRows) throws com.typedb.driver.common.exception.TypeDBDriverException;
+
+    /**
+     * Execute a TypeQL query with input rows in this transaction.
+     *
+     * @param query     The query to execute.
+     * @param options   The <code>QueryOptions</code> to execute the query with.
+     * @param givenVariables The variables describing the content of the givenRows.
+     * @param givenRows Input rows for the query; each inner iterable is one row, {@code Optional.empty()} entries represent empty variables.
+     */
+    @CheckReturnValue
+    Promise<? extends QueryAnswer> query(String query, QueryOptions options, List<String> givenVariables, List<? extends List<Optional<? extends Concept>>> givenRows) throws com.typedb.driver.common.exception.TypeDBDriverException;
 
     /**
      * Analayze a TypeQL query in this transaction.

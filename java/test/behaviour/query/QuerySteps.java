@@ -78,11 +78,21 @@ public class QuerySteps {
     private static List<ConceptRow> collectedRows;
     private static List<JSON> collectedDocuments;
     private static List<CompletableFuture<QueryAnswer>> queryAnswersParallel = null;
-    private static List<List<Optional<? extends Concept>>> givenRows = null;
+    private static GivenRows givenRows = null;
 
-    private Promise<? extends QueryAnswer> query(Transaction transaction, String query, Optional<QueryOptions> options, List<List<Optional<? extends Concept>>> given) {
+    private static class GivenRows {
+        public List<String> variables;
+        public List<? extends List<Optional<? extends Concept>>> rows;
+
+        public GivenRows(List<String> variables, List<? extends List<Optional<? extends Concept>>> rows) {
+            this.variables = variables;
+            this.rows = rows;
+        }
+    }
+
+    private Promise<? extends QueryAnswer> query(Transaction transaction, String query, Optional<QueryOptions> options, GivenRows given) {
         QueryOptions opts = options.orElseGet(QueryOptions::new);
-        if (given != null) return transaction.query(query, opts, given);
+        if (given != null) return transaction.query(query, opts, given.variables, given.rows);
         else if (options.isPresent()) return transaction.query(query, opts);
         else return transaction.query(query);
     }
@@ -91,9 +101,9 @@ public class QuerySteps {
         return query(transaction, query, options, null);
     }
 
-    private List<List<Optional<? extends Concept>>> takeGivenRows() {
+    private GivenRows takeGivenRows() {
         assert givenRows != null : "Expected given rows to be set";
-        List<List<Optional<? extends Concept>>> rows = givenRows;
+        GivenRows rows = givenRows;
         givenRows = null;
         return rows;
     }
@@ -869,16 +879,17 @@ public class QuerySteps {
     @Given("typeql schema query{with_given}{may_error}")
     public void typeql_query(boolean withGiven, Parameters.MayError mayError, String query) {
         clearAnswers();
-        List<List<Optional<? extends Concept>>> given = withGiven ? takeGivenRows() : null;
+        GivenRows given = withGiven ? takeGivenRows() : null;
         mayError.check(() -> query(tx(), query, queryOptions, given).resolve());
     }
 
     @Given("set answers of typeql read query as given rows with order: {variable_list}")
     public void set_answers_as_given_rows(List<String> varList, String query) {
-        List<ConceptRow> rows = tx().query(query).resolve().asConceptRows().stream().collect(Collectors.toList());
-        givenRows = rows.stream()
+        List<ConceptRow> tableRows = tx().query(query).resolve().asConceptRows().stream().collect(Collectors.toList());
+        List<? extends List<Optional<? extends Concept>>> rows = tableRows.stream()
                 .map(row -> varList.stream().<Optional<? extends Concept>>map(row::get).collect(Collectors.toList()))
                 .collect(Collectors.toList());
+        givenRows = new GivenRows(varList, rows);
     }
 
     @Given("get answers of typeql write query{with_given}{may_error}")
@@ -886,7 +897,7 @@ public class QuerySteps {
     @Given("get answers of typeql schema query{with_given}{may_error}")
     public void get_answers_of_typeql_query(boolean withGiven, Parameters.MayError mayError, String query) {
         clearAnswers();
-        List<List<Optional<? extends Concept>>> given = withGiven ? takeGivenRows() : null;
+        GivenRows given = withGiven ? takeGivenRows() : null;
         mayError.check(() -> queryAnswer = query(tx(), query, queryOptions, given).resolve());
     }
 

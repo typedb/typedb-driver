@@ -51,6 +51,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -508,7 +509,7 @@ public class ValueTest {
 
     private ConceptRow runRoundtripTest(Transaction tx, String valueType, Value nativeValue, String typeqlLiteral) {
         String query = String.format("given $native: %s; match let $parsed = %s;", valueType, typeqlLiteral);
-        List<ConceptRow> rows = tx.query(query, new QueryOptions(), List.of(List.of(Optional.of(nativeValue)))).resolve()
+        List<ConceptRow> rows = tx.query(query, new QueryOptions(), List.of("native"), List.of(List.of(Optional.of(nativeValue)))).resolve()
                 .asConceptRows().stream().collect(Collectors.toList());
         assertEquals(1, rows.size());
         return rows.get(0);
