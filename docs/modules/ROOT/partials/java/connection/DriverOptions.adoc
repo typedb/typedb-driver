@@ -40,7 +40,7 @@ DriverOptions options = new DriverOptions(DriverTlsConfig.enabledWithNativeRootC
 public java.lang.Integer primaryFailoverRetries()
 ----
 
-Specifies the number of retries the driver performs to find and reach the cluster primary after a failed request, before giving up. Total attempts per user request = ``N + 1``. Each retry either follows the server's redirect address (fast path) or polls the known replicas with a 2-second sleep between polls (slow path). Set to ``0`` to disable failover. Defaults to 1. 
+Returns the value set for the primary failover retries limit in this ``DriverOptions`` object. Specifies the number of retries the driver performs to find and reach the cluster primary after a failed request, before giving up. Total attempts per user request = ``N + 1``. Each retry either follows the server's redirect address (fast path) or polls the known replicas with a 2-second sleep between polls (slow path). Set to ``0`` to disable failover. Defaults to 1. 
 
 
 [caption=""]

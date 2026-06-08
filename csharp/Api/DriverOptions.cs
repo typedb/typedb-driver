@@ -87,7 +87,7 @@ namespace TypeDB.Driver.Api
         }
 
         /// <summary>
-        /// Specifies the number of retries the driver performs to find and reach the cluster primary
+        /// Gets or sets the number of retries the driver performs to find and reach the cluster primary
         /// after a failed request, before giving up. Total attempts per user request = <c>N + 1</c>.
         /// Each retry either follows the server's redirect address (fast path) or polls the
         /// known replicas with a 2-second sleep between polls (slow path).

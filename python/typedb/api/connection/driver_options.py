@@ -124,6 +124,7 @@ class DriverOptions(NativeWrapper[NativeDriverOptions]):
     @property
     def primary_failover_retries(self) -> int:
         """
+        Returns the value set for the primary failover retries limit in this ``DriverOptions`` object.
         Specifies the number of retries the driver performs to find and reach the cluster primary
         after a failed request, before giving up. Total attempts per user request = ``N + 1``.
         Each retry either follows the server's redirect address (fast path) or polls the

@@ -47,7 +47,7 @@
 
 		[workspace.dependencies.tokio]
 			features = ["bytes", "default", "fs", "io-std", "io-util", "libc", "macros", "mio", "net", "rt", "rt-multi-thread", "signal", "signal-hook-registry", "socket2", "sync", "test-util", "time", "tokio-macros"]
-			version = "1.52.1"
+			version = "1.52.3"
 			default-features = false
 
 		[workspace.dependencies.tracing]
@@ -108,7 +108,7 @@
 
 		[workspace.dependencies.maybe-async]
 			features = ["default"]
-			version = "0.2.10"
+			version = "0.2.11"
 			default-features = false
 
 		[workspace.dependencies.tonic]

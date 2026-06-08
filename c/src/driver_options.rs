@@ -63,6 +63,7 @@ pub extern "C" fn driver_options_set_primary_failover_retries(
     borrow_mut(options).primary_failover_retries = primary_failover_retries as usize;
 }
 
+/// Returns the value set for the primary failover retries limit in this <code>DriverOptions</code> object.
 /// Specifies the number of retries the driver performs to find and reach the cluster primary
 /// after a failed request, before giving up. Total attempts per user request = <code>N + 1</code>.
 /// Each retry either follows the server's redirect address (fast path) or polls the

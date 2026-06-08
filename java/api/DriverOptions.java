@@ -115,6 +115,7 @@ public class DriverOptions extends NativeObject<com.typedb.driver.jni.DriverOpti
     }
 
     /**
+     * Returns the value set for the primary failover retries limit in this <code>DriverOptions</code> object.
      * Specifies the number of retries the driver performs to find and reach the cluster primary
      * after a failed request, before giving up. Total attempts per user request = {@code N + 1}.
      * Each retry either follows the server's redirect address (fast path) or polls the
