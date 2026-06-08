@@ -20,7 +20,7 @@
 use std::{error::Error as StdError, fmt, time::Duration};
 
 use tonic::{Code, Status};
-use tonic_types::StatusExt;
+use tonic_types::{ErrorInfo, StatusExt};
 
 use super::RequestID;
 use crate::common::address::{Address, Addresses};
@@ -152,8 +152,8 @@ error_messages! { ConnectionError
         12: "Didn't receive any server responses for the query.",
     UnexpectedQueryType { query_type: i32 } =
         13: "Unexpected query type in message received from server: {query_type}. This is either a version compatibility issue or a bug.",
-    ClusterServerNotPrimary =
-        14: "The server is not primary.",
+    ClusterServerNotPrimary { hint_address: Option<Address> } =
+        14: "The server is not primary (primary hint: {hint_address:?}).",
     UnknownDirectServerRouting { address: Address, known_addresses: Addresses } =
         15: "Could not execute operation against '{address}' since it's not in the list of known servers: {known_addresses}.",
     TokenCredentialInvalid =
@@ -196,8 +196,6 @@ error_messages! { ConnectionError
         34: "Server is not yet initialized.",
     AnalyzeNoResponse =
         35: "Didn't receive any server responses for the analyze request.",
-    NotPrimaryOnReadOnly { address: Address } =
-        36: "Could not execute a readonly operation on a non-primary server '{address}'.",
     NoPrimaryServer =
         37: "Could not find a primary server.",
     SchemeTlsSettingsMismatch { scheme: http::uri::Scheme, is_tls_enabled: bool } =
@@ -342,11 +340,14 @@ impl Error {
         }
     }
 
-    fn try_extracting_connection_error_code(code: &str) -> Option<ConnectionError> {
-        match code {
+    fn try_extracting_connection_error_from_info(error_info: &ErrorInfo) -> Option<ConnectionError> {
+        match error_info.reason.as_str() {
             "AUT1" | "AUT2" | "AUT3" => Some(ConnectionError::TokenCredentialInvalid {}),
             "SRV14" | "RFT1" | "CSV7" => Some(ConnectionError::ServerIsNotInitialised {}),
-            "CSV8" => Some(ConnectionError::ClusterServerNotPrimary {}),
+            "CSV8" => Some(ConnectionError::ClusterServerNotPrimary { hint_address: None }),
+            "CSV9" => Some(ConnectionError::ClusterServerNotPrimary {
+                hint_address: error_info.metadata.get("redirect_address").and_then(|addr| addr.parse::<Address>().ok()),
+            }),
             _ => None,
         }
     }
@@ -455,10 +456,10 @@ impl From<Status> for Error {
             }
 
             if let Some(error_info) = details.error_info() {
-                let code = error_info.reason.clone();
-                if let Some(connection_error) = Self::try_extracting_connection_error_code(&code) {
+                if let Some(connection_error) = Self::try_extracting_connection_error_from_info(error_info) {
                     Self::Connection(connection_error)
                 } else {
+                    let code = error_info.reason.clone();
                     let domain = error_info.domain.clone();
                     let stack_trace =
                         details.debug_info().map(|debug_info| debug_info.stack_entries.clone()).unwrap_or_default();

@@ -23,7 +23,7 @@ use crate::connection::driver_tls_config::DriverTlsConfig;
 
 // When changing these numbers, also update docs in DriverOptions
 const DEFAULT_REQUEST_TIMEOUT: Duration = Duration::from_secs(2 * 60 * 60); // 2 hours
-const DEFAULT_REDIRECT_FAILOVER_RETRIES: usize = 1;
+const DEFAULT_PRIMARY_FAILOVER_RETRIES: usize = 1;
 
 /// TypeDB driver connection options.
 /// `DriverOptions` object can be used to override the default driver behavior while connecting to
@@ -47,10 +47,11 @@ pub struct DriverOptions {
     // TODO: What if the server does not respond on queries/commits?
     // Shall we apply the same or a different timeout?
     pub request_timeout: Duration,
-    /// Sets the number of times the driver retries finding and re-routing to the primary server
-    /// on connection failures. This value is used both for polling during leader election (up to
-    /// N+1 attempts with a 2-second sleep between each) and for re-executing a failed request on
-    /// a newly discovered primary. Defaults to 1.
+    /// Specifies the number of retries the driver performs to find and reach the cluster primary
+    /// after a failed request, before giving up. Total attempts per user request = `N + 1`.
+    /// Each retry either follows the server's redirect address (fast path) or polls the
+    /// known replicas with a 2-second sleep between polls (slow path).
+    /// Set to `0` to disable failover. Defaults to 1.
     pub primary_failover_retries: usize,
 }
 
@@ -75,10 +76,11 @@ impl DriverOptions {
         Self { request_timeout, ..self }
     }
 
-    /// Sets the number of times the driver retries finding and re-routing to the primary server
-    /// on connection failures. This value is used both for polling during leader election (up to
-    /// N+1 attempts with a 2-second sleep between each) and for re-executing a failed request on
-    /// a newly discovered primary. Defaults to 1.
+    /// Specifies the number of retries the driver performs to find and reach the cluster primary
+    /// after a failed request, before giving up. Total attempts per user request = `N + 1`.
+    /// Each retry either follows the server's redirect address (fast path) or polls the
+    /// known replicas with a 2-second sleep between polls (slow path).
+    /// Set to `0` to disable failover. Defaults to 1.
     pub fn primary_failover_retries(self, primary_failover_retries: usize) -> Self {
         Self { primary_failover_retries, ..self }
     }
@@ -89,7 +91,7 @@ impl Default for DriverOptions {
         Self {
             tls_config: DriverTlsConfig::default(),
             request_timeout: DEFAULT_REQUEST_TIMEOUT,
-            primary_failover_retries: DEFAULT_REDIRECT_FAILOVER_RETRIES,
+            primary_failover_retries: DEFAULT_PRIMARY_FAILOVER_RETRIES,
         }
     }
 }

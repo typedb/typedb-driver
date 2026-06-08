@@ -25,7 +25,6 @@ a| `ListsNotImplemented`
 a| `MissingPort`
 a| `MissingResponseField`
 a| `NoPrimaryServer`
-a| `NotPrimaryOnReadOnly`
 a| `QueryStreamNoResponse`
 a| `RPCMethodUnavailable`
 a| `RequestTimeout`

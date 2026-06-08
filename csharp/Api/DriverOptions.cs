@@ -87,10 +87,11 @@ namespace TypeDB.Driver.Api
         }
 
         /// <summary>
-        /// Gets or sets the number of times the driver retries finding and re-routing to the primary server
-        /// on connection failures. This value is used both for polling during leader election (up to
-        /// N+1 attempts with a 2-second sleep between each) and for re-executing a failed request on
-        /// a newly discovered primary. Defaults to 1.
+        /// Specifies the number of retries the driver performs to find and reach the cluster primary
+        /// after a failed request, before giving up. Total attempts per user request = <c>N + 1</c>.
+        /// Each retry either follows the server's redirect address (fast path) or polls the
+        /// known replicas with a 2-second sleep between polls (slow path).
+        /// Set to <c>0</c> to disable failover. Defaults to 1.
         /// </summary>
         /// <example>
         /// <code>

@@ -230,6 +230,12 @@ impl ServerManager {
                 Err(Error::Connection(connection_error)) => {
                     debug!("Failed on primary {}: {connection_error:?}", primary.address());
                     connection_errors.insert(primary.address().clone(), connection_error.clone().into());
+                    if let ConnectionError::ClusterServerNotPrimary { hint_address: Some(hint) } = &connection_error {
+                        if let Some(hinted) = self.find_replica_by_private_address(hint) {
+                            primary = hinted;
+                            continue;
+                        }
+                    }
                     let candidates = self.failover_candidates(&private_address, &connection_error);
                     match self.seek_primary_replica_in(candidates, retries, Some(&private_address)).await {
                         Ok(replica) => primary = replica,
@@ -240,6 +246,10 @@ impl ServerManager {
             }
         }
         Err(self.server_connection_failed_err(connection_errors))
+    }
+
+    fn find_replica_by_private_address(&self, private_address: &Address) -> Option<AvailableServer> {
+        self.read_replicas().iter().find(|replica| replica.private_address() == private_address).cloned()
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
@@ -257,7 +267,7 @@ impl ServerManager {
 
     fn failover_candidates(&self, failed_address: &Address, error: &ConnectionError) -> HashSet<AvailableServer> {
         let replicas: HashSet<_> = self.read_replicas().iter().cloned().collect();
-        if matches!(error, ConnectionError::ClusterServerNotPrimary) {
+        if matches!(error, ConnectionError::ClusterServerNotPrimary { .. }) {
             replicas // Server is alive — include it as a candidate to query
         } else {
             replicas.into_iter().filter(|r| r.private_address() != failed_address).collect()
@@ -276,9 +286,6 @@ impl ServerManager {
             // TODO: We won't ever reconnect to disconnected / new replicas when using execute_on_any.
             // We need to think how to update the connections in this case.
             match self.execute_on(replica.address(), replica.private_address(), &task).await {
-                Err(Error::Connection(ConnectionError::ClusterServerNotPrimary)) => {
-                    return Err(ConnectionError::NotPrimaryOnReadOnly { address: replica.address().clone() }.into());
-                }
                 Err(Error::Connection(error)) => {
                     debug!("Unable to connect to {}: {error:?}. May attempt the next server.", replica.address());
                     connection_errors.insert(replica.address().clone(), error.into());

@@ -180,6 +180,66 @@ async fn cleanup_database() {
     }
 }
 
+/// Exercises the CSV9 hinted-redirect path: a stale-but-alive cached primary returns
+/// `[CSV9] Not primary, redirect_address=<new primary>` and the driver must follow the
+/// hint instead of surfacing the error. The plain `primary_failover` test below cannot
+/// reach this path — it always kills the cached primary, so failover goes through the
+/// network-error branch and the cache is refreshed every iteration via `get_primary_server`.
+#[test]
+#[serial]
+fn primary_failover_csv9_redirect_hint() {
+    ensure_all_nodes_up();
+    async_std::task::block_on(async {
+        println!("=== CSV9 Redirect-Hint Failover Test ===");
+        let tls_config = DriverTlsConfig::enabled_with_root_ca(&tls_root_ca()).expect("TLS config");
+        let driver_options = DriverOptions::new(tls_config).primary_failover_retries(PRIMARY_FAILOVER_RETRIES);
+        let driver = TypeDBDriver::new(
+            Addresses::try_from_address_str(ADDRESSES[0]).unwrap(),
+            Credentials::new(USERNAME, PASSWORD),
+            driver_options,
+        )
+        .await
+        .expect("Driver should connect via single address");
+
+        setup_database(&driver).await;
+        verify_read_query(&driver).await;
+
+        let primary = get_primary_server(&driver).await;
+        let primary_address = primary.address().unwrap().to_string();
+        let primary_node_id = node_id_from_address(&primary_address);
+        println!("  Current primary: {primary_address} (node {primary_node_id})");
+        verify_read_query(&driver).await;
+
+        println!("  Killing primary node {primary_node_id}...");
+        cluster_server("kill", &primary_node_id);
+        // Wait for the cluster to elect a new primary before restarting the killed node.
+        sleep(Duration::from_secs(8)).await;
+
+        println!("  Restarting node {primary_node_id} (will rejoin as secondary)...");
+        cluster_server("start", &primary_node_id);
+        cluster_server("await", &primary_node_id);
+        sleep(Duration::from_secs(3)).await;
+
+        // Issue a request without refreshing the driver's view first. The cached primary is
+        // the now-secondary restarted node, which will respond with CSV9 + redirect_address.
+        println!("  Issuing read query against driver with stale cached primary...");
+        verify_read_query(&driver).await;
+        println!("  Read via CSV9 redirect hint: OK");
+
+        let new_primary = get_primary_server(&driver).await;
+        let new_primary_address = new_primary.address().unwrap().to_string();
+        assert_ne!(
+            new_primary_address, primary_address,
+            "Driver's cached primary should have moved after the CSV9 redirect; still pointing at {primary_address}"
+        );
+        println!("  Driver's new cached primary: {new_primary_address}");
+
+        drop(driver);
+        cleanup_database().await;
+        println!("\n=== CSV9 redirect-hint test passed ===");
+    });
+}
+
 #[test]
 #[serial]
 fn primary_failover() {
