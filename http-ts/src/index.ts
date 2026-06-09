@@ -33,7 +33,7 @@ import {
     UsersListResponse,
     VersionResponse
 } from "./response";
-import {Attribute, Entity, Relation, Value} from "./concept";
+import {Attribute, Concept, Entity, Relation, Value} from "./concept";
 
 const HTTP_UNAUTHORIZED = 401;
 const HTTP_MISDIRECTED = 421;
@@ -392,4 +392,7 @@ export interface User {
 
 export type GivenRowEntry = Value | Entity | Relation | Attribute;
 export type GivenRow = GivenRowEntry[];
-export type GivenRows = GivenRow[][];
+export type GivenRows = { [varName: string]: GivenRowEntry } | {
+    variables: String[],
+    rows: GivenRow[][];
+};

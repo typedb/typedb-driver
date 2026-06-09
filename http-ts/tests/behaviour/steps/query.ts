@@ -81,7 +81,7 @@ When('set answers of typeql read query as given rows with order: {variable_list}
     const results = await makeQuery(query).then(assertNotError);
     if (results.ok.answerType === "ok" || results.ok.answerType === "conceptDocuments") assert.fail("Expected concept rows");
     const rows = results.ok.answers.map(row => varList.map(v => row.data[v] as GivenRowEntry));
-    setGivenRows(rows as GivenRows);
+    setGivenRows({ variables: varList, rows });
 });
 
 const runQueryWithGiven = async (mayError: MayError, query: string) => {
