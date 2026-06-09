@@ -17,7 +17,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Iterator, Optional, Callable
+from typing import TYPE_CHECKING, Optional, Callable
 
 from typedb.api.analyze.analyzed_query import AnalyzedQuery
 from typedb.api.answer.query_answer import QueryAnswer
@@ -29,20 +29,14 @@ from typedb.common.native_wrapper import NativeWrapper
 from typedb.common.promise import Promise
 from typedb.common.validation import require_non_null
 from typedb.concept.answer.query_answer_factory import wrap_query_answer
+from typedb.connection.given_rows import GivenRows
 from typedb.native_driver_wrapper import error_code, error_message, transaction_new, \
     transaction_analyze, transaction_query, transaction_query_given_rows, \
     transaction_commit, transaction_rollback, transaction_is_open, transaction_on_close, transaction_close, \
     query_answer_promise_resolve, analyzed_query_promise_resolve, \
-    Transaction as NativeTransaction, TransactionCallbackDirector, TypeDBDriverExceptionNative, void_promise_resolve, \
-    given_rows_header_builder_new, given_rows_header_builder_push, given_rows_header_builder_finish, \
-    given_rows_builder_new, given_rows_builder_start_new_row, given_rows_builder_commit_row, \
-    given_rows_builder_finish, \
-    given_rows_builder_set_index_to_concept, given_rows_builder_set_index_to_empty, \
-    given_rows_builder_set_variable_to_concept, given_rows_builder_set_variable_to_empty, \
-    GivenRows as NativeGivenRows
+    Transaction as NativeTransaction, TransactionCallbackDirector, TypeDBDriverExceptionNative, void_promise_resolve
 
 if TYPE_CHECKING:
-    from typedb.api.concept.concept import Concept
     from typedb.api.connection.transaction import TransactionType
     from typedb.native_driver_wrapper import Error as NativeError
 
@@ -79,20 +73,15 @@ class _Transaction(Transaction, NativeWrapper[NativeTransaction]):
         promise = transaction_analyze(self.native_object, query)
         return Promise.map(_AnalyzedQuery, lambda: analyzed_query_promise_resolve(promise))
 
-    def query(self, query: str, options: Optional[QueryOptions] = None, given_variables=None, given_rows=None) -> Promise[QueryAnswer]:
+    def query(self, query: str, options: Optional[QueryOptions] = None, given_rows: Optional[GivenRows] = None) -> Promise[QueryAnswer]:
         require_non_null(query, "query")
         if not options:
             options = QueryOptions()
         if given_rows is None:
             promise = transaction_query(self.native_object, query, options.native_object)
-        elif given_variables is not None:
-            native_given_rows = _build_native_given_rows(given_variables, given_rows)
-            native_given_rows.thisown = 0
-            promise = transaction_query_given_rows(self.native_object, query, options.native_object, native_given_rows)
         else:
-            native_given_rows = _build_native_given_rows_from_map(given_rows)
-            native_given_rows.thisown = 0
-            promise = transaction_query_given_rows(self.native_object, query, options.native_object, native_given_rows)
+            given_rows._native.thisown = 0
+            promise = transaction_query_given_rows(self.native_object, query, options.native_object, given_rows._native)
         return Promise.map(wrap_query_answer, lambda: query_answer_promise_resolve(promise))
 
     def is_open(self) -> bool:
@@ -146,45 +135,3 @@ class _Transaction(Transaction, NativeWrapper[NativeTransaction]):
         self.close()
         if exc_tb is not None:
             return False
-
-
-def _build_native_given_rows_from_map(rows) -> NativeGivenRows:
-    all_variables = set()
-    for row in rows:
-        all_variables.update(row.keys())
-    variables = list(all_variables)
-    header_builder = given_rows_header_builder_new(len(variables))
-    for variable in variables:
-        given_rows_header_builder_push(header_builder, variable)
-    header_builder.thisown = 0
-    header = given_rows_header_builder_finish(header_builder)
-    rows_builder = given_rows_builder_new(header, len(rows))
-    for row in rows:
-        given_rows_builder_start_new_row(rows_builder)
-        for variable, concept in row.items():
-            if concept is None:
-                given_rows_builder_set_variable_to_empty(rows_builder, variable)
-            else:
-                given_rows_builder_set_variable_to_concept(rows_builder, variable, concept._native_object)
-        given_rows_builder_commit_row(rows_builder)
-    rows_builder.thisown = 0
-    return given_rows_builder_finish(rows_builder)
-
-
-def _build_native_given_rows(variables, rows) -> NativeGivenRows:
-    header_builder = given_rows_header_builder_new(len(variables))
-    for variable in variables:
-        given_rows_header_builder_push(header_builder, variable)
-    header_builder.thisown = 0
-    header = given_rows_header_builder_finish(header_builder)
-    rows_builder = given_rows_builder_new(header, len(rows))
-    for row in rows:
-        given_rows_builder_start_new_row(rows_builder)
-        for i, concept in enumerate(row):
-            if concept is None:
-                given_rows_builder_set_index_to_empty(rows_builder, i)
-            else:
-                given_rows_builder_set_index_to_concept(rows_builder, i, concept._native_object)
-        given_rows_builder_commit_row(rows_builder)
-    rows_builder.thisown = 0
-    return given_rows_builder_finish(rows_builder)

@@ -85,7 +85,7 @@ class Transaction(ABC):
         pass
 
     @abstractmethod
-    def query(self, query: str, options: Optional[QueryOptions] = None, given_variables=None, given_rows=None) -> Promise[QueryAnswer]:
+    def query(self, query: str, options: Optional[QueryOptions] = None, given_rows=None) -> Promise[QueryAnswer]:
         """
         Execute a TypeQL query in this transaction.
 

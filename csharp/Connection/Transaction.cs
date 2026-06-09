@@ -19,7 +19,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using TypeDB.Driver;
 using TypeDB.Driver.Analyze;
 using TypeDB.Driver.Answer;
@@ -30,7 +29,6 @@ using TypeDB.Driver.Common;
 using TypeDB.Driver.Common.Validation;
 
 using DriverError = TypeDB.Driver.Common.Error.Driver;
-using TypeDB.Driver.Concept;
 
 namespace TypeDB.Driver.Connection
 {
@@ -154,7 +152,7 @@ namespace TypeDB.Driver.Connection
         }
 
         /// <inheritdoc/>
-        public Promise<IQueryAnswer> Query(string query, QueryOptions options, List<Dictionary<string, IConcept?>> givenRows)
+        public Promise<IQueryAnswer> Query(string query, QueryOptions options, IGivenRows givenRows)
         {
             Validator.NonNull(query, DriverError.NON_NULL_VALUE_REQUIRED, "query");
             Validator.ThrowIfFalse(NativeObject.IsOwned, DriverError.TRANSACTION_CLOSED);
@@ -162,7 +160,7 @@ namespace TypeDB.Driver.Connection
             try
             {
                 var promise = Pinvoke.typedb_driver.transaction_query_given_rows(
-                    NativeObject, query, options.NativeObject, BuildNativeGivenRowsFromMap(givenRows).Released());
+                    NativeObject, query, options.NativeObject, ((GivenRows)givenRows).NativeObject.Released());
                 return Promise<IQueryAnswer>.Map<Pinvoke.QueryAnswer, IQueryAnswer>(
                     () => promise.Resolve(),
                     QueryAnswer.Of);
@@ -171,72 +169,6 @@ namespace TypeDB.Driver.Connection
             {
                 throw new TypeDBDriverException(e);
             }
-        }
-
-        /// <inheritdoc/>
-        public Promise<IQueryAnswer> Query(string query, QueryOptions options, List<string> givenVariables, List<List<IConcept?>> givenRows)
-        {
-            Validator.NonNull(query, DriverError.NON_NULL_VALUE_REQUIRED, "query");
-            Validator.ThrowIfFalse(NativeObject.IsOwned, DriverError.TRANSACTION_CLOSED);
-
-            try
-            {
-                var promise = Pinvoke.typedb_driver.transaction_query_given_rows(
-                    NativeObject, query, options.NativeObject, BuildNativeGivenRows(givenVariables, givenRows).Released());
-                return Promise<IQueryAnswer>.Map<Pinvoke.QueryAnswer, IQueryAnswer>(
-                    () => promise.Resolve(),
-                    QueryAnswer.Of);
-            }
-            catch (Pinvoke.Error e)
-            {
-                throw new TypeDBDriverException(e);
-            }
-        }
-
-        private static Pinvoke.GivenRows BuildNativeGivenRowsFromMap(List<Dictionary<string, IConcept?>> rows)
-        {
-            var variables = rows.SelectMany(r => r.Keys).Distinct().ToList();
-            var headerBuilder = Pinvoke.typedb_driver.given_rows_header_builder_new((uint)variables.Count);
-            foreach (var variable in variables)
-                Pinvoke.typedb_driver.given_rows_header_builder_push(headerBuilder, variable);
-            var header = Pinvoke.typedb_driver.given_rows_header_builder_finish(headerBuilder.Released());
-            var rowsBuilder = Pinvoke.typedb_driver.given_rows_builder_new(header, (uint)rows.Count);
-            foreach (var row in rows)
-            {
-                Pinvoke.typedb_driver.given_rows_builder_start_new_row(rowsBuilder);
-                foreach (var (variable, concept) in row)
-                {
-                    if (concept == null)
-                        Pinvoke.typedb_driver.given_rows_builder_set_variable_to_empty(rowsBuilder, variable);
-                    else
-                        Pinvoke.typedb_driver.given_rows_builder_set_variable_to_concept(rowsBuilder, variable, ((Concept.Concept)concept).NativeObject);
-                }
-                Pinvoke.typedb_driver.given_rows_builder_commit_row(rowsBuilder);
-            }
-            return Pinvoke.typedb_driver.given_rows_builder_finish(rowsBuilder.Released());
-        }
-
-        private static Pinvoke.GivenRows BuildNativeGivenRows(List<string> variables, List<List<IConcept?>> rows)
-        {
-            var headerBuilder = Pinvoke.typedb_driver.given_rows_header_builder_new((uint)variables.Count);
-            foreach (var variable in variables)
-                Pinvoke.typedb_driver.given_rows_header_builder_push(headerBuilder, variable);
-            var header = Pinvoke.typedb_driver.given_rows_header_builder_finish(headerBuilder.Released());
-            var rowsBuilder = Pinvoke.typedb_driver.given_rows_builder_new(header, (uint)rows.Count);
-            foreach (var row in rows)
-            {
-                Pinvoke.typedb_driver.given_rows_builder_start_new_row(rowsBuilder);
-                for (int i = 0; i < row.Count; i++)
-                {
-                    var concept = row[i];
-                    if (concept == null)
-                        Pinvoke.typedb_driver.given_rows_builder_set_index_to_empty(rowsBuilder, (uint)i);
-                    else
-                        Pinvoke.typedb_driver.given_rows_builder_set_index_to_concept(rowsBuilder, (uint)i, ((Concept.Concept)concept).NativeObject);
-                }
-                Pinvoke.typedb_driver.given_rows_builder_commit_row(rowsBuilder);
-            }
-            return Pinvoke.typedb_driver.given_rows_builder_finish(rowsBuilder.Released());
         }
 
         /// <inheritdoc/>

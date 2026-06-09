@@ -42,18 +42,11 @@ from typedb.api.concept.value.value import Value
 from typedb.common.datetime import Datetime
 from typedb.common.duration import Duration
 from typedb.driver import *
+from typedb.concept_factory import ConceptFactory
 
 
-class _GivenRows:
-    def __init__(self, variables, rows):
-        self.variables = variables
-        self.rows = rows
-
-
-def query(transaction: Transaction, query: str, options: Optional[QueryOptions], given_rows: Optional[_GivenRows] = None) -> 'Promise[QueryAnswer]':
-    if given_rows is None:
-        return transaction.query(query=query, options=options)
-    return transaction.query(query=query, options=options, given_variables=given_rows.variables, given_rows=given_rows.rows)
+def query(transaction: Transaction, query: str, options: Optional[QueryOptions], given_rows=None) -> 'Promise[QueryAnswer]':
+    return transaction.query(query=query, options=options, given_rows=given_rows)
 
 
 @step("typeql write query{with_given:WithGiven}{may_error:MayError}")
@@ -70,7 +63,7 @@ def step_impl(context: Context, var_list: list):
     answer = context.tx().query(query=context.text).resolve()
     table_rows = list(answer.as_concept_rows())
     rows = [[row.get(v) for v in var_list] for row in table_rows]
-    context.given_rows = _GivenRows(var_list, rows)
+    context.given_rows = ConceptFactory.build_given_rows_from(var_list, rows)
 
 
 @step("get answers of typeql write query{with_given:WithGiven}")

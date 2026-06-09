@@ -48,6 +48,7 @@ csharp_library(
         "//csharp/Api:api",
         "//csharp/Common:common",
         "//csharp/Connection:connection",
+        "//csharp/Concept:concept",
         "//csharp:typedb_driver_pinvoke",
     ],
     out = "TypeDB.Driver",

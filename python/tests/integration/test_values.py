@@ -497,7 +497,7 @@ class TestValues(TestCase):
         from typedb.concept.value.value import _Value
         def run_roundtrip_test(tx, value_type, native_concept, typeql_literal):
             answer = tx.query(f"given $native: {value_type}; match let $parsed = {typeql_literal};",
-                              given_variables=["native"], given_rows=[[native_concept]]).resolve()
+                              given_rows=ConceptFactory.build_given_rows_from(["native"], [[native_concept]])).resolve()
             rows = list(answer.as_concept_rows())
             assert_that(len(rows), is_(1))
             return (rows[0].get("native"), rows[0].get("parsed"))
@@ -507,22 +507,22 @@ class TestValues(TestCase):
             database = driver.databases.get(TYPEDB)
 
             examples = [
-                ("boolean", ValueFactory.new_boolean(True),  'true'),
-                ("boolean", ValueFactory.new_boolean(False), 'false'),
-                ("integer", ValueFactory.new_integer(25),    '25'),
-                ("double", ValueFactory.new_double(54.321),   '54.321'),
-                ("decimal", ValueFactory.new_decimal(Decimal('1234567890.0001234567890')), '1234567890.0001234567890dec'),
-                ("decimal", ValueFactory.new_decimal(Decimal('-1234567890.0001234567890')), '-1234567890.0001234567890dec'),
-                ("string", ValueFactory.new_string('John'), '"John"'),
-                ("date", ValueFactory.new_date(date(2024, 9, 20)),                      '2024-09-20'),
-                ("datetime", ValueFactory.new_datetime(Datetime.utcfromstring("1999-02-26T12:15:05")),
+                ("boolean", ConceptFactory.new_boolean(True),  'true'),
+                ("boolean", ConceptFactory.new_boolean(False), 'false'),
+                ("integer", ConceptFactory.new_integer(25),    '25'),
+                ("double", ConceptFactory.new_double(54.321),   '54.321'),
+                ("decimal", ConceptFactory.new_decimal(Decimal('1234567890.0001234567890')), '1234567890.0001234567890dec'),
+                ("decimal", ConceptFactory.new_decimal(Decimal('-1234567890.0001234567890')), '-1234567890.0001234567890dec'),
+                ("string", ConceptFactory.new_string('John'), '"John"'),
+                ("date", ConceptFactory.new_date(date(2024, 9, 20)),                      '2024-09-20'),
+                ("datetime", ConceptFactory.new_datetime(Datetime.utcfromstring("1999-02-26T12:15:05")),
                  '1999-02-26T12:15:05'),
-                ("datetime-tz", ValueFactory.new_datetime_tz(Datetime.utcfromstring("2024-09-20T16:40:05", tz_name="Europe/Belfast")),
+                ("datetime-tz", ConceptFactory.new_datetime_tz(Datetime.utcfromstring("2024-09-20T16:40:05", tz_name="Europe/Belfast")),
                  '2024-09-20T16:40:05 Europe/Belfast'),
-                ("datetime-tz", ValueFactory.new_datetime_tz(Datetime.utcfromstring("2024-09-20T16:40:05.028129323",
+                ("datetime-tz", ConceptFactory.new_datetime_tz(Datetime.utcfromstring("2024-09-20T16:40:05.028129323",
                                                                offset_seconds=Datetime.offset_seconds_fromstring("+0545"))),
                  '2024-09-20T16:40:05.028129323+0545'),
-                ("duration", ValueFactory.new_duration(Duration.fromstring("P1Y10M7DT15H44M5.00394892S")),
+                ("duration", ConceptFactory.new_duration(Duration.fromstring("P1Y10M7DT15H44M5.00394892S")),
                  'P1Y10M7DT15H44M5.00394892S'),
             ]
 
