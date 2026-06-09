@@ -391,8 +391,4 @@ export interface User {
 }
 
 export type GivenRowEntry = Value | Entity | Relation | Attribute;
-export type GivenRow = GivenRowEntry[];
-export type GivenRows = { [varName: string]: GivenRowEntry } | {
-    variables: String[],
-    rows: GivenRow[][];
-};
+export type GivenRows = { [varName: string]: GivenRowEntry }[];

@@ -85,7 +85,7 @@ async function runGivenTests(driver: TypeDBHttpDriver, failures: string[]): Prom
             if (insertAnswers.length !== 1) throw new Error(`Expected 1 row, got: ${insertAnswers.length}`);
             const xConcept = insertAnswers[0].data["x"];
 
-            const readAnswers = await runOneShot(driver, "read", ex.givenQuery, false, { variables: ["x"], rows: [[xConcept]] });
+            const readAnswers = await runOneShot(driver, "read", ex.givenQuery, false, [{ x: xConcept }]);
             if (readAnswers.length !== 1) throw new Error(`Expected 1 row, got: ${readAnswers.length}`);
             const idConcept = readAnswers[0].data["id"] as any;
             assert.equal(idConcept.value, ex.expectedId, `id mismatch: expected ${ex.expectedId}, got ${idConcept.value}`);
@@ -126,7 +126,7 @@ async function runValueTests(driver: TypeDBHttpDriver, failures: string[]): Prom
     for (const [valueType, value, literal] of valueExamples) {
         try {
             const query = `given $native: ${valueType}; match let $parsed = ${literal};`;
-            const readAnswers = await runOneShot(driver, "read", query, false, { variables: ["native"], rows: [[value]] });
+            const readAnswers = await runOneShot(driver, "read", query, false, [{ native: value }]);
             if (readAnswers.length !== 1) throw new Error(`Expected 1 row, got: ${readAnswers.length}`);
 
             const native = readAnswers[0].data["native"] as any;
