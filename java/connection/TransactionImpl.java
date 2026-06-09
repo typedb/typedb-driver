@@ -32,29 +32,16 @@ import com.typedb.driver.common.Validator;
 import com.typedb.driver.common.exception.TypeDBDriverException;
 import com.typedb.driver.answer.QueryAnswerImpl;
 import com.typedb.driver.api.concept.Concept;
-import com.typedb.driver.concept.ConceptImpl;
+import com.typedb.driver.api.GivenRows;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Optional;
 
 import java.util.function.Consumer;
 
 import static com.typedb.driver.common.exception.ErrorMessage.Driver.TRANSACTION_CLOSED;
-import static com.typedb.driver.jni.typedb_driver.given_rows_builder_new;
-import static com.typedb.driver.jni.typedb_driver.given_rows_builder_finish;
-import static com.typedb.driver.jni.typedb_driver.given_rows_builder_commit_row;
-import static com.typedb.driver.jni.typedb_driver.given_rows_builder_start_new_row;
-import static com.typedb.driver.jni.typedb_driver.given_rows_builder_set_index_to_concept;
-import static com.typedb.driver.jni.typedb_driver.given_rows_builder_set_index_to_empty;
-import static com.typedb.driver.jni.typedb_driver.given_rows_builder_set_variable_to_concept;
-import static com.typedb.driver.jni.typedb_driver.given_rows_builder_set_variable_to_empty;
-import static com.typedb.driver.jni.typedb_driver.given_rows_header_builder_new;
-import static com.typedb.driver.jni.typedb_driver.given_rows_header_builder_push;
-import static com.typedb.driver.jni.typedb_driver.given_rows_header_builder_finish;
 import static com.typedb.driver.jni.typedb_driver.transaction_analyze;
 import static com.typedb.driver.jni.typedb_driver.transaction_commit;
 import static com.typedb.driver.jni.typedb_driver.transaction_close;
@@ -119,78 +106,10 @@ public class TransactionImpl extends NativeObject<com.typedb.driver.jni.Transact
     }
 
     @Override
-    public Promise<? extends QueryAnswer> query(String query, QueryOptions options, List<? extends Map<String, Optional<? extends Concept>>> givenRows) throws TypeDBDriverException {
+    public Promise<? extends QueryAnswer> query(String query, QueryOptions options, GivenRows givenRows) throws TypeDBDriverException {
         Validator.requireNonNull(query, "query");
         try {
-            // NOTE: .released() relinquishes ownership of the native rows to the Rust side
-            return Promise.map(transaction_query_given_rows(nativeObject, query, options.nativeObject, buildNativeGivenRowsFromMap(givenRows).released()), QueryAnswerImpl::of);
-        } catch (com.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
-    }
-
-    @Override
-    public Promise<? extends QueryAnswer> query(String query, QueryOptions options, List<String> givenVariables, List<? extends List<Optional<? extends Concept>>> givenRows) throws TypeDBDriverException {
-        Validator.requireNonNull(query, "query");
-        try {
-            return Promise.map(transaction_query_given_rows(nativeObject, query, options.nativeObject, buildNativeGivenRows(givenVariables, givenRows).released()), QueryAnswerImpl::of);
-        } catch (com.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
-    }
-
-    private static com.typedb.driver.jni.GivenRows buildNativeGivenRowsFromMap(List<? extends Map<String, Optional<? extends Concept>>> givenRows) {
-        try{
-            Set<String> variables= new HashSet<>();
-            givenRows.forEach(row -> variables.addAll(row.keySet()));
-            com.typedb.driver.jni.GivenRowsHeaderBuilder headerBuilder = given_rows_header_builder_new(variables.size());
-            for (String variable : variables) {
-                given_rows_header_builder_push(headerBuilder, variable);
-            }
-            com.typedb.driver.jni.GivenRowsHeader header = given_rows_header_builder_finish(headerBuilder.released());
-            com.typedb.driver.jni.GivenRowsBuilder rowsBuilder = given_rows_builder_new(header, givenRows.size());
-            for (Map<String, Optional<? extends Concept>> row : givenRows) {
-                given_rows_builder_start_new_row(rowsBuilder);
-                for (Map.Entry<String, Optional<? extends Concept>> variableAndEntry : row.entrySet()) {
-                    if (variableAndEntry.getValue().isEmpty()) {
-                        given_rows_builder_set_variable_to_empty(rowsBuilder, variableAndEntry.getKey());
-                    } else {
-                        Concept concept = variableAndEntry.getValue().get();
-                        given_rows_builder_set_variable_to_concept(rowsBuilder, variableAndEntry.getKey(), ((ConceptImpl) concept).nativeObject);
-                    }
-                }
-                given_rows_builder_commit_row(rowsBuilder);
-            }
-            return given_rows_builder_finish(rowsBuilder.released());
-        } catch (com.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
-    }
-
-    private static com.typedb.driver.jni.GivenRows buildNativeGivenRows(List<String> variables, List<? extends List<Optional<? extends Concept>>> rows) throws TypeDBDriverException {
-        try{
-            com.typedb.driver.jni.GivenRowsHeaderBuilder headerBuilder = given_rows_header_builder_new(variables.size());
-            for (String variable : variables) {
-                given_rows_header_builder_push(headerBuilder, variable);
-            }
-            com.typedb.driver.jni.GivenRowsHeader header = given_rows_header_builder_finish(headerBuilder.released());
-
-            com.typedb.driver.jni.GivenRowsBuilder rowsBuilder = given_rows_builder_new(header, rows.size());
-            for (List<Optional<? extends Concept>> row : rows) {
-                given_rows_builder_start_new_row(rowsBuilder);
-                int colIndex = 0;
-                for (Optional<? extends Concept> entry : row) {
-                    if (entry.isEmpty()) {
-                        given_rows_builder_set_index_to_empty(rowsBuilder, colIndex);
-                    } else {
-                        Concept concept = entry.get();
-                        given_rows_builder_set_index_to_concept(rowsBuilder, colIndex, ((ConceptImpl) concept).nativeObject);
-                    }
-                    colIndex += 1;
-                }
-                given_rows_builder_commit_row(rowsBuilder);
-            }
-            return given_rows_builder_finish(rowsBuilder.released());
+            return Promise.map(transaction_query_given_rows(nativeObject, query, options.nativeObject, ((GivenRowsImpl)givenRows).nativeObject), QueryAnswerImpl::of);
         } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }

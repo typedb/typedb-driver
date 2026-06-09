@@ -19,6 +19,7 @@
 
 package com.typedb.driver.api;
 
+import com.typedb.driver.api.concept.Concept;
 import com.typedb.driver.api.database.DatabaseManager;
 import com.typedb.driver.api.server.Server;
 import com.typedb.driver.api.server.ServerVersion;
@@ -26,6 +27,7 @@ import com.typedb.driver.api.user.UserManager;
 import com.typedb.driver.common.exception.TypeDBDriverException;
 
 import javax.annotation.CheckReturnValue;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -121,6 +123,21 @@ public interface Driver extends AutoCloseable {
      */
     @CheckReturnValue
     Transaction transaction(String database, Transaction.Type type, TransactionOptions options);
+
+    /**
+     * Constructs a <code>GivenRows</code> instance from the dictionary for use as inputs to queries.
+     *
+     * @param givenRows A list of input rows for the query. Each row is a dictionary mapping a variable to its value.
+     */
+    GivenRows buildGivenRowsFrom(List<? extends Map<String, Optional<? extends Concept>>> givenRows);
+
+    /**
+     * Constructs a <code>GivenRows</code> instance for use as inputs to queries.
+     *
+     * @param variables The variables describing the content of the givenRows.
+     * @param rows Input rows for the query; each inner iterable is one row, {@code Optional.empty()} entries represent empty variables.
+     */
+    GivenRows buildGivenRowsFrom(List<String> variables, List<? extends List<Optional<? extends Concept>>> rows) throws TypeDBDriverException;
 
     /**
      * Set of servers for this driver connection, using default automatic routing.

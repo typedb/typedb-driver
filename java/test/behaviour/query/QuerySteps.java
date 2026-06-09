@@ -19,6 +19,7 @@
 
 package com.typedb.driver.test.behaviour.query;
 
+import com.typedb.driver.api.GivenRows;
 import com.typedb.driver.api.QueryOptions;
 import com.typedb.driver.api.QueryType;
 import com.typedb.driver.api.Transaction;
@@ -65,10 +66,7 @@ import java.util.stream.Collectors;
 
 import static com.typedb.driver.api.concept.Concept.DECIMAL_SCALE;
 import static com.typedb.driver.test.behaviour.config.Parameters.DATETIME_TZ_FORMATTERS;
-import static com.typedb.driver.test.behaviour.connection.ConnectionStepsBase.initQueryOptionsIfNeeded;
-import static com.typedb.driver.test.behaviour.connection.ConnectionStepsBase.queryOptions;
-import static com.typedb.driver.test.behaviour.connection.ConnectionStepsBase.threadPool;
-import static com.typedb.driver.test.behaviour.connection.ConnectionStepsBase.tx;
+import static com.typedb.driver.test.behaviour.connection.ConnectionStepsBase.*;
 import static com.typedb.driver.test.behaviour.util.Util.JSONListContains;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -80,19 +78,9 @@ public class QuerySteps {
     private static List<CompletableFuture<QueryAnswer>> queryAnswersParallel = null;
     private static GivenRows givenRows = null;
 
-    private static class GivenRows {
-        public List<String> variables;
-        public List<? extends List<Optional<? extends Concept>>> rows;
-
-        public GivenRows(List<String> variables, List<? extends List<Optional<? extends Concept>>> rows) {
-            this.variables = variables;
-            this.rows = rows;
-        }
-    }
-
     private Promise<? extends QueryAnswer> query(Transaction transaction, String query, Optional<QueryOptions> options, GivenRows given) {
         QueryOptions opts = options.orElseGet(QueryOptions::new);
-        if (given != null) return transaction.query(query, opts, given.variables, given.rows);
+        if (given != null) return transaction.query(query, opts, given);
         else if (options.isPresent()) return transaction.query(query, opts);
         else return transaction.query(query);
     }
@@ -889,7 +877,7 @@ public class QuerySteps {
         List<? extends List<Optional<? extends Concept>>> rows = tableRows.stream()
                 .map(row -> varList.stream().<Optional<? extends Concept>>map(row::get).collect(Collectors.toList()))
                 .collect(Collectors.toList());
-        givenRows = new GivenRows(varList, rows);
+        givenRows = driver.buildGivenRowsFrom(varList, rows);
     }
 
     @Given("get answers of typeql write query{with_given}{may_error}")
