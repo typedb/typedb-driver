@@ -44,8 +44,16 @@ from typedb.common.duration import Duration
 from typedb.driver import *
 
 
-def query(transaction: Transaction, query: str, options: Optional[QueryOptions], given_rows: Optional = None) -> 'Promise[QueryAnswer]':
-    return transaction.query(query=query, options=options, given_rows=given_rows)
+class _GivenRows:
+    def __init__(self, variables, rows):
+        self.variables = variables
+        self.rows = rows
+
+
+def query(transaction: Transaction, query: str, options: Optional[QueryOptions], given_rows: Optional[_GivenRows] = None) -> 'Promise[QueryAnswer]':
+    if given_rows is None:
+        return transaction.query(query=query, options=options)
+    return transaction.query(query=query, options=options, given_variables=given_rows.variables, given_rows=given_rows.rows)
 
 
 @step("typeql write query{with_given:WithGiven}{may_error:MayError}")
@@ -60,8 +68,9 @@ def step_impl(context: Context, with_given: bool, may_error: MayError):
 @step("set answers of typeql read query as given rows with order: {var_list:VariableList}")
 def step_impl(context: Context, var_list: list):
     answer = context.tx().query(query=context.text).resolve()
-    rows = list(answer.as_concept_rows())
-    context.given_rows = [[row.get(v) for v in var_list] for row in rows]
+    table_rows = list(answer.as_concept_rows())
+    rows = [[row.get(v) for v in var_list] for row in table_rows]
+    context.given_rows = _GivenRows(var_list, rows)
 
 
 @step("get answers of typeql write query{with_given:WithGiven}")

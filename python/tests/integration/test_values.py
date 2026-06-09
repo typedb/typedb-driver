@@ -497,7 +497,7 @@ class TestValues(TestCase):
         from typedb.concept.value.value import _Value
         def run_roundtrip_test(tx, value_type, native_concept, typeql_literal):
             answer = tx.query(f"given $native: {value_type}; match let $parsed = {typeql_literal};",
-                              given_rows=[[native_concept]]).resolve()
+                              given_variables=["native"], given_rows=[[native_concept]]).resolve()
             rows = list(answer.as_concept_rows())
             assert_that(len(rows), is_(1))
             return (rows[0].get("native"), rows[0].get("parsed"))
