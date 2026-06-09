@@ -151,7 +151,7 @@ bool test_query_schema() {
     success = true;
 
 cleanup:
-    if (NULL != transaction) transaction_close(transaction);
+    if (NULL != transaction) transaction_drop_sync(transaction);
     transaction_options_drop(tx_opts);
     query_options_drop(query_opts);
 
@@ -257,7 +257,7 @@ bool test_query_data() {
     success = true;
 
 cleanup:
-    if (NULL != transaction) transaction_close(transaction);
+    if (NULL != transaction) transaction_drop_sync(transaction);
     transaction_options_drop(tx_opts);
     query_options_drop(query_opts);
 
