@@ -20,6 +20,7 @@ use std::ffi::c_char;
 use std::ptr::null_mut;
 use std::sync::Arc;
 use typedb_driver::concept::Concept;
+use typedb_driver::error::QueryError;
 use typedb_driver::given::{GivenRow, GivenRowEntry, GivenRows, GivenRowsHeader};
 use crate::common::error::record_error;
 use crate::common::memory::{borrow, borrow_mut, decrement_arc, free, release, release_arc, release_optional, string_view, take_arc, take_ownership};
@@ -43,7 +44,7 @@ impl GivenRowsBuilder {
     }
 }
 
-fn to_given_row_entry(concept: &Concept, index: impl std::fmt::Display) -> typedb_driver::Result<GivenRowEntry> {
+fn to_given_row_entry(concept: &Concept, variable_or_index: impl std::fmt::Display) -> typedb_driver::Result<GivenRowEntry> {
     match borrow(concept).clone() {
         Concept::Entity(entity) => Ok(GivenRowEntry::Entity(entity)),
         Concept::Relation(relation) => Ok(GivenRowEntry::Relation(relation)),
@@ -53,9 +54,9 @@ fn to_given_row_entry(concept: &Concept, index: impl std::fmt::Display) -> typed
         | Concept::RelationType(_)
         | Concept::RoleType(_)
         | Concept::AttributeType(_) => {
-            Err(typedb_driver::error::Error::FFI(
-                format!("A type was passed as a given row entry at column: {index}. Only instances and values are allowed.")
-            ))
+            Err(typedb_driver::error::Error::Query(
+                QueryError::GivenRowsReceivedType { variable_or_index: format!("{variable_or_index}") })
+            )
         }
     }
 }

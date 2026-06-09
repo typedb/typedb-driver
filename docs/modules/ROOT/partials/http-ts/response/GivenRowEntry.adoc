@@ -1,0 +1,12 @@
+[#_GivenRowEntry]
+[.doc-api-reference-driver]
+=== GivenRowEntry
+
+`class`
+
+[source,typescript]
+----
+GivenRowEntry: Value | Entity | Relation | Attribute
+----
+
+

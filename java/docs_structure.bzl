@@ -111,7 +111,8 @@ dir_mapping = {
     "Instance.adoc": "data",
     "Relation.adoc": "data",
     "Value.adoc": "data",
-    "ValueFactory.adoc": "data",
+    "ConceptFactory.adoc": "data",
+    "GivenRows.adoc": "data",
 
     # Errors
     "TypeDBDriverException.adoc": "errors",

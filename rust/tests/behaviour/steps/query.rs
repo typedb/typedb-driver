@@ -26,7 +26,7 @@ use typedb_driver::{
     answer::{ConceptRow, QueryAnswer},
     concept::{Attribute, AttributeType, Concept, ConceptCategory, Entity, EntityType, Relation, RelationType, Value, ValueType},
     error::ConceptError,
-    given::{GivenRowEntry, GivenRow, GivenRows},
+    given::{GivenRowEntry, GivenRows},
 };
 use crate::{
     BehaviourTestOptionalError, Context, generic_step, params,
@@ -205,6 +205,32 @@ async fn set_given_rows(context: &mut Context, var_list: VariableList, step: &St
             }
         }).collect();
         given_rows.push_row(given_row).unwrap();
+    }
+
+    context.given_rows = Some(given_rows)
+}
+
+#[cucumber::given(expr = "set answers of typeql read query as given rows dictionary with variables: {variable_list}")]
+#[cucumber::when(expr = "set answers of typeql read query as given rows dictionary with variables: {variable_list}")]
+async fn set_given_rows_dict(context: &mut Context, var_list: VariableList, step: &Step) {
+    let result = run_query(context.transaction(), step.docstring().unwrap(), None, context.query_options).await;
+    let mut given_rows = GivenRows::new(var_list.0.clone(), 0);
+    let mut as_rows_result = result.unwrap().into_rows();
+
+    while let Some(row_result) = as_rows_result.next().await {
+        let answer_row = row_result.unwrap();
+        let entries = var_list.0.iter().map(|v| {
+            let entry = match answer_row.get(v).unwrap() {
+                None => GivenRowEntry::Empty,
+                Some(Concept::Entity(entity)) => GivenRowEntry::Entity(entity.clone()),
+                Some(Concept::Relation(relation)) => GivenRowEntry::Relation(relation.clone()),
+                Some(Concept::Attribute(attribute)) => GivenRowEntry::Attribute(attribute.clone()),
+                Some(Concept::Value(value)) => GivenRowEntry::Value(value.clone()),
+                Some(_) => panic!("You can't have this in given rows. Use a select on the previous query")
+            };
+            (v.clone(), entry)
+        });
+        given_rows.push_map(entries).unwrap();
     }
 
     context.given_rows = Some(given_rows)

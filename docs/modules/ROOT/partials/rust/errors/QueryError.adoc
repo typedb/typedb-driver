@@ -1,0 +1,20 @@
+[#_enum_QueryError]
+[.doc-api-reference-driver]
+=== QueryError
+
+`enum`
+
+[caption=""]
+.Enum variants
+// tag::enum_constants[]
+[cols=""]
+[options="header"]
+|===
+|Variant
+a| `GivenRowIndexOutOfBounds`
+a| `GivenRowUnknownVariable`
+a| `GivenRowsReceivedType`
+a| `GivenRowsSizeMismatch`
+|===
+// end::enum_constants[]
+

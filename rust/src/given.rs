@@ -33,6 +33,14 @@ pub enum GivenRowEntry {
     Value(Value),
 }
 
+/// Rows of data to be used as input to a TypeQL query using a `given` stage.
+///
+/// # Examples
+///
+/// ```rust
+/// let rows =
+/// transaction.query_with_options_and_rows(query, options, Some(rows))
+/// ```
 #[derive(Debug, Clone)]
 pub struct GivenRows {
     pub header: Arc<GivenRowsHeader>,
@@ -71,7 +79,8 @@ impl GivenRows {
         let mut row = GivenRow::new(self.header.clone());
         values.into_iter().try_for_each(|(var, entry)| {
             row.set(var, entry)
-        })
+        })?;
+        self.push(row)
     }
 }
 
@@ -92,6 +101,7 @@ impl GivenRowsHeader {
     }
 }
 
+/// Helper for building a single row to add to a <code>GivenRows</code> instance.
 #[derive(Debug, Clone)]
 pub struct GivenRow {
     header: Arc<GivenRowsHeader>,

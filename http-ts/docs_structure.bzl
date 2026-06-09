@@ -108,6 +108,7 @@ dir_mapping = {
 
     "QueryOptions.adoc": "response",
     "QueryResponseBase.adoc": "response",
+    "GivenRowEntry.adoc": "response",
     "ConstraintVertexAny.adoc": "analyze",
     "ConstraintVertexLabel.adoc": "analyze",
     "ConstraintVertexNamedRole.adoc": "analyze",

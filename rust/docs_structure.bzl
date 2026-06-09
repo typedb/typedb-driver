@@ -84,6 +84,10 @@ dir_mapping = {
     "Entity.adoc": "data",
     "Relation.adoc": "data",
     "Value.adoc": "data",
+    "GivenRow.adoc": "data",
+    "GivenRowEntry.adoc": "data",
+    "GivenRows.adoc": "data",
+    "GivenRowsHeader.adoc": "data",
 
     # Errors
     "AnalyzeError.adoc": "errors",
@@ -93,6 +97,7 @@ dir_mapping = {
     "Error.adoc": "errors",
     "InternalError.adoc": "errors",
     "MigrationError.adoc": "errors",
+    "QueryError.adoc": "errors",
     "ServerError.adoc": "errors",
 
     # Schema
@@ -104,9 +109,6 @@ dir_mapping = {
 
     # Transaction
     "QueryOptions.adoc": "transaction",
-    "QueryGivenEntry.adoc": "transaction",
-    "QueryGivenRow.adoc": "transaction",
-    "QueryGivenRows.adoc": "transaction",
     "Transaction.adoc": "transaction",
     "TransactionOptions.adoc": "transaction",
     "TransactionType.adoc": "transaction",

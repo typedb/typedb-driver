@@ -1,0 +1,13 @@
+[#_struct_GivenRow]
+[.doc-api-reference-driver]
+=== GivenRow
+
+`struct`
+
+*Implements traits:*
+
+* `Clone`
+* `Debug`
+
+Helper for building a single row to add to a ``GivenRows`` instance.
+

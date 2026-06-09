@@ -20,6 +20,7 @@ a| `FFI(String)`
 a| `Internal(InternalError)`
 a| `Migration(MigrationError)`
 a| `Other(String)`
+a| `Query(QueryError)`
 a| `Server(ServerError)`
 |===
 // end::enum_constants[]

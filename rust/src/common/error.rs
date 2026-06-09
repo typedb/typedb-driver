@@ -273,6 +273,8 @@ error_messages! { QueryError
         2: "Attempted to set a row entry for a variable {variable} which was not in the header.",
     GivenRowsSizeMismatch { actual: usize, expected: usize } =
         3: "Cannot push a row of width: {actual} . Expected width: {expected}",
+    GivenRowsReceivedType { variable_or_index: String } =
+        4: "A type was passed as given row entry for '{variable_or_index}'. Only instances and values are allowed.",
 }
 
 #[derive(Clone, PartialEq, Eq)]

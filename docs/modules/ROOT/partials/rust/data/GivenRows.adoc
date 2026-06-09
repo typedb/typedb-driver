@@ -1,0 +1,22 @@
+[#_struct_GivenRows]
+[.doc-api-reference-driver]
+=== GivenRows
+
+`struct`
+
+*Implements traits:*
+
+* `Clone`
+* `Debug`
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `header` a| `Arc<GivenRowsHeader>` a| 
+|===
+// end::properties[]
+

@@ -250,7 +250,7 @@ a| `options` a| The ``QueryOptions`` to execute the query with. a| `QueryOptions
 transaction.query("define entity person;");
 ----
 
-[#_Transaction_query_java_lang_String_QueryOptions_java_util_List_extends_java_util_List_java_util_Optional_extends_Concept_]
+[#_Transaction_query_java_lang_String_QueryOptions_GivenRows]
 ==== method ``query``
 
 [source,java]
@@ -258,7 +258,7 @@ transaction.query("define entity person;");
 @CheckReturnValue
 Promise<? extends QueryAnswer> query​(java.lang.String query,
                                      QueryOptions options,
-                                     java.util.List<? extends java.util.List<java.util.Optional<? extends Concept>>> givenRows)
+                                     GivenRows givenRows)
                               throws TypeDBDriverException
 ----
 
@@ -272,7 +272,7 @@ Execute a TypeQL query with input rows in this transaction.
 |Name |Description |Type
 a| `query` a| The query to execute. a| `java.lang.String`
 a| `options` a| The ``QueryOptions`` to execute the query with. a| `QueryOptions`
-a| `givenRows` a| Input rows for the query; each inner iterable is one row, ``Optional.empty()`` entries represent empty variables. a| `java.util.List<? extends java.util.List<java.util.Optional<? extends Concept>>>`
+a| `givenRows` a| GivenRows to be used as input to the query. a| `GivenRows`
 |===
 
 [caption=""]

@@ -1,0 +1,11 @@
+[#_struct_GivenRowsHeader]
+[.doc-api-reference-driver]
+=== GivenRowsHeader
+
+`struct`
+
+*Implements traits:*
+
+* `Clone`
+* `Debug`
+
