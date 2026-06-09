@@ -81,13 +81,23 @@ namespace TypeDB.Driver.Api
         Promise<IQueryAnswer> Query(string query, QueryOptions options);
 
         /// <summary>
-        /// Executes a TypeQL query with input rows in this transaction.
+        /// Executes a TypeQL query with input rows in this transaction (map-based: variable name to concept).
         /// </summary>
         /// <param name="query">The TypeQL query string to execute.</param>
         /// <param name="options">Query options.</param>
-        /// <param name="givenRows">Input rows; each inner enumerable is one row, <c>null</c> entries represent empty variables.</param>
+        /// <param name="givenRows">Input rows; each row is a map from variable name to concept, <c>null</c> values represent empty variables.</param>
         /// <returns>A promise that resolves to the query answer containing the results.</returns>
-        Promise<IQueryAnswer> Query(string query, QueryOptions options, List<List<IConcept?>> givenRows);
+        Promise<IQueryAnswer> Query(string query, QueryOptions options, List<Dictionary<string, IConcept?>> givenRows);
+
+        /// <summary>
+        /// Executes a TypeQL query with input rows in this transaction (index-based with explicit variable list).
+        /// </summary>
+        /// <param name="query">The TypeQL query string to execute.</param>
+        /// <param name="options">Query options.</param>
+        /// <param name="givenVariables">The variable names describing the columns of <paramref name="givenRows"/>.</param>
+        /// <param name="givenRows">Input rows; each inner list is one row indexed by <paramref name="givenVariables"/>, <c>null</c> entries represent empty variables.</param>
+        /// <returns>A promise that resolves to the query answer containing the results.</returns>
+        Promise<IQueryAnswer> Query(string query, QueryOptions options, List<string> givenVariables, List<List<IConcept?>> givenRows);
 
         /// <summary>
         /// Analyzes a TypeQL query and returns information about its structure and type inference results.

@@ -40,7 +40,19 @@ namespace TypeDB.Driver.Test.Behaviour
         private static List<IConceptRow>? _collectedRows;
         private static List<IJSON>? _collectedDocuments;
         private static QueryOptions? _queryOptions;
-        private static List<List<IConcept?>>? _givenRows;
+        private class GivenRows
+        {
+            public List<string> Variables;
+            public List<List<IConcept?>> Rows;
+
+            public GivenRows(List<string> variables, List<List<IConcept?>> rows)
+            {
+                Variables = variables;
+                Rows = rows;
+            }
+        }
+
+        private static GivenRows? _givenRows;
 
         // Concurrent query state
         private static List<IQueryAnswer>? _concurrentAnswers;
@@ -122,7 +134,7 @@ namespace TypeDB.Driver.Test.Behaviour
 
         #region Query Execution Steps
 
-        private List<List<IConcept?>> TakeGivenRows()
+        private GivenRows TakeGivenRows()
         {
             Assert.NotNull(_givenRows);
             var rows = _givenRows!;
@@ -130,10 +142,10 @@ namespace TypeDB.Driver.Test.Behaviour
             return rows;
         }
 
-        private IQueryAnswer ExecuteQuery(string queryText, List<List<IConcept?>>? givenRows = null)
+        private IQueryAnswer ExecuteQuery(string queryText, GivenRows? givenRows = null)
         {
             if (givenRows != null)
-                return Tx.Query(queryText, _queryOptions ?? new QueryOptions(), givenRows).Resolve()!;
+                return Tx.Query(queryText, _queryOptions ?? new QueryOptions(), givenRows.Variables, givenRows.Rows).Resolve()!;
             if (_queryOptions != null)
                 return Tx.Query(queryText, _queryOptions).Resolve()!;
             return Tx.Query(queryText).Resolve()!;
@@ -253,8 +265,9 @@ namespace TypeDB.Driver.Test.Behaviour
         public void SetAnswersAsGivenRows(string varListStr, DocString query)
         {
             var varList = varListStr.Split(',').Select(v => v.Replace("$", "").Trim()).ToList();
-            var rows = Tx.Query(query.Content).Resolve()!.AsConceptRows().ToList();
-            _givenRows = rows.Select(row => varList.Select(v => row.Get(v)).ToList()).ToList();
+            var tableRows = Tx.Query(query.Content).Resolve()!.AsConceptRows().ToList();
+            var rows = tableRows.Select(row => varList.Select(v => row.Get(v)).ToList()).ToList();
+            _givenRows = new GivenRows(varList, rows);
         }
 
         [Given(@"get answers of typeql schema query")]

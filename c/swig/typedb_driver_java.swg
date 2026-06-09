@@ -221,7 +221,6 @@
 %nojavaexception given_rows_header_builder_finish;
 %nojavaexception given_rows_builder_new;
 %nojavaexception given_rows_builder_start_new_row;
-%nojavaexception given_rows_builder_commit_row;
 
 
 %nojavaexception ServerVersion::distribution;

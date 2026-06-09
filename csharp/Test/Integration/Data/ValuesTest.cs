@@ -671,8 +671,9 @@ namespace TypeDB.Driver.Test.Integration
         private static IConceptRow RunRoundtripTest(ITransaction tx, string valueType, IValue nativeValue, string typeqlLiteral)
         {
             string query = $"given $native: {valueType}; match let $parsed = {typeqlLiteral};";
+            var givenVariables = new List<string> { "native" };
             var givenRows = new List<List<IConcept?>> { new List<IConcept?> { nativeValue } };
-            var rows = tx.Query(query, new QueryOptions(), givenRows).Resolve()!.AsConceptRows().ToList();
+            var rows = tx.Query(query, new QueryOptions(), givenVariables, givenRows).Resolve()!.AsConceptRows().ToList();
             Assert.AreEqual(1, rows.Count);
             return rows[0];
         }

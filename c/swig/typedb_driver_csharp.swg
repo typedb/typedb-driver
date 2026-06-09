@@ -458,6 +458,10 @@
 %noexception ~Duration;
 %noexception ~StringAndOptValue;
 %noexception ~Value;
+%noexception ~GivenRowsHeaderBuilder;
+%noexception ~GivenRowsHeader;
+%noexception ~GivenRowsBuilder;
+%noexception ~GivenRows;
 %noexception ~ValueType;
 %noexception ~BoolPromise;
 %noexception ~VoidPromise;
@@ -492,6 +496,13 @@
 %noexception ~VariableAnnotationsIterator;
 %noexception ~Variable;
 %noexception ~VariableIterator;
+
+/* GivenRows builder construction does not throw */
+%noexception given_rows_header_builder_new;
+%noexception given_rows_header_builder_push;
+%noexception given_rows_header_builder_finish;
+%noexception given_rows_builder_new;
+%noexception given_rows_builder_start_new_row;
 
 /* Commit and rollback are non-throwing operations on construction */
 %noexception transaction_commit;
