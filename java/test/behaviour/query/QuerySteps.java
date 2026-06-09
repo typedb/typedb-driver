@@ -19,6 +19,7 @@
 
 package com.typedb.driver.test.behaviour.query;
 
+import com.typedb.driver.ConceptFactory;
 import com.typedb.driver.api.GivenRows;
 import com.typedb.driver.api.QueryOptions;
 import com.typedb.driver.api.QueryType;
@@ -877,7 +878,7 @@ public class QuerySteps {
         List<? extends List<Optional<? extends Concept>>> rows = tableRows.stream()
                 .map(row -> varList.stream().<Optional<? extends Concept>>map(row::get).collect(Collectors.toList()))
                 .collect(Collectors.toList());
-        givenRows = driver.buildGivenRowsFrom(varList, rows);
+        givenRows = ConceptFactory.buildGivenRowsFrom(varList, rows);
     }
 
     @Given("get answers of typeql write query{with_given}{may_error}")

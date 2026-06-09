@@ -125,21 +125,6 @@ public interface Driver extends AutoCloseable {
     Transaction transaction(String database, Transaction.Type type, TransactionOptions options);
 
     /**
-     * Constructs a <code>GivenRows</code> instance from the dictionary for use as inputs to queries.
-     *
-     * @param givenRows A list of input rows for the query. Each row is a dictionary mapping a variable to its value.
-     */
-    GivenRows buildGivenRowsFrom(List<? extends Map<String, Optional<? extends Concept>>> givenRows);
-
-    /**
-     * Constructs a <code>GivenRows</code> instance for use as inputs to queries.
-     *
-     * @param variables The variables describing the content of the givenRows.
-     * @param rows Input rows for the query; each inner iterable is one row, {@code Optional.empty()} entries represent empty variables.
-     */
-    GivenRows buildGivenRowsFrom(List<String> variables, List<? extends List<Optional<? extends Concept>>> rows) throws TypeDBDriverException;
-
-    /**
      * Set of servers for this driver connection, using default automatic routing.
      * See {@link #servers(ServerRouting)} for more details and options.
      *

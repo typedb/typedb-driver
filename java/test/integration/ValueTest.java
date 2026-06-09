@@ -34,7 +34,7 @@ import com.typedb.driver.api.concept.type.AttributeType;
 import com.typedb.driver.api.concept.value.Value;
 import com.typedb.driver.api.database.Database;
 import com.typedb.driver.common.Duration;
-import com.typedb.driver.concept.ValueFactory;
+import com.typedb.driver.ConceptFactory;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -475,18 +475,18 @@ public class ValueTest {
         ZonedDateTime offsetDT = OffsetDateTime.parse("2024-09-20T16:40:05.028129323+0545", offsetFormatter).toZonedDateTime();
 
         Object[][] examples = {
-                {"boolean",     ValueFactory.newBoolean(true),                                              "true"},
-                {"boolean",     ValueFactory.newBoolean(false),                                             "false"},
-                {"integer",     ValueFactory.newInteger(25),                                                "25"},
-                {"double",      ValueFactory.newDouble(54.321),                                             "54.321"},
-                {"decimal",     ValueFactory.newDecimal(new BigDecimal("1234567890.0001234567890")),        "1234567890.0001234567890dec"},
-                {"decimal",     ValueFactory.newDecimal(new BigDecimal("-1234567890.0001234567890")),        "-1234567890.0001234567890dec"},
-                {"string",      ValueFactory.newString("John"),                                             "\"John\""},
-                {"date",        ValueFactory.newDate(LocalDate.of(2024, 9, 20)),                            "2024-09-20"},
-                {"datetime",    ValueFactory.newDatetime(LocalDateTime.parse("1999-02-26T12:15:05")),       "1999-02-26T12:15:05"},
-                {"datetime-tz", ValueFactory.newDatetimeTz(belfastDT),                                     "2024-09-20T16:40:05 Europe/Belfast"},
-                {"datetime-tz", ValueFactory.newDatetimeTz(offsetDT),                                      "2024-09-20T16:40:05.028129323+0545"},
-                {"duration",    ValueFactory.newDuration(Duration.parse("P1Y10M7DT15H44M5.00394892S")),     "P1Y10M7DT15H44M5.00394892S"},
+                {"boolean",     ConceptFactory.newBoolean(true),                                              "true"},
+                {"boolean",     ConceptFactory.newBoolean(false),                                             "false"},
+                {"integer",     ConceptFactory.newInteger(25),                                                "25"},
+                {"double",      ConceptFactory.newDouble(54.321),                                             "54.321"},
+                {"decimal",     ConceptFactory.newDecimal(new BigDecimal("1234567890.0001234567890")),        "1234567890.0001234567890dec"},
+                {"decimal",     ConceptFactory.newDecimal(new BigDecimal("-1234567890.0001234567890")),        "-1234567890.0001234567890dec"},
+                {"string",      ConceptFactory.newString("John"),                                             "\"John\""},
+                {"date",        ConceptFactory.newDate(LocalDate.of(2024, 9, 20)),                            "2024-09-20"},
+                {"datetime",    ConceptFactory.newDatetime(LocalDateTime.parse("1999-02-26T12:15:05")),       "1999-02-26T12:15:05"},
+                {"datetime-tz", ConceptFactory.newDatetimeTz(belfastDT),                                     "2024-09-20T16:40:05 Europe/Belfast"},
+                {"datetime-tz", ConceptFactory.newDatetimeTz(offsetDT),                                      "2024-09-20T16:40:05.028129323+0545"},
+                {"duration",    ConceptFactory.newDuration(Duration.parse("P1Y10M7DT15H44M5.00394892S")),     "P1Y10M7DT15H44M5.00394892S"},
         };
 
         localhostTypeDBTX(tx -> {

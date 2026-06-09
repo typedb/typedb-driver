@@ -36,6 +36,8 @@ java_library(
         "//java/analyze",
         "//java/api",
         "//java/common",
+        "//java:driver-java",
+
         "//java/test/behaviour/config:parameters",
         "//java/test/behaviour/connection:steps-base",
         "//java/test/behaviour/util",

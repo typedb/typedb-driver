@@ -29,12 +29,10 @@ import com.typedb.driver.common.NativeIterator;
 import com.typedb.driver.common.NativeObject;
 import com.typedb.driver.common.Validator;
 import com.typedb.driver.common.exception.TypeDBDriverException;
-import com.typedb.driver.concept.ConceptImpl;
 import com.typedb.driver.user.UserManagerImpl;
 
 import java.util.AbstractMap;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -48,18 +46,6 @@ import static com.typedb.driver.jni.typedb_driver.driver_new_with_address_transl
 import static com.typedb.driver.jni.typedb_driver.driver_primary_server;
 import static com.typedb.driver.jni.typedb_driver.driver_servers;
 import static com.typedb.driver.jni.typedb_driver.driver_server_version;
-import static com.typedb.driver.jni.typedb_driver.given_rows_builder_new;
-import static com.typedb.driver.jni.typedb_driver.given_rows_builder_finish;
-import static com.typedb.driver.jni.typedb_driver.given_rows_builder_commit_row;
-import static com.typedb.driver.jni.typedb_driver.given_rows_builder_start_new_row;
-import static com.typedb.driver.jni.typedb_driver.given_rows_builder_set_index_to_concept;
-import static com.typedb.driver.jni.typedb_driver.given_rows_builder_set_index_to_empty;
-import static com.typedb.driver.jni.typedb_driver.given_rows_builder_set_variable_to_concept;
-import static com.typedb.driver.jni.typedb_driver.given_rows_builder_set_variable_to_empty;
-import static com.typedb.driver.jni.typedb_driver.given_rows_header_builder_new;
-import static com.typedb.driver.jni.typedb_driver.given_rows_header_builder_push;
-import static com.typedb.driver.jni.typedb_driver.given_rows_header_builder_finish;
-
 import static java.util.stream.Collectors.toSet;
 
 public class DriverImpl extends NativeObject<com.typedb.driver.jni.TypeDBDriver> implements Driver {
@@ -109,65 +95,6 @@ public class DriverImpl extends NativeObject<com.typedb.driver.jni.TypeDBDriver>
         try {
             Map.Entry<String[], String[]> addresses = getTranslatedAddresses(addressTranslation);
             return driver_new_with_address_translation(addresses.getKey(), addresses.getValue(), credentials.nativeObject, driverOptions.nativeObject, LANGUAGE);
-        } catch (com.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
-    }
-
-    @Override
-    public GivenRows buildGivenRowsFrom(List<? extends Map<String, Optional<? extends Concept>>> givenRows) {
-        try{
-            Set<String> variables= new HashSet<>();
-            givenRows.forEach(row -> variables.addAll(row.keySet()));
-            com.typedb.driver.jni.GivenRowsHeaderBuilder headerBuilder = given_rows_header_builder_new(variables.size());
-            for (String variable : variables) {
-                given_rows_header_builder_push(headerBuilder, variable);
-            }
-            com.typedb.driver.jni.GivenRowsHeader header = given_rows_header_builder_finish(headerBuilder.released());
-            com.typedb.driver.jni.GivenRowsBuilder rowsBuilder = given_rows_builder_new(header, givenRows.size());
-            for (Map<String, Optional<? extends Concept>> row : givenRows) {
-                given_rows_builder_start_new_row(rowsBuilder);
-                for (Map.Entry<String, Optional<? extends Concept>> variableAndEntry : row.entrySet()) {
-                    if (variableAndEntry.getValue().isEmpty()) {
-                        given_rows_builder_set_variable_to_empty(rowsBuilder, variableAndEntry.getKey());
-                    } else {
-                        Concept concept = variableAndEntry.getValue().get();
-                        given_rows_builder_set_variable_to_concept(rowsBuilder, variableAndEntry.getKey(), ((ConceptImpl) concept).nativeObject);
-                    }
-                }
-                given_rows_builder_commit_row(rowsBuilder);
-            }
-            return new GivenRowsImpl(given_rows_builder_finish(rowsBuilder.released()));
-        } catch (com.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
-    }
-
-    @Override
-    public GivenRows buildGivenRowsFrom(List<String> variables, List<? extends List<Optional<? extends Concept>>> rows) throws TypeDBDriverException {
-        try{
-            com.typedb.driver.jni.GivenRowsHeaderBuilder headerBuilder = given_rows_header_builder_new(variables.size());
-            for (String variable : variables) {
-                given_rows_header_builder_push(headerBuilder, variable);
-            }
-            com.typedb.driver.jni.GivenRowsHeader header = given_rows_header_builder_finish(headerBuilder.released());
-
-            com.typedb.driver.jni.GivenRowsBuilder rowsBuilder = given_rows_builder_new(header, rows.size());
-            for (List<Optional<? extends Concept>> row : rows) {
-                given_rows_builder_start_new_row(rowsBuilder);
-                int colIndex = 0;
-                for (Optional<? extends Concept> entry : row) {
-                    if (entry.isEmpty()) {
-                        given_rows_builder_set_index_to_empty(rowsBuilder, colIndex);
-                    } else {
-                        Concept concept = entry.get();
-                        given_rows_builder_set_index_to_concept(rowsBuilder, colIndex, ((ConceptImpl) concept).nativeObject);
-                    }
-                    colIndex += 1;
-                }
-                given_rows_builder_commit_row(rowsBuilder);
-            }
-            return new GivenRowsImpl(given_rows_builder_finish(rowsBuilder.released()));
         } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }

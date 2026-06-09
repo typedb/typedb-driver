@@ -41,7 +41,9 @@ java_library(
         # Internal dependencies
         "//java/api",
         "//java/common",
+        "//java/concept",
         "//java/connection",
+        "//java:typedb_driver_jni",
     ],
 )
 
