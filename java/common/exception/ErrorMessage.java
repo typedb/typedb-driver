@@ -103,6 +103,8 @@ public abstract class ErrorMessage {
                 new Concept(2, "Invalid query answer conversion from '%s' to '%s'.");
         public static final Concept INVALID_VALUE_RETRIEVAL =
                 new Concept(3, "Could not retrieve a '%s' value.");
+        public static final Concept UNSUPPORTED_VALUE_CONVERSION =
+                new Concept(4, "Cannot convert object of type '%s' to a Value. Supported types: Boolean, Long, Integer, Double, Float, BigDecimal, String, LocalDate, LocalDateTime, ZonedDateTime, Duration.");
 
         private static final String codePrefix = "JCO";
         private static final String messagePrefix = "Concept Error";

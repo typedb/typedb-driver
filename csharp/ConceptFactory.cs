@@ -87,6 +87,48 @@ namespace TypeDB.Driver
             return new GivenRows(Pinvoke.typedb_driver.given_rows_builder_finish(rowsBuilder.Released()));
         }
 
+        /// <summary>
+        /// Constructs an <c>IGivenRows</c> instance from rows containing raw .NET values or concepts.
+        /// Values that are already <c>IConcept</c> instances are used directly. Other values are
+        /// converted via <see cref="TryConvertToValue"/>. <c>null</c> entries represent empty variables.
+        /// </summary>
+        /// <param name="givenRows">Input rows; each row maps variable names to concepts or raw values.</param>
+        public static IGivenRows BuildGivenRowsFromObjects(List<Dictionary<string, object?>> givenRows)
+        {
+            var converted = givenRows.Select(row =>
+                row.ToDictionary(
+                    kv => kv.Key,
+                    kv => kv.Value == null ? null :
+                          kv.Value is IConcept concept ? concept :
+                          (IConcept?)TryConvertToValue(kv.Value)
+                )
+            ).ToList();
+            return BuildGivenRowsFrom(converted);
+        }
+
+        /// <summary>
+        /// Converts a raw .NET value to an <c>IValue</c> concept.
+        /// Accepted types: <c>bool</c>, <c>long</c>, <c>int</c>, <c>double</c>, <c>float</c>,
+        /// <c>decimal</c>, <c>string</c>, <c>DateOnly</c>, <c>Datetime</c>, <c>DatetimeTZ</c>, <c>Duration</c>.
+        /// </summary>
+        /// <param name="value">The value to convert.</param>
+        /// <exception cref="TypeDBDriverException">if the type is not supported.</exception>
+        public static IValue TryConvertToValue(object value)
+        {
+            if (value is bool b) return NewBoolean(b);
+            if (value is long l) return NewInteger(l);
+            if (value is int i) return NewInteger(i);
+            if (value is double d) return NewDouble(d);
+            if (value is float f) return NewDouble(f);
+            if (value is decimal dec) return NewDecimal(dec);
+            if (value is string s) return NewString(s);
+            if (value is DateOnly date) return NewDate(date);
+            if (value is Datetime dt) return NewDatetime(dt);
+            if (value is DatetimeTZ dtz) return NewDatetimeTz(dtz);
+            if (value is Duration dur) return NewDuration(dur);
+            throw new TypeDBDriverException(Error.Concept.UNSUPPORTED_VALUE_CONVERSION, value.GetType().Name);
+        }
+
         /// <summary>Creates a new <c>IValue</c> wrapping the specified <c>bool</c> value.</summary>
         public static IValue NewBoolean(bool value)
             => new Concept.Value(Pinvoke.typedb_driver.concept_new_boolean(value));

@@ -23,6 +23,7 @@ import com.typedb.driver.api.GivenRows;
 import com.typedb.driver.api.concept.Concept;
 import com.typedb.driver.api.concept.value.Value;
 import com.typedb.driver.common.Duration;
+import com.typedb.driver.common.exception.ErrorMessage;
 import com.typedb.driver.common.exception.TypeDBDriverException;
 import com.typedb.driver.concept.ConceptImpl;
 import com.typedb.driver.concept.value.ValueImpl;
@@ -36,11 +37,8 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.typedb.driver.jni.typedb_driver.concept_new_boolean;
 import static com.typedb.driver.jni.typedb_driver.concept_new_date_from_seconds;
@@ -136,6 +134,54 @@ public class ConceptFactory {
         } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
+    }
+
+    /**
+     * Constructs a <code>GivenRows</code> instance from a list of rows given as plain Java objects.
+     * Each map entry value may be a {@link Concept} (used directly) or a raw host-language value
+     * which is converted via {@link #tryConvertToValue}.
+     *
+     * @param givenRows A list of input rows; each row maps variable names to concepts or raw values.
+     */
+    public static GivenRows buildGivenRowsFromObjects(List<? extends Map<String, Object>> givenRows) throws TypeDBDriverException {
+        List<Map<String, Optional<? extends Concept>>> converted = givenRows.stream()
+                .map(row -> {
+                    Map<String, Optional<? extends Concept>> convertedRow = new HashMap<>();
+                    row.forEach((variable, value) -> {
+                        if (value == null) {
+                            convertedRow.put(variable, Optional.empty());
+                        } else if (value instanceof Concept) {
+                            convertedRow.put(variable, Optional.of((Concept) value));
+                        } else {
+                            convertedRow.put(variable, Optional.of(tryConvertToValue(value)));
+                        }
+                    });
+                    return convertedRow;
+                })
+                .collect(Collectors.toList());
+        return buildGivenRowsFrom(converted);
+    }
+
+    /**
+     * Converts a raw host-language object to a {@link Value} concept.
+     * Accepted types: {@code Boolean}, {@code Long}, {@code Integer}, {@code Double}, {@code Float},
+     * {@code BigDecimal}, {@code String}, {@code LocalDate}, {@code LocalDateTime}, {@code ZonedDateTime}, {@code Duration}.
+     *
+     * @throws TypeDBDriverException if the object's type is not supported
+     */
+    public static Value tryConvertToValue(Object value) {
+        if (value instanceof Boolean) return newBoolean((Boolean) value);
+        if (value instanceof Long) return newInteger((Long) value);
+        if (value instanceof Integer) return newInteger((Integer) value);
+        if (value instanceof Double) return newDouble((Double) value);
+        if (value instanceof Float) return newDouble(((Float) value).doubleValue());
+        if (value instanceof BigDecimal) return newDecimal((BigDecimal) value);
+        if (value instanceof String) return newString((String) value);
+        if (value instanceof LocalDate) return newDate((LocalDate) value);
+        if (value instanceof LocalDateTime) return newDatetime((LocalDateTime) value);
+        if (value instanceof ZonedDateTime) return newDatetimeTz((ZonedDateTime) value);
+        if (value instanceof Duration) return newDuration((Duration) value);
+        throw new TypeDBDriverException(ErrorMessage.Concept.UNSUPPORTED_VALUE_CONVERSION, value.getClass().getName());
     }
 
     /** Creates a new {@code Value} wrapping the specified {@code boolean} value. */

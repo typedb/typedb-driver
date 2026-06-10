@@ -86,6 +86,8 @@ namespace TypeDB.Driver.Common
                 new Concept(2, "Invalid query answer conversion from {0} to {1}.");
             public static readonly Concept INVALID_VALUE_RETRIEVAL =
                 new Concept(3, "Could not retrieve a '{0}' value.");
+            public static readonly Concept UNSUPPORTED_VALUE_CONVERSION =
+                new Concept(4, "Cannot convert object of type '{0}' to a Value. Supported types: bool, long, int, double, float, decimal, string, DateOnly, Datetime, DatetimeTZ, Duration.");
         }
 
         public class Analyze : ErrorMessage

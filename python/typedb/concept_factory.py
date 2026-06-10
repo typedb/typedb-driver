@@ -18,10 +18,11 @@
 from math import floor
 from datetime import date, datetime, timezone
 from decimal import Decimal
-from typing import TYPE_CHECKING, List, Optional
+from typing import TYPE_CHECKING, Any, Dict, List, Optional
 
 from typedb.common.datetime import Datetime
 from typedb.common.duration import Duration
+from typedb.common.exception import TypeDBDriverException, UNSUPPORTED_VALUE_CONVERSION
 from typedb.concept.concept import _Concept
 from typedb.concept.concept_factory import wrap_value
 from typedb.connection.given_rows import GivenRows
@@ -93,6 +94,54 @@ class ConceptFactory:
             given_rows_builder_commit_row(rows_builder)
         rows_builder.thisown = 0
         return GivenRows(given_rows_builder_finish(rows_builder))
+
+    @staticmethod
+    def build_given_rows_from_objects(rows: List[Dict[str, Any]]) -> GivenRows:
+        """Constructs a ``GivenRows`` instance from dict rows containing raw Python values or concepts.
+
+        Values that are already ``Concept`` instances are used directly. Other values are converted
+        via :meth:`try_convert_to_value`. ``None`` values represent empty variables.
+
+        :param rows: A list of input rows; each row maps variable names to concepts or raw values.
+        :raises TypeError: if a value's type cannot be converted to a ``Value``.
+        """
+        from typedb.api.concept.concept import Concept as _ConceptApi
+        converted = [
+            {
+                var: (None if val is None else (val if isinstance(val, _ConceptApi) else ConceptFactory.try_convert_to_value(val)))
+                for var, val in row.items()
+            }
+            for row in rows
+        ]
+        return ConceptFactory.build_given_rows_from_map(converted)
+
+    @staticmethod
+    def try_convert_to_value(value: Any):
+        """Converts a raw Python value to a ``Value`` concept.
+
+        Accepted types: ``bool``, ``int``, ``float``, ``Decimal``, ``str``, ``date``, ``Datetime``, ``Duration``.
+
+        :raises TypeDBDriverException: if the type is not supported.
+        """
+        if isinstance(value, bool):  # must precede int: bool is a subclass of int
+            return ConceptFactory.new_boolean(value)
+        if isinstance(value, int):
+            return ConceptFactory.new_integer(value)
+        if isinstance(value, float):
+            return ConceptFactory.new_double(value)
+        if isinstance(value, Decimal):
+            return ConceptFactory.new_decimal(value)
+        if isinstance(value, str):
+            return ConceptFactory.new_string(value)
+        if isinstance(value, date) and not isinstance(value, datetime):
+            return ConceptFactory.new_date(value)
+        if isinstance(value, Datetime):
+            if value.tz_name is not None or value.offset_seconds is not None:
+                return ConceptFactory.new_datetime_tz(value)
+            return ConceptFactory.new_datetime(value)
+        if isinstance(value, Duration):
+            return ConceptFactory.new_duration(value)
+        raise TypeDBDriverException(UNSUPPORTED_VALUE_CONVERSION, type(value).__name__)
 
     @staticmethod
     def new_boolean(value: bool):

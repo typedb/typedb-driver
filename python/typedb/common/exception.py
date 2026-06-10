@@ -108,6 +108,7 @@ class ConceptErrorMessage(ErrorMessage):
 INVALID_CONCEPT_CASTING = ConceptErrorMessage(1, "Invalid concept conversion from '%s' to '%s'.")
 INVALID_QUERY_ANSWER_CASTING = ConceptErrorMessage(2, "Invalid query answer conversion from '%s' to '%s'.")
 INVALID_VALUE_RETRIEVAL = ConceptErrorMessage(3, "Could not retrieve a '%s' value.")
+UNSUPPORTED_VALUE_CONVERSION = ConceptErrorMessage(4, "Cannot convert object of type '%s' to a Value. Supported types: bool, int, float, Decimal, str, date, Datetime, Duration.")
 
 
 class InternalErrorMessage(ErrorMessage):
