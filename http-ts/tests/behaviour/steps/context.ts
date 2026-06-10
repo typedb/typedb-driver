@@ -232,11 +232,11 @@ Before(resetDB);
 After(resetDB);
 
 async function resetDB() {
+    setDefaultDriver();
+
     if (transactionID != undefined) await driver.closeTransaction(transactionID).then(assertNotError);
 
     if (backgroundTransactionID != undefined) await driver.closeTransaction(backgroundTransactionID).then(assertNotError);
-
-    setDefaultDriver();
 
     const dbRes = await driver.getDatabases().then(assertNotError);
     for (const db of dbRes.ok.databases) {
