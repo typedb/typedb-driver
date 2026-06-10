@@ -113,6 +113,8 @@ dir_mapping = {
     "IInstance.adoc": "data",
     "IRelation.adoc": "data",
     "IValue.adoc": "data",
+    "IGivenRows.adoc": "data",
+    "ConceptFactory.adoc": "data",
 
     # Errors
     "TypeDBDriverException.adoc": "errors",

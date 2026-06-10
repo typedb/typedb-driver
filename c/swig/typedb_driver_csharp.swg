@@ -497,7 +497,6 @@
 %noexception ~Variable;
 %noexception ~VariableIterator;
 
-/* GivenRows builder construction does not throw */
 %noexception given_rows_header_builder_new;
 %noexception given_rows_header_builder_push;
 %noexception given_rows_header_builder_finish;

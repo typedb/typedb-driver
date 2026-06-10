@@ -283,37 +283,6 @@ namespace TypeDB.Driver.Test.Behaviour
             _queryAnswer = ExecuteQuery(query.Content);
         }
 
-        [Given(@"get answers of typeql schema query; fails")]
-        [When(@"get answers of typeql schema query; fails")]
-        [Then(@"get answers of typeql schema query; fails")]
-        [Given(@"get answers of typeql write query; fails")]
-        [When(@"get answers of typeql write query; fails")]
-        [Then(@"get answers of typeql write query; fails")]
-        [Given(@"get answers of typeql read query; fails")]
-        [When(@"get answers of typeql read query; fails")]
-        [Then(@"get answers of typeql read query; fails")]
-        public void GetAnswersOfTypeqlQueryFails(DocString query)
-        {
-            ClearAnswers();
-            Assert.ThrowsAny<Exception>(() => { _queryAnswer = ExecuteQuery(query.Content); });
-        }
-
-        [Given(@"get answers of typeql schema query; fails with a message containing: ""(.*)""")]
-        [When(@"get answers of typeql schema query; fails with a message containing: ""(.*)""")]
-        [Then(@"get answers of typeql schema query; fails with a message containing: ""(.*)""")]
-        [Given(@"get answers of typeql write query; fails with a message containing: ""(.*)""")]
-        [When(@"get answers of typeql write query; fails with a message containing: ""(.*)""")]
-        [Then(@"get answers of typeql write query; fails with a message containing: ""(.*)""")]
-        [Given(@"get answers of typeql read query; fails with a message containing: ""(.*)""")]
-        [When(@"get answers of typeql read query; fails with a message containing: ""(.*)""")]
-        [Then(@"get answers of typeql read query; fails with a message containing: ""(.*)""")]
-        public void GetAnswersOfTypeqlQueryFailsWithMessage(string expectedMessage, DocString query)
-        {
-            ClearAnswers();
-            var exception = Assert.ThrowsAny<Exception>(() => { _queryAnswer = ExecuteQuery(query.Content); });
-            Assert.Contains(expectedMessage.Replace("\\\"", "\""), exception.Message);
-        }
-
         [Given(@"get answers of typeql schema query with given rows")]
         [When(@"get answers of typeql schema query with given rows")]
         [Then(@"get answers of typeql schema query with given rows")]
@@ -329,38 +298,6 @@ namespace TypeDB.Driver.Test.Behaviour
             _queryAnswer = ExecuteQuery(query.Content, TakeGivenRows());
         }
 
-        [Given(@"get answers of typeql schema query with given rows; fails")]
-        [When(@"get answers of typeql schema query with given rows; fails")]
-        [Then(@"get answers of typeql schema query with given rows; fails")]
-        [Given(@"get answers of typeql write query with given rows; fails")]
-        [When(@"get answers of typeql write query with given rows; fails")]
-        [Then(@"get answers of typeql write query with given rows; fails")]
-        [Given(@"get answers of typeql read query with given rows; fails")]
-        [When(@"get answers of typeql read query with given rows; fails")]
-        [Then(@"get answers of typeql read query with given rows; fails")]
-        public void GetAnswersOfTypeqlQueryWithGivenRowsFails(DocString query)
-        {
-            ClearAnswers();
-            var given = TakeGivenRows();
-            Assert.ThrowsAny<Exception>(() => { _queryAnswer = ExecuteQuery(query.Content, given); });
-        }
-
-        [Given(@"get answers of typeql schema query with given rows; fails with a message containing: ""(.*)""")]
-        [When(@"get answers of typeql schema query with given rows; fails with a message containing: ""(.*)""")]
-        [Then(@"get answers of typeql schema query with given rows; fails with a message containing: ""(.*)""")]
-        [Given(@"get answers of typeql write query with given rows; fails with a message containing: ""(.*)""")]
-        [When(@"get answers of typeql write query with given rows; fails with a message containing: ""(.*)""")]
-        [Then(@"get answers of typeql write query with given rows; fails with a message containing: ""(.*)""")]
-        [Given(@"get answers of typeql read query with given rows; fails with a message containing: ""(.*)""")]
-        [When(@"get answers of typeql read query with given rows; fails with a message containing: ""(.*)""")]
-        [Then(@"get answers of typeql read query with given rows; fails with a message containing: ""(.*)""")]
-        public void GetAnswersOfTypeqlQueryWithGivenRowsFailsWithMessage(string expectedMessage, DocString query)
-        {
-            ClearAnswers();
-            var given = TakeGivenRows();
-            var exception = Assert.ThrowsAny<Exception>(() => { _queryAnswer = ExecuteQuery(query.Content, given); });
-            Assert.Contains(expectedMessage, exception.Message);
-        }
 
         #endregion
 
@@ -1137,8 +1074,6 @@ namespace TypeDB.Driver.Test.Behaviour
             CollectDocumentsAnswerIfNeeded();
             var expected = JSON.Parse(expectedDocument.Content);
             bool found = _collectedDocuments!.Any(doc => {
-                Console.WriteLine("Checking if this document is an expected document it could be:");
-                Console.WriteLine(doc);
                 var settings = new Newtonsoft.Json.JsonSerializerSettings
                 {
                     DateParseHandling = Newtonsoft.Json.DateParseHandling.None
@@ -1158,20 +1093,12 @@ namespace TypeDB.Driver.Test.Behaviour
             CollectDocumentsAnswerIfNeeded();
             var expected = JSON.Parse(expectedDocument.Content);
             bool found = _collectedDocuments!.Any(doc => {
-                Console.WriteLine("Checking if this document is an expected document it should not be:");
-                Console.WriteLine(doc.ToString());
-                Console.WriteLine("... comparing to expected doc:");
-                Console.WriteLine(expected.ToString());
                 var settings = new Newtonsoft.Json.JsonSerializerSettings
                 {
                     DateParseHandling = Newtonsoft.Json.DateParseHandling.None
                 };
                 var parsedDoc = Newtonsoft.Json.JsonConvert.DeserializeObject<Newtonsoft.Json.Linq.JToken>(doc.ToString()!, settings)!;
                 var parsedExpectedDoc = Newtonsoft.Json.JsonConvert.DeserializeObject<Newtonsoft.Json.Linq.JToken>(expected.ToString()!, settings)!;
-                Console.WriteLine("As parsed Linq docs...");
-
-                Console.WriteLine(parsedDoc);
-                Console.WriteLine(parsedExpectedDoc);
                 return Util.JsonDeepEqualsUnordered(parsedDoc, parsedExpectedDoc);
             });
             Assert.False(found, $"Unexpected document found: {expectedDocument.Content}");

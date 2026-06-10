@@ -113,7 +113,7 @@ namespace TypeDB.Driver
         /// </summary>
         /// <param name="value">The value to convert.</param>
         /// <exception cref="TypeDBDriverException">if the type is not supported.</exception>
-        public static IValue TryConvertToValue(object value)
+        static IValue TryConvertToValue(object value)
         {
             if (value is bool b) return NewBoolean(b);
             if (value is long l) return NewInteger(l);
