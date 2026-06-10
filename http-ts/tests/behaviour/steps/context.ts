@@ -36,6 +36,9 @@ export let concurrentAnswers: QueryResponse[];
 let givenRows: GivenRows | undefined;
 
 export async function openTransaction(database: string, type: TransactionType) {
+    if (transactionID != null) {
+        console.log("transactionID was not null. If the transaction is not closed by the server, this may cause the http-ts drivers to be unable to clear the database after the test.");
+    }
     const res = await driver.openTransaction(database, type, transactionOptions);
     if (isOkResponse(res)) transactionID = res.ok.transactionId;
     return res;
@@ -207,6 +210,10 @@ export async function openAndTestConnectionWithHostPort(username: string, passwo
     return healthCheck;
 }
 
+export function clearTransactionId() {
+    transactionID = undefined;
+}
+
 export function closeConnection() {
     if (transactionID) driver.closeTransaction(transactionID).then(assertNotError);
     if (backgroundTransactionID) driver.closeTransaction(backgroundTransactionID).then(assertNotError);
@@ -225,11 +232,11 @@ Before(resetDB);
 After(resetDB);
 
 async function resetDB() {
-    setDefaultDriver();
-
     if (transactionID != undefined) await driver.closeTransaction(transactionID).then(assertNotError);
 
     if (backgroundTransactionID != undefined) await driver.closeTransaction(backgroundTransactionID).then(assertNotError);
+
+    setDefaultDriver();
 
     const dbRes = await driver.getDatabases().then(assertNotError);
     for (const db of dbRes.ok.databases) {
