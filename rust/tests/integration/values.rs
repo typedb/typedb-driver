@@ -838,20 +838,19 @@ fn test_round_trips() {
         let driver = setup().await;
         let database = driver.databases().get(DATABASE_NAME).await.unwrap();
 
-        compile_error!("This is some terrible UX");
-        // Belfast is UTC+1 (BST) in September, so local 16:40:05 = UTC 15:40:05
-        let belfast_naive_utc = NaiveDate::from_ymd_opt(2024, 9, 20).unwrap().and_hms_opt(15, 40, 5).unwrap();
+        // from_local_datetime can fail since it's not continuous, but using from_utc_datetime here is overkill.
+        let belfast_naive_local = NaiveDate::from_ymd_opt(2024, 9, 20).unwrap().and_hms_opt(16, 40, 5).unwrap();
         let belfast_dt = Value::DatetimeTZ(
-            TimeZone::IANA(Tz::from_str("Europe/Belfast").unwrap()).from_utc_datetime(&belfast_naive_utc),
+            TimeZone::IANA(Tz::from_str("Europe/Belfast").unwrap()).from_local_datetime(&belfast_naive_local).unwrap(),
         );
 
-        // +05:45 offset, so local 16:40:05.028... = UTC 10:55:05.028...
         let offset_naive_utc =
-            NaiveDate::from_ymd_opt(2024, 9, 20).unwrap().and_hms_nano_opt(10, 55, 5, 28129323).unwrap();
+            NaiveDate::from_ymd_opt(2024, 9, 20).unwrap().and_hms_nano_opt(16, 40, 5, 28129323).unwrap();
         let offset_dt = Value::DatetimeTZ(
-            TimeZone::Fixed(FixedOffset::east_opt(5 * 3600 + 45 * 60).unwrap()).from_utc_datetime(&offset_naive_utc),
+            TimeZone::Fixed(FixedOffset::east_opt(5 * 3600 + 45 * 60).unwrap()).from_local_datetime(&offset_naive_utc).unwrap(),
         );
 
+        compile_error!("This is some terrible UX");
         // Decimal::new(integer, fractional) where fractional is in units of 10^-19.
         // 1234567890.0001234567890 → integer=1234567890, fractional="0001234567890" padded to 19 digits = 1_234_567_890_000_000
         // -1234567890.0001234567890 → floor=-1234567891, fractional=(10^19 - 1_234_567_890_000_000) = 9_998_765_432_110_000_000
