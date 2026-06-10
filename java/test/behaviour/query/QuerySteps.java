@@ -67,7 +67,10 @@ import java.util.stream.Collectors;
 
 import static com.typedb.driver.api.concept.Concept.DECIMAL_SCALE;
 import static com.typedb.driver.test.behaviour.config.Parameters.DATETIME_TZ_FORMATTERS;
-import static com.typedb.driver.test.behaviour.connection.ConnectionStepsBase.*;
+import static com.typedb.driver.test.behaviour.connection.ConnectionStepsBase.initQueryOptionsIfNeeded;
+import static com.typedb.driver.test.behaviour.connection.ConnectionStepsBase.queryOptions;
+import static com.typedb.driver.test.behaviour.connection.ConnectionStepsBase.threadPool;
+import static com.typedb.driver.test.behaviour.connection.ConnectionStepsBase.tx;
 import static com.typedb.driver.test.behaviour.util.Util.JSONListContains;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

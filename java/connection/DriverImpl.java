@@ -19,8 +19,13 @@
 
 package com.typedb.driver.connection;
 
-import com.typedb.driver.api.*;
-import com.typedb.driver.api.concept.Concept;
+import com.typedb.driver.api.Credentials;
+import com.typedb.driver.api.Driver;
+import com.typedb.driver.api.DriverOptions;
+import com.typedb.driver.api.ServerRouting;
+import com.typedb.driver.api.Transaction;
+import com.typedb.driver.api.TransactionOptions;
+
 import com.typedb.driver.api.database.DatabaseManager;
 import com.typedb.driver.api.server.Server;
 import com.typedb.driver.api.server.ServerVersion;
