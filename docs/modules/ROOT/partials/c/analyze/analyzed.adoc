@@ -17,6 +17,22 @@ Returns the analyzed fetch
 .Returns
 `struct Fetch*`
 
+[#_analyzed_given]
+==== function ``analyzed_given``
+
+[source,c]
+----
+struct Given* analyzed_given(const struct AnalyzedQuery* analyzed_query)
+----
+
+
+
+Returns the analyzed given stage, or null if the query has no given stage.
+
+[caption=""]
+.Returns
+`struct Given*`
+
 [#_analyzed_preamble]
 ==== function ``analyzed_preamble``
 

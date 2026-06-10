@@ -517,6 +517,166 @@ Checks if this ``Concept`` is a ``Value``.
 .Returns
 `bool`
 
+[#_concept_new_boolean]
+==== function ``concept_new_boolean``
+
+[source,c]
+----
+struct Concept* concept_new_boolean(bool value)
+----
+
+
+
+Creates a new ``Concept`` object wrapping the specified ``bool`` value
+
+[caption=""]
+.Returns
+`struct Concept*`
+
+[#_concept_new_date_from_seconds]
+==== function ``concept_new_date_from_seconds``
+
+[source,c]
+----
+struct Concept* concept_new_date_from_seconds(int64_t seconds_since_epoch)
+----
+
+
+
+Creates a new ``Concept`` object wrapping a specified ``NaiveDate`` value. The value must be seconds since the start of the UNIX epoch.
+
+[caption=""]
+.Returns
+`struct Concept*`
+
+[#_concept_new_datetime]
+==== function ``concept_new_datetime``
+
+[source,c]
+----
+struct Concept* concept_new_datetime(int64_t seconds, uint32_t subsec_nanos)
+----
+
+
+
+Creates a new ``Concept`` object wrapping the specified naive datetime value, provided as seconds and nanoseconds since the Unix epoch.
+
+[caption=""]
+.Returns
+`struct Concept*`
+
+[#_concept_new_datetime_tz_iana]
+==== function ``concept_new_datetime_tz_iana``
+
+[source,c]
+----
+struct Concept* concept_new_datetime_tz_iana(int64_t seconds, uint32_t subsec_nanos, const char* zone_name)
+----
+
+
+
+Creates a new ``Concept`` object wrapping the specified timezone-aware datetime value with an IANA timezone name, provided as seconds and nanoseconds since the Unix epoch.
+
+[caption=""]
+.Returns
+`struct Concept*`
+
+[#_concept_new_datetime_tz_offset]
+==== function ``concept_new_datetime_tz_offset``
+
+[source,c]
+----
+struct Concept* concept_new_datetime_tz_offset(int64_t seconds, uint32_t subsec_nanos, int32_t offset_seconds)
+----
+
+
+
+Creates a new ``Concept`` object wrapping the specified timezone-aware datetime value with a fixed UTC offset in seconds, provided as seconds and nanoseconds since the Unix epoch.
+
+[caption=""]
+.Returns
+`struct Concept*`
+
+[#_concept_new_decimal]
+==== function ``concept_new_decimal``
+
+[source,c]
+----
+struct Concept* concept_new_decimal(int64_t integer, uint64_t fractional)
+----
+
+
+
+Creates a new ``Concept`` object wrapping the specified ``Decimal`` value, provided as its integer and fractional parts. The fractional part is in units of 10^-19.
+
+[caption=""]
+.Returns
+`struct Concept*`
+
+[#_concept_new_double]
+==== function ``concept_new_double``
+
+[source,c]
+----
+struct Concept* concept_new_double(double value)
+----
+
+
+
+Creates a new ``Concept`` object wrapping the specified ``f64`` value
+
+[caption=""]
+.Returns
+`struct Concept*`
+
+[#_concept_new_duration]
+==== function ``concept_new_duration``
+
+[source,c]
+----
+struct Concept* concept_new_duration(uint32_t months, uint32_t days, uint64_t nanos)
+----
+
+
+
+Creates a new ``Concept`` object wrapping the specified ``Duration`` value, provided as its months, days, and nanoseconds components.
+
+[caption=""]
+.Returns
+`struct Concept*`
+
+[#_concept_new_integer]
+==== function ``concept_new_integer``
+
+[source,c]
+----
+struct Concept* concept_new_integer(int64_t value)
+----
+
+
+
+Creates a new ``Concept`` object wrapping the specified ``i64`` value
+
+[caption=""]
+.Returns
+`struct Concept*`
+
+[#_concept_new_string]
+==== function ``concept_new_string``
+
+[source,c]
+----
+struct Concept* concept_new_string(const char* value)
+----
+
+
+
+Creates a new ``Concept`` object wrapping the specified ``String`` value
+
+[caption=""]
+.Returns
+`struct Concept*`
+
 [#_concept_row_drop]
 ==== function ``concept_row_drop``
 

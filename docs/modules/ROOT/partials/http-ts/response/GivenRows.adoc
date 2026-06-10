@@ -1,0 +1,12 @@
+[#_GivenRows]
+[.doc-api-reference-driver]
+=== GivenRows
+
+`class`
+
+[source,typescript]
+----
+GivenRows: { [varName: string]: GivenRowEntry }[]
+----
+
+

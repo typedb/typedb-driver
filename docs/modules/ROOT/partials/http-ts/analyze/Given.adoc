@@ -1,0 +1,18 @@
+[#_Given]
+[.doc-api-reference-driver]
+=== Given
+
+`class`
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `variable_annotations` a| `string` a| 
+a| `variables` a| `string` a| 
+|===
+// end::properties[]
+

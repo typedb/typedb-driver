@@ -12,6 +12,7 @@
 |===
 |Name |Type |Description
 a| `fetch` a| `AnalyzedFetch` a| 
+a| `given` a| `Given` a| 
 a| `preamble` a| `AnalyzedFunction` a| 
 a| `query` a| `AnalyzedPipeline` a| 
 a| `source` a| `string` a| 

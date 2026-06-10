@@ -1,0 +1,61 @@
+[#_methods_analyze_given]
+=== given
+
+[#_Struct_Given]
+[.doc-api-reference-driver]
+==== Struct Given
+
+`rust struct (pointer)`
+
+
+
+A representation of the 'given' stage of a query
+
+[#_given_drop]
+==== function ``given_drop``
+
+[source,c]
+----
+void given_drop(struct Given* obj)
+----
+
+
+
+Frees the native rust ``Given`` object.
+
+[caption=""]
+.Returns
+`void`
+
+[#_given_variable_annotations]
+==== function ``given_variable_annotations``
+
+[source,c]
+----
+struct VariableAnnotations* given_variable_annotations(const struct Given* given, const struct Variable* variable)
+----
+
+
+
+Returns the inferred types for the specified variable in the given stage.
+
+[caption=""]
+.Returns
+`struct VariableAnnotations*`
+
+[#_given_variables]
+==== function ``given_variables``
+
+[source,c]
+----
+struct VariableIterator* given_variables(const struct Given* given)
+----
+
+
+
+Returns the variables declared in the given stage.
+
+[caption=""]
+.Returns
+`struct VariableIterator*`
+

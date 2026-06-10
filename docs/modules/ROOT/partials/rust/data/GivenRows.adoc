@@ -9,6 +9,8 @@
 * `Clone`
 * `Debug`
 
+Rows of data to be used as input to a TypeQL query using a ``given`` stage.
+
 [caption=""]
 .Fields
 // tag::properties[]

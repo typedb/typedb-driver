@@ -39,6 +39,7 @@ dir_mapping = {
     "fetch": "analyze",
     "function": "analyze",
     "functioniterator": "analyze",
+    "given": "analyze",
     "named": "analyze",
     "namedrole": "analyze",
     "pipeline": "analyze",
@@ -87,6 +88,7 @@ dir_mapping = {
     "stringandoptvalue": "concept",
     "stringandoptvalueiterator": "concept",
     "valuetype": "concept",
+    "givenrows": "concept",
 
     # Connection
     "credential": "connection",

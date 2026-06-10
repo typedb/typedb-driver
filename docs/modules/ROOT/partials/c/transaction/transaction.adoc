@@ -187,6 +187,35 @@ a| `options` a| ``QueryOptions`` to configure the executed query. a| `const stru
 .Returns
 `struct QueryAnswerPromise*`
 
+[#_transaction_query_given_rows]
+==== function ``transaction_query_given_rows``
+
+[source,c]
+----
+struct QueryAnswerPromise* transaction_query_given_rows(struct Transaction* transaction, const char* query, const struct QueryOptions* options, struct GivenRows* given_rows)
+----
+
+
+
+Performs a TypeQL query in the transaction with the given rows
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The ``Transaction`` to execute the query within. a| `struct Transaction*`
+a| `query` a| The query string. a| `const char*`
+a| `options` a| ``QueryOptions`` to configure the executed query. a| `const struct QueryOptions*`
+a| `given_rows` a| ``QueryGivenRows`` the rows given as input to the query. a| `struct GivenRows*`
+|===
+
+[caption=""]
+.Returns
+`struct QueryAnswerPromise*`
+
 [#_transaction_rollback]
 ==== function ``transaction_rollback``
 

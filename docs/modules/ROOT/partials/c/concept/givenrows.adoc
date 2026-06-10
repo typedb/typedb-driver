@@ -1,0 +1,226 @@
+[#_methods_concept_givenrows]
+=== givenrows
+
+[#_Struct_GivenRows]
+[.doc-api-reference-driver]
+==== Struct GivenRows
+
+`rust struct (pointer)`
+
+
+
+Rows of data to be used as input to a TypeQL query using a ``given`` stage.
+
+
+[#_Struct_GivenRowsBuilder]
+[.doc-api-reference-driver]
+==== Struct GivenRowsBuilder
+
+`rust struct (pointer)`
+
+
+
+Helper type for constructing ``GivenRows`` instance across FFI.
+
+[#_Struct_GivenRowsHeaderBuilder]
+[.doc-api-reference-driver]
+==== Struct GivenRowsHeaderBuilder
+
+`rust struct (pointer)`
+
+
+
+Helper type for constructing a ``GivenRowsHeader`` instance across FFI.
+
+[#_given_rows_builder_drop]
+==== function ``given_rows_builder_drop``
+
+[source,c]
+----
+void given_rows_builder_drop(struct GivenRowsBuilder* builder)
+----
+
+
+
+Frees the native rust ``GivenRowsBuilder`` object
+
+[caption=""]
+.Returns
+`void`
+
+[#_given_rows_builder_new]
+==== function ``given_rows_builder_new``
+
+[source,c]
+----
+struct GivenRowsBuilder* given_rows_builder_new(struct GivenRowsHeader* header, uintptr_t row_count_hint)
+----
+
+
+
+Creates a new ``givenRow`` of the specified capacity,
+
+[caption=""]
+.Returns
+`struct GivenRowsBuilder*`
+
+[#_given_rows_builder_set_index_to_concept]
+==== function ``given_rows_builder_set_index_to_concept``
+
+[source,c]
+----
+void given_rows_builder_set_index_to_concept(struct GivenRowsBuilder* builder, uintptr_t index, const struct Concept* concept)
+----
+
+
+
+Sets the entry at ``index`` in the given row to the specified entity
+
+[caption=""]
+.Returns
+`void`
+
+[#_given_rows_builder_set_index_to_empty]
+==== function ``given_rows_builder_set_index_to_empty``
+
+[source,c]
+----
+void given_rows_builder_set_index_to_empty(struct GivenRowsBuilder* builder, uintptr_t index)
+----
+
+
+
+Sets the entry at ``index`` in the given row to the Empty Optional value
+
+[caption=""]
+.Returns
+`void`
+
+[#_given_rows_builder_set_variable_to_concept]
+==== function ``given_rows_builder_set_variable_to_concept``
+
+[source,c]
+----
+void given_rows_builder_set_variable_to_concept(struct GivenRowsBuilder* builder, const char* variable, const struct Concept* concept)
+----
+
+
+
+Sets the entry for ``variable`` in the given row to the specified entity
+
+[caption=""]
+.Returns
+`void`
+
+[#_given_rows_builder_set_variable_to_empty]
+==== function ``given_rows_builder_set_variable_to_empty``
+
+[source,c]
+----
+void given_rows_builder_set_variable_to_empty(struct GivenRowsBuilder* builder, const char* variable)
+----
+
+
+
+Sets the entry for ``variable`` in the given row to the Empty optional value
+
+[caption=""]
+.Returns
+`void`
+
+[#_given_rows_drop]
+==== function ``given_rows_drop``
+
+[source,c]
+----
+void given_rows_drop(struct GivenRows* rows)
+----
+
+
+
+Frees the native rust ``QueryGivenRows`` object
+
+[caption=""]
+.Returns
+`void`
+
+[#_given_rows_header_builder_drop]
+==== function ``given_rows_header_builder_drop``
+
+[source,c]
+----
+void given_rows_header_builder_drop(struct GivenRowsHeaderBuilder* builder)
+----
+
+
+
+Frees the native rust ``GivenRowsHeaderBuilder`` object
+
+[caption=""]
+.Returns
+`void`
+
+[#_given_rows_header_builder_finish]
+==== function ``given_rows_header_builder_finish``
+
+[source,c]
+----
+const struct GivenRowsHeader* given_rows_header_builder_finish(struct GivenRowsHeaderBuilder* builder)
+----
+
+
+
+Converts the builder into a finished ``GivenRowsHeader`` consisting of the pushed variables.
+
+[caption=""]
+.Returns
+`const struct GivenRowsHeader*`
+
+[#_given_rows_header_builder_new]
+==== function ``given_rows_header_builder_new``
+
+[source,c]
+----
+struct GivenRowsHeaderBuilder* given_rows_header_builder_new(uintptr_t width)
+----
+
+
+
+Creates a new ``GivenRowsHeaderBuilder`` of the specified capacity,
+
+[caption=""]
+.Returns
+`struct GivenRowsHeaderBuilder*`
+
+[#_given_rows_header_builder_push]
+==== function ``given_rows_header_builder_push``
+
+[source,c]
+----
+void given_rows_header_builder_push(struct GivenRowsHeaderBuilder* builder, char* variable)
+----
+
+
+
+Adds a variable to the header being built by this ``GivenRowsHeaderBuilder``
+
+[caption=""]
+.Returns
+`void`
+
+[#_given_rows_header_drop]
+==== function ``given_rows_header_drop``
+
+[source,c]
+----
+void given_rows_header_drop(struct GivenRowsHeader* header)
+----
+
+
+
+Releases this instance of the arc of the native rust ``GivenRowsHeader`` object
+
+[caption=""]
+.Returns
+`void`
+
