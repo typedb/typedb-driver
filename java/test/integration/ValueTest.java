@@ -24,6 +24,7 @@ import com.typedb.driver.api.Credentials;
 import com.typedb.driver.api.Driver;
 import com.typedb.driver.api.DriverOptions;
 import com.typedb.driver.api.DriverTlsConfig;
+import com.typedb.driver.api.GivenRows;
 import com.typedb.driver.api.QueryOptions;
 import com.typedb.driver.api.Transaction;
 import com.typedb.driver.api.answer.ConceptRow;
@@ -507,9 +508,62 @@ public class ValueTest {
         }, Transaction.Type.READ);
     }
 
+    @Test
+    public void testRoundTripsWithRawValue() {
+        Database db = typedbDriver.databases().get(DB_NAME);
+        db.delete();
+        typedbDriver.databases().create(DB_NAME);
+
+        DateTimeFormatter offsetFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSSZ");
+        ZonedDateTime belfastDT = LocalDateTime.parse("2024-09-20T16:40:05").atZone(ZoneId.of("Europe/Belfast"));
+        ZonedDateTime offsetDT = OffsetDateTime.parse("2024-09-20T16:40:05.028129323+0545", offsetFormatter).toZonedDateTime();
+
+        Object[][] examples = {
+                {"boolean",     ConceptFactory.newBoolean(true),                                              true,                                                    "true"},
+                {"boolean",     ConceptFactory.newBoolean(false),                                             false,                                                   "false"},
+                {"integer",     ConceptFactory.newInteger(25),                                                25L,                                                     "25"},
+                {"double",      ConceptFactory.newDouble(54.321),                                             54.321,                                                  "54.321"},
+                {"decimal",     ConceptFactory.newDecimal(new BigDecimal("1234567890.0001234567890")),        new BigDecimal("1234567890.0001234567890"),               "1234567890.0001234567890dec"},
+                {"decimal",     ConceptFactory.newDecimal(new BigDecimal("-1234567890.0001234567890")),       new BigDecimal("-1234567890.0001234567890"),              "-1234567890.0001234567890dec"},
+                {"string",      ConceptFactory.newString("John"),                                             "John",                                                  "\"John\""},
+                {"date",        ConceptFactory.newDate(LocalDate.of(2024, 9, 20)),                            LocalDate.of(2024, 9, 20),                               "2024-09-20"},
+                {"datetime",    ConceptFactory.newDatetime(LocalDateTime.parse("1999-02-26T12:15:05")),       LocalDateTime.parse("1999-02-26T12:15:05"),              "1999-02-26T12:15:05"},
+                {"datetime-tz", ConceptFactory.newDatetimeTz(belfastDT),                                     belfastDT,                                               "2024-09-20T16:40:05 Europe/Belfast"},
+                {"datetime-tz", ConceptFactory.newDatetimeTz(offsetDT),                                      offsetDT,                                                "2024-09-20T16:40:05.028129323+0545"},
+                {"duration",    ConceptFactory.newDuration(Duration.parse("P1Y10M7DT15H44M5.00394892S")),     Duration.parse("P1Y10M7DT15H44M5.00394892S"),            "P1Y10M7DT15H44M5.00394892S"},
+        };
+
+        localhostTypeDBTX(tx -> {
+            for (Object[] example : examples) {
+                String valueType = (String) example[0];
+                Value nativeValue = (Value) example[1];
+                Object rawValue = example[2];
+                String typeqlLiteral = (String) example[3];
+                try {
+                    ConceptRow row = runRoundtripTestWithRawValue(tx, valueType, rawValue, typeqlLiteral);
+                    Value given = row.get("native").get().asValue();
+                    Value parsed = row.get("parsed").get().asValue();
+                    assertEquals(nativeValue, given);
+                    assertEquals(given, parsed);
+                } catch (Exception e) {
+                    throw new AssertionError("Roundtrip with raw value failed for " + valueType + " '" + typeqlLiteral + "'", e);
+                }
+            }
+        }, Transaction.Type.READ);
+    }
+
     private ConceptRow runRoundtripTest(Transaction tx, String valueType, Value nativeValue, String typeqlLiteral) {
         String query = String.format("given $native: %s; match let $parsed = %s;", valueType, typeqlLiteral);
-        List<ConceptRow> rows = tx.query(query, new QueryOptions(), List.of("native"), List.of(List.of(Optional.of(nativeValue)))).resolve()
+        GivenRows givenRows = ConceptFactory.buildGivenRowsFrom(List.of("native"), List.of(List.of(Optional.of(nativeValue))));
+        List<ConceptRow> rows = tx.query(query, new QueryOptions(), givenRows).resolve()
+                .asConceptRows().stream().collect(Collectors.toList());
+        assertEquals(1, rows.size());
+        return rows.get(0);
+    }
+
+    private ConceptRow runRoundtripTestWithRawValue(Transaction tx, String valueType, Object rawValue, String typeqlLiteral) {
+        String query = String.format("given $native: %s; match let $parsed = %s;", valueType, typeqlLiteral);
+        List<ConceptRow> rows = tx.query(query, new QueryOptions(), ConceptFactory.buildGivenRowsFromObjects(List.of(Map.of("native", rawValue)))).resolve()
                 .asConceptRows().stream().collect(Collectors.toList());
         assertEquals(1, rows.size());
         return rows.get(0);

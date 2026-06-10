@@ -21,9 +21,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TypeDB.Driver.Api;
-
 using TypeDB.Driver.Common;
 using TypeDB.Driver.Connection;
+using ConceptError = TypeDB.Driver.Common.Error.Concept;
 
 namespace TypeDB.Driver
 {
@@ -126,7 +126,7 @@ namespace TypeDB.Driver
             if (value is Datetime dt) return NewDatetime(dt);
             if (value is DatetimeTZ dtz) return NewDatetimeTz(dtz);
             if (value is Duration dur) return NewDuration(dur);
-            throw new TypeDBDriverException(Error.Concept.UNSUPPORTED_VALUE_CONVERSION, value.GetType().Name);
+            throw new TypeDBDriverException(ConceptError.UNSUPPORTED_VALUE_CONVERSION, value.GetType().Name);
         }
 
         /// <summary>Creates a new <c>IValue</c> wrapping the specified <c>bool</c> value.</summary>

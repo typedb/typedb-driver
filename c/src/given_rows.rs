@@ -28,10 +28,10 @@ use crate::common::memory::{borrow, borrow_mut, decrement_arc, free, release, re
 // We use builders to make the FFI directives simpler.
 
 /// Helper type for constructing a <code>GivenRowsHeader</code> instance across FFI.
-struct GivenRowsHeaderBuilder(Vec<String>);
+pub struct GivenRowsHeaderBuilder(Vec<String>);
 
 /// Helper type for constructing <code>GivenRows</code> instance across FFI.
-struct GivenRowsBuilder {
+pub struct GivenRowsBuilder {
     rows: GivenRows,
     active_row: Option<GivenRow>,
 }
@@ -136,7 +136,7 @@ pub extern "C" fn given_rows_builder_set_index_to_concept(builder: *mut GivenRow
 pub extern "C" fn given_rows_builder_set_variable_to_concept(builder: *mut GivenRowsBuilder, variable: *const c_char, concept: *const Concept) {
     let result = borrow_mut(builder).active_row().and_then(|mut row| {
         let var_name = string_view(variable);
-        row.set(var_name.to_owned(), to_given_row_entry(borrow(concept), var_name)?);
+        row.set(var_name.to_owned(), to_given_row_entry(borrow(concept), var_name)?)?;
         Ok(())
     });
     if let Err(err) = result {

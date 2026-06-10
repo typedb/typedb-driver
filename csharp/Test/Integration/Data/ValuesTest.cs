@@ -667,12 +667,69 @@ namespace TypeDB.Driver.Test.Integration
             }
         }
 
+        [Test]
+        public void TestRoundTripsWithRawValue()
+        {
+            using var driver = TypeDB.Driver(ServerAddress, new Credentials("admin", "password"), new DriverOptions(DriverTlsConfig.Disabled()));
+            driver.Databases.Create(DatabaseName);
+
+            var belfastDtz = DatetimeTZ.Parse("2024-09-20T16:40:05 Europe/Belfast");
+            var offsetDtz = DatetimeTZ.Parse("2024-09-20T16:40:05.028129323+0545");
+
+            var examples = new (string ValueType, IValue NativeValue, object RawValue, string TypeqlLiteral)[]
+            {
+                ("boolean",     ConceptFactory.NewBoolean(true),                                              (object)true,                                        "true"),
+                ("boolean",     ConceptFactory.NewBoolean(false),                                             (object)false,                                       "false"),
+                ("integer",     ConceptFactory.NewInteger(25),                                                (object)25L,                                         "25"),
+                ("double",      ConceptFactory.NewDouble(54.321),                                             (object)54.321,                                      "54.321"),
+                ("decimal",     ConceptFactory.NewDecimal(1234567890.0001234567890m),                         (object)1234567890.0001234567890m,                   "1234567890.0001234567890dec"),
+                ("decimal",     ConceptFactory.NewDecimal(-1234567890.0001234567890m),                        (object)(-1234567890.0001234567890m),                 "-1234567890.0001234567890dec"),
+                ("string",      ConceptFactory.NewString("John"),                                             (object)"John",                                      "\"John\""),
+                ("date",        ConceptFactory.NewDate(new DateOnly(2024, 9, 20)),                            (object)new DateOnly(2024, 9, 20),                   "2024-09-20"),
+                ("datetime",    ConceptFactory.NewDatetime(Datetime.Parse("1999-02-26T12:15:05")),            (object)Datetime.Parse("1999-02-26T12:15:05"),        "1999-02-26T12:15:05"),
+                ("datetime-tz", ConceptFactory.NewDatetimeTz(belfastDtz),                                    (object)belfastDtz,                                  "2024-09-20T16:40:05 Europe/Belfast"),
+                ("datetime-tz", ConceptFactory.NewDatetimeTz(offsetDtz),                                     (object)offsetDtz,                                   "2024-09-20T16:40:05.028129323+0545"),
+                ("duration",    ConceptFactory.NewDuration(Duration.Parse("P1Y10M7DT15H44M5.00394892S")),     (object)Duration.Parse("P1Y10M7DT15H44M5.00394892S"), "P1Y10M7DT15H44M5.00394892S"),
+            };
+
+            using var tx = driver.Transaction(DatabaseName, TransactionType.Read);
+            foreach (var (valueType, nativeValue, rawValue, typeqlLiteral) in examples)
+            {
+                try
+                {
+                    var row = RunRoundtripTestWithRawValue(tx, valueType, rawValue, typeqlLiteral);
+                    var given = row.Get("native")!.AsValue();
+                    var parsed = row.Get("parsed")!.AsValue();
+                    Assert.AreEqual(nativeValue, given);
+                    Assert.AreEqual(given, parsed);
+                }
+                catch (AssertionException)
+                {
+                    throw;
+                }
+                catch (Exception e)
+                {
+                    throw new AssertionException($"Roundtrip with raw value failed for {valueType} '{typeqlLiteral}'", e);
+                }
+            }
+        }
+
         private static IConceptRow RunRoundtripTest(ITransaction tx, string valueType, IValue nativeValue, string typeqlLiteral)
         {
             string query = $"given $native: {valueType}; match let $parsed = {typeqlLiteral};";
             var givenRows = ConceptFactory.BuildGivenRowsFrom(
                 new List<string> { "native" },
                 new List<List<IConcept?>> { new List<IConcept?> { nativeValue } });
+            var rows = tx.Query(query, new QueryOptions(), givenRows).Resolve()!.AsConceptRows().ToList();
+            Assert.AreEqual(1, rows.Count);
+            return rows[0];
+        }
+
+        private static IConceptRow RunRoundtripTestWithRawValue(ITransaction tx, string valueType, object rawValue, string typeqlLiteral)
+        {
+            string query = $"given $native: {valueType}; match let $parsed = {typeqlLiteral};";
+            var givenRows = ConceptFactory.BuildGivenRowsFromObjects(
+                new List<Dictionary<string, object?>> { new Dictionary<string, object?> { { "native", rawValue } } });
             var rows = tx.Query(query, new QueryOptions(), givenRows).Resolve()!.AsConceptRows().ToList();
             Assert.AreEqual(1, rows.Count);
             return rows[0];
