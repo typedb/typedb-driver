@@ -179,13 +179,13 @@ class ConceptFactory:
     @staticmethod
     def new_datetime(value: Datetime):
         """Creates a new ``Value`` wrapping the specified naive ``Datetime`` value."""
-        seconds, nanos = value.to_seconds_and_nanos()
+        seconds, nanos = value._to_seconds_and_nanos()
         return wrap_value(concept_new_datetime(seconds, nanos))
 
     @staticmethod
     def new_datetime_tz(value: Datetime):
         """Creates a new ``Value`` wrapping the specified timezone-aware ``Datetime`` value."""
-        seconds, nanos = value.to_seconds_and_nanos()
+        seconds, nanos = value._to_seconds_and_nanos()
         if value.tz_name is not None:
             return wrap_value(concept_new_datetime_tz_iana(seconds, nanos, value.tz_name))
         else:

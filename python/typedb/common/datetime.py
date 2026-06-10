@@ -68,7 +68,7 @@ class Datetime:
 
         self._nanos = subsec_nanos
 
-    def to_seconds_and_nanos(self) -> Tuple[int, int]:
+    def _to_seconds_and_nanos(self) -> Tuple[int, int]:
         return (int(self._datetime_of_seconds.timestamp()), self._nanos)
 
     @classmethod

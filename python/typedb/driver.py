@@ -49,7 +49,7 @@ from typedb.api.user.user_manager import *  # noqa # pylint: disable=unused-impo
 from typedb.common.datetime import *  # noqa # pylint: disable=unused-import
 from typedb.common.duration import *  # noqa # pylint: disable=unused-import
 from typedb.common.exception import *  # noqa # pylint: disable=unused-import
-from typedb.concept_factory import ConceptFactory
+from typedb.concept_factory import ConceptFactory  # noqa # pylint: disable=unused-import
 from typedb.connection.driver import _Driver
 
 
