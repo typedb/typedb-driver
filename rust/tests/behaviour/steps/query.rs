@@ -22,18 +22,21 @@ use futures::{StreamExt, future::join_all};
 use itertools::Itertools;
 use macro_rules_attribute::apply;
 use typedb_driver::{
-    QueryOptions, Result as TypeDBResult, Transaction, IID,
+    IID, QueryOptions, Result as TypeDBResult, Transaction,
     answer::{ConceptRow, QueryAnswer},
-    concept::{Attribute, AttributeType, Concept, ConceptCategory, Entity, EntityType, Relation, RelationType, Value, ValueType},
+    concept::{
+        Attribute, AttributeType, Concept, ConceptCategory, Entity, EntityType, Relation, RelationType, Value,
+        ValueType,
+    },
     error::ConceptError,
     given::{GivenRowEntry, GivenRows},
 };
+
 use crate::{
     BehaviourTestOptionalError, Context, generic_step, params,
-    params::check_boolean,
+    params::{VariableList, WithGiven, check_boolean},
     util::{iter_table, list_contains_json, parse_json},
 };
-use crate::params::{VariableList, WithGiven};
 
 pub(crate) async fn run_query(
     transaction: &Transaction,
@@ -181,9 +184,9 @@ fn concept_get_type(concept: &Concept) -> Concept {
 pub async fn typeql_query(context: &mut Context, with_given: WithGiven, may_error: params::MayError, step: &Step) {
     context.cleanup_answers().await;
     let given_rows = may_take_given_rows(context, with_given);
-    may_error.check(run_query(context.transaction(), step.docstring().unwrap(), given_rows, context.query_options).await);
+    may_error
+        .check(run_query(context.transaction(), step.docstring().unwrap(), given_rows, context.query_options).await);
 }
-
 
 #[cucumber::given(expr = "set answers of typeql read query as given rows with order: {variable_list}")]
 #[cucumber::when(expr = "set answers of typeql read query as given rows with order: {variable_list}")]
@@ -194,16 +197,18 @@ async fn set_given_rows(context: &mut Context, var_list: VariableList, step: &St
 
     while let Some(row_result) = as_rows_result.next().await {
         let answer_row = row_result.unwrap();
-        let given_row: Vec<GivenRowEntry> = var_list.0.iter().map(|v| {
-            match answer_row.get(v).unwrap() {
+        let given_row: Vec<GivenRowEntry> = var_list
+            .0
+            .iter()
+            .map(|v| match answer_row.get(v).unwrap() {
                 None => GivenRowEntry::Empty,
                 Some(Concept::Entity(entity)) => GivenRowEntry::Entity(entity.clone()),
                 Some(Concept::Relation(relation)) => GivenRowEntry::Relation(relation.clone()),
                 Some(Concept::Attribute(attribute)) => GivenRowEntry::Attribute(attribute.clone()),
                 Some(Concept::Value(value)) => GivenRowEntry::Value(value.clone()),
-                Some(_) => panic!("You can't have this in given rows. Use a select on the previous query")
-            }
-        }).collect();
+                Some(_) => panic!("You can't have this in given rows. Use a select on the previous query"),
+            })
+            .collect();
         given_rows.push_row(given_row).unwrap();
     }
 
@@ -226,7 +231,7 @@ async fn set_given_rows_dict(context: &mut Context, var_list: VariableList, step
                 Some(Concept::Relation(relation)) => GivenRowEntry::Relation(relation.clone()),
                 Some(Concept::Attribute(attribute)) => GivenRowEntry::Attribute(attribute.clone()),
                 Some(Concept::Value(value)) => GivenRowEntry::Value(value.clone()),
-                Some(_) => panic!("You can't have this in given rows. Use a select on the previous query")
+                Some(_) => panic!("You can't have this in given rows. Use a select on the previous query"),
             };
             (v.clone(), entry)
         });
@@ -244,7 +249,9 @@ pub async fn get_answers_of_typeql_query(context: &mut Context, with_given: With
     context.cleanup_answers().await;
     let given_rows = may_take_given_rows(context, with_given);
     context
-        .set_answer(run_query(context.transaction(), step.docstring().unwrap(), given_rows, context.query_options).await)
+        .set_answer(
+            run_query(context.transaction(), step.docstring().unwrap(), given_rows, context.query_options).await,
+        )
         .unwrap();
 }
 

@@ -25,8 +25,8 @@ use typedb_driver::{Result as TypeDBResult, Transaction, analyze::AnalyzedQuery}
 use crate::{
     Context,
     analyze::functor_encoding::{
-        encode_fetch_annotations_as_functor, encode_given_annotations_as_functor, encode_query_annotations_as_functor,
-        encode_given_structure_as_functor, encode_query_structure_as_functor,
+        encode_fetch_annotations_as_functor, encode_given_annotations_as_functor, encode_given_structure_as_functor,
+        encode_query_annotations_as_functor, encode_query_structure_as_functor,
     },
     generic_step, params,
 };

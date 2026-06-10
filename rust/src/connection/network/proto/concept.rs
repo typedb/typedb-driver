@@ -23,26 +23,26 @@ use chrono::{Date, DateTime, Datelike, FixedOffset, NaiveDate, NaiveDateTime, Ti
 use chrono_tz::Tz;
 use itertools::Itertools;
 use typedb_protocol::{
-    concept,
-    concept_document::{self, node::leaf::Leaf as LeafProto},
-    row_entry::Entry,
-    value::{self as value_proto, datetime_tz::Timezone as TimezoneProto, Value as ValueProtoInner},
-    value_type::ValueType as ValueTypeProto,
     Attribute as AttributeProto, AttributeType as AttributeTypeProto, Concept as ConceptProto,
     ConceptDocument as ConceptDocumentProto, ConceptRow as ConceptRowProto, Entity as EntityProto,
     EntityType as EntityTypeProto, Relation as RelationProto, RelationType as RelationTypeProto,
-    RoleType as RoleTypeProto, Type as TypeProto, Value as ValueProto, ValueType as ValueTypeStructProto,
+    RoleType as RoleTypeProto, Type as TypeProto, Value as ValueProto, ValueType as ValueTypeStructProto, concept,
+    concept_document::{self, node::leaf::Leaf as LeafProto},
+    row_entry::Entry,
+    value::{self as value_proto, Value as ValueProtoInner, datetime_tz::Timezone as TimezoneProto},
+    value_type::ValueType as ValueTypeProto,
 };
 
 use super::{FromProto, IntoProto, TryFromProto};
 use crate::{
+    Error, Result,
     answer::concept_document::{Leaf, Node},
     concept::{
+        Attribute, AttributeType, Concept, Entity, EntityType, Kind, Relation, RelationType, RoleType, Value,
+        ValueType,
         type_::Type,
         value,
         value::{Decimal, Duration, TimeZone},
-        Attribute, AttributeType, Concept, Entity, EntityType, Kind, Relation, RelationType, RoleType, Value,
-        ValueType,
     },
     error::{
         ConnectionError,
@@ -51,7 +51,6 @@ use crate::{
             ValueTimeZoneOffsetNotRecognised,
         },
     },
-    Error, Result,
 };
 
 impl TryFromProto<ConceptRowProto> for (Vec<Option<Concept>>, Option<Vec<u8>>) {

@@ -50,6 +50,6 @@ pub mod concept;
 mod connection;
 mod database;
 pub mod driver;
+pub mod given;
 pub mod transaction;
 mod user;
-pub mod given;

@@ -23,15 +23,15 @@ use typedb_protocol::{analyze::res::analyzed_query as analyze_proto, analyzed_co
 
 use crate::{
     analyze::{
+        AnalyzedQuery, Fetch, FetchLeaf, Function, Given, ReturnOperation, TypeAnnotations, VariableAnnotations,
         conjunction::{
             Comparator, Conjunction, ConjunctionID, Constraint, ConstraintExactness, ConstraintSpan, ConstraintVertex,
             ConstraintWithSpan, NamedRole, Variable,
         },
         pipeline::{Pipeline, PipelineStage, ReduceAssignment, Reducer, SortOrder, SortVariable, VariableInfo},
-        AnalyzedQuery, Fetch, FetchLeaf, Function, Given, ReturnOperation, TypeAnnotations, VariableAnnotations,
     },
     common::Result,
-    concept::{type_, Kind, Value, ValueType},
+    concept::{Kind, Value, ValueType, type_},
     connection::{
         message::AnalyzeResponse,
         network::proto::{FromProto, TryFromProto},

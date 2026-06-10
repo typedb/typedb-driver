@@ -16,8 +16,8 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-use std::sync::Arc;
-use std::collections::HashMap;
+use std::{collections::HashMap, sync::Arc};
+
 use crate::{
     Result,
     concept::{Attribute, Entity, Relation, Value},
@@ -75,11 +75,9 @@ impl GivenRows {
         }
     }
 
-    pub fn push_map(&mut self, values: impl IntoIterator<Item=(String, GivenRowEntry)>) -> Result<()> {
+    pub fn push_map(&mut self, values: impl IntoIterator<Item = (String, GivenRowEntry)>) -> Result<()> {
         let mut row = GivenRow::new(self.header.clone());
-        values.into_iter().try_for_each(|(var, entry)| {
-            row.set(var, entry)
-        })?;
+        values.into_iter().try_for_each(|(var, entry)| row.set(var, entry))?;
         self.push(row)
     }
 }
@@ -120,9 +118,8 @@ impl GivenRow {
     }
 
     pub fn set(&mut self, variable: String, entry: GivenRowEntry) -> Result<()> {
-        let index = self.header.index.get(&variable).ok_or(
-            Error::Query(QueryError::GivenRowUnknownVariable { variable })
-        )?;
+        let index =
+            self.header.index.get(&variable).ok_or(Error::Query(QueryError::GivenRowUnknownVariable { variable }))?;
         self.set_at(*index, entry)
     }
 

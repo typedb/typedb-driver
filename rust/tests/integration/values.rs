@@ -841,28 +841,45 @@ fn test_round_trips() {
         compile_error!("This is some terrible UX");
         // Belfast is UTC+1 (BST) in September, so local 16:40:05 = UTC 15:40:05
         let belfast_naive_utc = NaiveDate::from_ymd_opt(2024, 9, 20).unwrap().and_hms_opt(15, 40, 5).unwrap();
-        let belfast_dt = Value::DatetimeTZ(TimeZone::IANA(Tz::from_str("Europe/Belfast").unwrap()).from_utc_datetime(&belfast_naive_utc));
+        let belfast_dt = Value::DatetimeTZ(
+            TimeZone::IANA(Tz::from_str("Europe/Belfast").unwrap()).from_utc_datetime(&belfast_naive_utc),
+        );
 
         // +05:45 offset, so local 16:40:05.028... = UTC 10:55:05.028...
-        let offset_naive_utc = NaiveDate::from_ymd_opt(2024, 9, 20).unwrap().and_hms_nano_opt(10, 55, 5, 28129323).unwrap();
-        let offset_dt = Value::DatetimeTZ(TimeZone::Fixed(FixedOffset::east_opt(5 * 3600 + 45 * 60).unwrap()).from_utc_datetime(&offset_naive_utc));
+        let offset_naive_utc =
+            NaiveDate::from_ymd_opt(2024, 9, 20).unwrap().and_hms_nano_opt(10, 55, 5, 28129323).unwrap();
+        let offset_dt = Value::DatetimeTZ(
+            TimeZone::Fixed(FixedOffset::east_opt(5 * 3600 + 45 * 60).unwrap()).from_utc_datetime(&offset_naive_utc),
+        );
 
         // Decimal::new(integer, fractional) where fractional is in units of 10^-19.
         // 1234567890.0001234567890 → integer=1234567890, fractional="0001234567890" padded to 19 digits = 1_234_567_890_000_000
         // -1234567890.0001234567890 → floor=-1234567891, fractional=(10^19 - 1_234_567_890_000_000) = 9_998_765_432_110_000_000
         let examples: Vec<(&str, Value, &str)> = vec![
-            ("boolean",     Value::Boolean(true),                                                                                "true"),
-            ("boolean",     Value::Boolean(false),                                                                               "false"),
-            ("integer",     Value::Integer(25),                                                                                  "25"),
-            ("double",      Value::Double(54.321),                                                                               "54.321"),
-            ("decimal",     Value::Decimal(Decimal::new(1234567890, 1_234_567_890_000_000)),                                     "1234567890.0001234567890dec"),
-            ("decimal",     Value::Decimal(Decimal::new(-1234567891, 9_998_765_432_110_000_000)),                                "-1234567890.0001234567890dec"),
-            ("string",      Value::String("John".to_string()),                                                                   "\"John\""),
-            ("date",        Value::Date(NaiveDate::from_ymd_opt(2024, 9, 20).unwrap()),                                          "2024-09-20"),
-            ("datetime",    Value::Datetime(NaiveDate::from_ymd_opt(1999, 2, 26).unwrap().and_hms_opt(12, 15, 5).unwrap()),      "1999-02-26T12:15:05"),
-            ("datetime-tz", belfast_dt,                                                                                          "2024-09-20T16:40:05 Europe/Belfast"),
-            ("datetime-tz", offset_dt,                                                                                           "2024-09-20T16:40:05.028129323+0545"),
-            ("duration",    Value::Duration(Duration::from_str("P1Y10M7DT15H44M5.00394892S").unwrap()),                         "P1Y10M7DT15H44M5.00394892S"),
+            ("boolean", Value::Boolean(true), "true"),
+            ("boolean", Value::Boolean(false), "false"),
+            ("integer", Value::Integer(25), "25"),
+            ("double", Value::Double(54.321), "54.321"),
+            ("decimal", Value::Decimal(Decimal::new(1234567890, 1_234_567_890_000_000)), "1234567890.0001234567890dec"),
+            (
+                "decimal",
+                Value::Decimal(Decimal::new(-1234567891, 9_998_765_432_110_000_000)),
+                "-1234567890.0001234567890dec",
+            ),
+            ("string", Value::String("John".to_string()), "\"John\""),
+            ("date", Value::Date(NaiveDate::from_ymd_opt(2024, 9, 20).unwrap()), "2024-09-20"),
+            (
+                "datetime",
+                Value::Datetime(NaiveDate::from_ymd_opt(1999, 2, 26).unwrap().and_hms_opt(12, 15, 5).unwrap()),
+                "1999-02-26T12:15:05",
+            ),
+            ("datetime-tz", belfast_dt, "2024-09-20T16:40:05 Europe/Belfast"),
+            ("datetime-tz", offset_dt, "2024-09-20T16:40:05.028129323+0545"),
+            (
+                "duration",
+                Value::Duration(Duration::from_str("P1Y10M7DT15H44M5.00394892S").unwrap()),
+                "P1Y10M7DT15H44M5.00394892S",
+            ),
         ];
 
         let tx = driver.transaction(database.name(), TransactionType::Read).await.unwrap();
@@ -870,7 +887,9 @@ fn test_round_trips() {
             let query = format!("given $native: {}; match let $parsed = {};", value_type, typeql_literal);
             let mut given_rows = GivenRows::new(vec!["native".to_string()], 1);
             given_rows.push_row(vec![GivenRowEntry::Value(native.clone())]).unwrap();
-            let answer = tx.query_with_rows(&query, given_rows).await
+            let answer = tx
+                .query_with_rows(&query, given_rows)
+                .await
                 .unwrap_or_else(|e| panic!("Query failed for {} '{}': {}", value_type, typeql_literal, e));
             let rows: Vec<_> = answer.into_rows().try_collect().await.unwrap();
             assert_eq!(rows.len(), 1, "Expected 1 row for {} '{}'", value_type, typeql_literal);

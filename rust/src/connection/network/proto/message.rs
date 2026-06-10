@@ -19,27 +19,27 @@
 
 use itertools::Itertools;
 use typedb_protocol::{
-    authentication, connection, database, database_manager, migration, query::initial_res::Res, server, server_manager,
-    transaction, user, user_manager, ExtensionVersion::Extension, Version::Version,
+    ExtensionVersion::Extension, Version::Version, authentication, connection, database, database_manager, migration,
+    query::initial_res::Res, server, server_manager, transaction, user, user_manager,
 };
 use uuid::Uuid;
 
 use super::{FromProto, IntoProto, TryFromProto, TryIntoProto};
 use crate::{
+    Credentials,
     analyze::pipeline::Pipeline,
-    answer::{concept_document::ConceptDocumentHeader, concept_row::ConceptRowHeader, QueryType},
-    common::{info::DatabaseInfo, RequestID, Result},
+    answer::{QueryType, concept_document::ConceptDocumentHeader, concept_row::ConceptRowHeader},
+    common::{RequestID, Result, info::DatabaseInfo},
     connection::{
         message::{
             AnalyzeResponse, DatabaseExportResponse, DatabaseImportRequest, QueryRequest, QueryResponse, Request,
             Response, TransactionRequest, TransactionResponse,
         },
-        server::{server_version::ServerVersion, Server},
+        server::{Server, server_version::ServerVersion},
     },
     error::{ConnectionError, InternalError, ServerError},
-    given::{GivenRowEntry, GivenRow, GivenRows},
+    given::{GivenRow, GivenRowEntry, GivenRows},
     info::UserInfo,
-    Credentials,
 };
 
 impl TryIntoProto<connection::open::Req> for Request {
@@ -256,7 +256,7 @@ impl IntoProto<typedb_protocol::query::req::GivenRow> for Vec<GivenRowEntry> {
 impl IntoProto<typedb_protocol::query::req::GivenEntry> for GivenRowEntry {
     fn into_proto(self) -> typedb_protocol::query::req::GivenEntry {
         use typedb_protocol::{
-            query::req::given_entry::Entry as EntryProto, thing::Thing as ThingProtoInner, Thing as ThingProto,
+            Thing as ThingProto, query::req::given_entry::Entry as EntryProto, thing::Thing as ThingProtoInner,
         };
 
         let inner = match self {
@@ -451,7 +451,7 @@ impl FromProto<database::type_schema::Res> for Response {
 
 impl TryFromProto<database::export::Server> for DatabaseExportResponse {
     fn try_from_proto(proto: database::export::Server) -> Result<Self> {
-        use migration::export::{server::Server, Done, InitialRes, ResPart};
+        use migration::export::{Done, InitialRes, ResPart, server::Server};
         match proto.server {
             Some(server) => match server.server {
                 Some(Server::InitialRes(InitialRes { schema })) => Ok(Self::Schema(schema)),

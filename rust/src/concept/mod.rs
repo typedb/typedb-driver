@@ -27,8 +27,8 @@ pub use self::{
     value::{Value, ValueType},
 };
 use crate::{
-    concept::value::{Decimal, Duration, Struct, TimeZone},
     IID,
+    concept::value::{Decimal, Duration, Struct, TimeZone},
 };
 
 pub mod instance;
