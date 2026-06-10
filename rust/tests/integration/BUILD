@@ -63,6 +63,7 @@ rust_test(
         "//rust:typedb_driver",
         "@crates//:async-std",
         "@crates//:chrono",
+        "@crates//:chrono-tz",
         "@crates//:futures",
         "@crates//:serial_test",
     ],
