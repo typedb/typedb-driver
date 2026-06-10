@@ -19,7 +19,6 @@
 
 package com.typedb.driver.api;
 
-import com.typedb.driver.api.concept.Concept;
 import com.typedb.driver.api.database.DatabaseManager;
 import com.typedb.driver.api.server.Server;
 import com.typedb.driver.api.server.ServerVersion;
@@ -27,8 +26,6 @@ import com.typedb.driver.api.user.UserManager;
 import com.typedb.driver.common.exception.TypeDBDriverException;
 
 import javax.annotation.CheckReturnValue;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 

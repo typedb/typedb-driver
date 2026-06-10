@@ -22,11 +22,6 @@ package com.typedb.driver.api;
 import com.typedb.driver.api.analyze.AnalyzedQuery;
 import com.typedb.driver.api.answer.QueryAnswer;
 import com.typedb.driver.common.Promise;
-import com.typedb.driver.api.concept.Concept;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 import javax.annotation.CheckReturnValue;
 import java.util.function.Consumer;
