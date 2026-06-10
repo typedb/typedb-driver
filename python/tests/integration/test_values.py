@@ -506,32 +506,27 @@ class TestValues(TestCase):
             database = driver.databases.get(TYPEDB)
 
             examples = [
-                ("boolean", ConceptFactory.new_boolean(True),  True,                                                               'true'),
-                ("boolean", ConceptFactory.new_boolean(False), False,                                                              'false'),
-                ("integer", ConceptFactory.new_integer(25),    25,                                                                 '25'),
-                ("double",  ConceptFactory.new_double(54.321), 54.321,                                                             '54.321'),
-                ("decimal", ConceptFactory.new_decimal(Decimal('1234567890.0001234567890')),  Decimal('1234567890.0001234567890'),  '1234567890.0001234567890dec'),
-                ("decimal", ConceptFactory.new_decimal(Decimal('-1234567890.0001234567890')), Decimal('-1234567890.0001234567890'), '-1234567890.0001234567890dec'),
-                ("string",  ConceptFactory.new_string('John'), 'John',                                                             '"John"'),
-                ("date",    ConceptFactory.new_date(date(2024, 9, 20)), date(2024, 9, 20),                                         '2024-09-20'),
-                ("datetime", ConceptFactory.new_datetime(Datetime.utcfromstring("1999-02-26T12:15:05")),
-                             Datetime.utcfromstring("1999-02-26T12:15:05"),                                                        '1999-02-26T12:15:05'),
-                ("datetime-tz", ConceptFactory.new_datetime_tz(Datetime.utcfromstring("2024-09-20T16:40:05", tz_name="Europe/Belfast")),
-                                Datetime.utcfromstring("2024-09-20T16:40:05", tz_name="Europe/Belfast"),                           '2024-09-20T16:40:05 Europe/Belfast'),
-                ("datetime-tz", ConceptFactory.new_datetime_tz(Datetime.utcfromstring("2024-09-20T16:40:05.028129323",
-                                                               offset_seconds=Datetime.offset_seconds_fromstring("+0545"))),
-                                Datetime.utcfromstring("2024-09-20T16:40:05.028129323",
-                                                       offset_seconds=Datetime.offset_seconds_fromstring("+0545")),               '2024-09-20T16:40:05.028129323+0545'),
-                ("duration", ConceptFactory.new_duration(Duration.fromstring("P1Y10M7DT15H44M5.00394892S")),
-                             Duration.fromstring("P1Y10M7DT15H44M5.00394892S"),                                                    'P1Y10M7DT15H44M5.00394892S'),
+                ("boolean",     lambda v: v.get_boolean(),      True,                                                                                       'true'),
+                ("boolean",     lambda v: v.get_boolean(),      False,                                                                                      'false'),
+                ("integer",     lambda v: v.get_integer(),      25,                                                                                         '25'),
+                ("double",      lambda v: v.get_double(),       54.321,                                                                                     '54.321'),
+                ("decimal",     lambda v: v.get_decimal(),      Decimal('1234567890.0001234567890'),                                                         '1234567890.0001234567890dec'),
+                ("decimal",     lambda v: v.get_decimal(),      Decimal('-1234567890.0001234567890'),                                                        '-1234567890.0001234567890dec'),
+                ("string",      lambda v: v.get_string(),       'John',                                                                                     '"John"'),
+                ("date",        lambda v: v.get_date(),         date(2024, 9, 20),                                                                          '2024-09-20'),
+                ("datetime",    lambda v: v.get_datetime(),     Datetime.utcfromstring("1999-02-26T12:15:05"),                                               '1999-02-26T12:15:05'),
+                ("datetime-tz", lambda v: v.get_datetime_tz(),  Datetime.utcfromstring("2024-09-20T16:40:05", tz_name="Europe/Belfast"),                     '2024-09-20T16:40:05 Europe/Belfast'),
+                ("datetime-tz", lambda v: v.get_datetime_tz(),  Datetime.utcfromstring("2024-09-20T16:40:05.028129323",
+                                                                                        offset_seconds=Datetime.offset_seconds_fromstring("+0545")),         '2024-09-20T16:40:05.028129323+0545'),
+                ("duration",    lambda v: v.get_duration(),     Duration.fromstring("P1Y10M7DT15H44M5.00394892S"),                                           'P1Y10M7DT15H44M5.00394892S'),
             ]
 
             with driver.transaction(database.name, READ) as tx:
-                for value_type, native_concept, raw_value, typeql_literal in examples:
+                for value_type, extractor, raw_value, typeql_literal in examples:
                     try:
                         given, parsed = run_roundtrip_test_with_raw_value(tx, value_type, raw_value, typeql_literal)
-                        assert_that(given, is_(equal_to(native_concept)))
-                        assert_that(given, is_(equal_to(parsed)))
+                        assert_that(extractor(given), is_(equal_to(raw_value)))
+                        assert_that(extractor(parsed), is_(equal_to(raw_value)))
                     except Exception as e:
                         raise AssertionError(
                             f"Roundtrip with raw value failed for {value_type} '{typeql_literal}' (raw={raw_value!r})"

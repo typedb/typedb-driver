@@ -676,32 +676,32 @@ namespace TypeDB.Driver.Test.Integration
             var belfastDtz = DatetimeTZ.Parse("2024-09-20T16:40:05 Europe/Belfast");
             var offsetDtz = DatetimeTZ.Parse("2024-09-20T16:40:05.028129323+0545");
 
-            var examples = new (string ValueType, IValue NativeValue, object RawValue, string TypeqlLiteral)[]
+            var examples = new (string ValueType, Func<IValue, object?> Extractor, object RawValue, string TypeqlLiteral)[]
             {
-                ("boolean",     ConceptFactory.NewBoolean(true),                                              (object)true,                                        "true"),
-                ("boolean",     ConceptFactory.NewBoolean(false),                                             (object)false,                                       "false"),
-                ("integer",     ConceptFactory.NewInteger(25),                                                (object)25L,                                         "25"),
-                ("double",      ConceptFactory.NewDouble(54.321),                                             (object)54.321,                                      "54.321"),
-                ("decimal",     ConceptFactory.NewDecimal(1234567890.0001234567890m),                         (object)1234567890.0001234567890m,                   "1234567890.0001234567890dec"),
-                ("decimal",     ConceptFactory.NewDecimal(-1234567890.0001234567890m),                        (object)(-1234567890.0001234567890m),                 "-1234567890.0001234567890dec"),
-                ("string",      ConceptFactory.NewString("John"),                                             (object)"John",                                      "\"John\""),
-                ("date",        ConceptFactory.NewDate(new DateOnly(2024, 9, 20)),                            (object)new DateOnly(2024, 9, 20),                   "2024-09-20"),
-                ("datetime",    ConceptFactory.NewDatetime(Datetime.Parse("1999-02-26T12:15:05")),            (object)Datetime.Parse("1999-02-26T12:15:05"),        "1999-02-26T12:15:05"),
-                ("datetime-tz", ConceptFactory.NewDatetimeTz(belfastDtz),                                    (object)belfastDtz,                                  "2024-09-20T16:40:05 Europe/Belfast"),
-                ("datetime-tz", ConceptFactory.NewDatetimeTz(offsetDtz),                                     (object)offsetDtz,                                   "2024-09-20T16:40:05.028129323+0545"),
-                ("duration",    ConceptFactory.NewDuration(Duration.Parse("P1Y10M7DT15H44M5.00394892S")),     (object)Duration.Parse("P1Y10M7DT15H44M5.00394892S"), "P1Y10M7DT15H44M5.00394892S"),
+                ("boolean",     v => v.TryGetBoolean(),    (object)true,                                          "true"),
+                ("boolean",     v => v.TryGetBoolean(),    (object)false,                                         "false"),
+                ("integer",     v => v.TryGetInteger(),    (object)25L,                                           "25"),
+                ("double",      v => v.TryGetDouble(),     (object)54.321,                                        "54.321"),
+                ("decimal",     v => v.TryGetDecimal(),    (object)1234567890.0001234567890m,                     "1234567890.0001234567890dec"),
+                ("decimal",     v => v.TryGetDecimal(),    (object)(-1234567890.0001234567890m),                  "-1234567890.0001234567890dec"),
+                ("string",      v => v.TryGetString(),     (object)"John",                                        "\"John\""),
+                ("date",        v => v.TryGetDate(),       (object)new DateOnly(2024, 9, 20),                     "2024-09-20"),
+                ("datetime",    v => v.TryGetDatetime(),   (object)Datetime.Parse("1999-02-26T12:15:05"),         "1999-02-26T12:15:05"),
+                ("datetime-tz", v => v.TryGetDatetimeTZ(), (object)belfastDtz,                                    "2024-09-20T16:40:05 Europe/Belfast"),
+                ("datetime-tz", v => v.TryGetDatetimeTZ(), (object)offsetDtz,                                     "2024-09-20T16:40:05.028129323+0545"),
+                ("duration",    v => v.TryGetDuration(),   (object)Duration.Parse("P1Y10M7DT15H44M5.00394892S"),  "P1Y10M7DT15H44M5.00394892S"),
             };
 
             using var tx = driver.Transaction(DatabaseName, TransactionType.Read);
-            foreach (var (valueType, nativeValue, rawValue, typeqlLiteral) in examples)
+            foreach (var (valueType, extractor, rawValue, typeqlLiteral) in examples)
             {
                 try
                 {
                     var row = RunRoundtripTestWithRawValue(tx, valueType, rawValue, typeqlLiteral);
                     var given = row.Get("native")!.AsValue();
                     var parsed = row.Get("parsed")!.AsValue();
-                    Assert.AreEqual(nativeValue, given);
-                    Assert.AreEqual(given, parsed);
+                    Assert.AreEqual(rawValue, extractor(given));
+                    Assert.AreEqual(rawValue, extractor(parsed));
                 }
                 catch (AssertionException)
                 {
