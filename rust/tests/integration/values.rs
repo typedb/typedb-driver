@@ -214,27 +214,27 @@ fn duration_debug() {
 
 #[test]
 fn decimal_new() {
-    let decimal = Decimal::new(123, 456);
+    let decimal = Decimal::from_parts(123, 456);
     assert_eq!(decimal.integer, 123);
     assert_eq!(decimal.fractional, 456);
 }
 
 #[test]
 fn decimal_display_whole() {
-    let decimal = Decimal::new(123, 0);
+    let decimal = Decimal::from_parts(123, 0);
     assert_eq!(format!("{}", decimal), "123.0");
 }
 
 #[test]
 fn decimal_display_fractional() {
-    let decimal = Decimal::new(1234567890, 1_234_567_890_000_000_000);
+    let decimal = Decimal::from_parts(1234567890, 1_234_567_890_000_000_000);
     assert_eq!(format!("{}", decimal), "1234567890.123456789dec");
 }
 
 #[test]
 fn decimal_addition() {
-    let a = Decimal::new(1, 5_000_000_000_000_000_000);
-    let b = Decimal::new(2, 7_000_000_000_000_000_000);
+    let a = Decimal::from_parts(1, 5_000_000_000_000_000_000);
+    let b = Decimal::from_parts(2, 7_000_000_000_000_000_000);
     let c = a + b;
     assert_eq!(c.integer, 4);
     assert_eq!(c.fractional, 2_000_000_000_000_000_000);
@@ -242,8 +242,8 @@ fn decimal_addition() {
 
 #[test]
 fn decimal_subtraction() {
-    let a = Decimal::new(5, 3_000_000_000_000_000_000);
-    let b = Decimal::new(2, 7_000_000_000_000_000_000);
+    let a = Decimal::from_parts(5, 3_000_000_000_000_000_000);
+    let b = Decimal::from_parts(2, 7_000_000_000_000_000_000);
     let c = a - b;
     assert_eq!(c.integer, 2);
     assert_eq!(c.fractional, 6_000_000_000_000_000_000);
@@ -251,7 +251,7 @@ fn decimal_subtraction() {
 
 #[test]
 fn decimal_negation() {
-    let a = Decimal::new(5, 3_000_000_000_000_000_000);
+    let a = Decimal::from_parts(5, 3_000_000_000_000_000_000);
     let neg_a = -a;
     assert_eq!(neg_a.integer, -6);
     assert_eq!(neg_a.fractional, 7_000_000_000_000_000_000);
@@ -259,18 +259,18 @@ fn decimal_negation() {
 
 #[test]
 fn decimal_equality() {
-    let a = Decimal::new(123, 456);
-    let b = Decimal::new(123, 456);
-    let c = Decimal::new(123, 457);
+    let a = Decimal::from_parts(123, 456);
+    let b = Decimal::from_parts(123, 456);
+    let c = Decimal::from_parts(123, 457);
     assert_eq!(a, b);
     assert_ne!(a, c);
 }
 
 #[test]
 fn decimal_ordering() {
-    let a = Decimal::new(1, 0);
-    let b = Decimal::new(2, 0);
-    let c = Decimal::new(1, 1);
+    let a = Decimal::from_parts(1, 0);
+    let b = Decimal::from_parts(2, 0);
+    let c = Decimal::from_parts(1, 1);
     assert!(a < b);
     assert!(a < c);
     assert!(c < b);

@@ -68,8 +68,8 @@ impl Value {
                 let fractional_parsed = Self::parse_decimal_fraction_part(fractional);
 
                 TypeDBValue::Decimal(match integer.starts_with('-') {
-                    false => Decimal::new(integer_parsed_abs, fractional_parsed),
-                    true => -Decimal::new(integer_parsed_abs, fractional_parsed),
+                    false => Decimal::from_parts(integer_parsed_abs, fractional_parsed),
+                    true => -Decimal::from_parts(integer_parsed_abs, fractional_parsed),
                 })
             }
             TypeDBValueType::Date => {

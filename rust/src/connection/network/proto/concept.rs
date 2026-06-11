@@ -283,7 +283,7 @@ impl TryFromProto<ValueProto> for Value {
             Some(ValueProtoInner::Double(double)) => Ok(Self::Double(double)),
             Some(ValueProtoInner::String(string)) => Ok(Self::String(string)),
             Some(ValueProtoInner::Decimal(decimal)) => {
-                Ok(Self::Decimal(Decimal::new(decimal.integer, decimal.fractional)))
+                Ok(Self::Decimal(Decimal::from_parts(decimal.integer, decimal.fractional)))
             }
             Some(ValueProtoInner::Date(date)) => {
                 Ok(Self::Date(NaiveDate::from_num_days_from_ce_opt(date.num_days_since_ce).unwrap()))

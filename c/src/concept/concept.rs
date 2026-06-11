@@ -17,8 +17,8 @@
  * under the License.
  */
 
-use std::ffi::c_char;
-
+use std::{ffi::c_char, str::FromStr};
+use std::ptr::null_mut;
 use chrono::{DateTime, FixedOffset, NaiveDate, NaiveDateTime, NaiveTime, TimeZone as ChronoTimeZone};
 use typedb_driver::{
     box_stream,
@@ -34,6 +34,7 @@ use crate::common::{
         borrow, borrow_mut, free, release, release_optional, release_optional_string, release_string, string_free,
     },
 };
+use crate::common::error::record_error;
 use crate::common::memory::{string_view, take_ownership};
 
 /// A <code>DatetimeInNanos</code> used to represent datetime as a pair of seconds part and
@@ -455,14 +456,20 @@ pub extern "C" fn concept_new_double(value: f64) -> *mut Concept {
 /// provided as a string (without the dec suffix).
 #[unsafe(no_mangle)]
 pub extern "C" fn concept_new_decimal_from_string(str: *const c_char) -> *mut Concept {
-    release(Concept::Value(Value::Decimal(Decimal::from_str(string_view(str)))))
+    match Decimal::from_str(string_view(str)) {
+        Ok(value) => release(Concept::Value(Value::Decimal(value))),
+        Err(err) => {
+            record_error(err);
+            null_mut()
+        }
+    }
 }
 
 /// Creates a new <code>Concept</code> object wrapping the specified <code>Decimal</code> value,
 /// provided as its integer and fractional parts. The fractional part is in units of 10^-19.
 #[unsafe(no_mangle)]
 pub extern "C" fn concept_new_decimal(integer: i64, fractional: u64) -> *mut Concept {
-    release(Concept::Value(Value::Decimal(Decimal::new(integer, fractional))))
+    release(Concept::Value(Value::Decimal(Decimal::from_parts(integer, fractional))))
 }
 
 /// Creates a new <code>Concept</code> object wrapping a specified <code>NaiveDate</code> value.
