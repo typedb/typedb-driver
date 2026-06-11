@@ -613,6 +613,22 @@ Creates a new ``Concept`` object wrapping the specified ``Decimal`` value, provi
 .Returns
 `struct Concept*`
 
+[#_concept_new_decimal_from_string]
+==== function ``concept_new_decimal_from_string``
+
+[source,c]
+----
+struct Concept* concept_new_decimal_from_string(const char* str)
+----
+
+
+
+Creates a new ``Concept`` object wrapping the specified ``Decimal`` value, provided as a string (without the dec suffix).
+
+[caption=""]
+.Returns
+`struct Concept*`
+
 [#_concept_new_double]
 ==== function ``concept_new_double``
 

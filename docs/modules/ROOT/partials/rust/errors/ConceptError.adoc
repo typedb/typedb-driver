@@ -11,6 +11,7 @@
 [options="header"]
 |===
 |Variant
+a| `ErrorParsingDecimal`
 a| `UnavailableRowIndex`
 a| `UnavailableRowVariable`
 |===

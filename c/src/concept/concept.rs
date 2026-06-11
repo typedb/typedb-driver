@@ -452,6 +452,13 @@ pub extern "C" fn concept_new_double(value: f64) -> *mut Concept {
 }
 
 /// Creates a new <code>Concept</code> object wrapping the specified <code>Decimal</code> value,
+/// provided as a string (without the dec suffix).
+#[unsafe(no_mangle)]
+pub extern "C" fn concept_new_decimal_from_string(str: *const c_char) -> *mut Concept {
+    release(Concept::Value(Value::Decimal(Decimal::from_str(string_view(str)))))
+}
+
+/// Creates a new <code>Concept</code> object wrapping the specified <code>Decimal</code> value,
 /// provided as its integer and fractional parts. The fractional part is in units of 10^-19.
 #[unsafe(no_mangle)]
 pub extern "C" fn concept_new_decimal(integer: i64, fractional: u64) -> *mut Concept {

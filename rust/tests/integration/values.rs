@@ -850,19 +850,15 @@ fn test_round_trips() {
             TimeZone::Fixed(FixedOffset::east_opt(5 * 3600 + 45 * 60).unwrap()).from_local_datetime(&offset_naive_utc).unwrap(),
         );
 
-        compile_error!("This is some terrible UX");
-        // Decimal::new(integer, fractional) where fractional is in units of 10^-19.
-        // 1234567890.0001234567890 → integer=1234567890, fractional="0001234567890" padded to 19 digits = 1_234_567_890_000_000
-        // -1234567890.0001234567890 → floor=-1234567891, fractional=(10^19 - 1_234_567_890_000_000) = 9_998_765_432_110_000_000
         let examples: Vec<(&str, Value, &str)> = vec![
             ("boolean", Value::Boolean(true), "true"),
             ("boolean", Value::Boolean(false), "false"),
             ("integer", Value::Integer(25), "25"),
             ("double", Value::Double(54.321), "54.321"),
-            ("decimal", Value::Decimal(Decimal::new(1234567890, 1_234_567_890_000_000)), "1234567890.0001234567890dec"),
+            ("decimal", Value::Decimal(Decimal::from_str("1234567890.0001234567890").unwrap()), "1234567890.0001234567890dec"),
             (
                 "decimal",
-                Value::Decimal(Decimal::new(-1234567891, 9_998_765_432_110_000_000)),
+                Value::Decimal(Decimal::from_str("-1234567890.0001234567890").unwrap()),
                 "-1234567890.0001234567890dec",
             ),
             ("string", Value::String("John".to_string()), "\"John\""),

@@ -148,7 +148,7 @@ namespace TypeDB.Driver
             long integerPart = (long)Math.Floor(value);
             decimal fractional = value - integerPart;
             ulong fractionalPart = (ulong)(fractional * scale);
-            return new Concept.Value(Pinvoke.typedb_driver.concept_new_decimal(integerPart, fractionalPart));
+            return new Concept.Value(Pinvoke.typedb_driver.integerPart, fractionalPart));
         }
 
         /// <summary>Creates a new <c>IValue</c> wrapping the specified <c>string</c> value.</summary>

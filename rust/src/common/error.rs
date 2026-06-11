@@ -18,7 +18,7 @@
  */
 
 use std::{error::Error as StdError, fmt, time::Duration};
-
+use std::num::ParseIntError;
 use tonic::{Code, Status};
 use tonic_types::{ErrorInfo, StatusExt};
 
@@ -233,6 +233,8 @@ error_messages! { ConceptError
         1: "Cannot get concept from a concept row by variable '{variable}'.",
     UnavailableRowIndex { index: usize } =
         2: "Cannot get concept from a concept row by index '{index}'.",
+    ErrorParsingDecimal { unparsed: String, reason: ParseIntError } =
+        3: "Could not parse the value'{unparsed}' as decimal: {reason}.",
 }
 
 error_messages! { MigrationError

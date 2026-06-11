@@ -13,6 +13,7 @@
 * `Default`
 * `Display`
 * `Eq`
+* `FromStr`
 * `Hash`
 * `Neg`
 * `Ord`
@@ -34,4 +35,24 @@ a| `fractional` a| `u64` a| The fractional part of the decimal, in multiples of 
 a| `integer` a| `i64` a| The integer part of the decimal as normal signed 64 bit number
 |===
 // end::properties[]
+
+// tag::methods[]
+[#_struct_Decimal_new_]
+==== new
+
+[source,rust]
+----
+pub const fn new(integer: i64, fractional: u64) -> Self
+----
+
+Creates a new Decimal value from the raw integer and fractional parts. For an easier interface, use from_str.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Self
+----
+
+// end::methods[]
 
