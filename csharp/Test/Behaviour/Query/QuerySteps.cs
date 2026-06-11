@@ -540,7 +540,7 @@ namespace TypeDB.Driver.Test.Behaviour
         }
 
         [Then(@"answer get row\((\d+)\) get variable by index of variable\(([^)]+)\) is empty")]
-        public void AnswerGetRowGetVariableByIndexIsEmpty(int rowIndex, string variable)
+        public void AnswerGetRowGetVariableByIndexOfVariableIsEmpty(int rowIndex, string variable)
         {
             CollectRowsAnswerIfNeeded();
             IConcept? concept = GetRowGetConcept(rowIndex, variable, byIndex: true);
@@ -548,12 +548,32 @@ namespace TypeDB.Driver.Test.Behaviour
         }
 
         [Then(@"answer get row\((\d+)\) get variable by index of variable\(([^)]+)\) is not empty")]
-        public void AnswerGetRowGetVariableByIndexIsNotEmpty(int rowIndex, string variable)
+        public void AnswerGetRowGetVariableByIndexOfVariableIsNotEmpty(int rowIndex, string variable)
         {
             CollectRowsAnswerIfNeeded();
             IConcept? concept = GetRowGetConcept(rowIndex, variable, byIndex: true);
             Assert.NotNull(concept);
         }
+
+
+        // Pattern: answer get row(N) get variable by index(N) is empty
+        [Then(@"answer get row\((\d+)\) get variable by index\((\d+)\) is empty")]
+        public void AnswerGetRowGetVariableByIndexIsEmpty(int rowIndex, int varIndex)
+        {
+            CollectRowsAnswerIfNeeded();
+            IConcept? concept = _collectedRows![rowIndex].GetIndex(varIndex);
+            Assert.Null(concept);
+        }
+
+        // Pattern: answer get row(N) get variable by index(N) is not empty
+        [Then(@"answer get row\((\d+)\) get variable by index\((\d+)\) is not empty")]
+        public void AnswerGetRowGetVariableByIndexIsNotEmpty(int rowIndex, int varIndex)
+        {
+            CollectRowsAnswerIfNeeded();
+            IConcept? concept = _collectedRows![rowIndex].GetIndex(varIndex);
+            Assert.NotNull(concept);
+        }
+
 
         [Then(@"answer get row\((\d+)\) get variable\(([^)]+)\) try get label is not none")]
         public void AnswerGetRowGetVariableTryGetLabelIsNotNone(int rowIndex, string variable)
