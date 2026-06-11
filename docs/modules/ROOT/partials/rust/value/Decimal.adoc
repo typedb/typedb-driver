@@ -37,15 +37,15 @@ a| `integer` a| `i64` a| The integer part of the decimal as normal signed 64 bit
 // end::properties[]
 
 // tag::methods[]
-[#_struct_Decimal_new_]
-==== new
+[#_struct_Decimal_from_parts_]
+==== from_parts
 
 [source,rust]
 ----
-pub const fn new(integer: i64, fractional: u64) -> Self
+pub const fn from_parts(integer: i64, fractional: u64) -> Self
 ----
 
-Creates a new Decimal value from the raw integer and fractional parts. For an easier interface, use from_str.
+Creates a new Decimal value from the raw integer and fractional parts. The fractional part is specified in multiples of 10^-19 (Decimal::FRACTIONAL_PART_DENOMINATOR). For an easier interface, use from_str.
 
 [caption=""]
 .Returns
