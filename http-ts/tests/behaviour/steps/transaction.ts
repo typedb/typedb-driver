@@ -21,7 +21,6 @@ import { Then, When } from "@cucumber/cucumber";
 import { TransactionType } from "../../../dist/index.cjs";
 import { checkMayError, EXPECT_ERROR_CONTAINING, MayError } from "./params";
 import {
-    clearTransactionId,
     driver, openBackgroundTransaction,
     openTransaction,
     setTransactionSchemaLockAcquireTimeout,
@@ -37,21 +36,18 @@ Then(`connection open {transaction_type} transaction for database: {word}${EXPEC
 
 async function transactionCommits(mayError: MayError) {
     await driver.commitTransaction(tx()).then(checkMayError(mayError));
-    clearTransactionId();
 }
 Then('transaction commits{may_error}', transactionCommits);
 Then(`transaction commits${EXPECT_ERROR_CONTAINING}`, transactionCommits);
 
 async function transactionCloses(mayError: MayError) {
     await driver.closeTransaction(tx()).then(checkMayError(mayError));
-    clearTransactionId();
 }
 Then('transaction closes{may_error}', transactionCloses);
 Then(`transaction closes${EXPECT_ERROR_CONTAINING}`, transactionCloses);
 
 async function transactionRollbacks(mayError: MayError) {
     await driver.rollbackTransaction(tx()).then(checkMayError(mayError));
-    clearTransactionId();
 }
 Then('transaction rollbacks{may_error}', transactionRollbacks);
 Then(`transaction rollbacks${EXPECT_ERROR_CONTAINING}`, transactionRollbacks);

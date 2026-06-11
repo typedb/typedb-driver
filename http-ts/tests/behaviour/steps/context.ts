@@ -36,9 +36,6 @@ export let concurrentAnswers: QueryResponse[];
 let givenRows: GivenRows | undefined;
 
 export async function openTransaction(database: string, type: TransactionType) {
-    if (transactionID != null) {
-        console.log("transactionID was not null. If the transaction is not closed by the server, this may cause the http-ts drivers to be unable to clear the database after the test.");
-    }
     const res = await driver.openTransaction(database, type, transactionOptions);
     if (isOkResponse(res)) transactionID = res.ok.transactionId;
     return res;
@@ -208,10 +205,6 @@ export async function openAndTestConnectionWithHostPort(username: string, passwo
     const healthCheck = await newDriver.health();
     if (isOkResponse(healthCheck)) driver = newDriver;
     return healthCheck;
-}
-
-export function clearTransactionId() {
-    transactionID = undefined;
 }
 
 export function closeConnection() {
