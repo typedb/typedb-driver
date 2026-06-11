@@ -28,6 +28,7 @@ csharp_behaviour_test_all(
     step_files = [
         "//csharp/Test/Behaviour/Util:steps",
         "//csharp/Test/Behaviour/Query:steps",
+        "//csharp/Test/Behaviour/Concept:steps",
         "//csharp/Test/Behaviour/Connection/Transaction:steps",
         "//csharp/Test/Behaviour/Connection/Database:steps",
     ],

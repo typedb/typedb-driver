@@ -724,18 +724,6 @@ namespace TypeDB.Driver.Test.Behaviour
             Assert.Equal(expectedValue.Replace("\\\"", "\""), value!.GetString());
         }
 
-        // Copied from ConceptSteps
-        [Then(@"answer get row\((\d+)\) get value\(([^)]+)\) get is: (.+)")]
-        public void AnswerGetRowGetValueGetIs(int rowIndex, string variable, string expectedValue)
-        {
-            CollectRowsAnswerIfNeeded();
-            IConcept? concept = GetRowGetConcept(rowIndex, variable);
-            Assert.NotNull(concept);
-            IValue value = concept!.AsValue();
-            Assert.True(TestValueHelper.CompareValues(value, expectedValue, null),
-                $"Expected value '{expectedValue}' but got '{value}'");
-        }
-
         #endregion
 
         #region Uniquely Identify Answer Concepts Steps
