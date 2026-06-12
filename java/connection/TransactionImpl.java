@@ -106,7 +106,7 @@ public class TransactionImpl extends NativeObject<com.typedb.driver.jni.Transact
     public Promise<? extends QueryAnswer> query(String query, QueryOptions options, GivenRows givenRows) throws TypeDBDriverException {
         Validator.requireNonNull(query, "query");
         try {
-            return Promise.map(transaction_query_given_rows(nativeObject, query, options.nativeObject, ((GivenRowsImpl)givenRows).nativeObject), QueryAnswerImpl::of);
+            return Promise.map(transaction_query_given_rows(nativeObject, query, options.nativeObject, ((GivenRowsImpl)givenRows).nativeObject.released()), QueryAnswerImpl::of);
         } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }

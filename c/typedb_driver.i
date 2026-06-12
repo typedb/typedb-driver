@@ -289,8 +289,6 @@ VoidPromise* transaction_on_close_register(const Transaction* transaction, Trans
 %newobject given_rows_builder_new;
 %delobject given_rows_builder_finish;
 %newobject given_rows_builder_finish;
-// GivenRows is consumed by any function that takes it (transaction_query_given_rows)
-%apply SWIGTYPE *DISOWN { GivenRows *given_rows };
 
 %newobject analyzed_query_pipeline;
 %newobject analyzed_preamble;
