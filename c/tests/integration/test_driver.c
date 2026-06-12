@@ -267,3 +267,133 @@ cleanup:
     driver_close(driver);
     return success;
 }
+
+bool test_query_given() {
+    const char databaseName[] = "test_query_data";
+
+    TypeDBDriver* driver = NULL;
+    TransactionOptions* tx_opts = NULL;
+    QueryOptions* query_opts = NULL;
+    Transaction* transaction = NULL;
+    GivenRowsHeader* given_rows_header = NULL;
+    GivenRows* given_rows = NULL;
+
+    bool success = false;
+
+    // Set up connection & database
+    driver = driver_new_for_tests(TYPEDB_CORE_ADDRESS, TYPEDB_CORE_USERNAME, TYPEDB_CORE_PASSWORD);
+    if (FAILED()) goto cleanup;
+
+    delete_database_if_exists(driver, databaseName);
+    if (FAILED()) goto cleanup;
+
+    databases_create(driver, databaseName);
+    if (FAILED()) goto cleanup;
+
+    tx_opts = transaction_options_new();
+    if (FAILED()) goto cleanup;
+    query_opts = query_options_new();
+    if (FAILED()) goto cleanup;
+
+    // Set up schema
+    {
+        transaction = transaction_new(driver, databaseName, Schema, tx_opts);
+        if (FAILED()) goto cleanup;
+
+
+        QueryAnswerPromise* define_promise = transaction_query(transaction, "define attribute name @independent, value string;", query_opts);
+        if (FAILED()) goto cleanup;
+        QueryAnswer* define_answer = query_answer_promise_resolve(define_promise);
+        if (FAILED()) goto cleanup;
+        success = query_answer_is_ok(define_answer);
+        query_answer_drop(define_answer);
+        if (!success) {
+            goto cleanup;
+        }
+
+        void_promise_resolve(transaction_commit(transaction));
+        transaction = NULL;
+        if (FAILED()) goto cleanup;
+    }
+
+    {
+        // create the given rows
+        GivenRowsHeaderBuilder* given_rows_header_builder = given_rows_header_builder_new(1);
+        given_rows_header_builder_push(given_rows_header_builder, "s");
+        given_rows_header = given_rows_header_builder_finish(given_rows_header_builder);
+        if (FAILED()) goto cleanup;
+        GivenRowsBuilder* given_rows_builder = given_rows_builder_new(given_rows_header, 1);
+
+        given_rows_builder_start_new_row(given_rows_builder);
+        Concept* value_john = concept_new_string("john");
+        given_rows_builder_set_index_to_concept(given_rows_builder, 0, value_john);
+        concept_drop(value_john);
+        given_rows_builder_commit_row(given_rows_builder);
+        if (FAILED()) goto cleanup;
+        given_rows = given_rows_builder_finish(given_rows_builder);
+        given_rows_header_drop(given_rows_header);
+
+
+        transaction = transaction_new(driver, databaseName, Write, tx_opts);
+        if (FAILED()) goto cleanup;
+        QueryAnswerPromise* insert_promise = transaction_query_given_rows(transaction, "given $s: string; insert $n isa name == $s;", query_opts, given_rows);
+        given_rows = NULL; // transaction_given_rows consumes it.
+        if (FAILED()) goto cleanup;
+        QueryAnswer* insert_answer = query_answer_promise_resolve(insert_promise);
+        if (FAILED()) goto cleanup;
+        if (!query_answer_is_concept_row_stream(insert_answer)) {
+            success = false;
+            query_answer_drop(insert_answer);
+            goto cleanup;
+        }
+        ConceptRowIterator* insert_result = query_answer_into_rows(insert_answer);
+        if (FAILED()) goto cleanup;
+        else concept_row_iterator_drop(insert_result);
+
+
+        QueryAnswerPromise* match_promise = transaction_query(transaction, "match $n isa name;", query_opts);
+        QueryAnswer* match_answer = query_answer_promise_resolve(match_promise);
+        if (FAILED()) goto cleanup;
+        if (!query_answer_is_concept_row_stream(match_answer)) {
+            success = false;
+            query_answer_drop(match_answer);
+            goto cleanup;
+        }
+        ConceptRowIterator* it = query_answer_into_rows(match_answer);
+        ConceptRow* conceptRow;
+        bool foundJohn = false;
+        while (NULL != (conceptRow = concept_row_iterator_next(it))) {
+            Concept* concept = concept_row_get(conceptRow, "n");
+            char* attr = concept_get_string(concept);
+            foundJohn = foundJohn || (0 == strcmp(attr, "John"));
+            string_free(attr);
+            concept_drop(concept);
+            concept_row_drop(conceptRow);
+        }
+        concept_row_iterator_drop(it);
+
+        void_promise_resolve(transaction_commit(transaction));
+        transaction = NULL;
+
+        if (!foundJohn) {
+            fprintf(stderr, "Did not find inserted name \'John\' in query result.\n");
+            goto cleanup;
+        }
+    }
+
+    success = true;
+
+cleanup:
+    if (NULL != transaction) transaction_drop_sync(transaction);
+    transaction_options_drop(tx_opts);
+    query_options_drop(query_opts);
+
+    if (NULL != given_rows_header) given_rows_header_drop(given_rows_header);
+    if (NULL != given_rows) given_rows_drop(given_rows);
+
+    delete_database_if_exists(driver, databaseName);
+    check_error_may_print(__FILE__, __LINE__);
+
+    driver_close(driver);
+    return success;
+}

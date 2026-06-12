@@ -21,6 +21,7 @@ bool test_database_management();
 
 bool test_query_schema();
 bool test_query_data();
+bool test_query_given();
 
 bool test_concept_api_schema();
 bool test_concept_api_data();

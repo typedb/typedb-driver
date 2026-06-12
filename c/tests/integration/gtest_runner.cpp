@@ -33,6 +33,9 @@ TEST(TestQuery, TestSchema) {
 TEST(TestQuery, TestData) {
     EXPECT_TRUE(test_query_data());
 }
+TEST(TestQuery, TestGiven) {
+    EXPECT_TRUE(test_query_given());
+}
 
 TEST(TestExample, TestExample) {
     EXPECT_TRUE(test_example());
