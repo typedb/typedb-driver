@@ -16,17 +16,21 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-use crate::common::error::record_error;
-use crate::common::memory::{
-    borrow, borrow_mut, decrement_arc, free, release, release_arc, release_optional, string_view,
-    take_arc, take_ownership,
+use std::{ffi::c_char, ptr::null_mut, sync::Arc};
+
+use typedb_driver::{
+    concept::Concept,
+    error::QueryError,
+    given::{GivenRow, GivenRowEntry, GivenRows, GivenRowsHeader},
 };
-use std::ffi::c_char;
-use std::ptr::null_mut;
-use std::sync::Arc;
-use typedb_driver::concept::Concept;
-use typedb_driver::error::QueryError;
-use typedb_driver::given::{GivenRow, GivenRowEntry, GivenRows, GivenRowsHeader};
+
+use crate::common::{
+    error::record_error,
+    memory::{
+        borrow, borrow_mut, decrement_arc, free, release, release_arc, release_optional, string_view, take_arc,
+        take_ownership,
+    },
+};
 
 // We use builders to make the FFI directives simpler.
 
@@ -42,9 +46,7 @@ pub struct GivenRowsBuilder {
 impl GivenRowsBuilder {
     fn active_row(&mut self) -> typedb_driver::Result<&mut GivenRow> {
         self.active_row.as_mut().ok_or_else(|| {
-            typedb_driver::error::Error::FFI(
-                "given_rows_builder_commit_row: No active row found".to_owned(),
-            )
+            typedb_driver::error::Error::FFI("given_rows_builder_commit_row: No active row found".to_owned())
         })
     }
 }
@@ -58,14 +60,11 @@ fn to_given_row_entry(
         Concept::Relation(relation) => Ok(GivenRowEntry::Relation(relation)),
         Concept::Attribute(attribute) => Ok(GivenRowEntry::Attribute(attribute)),
         Concept::Value(value) => Ok(GivenRowEntry::Value(value)),
-        Concept::EntityType(_)
-        | Concept::RelationType(_)
-        | Concept::RoleType(_)
-        | Concept::AttributeType(_) => Err(typedb_driver::error::Error::Query(
-            QueryError::GivenRowsReceivedType {
+        Concept::EntityType(_) | Concept::RelationType(_) | Concept::RoleType(_) | Concept::AttributeType(_) => {
+            Err(typedb_driver::error::Error::Query(QueryError::GivenRowsReceivedType {
                 variable_or_index: format!("{variable_or_index}"),
-            },
-        )),
+            }))
+        }
     }
 }
 
@@ -77,27 +76,19 @@ pub extern "C" fn given_rows_header_builder_new(width: usize) -> *mut GivenRowsH
 
 /// Adds a variable to the header being built by this <code>GivenRowsHeaderBuilder</code>
 #[unsafe(no_mangle)]
-pub extern "C" fn given_rows_header_builder_push(
-    builder: *mut GivenRowsHeaderBuilder,
-    variable: *mut c_char,
-) {
+pub extern "C" fn given_rows_header_builder_push(builder: *mut GivenRowsHeaderBuilder, variable: *mut c_char) {
     borrow_mut(builder).0.push(string_view(variable).to_owned())
 }
 
 /// Converts the builder into a finished <code>GivenRowsHeader</code> consisting of the pushed variables.
 #[unsafe(no_mangle)]
-pub extern "C" fn given_rows_header_builder_finish(
-    builder: *mut GivenRowsHeaderBuilder,
-) -> *const GivenRowsHeader {
+pub extern "C" fn given_rows_header_builder_finish(builder: *mut GivenRowsHeaderBuilder) -> *const GivenRowsHeader {
     release_arc(Arc::new(GivenRowsHeader::new(take_ownership(builder).0)))
 }
 
 /// Creates a new <code>givenRow</code> of the specified capacity,
 #[unsafe(no_mangle)]
-pub extern "C" fn given_rows_builder_new(
-    header: *mut GivenRowsHeader,
-    row_count_hint: usize,
-) -> *mut GivenRowsBuilder {
+pub extern "C" fn given_rows_builder_new(header: *mut GivenRowsHeader, row_count_hint: usize) -> *mut GivenRowsBuilder {
     let arced_header = take_arc(header);
     let cloned_header = arced_header.clone();
     let _ = release_arc(arced_header); // Give ownership back before anything bad can happen
@@ -116,9 +107,7 @@ pub extern "C" fn given_rows_builder_start_new_row(builder: *mut GivenRowsBuilde
 pub extern "C" fn given_rows_builder_commit_row(builder: *mut GivenRowsBuilder) {
     let builder = borrow_mut(builder);
     let Some(row) = builder.active_row.take() else {
-        record_error(typedb_driver::error::Error::FFI(
-            "given_rows_builder_commit_row: No active row found".to_owned(),
-        ));
+        record_error(typedb_driver::error::Error::FFI("given_rows_builder_commit_row: No active row found".to_owned()));
         return;
     };
     if let Err(err) = builder.rows.push(row) {
@@ -162,10 +151,7 @@ pub extern "C" fn given_rows_builder_set_variable_to_concept(
 ) {
     let result = borrow_mut(builder).active_row().and_then(|mut row| {
         let var_name = string_view(variable);
-        row.set(
-            var_name.to_owned(),
-            to_given_row_entry(borrow(concept), var_name)?,
-        )?;
+        row.set(var_name.to_owned(), to_given_row_entry(borrow(concept), var_name)?)?;
         Ok(())
     });
     if let Err(err) = result {
@@ -175,13 +161,8 @@ pub extern "C" fn given_rows_builder_set_variable_to_concept(
 
 /// Sets the entry at `index` in the given row to the Empty Optional value
 #[unsafe(no_mangle)]
-pub extern "C" fn given_rows_builder_set_index_to_empty(
-    builder: *mut GivenRowsBuilder,
-    index: usize,
-) {
-    let result = borrow_mut(builder)
-        .active_row()
-        .and_then(|mut row| row.set_at(index, GivenRowEntry::Empty));
+pub extern "C" fn given_rows_builder_set_index_to_empty(builder: *mut GivenRowsBuilder, index: usize) {
+    let result = borrow_mut(builder).active_row().and_then(|mut row| row.set_at(index, GivenRowEntry::Empty));
     if let Err(err) = result {
         record_error(err);
     }
@@ -189,10 +170,7 @@ pub extern "C" fn given_rows_builder_set_index_to_empty(
 
 /// Sets the entry for `variable` in the given row to the Empty optional value
 #[unsafe(no_mangle)]
-pub extern "C" fn given_rows_builder_set_variable_to_empty(
-    builder: *mut GivenRowsBuilder,
-    variable: *const c_char,
-) {
+pub extern "C" fn given_rows_builder_set_variable_to_empty(builder: *mut GivenRowsBuilder, variable: *const c_char) {
     let result = borrow_mut(builder).active_row().and_then(|mut row| {
         let var_name = string_view(variable);
         row.set(var_name.to_owned(), GivenRowEntry::Empty)
