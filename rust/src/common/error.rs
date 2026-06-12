@@ -17,8 +17,8 @@
  * under the License.
  */
 
-use std::{error::Error as StdError, fmt, time::Duration};
-use std::num::ParseIntError;
+use std::{error::Error as StdError, fmt, num::ParseIntError, time::Duration};
+
 use tonic::{Code, Status};
 use tonic_types::{ErrorInfo, StatusExt};
 

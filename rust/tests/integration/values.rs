@@ -847,7 +847,9 @@ fn test_round_trips() {
         let offset_naive_utc =
             NaiveDate::from_ymd_opt(2024, 9, 20).unwrap().and_hms_nano_opt(16, 40, 5, 28129323).unwrap();
         let offset_dt = Value::DatetimeTZ(
-            TimeZone::Fixed(FixedOffset::east_opt(5 * 3600 + 45 * 60).unwrap()).from_local_datetime(&offset_naive_utc).unwrap(),
+            TimeZone::Fixed(FixedOffset::east_opt(5 * 3600 + 45 * 60).unwrap())
+                .from_local_datetime(&offset_naive_utc)
+                .unwrap(),
         );
 
         let examples: Vec<(&str, Value, &str)> = vec![
@@ -855,7 +857,11 @@ fn test_round_trips() {
             ("boolean", Value::Boolean(false), "false"),
             ("integer", Value::Integer(25), "25"),
             ("double", Value::Double(54.321), "54.321"),
-            ("decimal", Value::Decimal(Decimal::from_str("1234567890.0001234567890").unwrap()), "1234567890.0001234567890dec"),
+            (
+                "decimal",
+                Value::Decimal(Decimal::from_str("1234567890.0001234567890").unwrap()),
+                "1234567890.0001234567890dec",
+            ),
             (
                 "decimal",
                 Value::Decimal(Decimal::from_str("-1234567890.0001234567890").unwrap()),

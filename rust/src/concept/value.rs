@@ -27,8 +27,7 @@ use std::{
 use chrono::{DateTime, FixedOffset, MappedLocalTime, NaiveDate, NaiveDateTime};
 use chrono_tz::Tz;
 
-use crate::Error;
-use crate::error::ConceptError;
+use crate::{Error, error::ConceptError};
 
 /// Represents the type of primitive value is held by a Value or Attribute.
 #[derive(Clone, PartialEq, Eq)]
@@ -307,15 +306,14 @@ impl FromStr for Decimal {
         };
 
         let (integer_part, fractional_part) = str.split_once(".").unwrap_or((str, "0"));
-        let integer = integer_part.parse().map_err(|reason| {
-            Error::Concept(ConceptError::ErrorParsingDecimal {unparsed: str.to_owned(), reason})
-        })?;
+        let integer = integer_part
+            .parse()
+            .map_err(|reason| Error::Concept(ConceptError::ErrorParsingDecimal { unparsed: str.to_owned(), reason }))?;
         let num_fractional_digits = fractional_part.len() as u32;
-        let parsed_fractional = fractional_part.parse::<u64>().map_err(|reason| {
-            Error::Concept(ConceptError::ErrorParsingDecimal {unparsed: str.to_owned(), reason})
-        })?;
-        let fractional =
-            parsed_fractional * 10u64.pow(Self::FRACTIONAL_PART_DENOMINATOR_LOG10 - num_fractional_digits);
+        let parsed_fractional = fractional_part
+            .parse::<u64>()
+            .map_err(|reason| Error::Concept(ConceptError::ErrorParsingDecimal { unparsed: str.to_owned(), reason }))?;
+        let fractional = parsed_fractional * 10u64.pow(Self::FRACTIONAL_PART_DENOMINATOR_LOG10 - num_fractional_digits);
 
         if is_negative { Ok(-Self::from_parts(integer, fractional)) } else { Ok(Self::from_parts(integer, fractional)) }
     }
