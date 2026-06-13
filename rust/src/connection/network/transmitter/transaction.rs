@@ -119,7 +119,7 @@ impl TransactionTransmitter {
             if self.background_runtime.is_open() && self.is_open.compare_exchange(true, false).is_ok() {
                 let (closed_sink, mut closed_source) = unbounded_async();
                 let close_notifier_callback = Box::new(move |_error| {
-                    closed_sink.send(()).unwrap();
+                    closed_sink.send(()).ok();
                 });
                 let on_close_submit_promise = self.on_close(close_notifier_callback);
                 let _ = resolve!(on_close_submit_promise);
@@ -139,7 +139,7 @@ impl TransactionTransmitter {
             if self.background_runtime.is_open() && self.is_open.compare_exchange(true, false).is_ok() {
                 let (closed_sink, closed_source) = oneshot();
                 let close_notifier_callback = Box::new(move |_error| {
-                    closed_sink.send(()).unwrap();
+                    closed_sink.send(()).ok();
                 });
                 let _ = resolve!(self.on_close(close_notifier_callback));
                 *self.error.write().unwrap() = Some(ConnectionError::TransactionIsClosed.into());
@@ -168,7 +168,8 @@ impl TransactionTransmitter {
         box_promise(async move {
             let (sender, mut sink) = unbounded_async();
             self.on_close_register_sink.send((Box::new(callback), sender)).ok();
-            sink.recv().await.expect("Did not receive on_close registration success signal");
+            // A closed channel means the listener already stopped: the transaction is closed.
+            let _ = sink.recv().await;
             Ok(())
         })
     }
@@ -181,7 +182,8 @@ impl TransactionTransmitter {
         box_promise(move || {
             let (sender, mut sink) = unbounded_async();
             self.on_close_register_sink.send((Box::new(callback), sender)).ok();
-            sink.blocking_recv().expect("Did not receive on_close registration success signal");
+            // A closed channel means the listener already stopped: the transaction is closed.
+            let _ = sink.blocking_recv();
             Ok(())
         })
     }
@@ -367,7 +369,8 @@ impl TransactionTransmitter {
                 callback_option = on_close_callback_source.recv() => {
                     if let Some((callback, recorded_signal)) = callback_option {
                         collector.on_close.write().unwrap().push(callback);
-                        recorded_signal.send(()).expect("Failed to signal back that on_close callback was recorded.")
+                        // Best-effort: the registrant may have stopped waiting (e.g. a cancelled close()).
+                        recorded_signal.send(()).ok();
                     }
                 }
             };
