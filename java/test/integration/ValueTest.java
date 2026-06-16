@@ -51,7 +51,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
@@ -564,7 +563,7 @@ public class ValueTest {
 
     private ConceptRow runRoundtripTest(Transaction tx, String valueType, Value nativeValue, String typeqlLiteral) {
         String query = String.format("given $native: %s; match let $parsed = %s;", valueType, typeqlLiteral);
-        GivenRows givenRows = ConceptFactory.buildGivenRowsFrom(List.of("native"), List.of(List.of(Optional.of(nativeValue))));
+        GivenRows givenRows = ConceptFactory.buildGivenRowsFrom(List.of("native"), List.of(List.of(nativeValue)));
         List<ConceptRow> rows = tx.query(query, new QueryOptions(), givenRows).resolve()
                 .asConceptRows().stream().collect(Collectors.toList());
         assertEquals(1, rows.size());

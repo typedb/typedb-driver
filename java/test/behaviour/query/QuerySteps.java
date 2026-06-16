@@ -878,10 +878,10 @@ public class QuerySteps {
     @Given("set answers of typeql read query as given rows dictionary with variables: {variable_list}")
     public void set_answers_as_given_rows_dict(List<String> varList, String query) {
         List<ConceptRow> tableRows = tx().query(query).resolve().asConceptRows().stream().collect(Collectors.toList());
-        List<? extends Map<String, Optional<? extends Concept>>> asMap = tableRows.stream()
+        List<? extends Map<String, ? extends Concept>> asMap = tableRows.stream()
                 .map(row -> {
-                    Map<String, Optional<? extends Concept>> m = new java.util.HashMap<>();
-                    varList.forEach(var -> m.put(var, row.get(var)));
+                    Map<String, Concept> m = new java.util.HashMap<>();
+                    varList.forEach(var -> m.put(var, row.get(var).orElse(null)));
                     return m;
                 })
                 .collect(Collectors.toList());
@@ -891,8 +891,8 @@ public class QuerySteps {
     @Given("set answers of typeql read query as given rows with order: {variable_list}")
     public void set_answers_as_given_rows(List<String> varList, String query) {
         List<ConceptRow> tableRows = tx().query(query).resolve().asConceptRows().stream().collect(Collectors.toList());
-        List<? extends List<Optional<? extends Concept>>> rows = tableRows.stream()
-                .map(row -> varList.stream().<Optional<? extends Concept>>map(row::get).collect(Collectors.toList()))
+        List<? extends List<? extends Concept>> rows = tableRows.stream()
+                .map(row -> varList.stream().<Concept>map(var -> row.get(var).orElse(null)).collect(Collectors.toList()))
                 .collect(Collectors.toList());
         givenRows = ConceptFactory.buildGivenRowsFrom(varList, rows);
     }
