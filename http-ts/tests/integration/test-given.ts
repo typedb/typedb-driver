@@ -100,6 +100,29 @@ async function runGivenTests(driver: TypeDBHttpDriver, failures: string[]): Prom
     return passed;
 }
 
+async function runGivenRawIIDTests(driver: TypeDBHttpDriver, failures: string[]): Promise<number> {
+    let passed = 0;
+    for (const ex of givenExamples) {
+        try {
+            const insertAnswers = await runOneShot(driver, "write", ex.insertQuery, true);
+            if (insertAnswers.length !== 1) throw new Error(`Expected 1 row, got: ${insertAnswers.length}`);
+            const xConcept = insertAnswers[0].data["x"];
+
+            const readAnswers = await runOneShot(driver, "read", ex.givenQuery, false, [{ x: xConcept.iid }]);
+            if (readAnswers.length !== 1) throw new Error(`Expected 1 row, got: ${readAnswers.length}`);
+            const idConcept = readAnswers[0].data["id"] as any;
+            assert.equal(idConcept.value, ex.expectedId, `id mismatch: expected ${ex.expectedId}, got ${idConcept.value}`);
+            console.log(`  PASS [givenRawIID]: ${ex.description}`);
+            passed++;
+        } catch (e) {
+            const msg = `FAIL [givenRawIID]: ${ex.description}: ${e}`;
+            console.error(`  ${msg}`);
+            failures.push(msg);
+        }
+    }
+    return passed;
+}
+
 // --- Value roundtrip ---
 
 function mkValue(valueType: string, value: any): Value {
@@ -148,6 +171,48 @@ async function runValueTests(driver: TypeDBHttpDriver, failures: string[]): Prom
     return passed;
 }
 
+const rawValueExamples: [string, any, string][] = [
+    ["boolean", true,  "true"],
+    ["boolean", false, "false"],
+    ["integer", 25,    "25"],
+    ["double",  54.321, "54.321"],
+    ["decimal", "1234567890.0001234567890",  "1234567890.0001234567890dec"],
+    ["decimal", "-1234567890.0001234567890", "-1234567890.0001234567890dec"],
+    ["string",  "John", '"John"'],
+    ["date",        "2024-09-20",                              "2024-09-20"],
+    ["datetime",    "1999-02-26T12:15:05.000000000",           "1999-02-26T12:15:05"],
+    ["datetime-tz", "2024-09-20T16:40:05.000000000 Europe/Belfast", "2024-09-20T16:40:05 Europe/Belfast"],
+    ["datetime-tz", "2024-09-20T16:40:05.028129323+05:45",         "2024-09-20T16:40:05.028129323+0545"],
+    ["duration", "P1Y10M7DT15H44M5.00394892S", "P1Y10M7DT15H44M5.00394892S"],
+];
+
+async function runRawValueTests(driver: TypeDBHttpDriver, failures: string[]): Promise<number> {
+    let passed = 0;
+    for (const [valueType, value, literal] of rawValueExamples) {
+        try {
+            const query = `given $native: ${valueType}; match let $parsed = ${literal};`;
+            const readAnswers = await runOneShot(driver, "read", query, false, [{ native: value }]);
+            if (readAnswers.length !== 1) throw new Error(`Expected 1 row, got: ${readAnswers.length}`);
+
+            const native = readAnswers[0].data["native"] as any;
+            const parsed = readAnswers[0].data["parsed"] as any;
+
+            assert.deepEqual(
+                native.value, parsed.value,
+                `native !== parsed: ${JSON.stringify(native.value)} !== ${JSON.stringify(parsed.value)}`
+            );
+
+            console.log(`  PASS [rawValues]: ${valueType} (${literal})`);
+            passed++;
+        } catch (e) {
+            const msg = `FAIL [rawValues]: ${valueType} (${literal}): ${e}`;
+            console.error(`  ${msg}`);
+            failures.push(msg);
+        }
+    }
+    return passed;
+}
+
 async function main(): Promise<void> {
     console.log("=== Integration Tests (HTTP-TS) ===\n");
 
@@ -165,7 +230,9 @@ async function main(): Promise<void> {
     let passed = 0;
 
     passed += await runGivenTests(driver, failures);
+    passed += await runGivenRawIIDTests(driver, failures);
     passed += await runValueTests(driver, failures);
+    passed += await runRawValueTests(driver, failures);
 
     await driver.deleteDatabase(DATABASE_NAME);
 
