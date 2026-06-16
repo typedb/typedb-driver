@@ -213,6 +213,25 @@ class TestExample(TestCase):
                 except TypeDBDriverException as expected_exception:
                     print(f"Commit result will contain the unresolved query's error: {expected_exception}")
 
+            # It's also possible to provide rows as input to queries.
+            with driver.transaction(database.name, TransactionType.WRITE) as tx:
+                answer = tx.query('insert $eugene isa person, has name "Eugene"; $fred isa person, has name "Fred";').resolve()
+                rows = list(answer.as_concept_rows())
+                assert_that(len(rows), is_(1))
+                person_eugene = rows[0].get("eugene")
+                person_fred = rows[0].get("fred")
+
+                query = "given $x: person, $v: integer; insert $x has age == $v;"
+                given_rows = ConceptFactory.build_given_rows_from_map([
+                    {"x": person_eugene, "v": ConceptFactory.new_integer(12)},
+                    {"x": person_fred, "v": ConceptFactory.new_integer(34)},
+                ])
+                inserted = tx.query(query, given_rows=given_rows).resolve()
+                inserted_rows = list(inserted.as_concept_rows())
+                tx.commit()
+
+                assert_that(len(inserted_rows), is_(2))
+
             # Open a read transaction to verify that the previously inserted data is saved
             with driver.transaction(database.name, TransactionType.READ) as tx:
                 # Queries can also be executed with configurable options. This option forces the database
@@ -239,7 +258,7 @@ class TestExample(TestCase):
                     assert_that(x_type.get_label(), is_not("not person"))
                     count += 1
                     print(f"Found a person {x} of type {x_type}")
-                assert_that(count, is_(4))
+                assert_that(count, is_(6))
                 print(f"Total persons found: {count}")
 
                 # A fetch query can be used for concept document outputs with flexible structure
@@ -263,7 +282,7 @@ class TestExample(TestCase):
                     count += 1
                     print(f"Fetched a document: {document}.")
                     print(f"This document contains an attribute of type: {document['single attribute type']['label']}")
-                assert_that(count, is_(5))
+                assert_that(count, is_(9))
                 print(f"Total documents fetched: {count}")
 
         print("More examples can be found in the API reference and the documentation.\nWelcome to TypeDB!")
