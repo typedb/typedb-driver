@@ -86,6 +86,15 @@ public interface Transaction extends AutoCloseable {
      * Execute a TypeQL query with input rows in this transaction.
      *
      * @param query     The query to execute.
+     * @param givenRows GivenRows to be used as input to the query.
+     */
+    @CheckReturnValue
+    Promise<? extends QueryAnswer> query(String query, GivenRows givenRows) throws com.typedb.driver.common.exception.TypeDBDriverException;
+
+    /**
+     * Execute a TypeQL query with input rows in this transaction.
+     *
+     * @param query     The query to execute.
      * @param options   The <code>QueryOptions</code> to execute the query with.
      * @param givenRows GivenRows to be used as input to the query.
      */

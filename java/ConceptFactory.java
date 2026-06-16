@@ -79,7 +79,7 @@ public class ConceptFactory {
      * @param variables The variables describing the content of the givenRows.
      * @param rows Input rows for the query; each inner iterable is one row, {@code Optional.empty()} entries represent empty variables.
      */
-    public static GivenRows buildGivenRowsFrom(List<String> variables, List<? extends List<Optional<? extends Concept>>> rows) throws TypeDBDriverException {
+    public static GivenRows buildGivenRowsFrom(List<String> variables, List<? extends List<? extends Concept>> rows) throws TypeDBDriverException {
         try{
             com.typedb.driver.jni.GivenRowsHeaderBuilder headerBuilder = given_rows_header_builder_new(variables.size());
             for (String variable : variables) {
@@ -88,14 +88,13 @@ public class ConceptFactory {
             com.typedb.driver.jni.GivenRowsHeader header = given_rows_header_builder_finish(headerBuilder.released());
 
             com.typedb.driver.jni.GivenRowsBuilder rowsBuilder = given_rows_builder_new(header, rows.size());
-            for (List<Optional<? extends Concept>> row : rows) {
+            for (List<? extends Concept> row : rows) {
                 given_rows_builder_start_new_row(rowsBuilder);
                 int colIndex = 0;
-                for (Optional<? extends Concept> entry : row) {
-                    if (entry.isEmpty()) {
+                for (Concept concept : row) {
+                    if (concept == null) {
                         given_rows_builder_set_index_to_empty(rowsBuilder, colIndex);
                     } else {
-                        Concept concept = entry.get();
                         given_rows_builder_set_index_to_concept(rowsBuilder, colIndex, ((ConceptImpl) concept).nativeObject);
                     }
                     colIndex += 1;
@@ -113,7 +112,7 @@ public class ConceptFactory {
      *
      * @param givenRows A list of input rows for the query. Each row is a dictionary mapping a variable to its value.
      */
-    public static GivenRows buildGivenRowsFrom(List<? extends Map<String, Optional<? extends Concept>>> givenRows) throws TypeDBDriverException {
+    public static GivenRows buildGivenRowsFrom(List<? extends Map<String, ? extends Concept>> givenRows) throws TypeDBDriverException {
         try{
             Set<String> variables= new HashSet<>();
             givenRows.forEach(row -> variables.addAll(row.keySet()));
@@ -123,13 +122,13 @@ public class ConceptFactory {
             }
             com.typedb.driver.jni.GivenRowsHeader header = given_rows_header_builder_finish(headerBuilder.released());
             com.typedb.driver.jni.GivenRowsBuilder rowsBuilder = given_rows_builder_new(header, givenRows.size());
-            for (Map<String, Optional<? extends Concept>> row : givenRows) {
+            for (Map<String, ? extends Concept> row : givenRows) {
                 given_rows_builder_start_new_row(rowsBuilder);
-                for (Map.Entry<String, Optional<? extends Concept>> variableAndEntry : row.entrySet()) {
-                    if (variableAndEntry.getValue().isEmpty()) {
+                for (Map.Entry<String, ? extends Concept> variableAndEntry : row.entrySet()) {
+                    if (variableAndEntry.getValue() == null) {
                         given_rows_builder_set_variable_to_empty(rowsBuilder, variableAndEntry.getKey());
                     } else {
-                        Concept concept = variableAndEntry.getValue().get();
+                        Concept concept = variableAndEntry.getValue();
                         given_rows_builder_set_variable_to_concept(rowsBuilder, variableAndEntry.getKey(), ((ConceptImpl) concept).nativeObject);
                     }
                 }
@@ -149,16 +148,16 @@ public class ConceptFactory {
      * @param givenRows A list of input rows; each row maps variable names to concepts or raw values.
      */
     public static GivenRows buildGivenRowsFromObjects(List<? extends Map<String, Object>> givenRows) throws TypeDBDriverException {
-        List<Map<String, Optional<? extends Concept>>> converted = givenRows.stream()
+        List<Map<String, Concept>> converted = givenRows.stream()
                 .map(row -> {
-                    Map<String, Optional<? extends Concept>> convertedRow = new HashMap<>();
+                    Map<String, Concept> convertedRow = new HashMap<>();
                     row.forEach((variable, value) -> {
                         if (value == null) {
-                            convertedRow.put(variable, Optional.empty());
+                            convertedRow.put(variable, null);
                         } else if (value instanceof Concept) {
-                            convertedRow.put(variable, Optional.of((Concept) value));
+                            convertedRow.put(variable, (Concept) value);
                         } else {
-                            convertedRow.put(variable, Optional.of(tryConvertToValue(value)));
+                            convertedRow.put(variable, tryConvertToValue(value));
                         }
                     });
                     return convertedRow;

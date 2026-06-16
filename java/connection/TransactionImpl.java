@@ -103,6 +103,11 @@ public class TransactionImpl extends NativeObject<com.typedb.driver.jni.Transact
     }
 
     @Override
+    public Promise<? extends QueryAnswer> query(String query, GivenRows givenRows) throws TypeDBDriverException {
+        return query(query, new QueryOptions(), givenRows);
+    }
+
+    @Override
     public Promise<? extends QueryAnswer> query(String query, QueryOptions options, GivenRows givenRows) throws TypeDBDriverException {
         Validator.requireNonNull(query, "query");
         try {
