@@ -246,6 +246,28 @@ namespace TypeDB.Driver.Test.Integration
                     // Transaction is still usable after catching the exception
                 }
 
+                // It's also possible to provide rows as input to queries.
+                using (var transaction = driver.Transaction(database.Name, TransactionType.Write))
+                {
+                    var answer = transaction.Query("insert $eugene isa person, has name \"Eugene\"; $fred isa person, has name \"Fred\";").Resolve()!;
+                    var rows = answer.AsConceptRows().ToList();
+                    Assert.AreEqual(1, rows.Count);
+                    var personEugene = rows[0].Get("eugene");
+                    var personFred = rows[0].Get("fred");
+
+                    var query = "given $x: person, $v: integer; insert $x has age == $v;";
+                    var givenRows = ConceptFactory.BuildGivenRowsFrom(new List<Dictionary<string, IConcept?>>
+                    {
+                        new Dictionary<string, IConcept?> { { "x", personEugene }, { "v", ConceptFactory.NewInteger(12) } },
+                        new Dictionary<string, IConcept?> { { "x", personFred }, { "v", ConceptFactory.NewInteger(34) } }
+                    });
+                    var inserted = transaction.Query(query, new QueryOptions(), givenRows).Resolve()!;
+                    var insertedRows = inserted.AsConceptRows().ToList();
+                    transaction.Commit();
+
+                    Assert.AreEqual(2, insertedRows.Count);
+                }
+
                 // Open a read transaction to verify that the inserted data is saved
                 using (var transaction = driver.Transaction(database.Name, TransactionType.Read))
                 {
@@ -276,7 +298,7 @@ namespace TypeDB.Driver.Test.Integration
                         matchCount++;
                         Console.WriteLine($"Found a person {x} of type {xType}");
                     }
-                    Assert.AreEqual(4, matchCount);
+                    Assert.AreEqual(6, matchCount);
                     Console.WriteLine("Total persons found: " + matchCount);
 
                     // A fetch query can be used for concept document outputs with flexible structure
@@ -302,7 +324,7 @@ namespace TypeDB.Driver.Test.Integration
 
                         fetchCount++;
                     }
-                    Assert.AreEqual(5, fetchCount);
+                    Assert.AreEqual(9, fetchCount);
                     Console.WriteLine("Total documents fetched: " + fetchCount);
                 }
             }
