@@ -370,6 +370,7 @@ impl IntoProto<EntityProto> for Entity {
         EntityProto { iid: self.iid.bytes_cloned(), entity_type: None }
     }
 }
+
 impl IntoProto<RelationProto> for Relation {
     fn into_proto(self) -> RelationProto {
         RelationProto { iid: self.iid.bytes_cloned(), relation_type: None }

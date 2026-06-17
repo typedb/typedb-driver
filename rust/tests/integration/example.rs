@@ -266,16 +266,11 @@ fn example() {
             let rows: Vec<ConceptRow> = answer.into_rows().try_collect().await.unwrap();
             assert_eq!(rows.len(), 1);
 
-            let Concept::Entity(eugene) = rows[0].get("eugene").unwrap().unwrap().clone() else {
-                unreachable!()
-            };
-            let Concept::Entity(fred) = rows[0].get("fred").unwrap().unwrap().clone() else {
-                unreachable!()
-            };
+            let Concept::Entity(eugene) = rows[0].get("eugene").unwrap().unwrap().clone() else { unreachable!() };
+            let Concept::Entity(fred) = rows[0].get("fred").unwrap().unwrap().clone() else { unreachable!() };
 
             let mut given_rows = GivenRows::new(vec!["x".to_string(), "v".to_string()], 2);
-            given_rows
-                .push_row(vec![GivenRowEntry::Entity(eugene), GivenRowEntry::Value(Value::Integer(12))]).unwrap();
+            given_rows.push_row(vec![GivenRowEntry::Entity(eugene), GivenRowEntry::Value(Value::Integer(12))]).unwrap();
             given_rows.push_row(vec![GivenRowEntry::Entity(fred), GivenRowEntry::Value(Value::Integer(34))]).unwrap();
 
             let query = "given $x: person, $v: integer; insert $x has age == $v;";

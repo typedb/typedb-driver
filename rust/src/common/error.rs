@@ -355,7 +355,7 @@ impl Error {
             Self::Internal(error) => error.message(),
             Self::Query(error) => error.message(),
             Self::Server(error) => error.message(),
-            Self::FFI(_error) => String::new(),
+            Self::FFI(error) => error.clone(),
             Self::Other(error) => error.clone(),
         }
     }

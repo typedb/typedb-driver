@@ -258,7 +258,6 @@ impl IntoProto<typedb_protocol::query::req::GivenEntry> for GivenRowEntry {
         use typedb_protocol::{
             Thing as ThingProto, query::req::given_entry::Entry as EntryProto, thing::Thing as ThingProtoInner,
         };
-
         let inner = match self {
             GivenRowEntry::Empty => EntryProto::Empty(typedb_protocol::query::req::given_entry::EmptyEntry {}),
             GivenRowEntry::Value(value) => EntryProto::Value(value.into_proto()),

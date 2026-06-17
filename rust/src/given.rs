@@ -62,11 +62,11 @@ impl GivenRows {
         (header, rows)
     }
 
-    pub fn push(&mut self, row: GivenRow) -> Result<()> {
+    pub fn push(&mut self, row: GivenRow) -> Result {
         self.push_row(row.row)
     }
 
-    pub fn push_row(&mut self, row: Vec<GivenRowEntry>) -> Result<()> {
+    pub fn push_row(&mut self, row: Vec<GivenRowEntry>) -> Result {
         if row.len() == self.header.width() {
             self.rows.push(row);
             Ok(())
@@ -75,7 +75,7 @@ impl GivenRows {
         }
     }
 
-    pub fn push_map(&mut self, values: impl IntoIterator<Item = (String, GivenRowEntry)>) -> Result<()> {
+    pub fn push_map(&mut self, values: impl IntoIterator<Item = (String, GivenRowEntry)>) -> Result {
         let mut row = GivenRow::new(self.header.clone());
         values.into_iter().try_for_each(|(var, entry)| row.set(var, entry))?;
         self.push(row)
@@ -117,13 +117,13 @@ impl GivenRow {
         self.header.width()
     }
 
-    pub fn set(&mut self, variable: String, entry: GivenRowEntry) -> Result<()> {
+    pub fn set(&mut self, variable: String, entry: GivenRowEntry) -> Result {
         let index =
             self.header.index.get(&variable).ok_or(Error::Query(QueryError::GivenRowUnknownVariable { variable }))?;
         self.set_at(*index, entry)
     }
 
-    pub fn set_at(&mut self, index: usize, entry: GivenRowEntry) -> Result<()> {
+    pub fn set_at(&mut self, index: usize, entry: GivenRowEntry) -> Result {
         if index < self.row.len() {
             self.row[index] = entry;
             Ok(())

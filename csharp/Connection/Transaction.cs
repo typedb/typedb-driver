@@ -23,8 +23,8 @@ using TypeDB.Driver;
 using TypeDB.Driver.Analyze;
 using TypeDB.Driver.Answer;
 using TypeDB.Driver.Api;
-using TypeDB.Driver.Api.Answer;
 using TypeDB.Driver.Api.Analyze;
+using TypeDB.Driver.Api.Answer;
 using TypeDB.Driver.Common;
 using TypeDB.Driver.Common.Validation;
 

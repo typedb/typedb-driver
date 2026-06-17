@@ -29,7 +29,7 @@ use typedb_driver::{
 };
 
 use crate::common::{
-    error::record_error,
+    error::try_release,
     iterator::CIterator,
     memory::{
         borrow, borrow_mut, free, release, release_optional, release_optional_string, release_string, string_free,
@@ -426,8 +426,6 @@ pub extern "C" fn concept_to_string(concept: *const Concept) -> *mut c_char {
     release_string(format!("{:?}", borrow(concept)))
 }
 
-// Constructors
-
 /// Creates a new <code>Concept</code> object wrapping the specified <code>bool</code> value
 #[unsafe(no_mangle)]
 pub extern "C" fn concept_new_boolean(value: bool) -> *mut Concept {
@@ -456,13 +454,8 @@ pub extern "C" fn concept_new_double(value: f64) -> *mut Concept {
 /// provided as a string (without the dec suffix).
 #[unsafe(no_mangle)]
 pub extern "C" fn concept_new_decimal_from_string(str: *const c_char) -> *mut Concept {
-    match Decimal::from_str(string_view(str)) {
-        Ok(value) => release(Concept::Value(Value::Decimal(value))),
-        Err(err) => {
-            record_error(err);
-            null_mut()
-        }
-    }
+    let result = Decimal::from_str(string_view(str)).map(|value| Concept::Value(Value::Decimal(value)));
+    try_release(result)
 }
 
 /// Creates a new <code>Concept</code> object wrapping the specified <code>Decimal</code> value,

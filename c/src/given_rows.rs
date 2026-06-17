@@ -25,13 +25,12 @@ use typedb_driver::{
 };
 
 use crate::common::{
-    error::record_error,
+    error::{try_release, unwrap_void},
     memory::{
         borrow, borrow_mut, decrement_arc, free, release, release_arc, release_optional, string_view, take_arc,
         take_ownership,
     },
 };
-
 // We use builders to make the FFI directives simpler.
 
 /// Helper type for constructing a <code>GivenRowsHeader</code> instance across FFI.
@@ -48,6 +47,16 @@ impl GivenRowsBuilder {
         self.active_row.as_mut().ok_or_else(|| {
             typedb_driver::error::Error::FFI("given_rows_builder_commit_row: No active row found".to_owned())
         })
+    }
+
+    fn finish(self) -> typedb_driver::Result<GivenRows> {
+        if self.active_row.is_some() {
+            Err(typedb_driver::error::Error::FFI(
+                "given_rows_builder_finish: There is an active, uncommitted row.".to_owned(),
+            ))
+        } else {
+            Ok(self.rows)
+        }
     }
 }
 
@@ -106,25 +115,15 @@ pub extern "C" fn given_rows_builder_start_new_row(builder: *mut GivenRowsBuilde
 #[unsafe(no_mangle)]
 pub extern "C" fn given_rows_builder_commit_row(builder: *mut GivenRowsBuilder) {
     let builder = borrow_mut(builder);
-    let Some(row) = builder.active_row.take() else {
-        record_error(typedb_driver::error::Error::FFI("given_rows_builder_commit_row: No active row found".to_owned()));
-        return;
-    };
-    if let Err(err) = builder.rows.push(row) {
-        record_error(err);
-    }
+    unwrap_void(match builder.active_row.take() {
+        Some(row) => builder.rows.push(row),
+        None => Err(typedb_driver::error::Error::FFI("given_rows_builder_commit_row: No active row found".to_owned())),
+    });
 }
 
 #[unsafe(no_mangle)]
 pub extern "C" fn given_rows_builder_finish(builder: *mut GivenRowsBuilder) -> *mut GivenRows {
-    let builder = take_ownership(builder);
-    if builder.active_row.is_some() {
-        record_error(typedb_driver::error::Error::FFI(
-            "given_rows_builder_finish: There is an active, uncommitted row.".to_owned(),
-        ));
-        return null_mut();
-    };
-    release(builder.rows)
+    try_release(take_ownership(builder).finish())
 }
 
 /// Sets the entry at `index` in the given row to the specified entity
@@ -137,9 +136,7 @@ pub extern "C" fn given_rows_builder_set_index_to_concept(
     let result = borrow_mut(builder)
         .active_row()
         .and_then(|mut row| row.set_at(index, to_given_row_entry(borrow(concept), index)?));
-    if let Err(err) = result {
-        record_error(err);
-    }
+    unwrap_void(result);
 }
 
 /// Sets the entry for `variable` in the given row to the specified entity
@@ -151,21 +148,16 @@ pub extern "C" fn given_rows_builder_set_variable_to_concept(
 ) {
     let result = borrow_mut(builder).active_row().and_then(|mut row| {
         let var_name = string_view(variable);
-        row.set(var_name.to_owned(), to_given_row_entry(borrow(concept), var_name)?)?;
-        Ok(())
+        row.set(var_name.to_owned(), to_given_row_entry(borrow(concept), var_name)?)
     });
-    if let Err(err) = result {
-        record_error(err);
-    }
+    unwrap_void(result);
 }
 
 /// Sets the entry at `index` in the given row to the Empty Optional value
 #[unsafe(no_mangle)]
 pub extern "C" fn given_rows_builder_set_index_to_empty(builder: *mut GivenRowsBuilder, index: usize) {
     let result = borrow_mut(builder).active_row().and_then(|mut row| row.set_at(index, GivenRowEntry::Empty));
-    if let Err(err) = result {
-        record_error(err);
-    }
+    unwrap_void(result);
 }
 
 /// Sets the entry for `variable` in the given row to the Empty optional value
@@ -175,9 +167,7 @@ pub extern "C" fn given_rows_builder_set_variable_to_empty(builder: *mut GivenRo
         let var_name = string_view(variable);
         row.set(var_name.to_owned(), GivenRowEntry::Empty)
     });
-    if let Err(err) = result {
-        record_error(err);
-    }
+    unwrap_void(result);
 }
 
 /// Frees the native rust <code>GivenRowsHeaderBuilder</code> object
