@@ -77,16 +77,17 @@ use std::time::Duration;
 
 use futures::{StreamExt, TryStreamExt};
 use typedb_driver::{
-    answer::{
-        concept_document::{Leaf, Node},
-        ConceptRow, QueryAnswer,
-    },
-    concept::{Concept, ValueType},
     Addresses, Credentials, DriverOptions, DriverTlsConfig, Error, QueryOptions, TransactionOptions, TransactionType,
     TypeDBDriver,
+    answer::{
+        ConceptRow, QueryAnswer,
+        concept_document::{Leaf, Node},
+    },
+    concept::{Concept, Value, ValueType},
+    given::{GivenRowEntry, GivenRows},
 };
 
-fn typedb_example() {
+fn main() {
     async_std::task::block_on(async {
         // Open a driver connection. Specify your parameters if needed
         let driver = TypeDBDriver::new(
@@ -137,7 +138,9 @@ fn typedb_example() {
 
         // Work with the driver's enums in a classic way or using helper methods
         if answer.is_ok() && matches!(answer, QueryAnswer::Ok(_)) {
-            println!("OK results do not give any extra interesting information, but they mean that the query is successfully executed!");
+            println!(
+                "OK results do not give any extra interesting information, but they mean that the query is successfully executed!"
+            );
         }
 
         // Commit automatically closes the transaction (don't forget to await the result!)
@@ -150,12 +153,12 @@ fn typedb_example() {
 
         // Collect concept rows that represent the answer as a table
         let rows: Vec<ConceptRow> = answer.into_rows().try_collect().await.unwrap();
-        let row = rows.get(0).unwrap();
+        let row = &rows[0];
 
         // Retrieve column names to get concepts by index if the variable names are lost
         let column_names = row.get_column_names();
 
-        let column_name = column_names.get(0).unwrap();
+        let column_name = &column_names[0];
 
         // Get concept by the variable name (column name)
         let concept_by_name = row.get(column_name).unwrap().unwrap();
@@ -179,7 +182,7 @@ fn typedb_example() {
         // Concept rows can be used as a stream of results
         let mut rows_stream = answer.into_rows();
         while let Some(Ok(row)) = rows_stream.next().await {
-            let mut column_names_iter = row.get_column_names().into_iter();
+            let mut column_names_iter = row.get_column_names().iter();
             let column_name = column_names_iter.next().unwrap();
 
             let concept_by_name = row.get(column_name).unwrap().unwrap();
@@ -207,7 +210,7 @@ fn typedb_example() {
         while let Some(Ok(row)) = rows_stream.next().await {
             rows.push(row);
         }
-        let row = rows.get(0).unwrap();
+        let row = &rows[0];
 
         for column_name in row.get_column_names() {
             let inserted_concept = row.get(column_name).unwrap().unwrap();
@@ -252,6 +255,28 @@ fn typedb_example() {
 
             let result = transaction.commit().await;
             println!("Commit result will contain the unresolved query's error: {}", result.unwrap_err());
+        }
+
+        // It's also possible to provide rows as input to queries.
+        {
+            let transaction = driver.transaction(database.name(), TransactionType::Write).await.unwrap();
+            let answer = transaction
+                .query("insert $eugene isa person, has name \"Eugene\"; $fred isa person, has name \"Fred\";")
+                .await
+                .unwrap();
+            let rows: Vec<ConceptRow> = answer.into_rows().try_collect().await.unwrap();
+
+            let Concept::Entity(eugene) = rows[0].get("eugene").unwrap().unwrap().clone() else { unreachable!() };
+            let Concept::Entity(fred) = rows[0].get("fred").unwrap().unwrap().clone() else { unreachable!() };
+
+            let mut given_rows = GivenRows::new(vec!["x".to_string(), "v".to_string()], 2);
+            given_rows.push_row(vec![GivenRowEntry::Entity(eugene), GivenRowEntry::Value(Value::Integer(12))]).unwrap();
+            given_rows.push_row(vec![GivenRowEntry::Entity(fred), GivenRowEntry::Value(Value::Integer(34))]).unwrap();
+
+            let query = "given $x: person, $v: integer; insert $x has age == $v;";
+            let inserted_answer = transaction.query_with_rows(query, given_rows).await.unwrap();
+            let inserted_rows: Vec<ConceptRow> = inserted_answer.into_rows().try_collect().await.unwrap();
+            transaction.commit().await.unwrap();
         }
 
         // Open a read transaction to verify that the inserted data is saved
@@ -324,7 +349,7 @@ fn typedb_example() {
 
             // The document can be converted to a JSON
             count += 1;
-            println!("JSON representation of the fetched document:\n{}", document.into_json().to_string());
+            println!("JSON representation of the fetched document:\n{}", document.into_json());
         }
         println!("Total documents fetched: {}", count);
         println!("More examples can be found in the API reference and the documentation.\nWelcome to TypeDB!");

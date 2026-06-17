@@ -58,11 +58,13 @@ To learn about the methods available for executing queries and retrieving their 
 ```java
 package com.typedb.driver;
 
+import com.typedb.driver.ConceptFactory;
 import com.typedb.driver.TypeDB;
 import com.typedb.driver.api.Credentials;
 import com.typedb.driver.api.Driver;
 import com.typedb.driver.api.DriverOptions;
 import com.typedb.driver.api.DriverTlsConfig;
+import com.typedb.driver.api.GivenRows;
 import com.typedb.driver.api.QueryOptions;
 import com.typedb.driver.api.QueryType;
 import com.typedb.driver.api.Transaction;
@@ -80,6 +82,7 @@ import com.typedb.driver.common.exception.TypeDBDriverException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -219,7 +222,7 @@ public class TypeDBExample {
                 // just call `commit`, which will wait for all ongoing operations to finish before executing.
                 List<String> queries = List.of("insert $a isa person, has name \"Alice\";", "insert $b isa person, has name \"Bob\";");
                 for (String query : queries) {
-                    transaction.query(query);
+                    transaction.query(query).resolve();
                 }
                 transaction.commit();
             }
@@ -239,7 +242,35 @@ public class TypeDBExample {
                 }
             }
 
-            // Open a read transaction to verify that the inserted data is saved
+            // It's also possible to use the provide rows as input to queries.
+            try (Transaction transaction = driver.transaction(database.name(), Transaction.Type.WRITE)) {
+                QueryAnswer answer = transaction.query(
+                        "insert $eugene isa person, has name \"Eugene\"; $fred isa person, has name \"Fred\";"
+                    ).resolve();
+                List<ConceptRow> rows = answer.asConceptRows().stream().collect(Collectors.toList());
+                Concept personEugene = rows.get(0).get("eugene").get();
+                Concept personFred = rows.get(0).get("fred").get();
+
+                String query = "given $x: person, $v: integer; insert $x has age == $v;";
+                GivenRows givenRows = ConceptFactory.buildGivenRowsFrom(
+                    List.of(
+                        java.util.Map.ofEntries(
+                            Map.entry("x", personEugene),
+                            Map.entry("v", ConceptFactory.newInteger(12))
+                        ),
+                        java.util.Map.ofEntries(
+                            Map.entry("x", personFred),
+                            Map.entry("v", ConceptFactory.newInteger(34))
+                        )
+                    )
+                );
+                QueryAnswer inserted = transaction.query(query, givenRows).resolve();
+                List<ConceptRow> insertedRows = inserted.asConceptRows().stream().collect(Collectors.toList());
+                transaction.commit();
+
+            }
+
+                // Open a read transaction to verify that the inserted data is saved
             try (Transaction transaction = driver.transaction(database.name(), Transaction.Type.READ)) {
                 // Queries can also be executed with configurable options. This option forces the database
                 // to include types of instance concepts in ConceptRows answers

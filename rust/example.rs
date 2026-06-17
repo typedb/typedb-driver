@@ -10,7 +10,8 @@ use typedb_driver::{
         ConceptRow, QueryAnswer,
         concept_document::{Leaf, Node},
     },
-    concept::Concept,
+    concept::{Concept, Value, ValueType},
+    given::{GivenRowEntry, GivenRows},
 };
 
 fn main() {
@@ -181,6 +182,28 @@ fn main() {
 
             let result = transaction.commit().await;
             println!("Commit result will contain the unresolved query's error: {}", result.unwrap_err());
+        }
+
+        // It's also possible to provide rows as input to queries.
+        {
+            let transaction = driver.transaction(database.name(), TransactionType::Write).await.unwrap();
+            let answer = transaction
+                .query("insert $eugene isa person, has name \"Eugene\"; $fred isa person, has name \"Fred\";")
+                .await
+                .unwrap();
+            let rows: Vec<ConceptRow> = answer.into_rows().try_collect().await.unwrap();
+
+            let Concept::Entity(eugene) = rows[0].get("eugene").unwrap().unwrap().clone() else { unreachable!() };
+            let Concept::Entity(fred) = rows[0].get("fred").unwrap().unwrap().clone() else { unreachable!() };
+
+            let mut given_rows = GivenRows::new(vec!["x".to_string(), "v".to_string()], 2);
+            given_rows.push_row(vec![GivenRowEntry::Entity(eugene), GivenRowEntry::Value(Value::Integer(12))]).unwrap();
+            given_rows.push_row(vec![GivenRowEntry::Entity(fred), GivenRowEntry::Value(Value::Integer(34))]).unwrap();
+
+            let query = "given $x: person, $v: integer; insert $x has age == $v;";
+            let inserted_answer = transaction.query_with_rows(query, given_rows).await.unwrap();
+            let inserted_rows: Vec<ConceptRow> = inserted_answer.into_rows().try_collect().await.unwrap();
+            transaction.commit().await.unwrap();
         }
 
         // Open a read transaction to verify that the inserted data is saved
