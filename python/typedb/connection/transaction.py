@@ -29,7 +29,7 @@ from typedb.common.native_wrapper import NativeWrapper
 from typedb.common.promise import Promise
 from typedb.common.validation import require_non_null
 from typedb.concept.answer.query_answer_factory import wrap_query_answer
-from typedb.connection.given_rows import GivenRows
+from typedb.api.concept.given_rows import GivenRows
 from typedb.native_driver_wrapper import error_code, error_message, transaction_new, \
     transaction_analyze, transaction_query, transaction_query_given_rows, \
     transaction_commit, transaction_rollback, transaction_is_open, transaction_on_close, transaction_close, \

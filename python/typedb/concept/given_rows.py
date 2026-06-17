@@ -15,9 +15,16 @@
 # specific language governing permissions and limitations
 # under the License.
 
+from typedb.api.concept.given_rows import GivenRows
+from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE
+from typedb.common.native_wrapper import NativeWrapper
 from typedb.native_driver_wrapper import GivenRows as NativeGivenRows
 
 
-class GivenRows:
+class _GivenRows(GivenRows, NativeWrapper[NativeGivenRows]):
     def __init__(self, native: NativeGivenRows):
         self._native = native
+
+    @property
+    def _native_object_not_owned_exception(self) -> TypeDBDriverException:
+        return TypeDBDriverException(ILLEGAL_STATE)

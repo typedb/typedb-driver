@@ -20,12 +20,14 @@ from datetime import date, datetime, timezone
 from decimal import Decimal
 from typing import TYPE_CHECKING, Any, Dict, List, Optional
 
+from typedb.api.concept.concept import Concept
+from typedb.api.concept.given_rows import GivenRows
 from typedb.common.datetime import Datetime
 from typedb.common.duration import Duration
 from typedb.common.exception import TypeDBDriverException, UNSUPPORTED_VALUE_CONVERSION
 from typedb.concept.concept import _Concept
 from typedb.concept.concept_factory import wrap_value
-from typedb.connection.given_rows import GivenRows
+from typedb.concept.given_rows import _GivenRows
 from typedb.native_driver_wrapper import (
     concept_new_boolean, concept_new_integer, concept_new_double, concept_new_decimal,
     concept_new_string, concept_new_date_from_seconds, concept_new_datetime,
@@ -36,10 +38,6 @@ from typedb.native_driver_wrapper import (
     given_rows_builder_set_index_to_concept, given_rows_builder_set_index_to_empty,
     given_rows_builder_set_variable_to_concept, given_rows_builder_set_variable_to_empty,
 )
-
-if TYPE_CHECKING:
-    from typedb.api.concept.concept import Concept
-
 
 class ConceptFactory:
     """Factory class to instantiate new ``Value`` concepts and build ``GivenRows`` for use as query inputs."""
@@ -66,7 +64,7 @@ class ConceptFactory:
                     given_rows_builder_set_index_to_concept(rows_builder, i, concept._native_object)
             given_rows_builder_commit_row(rows_builder)
         rows_builder.thisown = 0
-        return GivenRows(given_rows_builder_finish(rows_builder))
+        return _GivenRows(given_rows_builder_finish(rows_builder))
 
     @staticmethod
     def build_given_rows_from_map(rows) -> GivenRows:
@@ -93,7 +91,7 @@ class ConceptFactory:
                     given_rows_builder_set_variable_to_concept(rows_builder, variable, concept._native_object)
             given_rows_builder_commit_row(rows_builder)
         rows_builder.thisown = 0
-        return GivenRows(given_rows_builder_finish(rows_builder))
+        return _GivenRows(given_rows_builder_finish(rows_builder))
 
     @staticmethod
     def build_given_rows_from_objects(rows: List[Dict[str, Any]]) -> GivenRows:
