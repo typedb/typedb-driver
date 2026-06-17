@@ -21,6 +21,7 @@ package com.typedb.driver.api;
 
 import com.typedb.driver.api.analyze.AnalyzedQuery;
 import com.typedb.driver.api.answer.QueryAnswer;
+import com.typedb.driver.api.concept.GivenRows;
 import com.typedb.driver.common.Promise;
 
 import javax.annotation.CheckReturnValue;

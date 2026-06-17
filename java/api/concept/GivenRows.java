@@ -17,13 +17,6 @@
  * under the License.
  */
 
-package com.typedb.driver.connection;
+package com.typedb.driver.api.concept;
 
-import com.typedb.driver.common.NativeObject;
-import com.typedb.driver.api.GivenRows;
-
-public class GivenRowsImpl extends NativeObject<com.typedb.driver.jni.GivenRows> implements GivenRows {
-    public GivenRowsImpl(com.typedb.driver.jni.GivenRows nativeObject) {
-        super(nativeObject);
-    }
-}
+public interface GivenRows { }

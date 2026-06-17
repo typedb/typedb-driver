@@ -20,7 +20,7 @@
 package com.typedb.driver.test.behaviour.query;
 
 import com.typedb.driver.ConceptFactory;
-import com.typedb.driver.api.GivenRows;
+import com.typedb.driver.api.concept.GivenRows;
 import com.typedb.driver.api.QueryOptions;
 import com.typedb.driver.api.QueryType;
 import com.typedb.driver.api.Transaction;

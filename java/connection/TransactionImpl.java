@@ -31,7 +31,8 @@ import com.typedb.driver.common.Promise;
 import com.typedb.driver.common.Validator;
 import com.typedb.driver.common.exception.TypeDBDriverException;
 import com.typedb.driver.answer.QueryAnswerImpl;
-import com.typedb.driver.api.GivenRows;
+import com.typedb.driver.api.concept.GivenRows;
+import com.typedb.driver.concept.GivenRowsImpl;
 
 import java.util.ArrayList;
 import java.util.List;

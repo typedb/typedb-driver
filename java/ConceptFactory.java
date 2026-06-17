@@ -19,7 +19,7 @@
 
 package com.typedb.driver;
 
-import com.typedb.driver.api.GivenRows;
+import com.typedb.driver.api.concept.GivenRows;
 import com.typedb.driver.api.concept.Concept;
 import com.typedb.driver.api.concept.value.Value;
 import com.typedb.driver.common.Duration;
@@ -27,7 +27,7 @@ import com.typedb.driver.common.exception.ErrorMessage;
 import com.typedb.driver.common.exception.TypeDBDriverException;
 import com.typedb.driver.concept.ConceptImpl;
 import com.typedb.driver.concept.value.ValueImpl;
-import com.typedb.driver.connection.GivenRowsImpl;
+import com.typedb.driver.concept.GivenRowsImpl;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
