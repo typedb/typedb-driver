@@ -390,5 +390,9 @@ export interface User {
     username: string;
 }
 
-export type GivenRowEntry = Value | Entity | Relation | Attribute;
+export type GivenRowEntry = Value | Entity | Relation | Attribute | LiteralRowEntry;
+export type LiteralRowEntry =
+    boolean // for boolean values
+    | number  // For integer and double values
+    | string; // For all other types, as well as IIDs.
 export type GivenRows = { [varName: string]: GivenRowEntry }[];
