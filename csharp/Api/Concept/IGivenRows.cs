@@ -17,13 +17,7 @@
  * under the License.
  */
 
-using TypeDB.Driver.Api;
-using TypeDB.Driver.Common;
-
-namespace TypeDB.Driver.Connection
+namespace TypeDB.Driver.Api.Concept
 {
-    public class GivenRows : NativeObjectWrapper<Pinvoke.GivenRows>, IGivenRows
-    {
-        public GivenRows(Pinvoke.GivenRows nativeObject) : base(nativeObject) { }
-    }
+    public interface IGivenRows { }
 }

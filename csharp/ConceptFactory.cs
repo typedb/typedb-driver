@@ -21,8 +21,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TypeDB.Driver.Api;
+using TypeDB.Driver.Api.Concept;
 using TypeDB.Driver.Common;
-using TypeDB.Driver.Connection;
+using TypeDB.Driver.Concept;
 using ConceptError = TypeDB.Driver.Common.Error.Concept;
 
 namespace TypeDB.Driver

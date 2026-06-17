@@ -25,7 +25,9 @@ using TypeDB.Driver.Answer;
 using TypeDB.Driver.Api;
 using TypeDB.Driver.Api.Analyze;
 using TypeDB.Driver.Api.Answer;
+using TypeDB.Driver.Api.Concept;
 using TypeDB.Driver.Common;
+using TypeDB.Driver.Concept;
 using TypeDB.Driver.Common.Validation;
 
 using DriverError = TypeDB.Driver.Common.Error.Driver;
