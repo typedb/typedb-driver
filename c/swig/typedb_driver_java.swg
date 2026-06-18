@@ -690,9 +690,11 @@
     /* make a copy of each string */
     for (i = 0; i<size; i++) {
         jbyteArray j_string = (jbyteArray)jenv->GetObjectArrayElement($input, i);
+        size_t sz = jenv->GetArrayLength(j_string);
         const char * c_string = (char*)jenv->GetByteArrayElements(j_string, 0);
-        $1[i] = (char*)malloc((strlen(c_string)+1)*sizeof(char));
-        strcpy($1[i], c_string);
+        $1[i] = (char*)malloc((sz + 1)*sizeof(char));
+        memcpy($1[i], c_string, sz);
+        $1[i][sz] = 0;
         jenv->ReleaseByteArrayElements(j_string, (jbyte*)c_string, 0);
         jenv->DeleteLocalRef(j_string);
     }
