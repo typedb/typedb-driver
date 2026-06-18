@@ -636,9 +636,11 @@
 %typemap(jni) char* "jbyteArray"
 %typemap(jtype) char* "byte[]"
 %typemap(jstype) char* "String"
+
 %typemap(javain) char* %{
     $javainput.getBytes(java.nio.charset.Charset.forName("UTF-8"))
 %}
+
 %typemap(in) char* {
     size_t sz = jenv->GetArrayLength($input);
     $1 = (char*)malloc(sz + 1);
@@ -647,6 +649,7 @@
     $1[sz] = 0;
     jenv->ReleaseByteArrayElements($input, bae, 0);
 }
+
 %typemap(out) char* {
     if ($1) {
         size_t sz = strlen($1);
@@ -658,6 +661,7 @@
         $result = 0;
     }
 }
+
 %typemap(javaout) char* {
     byte[] ba = $jnicall;
     if (ba == null) {
@@ -665,6 +669,7 @@
     }
     return new String(ba, java.nio.charset.Charset.forName("UTF-8"));
 }
+
 %typemap(freearg) char* {
     if ($1) jenv->ReleaseByteArrayElements($input, (jbyte*)$1, 0);
 }
