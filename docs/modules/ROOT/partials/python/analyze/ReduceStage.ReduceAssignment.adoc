@@ -1,15 +1,15 @@
-[#_ReduceAssignment]
+[#_ReduceStage.ReduceAssignment]
 [.doc-api-reference-driver]
-=== ReduceAssignment
+=== ReduceStage.ReduceAssignment
 
 `class`
 
-*Package*: `typedb.api.analyze.pipeline_stage.ReduceStage`
+*Package*: `typedb.api.analyze.pipeline_stage`
 
 An assignment of a reducer to a variable.
 
 // tag::methods[]
-[#_ReduceAssignment_assigned_]
+[#_ReduceStage_ReduceAssignment_assigned_]
 ==== method ``assigned``
 
 [source,python]
@@ -23,7 +23,7 @@ assigned() -> Variable
 .Returns
 `Variable`
 
-[#_ReduceAssignment_reducer_]
+[#_ReduceStage_ReduceAssignment_reducer_]
 ==== method ``reducer``
 
 [source,python]

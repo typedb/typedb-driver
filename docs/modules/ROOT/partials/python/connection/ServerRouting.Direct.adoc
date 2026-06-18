@@ -1,6 +1,6 @@
-[#_Direct]
+[#_ServerRouting.Direct]
 [.doc-api-reference-driver]
-=== Direct
+=== ServerRouting.Direct
 
 `class`
 

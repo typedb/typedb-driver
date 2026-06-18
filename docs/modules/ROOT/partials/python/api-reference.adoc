@@ -1,7 +1,7 @@
 [#_connection_header]
 == Connection
 
-include::{page-version}@external-typedb-driver::partial$python/connection/TypeDB.adoc[]
+include::{page-version}@external-typedb-driver::partial$python/connection/TypeDBDriver.adoc[]
 
 include::{page-version}@external-typedb-driver::partial$python/connection/Driver.adoc[]
 
@@ -11,7 +11,7 @@ include::{page-version}@external-typedb-driver::partial$python/connection/Driver
 
 include::{page-version}@external-typedb-driver::partial$python/connection/DatabaseManager.adoc[]
 
-include::{page-version}@external-typedb-driver::partial$python/connection/Database.adoc[]
+include::{page-version}@external-typeb-driver::partial$python/connection/Database.adoc[]
 
 include::{page-version}@external-typedb-driver::partial$python/connection/UserManager.adoc[]
 
@@ -138,7 +138,7 @@ include::{page-version}@external-typedb-driver::partial$python/analyze/SelectSta
 include::{page-version}@external-typedb-driver::partial$python/analyze/SortStage.adoc[]
 include::{page-version}@external-typedb-driver::partial$python/analyze/UpdateStage.adoc[]
 
-include::{page-version}@external-typedb-driver::partial$python/analyze/ReduceAssignment.adoc[]
+include::{page-version}@external-typedb-driver::partial$python/analyze/ReduceStage.ReduceAssignment.adoc[]
 include::{page-version}@external-typedb-driver::partial$python/analyze/Reducer.adoc[]
 
 include::{page-version}@external-typedb-driver::partial$python/analyze/ReturnOperation.adoc[]
@@ -147,7 +147,7 @@ include::{page-version}@external-typedb-driver::partial$python/analyze/ReturnOpe
 include::{page-version}@external-typedb-driver::partial$python/analyze/ReturnOperationSingle.adoc[]
 include::{page-version}@external-typedb-driver::partial$python/analyze/ReturnOperationStream.adoc[]
 
-include::{page-version}@external-typedb-driver::partial$python/analyze/SortVariable.adoc[]
+include::{page-version}@external-typedb-driver::partial$python/analyze/SortStage.SortVariable.adoc[]
 include::{page-version}@external-typedb-driver::partial$python/analyze/SortOrder.adoc[]
 
 include::{page-version}@external-typedb-driver::partial$python/analyze/Span.adoc[]

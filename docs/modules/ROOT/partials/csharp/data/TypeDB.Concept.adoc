@@ -1,6 +1,6 @@
-[#_Concept]
+[#_TypeDB_Concept]
 [.doc-api-reference-driver]
-=== Concept
+=== TypeDB.Concept
 
 `class`
 

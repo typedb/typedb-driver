@@ -1,6 +1,6 @@
-[#_Auto]
+[#_ServerRouting.Auto]
 [.doc-api-reference-driver]
-=== Auto
+=== ServerRouting.Auto
 
 `class`
 
