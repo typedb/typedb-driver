@@ -198,7 +198,7 @@ fn main() {
 
             let mut given_rows = GivenRows::new(vec!["x".to_string(), "v".to_string()], 2);
             given_rows.push_row(vec![GivenRowEntry::Entity(eugene), GivenRowEntry::Value(Value::Integer(12))]).unwrap();
-            given_rows.push_row(vec![GivenRowEntry::Entity(fred), GivenRowEntry::Value(Value::Integer(34))]).unwrap();
+            given_rows.push_row(vec![fred.into(), 34.into()]).unwrap(); // From<T> is implemented for many native values, and concepts.
 
             let query = "given $x: person, $v: integer; insert $x has age == $v;";
             let inserted_answer = transaction.query_with_rows(query, given_rows).await.unwrap();
