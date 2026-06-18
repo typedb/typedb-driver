@@ -1,0 +1,19 @@
+[#_TypeDBDriver]
+[.doc-api-reference-driver]
+=== TypeDBDriver
+
+`class`
+
+*Package*: `typedb.native_driver_wrapper`
+
+[caption=""]
+.Properties
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `thisown` a|  a| The membership flag
+|===
+// end::properties[]
+

@@ -1,0 +1,181 @@
+[#_TypeDB.Concept]
+[.doc-api-reference-driver]
+=== TypeDB.Concept
+
+`class`
+
+*Package*: `typedb.driver`
+
+Factory class to instantiate new ``Value`` concepts and build ``GivenRows`` for use as query inputs.
+
+// tag::methods[]
+[#_TypeDB_Concept_given_rows_]
+==== method ``given_rows``
+
+[source,python]
+----
+static given_rows(variables: List[str], rows: List[List[typedb.api.concept.concept.Concept | None]]) -> GivenRows
+----
+
+Constructs a ``GivenRows`` instance for use as inputs to queries.
+
+[caption=""]
+.Returns
+`GivenRows`
+
+[#_TypeDB_Concept_given_rows_from_map_]
+==== method ``given_rows_from_map``
+
+[source,python]
+----
+static given_rows_from_map(rows: List[Dict[str, typedb.api.concept.concept.Concept | Any]]) -> GivenRows
+----
+
+Constructs a ``GivenRows`` instance from dict-based rows for use as inputs to queries.
+
+[caption=""]
+.Returns
+`GivenRows`
+
+[#_TypeDB_Concept_new_boolean_]
+==== method ``new_boolean``
+
+[source,python]
+----
+static new_boolean(value: bool)
+----
+
+
+
+[caption=""]
+.Returns
+``
+
+[#_TypeDB_Concept_new_date_]
+==== method ``new_date``
+
+[source,python]
+----
+static new_date(value: date)
+----
+
+
+
+[caption=""]
+.Returns
+``
+
+[#_TypeDB_Concept_new_datetime_]
+==== method ``new_datetime``
+
+[source,python]
+----
+static new_datetime(value: Datetime)
+----
+
+
+
+[caption=""]
+.Returns
+``
+
+[#_TypeDB_Concept_new_datetime_tz_]
+==== method ``new_datetime_tz``
+
+[source,python]
+----
+static new_datetime_tz(value: Datetime)
+----
+
+
+
+[caption=""]
+.Returns
+``
+
+[#_TypeDB_Concept_new_decimal_]
+==== method ``new_decimal``
+
+[source,python]
+----
+static new_decimal(value: Decimal)
+----
+
+
+
+[caption=""]
+.Returns
+``
+
+[#_TypeDB_Concept_new_double_]
+==== method ``new_double``
+
+[source,python]
+----
+static new_double(value: float)
+----
+
+
+
+[caption=""]
+.Returns
+``
+
+[#_TypeDB_Concept_new_duration_]
+==== method ``new_duration``
+
+[source,python]
+----
+static new_duration(value: Duration)
+----
+
+
+
+[caption=""]
+.Returns
+``
+
+[#_TypeDB_Concept_new_integer_]
+==== method ``new_integer``
+
+[source,python]
+----
+static new_integer(value: int)
+----
+
+
+
+[caption=""]
+.Returns
+``
+
+[#_TypeDB_Concept_new_string_]
+==== method ``new_string``
+
+[source,python]
+----
+static new_string(value: str)
+----
+
+
+
+[caption=""]
+.Returns
+``
+
+[#_TypeDB_Concept_try_convert_to_value_]
+==== method ``try_convert_to_value``
+
+[source,python]
+----
+static try_convert_to_value(value: Any)
+----
+
+
+
+[caption=""]
+.Returns
+``
+
+// end::methods[]
+

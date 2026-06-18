@@ -70,7 +70,7 @@ class PythonDocParser : Callable<Unit> {
         val fileClassFilter = mapOf(
                 Pair(Regex(".*\\.api\\..*"), Regex(".*")),
                 Pair(Regex(".*\\.common\\..*"), Regex(".*")),
-                Pair(Regex(".*typedb\\.html"), Regex("TypeDB")),
+                Pair(Regex(".*typedb\\.html"), Regex("TypeDB.*")),
         )
 
         File(inputDirectoryName).walkTopDown().filter {
@@ -107,15 +107,20 @@ class PythonDocParser : Callable<Unit> {
 
     private fun parseClass(element: Element): Class {
         val classSignElement = element.selectFirst("dt.sig-object")!!
-        val className = classSignElement.selectFirst("dt.sig-object span.sig-name")!!.text()
+        // Derive the qualified class name from the id (e.g. "typedb.driver.TypeDB.Concept"),
+        // stripping the lowercase module path so inner classes become "TypeDB.Concept".
+        val fullId = classSignElement.id()
+        val modulePath = fullId.split(".").takeWhile { it.first().isLowerCase() }.joinToString(".")
+        val className = fullId.removePrefix("$modulePath.")
         val classAnchor = className
 
-        val packagePath = classSignElement.id().substringBeforeLast(".")
+        val packagePath = modulePath
         var classDetailsElement = classSignElement.nextElementSibling()
         val classDetailsParagraphs = classDetailsElement!!.children().map { it }.filter { it.tagName() == "p" }
         val (descr, bases) = classDetailsParagraphs.partition { it.select("code.py-class").isNullOrEmpty() }
-        val superClasses = bases[0]!!.text().substringAfter("Bases: ").split(", ")
-            .filter { it != "ABC" && it != "object" && it != "Generic[T]" && !it.startsWith("NativeWrapper") }
+        val superClasses = bases.firstOrNull()?.text()?.substringAfter("Bases: ")?.split(", ")
+            ?.filter { it != "ABC" && it != "object" && it != "Generic[T]" && !it.startsWith("NativeWrapper") }
+            ?: listOf()
         val classDescr = descr.map { reformatTextWithCode(it.html()) }
 
         val exampleHeaderElements = classDetailsElement.children().map { it.firstElementChild() }
