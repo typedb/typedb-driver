@@ -54,6 +54,7 @@ from typedb.common.duration import *  # noqa # pylint: disable=unused-import
 from typedb.common.exception import *  # noqa # pylint: disable=unused-import
 # Repackaging these symbols allows them to be imported from "typedb.driver"
 
+from typedb.connection.driver import _Driver
 
 class TypeDB:
     DEFAULT_ADDRESS = "127.0.0.1:1729"
@@ -69,7 +70,6 @@ class TypeDB:
         :param credentials: The credentials to connect with.
         :param driver_options: The driver connection options to connect with.
         """
-        from typedb.connection.driver import _Driver
         if isinstance(addresses, str):
             return _Driver(addresses, credentials, driver_options)
         elif isinstance(addresses, ABCMapping):
