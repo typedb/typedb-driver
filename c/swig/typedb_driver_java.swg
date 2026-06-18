@@ -630,6 +630,9 @@
 }
 %enddef
 
+%array(Concept)
+
+/* Strings: reencode as UTF-8 byte arrays rather than use Java's MUTF-8 */
 %typemap(jni) char* "jbyteArray"
 %typemap(jtype) char* "byte[]"
 %typemap(jstype) char* "String"
@@ -665,8 +668,6 @@
 %typemap(freearg) char* {
     if ($1) jenv->ReleaseByteArrayElements($input, (jbyte*)$1, 0);
 }
-
-%array(Concept)
 
 /* char** needs special handling */
 %typemap(in) char ** (jint size) {
