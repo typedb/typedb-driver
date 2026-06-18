@@ -69,8 +69,9 @@ The SWIG-generated wrapper classes (`Credentials`, `DriverOptions`, `Transaction
 3. Examples of building and using Bazel-based C# applications with the produced dependencies can be found in `csharp/Test/Integration/Examples`.
 
 ## Example usage
+<!-- EXAMPLE_START_MARKER -->
 
-```cs
+```csharp
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -80,11 +81,12 @@ using TypeDB.Driver.Api;
 using TypeDB.Driver.Api.Answer;
 using TypeDB.Driver.Common;
 
-namespace TypeDB.Driver.Example
+
+namespace TypeDB.Driver.Examples
 {
-    public class Example
+    public class TypeDBExample
     {
-        public void Run()
+        public void Example()
         {
             // Open a driver connection. Using statements can be used for automatic driver connection management
             using (var driver = TypeDB.Driver(TypeDB.DefaultAddress, new Credentials("admin", "password"), new DriverOptions(DriverTlsConfig.Disabled())))
@@ -100,7 +102,7 @@ namespace TypeDB.Driver.Example
                 try
                 {
                     // Execute any TypeDB query using TypeQL. Wrong queries are rejected with an explicit exception
-                    var answer = tx.Query("define entity i-cannot-be-defined-in-read-transactions;").Resolve();
+                    var answer = tx.Query("define entity i-cannot-be-defined-in-read-transactions;").Resolve()!;
 
                     Console.WriteLine("The query has been sent, iterating or committing will surface errors!");
                     // Iterating the answer would throw an exception
@@ -127,7 +129,7 @@ namespace TypeDB.Driver.Example
                         attribute name, value string;
                         attribute age, value integer;";
 
-                    var answer = transaction.Query(defineQuery).Resolve();
+                    var answer = transaction.Query(defineQuery).Resolve()!;
 
                     // Commit automatically closes the transaction. It can still be safely called inside using blocks
                     transaction.Commit();
@@ -136,7 +138,7 @@ namespace TypeDB.Driver.Example
                 // Open a read transaction to safely read anything without database modifications
                 using (var transaction = driver.Transaction(database.Name, TransactionType.Read))
                 {
-                    var entityAnswer = transaction.Query("match entity $x;").Resolve();
+                    var entityAnswer = transaction.Query("match entity $x;").Resolve()!;
 
                     // Collect concept rows that represent the answer as a table
                     var entityRows = entityAnswer.AsConceptRows().ToList();
@@ -162,7 +164,7 @@ namespace TypeDB.Driver.Example
                     }
 
                     // Continue querying in the same transaction if needed
-                    var attributeAnswer = transaction.Query("match attribute $a;").Resolve();
+                    var attributeAnswer = transaction.Query("match attribute $a;").Resolve()!;
 
                     // IConceptRowIterator can be used as any other IEnumerable
                     foreach (var attributeRow in attributeAnswer.AsConceptRows())
@@ -188,7 +190,7 @@ namespace TypeDB.Driver.Example
                 using (var transaction = driver.Transaction(database.Name, TransactionType.Write))
                 {
                     var insertQuery = "insert $z isa person, has age 10; $x isa person, has age 20, has name \"John\";";
-                    var answer = transaction.Query(insertQuery).Resolve();
+                    var answer = transaction.Query(insertQuery).Resolve()!;
 
                     // Insert queries also return concept rows
                     var rows = answer.AsConceptRows().ToList();
@@ -246,6 +248,26 @@ namespace TypeDB.Driver.Example
                     // Transaction is still usable after catching the exception
                 }
 
+                // It's also possible to provide rows as input to queries.
+                using (var transaction = driver.Transaction(database.Name, TransactionType.Write))
+                {
+                    var answer = transaction.Query("insert $eugene isa person, has name \"Eugene\"; $fred isa person, has name \"Fred\";").Resolve()!;
+                    var rows = answer.AsConceptRows().ToList();
+                    var personEugene = rows[0].Get("eugene");
+                    var personFred = rows[0].Get("fred");
+
+                    var query = "given $x: person, $v: integer; insert $x has age == $v;";
+                    var givenRows = TypeDB.Concept.GivenRows(new List<Dictionary<string, IConcept?>>
+                    {
+                        new Dictionary<string, IConcept?> { { "x", personEugene }, { "v", TypeDB.Concept.NewInteger(12) } },
+                        new Dictionary<string, IConcept?> { { "x", personFred }, { "v", TypeDB.Concept.NewInteger(34) } }
+                    });
+                    var inserted = transaction.Query(query, new QueryOptions(), givenRows).Resolve()!;
+                    var insertedRows = inserted.AsConceptRows().ToList();
+                    transaction.Commit();
+
+                }
+
                 // Open a read transaction to verify that the inserted data is saved
                 using (var transaction = driver.Transaction(database.Name, TransactionType.Read))
                 {
@@ -254,7 +276,7 @@ namespace TypeDB.Driver.Example
                     var queryOptions = new QueryOptions { IncludeInstanceTypes = true };
                     // A match query can be used for concept row outputs
                     var varName = "x";
-                    var matchAnswer = transaction.Query($"match ${varName} isa person;", queryOptions).Resolve();
+                    var matchAnswer = transaction.Query($"match ${varName} isa person;", queryOptions).Resolve()!;
 
                     // Simple match queries always return concept rows
                     var matchCount = 0;
@@ -275,7 +297,7 @@ namespace TypeDB.Driver.Example
                             ""single attribute type"": $t,
                             ""single attribute"": $a,
                             ""all attributes"": { $x.* },
-                        };").Resolve();
+                        };").Resolve()!;
 
                     // Fetch queries always return concept documents
                     var fetchCount = 0;
@@ -296,3 +318,5 @@ namespace TypeDB.Driver.Example
     }
 }
 ```
+
+<!-- EXAMPLE_END_MARKER -->

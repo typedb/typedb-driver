@@ -17,7 +17,7 @@
 # under the License.
 
 # TODO: Add csharp
-languages=("rust" "java" "python")
+languages=("rust" "java" "python" "csharp")
 
 base_targets=(
     "//{language}:example"
