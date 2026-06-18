@@ -222,6 +222,66 @@ impl fmt::Debug for Value {
     }
 }
 
+impl From<bool> for Value {
+    fn from(value: bool) -> Self {
+        Self::Boolean(value)
+    }
+}
+
+impl From<i64> for Value {
+    fn from(value: i64) -> Self {
+        Self::Integer(value)
+    }
+}
+
+impl From<f64> for Value {
+    fn from(value: f64) -> Self {
+        Self::Double(value)
+    }
+}
+
+impl From<Decimal> for Value {
+    fn from(value: Decimal) -> Self {
+        Self::Decimal(value)
+    }
+}
+
+impl From<String> for Value {
+    fn from(value: String) -> Self {
+        Self::String(value)
+    }
+}
+
+impl From<&str> for Value {
+    fn from(value: &str) -> Self {
+        Self::String(value.to_owned())
+    }
+}
+
+impl From<NaiveDate> for Value {
+    fn from(value: NaiveDate) -> Self {
+        Self::Date(value)
+    }
+}
+
+impl From<NaiveDateTime> for Value {
+    fn from(value: NaiveDateTime) -> Self {
+        Self::Datetime(value)
+    }
+}
+
+impl From<DateTime<TimeZone>> for Value {
+    fn from(value: DateTime<TimeZone>) -> Self {
+        Self::DatetimeTZ(value)
+    }
+}
+
+impl From<Duration> for Value {
+    fn from(value: Duration) -> Self {
+        Self::Duration(value)
+    }
+}
+
 /// A fixed-point decimal number.
 /// Holds exactly 19 digits after the decimal point and a 64-bit value before the decimal point.
 #[repr(C)]

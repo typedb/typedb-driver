@@ -70,7 +70,7 @@ fn to_given_row_entry(
         Concept::Attribute(attribute) => Ok(GivenRowEntry::Attribute(attribute)),
         Concept::Value(value) => Ok(GivenRowEntry::Value(value)),
         Concept::EntityType(_) | Concept::RelationType(_) | Concept::RoleType(_) | Concept::AttributeType(_) => {
-            Err(typedb_driver::error::Error::Query(QueryError::GivenRowsReceivedType {
+            Err(typedb_driver::error::Error::Query(QueryError::InvalidConceptToGivenRowEntry {
                 variable_or_index: format!("{variable_or_index}"),
             }))
         }

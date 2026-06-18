@@ -18,9 +18,14 @@
  */
 use std::{collections::HashMap, sync::Arc};
 
+use chrono::{DateTime, NaiveDate, NaiveDateTime};
+
 use crate::{
     Result,
-    concept::{Attribute, Entity, Relation, Value},
+    concept::{
+        Attribute, Concept, Entity, Relation, Value,
+        value::{Decimal, Duration, TimeZone},
+    },
     error::{Error, QueryError},
 };
 
@@ -31,6 +36,63 @@ pub enum GivenRowEntry {
     Relation(Relation),
     Attribute(Attribute),
     Value(Value),
+}
+
+macro_rules! impl_from_for_given_row_entry {
+    ($($t:ty),*) => {
+        $(impl From<$t> for GivenRowEntry {
+            fn from(value: $t) -> Self { Self::Value(Value::from(value)) }
+        })*
+    };
+}
+
+impl_from_for_given_row_entry!(bool, i64, f64, Decimal, String, NaiveDate, NaiveDateTime, DateTime<TimeZone>, Duration);
+
+impl From<&str> for GivenRowEntry {
+    fn from(value: &str) -> Self {
+        Self::Value(Value::from(value))
+    }
+}
+
+impl TryFrom<Concept> for GivenRowEntry {
+    type Error = Error;
+
+    fn try_from(concept: Concept) -> Result<Self> {
+        match concept {
+            Concept::Entity(e) => Ok(Self::Entity(e)),
+            Concept::Relation(r) => Ok(Self::Relation(r)),
+            Concept::Attribute(a) => Ok(Self::Attribute(a)),
+            Concept::Value(v) => Ok(Self::Value(v)),
+
+            Concept::EntityType(_) | Concept::RelationType(_) | Concept::RoleType(_) | Concept::AttributeType(_) => {
+                Err(Error::Query(QueryError::InvalidTypeToGivenRow))
+            }
+        }
+    }
+}
+
+impl From<Entity> for GivenRowEntry {
+    fn from(value: Entity) -> Self {
+        Self::Entity(value)
+    }
+}
+
+impl From<Relation> for GivenRowEntry {
+    fn from(value: Relation) -> Self {
+        Self::Relation(value)
+    }
+}
+
+impl From<Attribute> for GivenRowEntry {
+    fn from(value: Attribute) -> Self {
+        Self::Attribute(value)
+    }
+}
+
+impl From<Value> for GivenRowEntry {
+    fn from(value: Value) -> Self {
+        Self::Value(value)
+    }
 }
 
 /// Rows of data to be used as input to a TypeQL query using a `given` stage.
