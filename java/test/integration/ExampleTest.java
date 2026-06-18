@@ -22,12 +22,12 @@
 // EXAMPLE START MARKER
 package com.typedb.driver.test.integration;
 
-import com.typedb.driver.ConceptFactory;
 import com.typedb.driver.TypeDB;
 import com.typedb.driver.api.Credentials;
 import com.typedb.driver.api.Driver;
 import com.typedb.driver.api.DriverOptions;
 import com.typedb.driver.api.DriverTlsConfig;
+import com.typedb.driver.api.concept.Concept;
 import com.typedb.driver.api.concept.GivenRows;
 import com.typedb.driver.api.QueryOptions;
 import com.typedb.driver.api.QueryType;
@@ -36,7 +36,6 @@ import com.typedb.driver.api.TransactionOptions;
 import com.typedb.driver.api.answer.ConceptRow;
 import com.typedb.driver.api.answer.ConceptRowIterator;
 import com.typedb.driver.api.answer.QueryAnswer;
-import com.typedb.driver.api.concept.Concept;
 import com.typedb.driver.api.concept.type.AttributeType;
 import com.typedb.driver.api.concept.type.EntityType;
 import com.typedb.driver.api.database.Database;
@@ -274,15 +273,15 @@ public class ExampleTest {
                 Concept personFred = rows.get(0).get("fred").get();
 
                 String query = "given $x: person, $v: integer; insert $x has age == $v;";
-                GivenRows givenRows = ConceptFactory.buildGivenRowsFrom(
+                GivenRows givenRows = TypeDB.Concept.buildGivenRowsFrom(
                     List.of(
                         java.util.Map.ofEntries(
                             Map.entry("x", personEugene),
-                            Map.entry("v", ConceptFactory.newInteger(12))
+                            Map.entry("v", TypeDB.Concept.newInteger(12))
                         ),
                         java.util.Map.ofEntries(
                             Map.entry("x", personFred),
-                            Map.entry("v", ConceptFactory.newInteger(34))
+                            Map.entry("v", TypeDB.Concept.newInteger(34))
                         )
                     )
                 );

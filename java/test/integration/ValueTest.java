@@ -24,18 +24,17 @@ import com.typedb.driver.api.Credentials;
 import com.typedb.driver.api.Driver;
 import com.typedb.driver.api.DriverOptions;
 import com.typedb.driver.api.DriverTlsConfig;
+import com.typedb.driver.api.concept.Concept;
 import com.typedb.driver.api.concept.GivenRows;
 import com.typedb.driver.api.QueryOptions;
 import com.typedb.driver.api.Transaction;
 import com.typedb.driver.api.answer.ConceptRow;
 import com.typedb.driver.api.answer.QueryAnswer;
-import com.typedb.driver.api.concept.Concept;
 import com.typedb.driver.api.concept.instance.Attribute;
 import com.typedb.driver.api.concept.type.AttributeType;
 import com.typedb.driver.api.concept.value.Value;
 import com.typedb.driver.api.database.Database;
 import com.typedb.driver.common.Duration;
-import com.typedb.driver.ConceptFactory;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -476,18 +475,18 @@ public class ValueTest {
         ZonedDateTime offsetDT = OffsetDateTime.parse("2024-09-20T16:40:05.028129323+0545", offsetFormatter).toZonedDateTime();
 
         Object[][] examples = {
-                {"boolean",     ConceptFactory.newBoolean(true),                                              "true"},
-                {"boolean",     ConceptFactory.newBoolean(false),                                             "false"},
-                {"integer",     ConceptFactory.newInteger(25),                                                "25"},
-                {"double",      ConceptFactory.newDouble(54.321),                                             "54.321"},
-                {"decimal",     ConceptFactory.newDecimal(new BigDecimal("1234567890.0001234567890")),        "1234567890.0001234567890dec"},
-                {"decimal",     ConceptFactory.newDecimal(new BigDecimal("-1234567890.0001234567890")),        "-1234567890.0001234567890dec"},
-                {"string",      ConceptFactory.newString("John"),                                             "\"John\""},
-                {"date",        ConceptFactory.newDate(LocalDate.of(2024, 9, 20)),                            "2024-09-20"},
-                {"datetime",    ConceptFactory.newDatetime(LocalDateTime.parse("1999-02-26T12:15:05")),       "1999-02-26T12:15:05"},
-                {"datetime-tz", ConceptFactory.newDatetimeTz(belfastDT),                                     "2024-09-20T16:40:05 Europe/Belfast"},
-                {"datetime-tz", ConceptFactory.newDatetimeTz(offsetDT),                                      "2024-09-20T16:40:05.028129323+0545"},
-                {"duration",    ConceptFactory.newDuration(Duration.parse("P1Y10M7DT15H44M5.00394892S")),     "P1Y10M7DT15H44M5.00394892S"},
+                {"boolean",     TypeDB.Concept.newBoolean(true),                                              "true"},
+                {"boolean",     TypeDB.Concept.newBoolean(false),                                             "false"},
+                {"integer",     TypeDB.Concept.newInteger(25),                                                "25"},
+                {"double",      TypeDB.Concept.newDouble(54.321),                                             "54.321"},
+                {"decimal",     TypeDB.Concept.newDecimal(new BigDecimal("1234567890.0001234567890")),        "1234567890.0001234567890dec"},
+                {"decimal",     TypeDB.Concept.newDecimal(new BigDecimal("-1234567890.0001234567890")),        "-1234567890.0001234567890dec"},
+                {"string",      TypeDB.Concept.newString("John"),                                             "\"John\""},
+                {"date",        TypeDB.Concept.newDate(LocalDate.of(2024, 9, 20)),                            "2024-09-20"},
+                {"datetime",    TypeDB.Concept.newDatetime(LocalDateTime.parse("1999-02-26T12:15:05")),       "1999-02-26T12:15:05"},
+                {"datetime-tz", TypeDB.Concept.newDatetimeTz(belfastDT),                                     "2024-09-20T16:40:05 Europe/Belfast"},
+                {"datetime-tz", TypeDB.Concept.newDatetimeTz(offsetDT),                                      "2024-09-20T16:40:05.028129323+0545"},
+                {"duration",    TypeDB.Concept.newDuration(Duration.parse("P1Y10M7DT15H44M5.00394892S")),     "P1Y10M7DT15H44M5.00394892S"},
         };
 
         localhostTypeDBTX(tx -> {
@@ -563,7 +562,7 @@ public class ValueTest {
 
     private ConceptRow runRoundtripTest(Transaction tx, String valueType, Value nativeValue, String typeqlLiteral) {
         String query = String.format("given $native: %s; match let $parsed = %s;", valueType, typeqlLiteral);
-        GivenRows givenRows = ConceptFactory.buildGivenRowsFrom(List.of("native"), List.of(List.of(nativeValue)));
+        GivenRows givenRows = TypeDB.Concept.buildGivenRowsFrom(List.of("native"), List.of(List.of(nativeValue)));
         List<ConceptRow> rows = tx.query(query, new QueryOptions(), givenRows).resolve()
                 .asConceptRows().stream().collect(Collectors.toList());
         assertEquals(1, rows.size());
@@ -572,7 +571,7 @@ public class ValueTest {
 
     private ConceptRow runRoundtripTestWithRawValue(Transaction tx, String valueType, Object rawValue, String typeqlLiteral) {
         String query = String.format("given $native: %s; match let $parsed = %s;", valueType, typeqlLiteral);
-        List<ConceptRow> rows = tx.query(query, new QueryOptions(), ConceptFactory.buildGivenRowsFromObjects(List.of(Map.of("native", rawValue)))).resolve()
+        List<ConceptRow> rows = tx.query(query, new QueryOptions(), TypeDB.Concept.buildGivenRowsFromObjects(List.of(Map.of("native", rawValue)))).resolve()
                 .asConceptRows().stream().collect(Collectors.toList());
         assertEquals(1, rows.size());
         return rows.get(0);

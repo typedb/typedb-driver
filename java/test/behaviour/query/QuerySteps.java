@@ -19,7 +19,8 @@
 
 package com.typedb.driver.test.behaviour.query;
 
-import com.typedb.driver.ConceptFactory;
+import com.typedb.driver.TypeDB;
+import com.typedb.driver.api.concept.Concept;
 import com.typedb.driver.api.concept.GivenRows;
 import com.typedb.driver.api.QueryOptions;
 import com.typedb.driver.api.QueryType;
@@ -31,7 +32,6 @@ import com.typedb.driver.api.answer.ConceptRowIterator;
 import com.typedb.driver.api.answer.JSON;
 import com.typedb.driver.api.answer.OkQueryAnswer;
 import com.typedb.driver.api.answer.QueryAnswer;
-import com.typedb.driver.api.concept.Concept;
 import com.typedb.driver.api.concept.instance.Attribute;
 import com.typedb.driver.api.concept.instance.Entity;
 import com.typedb.driver.api.concept.instance.Instance;
@@ -885,7 +885,7 @@ public class QuerySteps {
                     return m;
                 })
                 .collect(Collectors.toList());
-        givenRows = ConceptFactory.buildGivenRowsFrom(asMap);
+        givenRows = TypeDB.Concept.buildGivenRowsFrom(asMap);
     }
 
     @Given("set answers of typeql read query as given rows with order: {variable_list}")
@@ -894,7 +894,7 @@ public class QuerySteps {
         List<? extends List<? extends Concept>> rows = tableRows.stream()
                 .map(row -> varList.stream().<Concept>map(var -> row.get(var).orElse(null)).collect(Collectors.toList()))
                 .collect(Collectors.toList());
-        givenRows = ConceptFactory.buildGivenRowsFrom(varList, rows);
+        givenRows = TypeDB.Concept.buildGivenRowsFrom(varList, rows);
     }
 
     @Given("get answers of typeql write query{with_given}{may_error}")
