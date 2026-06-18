@@ -64,15 +64,15 @@ namespace TypeDB.Driver
         public static class Concept
         {
             /// <summary>Constructs an <c>IGivenRows</c> instance for use as inputs to queries (index-based).</summary>
-            public static IGivenRows BuildGivenRowsFrom(List<string> givenVariables, List<List<IConcept?>> givenRows)
+            public static IGivenRows GivenRows(List<string> givenVariables, List<List<IConcept?>> givenRows)
                 => ConceptGivenRows.Of(givenVariables, givenRows);
 
             /// <summary>Constructs an <c>IGivenRows</c> instance from dict-based rows for use as inputs to queries.</summary>
-            public static IGivenRows BuildGivenRowsFrom(List<Dictionary<string, IConcept?>> givenRows)
+            public static IGivenRows GivenRows(List<Dictionary<string, IConcept?>> givenRows)
                 => ConceptGivenRows.Of(givenRows);
 
             /// <summary>Constructs an <c>IGivenRows</c> instance from rows containing raw .NET values or concepts.</summary>
-            public static IGivenRows BuildGivenRowsFromObjects(List<Dictionary<string, object?>> givenRows)
+            public static IGivenRows GivenRowsFromObjects(List<Dictionary<string, object?>> givenRows)
                 => ConceptGivenRows.OfObjects(givenRows);
 
             /// <summary>Converts a raw .NET value to an <c>IValue</c> concept.</summary>

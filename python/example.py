@@ -159,7 +159,7 @@ class TypeDBExample:
                 person_fred = rows[0].get("fred")
 
                 query = "given $x: person, $v: integer; insert $x has age == $v;"
-                given_rows = TypeDB.Concept.build_given_rows_from_map([
+                given_rows = TypeDB.Concept.given_rows_from_map([
                     {"x": person_eugene, "v": TypeDB.Concept.new_integer(12)},
                     {"x": person_fred, "v": TypeDB.Concept.new_integer(34)},
                 ])

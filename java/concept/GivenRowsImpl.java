@@ -35,12 +35,7 @@ public class GivenRowsImpl extends NativeObject<com.typedb.driver.jni.GivenRows>
     public GivenRowsImpl(com.typedb.driver.jni.GivenRows nativeObject) {
         super(nativeObject);
     }
-    /**
-     * Constructs a <code>GivenRows</code> instance for use as inputs to queries.
-     *
-     * @param variables The variables describing the content of the givenRows.
-     * @param rows Input rows for the query; each inner iterable is one row, {@code Optional.empty()} entries represent empty variables.
-     */
+
     public static GivenRows of(List<String> variables, List<? extends List<? extends com.typedb.driver.api.concept.Concept>> rows) throws TypeDBDriverException {
         try{
             com.typedb.driver.jni.GivenRowsHeaderBuilder headerBuilder = given_rows_header_builder_new(variables.size());
@@ -69,11 +64,6 @@ public class GivenRowsImpl extends NativeObject<com.typedb.driver.jni.GivenRows>
         }
     }
 
-    /**
-     * Constructs a <code>GivenRows</code> instance from the dictionary for use as inputs to queries.
-     *
-     * @param givenRows A list of input rows for the query. Each row is a dictionary mapping a variable to its value.
-     */
     public static GivenRows of(List<? extends Map<String, ? extends Concept>> givenRows) throws TypeDBDriverException {
         try{
             Set<String> variables= new HashSet<>();
@@ -102,13 +92,6 @@ public class GivenRowsImpl extends NativeObject<com.typedb.driver.jni.GivenRows>
         }
     }
 
-    /**
-     * Constructs a <code>GivenRows</code> instance from a list of rows given as plain Java objects.
-     * Each map entry value may be a {@link com.typedb.driver.api.concept.Concept} (used directly) or a raw host-language value
-     * which is converted via {@link #tryConvertToValue}.
-     *
-     * @param givenRows A list of input rows; each row maps variable names to concepts or raw values.
-     */
     public static GivenRows ofObjects(List<? extends Map<String, Object>> givenRows) throws TypeDBDriverException {
         List<Map<String, com.typedb.driver.api.concept.Concept>> converted = givenRows.stream()
                 .map(row -> {

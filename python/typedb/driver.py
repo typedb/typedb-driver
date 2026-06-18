@@ -85,17 +85,17 @@ class TypeDB:
         """Factory class to instantiate new ``Value`` concepts and build ``GivenRows`` for use as query inputs."""
 
         @staticmethod
-        def build_given_rows_from(variables: List[str], rows: List[List[Optional[Any]]]) -> GivenRows:
+        def given_rows(variables: List[str], rows: List[List[Optional[Any]]]) -> GivenRows:
             """Constructs a ``GivenRows`` instance for use as inputs to queries."""
             return _GivenRows.of(variables, rows)
 
         @staticmethod
-        def build_given_rows_from_map(rows) -> GivenRows:
+        def given_rows_from_map(rows) -> GivenRows:
             """Constructs a ``GivenRows`` instance from dict-based rows for use as inputs to queries."""
             return _GivenRows.of_map(rows)
 
         @staticmethod
-        def build_given_rows_from_objects(rows: List[Dict[str, Any]]) -> GivenRows:
+        def given_rows_from_objects_map(rows: List[Dict[str, Any]]) -> GivenRows:
             """Constructs a ``GivenRows`` instance from dict rows containing raw Python values or concepts."""
             return _GivenRows.of_objects(rows)
 

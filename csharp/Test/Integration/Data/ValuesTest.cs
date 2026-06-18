@@ -717,7 +717,7 @@ namespace TypeDB.Driver.Test.Integration
         private static IConceptRow RunRoundtripTest(ITransaction tx, string valueType, IValue nativeValue, string typeqlLiteral)
         {
             string query = $"given $native: {valueType}; match let $parsed = {typeqlLiteral};";
-            var givenRows = TypeDB.Concept.BuildGivenRowsFrom(
+            var givenRows = TypeDB.Concept.GivenRows(
                 new List<string> { "native" },
                 new List<List<IConcept?>> { new List<IConcept?> { nativeValue } });
             var rows = tx.Query(query, new QueryOptions(), givenRows).Resolve()!.AsConceptRows().ToList();
@@ -728,7 +728,7 @@ namespace TypeDB.Driver.Test.Integration
         private static IConceptRow RunRoundtripTestWithRawValue(ITransaction tx, string valueType, object rawValue, string typeqlLiteral)
         {
             string query = $"given $native: {valueType}; match let $parsed = {typeqlLiteral};";
-            var givenRows = TypeDB.Concept.BuildGivenRowsFromObjects(
+            var givenRows = TypeDB.Concept.GivenRowsFromObjects(
                 new List<Dictionary<string, object?>> { new Dictionary<string, object?> { { "native", rawValue } } });
             var rows = tx.Query(query, new QueryOptions(), givenRows).Resolve()!.AsConceptRows().ToList();
             Assert.AreEqual(1, rows.Count);

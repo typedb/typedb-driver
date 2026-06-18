@@ -90,8 +90,8 @@ class Transaction(ABC):
         Execute a TypeQL query in this transaction.
 
         :param query: The query to execute.
-        :param options: The ``QueryOptions`` to execute the query with..
-        :param given_rows: Rows given to the query as input. Will throw an exception if a type is passed.
+        :param options: The ``QueryOptions`` to execute the query with.
+        :param given_rows: Rows given to the query as input.
 
         Examples:
         ---------
