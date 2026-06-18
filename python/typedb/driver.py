@@ -52,13 +52,6 @@ from typedb.api.user.user_manager import *  # noqa # pylint: disable=unused-impo
 from typedb.common.datetime import *  # noqa # pylint: disable=unused-import
 from typedb.common.duration import *  # noqa # pylint: disable=unused-import
 from typedb.common.exception import *  # noqa # pylint: disable=unused-import
-from typedb.concept.given_rows import _GivenRows
-from typedb.concept.value.value import _Value
-from typedb.connection.driver import _Driver
-
-from python.typedb.api.concept.concept import Concept
-
-
 # Repackaging these symbols allows them to be imported from "typedb.driver"
 
 
@@ -76,6 +69,7 @@ class TypeDB:
         :param credentials: The credentials to connect with.
         :param driver_options: The driver connection options to connect with.
         """
+        from typedb.connection.driver import _Driver
         if isinstance(addresses, str):
             return _Driver(addresses, credentials, driver_options)
         elif isinstance(addresses, ABCMapping):
@@ -87,41 +81,61 @@ class TypeDB:
         """Factory class to instantiate new ``Value`` concepts and build ``GivenRows`` for use as query inputs."""
 
         @staticmethod
-        def given_rows(variables: List[str], rows: List[List[Optional[Concept]]]) -> GivenRows:
+        def given_rows(variables: List[str], rows: "List[List[Optional[typedb.api.concept.concept.Concept]]]") -> GivenRows:
             """Constructs a ``GivenRows`` instance for use as inputs to queries."""
+            from typedb.concept.given_rows import _GivenRows
             return _GivenRows.of(variables, rows)
 
         @staticmethod
-        def given_rows_from_map(rows: List[Dict[str, Concept | Any]]) -> GivenRows:
+        def given_rows_from_map(rows: "List[Dict[str, typedb.api.concept.concept.Concept | Any]]") -> GivenRows:
             """Constructs a ``GivenRows`` instance from dict-based rows for use as inputs to queries."""
+            from typedb.concept.given_rows import _GivenRows
             return _GivenRows.of_map(rows)
 
         @staticmethod
         def try_convert_to_value(value: Any): return _Value.try_convert_to_value(value)
 
         @staticmethod
-        def new_boolean(value: bool): return _Value.new_boolean(value)
+        def new_boolean(value: bool):
+            from typedb.concept.value.value import _Value
+            return _Value.new_boolean(value)
 
         @staticmethod
-        def new_integer(value: int): return _Value.new_integer(value)
+        def new_integer(value: int):
+            from typedb.concept.value.value import _Value
+            return _Value.new_integer(value)
 
         @staticmethod
-        def new_double(value: float): return _Value.new_double(value)
+        def new_double(value: float):
+            from typedb.concept.value.value import _Value
+            return _Value.new_double(value)
 
         @staticmethod
-        def new_decimal(value: Decimal): return _Value.new_decimal(value)
+        def new_decimal(value: Decimal):
+            from typedb.concept.value.value import _Value
+            return _Value.new_decimal(value)
 
         @staticmethod
-        def new_string(value: str): return _Value.new_string(value)
+        def new_string(value: str):
+            from typedb.concept.value.value import _Value
+            return _Value.new_string(value)
 
         @staticmethod
-        def new_date(value: date): return _Value.new_date(value)
+        def new_date(value: date):
+            from typedb.concept.value.value import _Value
+            return _Value.new_date(value)
 
         @staticmethod
-        def new_datetime(value: Datetime): return _Value.new_datetime(value)
+        def new_datetime(value: Datetime):
+            from typedb.concept.value.value import _Value
+            return _Value.new_datetime(value)
 
         @staticmethod
-        def new_datetime_tz(value: Datetime): return _Value.new_datetime_tz(value)
+        def new_datetime_tz(value: Datetime):
+            from typedb.concept.value.value import _Value
+            return _Value.new_datetime_tz(value)
 
         @staticmethod
-        def new_duration(value: Duration): return _Value.new_duration(value)
+        def new_duration(value: Duration):
+            from typedb.concept.value.value import _Value
+            return _Value.new_duration(value)
