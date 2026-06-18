@@ -19,15 +19,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using TypeDB.Driver.Api;
-using TypeDB.Driver.Api.Concept;
 using TypeDB.Driver.Common;
 using TypeDB.Driver.Connection;
-using ConceptImpl = TypeDB.Driver.Concept.Concept;
-using ConceptValue = TypeDB.Driver.Concept.Value;
 using ConceptGivenRows = TypeDB.Driver.Concept.GivenRows;
-using ConceptError = TypeDB.Driver.Common.Error.Concept;
+using ConceptValue = TypeDB.Driver.Concept.Value;
 
 namespace TypeDB.Driver
 {
@@ -41,14 +37,6 @@ namespace TypeDB.Driver
         /// <summary>
         /// Open a TypeDB Driver to a TypeDB server available at the provided address.
         /// </summary>
-        /// <param name="address">The address of the TypeDB server.</param>
-        /// <param name="credentials">The credentials to connect with.</param>
-        /// <param name="driverOptions">The driver connection options to connect with.</param>
-        /// <example>
-        /// <code>
-        /// TypeDB.Driver(address, credentials, driverOptions);
-        /// </code>
-        /// </example>
         public static IDriver Driver(string address, Credentials credentials, DriverOptions driverOptions)
         {
             return new TypeDBDriver(address, credentials, driverOptions);
@@ -57,14 +45,6 @@ namespace TypeDB.Driver
         /// <summary>
         /// Open a TypeDB Driver to a TypeDB cluster available at the provided addresses.
         /// </summary>
-        /// <param name="addresses">The addresses of TypeDB cluster servers for connection.</param>
-        /// <param name="credentials">The credentials to connect with.</param>
-        /// <param name="driverOptions">The driver connection options to connect with.</param>
-        /// <example>
-        /// <code>
-        /// TypeDB.Driver(addresses, credentials, driverOptions);
-        /// </code>
-        /// </example>
         public static IDriver Driver(ISet<string> addresses, Credentials credentials, DriverOptions driverOptions)
         {
             return new TypeDBDriver(addresses, credentials, driverOptions);
@@ -73,14 +53,6 @@ namespace TypeDB.Driver
         /// <summary>
         /// Open a TypeDB Driver to a TypeDB cluster, using the provided address translation.
         /// </summary>
-        /// <param name="addressTranslation">The translation of public TypeDB cluster server addresses (keys) to server-side private addresses (values).</param>
-        /// <param name="credentials">The credentials to connect with.</param>
-        /// <param name="driverOptions">The driver connection options to connect with.</param>
-        /// <example>
-        /// <code>
-        /// TypeDB.Driver(addressTranslation, credentials, driverOptions);
-        /// </code>
-        /// </example>
         public static IDriver Driver(IDictionary<string, string> addressTranslation, Credentials credentials, DriverOptions driverOptions)
         {
             return new TypeDBDriver(addressTranslation, credentials, driverOptions);
@@ -91,159 +63,47 @@ namespace TypeDB.Driver
         /// </summary>
         public static class Concept
         {
-            /// <summary>
-            /// Constructs an <c>IGivenRows</c> instance for use as inputs to queries (index-based).
-            /// </summary>
-            /// <param name="givenVariables">The variables describing the columns of <paramref name="givenRows"/>.</param>
-            /// <param name="givenRows">Input rows; each inner list is one row indexed by <paramref name="givenVariables"/>, <c>null</c> entries represent empty variables.</param>
+            /// <summary>Constructs an <c>IGivenRows</c> instance for use as inputs to queries (index-based).</summary>
             public static IGivenRows BuildGivenRowsFrom(List<string> givenVariables, List<List<IConcept?>> givenRows)
-            {
-                var headerBuilder = Pinvoke.typedb_driver.given_rows_header_builder_new((uint)givenVariables.Count);
-                foreach (var variable in givenVariables)
-                    Pinvoke.typedb_driver.given_rows_header_builder_push(headerBuilder, variable);
-                var header = Pinvoke.typedb_driver.given_rows_header_builder_finish(headerBuilder.Released());
-                var rowsBuilder = Pinvoke.typedb_driver.given_rows_builder_new(header, (uint)givenRows.Count);
-                foreach (var row in givenRows)
-                {
-                    Pinvoke.typedb_driver.given_rows_builder_start_new_row(rowsBuilder);
-                    for (int i = 0; i < row.Count; i++)
-                    {
-                        var concept = row[i];
-                        if (concept == null)
-                            Pinvoke.typedb_driver.given_rows_builder_set_index_to_empty(rowsBuilder, (uint)i);
-                        else
-                            Pinvoke.typedb_driver.given_rows_builder_set_index_to_concept(rowsBuilder, (uint)i, ((ConceptImpl)concept).NativeObject);
-                    }
-                    Pinvoke.typedb_driver.given_rows_builder_commit_row(rowsBuilder);
-                }
-                return new ConceptGivenRows(Pinvoke.typedb_driver.given_rows_builder_finish(rowsBuilder.Released()));
-            }
+                => ConceptGivenRows.Of(givenVariables, givenRows);
 
-            /// <summary>
-            /// Constructs an <c>IGivenRows</c> instance from dict-based rows for use as inputs to queries.
-            /// </summary>
-            /// <param name="givenRows">Input rows; each row is a map from variable name to concept, <c>null</c> values represent empty variables.</param>
+            /// <summary>Constructs an <c>IGivenRows</c> instance from dict-based rows for use as inputs to queries.</summary>
             public static IGivenRows BuildGivenRowsFrom(List<Dictionary<string, IConcept?>> givenRows)
-            {
-                var variables = givenRows.SelectMany(r => r.Keys).Distinct().ToList();
-                var headerBuilder = Pinvoke.typedb_driver.given_rows_header_builder_new((uint)variables.Count);
-                foreach (var variable in variables)
-                    Pinvoke.typedb_driver.given_rows_header_builder_push(headerBuilder, variable);
-                var header = Pinvoke.typedb_driver.given_rows_header_builder_finish(headerBuilder.Released());
-                var rowsBuilder = Pinvoke.typedb_driver.given_rows_builder_new(header, (uint)givenRows.Count);
-                foreach (var row in givenRows)
-                {
-                    Pinvoke.typedb_driver.given_rows_builder_start_new_row(rowsBuilder);
-                    foreach (var (variable, concept) in row)
-                    {
-                        if (concept == null)
-                            Pinvoke.typedb_driver.given_rows_builder_set_variable_to_empty(rowsBuilder, variable);
-                        else
-                            Pinvoke.typedb_driver.given_rows_builder_set_variable_to_concept(rowsBuilder, variable, ((ConceptImpl)concept).NativeObject);
-                    }
-                    Pinvoke.typedb_driver.given_rows_builder_commit_row(rowsBuilder);
-                }
-                return new ConceptGivenRows(Pinvoke.typedb_driver.given_rows_builder_finish(rowsBuilder.Released()));
-            }
+                => ConceptGivenRows.Of(givenRows);
 
-            /// <summary>
-            /// Constructs an <c>IGivenRows</c> instance from rows containing raw .NET values or concepts.
-            /// Values that are already <c>IConcept</c> instances are used directly. Other values are
-            /// converted via <see cref="TryConvertToValue"/>. <c>null</c> entries represent empty variables.
-            /// </summary>
-            /// <param name="givenRows">Input rows; each row maps variable names to concepts or raw values.</param>
+            /// <summary>Constructs an <c>IGivenRows</c> instance from rows containing raw .NET values or concepts.</summary>
             public static IGivenRows BuildGivenRowsFromObjects(List<Dictionary<string, object?>> givenRows)
-            {
-                var converted = givenRows.Select(row =>
-                    row.ToDictionary(
-                        kv => kv.Key,
-                        kv => kv.Value == null ? null :
-                              kv.Value is IConcept concept ? concept :
-                              (IConcept?)TryConvertToValue(kv.Value)
-                    )
-                ).ToList();
-                return BuildGivenRowsFrom(converted);
-            }
+                => ConceptGivenRows.OfObjects(givenRows);
 
-            /// <summary>
-            /// Converts a raw .NET value to an <c>IValue</c> concept.
-            /// Accepted types: <c>bool</c>, <c>long</c>, <c>int</c>, <c>double</c>, <c>float</c>,
-            /// <c>decimal</c>, <c>string</c>, <c>DateOnly</c>, <c>Datetime</c>, <c>DatetimeTZ</c>, <c>Duration</c>.
-            /// </summary>
-            /// <param name="value">The value to convert.</param>
-            /// <exception cref="TypeDBDriverException">if the type is not supported.</exception>
-            public static IValue TryConvertToValue(object value)
-            {
-                if (value is bool b) return NewBoolean(b);
-                if (value is long l) return NewInteger(l);
-                if (value is int i) return NewInteger(i);
-                if (value is double d) return NewDouble(d);
-                if (value is float f) return NewDouble(f);
-                if (value is decimal dec) return NewDecimal(dec);
-                if (value is string s) return NewString(s);
-                if (value is DateOnly date) return NewDate(date);
-                if (value is Datetime dt) return NewDatetime(dt);
-                if (value is DatetimeTZ dtz) return NewDatetimeTz(dtz);
-                if (value is Duration dur) return NewDuration(dur);
-                throw new TypeDBDriverException(ConceptError.UNSUPPORTED_VALUE_CONVERSION, value.GetType().Name);
-            }
+            /// <summary>Converts a raw .NET value to an <c>IValue</c> concept.</summary>
+            public static IValue TryConvertToValue(object value) => ConceptValue.TryConvertToValue(value);
 
             /// <summary>Creates a new <c>IValue</c> wrapping the specified <c>bool</c> value.</summary>
-            public static IValue NewBoolean(bool value)
-                => new ConceptValue(Pinvoke.typedb_driver.concept_new_boolean(value));
+            public static IValue NewBoolean(bool value) => ConceptValue.NewBoolean(value);
 
             /// <summary>Creates a new <c>IValue</c> wrapping the specified <c>long</c> value.</summary>
-            public static IValue NewInteger(long value)
-                => new ConceptValue(Pinvoke.typedb_driver.concept_new_integer(value));
+            public static IValue NewInteger(long value) => ConceptValue.NewInteger(value);
 
             /// <summary>Creates a new <c>IValue</c> wrapping the specified <c>double</c> value.</summary>
-            public static IValue NewDouble(double value)
-                => new ConceptValue(Pinvoke.typedb_driver.concept_new_double(value));
+            public static IValue NewDouble(double value) => ConceptValue.NewDouble(value);
 
             /// <summary>Creates a new <c>IValue</c> wrapping the specified <c>decimal</c> value.</summary>
-            public static IValue NewDecimal(decimal value)
-            {
-                decimal scale = (decimal)Math.Pow(10, IConcept.DecimalScale);
-                long integerPart = (long)Math.Floor(value);
-                decimal fractional = value - integerPart;
-                ulong fractionalPart = (ulong)(fractional * scale);
-                return new ConceptValue(Pinvoke.typedb_driver.concept_new_decimal(integerPart, fractionalPart));
-            }
+            public static IValue NewDecimal(decimal value) => ConceptValue.NewDecimal(value);
 
             /// <summary>Creates a new <c>IValue</c> wrapping the specified <c>string</c> value.</summary>
-            public static IValue NewString(string value)
-                => new ConceptValue(Pinvoke.typedb_driver.concept_new_string(value));
+            public static IValue NewString(string value) => ConceptValue.NewString(value);
 
             /// <summary>Creates a new <c>IValue</c> wrapping the specified <c>DateOnly</c> value.</summary>
-            public static IValue NewDate(DateOnly value)
-            {
-                long epochSeconds = new DateTimeOffset(value.ToDateTime(TimeOnly.MinValue), TimeSpan.Zero).ToUnixTimeSeconds();
-                return new ConceptValue(Pinvoke.typedb_driver.concept_new_date_from_seconds(epochSeconds));
-            }
+            public static IValue NewDate(DateOnly value) => ConceptValue.NewDate(value);
 
             /// <summary>Creates a new <c>IValue</c> wrapping the specified <c>Datetime</c> value.</summary>
-            public static IValue NewDatetime(Datetime value)
-                => new ConceptValue(Pinvoke.typedb_driver.concept_new_datetime(value.Seconds, value.SubsecNanos));
+            public static IValue NewDatetime(Datetime value) => ConceptValue.NewDatetime(value);
 
             /// <summary>Creates a new <c>IValue</c> wrapping the specified <c>DatetimeTZ</c> value.</summary>
-            public static IValue NewDatetimeTz(DatetimeTZ value)
-            {
-                long seconds = value.DateTimeOffset.ToUnixTimeSeconds();
-                uint nanos = value.SubsecNanos;
-                if (value.IsFixedOffset)
-                {
-                    int offsetSeconds = (int)value.DateTimeOffset.Offset.TotalSeconds;
-                    return new ConceptValue(Pinvoke.typedb_driver.concept_new_datetime_tz_offset(seconds, nanos, offsetSeconds));
-                }
-                else
-                {
-                    return new ConceptValue(Pinvoke.typedb_driver.concept_new_datetime_tz_iana(seconds, nanos, value.ZoneName!));
-                }
-            }
+            public static IValue NewDatetimeTz(DatetimeTZ value) => ConceptValue.NewDatetimeTz(value);
 
             /// <summary>Creates a new <c>IValue</c> wrapping the specified <c>Duration</c> value.</summary>
-            public static IValue NewDuration(Duration value)
-                => new ConceptValue(Pinvoke.typedb_driver.concept_new_duration((uint)value.Months, (uint)value.Days, (ulong)value.Nanos));
+            public static IValue NewDuration(Duration value) => ConceptValue.NewDuration(value);
         }
     }
 }

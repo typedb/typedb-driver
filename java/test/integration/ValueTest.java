@@ -562,7 +562,7 @@ public class ValueTest {
 
     private ConceptRow runRoundtripTest(Transaction tx, String valueType, Value nativeValue, String typeqlLiteral) {
         String query = String.format("given $native: %s; match let $parsed = %s;", valueType, typeqlLiteral);
-        GivenRows givenRows = TypeDB.Concept.buildGivenRowsFrom(List.of("native"), List.of(List.of(nativeValue)));
+        GivenRows givenRows = TypeDB.Concept.givenRows(List.of("native"), List.of(List.of(nativeValue)));
         List<ConceptRow> rows = tx.query(query, new QueryOptions(), givenRows).resolve()
                 .asConceptRows().stream().collect(Collectors.toList());
         assertEquals(1, rows.size());
@@ -571,7 +571,7 @@ public class ValueTest {
 
     private ConceptRow runRoundtripTestWithRawValue(Transaction tx, String valueType, Object rawValue, String typeqlLiteral) {
         String query = String.format("given $native: %s; match let $parsed = %s;", valueType, typeqlLiteral);
-        List<ConceptRow> rows = tx.query(query, new QueryOptions(), TypeDB.Concept.buildGivenRowsFromObjects(List.of(Map.of("native", rawValue)))).resolve()
+        List<ConceptRow> rows = tx.query(query, new QueryOptions(), TypeDB.Concept.givenRowsFromObjects(List.of(Map.of("native", rawValue)))).resolve()
                 .asConceptRows().stream().collect(Collectors.toList());
         assertEquals(1, rows.size());
         return rows.get(0);

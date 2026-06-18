@@ -18,7 +18,14 @@
 from typedb.api.concept.given_rows import GivenRows
 from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE
 from typedb.common.native_wrapper import NativeWrapper
-from typedb.native_driver_wrapper import GivenRows as NativeGivenRows
+from typedb.native_driver_wrapper import (
+    GivenRows as NativeGivenRows,
+    given_rows_header_builder_new, given_rows_header_builder_push, given_rows_header_builder_finish,
+    given_rows_builder_new, given_rows_builder_start_new_row, given_rows_builder_commit_row,
+    given_rows_builder_finish,
+    given_rows_builder_set_index_to_concept, given_rows_builder_set_index_to_empty,
+    given_rows_builder_set_variable_to_concept, given_rows_builder_set_variable_to_empty,
+)
 
 
 class _GivenRows(GivenRows, NativeWrapper[NativeGivenRows]):
@@ -28,3 +35,58 @@ class _GivenRows(GivenRows, NativeWrapper[NativeGivenRows]):
     @property
     def _native_object_not_owned_exception(self) -> TypeDBDriverException:
         return TypeDBDriverException(ILLEGAL_STATE)
+
+    @staticmethod
+    def of(variables, rows) -> GivenRows:
+        header_builder = given_rows_header_builder_new(len(variables))
+        for variable in variables:
+            given_rows_header_builder_push(header_builder, variable)
+        header_builder.thisown = 0
+        header = given_rows_header_builder_finish(header_builder)
+        rows_builder = given_rows_builder_new(header, len(rows))
+        for row in rows:
+            given_rows_builder_start_new_row(rows_builder)
+            for i, concept in enumerate(row):
+                if concept is None:
+                    given_rows_builder_set_index_to_empty(rows_builder, i)
+                else:
+                    given_rows_builder_set_index_to_concept(rows_builder, i, concept._native_object)
+            given_rows_builder_commit_row(rows_builder)
+        rows_builder.thisown = 0
+        return _GivenRows(given_rows_builder_finish(rows_builder))
+
+    @staticmethod
+    def of_map(rows) -> GivenRows:
+        all_variables: set = set()
+        for row in rows:
+            all_variables.update(row.keys())
+        variables = list(all_variables)
+        header_builder = given_rows_header_builder_new(len(variables))
+        for variable in variables:
+            given_rows_header_builder_push(header_builder, variable)
+        header_builder.thisown = 0
+        header = given_rows_header_builder_finish(header_builder)
+        rows_builder = given_rows_builder_new(header, len(rows))
+        for row in rows:
+            given_rows_builder_start_new_row(rows_builder)
+            for variable, concept in row.items():
+                if concept is None:
+                    given_rows_builder_set_variable_to_empty(rows_builder, variable)
+                else:
+                    given_rows_builder_set_variable_to_concept(rows_builder, variable, concept._native_object)
+            given_rows_builder_commit_row(rows_builder)
+        rows_builder.thisown = 0
+        return _GivenRows(given_rows_builder_finish(rows_builder))
+
+    @staticmethod
+    def of_objects(rows) -> GivenRows:
+        from typedb.api.concept.concept import Concept as _ConceptApi
+        from typedb.concept.value.value import _Value
+        converted = [
+            {
+                var: (None if val is None else (val if isinstance(val, _ConceptApi) else _Value.try_convert_to_value(val)))
+                for var, val in row.items()
+            }
+            for row in rows
+        ]
+        return _GivenRows.of_map(converted)

@@ -19,11 +19,112 @@
 
 package com.typedb.driver.concept;
 
+import com.typedb.driver.api.concept.Concept;
 import com.typedb.driver.api.concept.GivenRows;
 import com.typedb.driver.common.NativeObject;
+import com.typedb.driver.common.exception.TypeDBDriverException;
+import com.typedb.driver.concept.value.ValueImpl;
+
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static com.typedb.driver.jni.typedb_driver.*;
+import static com.typedb.driver.jni.typedb_driver.given_rows_builder_finish;
 
 public class GivenRowsImpl extends NativeObject<com.typedb.driver.jni.GivenRows> implements GivenRows {
     public GivenRowsImpl(com.typedb.driver.jni.GivenRows nativeObject) {
         super(nativeObject);
+    }
+    /**
+     * Constructs a <code>GivenRows</code> instance for use as inputs to queries.
+     *
+     * @param variables The variables describing the content of the givenRows.
+     * @param rows Input rows for the query; each inner iterable is one row, {@code Optional.empty()} entries represent empty variables.
+     */
+    public static GivenRows of(List<String> variables, List<? extends List<? extends com.typedb.driver.api.concept.Concept>> rows) throws TypeDBDriverException {
+        try{
+            com.typedb.driver.jni.GivenRowsHeaderBuilder headerBuilder = given_rows_header_builder_new(variables.size());
+            for (String variable : variables) {
+                given_rows_header_builder_push(headerBuilder, variable);
+            }
+            com.typedb.driver.jni.GivenRowsHeader header = given_rows_header_builder_finish(headerBuilder.released());
+
+            com.typedb.driver.jni.GivenRowsBuilder rowsBuilder = given_rows_builder_new(header, rows.size());
+            for (List<? extends com.typedb.driver.api.concept.Concept> row : rows) {
+                given_rows_builder_start_new_row(rowsBuilder);
+                int colIndex = 0;
+                for (com.typedb.driver.api.concept.Concept concept : row) {
+                    if (concept == null) {
+                        given_rows_builder_set_index_to_empty(rowsBuilder, colIndex);
+                    } else {
+                        given_rows_builder_set_index_to_concept(rowsBuilder, colIndex, ((ConceptImpl) concept).nativeObject);
+                    }
+                    colIndex += 1;
+                }
+                given_rows_builder_commit_row(rowsBuilder);
+            }
+            return new GivenRowsImpl(given_rows_builder_finish(rowsBuilder.released()));
+        } catch (com.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
+        }
+    }
+
+    /**
+     * Constructs a <code>GivenRows</code> instance from the dictionary for use as inputs to queries.
+     *
+     * @param givenRows A list of input rows for the query. Each row is a dictionary mapping a variable to its value.
+     */
+    public static GivenRows of(List<? extends Map<String, ? extends Concept>> givenRows) throws TypeDBDriverException {
+        try{
+            Set<String> variables= new HashSet<>();
+            givenRows.forEach(row -> variables.addAll(row.keySet()));
+            com.typedb.driver.jni.GivenRowsHeaderBuilder headerBuilder = given_rows_header_builder_new(variables.size());
+            for (String variable : variables) {
+                given_rows_header_builder_push(headerBuilder, variable);
+            }
+            com.typedb.driver.jni.GivenRowsHeader header = given_rows_header_builder_finish(headerBuilder.released());
+            com.typedb.driver.jni.GivenRowsBuilder rowsBuilder = given_rows_builder_new(header, givenRows.size());
+            for (Map<String, ? extends com.typedb.driver.api.concept.Concept> row : givenRows) {
+                given_rows_builder_start_new_row(rowsBuilder);
+                for (Map.Entry<String, ? extends com.typedb.driver.api.concept.Concept> variableAndEntry : row.entrySet()) {
+                    if (variableAndEntry.getValue() == null) {
+                        given_rows_builder_set_variable_to_empty(rowsBuilder, variableAndEntry.getKey());
+                    } else {
+                        com.typedb.driver.api.concept.Concept concept = variableAndEntry.getValue();
+                        given_rows_builder_set_variable_to_concept(rowsBuilder, variableAndEntry.getKey(), ((ConceptImpl) concept).nativeObject);
+                    }
+                }
+                given_rows_builder_commit_row(rowsBuilder);
+            }
+            return new GivenRowsImpl(given_rows_builder_finish(rowsBuilder.released()));
+        } catch (com.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
+        }
+    }
+
+    /**
+     * Constructs a <code>GivenRows</code> instance from a list of rows given as plain Java objects.
+     * Each map entry value may be a {@link com.typedb.driver.api.concept.Concept} (used directly) or a raw host-language value
+     * which is converted via {@link #tryConvertToValue}.
+     *
+     * @param givenRows A list of input rows; each row maps variable names to concepts or raw values.
+     */
+    public static GivenRows ofObjects(List<? extends Map<String, Object>> givenRows) throws TypeDBDriverException {
+        List<Map<String, com.typedb.driver.api.concept.Concept>> converted = givenRows.stream()
+                .map(row -> {
+                    Map<String, com.typedb.driver.api.concept.Concept> convertedRow = new HashMap<>();
+                    row.forEach((variable, value) -> {
+                        if (value == null) {
+                            convertedRow.put(variable, null);
+                        } else if (value instanceof com.typedb.driver.api.concept.Concept) {
+                            convertedRow.put(variable, (com.typedb.driver.api.concept.Concept) value);
+                        } else {
+                            convertedRow.put(variable, ValueImpl.tryConvertToValue(value));
+                        }
+                    });
+                    return convertedRow;
+                })
+                .collect(Collectors.toList());
+        return GivenRowsImpl.of(converted);
     }
 }

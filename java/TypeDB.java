@@ -25,24 +25,16 @@ import com.typedb.driver.api.DriverOptions;
 import com.typedb.driver.api.concept.GivenRows;
 import com.typedb.driver.api.concept.value.Value;
 import com.typedb.driver.common.Duration;
-import com.typedb.driver.common.exception.ErrorMessage;
 import com.typedb.driver.common.exception.TypeDBDriverException;
-import com.typedb.driver.concept.ConceptImpl;
 import com.typedb.driver.concept.GivenRowsImpl;
 import com.typedb.driver.concept.value.ValueImpl;
 import com.typedb.driver.connection.DriverImpl;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
-
-import static com.typedb.driver.jni.typedb_driver.*;
 
 public class TypeDB {
     public static final String DEFAULT_ADDRESS = "127.0.0.1:1729";
@@ -107,32 +99,8 @@ public class TypeDB {
          * @param variables The variables describing the content of the givenRows.
          * @param rows Input rows for the query; each inner iterable is one row, {@code Optional.empty()} entries represent empty variables.
          */
-        public static GivenRows buildGivenRowsFrom(List<String> variables, List<? extends List<? extends com.typedb.driver.api.concept.Concept>> rows) throws TypeDBDriverException {
-            try{
-                com.typedb.driver.jni.GivenRowsHeaderBuilder headerBuilder = given_rows_header_builder_new(variables.size());
-                for (String variable : variables) {
-                    given_rows_header_builder_push(headerBuilder, variable);
-                }
-                com.typedb.driver.jni.GivenRowsHeader header = given_rows_header_builder_finish(headerBuilder.released());
-
-                com.typedb.driver.jni.GivenRowsBuilder rowsBuilder = given_rows_builder_new(header, rows.size());
-                for (List<? extends com.typedb.driver.api.concept.Concept> row : rows) {
-                    given_rows_builder_start_new_row(rowsBuilder);
-                    int colIndex = 0;
-                    for (com.typedb.driver.api.concept.Concept concept : row) {
-                        if (concept == null) {
-                            given_rows_builder_set_index_to_empty(rowsBuilder, colIndex);
-                        } else {
-                            given_rows_builder_set_index_to_concept(rowsBuilder, colIndex, ((ConceptImpl) concept).nativeObject);
-                        }
-                        colIndex += 1;
-                    }
-                    given_rows_builder_commit_row(rowsBuilder);
-                }
-                return new GivenRowsImpl(given_rows_builder_finish(rowsBuilder.released()));
-            } catch (com.typedb.driver.jni.Error e) {
-                throw new TypeDBDriverException(e);
-            }
+        public static GivenRows givenRows(List<String> variables, List<? extends List<? extends com.typedb.driver.api.concept.Concept>> rows) throws TypeDBDriverException {
+            return GivenRowsImpl.of(variables, rows);
         }
 
         /**
@@ -140,32 +108,8 @@ public class TypeDB {
          *
          * @param givenRows A list of input rows for the query. Each row is a dictionary mapping a variable to its value.
          */
-        public static GivenRows buildGivenRowsFrom(List<? extends Map<String, ? extends com.typedb.driver.api.concept.Concept>> givenRows) throws TypeDBDriverException {
-            try{
-                Set<String> variables= new HashSet<>();
-                givenRows.forEach(row -> variables.addAll(row.keySet()));
-                com.typedb.driver.jni.GivenRowsHeaderBuilder headerBuilder = given_rows_header_builder_new(variables.size());
-                for (String variable : variables) {
-                    given_rows_header_builder_push(headerBuilder, variable);
-                }
-                com.typedb.driver.jni.GivenRowsHeader header = given_rows_header_builder_finish(headerBuilder.released());
-                com.typedb.driver.jni.GivenRowsBuilder rowsBuilder = given_rows_builder_new(header, givenRows.size());
-                for (Map<String, ? extends com.typedb.driver.api.concept.Concept> row : givenRows) {
-                    given_rows_builder_start_new_row(rowsBuilder);
-                    for (Map.Entry<String, ? extends com.typedb.driver.api.concept.Concept> variableAndEntry : row.entrySet()) {
-                        if (variableAndEntry.getValue() == null) {
-                            given_rows_builder_set_variable_to_empty(rowsBuilder, variableAndEntry.getKey());
-                        } else {
-                            com.typedb.driver.api.concept.Concept concept = variableAndEntry.getValue();
-                            given_rows_builder_set_variable_to_concept(rowsBuilder, variableAndEntry.getKey(), ((ConceptImpl) concept).nativeObject);
-                        }
-                    }
-                    given_rows_builder_commit_row(rowsBuilder);
-                }
-                return new GivenRowsImpl(given_rows_builder_finish(rowsBuilder.released()));
-            } catch (com.typedb.driver.jni.Error e) {
-                throw new TypeDBDriverException(e);
-            }
+        public static GivenRows givenRows(List<? extends Map<String, ? extends com.typedb.driver.api.concept.Concept>> givenRows) throws TypeDBDriverException {
+            return GivenRowsImpl.of(givenRows);
         }
 
         /**
@@ -175,23 +119,8 @@ public class TypeDB {
          *
          * @param givenRows A list of input rows; each row maps variable names to concepts or raw values.
          */
-        public static GivenRows buildGivenRowsFromObjects(List<? extends Map<String, Object>> givenRows) throws TypeDBDriverException {
-            List<Map<String, com.typedb.driver.api.concept.Concept>> converted = givenRows.stream()
-                    .map(row -> {
-                        Map<String, com.typedb.driver.api.concept.Concept> convertedRow = new HashMap<>();
-                        row.forEach((variable, value) -> {
-                            if (value == null) {
-                                convertedRow.put(variable, null);
-                            } else if (value instanceof com.typedb.driver.api.concept.Concept) {
-                                convertedRow.put(variable, (com.typedb.driver.api.concept.Concept) value);
-                            } else {
-                                convertedRow.put(variable, tryConvertToValue(value));
-                            }
-                        });
-                        return convertedRow;
-                    })
-                    .collect(Collectors.toList());
-            return buildGivenRowsFrom(converted);
+        public static GivenRows givenRowsFromObjects(List<? extends Map<String, Object>> givenRows) throws TypeDBDriverException {
+            return GivenRowsImpl.ofObjects(givenRows);
         }
 
         /**
@@ -202,80 +131,36 @@ public class TypeDB {
          * @throws TypeDBDriverException if the object's type is not supported
          */
         public static Value tryConvertToValue(Object value) {
-            if (value instanceof Boolean) return newBoolean((Boolean) value);
-            if (value instanceof Long) return newInteger((Long) value);
-            if (value instanceof Integer) return newInteger((Integer) value);
-            if (value instanceof Double) return newDouble((Double) value);
-            if (value instanceof Float) return newDouble(((Float) value).doubleValue());
-            if (value instanceof BigDecimal) return newDecimal((BigDecimal) value);
-            if (value instanceof String) return newString((String) value);
-            if (value instanceof LocalDate) return newDate((LocalDate) value);
-            if (value instanceof LocalDateTime) return newDatetime((LocalDateTime) value);
-            if (value instanceof ZonedDateTime) return newDatetimeTz((ZonedDateTime) value);
-            if (value instanceof Duration) return newDuration((Duration) value);
-            throw new TypeDBDriverException(ErrorMessage.Concept.UNSUPPORTED_VALUE_CONVERSION, value.getClass().getName());
+            return ValueImpl.tryConvertToValue(value);
         }
 
         /** Creates a new {@code Value} wrapping the specified {@code boolean} value. */
         public static Value newBoolean(boolean value) {
-            return new ValueImpl(concept_new_boolean(value));
+            return ValueImpl.newBoolean(value);
         }
 
         /** Creates a new {@code Value} wrapping the specified {@code long} value. */
-        public static Value newInteger(long value) {
-            return new ValueImpl(concept_new_integer(value));
-        }
+        public static Value newInteger(long value) { return ValueImpl.newInteger(value); }
 
         /** Creates a new {@code Value} wrapping the specified {@code double} value. */
-        public static Value newDouble(double value) {
-            return new ValueImpl(concept_new_double(value));
-        }
+        public static Value newDouble(double value) { return ValueImpl.newDouble(value); }
 
         /** Creates a new {@code Value} wrapping the specified {@code BigDecimal} value. */
-        public static Value newDecimal(BigDecimal value) {
-            long integerPart = value.setScale(0, RoundingMode.FLOOR).longValue();
-            BigDecimal fractional = value.subtract(new BigDecimal(integerPart)).setScale(com.typedb.driver.api.concept.Concept.DECIMAL_SCALE, RoundingMode.UNNECESSARY);
-            BigInteger fractionalPart = fractional.movePointRight(com.typedb.driver.api.concept.Concept.DECIMAL_SCALE).toBigInteger();
-            return new ValueImpl(concept_new_decimal(integerPart, fractionalPart));
-        }
+        public static Value newDecimal(BigDecimal value) { return ValueImpl.newDecimal(value); }
 
         /** Creates a new {@code Value} wrapping the specified {@code String} value. */
-        public static Value newString(String value) {
-            return new ValueImpl(concept_new_string(value));
-        }
+        public static Value newString(String value) { return ValueImpl.newString(value); }
 
         /** Creates a new {@code Value} wrapping the specified {@code LocalDate} value. */
-        public static Value newDate(LocalDate value) {
-            long epochSeconds = value.atStartOfDay(ZoneOffset.UTC).toEpochSecond();
-            return new ValueImpl(concept_new_date_from_seconds(epochSeconds));
-        }
+        public static Value newDate(LocalDate value) { return ValueImpl.newDate(value); }
 
         /** Creates a new {@code Value} wrapping the specified {@code LocalDateTime} value. */
-        public static Value newDatetime(LocalDateTime value) {
-            long seconds = value.toEpochSecond(ZoneOffset.UTC);
-            int nanos = value.getNano();
-            return new ValueImpl(concept_new_datetime(seconds, nanos));
-        }
+        public static Value newDatetime(LocalDateTime value) { return ValueImpl.newDatetime(value); }
 
         /** Creates a new {@code Value} wrapping the specified {@code ZonedDateTime} value. */
-        public static Value newDatetimeTz(ZonedDateTime value) {
-            long seconds = value.toInstant().getEpochSecond();
-            int nanos = value.getNano();
-            if (value.getZone() instanceof ZoneOffset) {
-                int offsetSeconds = ((ZoneOffset) value.getZone()).getTotalSeconds();
-                return new ValueImpl(concept_new_datetime_tz_offset(seconds, nanos, offsetSeconds));
-            } else {
-                String zoneName = value.getZone().getId();
-                return new ValueImpl(concept_new_datetime_tz_iana(seconds, nanos, zoneName));
-            }
-        }
+        public static Value newDatetimeTz(ZonedDateTime value) { return ValueImpl.newDatetimeTz(value); }
 
         /** Creates a new {@code Value} wrapping the specified {@code Duration} value. */
-        public static Value newDuration(Duration value) {
-            int months = value.getMonths();
-            int days = value.getDays();
-            long nanos = value.getTimePart().toNanos();
-            return new ValueImpl(concept_new_duration(months, days, BigInteger.valueOf(nanos)));
-        }
+        public static Value newDuration(Duration value) { return ValueImpl.newDuration(value); }
     }
 }

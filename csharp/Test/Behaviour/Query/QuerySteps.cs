@@ -29,7 +29,6 @@ using Xunit.Gherkin.Quick;
 using TypeDB.Driver;
 using TypeDB.Driver.Api;
 using TypeDB.Driver.Api.Answer;
-using TypeDB.Driver.Api.Concept;
 using TypeDB.Driver.Answer;
 using TypeDB.Driver.Common;
 

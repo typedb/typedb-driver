@@ -26,6 +26,7 @@ using TypeDB.Driver.Common;
 
 using ConceptError = TypeDB.Driver.Common.Error.Concept;
 using InternalError = TypeDB.Driver.Common.Error.Internal;
+using IValueApi = TypeDB.Driver.Api.IValue;
 
 namespace TypeDB.Driver.Concept
 {
@@ -180,5 +181,69 @@ namespace TypeDB.Driver.Concept
 
             return _hash;
         }
+
+        public static IValueApi TryConvertToValue(object value)
+        {
+            if (value is bool b) return NewBoolean(b);
+            if (value is long l) return NewInteger(l);
+            if (value is int i) return NewInteger(i);
+            if (value is double d) return NewDouble(d);
+            if (value is float f) return NewDouble(f);
+            if (value is decimal dec) return NewDecimal(dec);
+            if (value is string s) return NewString(s);
+            if (value is DateOnly date) return NewDate(date);
+            if (value is Datetime dt) return NewDatetime(dt);
+            if (value is DatetimeTZ dtz) return NewDatetimeTz(dtz);
+            if (value is Duration dur) return NewDuration(dur);
+            throw new TypeDBDriverException(ConceptError.UNSUPPORTED_VALUE_CONVERSION, value.GetType().Name);
+        }
+
+        public static IValueApi NewBoolean(bool value)
+            => new Value(Pinvoke.typedb_driver.concept_new_boolean(value));
+
+        public static IValueApi NewInteger(long value)
+            => new Value(Pinvoke.typedb_driver.concept_new_integer(value));
+
+        public static IValueApi NewDouble(double value)
+            => new Value(Pinvoke.typedb_driver.concept_new_double(value));
+
+        public static IValueApi NewDecimal(decimal value)
+        {
+            decimal scale = (decimal)Math.Pow(10, IConcept.DecimalScale);
+            long integerPart = (long)Math.Floor(value);
+            decimal fractional = value - integerPart;
+            ulong fractionalPart = (ulong)(fractional * scale);
+            return new Value(Pinvoke.typedb_driver.concept_new_decimal(integerPart, fractionalPart));
+        }
+
+        public static IValueApi NewString(string value)
+            => new Value(Pinvoke.typedb_driver.concept_new_string(value));
+
+        public static IValueApi NewDate(DateOnly value)
+        {
+            long epochSeconds = new DateTimeOffset(value.ToDateTime(TimeOnly.MinValue), TimeSpan.Zero).ToUnixTimeSeconds();
+            return new Value(Pinvoke.typedb_driver.concept_new_date_from_seconds(epochSeconds));
+        }
+
+        public static IValueApi NewDatetime(Datetime value)
+            => new Value(Pinvoke.typedb_driver.concept_new_datetime(value.Seconds, value.SubsecNanos));
+
+        public static IValueApi NewDatetimeTz(DatetimeTZ value)
+        {
+            long seconds = value.DateTimeOffset.ToUnixTimeSeconds();
+            uint nanos = value.SubsecNanos;
+            if (value.IsFixedOffset)
+            {
+                int offsetSeconds = (int)value.DateTimeOffset.Offset.TotalSeconds;
+                return new Value(Pinvoke.typedb_driver.concept_new_datetime_tz_offset(seconds, nanos, offsetSeconds));
+            }
+            else
+            {
+                return new Value(Pinvoke.typedb_driver.concept_new_datetime_tz_iana(seconds, nanos, value.ZoneName!));
+            }
+        }
+
+        public static IValueApi NewDuration(Duration value)
+            => new Value(Pinvoke.typedb_driver.concept_new_duration((uint)value.Months, (uint)value.Days, (ulong)value.Nanos));
     }
 }

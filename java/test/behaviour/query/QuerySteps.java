@@ -885,7 +885,7 @@ public class QuerySteps {
                     return m;
                 })
                 .collect(Collectors.toList());
-        givenRows = TypeDB.Concept.buildGivenRowsFrom(asMap);
+        givenRows = TypeDB.Concept.givenRows(asMap);
     }
 
     @Given("set answers of typeql read query as given rows with order: {variable_list}")
@@ -894,7 +894,7 @@ public class QuerySteps {
         List<? extends List<? extends Concept>> rows = tableRows.stream()
                 .map(row -> varList.stream().<Concept>map(var -> row.get(var).orElse(null)).collect(Collectors.toList()))
                 .collect(Collectors.toList());
-        givenRows = TypeDB.Concept.buildGivenRowsFrom(varList, rows);
+        givenRows = TypeDB.Concept.givenRows(varList, rows);
     }
 
     @Given("get answers of typeql write query{with_given}{may_error}")

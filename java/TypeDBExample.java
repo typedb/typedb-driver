@@ -192,7 +192,7 @@ public class TypeDBExample {
                 Concept personFred = rows.get(0).get("fred").get();
 
                 String query = "given $x: person, $v: integer; insert $x has age == $v;";
-                GivenRows givenRows = TypeDB.Concept.buildGivenRowsFrom(
+                GivenRows givenRows = TypeDB.Concept.givenRows(
                     List.of(
                         java.util.Map.ofEntries(
                             Map.entry("x", personEugene),

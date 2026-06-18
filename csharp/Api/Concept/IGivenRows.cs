@@ -17,7 +17,7 @@
  * under the License.
  */
 
-namespace TypeDB.Driver.Api.Concept
+namespace TypeDB.Driver.Api
 {
     public interface IGivenRows { }
 }
