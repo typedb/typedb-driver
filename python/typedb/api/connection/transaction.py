@@ -98,6 +98,18 @@ class Transaction(ABC):
         ::
 
             transaction.query("define entity person;", options).resolve()
+
+        ::
+
+            query = "given $n: string, $a: integer; insert $p isa person, has name == $n, has age == $a;"
+            rows = TypeDB.Concept.given_rows(
+                ["n", "a"],
+                [
+                    [TypeDB.Concept.new_string("Alice"), TypeDB.Concept.new_integer(28)],  # First row
+                    [TypeDB.Concept.new_string("Bob"),   TypeDB.Concept.new_integer(26)],  # Second row
+                ]
+            )
+            transaction.query(query, given_rows=rows).resolve()
         """
         pass
 

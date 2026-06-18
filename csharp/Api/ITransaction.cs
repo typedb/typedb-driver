@@ -86,6 +86,19 @@ namespace TypeDB.Driver.Api
         /// <param name="options">Query options.</param>
         /// <param name="givenRows">Input rows built via <c>TypeDB.Concept.GivenRows</c>.</param>
         /// <returns>A promise that resolves to the query answer containing the results.</returns>
+        /// <example>
+        /// <code>
+        /// string query = "given $n: string, $a: integer; insert $p isa person, has name == $n, has age == $a;";
+        /// IGivenRows rows = TypeDB.Concept.GivenRows(
+        ///     new List&lt;string&gt; { "n", "a" },
+        ///     new List&lt;List&lt;IConcept?&gt;&gt; {
+        ///         new List&lt;IConcept?&gt; { TypeDB.Concept.NewString("Alice"), TypeDB.Concept.NewInteger(28) }, // First row
+        ///         new List&lt;IConcept?&gt; { TypeDB.Concept.NewString("Bob"),   TypeDB.Concept.NewInteger(26) }  // Second row
+        ///     }
+        /// );
+        /// transaction.Query(query, new QueryOptions(), rows).Resolve();
+        /// </code>
+        /// </example>
         Promise<IQueryAnswer> Query(string query, QueryOptions options, IGivenRows givenRows);
 
         /// <summary>

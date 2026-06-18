@@ -86,6 +86,18 @@ public interface Transaction extends AutoCloseable {
     /**
      * Execute a TypeQL query with input rows in this transaction.
      *
+     * <h3>Examples</h3>
+     * <pre>
+     * String query = "given $n: string, $a: integer; insert $p isa person, has name == $n, has age == $a;";
+     * GivenRows rows = TypeDB.Concept.givenRows(
+     *      List.of("n", "a"),
+     *      List.of(
+     *          List.of(TypeDB.Concept.newString("Alice"), TypeDB.Concept.newInteger(28)), // First row
+     *          List.of(TypeDB.Concept.newString("Bob"), TypeDB.Concept.newInteger(26))    // Second row
+     *      )
+     *  );
+     * transaction.query(query, rows);
+     * </pre>
      * @param query     The query to execute.
      * @param givenRows GivenRows to be used as input to the query.
      */

@@ -92,6 +92,18 @@ impl Transaction {
         self.query_with_options_and_rows(query, options, None)
     }
 
+    /// Performs a TypeQL query in this transaction.
+    ///
+    /// # Arguments
+    ///
+    /// * `query` — The TypeQL query to be executed
+    /// * `rows` — The GivenRows to pass as input to the query.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// transaction.query_with_options(query, options, rows)
+    /// ```
     pub fn query_with_rows(
         &self,
         query: impl AsRef<str>,
@@ -100,6 +112,19 @@ impl Transaction {
         self.query_with_options_and_rows(query, QueryOptions::new(), Some(rows))
     }
 
+    /// Performs a TypeQL query in this transaction.
+    ///
+    /// # Arguments
+    ///
+    /// * `query` — The TypeQL query to be executed
+    /// * `options` — The QueryOptions to execute the query with
+    /// * `rows` — The GivenRows to pass as input to the query.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// transaction.query_with_options(query, options, rows)
+    /// ```
     pub fn query_with_options_and_rows(
         &self,
         query: impl AsRef<str>,

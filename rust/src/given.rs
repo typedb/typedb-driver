@@ -38,8 +38,11 @@ pub enum GivenRowEntry {
 /// # Examples
 ///
 /// ```rust
-/// let rows =
-/// transaction.query_with_options_and_rows(query, options, Some(rows))
+/// let query = "given $n: string, $a: integer; insert $p isa person, has name == $n, has age == $a;";
+/// let mut rows = GivenRows::new(vec!["n".to_owned(), "a".to_owned()], 1);
+/// rows.push_row(vec![GivenRowEntry::Value(Value::String("Alice".to_owned())), GivenRowEntry::Value(Value::Integer(28))]);
+/// rows.push_row(vec![GivenRowEntry::Value(Value::String("Bob".to_owned())), GivenRowEntry::Value(Value::Integer(26))]);
+/// transaction.query_with_rows(query, rows)
 /// ```
 #[derive(Debug, Clone)]
 pub struct GivenRows {
