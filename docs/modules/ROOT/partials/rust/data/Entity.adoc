@@ -9,6 +9,7 @@
 * `Clone`
 * `Debug`
 * `Eq`
+* `From<Entity>`
 * `PartialEq`
 * `StructuralPartialEq`
 

@@ -250,6 +250,49 @@ a| `options` a| The ``QueryOptions`` to execute the query with. a| `QueryOptions
 transaction.query("define entity person;");
 ----
 
+[#_Transaction_query_java_lang_String_GivenRows]
+==== method ``query``
+
+[source,java]
+----
+@CheckReturnValue
+Promise<? extends QueryAnswer> query​(java.lang.String query,
+                                     GivenRows givenRows)
+                              throws TypeDBDriverException
+----
+
+Execute a TypeQL query with input rows in this transaction. 
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `query` a| The query to execute. a| `java.lang.String`
+a| `givenRows` a| GivenRows to be used as input to the query. a| `GivenRows`
+|===
+
+[caption=""]
+.Returns
+`Promise<? extends QueryAnswer>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+String query = "given $n: string, $a: integer; insert $p isa person, has name == $n, has age == $a;";
+ GivenRows rows = TypeDB.Concept.givenRows(
+      List.of("n", "a"),
+      List.of(
+          List.of(TypeDB.Concept.newString("Alice"), TypeDB.Concept.newInteger(28)), // First row
+          List.of(TypeDB.Concept.newString("Bob"), TypeDB.Concept.newInteger(26))    // Second row
+      )
+  );
+ transaction.query(query, rows);
+----
+
 [#_Transaction_query_java_lang_String_QueryOptions_GivenRows]
 ==== method ``query``
 

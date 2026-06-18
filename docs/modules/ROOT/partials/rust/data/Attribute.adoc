@@ -8,6 +8,7 @@
 
 * `Clone`
 * `Debug`
+* `From<Attribute>`
 * `PartialEq`
 * `StructuralPartialEq`
 

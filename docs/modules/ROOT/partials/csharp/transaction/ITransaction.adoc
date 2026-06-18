@@ -185,12 +185,19 @@ Executes a TypeQL query with input rows in this transaction.
 |Name |Description |Type
 a| `query` a| The TypeQL query string to execute. a| `string`
 a| `options` a| Query options. a| `QueryOptions`
-a| `givenRows` a| Input rows built via ``ConceptFactory.BuildGivenRowsFrom``. a| `IGivenRows`
+a| `givenRows` a| Input rows built via ``TypeDB.Concept.GivenRows``. a| `IGivenRows`
 |===
 
 [caption=""]
 .Returns
 `Promise< IQueryAnswer >`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+string query = "given $n: string, $a: integer; insert $p isa person, has name == $n, has age == $a;"; IGivenRows rows = TypeDB.Concept.GivenRows( new List<string> { "n", "a" }, new List<List<IConcept?>> { new List<IConcept?> { TypeDB.Concept.NewString("Alice"), TypeDB.Concept.NewInteger(28) }, // First row new List<IConcept?> { TypeDB.Concept.NewString("Bob"), TypeDB.Concept.NewInteger(26) } // Second row } ); transaction.Query(query, new QueryOptions(), rows).Resolve(); TypeDB.Driver.Api.IGivenRows Definition IGivenRows.cs:22 TypeDB Definition TypeDB.cs:29
+----
 
 [#_void_TypeDB_Driver_Api_ITransaction_Rollback_]
 ==== method ``Rollback``

@@ -124,7 +124,7 @@ dir_mapping = {
     "Instance.adoc": "data",
     "Relation.adoc": "data",
     "Value.adoc": "data",
-    "ConceptFactory.adoc": "data",
+    "TypeDB.Concept.adoc": "data",
     "GivenRows.adoc": "data",
 
     # Errors

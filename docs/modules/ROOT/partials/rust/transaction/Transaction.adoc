@@ -256,6 +256,84 @@ impl Promise<'static, Result<QueryAnswer>>
 transaction.query_with_options(query, options)
 ----
 
+[#_struct_Transaction_query_with_options_and_rows_query_impl_AsRef_str_options_QueryOptions_rows_Option_GivenRows_]
+==== query_with_options_and_rows
+
+[source,rust]
+----
+pub fn query_with_options_and_rows(
+    &self,
+    query: impl AsRef<str>,
+    options: QueryOptions,
+    rows: Option<GivenRows>,
+) -> impl Promise<'static, Result<QueryAnswer>>
+----
+
+Performs a TypeQL query in this transaction.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `query` a|  — The TypeQL query to be executed a| `impl AsRef<str>`
+a| `options` a|  — The QueryOptions to execute the query with a| `QueryOptions`
+a| `rows` a|  — The GivenRows to pass as input to the query. a| `Option<GivenRows>`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+impl Promise<'static, Result<QueryAnswer>>
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+transaction.query_with_options(query, options, rows)
+----
+
+[#_struct_Transaction_query_with_rows_query_impl_AsRef_str_rows_GivenRows]
+==== query_with_rows
+
+[source,rust]
+----
+pub fn query_with_rows(
+    &self,
+    query: impl AsRef<str>,
+    rows: GivenRows,
+) -> impl Promise<'static, Result<QueryAnswer>>
+----
+
+Performs a TypeQL query in this transaction.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `query` a|  — The TypeQL query to be executed a| `impl AsRef<str>`
+a| `rows` a|  — The GivenRows to pass as input to the query. a| `GivenRows`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+impl Promise<'static, Result<QueryAnswer>>
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+transaction.query_with_options(query, options, rows)
+----
+
 [#_struct_Transaction_rollback_]
 ==== rollback
 

@@ -11,6 +11,8 @@
 * `Debug`
 * `Display`
 * `Eq`
+* `From<Duration>`
+* `From<Duration>`
 * `FromStr`
 * `Hash`
 * `PartialEq`

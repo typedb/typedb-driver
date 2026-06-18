@@ -1,0 +1,223 @@
+[#_Concept]
+[.doc-api-reference-driver]
+=== Concept
+
+`class`
+
+*Package*: `TypeDB.Driver.TypeDB`
+
+
+
+Factory class to instantiate new ``IValue`` concepts and build ``IGivenRows`` for use as query inputs.
+
+// tag::methods[]
+[#_static_IGivenRows_TypeDB_Driver_TypeDB_Concept_GivenRows_List_string_givenVariables_List_List_IConcept_givenRows_]
+==== method ``GivenRows``
+
+[source,cs]
+----
+static IGivenRows GivenRows(List< string > givenVariables, List< List< IConcept? > > givenRows)
+----
+
+
+
+Constructs an ``IGivenRows`` instance for use as inputs to queries (index-based).
+
+[caption=""]
+.Returns
+`IGivenRows`
+
+[#_static_IGivenRows_TypeDB_Driver_TypeDB_Concept_GivenRows_List_Dictionary_string_IConcept_givenRows_]
+==== method ``GivenRows``
+
+[source,cs]
+----
+static IGivenRows GivenRows(List< Dictionary< string, IConcept? > > givenRows)
+----
+
+
+
+Constructs an ``IGivenRows`` instance from dict-based rows for use as inputs to queries.
+
+[caption=""]
+.Returns
+`IGivenRows`
+
+[#_static_IGivenRows_TypeDB_Driver_TypeDB_Concept_GivenRowsFromObjects_List_Dictionary_string_object_givenRows_]
+==== method ``GivenRowsFromObjects``
+
+[source,cs]
+----
+static IGivenRows GivenRowsFromObjects(List< Dictionary< string, object? > > givenRows)
+----
+
+
+
+Constructs an ``IGivenRows`` instance from rows containing raw .NET values or concepts.
+
+[caption=""]
+.Returns
+`IGivenRows`
+
+[#_static_IValue_TypeDB_Driver_TypeDB_Concept_NewBoolean_bool_value_]
+==== method ``NewBoolean``
+
+[source,cs]
+----
+static IValue NewBoolean(bool value)
+----
+
+
+
+Creates a new ``IValue`` wrapping the specified ``bool`` value.
+
+[caption=""]
+.Returns
+`IValue`
+
+[#_static_IValue_TypeDB_Driver_TypeDB_Concept_NewDate_DateOnly_value_]
+==== method ``NewDate``
+
+[source,cs]
+----
+static IValue NewDate(DateOnly value)
+----
+
+
+
+Creates a new ``IValue`` wrapping the specified ``DateOnly`` value.
+
+[caption=""]
+.Returns
+`IValue`
+
+[#_static_IValue_TypeDB_Driver_TypeDB_Concept_NewDatetime_Datetime_value_]
+==== method ``NewDatetime``
+
+[source,cs]
+----
+static IValue NewDatetime(Datetime value)
+----
+
+
+
+Creates a new ``IValue`` wrapping the specified ``Datetime`` value.
+
+[caption=""]
+.Returns
+`IValue`
+
+[#_static_IValue_TypeDB_Driver_TypeDB_Concept_NewDatetimeTz_DatetimeTZ_value_]
+==== method ``NewDatetimeTz``
+
+[source,cs]
+----
+static IValue NewDatetimeTz(DatetimeTZ value)
+----
+
+
+
+Creates a new ``IValue`` wrapping the specified ``DatetimeTZ`` value.
+
+[caption=""]
+.Returns
+`IValue`
+
+[#_static_IValue_TypeDB_Driver_TypeDB_Concept_NewDecimal_decimal_value_]
+==== method ``NewDecimal``
+
+[source,cs]
+----
+static IValue NewDecimal(decimal value)
+----
+
+
+
+Creates a new ``IValue`` wrapping the specified ``decimal`` value.
+
+[caption=""]
+.Returns
+`IValue`
+
+[#_static_IValue_TypeDB_Driver_TypeDB_Concept_NewDouble_double_value_]
+==== method ``NewDouble``
+
+[source,cs]
+----
+static IValue NewDouble(double value)
+----
+
+
+
+Creates a new ``IValue`` wrapping the specified ``double`` value.
+
+[caption=""]
+.Returns
+`IValue`
+
+[#_static_IValue_TypeDB_Driver_TypeDB_Concept_NewDuration_Duration_value_]
+==== method ``NewDuration``
+
+[source,cs]
+----
+static IValue NewDuration(Duration value)
+----
+
+
+
+Creates a new ``IValue`` wrapping the specified ``Duration`` value.
+
+[caption=""]
+.Returns
+`IValue`
+
+[#_static_IValue_TypeDB_Driver_TypeDB_Concept_NewInteger_long_value_]
+==== method ``NewInteger``
+
+[source,cs]
+----
+static IValue NewInteger(long value)
+----
+
+
+
+Creates a new ``IValue`` wrapping the specified ``long`` value.
+
+[caption=""]
+.Returns
+`IValue`
+
+[#_static_IValue_TypeDB_Driver_TypeDB_Concept_NewString_string_value_]
+==== method ``NewString``
+
+[source,cs]
+----
+static IValue NewString(string value)
+----
+
+
+
+Creates a new ``IValue`` wrapping the specified ``string`` value.
+
+[caption=""]
+.Returns
+`IValue`
+
+[#_static_IValue_TypeDB_Driver_TypeDB_Concept_TryConvertToValue_object_value_]
+==== method ``TryConvertToValue``
+
+[source,cs]
+----
+static IValue TryConvertToValue(object value)
+----
+
+
+
+Converts a raw .NET value to an ``IValue`` concept.
+
+[caption=""]
+.Returns
+`IValue`
+
+// end::methods[]
+

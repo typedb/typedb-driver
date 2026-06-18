@@ -114,7 +114,7 @@ dir_mapping = {
     "IRelation.adoc": "data",
     "IValue.adoc": "data",
     "IGivenRows.adoc": "data",
-    "ConceptFactory.adoc": "data",
+    "Concept.adoc": "data", # This is the factory TypeDB.Concept
 
     # Errors
     "TypeDBDriverException.adoc": "errors",

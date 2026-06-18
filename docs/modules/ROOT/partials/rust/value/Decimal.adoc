@@ -13,6 +13,8 @@
 * `Default`
 * `Display`
 * `Eq`
+* `From<Decimal>`
+* `From<Decimal>`
 * `FromStr`
 * `Hash`
 * `Neg`

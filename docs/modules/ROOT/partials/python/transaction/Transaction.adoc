@@ -112,12 +112,12 @@ a| `function` a| The callback function. a| `Callable` a|
 transaction.on_close(function)
 ----
 
-[#_Transaction_query_query_str_options_QueryOptions_None_given_rows_]
+[#_Transaction_query_query_str_options_QueryOptions_None_given_rows_GivenRows_None]
 ==== method ``query``
 
 [source,python]
 ----
-query(query: str, options: QueryOptions | None = None, given_rows=None) -> Promise[QueryAnswer]
+query(query: str, options: QueryOptions | None = None, given_rows: GivenRows | None = None) -> Promise[QueryAnswer]
 ----
 
 Execute a TypeQL query in this transaction.
@@ -129,8 +129,8 @@ Execute a TypeQL query in this transaction.
 |===
 |Name |Description |Type |Default Value
 a| `query` a| The query to execute. a| `str` a| 
-a| `options` a| The ``QueryOptions`` to execute the query with.. a| `QueryOptions \| None` a| `None`
-a| `given_rows` a| Rows given to the query as input. Will throw an exception if a type is passed. a| `` a| `None`
+a| `options` a| The ``QueryOptions`` to execute the query with. a| `QueryOptions \| None` a| `None`
+a| `given_rows` a| Rows given to the query as input. a| `GivenRows \| None` a| `None`
 |===
 
 [caption=""]
@@ -142,6 +142,19 @@ a| `given_rows` a| Rows given to the query as input. Will throw an exception if 
 [source,python]
 ----
 transaction.query("define entity person;", options).resolve()
+----
+
+[source,python]
+----
+query = "given $n: string, $a: integer; insert $p isa person, has name == $n, has age == $a;"
+rows = TypeDB.Concept.given_rows(
+    ["n", "a"],
+    [
+        [TypeDB.Concept.new_string("Alice"), TypeDB.Concept.new_integer(28)],  # First row
+        [TypeDB.Concept.new_string("Bob"),   TypeDB.Concept.new_integer(26)],  # Second row
+    ]
+)
+transaction.query(query, given_rows=rows).resolve()
 ----
 
 [#_Transaction_rollback_]

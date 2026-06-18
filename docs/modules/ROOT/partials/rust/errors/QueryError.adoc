@@ -15,6 +15,7 @@ a| `GivenRowIndexOutOfBounds`
 a| `GivenRowUnknownVariable`
 a| `GivenRowsReceivedType`
 a| `GivenRowsSizeMismatch`
+a| `InvalidTypeToGivenRow`
 |===
 // end::enum_constants[]
 

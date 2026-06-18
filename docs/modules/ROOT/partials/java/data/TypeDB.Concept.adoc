@@ -1,0 +1,241 @@
+[#_TypeDB_Concept]
+[.doc-api-reference-driver]
+=== TypeDB.Concept
+
+`class`
+
+*Package*: `com.typedb.driver`
+
+Factory class to instantiate new ``Value`` concepts from raw values. These can then be used in the ``GivenRows`` of a query.
+
+// tag::methods[]
+[#_TypeDB_Concept_Concept_]
+==== method ``Concept``
+
+[source,java]
+----
+public Concept()
+----
+
+
+
+[caption=""]
+.Returns
+`public`
+
+[#_TypeDB_Concept_givenRows_java_util_List_java_lang_String_java_util_List_extends_java_util_List_extends_Concept_]
+==== method ``givenRows``
+
+[source,java]
+----
+public static GivenRows givenRows​(java.util.List<java.lang.String> variables,
+                                  java.util.List<? extends java.util.List<? extends Concept>> rows)
+                           throws TypeDBDriverException
+----
+
+Constructs a ``GivenRows`` instance for use as inputs to queries.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `variables` a| The variables describing the content of the givenRows. a| `java.util.List<java.lang.String>`
+a| `rows` a| Input rows for the query; each inner iterable is one row, ``Optional.empty()`` entries represent empty variables. a| `java.util.List<? extends java.util.List<? extends Concept>>`
+|===
+
+[caption=""]
+.Returns
+`public static GivenRows`
+
+[#_TypeDB_Concept_givenRows_java_util_List_extends_java_util_Map_java_lang_String_​_extends_Concept_]
+==== method ``givenRows``
+
+[source,java]
+----
+public static GivenRows givenRows​(java.util.List<? extends java.util.Map<java.lang.String,​? extends Concept>> givenRows)
+                           throws TypeDBDriverException
+----
+
+Constructs a ``GivenRows`` instance from the dictionary for use as inputs to queries.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `givenRows` a| A list of input rows for the query. Each row is a dictionary mapping a variable to its value. a| `java.util.List<? extends java.util.Map<java.lang.String,​? extends Concept>>`
+|===
+
+[caption=""]
+.Returns
+`public static GivenRows`
+
+[#_TypeDB_Concept_givenRowsFromObjects_java_util_List_extends_java_util_Map_java_lang_String_​java_lang_Object_]
+==== method ``givenRowsFromObjects``
+
+[source,java]
+----
+public static GivenRows givenRowsFromObjects​(java.util.List<? extends java.util.Map<java.lang.String,​java.lang.Object>> givenRows)
+                                      throws TypeDBDriverException
+----
+
+Constructs a ``GivenRows`` instance from a list of rows given as plain Java objects. Each map entry value may be a ``Concept`` (used directly) or a raw host-language value which is converted via <<#_tryConvertToValue_java_lang_Object,``tryConvertToValue(java.lang.Object)``>>.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `givenRows` a| A list of input rows; each row maps variable names to concepts or raw values. a| `java.util.List<? extends java.util.Map<java.lang.String,​java.lang.Object>>`
+|===
+
+[caption=""]
+.Returns
+`public static GivenRows`
+
+[#_TypeDB_Concept_newBoolean_boolean]
+==== method ``newBoolean``
+
+[source,java]
+----
+public static Value newBoolean​(boolean value)
+----
+
+Creates a new ``Value`` wrapping the specified ``boolean`` value.
+
+[caption=""]
+.Returns
+`public static Value`
+
+[#_TypeDB_Concept_newDate_java_time_LocalDate]
+==== method ``newDate``
+
+[source,java]
+----
+public static Value newDate​(java.time.LocalDate value)
+----
+
+Creates a new ``Value`` wrapping the specified ``LocalDate`` value.
+
+[caption=""]
+.Returns
+`public static Value`
+
+[#_TypeDB_Concept_newDatetime_java_time_LocalDateTime]
+==== method ``newDatetime``
+
+[source,java]
+----
+public static Value newDatetime​(java.time.LocalDateTime value)
+----
+
+Creates a new ``Value`` wrapping the specified ``LocalDateTime`` value.
+
+[caption=""]
+.Returns
+`public static Value`
+
+[#_TypeDB_Concept_newDatetimeTz_java_time_ZonedDateTime]
+==== method ``newDatetimeTz``
+
+[source,java]
+----
+public static Value newDatetimeTz​(java.time.ZonedDateTime value)
+----
+
+Creates a new ``Value`` wrapping the specified ``ZonedDateTime`` value.
+
+[caption=""]
+.Returns
+`public static Value`
+
+[#_TypeDB_Concept_newDecimal_java_math_BigDecimal]
+==== method ``newDecimal``
+
+[source,java]
+----
+public static Value newDecimal​(java.math.BigDecimal value)
+----
+
+Creates a new ``Value`` wrapping the specified ``BigDecimal`` value.
+
+[caption=""]
+.Returns
+`public static Value`
+
+[#_TypeDB_Concept_newDouble_double]
+==== method ``newDouble``
+
+[source,java]
+----
+public static Value newDouble​(double value)
+----
+
+Creates a new ``Value`` wrapping the specified ``double`` value.
+
+[caption=""]
+.Returns
+`public static Value`
+
+[#_TypeDB_Concept_newDuration_Duration]
+==== method ``newDuration``
+
+[source,java]
+----
+public static Value newDuration​(Duration value)
+----
+
+Creates a new ``Value`` wrapping the specified ``Duration`` value.
+
+[caption=""]
+.Returns
+`public static Value`
+
+[#_TypeDB_Concept_newInteger_long]
+==== method ``newInteger``
+
+[source,java]
+----
+public static Value newInteger​(long value)
+----
+
+Creates a new ``Value`` wrapping the specified ``long`` value.
+
+[caption=""]
+.Returns
+`public static Value`
+
+[#_TypeDB_Concept_newString_java_lang_String]
+==== method ``newString``
+
+[source,java]
+----
+public static Value newString​(java.lang.String value)
+----
+
+Creates a new ``Value`` wrapping the specified ``String`` value.
+
+[caption=""]
+.Returns
+`public static Value`
+
+[#_TypeDB_Concept_tryConvertToValue_java_lang_Object]
+==== method ``tryConvertToValue``
+
+[source,java]
+----
+public static Value tryConvertToValue​(java.lang.Object value)
+----
+
+Converts a raw host-language object to a ``Value`` concept. Accepted types: ``Boolean``, ``Long``, ``Integer``, ``Double``, ``Float``, ``BigDecimal``, ``String``, ``LocalDate``, ``LocalDateTime``, ``ZonedDateTime``, ``Duration``.
+
+[caption=""]
+.Returns
+`public static Value`
+
+// end::methods[]
+

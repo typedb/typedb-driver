@@ -9,6 +9,7 @@
 * `Clone`
 * `Debug`
 * `Eq`
+* `From<Relation>`
 * `PartialEq`
 * `StructuralPartialEq`
 
