@@ -641,6 +641,7 @@
     $1 = (char*)malloc(sz + 1);
     jbyte* bae = jenv->GetByteArrayElements($input, 0);
     memcpy($1, (const char*)bae, sz);
+    $1[sz] = 0;
     jenv->ReleaseByteArrayElements($input, bae, 0);
 }
 %typemap(out) char* {
