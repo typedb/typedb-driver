@@ -19,7 +19,7 @@
 
 use std::{
     cell::RefCell,
-    ffi::{c_char, CStr, CString},
+    ffi::{CStr, CString, c_char},
     ptr::null_mut,
     sync::Arc,
 };
