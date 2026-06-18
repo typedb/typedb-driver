@@ -163,8 +163,16 @@ class DoxygenParserCsharp : Callable<Unit> {
     private fun parseClass(document: Element): Pair<Class, List<Class>> {
         // If we want inherited members, consider doxygen's INLINE_INHERITED_MEMB instead of the javadoc approach
         val fullyQualifiedName = formatEntityName(document.selectFirst("div .title")!!.text())
+        // For nested classes (e.g. TypeDB.Driver.TypeDB.Concept), keep the outer class name
+        // as a prefix so the filename is "TypeDB.Concept.adoc" rather than just "Concept.adoc".
+        // For regular classes (e.g. TypeDB.Driver.Api.IGivenRows), use just the simple name.
+        val withoutRootNamespace = fullyQualifiedName.removePrefix("TypeDB.Driver.")
+        val className = if (withoutRootNamespace.startsWith("TypeDB.")) {
+            withoutRootNamespace  // e.g. "TypeDB.Concept"
+        } else {
+            fullyQualifiedName.substringAfterLast(".")  // e.g. "IGivenRows"
+        }
         val packagePath = fullyQualifiedName.substringBeforeLast(".")
-        val className = fullyQualifiedName.substringAfterLast(".")
         val classAnchor = replaceSymbolsForAnchor(className)
         val classExamples = document.select("div.textblock > pre").map { replaceSpaces(it.text()) }
         val superClasses = document.select("tr.inherit_header")

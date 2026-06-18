@@ -109,7 +109,7 @@ a| `driverOptions` a| The driver connection options to connect with. a| `DriverO
 .Code examples
 [source,cs]
 ----
-TypeDB.Driver(addressTranslation, credentials, driverOptions); TypeDB.Driver Definition TypeDB.cs:26 TypeDB Definition TypeDB.cs:26
+TypeDB.Driver(addressTranslation, credentials, driverOptions); TypeDB.Driver Definition TypeDB.cs:29 TypeDB Definition TypeDB.cs:29
 ----
 
 // end::methods[]

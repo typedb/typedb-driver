@@ -37,6 +37,14 @@ namespace TypeDB.Driver
         /// <summary>
         /// Open a TypeDB Driver to a TypeDB server available at the provided address.
         /// </summary>
+        /// <param name="address">The address of the TypeDB server.</param>
+        /// <param name="credentials">The credentials to connect with.</param>
+        /// <param name="driverOptions">The driver connection options to connect with.</param>
+        /// <example>
+        /// <code>
+        /// TypeDB.Driver(address, credentials, driverOptions);
+        /// </code>
+        /// </example>
         public static IDriver Driver(string address, Credentials credentials, DriverOptions driverOptions)
         {
             return new TypeDBDriver(address, credentials, driverOptions);
@@ -45,6 +53,14 @@ namespace TypeDB.Driver
         /// <summary>
         /// Open a TypeDB Driver to a TypeDB cluster available at the provided addresses.
         /// </summary>
+        /// <param name="addresses">The addresses of TypeDB cluster servers for connection.</param>
+        /// <param name="credentials">The credentials to connect with.</param>
+        /// <param name="driverOptions">The driver connection options to connect with.</param>
+        /// <example>
+        /// <code>
+        /// TypeDB.Driver(addresses, credentials, driverOptions);
+        /// </code>
+        /// </example>
         public static IDriver Driver(ISet<string> addresses, Credentials credentials, DriverOptions driverOptions)
         {
             return new TypeDBDriver(addresses, credentials, driverOptions);
@@ -53,6 +69,14 @@ namespace TypeDB.Driver
         /// <summary>
         /// Open a TypeDB Driver to a TypeDB cluster, using the provided address translation.
         /// </summary>
+        /// <param name="addressTranslation">The translation of public TypeDB cluster server addresses (keys) to server-side private addresses (values).</param>
+        /// <param name="credentials">The credentials to connect with.</param>
+        /// <param name="driverOptions">The driver connection options to connect with.</param>
+        /// <example>
+        /// <code>
+        /// TypeDB.Driver(addressTranslation, credentials, driverOptions);
+        /// </code>
+        /// </example>
         public static IDriver Driver(IDictionary<string, string> addressTranslation, Credentials credentials, DriverOptions driverOptions)
         {
             return new TypeDBDriver(addressTranslation, credentials, driverOptions);
