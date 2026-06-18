@@ -57,6 +57,8 @@ class _GivenRows(GivenRows, NativeWrapper[NativeGivenRows]):
 
     @staticmethod
     def of_map(rows) -> GivenRows:
+        from typedb.api.concept.concept import Concept
+        from typedb.concept.value.value import _Value
         all_variables: set = set()
         for row in rows:
             all_variables.update(row.keys())
@@ -69,24 +71,12 @@ class _GivenRows(GivenRows, NativeWrapper[NativeGivenRows]):
         rows_builder = given_rows_builder_new(header, len(rows))
         for row in rows:
             given_rows_builder_start_new_row(rows_builder)
-            for variable, concept in row.items():
-                if concept is None:
+            for variable, val in row.items():
+                if val is None:
                     given_rows_builder_set_variable_to_empty(rows_builder, variable)
                 else:
+                    concept = val if isinstance(val, Concept) else _Value.try_convert_to_value(val)
                     given_rows_builder_set_variable_to_concept(rows_builder, variable, concept._native_object)
             given_rows_builder_commit_row(rows_builder)
         rows_builder.thisown = 0
         return _GivenRows(given_rows_builder_finish(rows_builder))
-
-    @staticmethod
-    def of_objects(rows) -> GivenRows:
-        from typedb.api.concept.concept import Concept as _ConceptApi
-        from typedb.concept.value.value import _Value
-        converted = [
-            {
-                var: (None if val is None else (val if isinstance(val, _ConceptApi) else _Value.try_convert_to_value(val)))
-                for var, val in row.items()
-            }
-            for row in rows
-        ]
-        return _GivenRows.of_map(converted)

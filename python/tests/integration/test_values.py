@@ -496,7 +496,7 @@ class TestValues(TestCase):
     def test_roundtrips_with_raw_value(self):
         def run_roundtrip_test_with_raw_value(tx, value_type, raw_value, typeql_literal):
             answer = tx.query(f"given $native: {value_type}; match let $parsed = {typeql_literal};",
-                              given_rows=TypeDB.Concept.given_rows_from_objects_map([{"native": raw_value}])).resolve()
+                              given_rows=TypeDB.Concept.given_rows_from_map([{"native": raw_value}])).resolve()
             rows = list(answer.as_concept_rows())
             assert_that(len(rows), is_(1))
             return (rows[0].get("native"), rows[0].get("parsed"))

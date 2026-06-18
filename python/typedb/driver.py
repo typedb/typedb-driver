@@ -56,6 +56,8 @@ from typedb.concept.given_rows import _GivenRows
 from typedb.concept.value.value import _Value
 from typedb.connection.driver import _Driver
 
+from python.typedb.api.concept.concept import Concept
+
 
 # Repackaging these symbols allows them to be imported from "typedb.driver"
 
@@ -85,19 +87,14 @@ class TypeDB:
         """Factory class to instantiate new ``Value`` concepts and build ``GivenRows`` for use as query inputs."""
 
         @staticmethod
-        def given_rows(variables: List[str], rows: List[List[Optional[Any]]]) -> GivenRows:
+        def given_rows(variables: List[str], rows: List[List[Optional[Concept]]]) -> GivenRows:
             """Constructs a ``GivenRows`` instance for use as inputs to queries."""
             return _GivenRows.of(variables, rows)
 
         @staticmethod
-        def given_rows_from_map(rows) -> GivenRows:
+        def given_rows_from_map(rows: List[Dict[str, Concept | Any]]) -> GivenRows:
             """Constructs a ``GivenRows`` instance from dict-based rows for use as inputs to queries."""
             return _GivenRows.of_map(rows)
-
-        @staticmethod
-        def given_rows_from_objects_map(rows: List[Dict[str, Any]]) -> GivenRows:
-            """Constructs a ``GivenRows`` instance from dict rows containing raw Python values or concepts."""
-            return _GivenRows.of_objects(rows)
 
         @staticmethod
         def try_convert_to_value(value: Any): return _Value.try_convert_to_value(value)
