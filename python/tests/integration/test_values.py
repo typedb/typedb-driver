@@ -496,7 +496,7 @@ class TestValues(TestCase):
     def test_roundtrips_with_raw_value(self):
         def run_roundtrip_test_with_raw_value(tx, value_type, raw_value, typeql_literal):
             answer = tx.query(f"given $native: {value_type}; match let $parsed = {typeql_literal};",
-                              given_rows=ConceptFactory.build_given_rows_from_objects([{"native": raw_value}])).resolve()
+                              given_rows=TypeDB.Concept.build_given_rows_from_objects([{"native": raw_value}])).resolve()
             rows = list(answer.as_concept_rows())
             assert_that(len(rows), is_(1))
             return (rows[0].get("native"), rows[0].get("parsed"))
@@ -536,7 +536,7 @@ class TestValues(TestCase):
         from typedb.concept.value.value import _Value
         def run_roundtrip_test(tx, value_type, native_concept, typeql_literal):
             answer = tx.query(f"given $native: {value_type}; match let $parsed = {typeql_literal};",
-                              given_rows=ConceptFactory.build_given_rows_from(["native"], [[native_concept]])).resolve()
+                              given_rows=TypeDB.Concept.build_given_rows_from(["native"], [[native_concept]])).resolve()
             rows = list(answer.as_concept_rows())
             assert_that(len(rows), is_(1))
             return (rows[0].get("native"), rows[0].get("parsed"))
@@ -546,22 +546,22 @@ class TestValues(TestCase):
             database = driver.databases.get(TYPEDB)
 
             examples = [
-                ("boolean", ConceptFactory.new_boolean(True),  'true'),
-                ("boolean", ConceptFactory.new_boolean(False), 'false'),
-                ("integer", ConceptFactory.new_integer(25),    '25'),
-                ("double", ConceptFactory.new_double(54.321),   '54.321'),
-                ("decimal", ConceptFactory.new_decimal(Decimal('1234567890.0001234567890')), '1234567890.0001234567890dec'),
-                ("decimal", ConceptFactory.new_decimal(Decimal('-1234567890.0001234567890')), '-1234567890.0001234567890dec'),
-                ("string", ConceptFactory.new_string('John'), '"John"'),
-                ("date", ConceptFactory.new_date(date(2024, 9, 20)),                      '2024-09-20'),
-                ("datetime", ConceptFactory.new_datetime(Datetime.utcfromstring("1999-02-26T12:15:05")),
+                ("boolean", TypeDB.Concept.new_boolean(True),  'true'),
+                ("boolean", TypeDB.Concept.new_boolean(False), 'false'),
+                ("integer", TypeDB.Concept.new_integer(25),    '25'),
+                ("double", TypeDB.Concept.new_double(54.321),   '54.321'),
+                ("decimal", TypeDB.Concept.new_decimal(Decimal('1234567890.0001234567890')), '1234567890.0001234567890dec'),
+                ("decimal", TypeDB.Concept.new_decimal(Decimal('-1234567890.0001234567890')), '-1234567890.0001234567890dec'),
+                ("string", TypeDB.Concept.new_string('John'), '"John"'),
+                ("date", TypeDB.Concept.new_date(date(2024, 9, 20)),                      '2024-09-20'),
+                ("datetime", TypeDB.Concept.new_datetime(Datetime.utcfromstring("1999-02-26T12:15:05")),
                  '1999-02-26T12:15:05'),
-                ("datetime-tz", ConceptFactory.new_datetime_tz(Datetime.utcfromstring("2024-09-20T16:40:05", tz_name="Europe/Belfast")),
+                ("datetime-tz", TypeDB.Concept.new_datetime_tz(Datetime.utcfromstring("2024-09-20T16:40:05", tz_name="Europe/Belfast")),
                  '2024-09-20T16:40:05 Europe/Belfast'),
-                ("datetime-tz", ConceptFactory.new_datetime_tz(Datetime.utcfromstring("2024-09-20T16:40:05.028129323",
+                ("datetime-tz", TypeDB.Concept.new_datetime_tz(Datetime.utcfromstring("2024-09-20T16:40:05.028129323",
                                                                offset_seconds=Datetime.offset_seconds_fromstring("+0545"))),
                  '2024-09-20T16:40:05.028129323+0545'),
-                ("duration", ConceptFactory.new_duration(Duration.fromstring("P1Y10M7DT15H44M5.00394892S")),
+                ("duration", TypeDB.Concept.new_duration(Duration.fromstring("P1Y10M7DT15H44M5.00394892S")),
                  'P1Y10M7DT15H44M5.00394892S'),
             ]
 

@@ -42,7 +42,6 @@ from typedb.api.concept.value.value import Value
 from typedb.common.datetime import Datetime
 from typedb.common.duration import Duration
 from typedb.driver import *
-from typedb.concept_factory import ConceptFactory
 
 
 def query(transaction: Transaction, query: str, options: Optional[QueryOptions], given_rows=None) -> 'Promise[QueryAnswer]':
@@ -63,7 +62,7 @@ def step_impl(context: Context, var_list: list):
     answer = context.tx().query(query=context.text).resolve()
     table_rows = list(answer.as_concept_rows())
     rows = [[row.get(v) for v in var_list] for row in table_rows]
-    context.given_rows = ConceptFactory.build_given_rows_from(var_list, rows)
+    context.given_rows = TypeDB.Concept.build_given_rows_from(var_list, rows)
 
 
 @step("set answers of typeql read query as given rows dictionary with variables: {var_list:VariableList}")
@@ -71,7 +70,7 @@ def step_impl(context: Context, var_list: list):
     answer = context.tx().query(query=context.text).resolve()
     table_rows = list(answer.as_concept_rows())
     rows = [{v: row.get(v) for v in var_list} for row in table_rows]
-    context.given_rows = ConceptFactory.build_given_rows_from_map(rows)
+    context.given_rows = TypeDB.Concept.build_given_rows_from_map(rows)
 
 
 @step("get answers of typeql write query{with_given:WithGiven}")
