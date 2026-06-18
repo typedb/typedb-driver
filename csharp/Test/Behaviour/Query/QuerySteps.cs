@@ -256,7 +256,7 @@ namespace TypeDB.Driver.Test.Behaviour
             var varList = varListStr.Split(',').Select(v => v.Replace("$", "").Trim()).ToList();
             var tableRows = Tx.Query(query.Content).Resolve()!.AsConceptRows().ToList();
             var rows = tableRows.Select(row => varList.Select(v => (IConcept?)row.Get(v)).ToList()).ToList();
-            _givenRows = ConceptFactory.BuildGivenRowsFrom(varList, rows);
+            _givenRows = TypeDB.Concept.BuildGivenRowsFrom(varList, rows);
         }
 
         [Given(@"set answers of typeql read query as given rows dictionary with variables: (\$[a-zA-Z0-9\-_]+(?:, \$[a-zA-Z0-9\-_]+)*)")]
@@ -266,7 +266,7 @@ namespace TypeDB.Driver.Test.Behaviour
             var varList = varListStr.Split(',').Select(v => v.Replace("$", "").Trim()).ToList();
             var tableRows = Tx.Query(query.Content).Resolve()!.AsConceptRows().ToList();
             var rows = tableRows.Select(row => varList.ToDictionary(v => v, v => (IConcept?)row.Get(v))).ToList();
-            _givenRows = ConceptFactory.BuildGivenRowsFrom(rows);
+            _givenRows = TypeDB.Concept.BuildGivenRowsFrom(rows);
         }
 
         [Given(@"get answers of typeql schema query")]

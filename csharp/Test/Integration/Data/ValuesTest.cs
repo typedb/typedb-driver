@@ -631,18 +631,18 @@ namespace TypeDB.Driver.Test.Integration
 
             var examples = new (string ValueType, IValue NativeValue, string TypeqlLiteral)[]
             {
-                ("boolean",     ConceptFactory.NewBoolean(true),                                              "true"),
-                ("boolean",     ConceptFactory.NewBoolean(false),                                             "false"),
-                ("integer",     ConceptFactory.NewInteger(25),                                                "25"),
-                ("double",      ConceptFactory.NewDouble(54.321),                                             "54.321"),
-                ("decimal",     ConceptFactory.NewDecimal(1234567890.0001234567890m),                         "1234567890.0001234567890dec"),
-                ("decimal",     ConceptFactory.NewDecimal(-1234567890.0001234567890m),                        "-1234567890.0001234567890dec"),
-                ("string",      ConceptFactory.NewString("John"),                                             "\"John\""),
-                ("date",        ConceptFactory.NewDate(new DateOnly(2024, 9, 20)),                            "2024-09-20"),
-                ("datetime",    ConceptFactory.NewDatetime(Datetime.Parse("1999-02-26T12:15:05")),            "1999-02-26T12:15:05"),
-                ("datetime-tz", ConceptFactory.NewDatetimeTz(belfastDtz),                                    "2024-09-20T16:40:05 Europe/Belfast"),
-                ("datetime-tz", ConceptFactory.NewDatetimeTz(offsetDtz),                                     "2024-09-20T16:40:05.028129323+0545"),
-                ("duration",    ConceptFactory.NewDuration(Duration.Parse("P1Y10M7DT15H44M5.00394892S")),     "P1Y10M7DT15H44M5.00394892S"),
+                ("boolean",     TypeDB.Concept.NewBoolean(true),                                              "true"),
+                ("boolean",     TypeDB.Concept.NewBoolean(false),                                             "false"),
+                ("integer",     TypeDB.Concept.NewInteger(25),                                                "25"),
+                ("double",      TypeDB.Concept.NewDouble(54.321),                                             "54.321"),
+                ("decimal",     TypeDB.Concept.NewDecimal(1234567890.0001234567890m),                         "1234567890.0001234567890dec"),
+                ("decimal",     TypeDB.Concept.NewDecimal(-1234567890.0001234567890m),                        "-1234567890.0001234567890dec"),
+                ("string",      TypeDB.Concept.NewString("John"),                                             "\"John\""),
+                ("date",        TypeDB.Concept.NewDate(new DateOnly(2024, 9, 20)),                            "2024-09-20"),
+                ("datetime",    TypeDB.Concept.NewDatetime(Datetime.Parse("1999-02-26T12:15:05")),            "1999-02-26T12:15:05"),
+                ("datetime-tz", TypeDB.Concept.NewDatetimeTz(belfastDtz),                                    "2024-09-20T16:40:05 Europe/Belfast"),
+                ("datetime-tz", TypeDB.Concept.NewDatetimeTz(offsetDtz),                                     "2024-09-20T16:40:05.028129323+0545"),
+                ("duration",    TypeDB.Concept.NewDuration(Duration.Parse("P1Y10M7DT15H44M5.00394892S")),     "P1Y10M7DT15H44M5.00394892S"),
             };
 
             using var tx = driver.Transaction(DatabaseName, TransactionType.Read);
@@ -717,7 +717,7 @@ namespace TypeDB.Driver.Test.Integration
         private static IConceptRow RunRoundtripTest(ITransaction tx, string valueType, IValue nativeValue, string typeqlLiteral)
         {
             string query = $"given $native: {valueType}; match let $parsed = {typeqlLiteral};";
-            var givenRows = ConceptFactory.BuildGivenRowsFrom(
+            var givenRows = TypeDB.Concept.BuildGivenRowsFrom(
                 new List<string> { "native" },
                 new List<List<IConcept?>> { new List<IConcept?> { nativeValue } });
             var rows = tx.Query(query, new QueryOptions(), givenRows).Resolve()!.AsConceptRows().ToList();
@@ -728,7 +728,7 @@ namespace TypeDB.Driver.Test.Integration
         private static IConceptRow RunRoundtripTestWithRawValue(ITransaction tx, string valueType, object rawValue, string typeqlLiteral)
         {
             string query = $"given $native: {valueType}; match let $parsed = {typeqlLiteral};";
-            var givenRows = ConceptFactory.BuildGivenRowsFromObjects(
+            var givenRows = TypeDB.Concept.BuildGivenRowsFromObjects(
                 new List<Dictionary<string, object?>> { new Dictionary<string, object?> { { "native", rawValue } } });
             var rows = tx.Query(query, new QueryOptions(), givenRows).Resolve()!.AsConceptRows().ToList();
             Assert.AreEqual(1, rows.Count);

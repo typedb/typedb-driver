@@ -85,7 +85,7 @@ namespace TypeDB.Driver.Api
         /// </summary>
         /// <param name="query">The TypeQL query string to execute.</param>
         /// <param name="options">Query options.</param>
-        /// <param name="givenRows">Input rows built via <c>ConceptFactory.BuildGivenRowsFrom</c>.</param>
+        /// <param name="givenRows">Input rows built via <c>TypeDB.Concept.BuildGivenRowsFrom</c>.</param>
         /// <returns>A promise that resolves to the query answer containing the results.</returns>
         Promise<IQueryAnswer> Query(string query, QueryOptions options, IGivenRows givenRows);
 

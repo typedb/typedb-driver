@@ -256,10 +256,10 @@ namespace TypeDB.Driver.Test.Integration
                     var personFred = rows[0].Get("fred");
 
                     var query = "given $x: person, $v: integer; insert $x has age == $v;";
-                    var givenRows = ConceptFactory.BuildGivenRowsFrom(new List<Dictionary<string, IConcept?>>
+                    var givenRows = TypeDB.Concept.BuildGivenRowsFrom(new List<Dictionary<string, IConcept?>>
                     {
-                        new Dictionary<string, IConcept?> { { "x", personEugene }, { "v", ConceptFactory.NewInteger(12) } },
-                        new Dictionary<string, IConcept?> { { "x", personFred }, { "v", ConceptFactory.NewInteger(34) } }
+                        new Dictionary<string, IConcept?> { { "x", personEugene }, { "v", TypeDB.Concept.NewInteger(12) } },
+                        new Dictionary<string, IConcept?> { { "x", personFred }, { "v", TypeDB.Concept.NewInteger(34) } }
                     });
                     var inserted = transaction.Query(query, new QueryOptions(), givenRows).Resolve()!;
                     var insertedRows = inserted.AsConceptRows().ToList();
