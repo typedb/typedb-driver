@@ -46,7 +46,11 @@
     protected transient boolean swigCMemOwn;
 
     protected $javaclassname(long cPtr, boolean cMemoryOwn) {
-        super((typedb_driverJNI.error_code(cPtr, null) + " " + typedb_driverJNI.error_message(cPtr, null)).strip());
+        super((
+            new String(typedb_driverJNI.error_code(cPtr, null), java.nio.charset.Charset.forName("UTF-8"))
+            + " "
+            + new String(typedb_driverJNI.error_message(cPtr, null), java.nio.charset.Charset.forName("UTF-8"))
+        ).strip());
         swigCMemOwn = cMemoryOwn;
         swigCPtr = cPtr;
     }
@@ -626,6 +630,41 @@
 }
 %enddef
 
+%typemap(jni) char* "jbyteArray"
+%typemap(jtype) char* "byte[]"
+%typemap(jstype) char* "String"
+%typemap(javain) char* %{
+    $javainput.getBytes(java.nio.charset.Charset.forName("UTF-8"))
+%}
+%typemap(in) char* {
+    size_t sz = jenv->GetArrayLength($input);
+    $1 = (char*)malloc(sz + 1);
+    jbyte* bae = jenv->GetByteArrayElements($input, 0);
+    memcpy($1, (const char*)bae, sz);
+    jenv->ReleaseByteArrayElements($input, bae, 0);
+}
+%typemap(out) char* {
+    if ($1) {
+        size_t sz = strlen($1);
+        $result = jenv->NewByteArray(sz);
+        jbyte* bae = jenv->GetByteArrayElements($result, 0);
+        memcpy((char*)bae, $1, sz);
+        jenv->ReleaseByteArrayElements($result, bae, 0);
+    } else {
+        $result = 0;
+    }
+}
+%typemap(javaout) char* {
+    byte[] ba = $jnicall;
+    if (ba == null) {
+        return null;
+    }
+    return new String(ba, java.nio.charset.Charset.forName("UTF-8"));
+}
+%typemap(freearg) char* {
+    if ($1) jenv->ReleaseByteArrayElements($input, (jbyte*)$1, 0);
+}
+
 %array(Concept)
 
 /* char** needs special handling */
@@ -635,11 +674,11 @@
     $1 = (char **) malloc((size+1)*sizeof(char *));
     /* make a copy of each string */
     for (i = 0; i<size; i++) {
-        jstring j_string = (jstring)jenv->GetObjectArrayElement($input, i);
-        const char * c_string = jenv->GetStringUTFChars(j_string, 0);
+        jbyteArray j_string = (jbyteArray)jenv->GetObjectArrayElement($input, i);
+        const char * c_string = (char*)jenv->GetByteArrayElements(j_string, 0);
         $1[i] = (char*)malloc((strlen(c_string)+1)*sizeof(char));
         strcpy($1[i], c_string);
-        jenv->ReleaseStringUTFChars(j_string, c_string);
+        // jenv->ReleaseStringUTFChars(j_string, c_string);
         jenv->DeleteLocalRef(j_string);
     }
     $1[i] = 0;
