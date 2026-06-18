@@ -675,6 +675,14 @@
 }
 
 /* char** needs special handling */
+%typemap(jni) char ** "jobjectArray"
+%typemap(jtype) char ** "byte[][]"
+%typemap(jstype) char ** "String[]"
+
+%typemap(javain) char ** %{
+    java.util.stream.Stream.of($javainput).map(s -> s.getBytes(java.nio.charset.Charset.forName("UTF-8"))).toArray(byte[][]::new)
+%}
+
 %typemap(in) char ** (jint size) {
     int i = 0;
     size = jenv->GetArrayLength($input);
@@ -698,11 +706,3 @@
     free($1);
 }
 
-%typemap(jni) char ** "jobjectArray"
-%typemap(jtype) char ** "String[]"
-%typemap(jstype) char ** "String[]"
-
-%typemap(javain) char ** "$javainput"
-%typemap(javaout) char ** {
-    return $jnicall;
-}
