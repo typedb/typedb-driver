@@ -25,11 +25,27 @@ import com.typedb.driver.common.NativeObject;
 import com.typedb.driver.common.exception.TypeDBDriverException;
 import com.typedb.driver.concept.value.ValueImpl;
 
-import java.util.*;
+
+import java.util.HashSet;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.typedb.driver.jni.typedb_driver.*;
+import static com.typedb.driver.jni.typedb_driver.given_rows_builder_new;
+import static com.typedb.driver.jni.typedb_driver.given_rows_builder_set_index_to_concept;
+import static com.typedb.driver.jni.typedb_driver.given_rows_builder_set_index_to_empty;
+import static com.typedb.driver.jni.typedb_driver.given_rows_builder_set_variable_to_concept;
+import static com.typedb.driver.jni.typedb_driver.given_rows_builder_set_variable_to_empty;
+import static com.typedb.driver.jni.typedb_driver.given_rows_builder_commit_row;
+import static com.typedb.driver.jni.typedb_driver.given_rows_builder_start_new_row;
 import static com.typedb.driver.jni.typedb_driver.given_rows_builder_finish;
+import static com.typedb.driver.jni.typedb_driver.given_rows_header_builder_new;
+import static com.typedb.driver.jni.typedb_driver.given_rows_header_builder_finish;
+import static com.typedb.driver.jni.typedb_driver.given_rows_header_builder_push;
+
+
 
 public class GivenRowsImpl extends NativeObject<com.typedb.driver.jni.GivenRows> implements GivenRows {
     public GivenRowsImpl(com.typedb.driver.jni.GivenRows nativeObject) {

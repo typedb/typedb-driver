@@ -39,8 +39,17 @@ import static com.typedb.driver.common.exception.ErrorMessage.Concept.INVALID_VA
 import static com.typedb.driver.common.exception.ErrorMessage.Internal.NULL_CONCEPT_PROPERTY;
 import static com.typedb.driver.common.exception.ErrorMessage.Internal.UNEXPECTED_NATIVE_VALUE;
 import static com.typedb.driver.common.util.Objects.className;
-import static com.typedb.driver.jni.typedb_driver.*;
+
+import static com.typedb.driver.jni.typedb_driver.concept_new_boolean;
+import static com.typedb.driver.jni.typedb_driver.concept_new_date_from_seconds;
+import static com.typedb.driver.jni.typedb_driver.concept_new_datetime;
+import static com.typedb.driver.jni.typedb_driver.concept_new_datetime_tz_iana;
+import static com.typedb.driver.jni.typedb_driver.concept_new_datetime_tz_offset;
+import static com.typedb.driver.jni.typedb_driver.concept_new_decimal;
+import static com.typedb.driver.jni.typedb_driver.concept_new_double;
 import static com.typedb.driver.jni.typedb_driver.concept_new_duration;
+import static com.typedb.driver.jni.typedb_driver.concept_new_integer;
+import static com.typedb.driver.jni.typedb_driver.concept_new_string;
 
 public class ValueImpl extends ConceptImpl implements Value {
     private int hash = 0;
