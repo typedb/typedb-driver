@@ -2,6 +2,7 @@
 // It is not intended for manual editing.
 package com.typedb.driver;
 
+import com.typedb.driver.TypeDB;
 import com.typedb.driver.api.Credentials;
 import com.typedb.driver.api.Driver;
 import com.typedb.driver.api.DriverOptions;
@@ -9,6 +10,7 @@ import com.typedb.driver.api.DriverTlsConfig;
 import com.typedb.driver.api.concept.Concept;
 import com.typedb.driver.api.concept.GivenRows;
 import com.typedb.driver.api.QueryOptions;
+import com.typedb.driver.api.QueryType;
 import com.typedb.driver.api.Transaction;
 import com.typedb.driver.api.TransactionOptions;
 import com.typedb.driver.api.answer.ConceptRow;
@@ -24,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
