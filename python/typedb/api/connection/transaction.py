@@ -19,11 +19,12 @@ from __future__ import annotations
 
 import enum
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Optional, Callable
+from typing import TYPE_CHECKING, Dict, List, Optional, Tuple, Union, Callable
 
 if TYPE_CHECKING:
     from typedb.api.answer.query_answer import QueryAnswer
     from typedb.api.concept.concept import Concept
+    from typedb.api.concept.given_rows import GivenRows
     from typedb.api.connection.transaction_options import TransactionOptions
     from typedb.api.connection.query_options import QueryOptions
     from typedb.common import Promise
@@ -85,13 +86,18 @@ class Transaction(ABC):
         pass
 
     @abstractmethod
-    def query(self, query: str, options: Optional[QueryOptions] = None, given_rows: Optional[GivenRows] =None) -> Promise[QueryAnswer]:
+    def query(self, query: str, options: Optional[QueryOptions] = None,
+              given_rows: Optional[Union[GivenRows, List[Dict[str, object]], Tuple[List[str], List[List[object]]]]] = None) -> Promise[QueryAnswer]:
         """
         Execute a TypeQL query in this transaction.
 
         :param query: The query to execute.
         :param options: The ``QueryOptions`` to execute the query with.
-        :param given_rows: Rows given to the query as input.
+        :param given_rows: Rows given to the query as input. May be a
+                    * ``GivenRows`` object,
+                    * a list of dicts mapping variable names to values,
+                    * or a ``(variables, rows)`` tuple.
+                Items in the dicts/rows may be ``Concept`` instances or primitives supported by ``TypeDB.Concept.try_convert_to_value``.
 
         Examples:
         ---------
@@ -110,6 +116,10 @@ class Transaction(ABC):
                 ]
             )
             transaction.query(query, given_rows=rows).resolve()
+
+        ::
+
+            transaction.query(query, given_rows=[{"n": "Alice", "a": 28}, {"n": "Bob", "a": 26}]).resolve()
         """
         pass
 
