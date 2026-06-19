@@ -36,6 +36,7 @@ import com.typedb.driver.concept.GivenRowsImpl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import java.util.function.Consumer;
 
@@ -106,6 +107,26 @@ public class TransactionImpl extends NativeObject<com.typedb.driver.jni.Transact
     @Override
     public Promise<? extends QueryAnswer> query(String query, GivenRows givenRows) throws TypeDBDriverException {
         return query(query, new QueryOptions(), givenRows);
+    }
+
+    @Override
+    public Promise<? extends QueryAnswer> query(String query, List<? extends Map<String, Object>> givenRows) throws TypeDBDriverException {
+        return query(query, GivenRowsImpl.ofObjects(givenRows));
+    }
+
+    @Override
+    public Promise<? extends QueryAnswer> query(String query, List<String> givenVariables, List<? extends List<Object>> givenRows) throws TypeDBDriverException {
+        return query(query, GivenRowsImpl.ofObjects(givenVariables, givenRows));
+    }
+
+    @Override
+    public Promise<? extends QueryAnswer> query(String query, QueryOptions options, List<? extends Map<String, Object>> givenRows) throws TypeDBDriverException {
+        return query(query, options, GivenRowsImpl.ofObjects(givenRows));
+    }
+
+    @Override
+    public Promise<? extends QueryAnswer> query(String query, QueryOptions options, List<String> givenVariables, List<? extends List<Object>> givenRows) throws TypeDBDriverException {
+        return query(query, options, GivenRowsImpl.ofObjects(givenVariables, givenRows));
     }
 
     @Override

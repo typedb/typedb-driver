@@ -108,6 +108,19 @@ public class GivenRowsImpl extends NativeObject<com.typedb.driver.jni.GivenRows>
         }
     }
 
+    public static GivenRows ofObjects(List<String> variables, List<? extends List<Object>> rows) throws TypeDBDriverException {
+        List<List<com.typedb.driver.api.concept.Concept>> converted = rows.stream()
+                .map(row -> row.stream()
+                        .map(value -> {
+                            if (value == null) return null;
+                            else if (value instanceof com.typedb.driver.api.concept.Concept) return (com.typedb.driver.api.concept.Concept) value;
+                            else return (com.typedb.driver.api.concept.Concept) ValueImpl.tryConvertToValue(value);
+                        })
+                        .collect(Collectors.toList()))
+                .collect(Collectors.toList());
+        return GivenRowsImpl.of(variables, converted);
+    }
+
     public static GivenRows ofObjects(List<? extends Map<String, Object>> givenRows) throws TypeDBDriverException {
         List<Map<String, com.typedb.driver.api.concept.Concept>> converted = givenRows.stream()
                 .map(row -> {
