@@ -358,21 +358,28 @@ impl FromStr for Decimal {
         if str.ends_with("dec") {
             str = str.trim_end_matches("dec");
         }
-        let is_negative = if str.starts_with("-") {
-            str = str.trim_start_matches('-');
-            true
+        let (str, is_negative) = if str.starts_with("-") {
+            (&str[1..], true)
+        } else if str.starts_with("+") {
+            (&str[1..], false)
         } else {
-            false
+            (str, false)
         };
 
         let (integer_part, fractional_part) = str.split_once(".").unwrap_or((str, "0"));
-        let integer = integer_part
-            .parse()
-            .map_err(|reason| Error::Concept(ConceptError::ErrorParsingDecimal { unparsed: str.to_owned(), reason }))?;
+        let integer = integer_part.parse().map_err(|source| {
+            let reason = format!("Error parsing integer part: {source}");
+            Error::Concept(ConceptError::ErrorParsingDecimal { unparsed: str.to_owned(), reason })
+        })?;
+        let parsed_fractional = fractional_part.parse::<u64>().map_err(|source| {
+            let reason = format!("Error parsing integer part: {source}");
+            Error::Concept(ConceptError::ErrorParsingDecimal { unparsed: str.to_owned(), reason })
+        })?;
         let num_fractional_digits = fractional_part.len() as u32;
-        let parsed_fractional = fractional_part
-            .parse::<u64>()
-            .map_err(|reason| Error::Concept(ConceptError::ErrorParsingDecimal { unparsed: str.to_owned(), reason }))?;
+        if num_fractional_digits > Self::FRACTIONAL_PART_DENOMINATOR_LOG10 {
+            let reason = "The value cannot be parsed without a loss of precision".to_owned();
+            return Err(Error::Concept(ConceptError::ErrorParsingDecimal { unparsed: str.to_owned(), reason }))
+        }
         let fractional = parsed_fractional * 10u64.pow(Self::FRACTIONAL_PART_DENOMINATOR_LOG10 - num_fractional_digits);
 
         if is_negative { Ok(-Self::from_parts(integer, fractional)) } else { Ok(Self::from_parts(integer, fractional)) }
