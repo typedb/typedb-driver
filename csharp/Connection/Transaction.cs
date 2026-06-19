@@ -153,6 +153,36 @@ namespace TypeDB.Driver.Connection
         }
 
         /// <inheritdoc/>
+        public Promise<IQueryAnswer> Query(string query, IGivenRows givenRows)
+        {
+            return Query(query, new QueryOptions(), givenRows);
+        }
+
+        /// <inheritdoc/>
+        public Promise<IQueryAnswer> Query(string query, List<Dictionary<string, object?>> givenRows)
+        {
+            return Query(query, new QueryOptions(), GivenRows.OfObjects(givenRows));
+        }
+
+        /// <inheritdoc/>
+        public Promise<IQueryAnswer> Query(string query, List<string> givenVariables, List<List<object?>> givenRows)
+        {
+            return Query(query, new QueryOptions(), GivenRows.OfObjects(givenVariables, givenRows));
+        }
+
+        /// <inheritdoc/>
+        public Promise<IQueryAnswer> Query(string query, QueryOptions options, List<Dictionary<string, object?>> givenRows)
+        {
+            return Query(query, options, GivenRows.OfObjects(givenRows));
+        }
+
+        /// <inheritdoc/>
+        public Promise<IQueryAnswer> Query(string query, QueryOptions options, List<string> givenVariables, List<List<object?>> givenRows)
+        {
+            return Query(query, options, GivenRows.OfObjects(givenVariables, givenRows));
+        }
+
+        /// <inheritdoc/>
         public Promise<IQueryAnswer> Query(string query, QueryOptions options, IGivenRows givenRows)
         {
             Validator.NonNull(query, DriverError.NON_NULL_VALUE_REQUIRED, "query");

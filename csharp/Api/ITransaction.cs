@@ -18,6 +18,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 
 using TypeDB.Driver.Api;
 using TypeDB.Driver.Api.Analyze;
@@ -79,6 +80,22 @@ namespace TypeDB.Driver.Api
         /// <returns>A promise that resolves to the query answer containing the results.</returns>
         Promise<IQueryAnswer> Query(string query, QueryOptions options);
 
+        /// <summary>Executes a TypeQL query with input rows in this transaction.</summary>
+        /// <param name="query">The TypeQL query string to execute.</param>
+        /// <param name="givenRows">Input rows.</param>
+        Promise<IQueryAnswer> Query(string query, IGivenRows givenRows);
+
+        /// <summary>Executes a TypeQL query with input rows supplied as a list of dictionaries of raw values.</summary>
+        /// <param name="query">The TypeQL query string to execute.</param>
+        /// <param name="givenRows">Rows as dictionaries from variable name to <c>IConcept</c> or a supported .NET primitive.</param>
+        Promise<IQueryAnswer> Query(string query, List<Dictionary<string, object?>> givenRows);
+
+        /// <summary>Executes a TypeQL query with input rows supplied as parallel variable and value lists of raw values.</summary>
+        /// <param name="query">The TypeQL query string to execute.</param>
+        /// <param name="givenVariables">Variable names.</param>
+        /// <param name="givenRows">Row values; each entry must be <c>IConcept</c> or a supported .NET primitive.</param>
+        Promise<IQueryAnswer> Query(string query, List<string> givenVariables, List<List<object?>> givenRows);
+
         /// <summary>
         /// Executes a TypeQL query with input rows in this transaction.
         /// </summary>
@@ -100,6 +117,19 @@ namespace TypeDB.Driver.Api
         /// </code>
         /// </example>
         Promise<IQueryAnswer> Query(string query, QueryOptions options, IGivenRows givenRows);
+
+        /// <summary>Executes a TypeQL query with input rows and options, rows supplied as a list of dictionaries of raw values.</summary>
+        /// <param name="query">The TypeQL query string to execute.</param>
+        /// <param name="options">Query options.</param>
+        /// <param name="givenRows">Rows as dictionaries from variable name to <c>IConcept</c> or a supported .NET primitive.</param>
+        Promise<IQueryAnswer> Query(string query, QueryOptions options, List<Dictionary<string, object?>> givenRows);
+
+        /// <summary>Executes a TypeQL query with input rows and options, rows supplied as parallel variable and value lists of raw values.</summary>
+        /// <param name="query">The TypeQL query string to execute.</param>
+        /// <param name="options">Query options.</param>
+        /// <param name="givenVariables">Variable names.</param>
+        /// <param name="givenRows">Row values; each entry must be <c>IConcept</c> or a supported .NET primitive.</param>
+        Promise<IQueryAnswer> Query(string query, QueryOptions options, List<string> givenVariables, List<List<object?>> givenRows);
 
         /// <summary>
         /// Analyzes a TypeQL query and returns information about its structure and type inference results.

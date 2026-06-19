@@ -276,11 +276,11 @@ public class ExampleTest {
                 List<Map<String, Object>> givenRows = List.of(
                     java.util.Map.ofEntries(
                         Map.entry("x", personEugene),
-                        Map.entry("v", 12)
+                        Map.entry("v", TypeDB.Concept.newInteger(12))
                     ),
                     java.util.Map.ofEntries(
                         Map.entry("x", personFred),
-                        Map.entry("v", 34)
+                        Map.entry("v", TypeDB.Concept.newInteger(34))
                     )
                 );
                 QueryAnswer inserted = transaction.query(query, givenRows).resolve();

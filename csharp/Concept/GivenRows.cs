@@ -74,6 +74,16 @@ namespace TypeDB.Driver.Concept
             return new GivenRows(Pinvoke.typedb_driver.given_rows_builder_finish(rowsBuilder.Released()));
         }
 
+        public static IGivenRows OfObjects(List<string> givenVariables, List<List<object?>> givenRows)
+        {
+            var converted = givenRows.Select(row =>
+                row.Select(val => val == null ? null :
+                                  val is IConcept c ? c :
+                                  (IConcept?)Value.TryConvertToValue(val)).ToList()
+            ).ToList();
+            return Of(givenVariables, converted);
+        }
+
         public static IGivenRows OfObjects(List<Dictionary<string, object?>> givenRows)
         {
             var converted = givenRows.Select(row =>
