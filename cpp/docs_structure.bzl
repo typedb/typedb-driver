@@ -61,7 +61,6 @@ dir_mapping = {
     "Attribute.adoc": "data",
     "Value.adoc": "data",
     "Thing.adoc": "data",
-    "ConceptFactory.adoc": "data",
     "Session.adoc": "session",
     "SessionType.adoc": "session",
     "Options.adoc": "session",
