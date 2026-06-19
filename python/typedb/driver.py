@@ -93,49 +93,64 @@ class TypeDB:
             return _GivenRows.of_map(rows)
 
         @staticmethod
-        def try_convert_to_value(value: Any): return _Value.try_convert_to_value(value)
+        def try_convert_to_value(value: Any):
+            """Converts a raw host-language object to a ``Value`` concept.
+            Accepted types: ``bool``, ``int``, ``float``, ``Decimal``, ``str``, ``date``, ``Datetime``, ``Duration``.
+
+            :raises TypeDBDriverException: if the object's type is not supported.
+            """
+            return _Value.try_convert_to_value(value)
 
         @staticmethod
         def new_boolean(value: bool):
+            """Creates a new ``boolean`` Value concept."""
             from typedb.concept.value.value import _Value
             return _Value.new_boolean(value)
 
         @staticmethod
         def new_integer(value: int):
+            """Creates a new ``integer`` Value concept."""
             from typedb.concept.value.value import _Value
             return _Value.new_integer(value)
 
         @staticmethod
         def new_double(value: float):
+            """Creates a new ``double`` Value concept."""
             from typedb.concept.value.value import _Value
             return _Value.new_double(value)
 
         @staticmethod
         def new_decimal(value: Decimal):
+            """Creates a new ``decimal`` Value concept."""
             from typedb.concept.value.value import _Value
             return _Value.new_decimal(value)
 
         @staticmethod
         def new_string(value: str):
+            """Creates a new ``string`` Value concept."""
             from typedb.concept.value.value import _Value
             return _Value.new_string(value)
 
         @staticmethod
         def new_date(value: date):
+            """Creates a new ``date`` Value concept."""
             from typedb.concept.value.value import _Value
             return _Value.new_date(value)
 
         @staticmethod
         def new_datetime(value: Datetime):
+            """Creates a new ``datetime`` Value concept."""
             from typedb.concept.value.value import _Value
             return _Value.new_datetime(value)
 
         @staticmethod
         def new_datetime_tz(value: Datetime):
+            """Creates a new ``datetime-tz`` Value concept."""
             from typedb.concept.value.value import _Value
             return _Value.new_datetime_tz(value)
 
         @staticmethod
         def new_duration(value: Duration):
+            """Creates a new ``duration`` Value concept."""
             from typedb.concept.value.value import _Value
             return _Value.new_duration(value)

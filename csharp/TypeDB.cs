@@ -99,7 +99,12 @@ namespace TypeDB.Driver
             public static IGivenRows GivenRowsFromObjects(List<Dictionary<string, object?>> givenRows)
                 => ConceptGivenRows.OfObjects(givenRows);
 
-            /// <summary>Converts a raw .NET value to an <c>IValue</c> concept.</summary>
+            /// <summary>
+            /// Converts a raw host-language object to an <c>IValue</c> concept.
+            /// Accepted types: <c>bool</c>, <c>long</c>, <c>int</c>, <c>double</c>, <c>float</c>,
+            /// <c>decimal</c>, <c>string</c>, <c>DateOnly</c>, <c>Datetime</c>, <c>DatetimeTZ</c>, <c>Duration</c>.
+            /// </summary>
+            /// <exception cref="TypeDBDriverException">if the object's type is not supported.</exception>
             public static IValue TryConvertToValue(object value) => ConceptValue.TryConvertToValue(value);
 
             /// <summary>Creates a new <c>IValue</c> wrapping the specified <c>bool</c> value.</summary>
