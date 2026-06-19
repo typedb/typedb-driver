@@ -159,10 +159,10 @@ class TypeDBExample:
                 person_fred = rows[0].get("fred")
 
                 query = "given $x: person, $v: integer; insert $x has age == $v;"
-                given_rows = [
+                given_rows = TypeDB.Concept.given_rows_from_map([
                     {"x": person_eugene, "v": TypeDB.Concept.new_integer(12)},
                     {"x": person_fred, "v": TypeDB.Concept.new_integer(34)},
-                ]
+                ])
                 inserted = tx.query(query, given_rows=given_rows).resolve()
                 inserted_rows = list(inserted.as_concept_rows())
                 tx.commit()
