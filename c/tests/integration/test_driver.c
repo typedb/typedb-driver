@@ -325,14 +325,14 @@ bool test_query_given() {
         GivenRowsBuilder* given_rows_builder = given_rows_builder_new(given_rows_header, 1);
 
         given_rows_builder_start_new_row(given_rows_builder);
-        Concept* value_john = concept_new_string("john");
+        Concept* value_john = concept_new_string("John");
         given_rows_builder_set_index_to_concept(given_rows_builder, 0, value_john);
         concept_drop(value_john);
         given_rows_builder_commit_row(given_rows_builder);
         if (FAILED()) goto cleanup;
         given_rows = given_rows_builder_finish(given_rows_builder);
         given_rows_header_drop(given_rows_header);
-
+        given_rows_header = NULL;
 
         transaction = transaction_new(driver, databaseName, Write, tx_opts);
         if (FAILED()) goto cleanup;
