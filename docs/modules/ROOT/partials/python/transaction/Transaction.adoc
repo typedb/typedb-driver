@@ -112,12 +112,12 @@ a| `function` a| The callback function. a| `Callable` a|
 transaction.on_close(function)
 ----
 
-[#_Transaction_query_query_str_options_QueryOptions_None_given_rows_GivenRows_None]
+[#_Transaction_query_query_str_options_QueryOptions_None_given_rows_GivenRows_List_Dict_str_object_Tuple_List_str_List_List_object_None]
 ==== method ``query``
 
 [source,python]
 ----
-query(query: str, options: QueryOptions | None = None, given_rows: GivenRows | None = None) -> Promise[QueryAnswer]
+query(query: str, options: QueryOptions | None = None, given_rows: GivenRows | List[Dict[str, object]] | Tuple[List[str], List[List[object]]] | None = None) -> Promise[QueryAnswer]
 ----
 
 Execute a TypeQL query in this transaction.
@@ -130,7 +130,7 @@ Execute a TypeQL query in this transaction.
 |Name |Description |Type |Default Value
 a| `query` a| The query to execute. a| `str` a| 
 a| `options` a| The ``QueryOptions`` to execute the query with. a| `QueryOptions \| None` a| `None`
-a| `given_rows` a| Rows given to the query as input. a| `GivenRows \| None` a| `None`
+a| `given_rows` a| Rows given to the query as input. May be a ``GivenRows`` object, a list of dicts mapping variable names to values, or a ``(variables, rows)`` tuple. Items in the dicts/rows may be ``Concept`` instances or primitives supported by ``TypeDB.Concept.try_convert_to_value``. a| `GivenRows \| List[Dict[str, object]] \| Tuple[List[str], List[List[object]]] \| None` a| `None`
 |===
 
 [caption=""]
@@ -155,6 +155,11 @@ rows = TypeDB.Concept.given_rows(
     ]
 )
 transaction.query(query, given_rows=rows).resolve()
+----
+
+[source,python]
+----
+transaction.query(query, given_rows=[{"n": "Alice", "a": 28}, {"n": "Bob", "a": 26}]).resolve()
 ----
 
 [#_Transaction_rollback_]

@@ -293,6 +293,70 @@ String query = "given $n: string, $a: integer; insert $p isa person, has name ==
  transaction.query(query, rows);
 ----
 
+[#_Transaction_query_java_lang_String_java_util_List_extends_java_util_Map_java_lang_String_​java_lang_Object_]
+==== method ``query``
+
+[source,java]
+----
+@CheckReturnValue
+Promise<? extends QueryAnswer> query​(java.lang.String query,
+                                     java.util.List<? extends java.util.Map<java.lang.String,​java.lang.Object>> givenRows)
+                              throws TypeDBDriverException
+----
+
+Execute a TypeQL query with input rows in this transaction.
+
+
+See also: <<#_query_java_lang_String_com_typedb_driver_api_concept_GivenRows,``query(String, GivenRows)``>>
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `query` a| The query to execute. a| `java.lang.String`
+a| `givenRows` a| Used to construct the GivenRows which will be used as input to the query. Values must be Concept or a primitive supported by TypeDB.tryConvertToValue a| `java.util.List<? extends java.util.Map<java.lang.String,​java.lang.Object>>`
+|===
+
+[caption=""]
+.Returns
+`Promise<? extends QueryAnswer>`
+
+[#_Transaction_query_java_lang_String_java_util_List_java_lang_String_java_util_List_extends_java_util_List_java_lang_Object_]
+==== method ``query``
+
+[source,java]
+----
+@CheckReturnValue
+Promise<? extends QueryAnswer> query​(java.lang.String query,
+                                     java.util.List<java.lang.String> givenVariables,
+                                     java.util.List<? extends java.util.List<java.lang.Object>> givenRows)
+                              throws TypeDBDriverException
+----
+
+Execute a TypeQL query with input rows in this transaction.
+
+
+See also: <<#_query_java_lang_String_com_typedb_driver_api_concept_GivenRows,``query(String, GivenRows)``>>
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `query` a| The query to execute. a| `java.lang.String`
+a| `givenVariables` a| The variables used to construct the GivenRows which will be used as input to the query. a| `java.util.List<java.lang.String>`
+a| `givenRows` a| The rows used to construct the GivenRows which will be used as input to the query. Values must be Concept or a primitive supported by TypeDB.tryConvertToValue a| `java.util.List<? extends java.util.List<java.lang.Object>>`
+|===
+
+[caption=""]
+.Returns
+`Promise<? extends QueryAnswer>`
+
 [#_Transaction_query_java_lang_String_QueryOptions_GivenRows]
 ==== method ``query``
 
@@ -305,7 +369,7 @@ Promise<? extends QueryAnswer> query​(java.lang.String query,
                               throws TypeDBDriverException
 ----
 
-Execute a TypeQL query with input rows in this transaction.
+Execute a TypeQL query in this transaction.
 
 [caption=""]
 .Input parameters
@@ -316,6 +380,66 @@ Execute a TypeQL query with input rows in this transaction.
 a| `query` a| The query to execute. a| `java.lang.String`
 a| `options` a| The ``QueryOptions`` to execute the query with. a| `QueryOptions`
 a| `givenRows` a| GivenRows to be used as input to the query. a| `GivenRows`
+|===
+
+[caption=""]
+.Returns
+`Promise<? extends QueryAnswer>`
+
+[#_Transaction_query_java_lang_String_QueryOptions_java_util_List_extends_java_util_Map_java_lang_String_​java_lang_Object_]
+==== method ``query``
+
+[source,java]
+----
+@CheckReturnValue
+Promise<? extends QueryAnswer> query​(java.lang.String query,
+                                     QueryOptions options,
+                                     java.util.List<? extends java.util.Map<java.lang.String,​java.lang.Object>> givenRows)
+                              throws TypeDBDriverException
+----
+
+Execute a TypeQL query in this transaction.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `query` a| The query to execute. a| `java.lang.String`
+a| `options` a| The ``QueryOptions`` to execute the query with. a| `QueryOptions`
+a| `givenRows` a| Used to construct the GivenRows which will be used as input to the query. Values must be Concept or a primitive supported by TypeDB.tryConvertToValue a| `java.util.List<? extends java.util.Map<java.lang.String,​java.lang.Object>>`
+|===
+
+[caption=""]
+.Returns
+`Promise<? extends QueryAnswer>`
+
+[#_Transaction_query_java_lang_String_QueryOptions_java_util_List_java_lang_String_java_util_List_extends_java_util_List_java_lang_Object_]
+==== method ``query``
+
+[source,java]
+----
+@CheckReturnValue
+Promise<? extends QueryAnswer> query​(java.lang.String query,
+                                     QueryOptions options,
+                                     java.util.List<java.lang.String> givenVariables,
+                                     java.util.List<? extends java.util.List<java.lang.Object>> givenRows)
+                              throws TypeDBDriverException
+----
+
+Execute a TypeQL query in this transaction.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `query` a| The query to execute. a| `java.lang.String`
+a| `options` a| The ``QueryOptions`` to execute the query with. a| `QueryOptions`
+a| `givenVariables` a| The variables used to construct the GivenRows which will be used as input to the query. a| `java.util.List<java.lang.String>`
+a| `givenRows` a| The rows used to construct the GivenRows which will be used as input to the query. Values must be Concept or a primitive supported by TypeDB.tryConvertToValue a| `java.util.List<? extends java.util.List<java.lang.Object>>`
 |===
 
 [caption=""]

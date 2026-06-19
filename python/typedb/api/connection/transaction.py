@@ -93,11 +93,9 @@ class Transaction(ABC):
 
         :param query: The query to execute.
         :param options: The ``QueryOptions`` to execute the query with.
-        :param given_rows: Rows given to the query as input. May be a
-                    * ``GivenRows`` object,
-                    * a list of dicts mapping variable names to values,
-                    * or a ``(variables, rows)`` tuple.
-                Items in the dicts/rows may be ``Concept`` instances or primitives supported by ``TypeDB.Concept.try_convert_to_value``.
+        :param given_rows: Rows given to the query as input. May be a ``GivenRows`` object,
+            a list of dicts mapping variable names to values, or a ``(variables, rows)`` tuple.
+            Items in the dicts/rows may be ``Concept`` instances or primitives supported by ``TypeDB.Concept.try_convert_to_value``.
 
         Examples:
         ---------

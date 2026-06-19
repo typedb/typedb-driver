@@ -213,7 +213,7 @@ static IValue TryConvertToValue(object value)
 
 
 
-Converts a raw .NET value to an ``IValue`` concept.
+Converts a raw host-language object to an ``IValue`` concept. Accepted types: ``bool``, ``long``, ``int``, ``double``, ``float``, ``decimal``, ``string``, ``DateOnly``, ``Datetime``, ``DatetimeTZ``, ``Duration``.
 
 [caption=""]
 .Returns

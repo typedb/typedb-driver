@@ -45,7 +45,7 @@ Constructs a ``GivenRows`` instance from dict-based rows for use as inputs to qu
 static new_boolean(value: bool)
 ----
 
-
+Creates a new ``boolean`` Value concept.
 
 [caption=""]
 .Returns
@@ -59,7 +59,7 @@ static new_boolean(value: bool)
 static new_date(value: date)
 ----
 
-
+Creates a new ``date`` Value concept.
 
 [caption=""]
 .Returns
@@ -73,7 +73,7 @@ static new_date(value: date)
 static new_datetime(value: Datetime)
 ----
 
-
+Creates a new ``datetime`` Value concept.
 
 [caption=""]
 .Returns
@@ -87,7 +87,7 @@ static new_datetime(value: Datetime)
 static new_datetime_tz(value: Datetime)
 ----
 
-
+Creates a new ``datetime-tz`` Value concept.
 
 [caption=""]
 .Returns
@@ -101,7 +101,7 @@ static new_datetime_tz(value: Datetime)
 static new_decimal(value: Decimal)
 ----
 
-
+Creates a new ``decimal`` Value concept.
 
 [caption=""]
 .Returns
@@ -115,7 +115,7 @@ static new_decimal(value: Decimal)
 static new_double(value: float)
 ----
 
-
+Creates a new ``double`` Value concept.
 
 [caption=""]
 .Returns
@@ -129,7 +129,7 @@ static new_double(value: float)
 static new_duration(value: Duration)
 ----
 
-
+Creates a new ``duration`` Value concept.
 
 [caption=""]
 .Returns
@@ -143,7 +143,7 @@ static new_duration(value: Duration)
 static new_integer(value: int)
 ----
 
-
+Creates a new ``integer`` Value concept.
 
 [caption=""]
 .Returns
@@ -157,7 +157,7 @@ static new_integer(value: int)
 static new_string(value: str)
 ----
 
-
+Creates a new ``string`` Value concept.
 
 [caption=""]
 .Returns
@@ -171,7 +171,7 @@ static new_string(value: str)
 static try_convert_to_value(value: Any)
 ----
 
-
+Converts a raw host-language object to a ``Value`` concept. Accepted types: ``bool``, ``int``, ``float``, ``Decimal``, ``str``, ``date``, ``Datetime``, ``Duration``.
 
 [caption=""]
 .Returns
