@@ -650,7 +650,7 @@
     jenv->ReleaseByteArrayElements($input, bae, 0);
 }
 
-%typemap(freearg) char* { free($1) }
+%typemap(freearg) char* { free($1); }
 
 %typemap(out) char* {
     if ($1) {
