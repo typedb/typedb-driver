@@ -378,7 +378,7 @@ impl FromStr for Decimal {
         let num_fractional_digits = fractional_part.len() as u32;
         if num_fractional_digits > Self::FRACTIONAL_PART_DENOMINATOR_LOG10 {
             let reason = "The value cannot be parsed without a loss of precision".to_owned();
-            return Err(Error::Concept(ConceptError::ErrorParsingDecimal { unparsed: str.to_owned(), reason }))
+            return Err(Error::Concept(ConceptError::ErrorParsingDecimal { unparsed: str.to_owned(), reason }));
         }
         let fractional = parsed_fractional * 10u64.pow(Self::FRACTIONAL_PART_DENOMINATOR_LOG10 - num_fractional_digits);
 
