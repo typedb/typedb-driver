@@ -650,6 +650,8 @@
     jenv->ReleaseByteArrayElements($input, bae, 0);
 }
 
+%typemap(freearg) char* { free($1) }
+
 %typemap(out) char* {
     if ($1) {
         size_t sz = strlen($1);
@@ -668,10 +670,6 @@
         return null;
     }
     return new String(ba, java.nio.charset.Charset.forName("UTF-8"));
-}
-
-%typemap(freearg) char* {
-    if ($1) jenv->ReleaseByteArrayElements($input, (jbyte*)$1, 0);
 }
 
 /* char** needs special handling */
