@@ -77,8 +77,7 @@ fn transaction_on_close_callback() {
     })
 }
 
-// on_close (or a second close) after the transaction has already closed must not panic: the
-// registration can no longer be acknowledged, which previously aborted the process via `expect`.
+// on_close (or a second close) after the transaction has already closed must not panic
 #[test]
 #[serial]
 fn transaction_on_close_after_close_does_not_panic() {

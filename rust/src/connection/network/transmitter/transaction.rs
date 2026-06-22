@@ -168,7 +168,6 @@ impl TransactionTransmitter {
         box_promise(async move {
             let (sender, mut sink) = unbounded_async();
             self.on_close_register_sink.send((Box::new(callback), sender)).ok();
-            // A closed channel means the listener already stopped: the transaction is closed.
             let _ = sink.recv().await;
             Ok(())
         })
@@ -182,7 +181,6 @@ impl TransactionTransmitter {
         box_promise(move || {
             let (sender, mut sink) = unbounded_async();
             self.on_close_register_sink.send((Box::new(callback), sender)).ok();
-            // A closed channel means the listener already stopped: the transaction is closed.
             let _ = sink.blocking_recv();
             Ok(())
         })
