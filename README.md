@@ -15,17 +15,17 @@ See the table below for links to README files, documentation, and source code.
 | Rust            | [README](https://github.com/typedb/typedb-driver/tree/master/rust/README.md)    | [Documentation](https://typedb.com/docs/reference/typedb-grpc-drivers/rust)       | [`rust/`](https://github.com/typedb/typedb-driver/tree/master/rust)       |
 | Python          | [README](https://github.com/typedb/typedb-driver/tree/master/python/README.md)  | [Documentation](https://typedb.com/docs/reference/typedb-grpc-drivers/python)     | [`python/`](https://github.com/typedb/typedb-driver/tree/master/python)   |
 | Java            | [README](https://github.com/typedb/typedb-driver/tree/master/java/README.md)    | [Documentation](https://typedb.com/docs/reference/typedb-grpc-drivers/java/)      | [`java/`](https://github.com/typedb/typedb-driver/tree/master/java)       |
+| C#              | [README](https://github.com/typedb/typedb-driver/tree/master/csharp/README.md)  | [Documentation](https://typedb.com/docs/reference/typedb-grpc-drivers/csharp/)    | [`csharp/`](https://github.com/typedb/typedb-driver/tree/master/csharp)   |
+| C               | [README](https://github.com/typedb/typedb-driver/tree/master/c/README.md)       | [Documentation](https://typedb.com/docs/reference/typedb-grpc-drivers/c/)         | [`c/`](https://github.com/typedb/typedb-driver/tree/master/c)             |
 | Typescript HTTP | [README](https://github.com/typedb/typedb-driver/tree/master/http-ts/README.md) | [Documentation](https://typedb.com/docs/reference/typedb-http-drivers/typescript) | [`http-ts/`](https://github.com/typedb/typedb-driver/tree/master/http-ts) |
 
 There are also some GRPC drivers that are available for TypeDB 2.x but have not been upgraded to 3.x yet. Please contact
 us if you need one of these, or use the [HTTP API](https://typedb.com/docs/reference/typedb-http-api)
 
-| Driver  | Readme                                                                         | Documentation                                                | Driver location                                                         |
-|---------|--------------------------------------------------------------------------------|--------------------------------------------------------------|-------------------------------------------------------------------------|
-| Node.js | [README](https://github.com/typedb/typedb-driver/tree/master/nodejs/README.md) | [Documentation](https://typedb.com/docs/drivers/2.x/nodejs/) | [`nodejs`](https://github.com/typedb/typedb-driver/tree/master/nodejs)  |
-| C#      | [README](https://github.com/typedb/typedb-driver/tree/master/csharp/README.md) | [Documentation](https://typedb.com/docs/drivers/2.x/csharp/) | [`csharp/`](https://github.com/typedb/typedb-driver/tree/master/csharp) |
-| C       | [README](https://github.com/typedb/typedb-driver/tree/master/c/README.md)      | See C++                                                      | [`c/`](https://github.com/typedb/typedb-driver/tree/master/c)           |
-| C++     | [README](https://github.com/typedb/typedb-driver/tree/master/cpp/README.md)    | [Documentation](https://typedb.com/docs/drivers/2.x/cpp/)    | [`cpp/`](https://github.com/typedb/typedb-driver/tree/master/cpp)       |
+| Driver  | Readme                                                                         | Documentation                                                | Driver location                                                        |
+|---------|--------------------------------------------------------------------------------|--------------------------------------------------------------|------------------------------------------------------------------------|
+| Node.js | [README](https://github.com/typedb/typedb-driver/tree/master/nodejs/README.md) | [Documentation](https://typedb.com/docs/drivers/2.x/nodejs/) | [`nodejs`](https://github.com/typedb/typedb-driver/tree/master/nodejs) |
+| C++     | [README](https://github.com/typedb/typedb-driver/tree/master/cpp/README.md)    | [Documentation](https://typedb.com/docs/drivers/2.x/cpp/)    | [`cpp/`](https://github.com/typedb/typedb-driver/tree/master/cpp)      |
 
 ### Package hosting
 
