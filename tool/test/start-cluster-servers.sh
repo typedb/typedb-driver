@@ -29,9 +29,6 @@ ROOT_CA_PATH="$(realpath tool/test/resources/encryption/ext-grpc-root-ca.pem)"
 
 rm -rf $(seq 1 $NODE_COUNT) typedb-cluster-all
 
-# Local override for development / hermetic testing: if TYPEDB_CLUSTER_TARBALL is set,
-# extract it directly instead of fetching via bazel. Useful when the artifact repo is
-# unavailable or when you want to test a locally-built typedb-cluster tarball.
 if [ -n "${TYPEDB_CLUSTER_TARBALL:-}" ]; then
   echo "Using local typedb-cluster tarball: ${TYPEDB_CLUSTER_TARBALL}"
   mkdir -p typedb-cluster-all
@@ -65,8 +62,6 @@ done
 
 echo Starting a cluster consisting of $NODE_COUNT servers...
 for i in $(seq 1 $NODE_COUNT); do
-  # Only the initial node seeds the cluster with itself as the sole voter;
-  # subsequent nodes are added via `servers register` below.
   if [ "$i" -eq 1 ]; then
     INIT=true "${CLUSTER_SERVER}" start $i
   else

@@ -139,11 +139,6 @@ server_start() {
     init_arg="--server.clustering.init=true"
   fi
 
-  # Restrict umask so the admin unix socket is created with mode 0600 (world-r/w
-  # sockets are rejected by the admin tool with [ADM9]). The subshell isolates
-  # the change from anything else in the caller's environment.
-  umask 0077
-
   # Use setsid on Linux to start in a new session (prevents process group cleanup).
   # On macOS, nohup + disown is sufficient.
   local setsid_cmd=""
