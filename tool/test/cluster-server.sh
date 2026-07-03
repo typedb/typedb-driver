@@ -134,10 +134,7 @@ server_start() {
   # by the outside-sandbox cluster start and the unlink fails with EPERM, even
   # though typedb itself can still truncate-and-write via the existing path.
 
-  local init_arg=""
-  if [ "${INIT}" = "true" ]; then
-    init_arg="--server.clustering.init=true"
-  fi
+  local init_arg="--server.clustering.init=$INIT"
 
   # Use setsid on Linux to start in a new session (prevents process group cleanup).
   # On macOS, nohup + disown is sufficient.
