@@ -8,13 +8,13 @@ Available from https://crates.io/crates/typedb-driver
 Documentation: https://typedb.com/docs/drivers/rust/overview
 
 ```sh
-cargo add typedb-driver@3.12.0-rc0
+cargo add typedb-driver@3.12.0
 ```
 
 
 ### Java driver
 
-Available through [https://repo.typedb.com](https://cloudsmith.io/~typedb/repos/public-release/packages/detail/maven/typedb-driver/3.12.0-rc0/a=noarch;xg=com.typedb/)
+Available through [https://repo.typedb.com](https://cloudsmith.io/~typedb/repos/public-release/packages/detail/maven/typedb-driver/3.12.0/a=noarch;xg=com.typedb/)
 Documentation: https://typedb.com/docs/drivers/java/overview
 
 ```xml
@@ -28,7 +28,7 @@ Documentation: https://typedb.com/docs/drivers/java/overview
     <dependency>
         <groupid>com.typedb</groupid>
         <artifactid>typedb-driver</artifactid>
-        <version>3.12.0-rc0</version>
+        <version>3.12.0</version>
     </dependency>
 </dependencies>
 ```
@@ -42,7 +42,7 @@ Available through https://pypi.org
 
 [//]: # (TODO: Python's RC/Alpha/Beta versions are formatted differently. Don't foget to update manually until we make an automation)
 ```
-pip install typedb-driver==3.12.0-rc0
+pip install typedb-driver==3.12.0
 ```
 
 ### C# driver
@@ -52,12 +52,12 @@ Documentation: https://typedb.com/docs/drivers/csharp/overview
 
 ```xml
 <ItemGroup>
-    <PackageReference Include="TypeDB.Driver" Version="3.12.0-rc0" />
-    <PackageReference Include="TypeDB.Driver.Pinvoke.osx-x64" Version="3.12.0-rc0" />
-    <PackageReference Include="TypeDB.Driver.Pinvoke.linux-x64" Version="3.12.0-rc0" />
-    <PackageReference Include="TypeDB.Driver.Pinvoke.win-x64" Version="3.12.0-rc0" />
-    <PackageReference Include="TypeDB.Driver.Pinvoke.osx-arm64" Version="3.12.0-rc0" />
-    <PackageReference Include="TypeDB.Driver.Pinvoke.linux-arm64" Version="3.12.0-rc0" />
+    <PackageReference Include="TypeDB.Driver" Version="3.12.0" />
+    <PackageReference Include="TypeDB.Driver.Pinvoke.osx-x64" Version="3.12.0" />
+    <PackageReference Include="TypeDB.Driver.Pinvoke.linux-x64" Version="3.12.0" />
+    <PackageReference Include="TypeDB.Driver.Pinvoke.win-x64" Version="3.12.0" />
+    <PackageReference Include="TypeDB.Driver.Pinvoke.osx-arm64" Version="3.12.0" />
+    <PackageReference Include="TypeDB.Driver.Pinvoke.linux-arm64" Version="3.12.0" />
 </ItemGroup>
 ```
 
@@ -69,12 +69,12 @@ NPM package: https://www.npmjs.com/package/@typedb/driver-http
 Documentation: https://typedb.com/docs/home/install/drivers/
 
 ```
-npm install @typedb/driver-http@3.12.0-rc0
+npm install @typedb/driver-http@3.12.0
 ```
 
 ### C driver
 
-Compiled distributions comprising headers and shared libraries available at: https://cloudsmith.io/~typedb/repos/public-release/packages/?q=name:^typedb-driver-clib+version:3.12.0-rc0
+Compiled distributions comprising headers and shared libraries available at: https://cloudsmith.io/~typedb/repos/public-release/packages/?q=name:^typedb-driver-clib+version:3.12.0
 
 
 ## New Features
@@ -179,6 +179,9 @@ Compiled distributions comprising headers and shared libraries available at: htt
   
 
 ## Other Improvements
+- **Update language references in README**
+  Refresh the table of supported languages with the latest information on 3.x support and documentation links.
+  
 - **Add deployment steps for Python 3.14 driver**
   Add deployment steps for Python 3.14 driver
   
