@@ -64,9 +64,7 @@ commands:
         type: string
     steps:
       - run: |
-          amazon-linux-extras install java-openjdk11 -y
-          yum install wget make gcc gcc-c++ openssl-devel bzip2-devel libffi-devel zlib-devel file lsof which procps tar git -y
-          
+          #yum install wget make gcc gcc-c++ openssl-devel bzip2-devel libffi-devel zlib-devel file lsof which procps tar git -y
           cd /tmp
           wget https://www.python.org/ftp/python/3.9.6/Python-3.9.6.tgz
           tar -xvf Python-3.9.6.tgz
@@ -99,7 +97,7 @@ commands:
           export PLATFORM_IDENTIFIER=$(echo "$(uname -s)_<<parameters.bazel-arch>>" | sed 's/Darwin/MAC/;s/Linux/LINUX/;s/amd64/X86_64/;s/aarch64/ARM64/;s/arm64/ARM64/')
           echo "export CARGO_BAZEL_GENERATOR_URL=\"\$CARGO_BAZEL_GENERATOR_URL_$PLATFORM_IDENTIFIER\"" >> $BASH_ENV
           echo "export CARGO_BAZEL_GENERATOR_SHA256=\"\$CARGO_BAZEL_GENERATOR_SHA_$PLATFORM_IDENTIFIER\"" >> $BASH_ENV
-  
+
   install-bazel-brew:
     parameters:
       bazel-arch:
@@ -848,27 +846,27 @@ workflows:
       - deploy-snapshot-linux-x86_64:
           filters:
             branches:
-              only: [master, custom-amazonlinux-image ]
+              only: [master]
 
       - deploy-snapshot-mac-arm64:
           filters:
             branches:
-              only: [master, custom-amazonlinux-image ]
+              only: [master]
 
       - deploy-snapshot-mac-x86_64:
           filters:
             branches:
-              only: [master, custom-amazonlinux-image ]
+              only: [master]
 
       - deploy-snapshot-windows-x86_64:
           filters:
             branches:
-              only: [master, custom-amazonlinux-image ]
+              only: [master]
 
       - deploy-snapshot-any:
           filters:
             branches:
-              only: [master, custom-amazonlinux-image ]
+              only: [master]
           requires:
             - deploy-snapshot-linux-arm64
             - deploy-snapshot-linux-x86_64
@@ -879,7 +877,7 @@ workflows:
       - deploy-snapshot-dotnet-any:
           filters:
             branches:
-              only: [master, custom-amazonlinux-image ]
+              only: [master]
           requires:
             - deploy-snapshot-linux-arm64
             - deploy-snapshot-linux-x86_64
@@ -890,7 +888,7 @@ workflows:
       - test-snapshot-linux-arm64:
           filters:
             branches:
-              only: [master, custom-amazonlinux-image ]
+              only: [master]
           requires:
             - deploy-snapshot-linux-arm64
             - deploy-snapshot-any
@@ -899,7 +897,7 @@ workflows:
       - test-snapshot-linux-x86_64:
           filters:
             branches:
-              only: [master, custom-amazonlinux-image ]
+              only: [master]
           requires:
             - deploy-snapshot-linux-x86_64
             - deploy-snapshot-any
@@ -908,7 +906,7 @@ workflows:
       - test-snapshot-mac-arm64:
           filters:
             branches:
-              only: [master, custom-amazonlinux-image ]
+              only: [master]
           requires:
             - deploy-snapshot-mac-arm64
             - deploy-snapshot-any
@@ -917,7 +915,7 @@ workflows:
       - test-snapshot-mac-x86_64:
           filters:
             branches:
-              only: [master, custom-amazonlinux-image ]
+              only: [master]
           requires:
             - deploy-snapshot-mac-x86_64
             - deploy-snapshot-any
@@ -926,7 +924,7 @@ workflows:
       - test-snapshot-windows-x86_64:
           filters:
             branches:
-              only: [master, custom-amazonlinux-image ]
+              only: [master]
           requires:
             - deploy-snapshot-windows-x86_64
             - deploy-snapshot-any
