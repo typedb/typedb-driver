@@ -128,6 +128,16 @@ commands:
     steps:
       - install-pip-requirements
       - run: |
+          cd /tmp
+          wget https://www.python.org/ftp/python/3.9.6/Python-3.9.6.tgz
+          tar -xvf Python-3.9.6.tgz
+          cd Python-3.9.6
+          ./configure --enable-optimizations --enable-shared
+          make altinstall
+          echo "/usr/local/lib" >> /etc/ld.so.conf.d/python3.9.conf
+          ldconfig
+          ln -s /usr/local/bin/python3.9 /usr/bin/python3
+
           tool/test/start-core-server.sh
           python3 -m pip install wheel 
           python3 -m pip install --extra-index-url https://repo.typedb.com/public/public-snapshot/python/simple typedb-driver==0.0.0+$(git rev-parse HEAD)
