@@ -30,7 +30,7 @@ executors:
 
   linux-x86_64-amazonlinux-2:
     docker:
-      - image: typedb/amazonlinux2-ci:3.12.0-x86_64
+      - image: typedb/amazonlinux2-ci:3.12.0-amd64
     resource_class: large
     working_directory: ~/typedb-driver
 
