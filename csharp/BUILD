@@ -26,10 +26,17 @@ load("//csharp:docs_structure.bzl", "dir_mapping")
 load("//tool/docs:csharp/rules.bzl", "doxygen_csharp_to_adoc")
 load("//tool/docs:examples/rules.bzl", "test_to_example", "update_markdown_example")
 
+load(":custom_transition.bzl", "clib_wrapper_force_config")
+
+clib_wrapper_force_config(
+    name = "typedb_driver_clib_headers_for_csharp",
+    actual = "//c:typedb_driver_clib_headers"
+)
+
 swig_native_csharp_library(
     name = "typedb_driver_pinvoke",
     native_lib_name = "typedb_driver",
-    lib = "//c:typedb_driver_clib_headers",
+    lib = ":typedb_driver_clib_headers_for_csharp",
     namespace = "TypeDB.Driver.Pinvoke",
     interface = "//c:typedb_driver.i",
     includes = ["//c:swig/typedb_driver_csharp.swg"],
