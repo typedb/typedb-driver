@@ -24,13 +24,13 @@ orbs:
 executors:
   linux-arm64-amazonlinux-2:
     docker:
-      - image: amazonlinux:2
+      - image: typedb/amazonlinux2-ci:3.12.0-arm64
     resource_class: arm.large
     working_directory: ~/typedb-driver
 
   linux-x86_64-amazonlinux-2:
     docker:
-      - image: amazonlinux:2
+      - image: typedb/amazonlinux2-ci:3.12.0-amd64
     resource_class: large
     working_directory: ~/typedb-driver
 
@@ -64,25 +64,10 @@ commands:
         type: string
     steps:
       - run: |
-          amazon-linux-extras install java-openjdk11 -y
-          yum install wget make gcc gcc-c++ openssl-devel bzip2-devel libffi-devel zlib-devel file lsof which procps tar git -y
-          
-          cd /tmp
-          wget https://www.python.org/ftp/python/3.9.6/Python-3.9.6.tgz
-          tar -xvf Python-3.9.6.tgz
-          cd Python-3.9.6
-          ./configure --enable-optimizations --enable-shared
-          make altinstall
-          echo "/usr/local/lib" >> /etc/ld.so.conf.d/python3.9.conf
-          ldconfig
-          ln -s /usr/local/bin/python3.9 /usr/bin/python3
-          
-          curl -OL "https://github.com/bazelbuild/bazelisk/releases/download/v1.17.0/bazelisk-linux-<<parameters.bazel-arch>>"
-          mv "bazelisk-linux-<<parameters.bazel-arch>>" /usr/local/bin/bazel
-          chmod a+x /usr/local/bin/bazel
           export PLATFORM_IDENTIFIER=$(echo "$(uname -s)_<<parameters.bazel-arch>>" | sed 's/Darwin/MAC/;s/Linux/LINUX/;s/amd64/X86_64/;s/aarch64/ARM64/;s/arm64/ARM64/')
           echo "export CARGO_BAZEL_GENERATOR_URL=\"\$CARGO_BAZEL_GENERATOR_URL_$PLATFORM_IDENTIFIER\"" >> $BASH_ENV
           echo "export CARGO_BAZEL_GENERATOR_SHA256=\"\$CARGO_BAZEL_GENERATOR_SHA_$PLATFORM_IDENTIFIER\"" >> $BASH_ENV
+          bazel run --config=ci --define version=$(git rev-parse HEAD) @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
 
   install-bazel-apt:
     parameters:
@@ -99,7 +84,8 @@ commands:
           export PLATFORM_IDENTIFIER=$(echo "$(uname -s)_<<parameters.bazel-arch>>" | sed 's/Darwin/MAC/;s/Linux/LINUX/;s/amd64/X86_64/;s/aarch64/ARM64/;s/arm64/ARM64/')
           echo "export CARGO_BAZEL_GENERATOR_URL=\"\$CARGO_BAZEL_GENERATOR_URL_$PLATFORM_IDENTIFIER\"" >> $BASH_ENV
           echo "export CARGO_BAZEL_GENERATOR_SHA256=\"\$CARGO_BAZEL_GENERATOR_SHA_$PLATFORM_IDENTIFIER\"" >> $BASH_ENV
-  
+          bazel run --config=ci --define version=$(git rev-parse HEAD) @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+
   install-bazel-brew:
     parameters:
       bazel-arch:
@@ -112,6 +98,7 @@ commands:
           export PLATFORM_IDENTIFIER=$(echo "$(uname -s)_<<parameters.bazel-arch>>" | sed 's/Darwin/MAC/;s/Linux/LINUX/;s/amd64/X86_64/;s/arm64/ARM64/')
           echo "export CARGO_BAZEL_GENERATOR_URL=\"\$CARGO_BAZEL_GENERATOR_URL_$PLATFORM_IDENTIFIER\"" >> $BASH_ENV
           echo "export CARGO_BAZEL_GENERATOR_SHA256=\"\$CARGO_BAZEL_GENERATOR_SHA_$PLATFORM_IDENTIFIER\"" >> $BASH_ENV
+          bazel run --config=ci --define version=$(git rev-parse HEAD) @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
 
   install-brew-rosetta:
     steps:
@@ -655,6 +642,18 @@ jobs:
       - install-maven-linux
       - install-dotnet-linux
       - install-libicu-linux
+      - run: |
+          cd /tmp
+          wget https://www.python.org/ftp/python/3.9.6/Python-3.9.6.tgz
+          tar -xvf Python-3.9.6.tgz
+          cd Python-3.9.6
+          ./configure --enable-optimizations --enable-shared
+          make altinstall
+          echo "/usr/local/lib" >> /etc/ld.so.conf.d/python3.9.conf
+          ldconfig
+          rm /usr/bin/python3
+          ln -s /usr/local/bin/python3.9 /usr/bin/python3
+
       - test-pip-snapshot-unix
       - test-maven-snapshot-unix
       - test-dotnet-snapshot-unix
@@ -826,7 +825,7 @@ jobs:
       - run: |
           apt update -y && apt install -y software-properties-common
           export SYNC_DEPENDENCIES_TOKEN=$REPO_GITHUB_TOKEN
-          bazel run --config=ci @typedb_dependencies//tool/sync:dependencies -- --source ${CIRCLE_PROJECT_REPONAME}@$(cat VERSION)
+          bazel run --config=ci --define version=$(git rev-parse HEAD) @typedb_dependencies//tool/sync:dependencies -- --source ${CIRCLE_PROJECT_REPONAME}@$(cat VERSION)
 
   release-cleanup:
     executor: linux-x86_64-ubuntu-2204
@@ -848,7 +847,7 @@ workflows:
       - deploy-snapshot-linux-x86_64:
           filters:
             branches:
-              only: [master]
+              only: [master, one-off/chsarp-custom-transition-prevents-rebuild]
 
       - deploy-snapshot-mac-arm64:
           filters:
