@@ -523,9 +523,9 @@ jobs:
       - install-bazel-yum:
           bazel-arch: arm64
       - install-libicu-linux
-      - deploy-clib-snapshot-unix
-      - deploy-pip-snapshot-unix
-      - deploy-maven-jni-snapshot-unix
+#      - deploy-clib-snapshot-unix
+#      - deploy-pip-snapshot-unix
+#      - deploy-maven-jni-snapshot-unix
 
 #      - deploy-cpp-snapshot-unix
 #      - test-cpp-assembly-linux:
@@ -540,9 +540,9 @@ jobs:
       - install-bazel-yum:
           bazel-arch: amd64
       - install-libicu-linux
-      - deploy-clib-snapshot-unix
-      - deploy-pip-snapshot-unix
-      - deploy-maven-jni-snapshot-unix
+#      - deploy-clib-snapshot-unix
+#      - deploy-pip-snapshot-unix
+#      - deploy-maven-jni-snapshot-unix
 
 #      - test-clib-assembly-linux:
 #          target-arch: x86_64
@@ -559,9 +559,9 @@ jobs:
       - checkout
       - install-bazel-brew:
           bazel-arch: arm64
-      - deploy-clib-snapshot-unix
-      - deploy-pip-snapshot-unix
-      - deploy-maven-jni-snapshot-unix
+#      - deploy-clib-snapshot-unix
+#      - deploy-pip-snapshot-unix
+#      - deploy-maven-jni-snapshot-unix
 
 #      - run: brew install cmake
 
@@ -581,9 +581,9 @@ jobs:
       - checkout
       - install-bazel-brew:
           bazel-arch: amd64
-      - deploy-clib-snapshot-unix
-      - deploy-pip-snapshot-unix
-      - deploy-maven-jni-snapshot-unix
+#      - deploy-clib-snapshot-unix
+#      - deploy-pip-snapshot-unix
+#      - deploy-maven-jni-snapshot-unix
 
 #      - run: brew install cmake
 
@@ -602,9 +602,9 @@ jobs:
     steps:
       - checkout
       - run: .circleci\windows\prepare.bat
-      - run: .circleci\windows\clib\deploy_snapshot.bat
-      - run: .circleci\windows\python\deploy_snapshot.bat
-      - run: .circleci\windows\java\deploy_snapshot.bat
+#      - run: .circleci\windows\clib\deploy_snapshot.bat
+#      - run: .circleci\windows\python\deploy_snapshot.bat
+#      - run: .circleci\windows\java\deploy_snapshot.bat
 
 
 #      - run: .circleci\windows\clib\test_assembly.bat
@@ -621,8 +621,8 @@ jobs:
       - install-bazel-apt:
           bazel-arch: amd64
       - deploy-crate-snapshot-unix
-      - deploy-maven-snapshot-unix
-      - deploy-http-ts-npm-snapshot-unix
+#      - deploy-maven-snapshot-unix
+#      - deploy-http-ts-npm-snapshot-unix
 #      - deploy-npm-snapshot-unix
 
   deploy-snapshot-dotnet-any:
@@ -639,23 +639,23 @@ jobs:
       - checkout
       - install-bazel-yum:
           bazel-arch: arm64
-      - install-maven-linux
+#      - install-maven-linux
       - install-dotnet-linux
-      - install-libicu-linux
-      - run: |
-          cd /tmp
-          wget https://www.python.org/ftp/python/3.9.6/Python-3.9.6.tgz
-          tar -xvf Python-3.9.6.tgz
-          cd Python-3.9.6
-          ./configure --enable-optimizations --enable-shared
-          make altinstall
-          echo "/usr/local/lib" >> /etc/ld.so.conf.d/python3.9.conf
-          ldconfig
-          rm /usr/bin/python3
-          ln -s /usr/local/bin/python3.9 /usr/bin/python3
-
-      - test-pip-snapshot-unix
-      - test-maven-snapshot-unix
+#      - install-libicu-linux
+#      - run: |
+#          cd /tmp
+#          wget https://www.python.org/ftp/python/3.9.6/Python-3.9.6.tgz
+#          tar -xvf Python-3.9.6.tgz
+#          cd Python-3.9.6
+#          ./configure --enable-optimizations --enable-shared
+#          make altinstall
+#          echo "/usr/local/lib" >> /etc/ld.so.conf.d/python3.9.conf
+#          ldconfig
+#          rm /usr/bin/python3
+#          ln -s /usr/local/bin/python3.9 /usr/bin/python3
+#
+#      - test-pip-snapshot-unix
+#      - test-maven-snapshot-unix
       - test-dotnet-snapshot-unix
 
   test-snapshot-linux-x86_64:
@@ -664,10 +664,10 @@ jobs:
       - checkout
       - install-bazel-yum:
           bazel-arch: amd64
-      - install-maven-linux
+#      - install-maven-linux
       - install-dotnet-linux
-      - test-pip-snapshot-unix
-      - test-maven-snapshot-unix
+#      - test-pip-snapshot-unix
+#      - test-maven-snapshot-unix
       - test-dotnet-snapshot-unix
 
   test-snapshot-mac-arm64:
@@ -676,10 +676,10 @@ jobs:
       - checkout
       - install-bazel-brew:
           bazel-arch: arm64
-      - install-maven-mac
+#      - install-maven-mac
       - install-dotnet-mac
-      - test-pip-snapshot-unix
-      - test-maven-snapshot-unix
+#      - test-pip-snapshot-unix
+#      - test-maven-snapshot-unix
       - test-dotnet-snapshot-unix
 
   test-snapshot-mac-x86_64:
@@ -689,10 +689,10 @@ jobs:
       - checkout
       - install-bazel-brew:
           bazel-arch: amd64
-      - install-maven-mac-rosetta
+#      - install-maven-mac-rosetta
       - install-dotnet-mac-rosetta
-      - test-pip-snapshot-mac-rosetta
-      - test-maven-snapshot-mac-rosetta
+#      - test-pip-snapshot-mac-rosetta
+#      - test-maven-snapshot-mac-rosetta
       - test-dotnet-snapshot-mac-rosetta
 
   test-snapshot-windows-x86_64:
@@ -701,8 +701,8 @@ jobs:
     steps:
       - checkout
       - run: .circleci\windows\prepare.bat
-      - run: .circleci\windows\python\test_deploy_snapshot.bat
-      - run: .circleci\windows\java\test_deploy_snapshot.bat
+#      - run: .circleci\windows\python\test_deploy_snapshot.bat
+#      - run: .circleci\windows\java\test_deploy_snapshot.bat
       - run: .circleci\windows\csharp\test_deploy_snapshot.bat
 
   test-snapshot-any:
@@ -842,7 +842,7 @@ workflows:
       - deploy-snapshot-linux-arm64:
           filters:
             branches:
-              only: [master]
+              only: [master, one-off/chsarp-custom-transition-prevents-rebuild]
 
       - deploy-snapshot-linux-x86_64:
           filters:
@@ -852,22 +852,22 @@ workflows:
       - deploy-snapshot-mac-arm64:
           filters:
             branches:
-              only: [master]
+              only: [master, one-off/chsarp-custom-transition-prevents-rebuild]
 
       - deploy-snapshot-mac-x86_64:
           filters:
             branches:
-              only: [master]
+              only: [master, one-off/chsarp-custom-transition-prevents-rebuild]
 
       - deploy-snapshot-windows-x86_64:
           filters:
             branches:
-              only: [master]
+              only: [master, one-off/chsarp-custom-transition-prevents-rebuild]
 
       - deploy-snapshot-any:
           filters:
             branches:
-              only: [master]
+              only: [master, one-off/chsarp-custom-transition-prevents-rebuild]
           requires:
             - deploy-snapshot-linux-arm64
             - deploy-snapshot-linux-x86_64
@@ -878,7 +878,7 @@ workflows:
       - deploy-snapshot-dotnet-any:
           filters:
             branches:
-              only: [master]
+              only: [master, one-off/chsarp-custom-transition-prevents-rebuild]
           requires:
             - deploy-snapshot-linux-arm64
             - deploy-snapshot-linux-x86_64
@@ -889,7 +889,7 @@ workflows:
       - test-snapshot-linux-arm64:
           filters:
             branches:
-              only: [master]
+              only: [master, one-off/chsarp-custom-transition-prevents-rebuild]
           requires:
             - deploy-snapshot-linux-arm64
             - deploy-snapshot-any
@@ -898,7 +898,7 @@ workflows:
       - test-snapshot-linux-x86_64:
           filters:
             branches:
-              only: [master]
+              only: [master, one-off/chsarp-custom-transition-prevents-rebuild]
           requires:
             - deploy-snapshot-linux-x86_64
             - deploy-snapshot-any
@@ -907,7 +907,7 @@ workflows:
       - test-snapshot-mac-arm64:
           filters:
             branches:
-              only: [master]
+              only: [master, one-off/chsarp-custom-transition-prevents-rebuild]
           requires:
             - deploy-snapshot-mac-arm64
             - deploy-snapshot-any
@@ -916,7 +916,7 @@ workflows:
       - test-snapshot-mac-x86_64:
           filters:
             branches:
-              only: [master]
+              only: [master, one-off/chsarp-custom-transition-prevents-rebuild]
           requires:
             - deploy-snapshot-mac-x86_64
             - deploy-snapshot-any
@@ -925,7 +925,7 @@ workflows:
       - test-snapshot-windows-x86_64:
           filters:
             branches:
-              only: [master]
+              only: [master, one-off/chsarp-custom-transition-prevents-rebuild]
           requires:
             - deploy-snapshot-windows-x86_64
             - deploy-snapshot-any
