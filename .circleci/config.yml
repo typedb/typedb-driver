@@ -179,7 +179,7 @@ commands:
       - run: |
           export DEPLOY_PIP_USERNAME=$REPO_PYPI_USERNAME
           export DEPLOY_PIP_PASSWORD=$REPO_PYPI_PASSWORD
-          bazel run --config=ci --jobs=8 --define version=$(cat VERSION) \
+          bazel build --config=ci --jobs=8 --define version=$(cat VERSION) \
             //python:deploy-pip39  //python:deploy-pip310 //python:deploy-pip311  \
             //python:deploy-pip312 //python:deploy-pip313 //python:deploy-pip314
           bazel run --config=ci --jobs=8 --define version=$(cat VERSION) //python:deploy-pip39 --compilation_mode=opt -- release
