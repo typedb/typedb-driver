@@ -641,7 +641,7 @@ jobs:
           bazel-arch: arm64
 #      - install-maven-linux
       - install-dotnet-linux
-#      - install-libicu-linux
+      - install-libicu-linux
 #      - run: |
 #          cd /tmp
 #          wget https://www.python.org/ftp/python/3.9.6/Python-3.9.6.tgz
