@@ -27,9 +27,7 @@ python.exe -m pip install twine==3.3.0 importlib-metadata==3.4.0
 git rev-parse HEAD > version_temp.txt
 set /p VER=<version_temp.txt
 
-bazel --output_base=C:\b build --config=ci --verbose_failures --define version=%VER% \
-    //python:deploy-pip39  //python:deploy-pip310 //python:deploy-pip311 \
-    //python:deploy-pip312 //python:deploy-pip313 //python:deploy-pip314
+bazel --output_base=C:\b build --config=ci --verbose_failures --define version=%VER% //python:deploy-pip39  //python:deploy-pip310 //python:deploy-pip311 //python:deploy-pip312 //python:deploy-pip313 //python:deploy-pip314
 IF %errorlevel% NEQ 0 EXIT /b %errorlevel%
 
 bazel --output_base=C:\b run --config=ci --verbose_failures --define version=%VER% //python:deploy-pip39 -- snapshot
