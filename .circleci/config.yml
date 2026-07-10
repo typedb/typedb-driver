@@ -869,7 +869,7 @@ workflows:
       - deploy-snapshot-windows-x86_64:
           filters:
             branches:
-              only: [master, build-all-python-drivers-in-parallel]
+              only: [master]
 
       - deploy-snapshot-any:
           filters:
