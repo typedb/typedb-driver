@@ -133,6 +133,9 @@ commands:
       - run: |
           export DEPLOY_PIP_USERNAME=$REPO_TYPEDB_USERNAME
           export DEPLOY_PIP_PASSWORD=$REPO_TYPEDB_PASSWORD
+          bazel build --config=ci --jobs=8 --define version=$(git rev-parse HEAD) \
+            //python:deploy-pip39  //python:deploy-pip310 //python:deploy-pip311  \
+            //python:deploy-pip312 //python:deploy-pip313 //python:deploy-pip314
           bazel run --config=ci --jobs=8 --define version=$(git rev-parse HEAD) //python:deploy-pip39 -- snapshot
           bazel run --config=ci --jobs=8 --define version=$(git rev-parse HEAD) //python:deploy-pip310 -- snapshot
           bazel run --config=ci --jobs=8 --define version=$(git rev-parse HEAD) //python:deploy-pip311 -- snapshot
