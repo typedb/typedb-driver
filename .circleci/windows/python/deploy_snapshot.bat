@@ -30,6 +30,8 @@ set /p VER=<version_temp.txt
 bazel --output_base=C:\b build --config=ci --verbose_failures --define version=%VER% \
     //python:deploy-pip39  //python:deploy-pip310 //python:deploy-pip311 \
     //python:deploy-pip312 //python:deploy-pip313 //python:deploy-pip314
+IF %errorlevel% NEQ 0 EXIT /b %errorlevel%
+
 bazel --output_base=C:\b run --config=ci --verbose_failures --define version=%VER% //python:deploy-pip39 -- snapshot
 IF %errorlevel% NEQ 0 EXIT /b %errorlevel%
 
