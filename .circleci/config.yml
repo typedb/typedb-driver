@@ -179,6 +179,9 @@ commands:
       - run: |
           export DEPLOY_PIP_USERNAME=$REPO_PYPI_USERNAME
           export DEPLOY_PIP_PASSWORD=$REPO_PYPI_PASSWORD
+          bazel run --config=ci --jobs=8 --define version=$(cat VERSION) \
+            //python:deploy-pip39  //python:deploy-pip310 //python:deploy-pip311  \
+            //python:deploy-pip312 //python:deploy-pip313 //python:deploy-pip314
           bazel run --config=ci --jobs=8 --define version=$(cat VERSION) //python:deploy-pip39 --compilation_mode=opt -- release
           bazel run --config=ci --jobs=8 --define version=$(cat VERSION) //python:deploy-pip310 --compilation_mode=opt -- release
           bazel run --config=ci --jobs=8 --define version=$(cat VERSION) //python:deploy-pip311 --compilation_mode=opt -- release
@@ -851,12 +854,12 @@ workflows:
       - deploy-snapshot-linux-x86_64:
           filters:
             branches:
-              only: [master, build-all-python-drivers-in-parallel]
+              only: [master]
 
       - deploy-snapshot-mac-arm64:
           filters:
             branches:
-              only: [master, build-all-python-drivers-in-parallel]
+              only: [master]
 
       - deploy-snapshot-mac-x86_64:
           filters:
@@ -866,7 +869,7 @@ workflows:
       - deploy-snapshot-windows-x86_64:
           filters:
             branches:
-              only: [master, build-all-python-drivers-in-parallel]
+              only: [master]
 
       - deploy-snapshot-any:
           filters:
