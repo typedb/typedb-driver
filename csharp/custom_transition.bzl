@@ -29,19 +29,19 @@ fixed_default_transition = transition(
     implementation = _impl,
     inputs = ["@rules_dotnet//dotnet:target_framework", "@rules_dotnet//dotnet:rid", "//command_line_option:cpu", "//command_line_option:platforms"],
     outputs = ["@rules_dotnet//dotnet:target_framework", "@rules_dotnet//dotnet:rid"] +
-              ["@rules_dotnet//dotnet:framework_compatible_%s" % framework for framework in FRAMEWORK_COMPATIBILITY.keys()] +
-              ["@rules_dotnet//dotnet:rid_compatible_%s" % rid for rid in RUNTIME_GRAPH.keys()],
+        ["@rules_dotnet//dotnet:framework_compatible_%s" % framework for framework in FRAMEWORK_COMPATIBILITY.keys()] +
+        ["@rules_dotnet//dotnet:rid_compatible_%s" % rid for rid in RUNTIME_GRAPH.keys()],
 )
 
 def _clib_wrapper_force_config(ctx):
-  # re-export whatever providers the actual produces
-  return [ctx.attr.actual[CcInfo], ctx.attr.actual[DefaultInfo], ]
+    # re-export whatever providers the actual produces
+    return [ctx.attr.actual[CcInfo], ctx.attr.actual[DefaultInfo], ]
 
 clib_wrapper_force_config = rule(
-  implementation = _clib_wrapper_force_config,
-  cfg = fixed_default_transition,
-  attrs = {"actual": attr.label()},
-  doc = ("The C# driver rebuilds the C driver with a different config." +
-    "Forcing the same config on every language means they can all share the same build"
+    implementation = _clib_wrapper_force_config,
+    cfg = fixed_default_transition,
+    attrs = {"actual": attr.label()},
+    doc = ("The C# driver rebuilds the C driver with a different config." +
+        "Forcing the same config on every language means they can all share the same build"
     ),
 )
