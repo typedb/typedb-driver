@@ -24,13 +24,13 @@ orbs:
 executors:
   linux-arm64-amazonlinux-2:
     docker:
-      - image: typedb/amazonlinux2-ci:3.12.0-arm64
+      - image: typedb/amazonlinux2-ci:3.12.1-arm64
     resource_class: arm.large
     working_directory: ~/typedb-driver
 
   linux-x86_64-amazonlinux-2:
     docker:
-      - image: typedb/amazonlinux2-ci:3.12.0-amd64
+      - image: typedb/amazonlinux2-ci:3.12.1-amd64
     resource_class: large
     working_directory: ~/typedb-driver
 
@@ -642,18 +642,6 @@ jobs:
       - install-maven-linux
       - install-dotnet-linux
       - install-libicu-linux
-      - run: |
-          cd /tmp
-          wget https://www.python.org/ftp/python/3.9.6/Python-3.9.6.tgz
-          tar -xvf Python-3.9.6.tgz
-          cd Python-3.9.6
-          ./configure --enable-optimizations --enable-shared
-          make altinstall
-          echo "/usr/local/lib" >> /etc/ld.so.conf.d/python3.9.conf
-          ldconfig
-          rm /usr/bin/python3
-          ln -s /usr/local/bin/python3.9 /usr/bin/python3
-
       - test-pip-snapshot-unix
       - test-maven-snapshot-unix
       - test-dotnet-snapshot-unix
