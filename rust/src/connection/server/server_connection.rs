@@ -105,8 +105,9 @@ impl ServerConnection {
         let request_time = Instant::now();
         match request_transmitter.request(message).await? {
             Response::ConnectionOpen { connection_id, server_duration_millis, servers } => {
-                let latency =
-                    Instant::now().duration_since(request_time) - Duration::from_millis(server_duration_millis);
+                let latency = Instant::now()
+                    .duration_since(request_time)
+                    .saturating_sub(Duration::from_millis(server_duration_millis));
                 Ok((connection_id, latency, servers))
             }
             other => Err(ConnectionError::UnexpectedResponse { response: format!("{other:?}") }.into()),
@@ -260,8 +261,10 @@ impl ServerConnection {
                 response_source,
                 server_duration_millis,
             } => {
-                let open_latency =
-                    Instant::now().duration_since(open_request_start).as_millis() as u64 - server_duration_millis;
+                let open_latency = Instant::now()
+                    .duration_since(open_request_start)
+                    .saturating_sub(Duration::from_millis(server_duration_millis))
+                    .as_millis() as u64;
                 self.latency_tracker.update_latency(open_latency);
                 let transmitter =
                     TransactionTransmitter::new(self.background_runtime.clone(), request_sink, response_source);
