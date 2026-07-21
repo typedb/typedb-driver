@@ -1,0 +1,22 @@
+[#_Kind]
+[.doc-api-reference-driver]
+=== Kind
+
+`class`
+
+*Package*: `typedb.common.enums`
+
+[caption=""]
+.Enum constants
+// tag::enum_constants[]
+[cols=","]
+[options="header"]
+|===
+|Name |Value
+a| `Attribute` a| `1`
+a| `Entity` a| `0`
+a| `Relation` a| `2`
+a| `Role` a| `3`
+|===
+// end::enum_constants[]
+
