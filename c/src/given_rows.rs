@@ -97,7 +97,10 @@ pub extern "C" fn given_rows_header_builder_finish(builder: *mut GivenRowsHeader
 
 /// Creates a new <code>givenRow</code> of the specified capacity,
 #[unsafe(no_mangle)]
-pub extern "C" fn given_rows_builder_new(header: *mut GivenRowsHeader, row_count_hint: usize) -> *mut GivenRowsBuilder {
+pub extern "C" fn given_rows_builder_new(
+    header: *const GivenRowsHeader,
+    row_count_hint: usize,
+) -> *mut GivenRowsBuilder {
     let arced_header = take_arc(header);
     let cloned_header = arced_header.clone();
     let _ = release_arc(arced_header); // Give ownership back before anything bad can happen
@@ -178,7 +181,7 @@ pub extern "C" fn given_rows_header_builder_drop(builder: *mut GivenRowsHeaderBu
 
 /// Releases this instance of the arc of the native rust <code>GivenRowsHeader</code> object
 #[unsafe(no_mangle)]
-pub extern "C" fn given_rows_header_drop(header: *mut GivenRowsHeader) {
+pub extern "C" fn given_rows_header_drop(header: *const GivenRowsHeader) {
     decrement_arc(header)
 }
 

@@ -107,9 +107,9 @@ bool test_query_schema() {
             if (FAILED()) goto cleanup;
             QueryAnswer* define_answer = query_answer_promise_resolve(define_promise);
             if (FAILED()) goto cleanup;
-            success = query_answer_is_ok(define_answer);
+            bool define_ok = query_answer_is_ok(define_answer);
             query_answer_drop(define_answer);
-            if (!success) {
+            if (!define_ok) {
                 goto cleanup;
             }
         }
@@ -120,7 +120,6 @@ bool test_query_schema() {
             QueryAnswer* query_answer = query_answer_promise_resolve(query_promise);
             if (FAILED()) goto cleanup;
             if (!query_answer_is_concept_row_stream(query_answer)) {
-                success = false;
                 query_answer_drop(query_answer);
                 goto cleanup;
             }
@@ -192,13 +191,13 @@ bool test_query_data() {
         if (FAILED()) goto cleanup;
 
 
-        QueryAnswerPromise* define_promise = transaction_query(transaction, "define attribute name, value string;", query_opts);
+        QueryAnswerPromise* define_promise = transaction_query(transaction, "define attribute name @independent, value string;", query_opts);
         if (FAILED()) goto cleanup;
         QueryAnswer* define_answer = query_answer_promise_resolve(define_promise);
         if (FAILED()) goto cleanup;
-        success = query_answer_is_ok(define_answer);
+        bool define_ok = query_answer_is_ok(define_answer);
         query_answer_drop(define_answer);
-        if (!success) {
+        if (!define_ok) {
             goto cleanup;
         }
 
@@ -215,7 +214,6 @@ bool test_query_data() {
         QueryAnswer* insert_answer = query_answer_promise_resolve(insert_promise);
         if (FAILED()) goto cleanup;
         if (!query_answer_is_concept_row_stream(insert_answer)) {
-            success = false;
             query_answer_drop(insert_answer);
             goto cleanup;
         }
@@ -228,7 +226,6 @@ bool test_query_data() {
         QueryAnswer* match_answer = query_answer_promise_resolve(match_promise);
         if (FAILED()) goto cleanup;
         if (!query_answer_is_concept_row_stream(match_answer)) {
-            success = false;
             query_answer_drop(match_answer);
             goto cleanup;
         }
@@ -269,13 +266,13 @@ cleanup:
 }
 
 bool test_query_given() {
-    const char databaseName[] = "test_query_data";
+    const char databaseName[] = "test_query_given";
 
     TypeDBDriver* driver = NULL;
     TransactionOptions* tx_opts = NULL;
     QueryOptions* query_opts = NULL;
     Transaction* transaction = NULL;
-    GivenRowsHeader* given_rows_header = NULL;
+    const GivenRowsHeader* given_rows_header = NULL;
     GivenRows* given_rows = NULL;
 
     bool success = false;
@@ -305,9 +302,9 @@ bool test_query_given() {
         if (FAILED()) goto cleanup;
         QueryAnswer* define_answer = query_answer_promise_resolve(define_promise);
         if (FAILED()) goto cleanup;
-        success = query_answer_is_ok(define_answer);
+        bool define_ok = query_answer_is_ok(define_answer);
         query_answer_drop(define_answer);
-        if (!success) {
+        if (!define_ok) {
             goto cleanup;
         }
 
@@ -342,7 +339,6 @@ bool test_query_given() {
         QueryAnswer* insert_answer = query_answer_promise_resolve(insert_promise);
         if (FAILED()) goto cleanup;
         if (!query_answer_is_concept_row_stream(insert_answer)) {
-            success = false;
             query_answer_drop(insert_answer);
             goto cleanup;
         }
@@ -355,7 +351,6 @@ bool test_query_given() {
         QueryAnswer* match_answer = query_answer_promise_resolve(match_promise);
         if (FAILED()) goto cleanup;
         if (!query_answer_is_concept_row_stream(match_answer)) {
-            success = false;
             query_answer_drop(match_answer);
             goto cleanup;
         }
