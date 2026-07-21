@@ -53,7 +53,7 @@ Frees the native rust ``GivenRowsBuilder`` object
 
 [source,c]
 ----
-struct GivenRowsBuilder* given_rows_builder_new(struct GivenRowsHeader* header, uintptr_t row_count_hint)
+struct GivenRowsBuilder* given_rows_builder_new(const struct GivenRowsHeader* header, uintptr_t row_count_hint)
 ----
 
 
@@ -213,7 +213,7 @@ Adds a variable to the header being built by this ``GivenRowsHeaderBuilder``
 
 [source,c]
 ----
-void given_rows_header_drop(struct GivenRowsHeader* header)
+void given_rows_header_drop(const struct GivenRowsHeader* header)
 ----
 
 

@@ -50,6 +50,8 @@ include::{page-version}@external-typedb-driver::partial$python/answer/Promise.ad
 
 include::{page-version}@external-typedb-driver::partial$python/concept/Concept.adoc[]
 
+include::{page-version}@external-typedb-driver::partial$python/concept/Kind.adoc[]
+
 [#_schema_header]
 == Schema
 
