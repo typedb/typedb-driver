@@ -250,7 +250,7 @@ namespace TypeDB.Driver.Test.Behaviour
 
         [Given(@"set answers of typeql read query as given rows with order: (\$[a-zA-Z0-9\-_]+(?:, \$[a-zA-Z0-9\-_]+)*)")]
         [When(@"set answers of typeql read query as given rows with order: (\$[a-zA-Z0-9\-_]+(?:, \$[a-zA-Z0-9\-_]+)*)")]
-        public void SetAnswersAsGivenRows(string varListStr, DocString query)
+        public void SetAnswersOfTypeqlReadQueryAsGivenRows(string varListStr, DocString query)
         {
             var varList = varListStr.Split(',').Select(v => v.Replace("$", "").Trim()).ToList();
             var tableRows = Tx.Query(query.Content).Resolve()!.AsConceptRows().ToList();
@@ -260,7 +260,7 @@ namespace TypeDB.Driver.Test.Behaviour
 
         [Given(@"set answers of typeql read query as given rows dictionary with variables: (\$[a-zA-Z0-9\-_]+(?:, \$[a-zA-Z0-9\-_]+)*)")]
         [When(@"set answers of typeql read query as given rows dictionary with variables: (\$[a-zA-Z0-9\-_]+(?:, \$[a-zA-Z0-9\-_]+)*)")]
-        public void SetAnswersAsGivenRowsDict(string varListStr, DocString query)
+        public void SetAnswersOfTypeqlReadQueryAsGivenRowsDict(string varListStr, DocString query)
         {
             var varList = varListStr.Split(',').Select(v => v.Replace("$", "").Trim()).ToList();
             var tableRows = Tx.Query(query.Content).Resolve()!.AsConceptRows().ToList();

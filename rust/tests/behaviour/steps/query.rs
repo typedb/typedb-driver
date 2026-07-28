@@ -190,7 +190,7 @@ pub async fn typeql_query(context: &mut Context, with_given: WithGiven, may_erro
 
 #[cucumber::given(expr = "set answers of typeql read query as given rows with order: {variable_list}")]
 #[cucumber::when(expr = "set answers of typeql read query as given rows with order: {variable_list}")]
-async fn set_given_rows(context: &mut Context, var_list: VariableList, step: &Step) {
+async fn set_answers_of_typeql_read_query_as_given_rows(context: &mut Context, var_list: VariableList, step: &Step) {
     let result = run_query(context.transaction(), step.docstring().unwrap(), None, context.query_options).await;
     let mut given_rows = GivenRows::new(var_list.0.clone(), 0);
     let mut as_rows_result = result.unwrap().into_rows();
@@ -217,7 +217,7 @@ async fn set_given_rows(context: &mut Context, var_list: VariableList, step: &St
 
 #[cucumber::given(expr = "set answers of typeql read query as given rows dictionary with variables: {variable_list}")]
 #[cucumber::when(expr = "set answers of typeql read query as given rows dictionary with variables: {variable_list}")]
-async fn set_given_rows_dict(context: &mut Context, var_list: VariableList, step: &Step) {
+async fn set_answers_of_typeql_read_query_as_given_rows_dict(context: &mut Context, var_list: VariableList, step: &Step) {
     let result = run_query(context.transaction(), step.docstring().unwrap(), None, context.query_options).await;
     let mut given_rows = GivenRows::new(var_list.0.clone(), 0);
     let mut as_rows_result = result.unwrap().into_rows();
