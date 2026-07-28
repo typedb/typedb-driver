@@ -77,15 +77,15 @@ function checkConceptKind(concept: Concept, kind: ConceptKind) {
     else return concept.kind === kind;
 }
 
-const setGivenRowsFromAnswer = async (varList: string[], query: string) => {
+const setAnswersOfTypeqlReadQueryAsGivenRows = async (varList: string[], query: string) => {
     const results = await makeQuery(query).then(assertNotError);
     if (results.ok.answerType === "ok" || results.ok.answerType === "conceptDocuments") assert.fail("Expected concept rows");
     const rows = results.ok.answers.map(row => Object.fromEntries(varList.map(v => [v, row.data[v] as GivenRowEntry])));
     setGivenRows(rows);
 };
 
-When('set answers of typeql read query as given rows with order: {variable_list}', setGivenRowsFromAnswer);
-When('set answers of typeql read query as given rows dictionary with variables: {variable_list}', setGivenRowsFromAnswer);
+When('set answers of typeql read query as given rows with order: {variable_list}', setAnswersOfTypeqlReadQueryAsGivenRows);
+When('set answers of typeql read query as given rows dictionary with variables: {variable_list}', setAnswersOfTypeqlReadQueryAsGivenRows);
 
 const runQueryWithGiven = async (mayError: MayError, query: string) => {
     const given = takeGivenRows();
