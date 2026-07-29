@@ -29,7 +29,6 @@ choco uninstall openjdk --limit-output --yes --no-progress
 
 REM install dependencies needed for build
 choco install .circleci\windows\dependencies.config  --limit-output --yes --no-progress
-call refreshenv
 
 REM create a symlink python3.exe and make it available in %PATH%
 mklink C:\Python311\python3.exe C:\Python311\python.exe
@@ -50,4 +49,3 @@ IF DEFINED CARGO_BAZEL_GENERATOR_URL_WIN_X86_64 (
 IF DEFINED CARGO_BAZEL_GENERATOR_SHA_WIN_X86_64 (
     SETX CARGO_BAZEL_GENERATOR_SHA256 %CARGO_BAZEL_GENERATOR_SHA_WIN_X86_64%
 )
-bazel run @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
