@@ -157,6 +157,7 @@ fn json_value_type(value_type: Option<ValueType>) -> JSON {
         Some(ValueType::DatetimeTZ) => DATETIME_TZ,
         Some(ValueType::Duration) => DURATION,
         Some(ValueType::Struct(name)) => Cow::Owned(name),
+        Some(ValueType::Vector { .. }) => Cow::Borrowed(ValueType::VECTOR_STR),
     })
 }
 
@@ -174,6 +175,8 @@ fn json_value(value: Value) -> JSON {
         Value::Struct(struct_, struct_name) => {
             JSON::Object(HashMap::from([(Cow::Owned(struct_name), json_struct(struct_))]))
         }
+
+        Value::Vector(vector) => JSON::Array(vector.into_iter().map(|element| JSON::Number(element as f64)).collect()),
     }
 }
 

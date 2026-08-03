@@ -248,6 +248,14 @@ impl Concept {
         self.try_get_value().and_then(|value| value.get_struct())
     }
 
+    /// Retrieves the vector value of this Concept, if it exists.
+    /// If this is a vector-valued Attribute Instance, returns the vector value of this instance.
+    /// If this a vector-valued Value, returns the vector value.
+    /// Otherwise, returns None.
+    pub fn try_get_vector(&self) -> Option<&[f32]> {
+        self.try_get_value().and_then(|value| value.get_vector())
+    }
+
     /// Retrieves the category of this Concept.
     pub fn get_category(&self) -> ConceptCategory {
         match self {
@@ -372,6 +380,11 @@ impl Concept {
     /// Checks if this Concept holds a struct as an AttributeType, an Attribute, or a Value
     pub fn is_struct(&self) -> bool {
         matches!(self.try_get_value_type(), Some(ValueType::Struct(_)))
+    }
+
+    /// Checks if this Concept holds a vector as an AttributeType, an Attribute, or a Value
+    pub fn is_vector(&self) -> bool {
+        matches!(self.try_get_value_type(), Some(ValueType::Vector { .. }))
     }
 }
 

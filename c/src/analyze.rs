@@ -122,6 +122,8 @@ enum ConstraintVariant {
     Or,
     Not,
     Try,
+
+    VectorSearch,
 }
 
 #[repr(C)]
@@ -653,6 +655,7 @@ pub extern "C" fn constraint_variant(constraint: *const ConstraintWithSpan) -> C
         Constraint::Or { .. } => ConstraintVariant::Or,
         Constraint::Not { .. } => ConstraintVariant::Not,
         Constraint::Try { .. } => ConstraintVariant::Try,
+        Constraint::VectorSearch { .. } => ConstraintVariant::VectorSearch,
     }
 }
 

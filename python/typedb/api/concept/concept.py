@@ -20,7 +20,7 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from datetime import date
 from decimal import Decimal
-from typing import TYPE_CHECKING, Dict, Optional, Union
+from typing import TYPE_CHECKING, Dict, List, Optional, Union
 
 from typedb.common.datetime import Datetime
 from typedb.common.duration import Duration
@@ -41,7 +41,8 @@ if TYPE_CHECKING:
 
 class Concept(ABC):
     STRUCT = Dict[str, Optional["Value"]]
-    VALUE = Union[bool, int, float, Decimal, str, date, Datetime, Duration, STRUCT]
+    VECTOR = List[float]
+    VALUE = Union[bool, int, float, Decimal, str, date, Datetime, Duration, STRUCT, VECTOR]
 
     def is_type(self) -> bool:
         """

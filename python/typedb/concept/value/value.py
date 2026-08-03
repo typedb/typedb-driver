@@ -62,6 +62,8 @@ class _Value(Value, _Concept):
             return self.get_duration()
         elif self.is_struct():
             return self.get_struct()
+        elif self.is_vector():
+            return self.get_vector()
         else:
             raise TypeDBDriverException(ILLEGAL_STATE)
 
@@ -113,6 +115,11 @@ class _Value(Value, _Concept):
     def get_struct(self) -> Concept.STRUCT:
         if (value := self.try_get_struct()) is None:
             raise TypeDBDriverException(INVALID_VALUE_RETRIEVAL, "struct")
+        return value
+
+    def get_vector(self) -> list[float]:
+        if (value := self.try_get_vector()) is None:
+            raise TypeDBDriverException(INVALID_VALUE_RETRIEVAL, "vector")
         return value
 
     def __str__(self):

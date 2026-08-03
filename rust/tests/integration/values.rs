@@ -439,6 +439,9 @@ fn test_all_value_types() {
                     Value::Struct(_, _) => {
                         // Struct not tested in this test
                     }
+                    Value::Vector(_) => {
+                        // Vector not tested in this test
+                    }
                 }
             }
             assert_eq!(checked, attribute_values.len());

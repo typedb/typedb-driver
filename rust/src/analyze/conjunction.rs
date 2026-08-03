@@ -109,6 +109,14 @@ pub enum Constraint {
     /// &lt;attribute_type&gt; value &lt;value_type&gt;
     /// e.g. $t value string
     Value { attribute_type: ConstraintVertex, value_type: concept::ValueType },
+    /// let &lt;attribute&gt; in cosine_similarity_search(&lt;attribute_type&gt;, &lt;query&gt;, &lt;threshold&gt;)
+    VectorSearch {
+        attribute: ConstraintVertex,
+        attribute_type: ConstraintVertex,
+        query: ConstraintVertex,
+        threshold: ConstraintVertex,
+        similarity: ConstraintVertex,
+    },
     /// { &lt;branches&lsqb;0&rsqb;&gt; } or { &lt;branches&lsqb;1&rsqb;&gt; } &lsqb;or ...&rsqb;
     Or {
         /// Index into <code>Pipeline.conjunctions</code>

@@ -238,6 +238,7 @@ impl FromProto<ValueTypeProto> for ValueType {
             ValueTypeProto::DatetimeTz(_) => Self::DatetimeTZ,
             ValueTypeProto::Duration(_) => Self::Duration,
             ValueTypeProto::Struct(typedb_protocol::value_type::Struct { name }) => Self::Struct(name),
+            ValueTypeProto::Vector(typedb_protocol::value_type::Vector { dimension }) => Self::Vector { dimension },
         }
     }
 }
@@ -325,6 +326,7 @@ impl TryFromProto<ValueProto> for Value {
                 Err(ValueStructNotImplemented.into())
                 // TODO: not implemented yet
             }
+            Some(ValueProtoInner::Vector(vector)) => Ok(Self::Vector(vector.values)),
             None => Err(MissingResponseField { field: "Value.value" }.into()),
         }
     }
@@ -359,6 +361,7 @@ impl IntoProto<ValueProto> for Value {
             Value::Datetime(v) => ValueProtoInner::Datetime(v.into_proto()),
             Value::DatetimeTZ(v) => ValueProtoInner::DatetimeTz(v.into_proto()),
             Value::Duration(v) => ValueProtoInner::Duration(v.into_proto()),
+            Value::Vector(v) => ValueProtoInner::Vector(value_proto::Vector { values: v }),
             Value::Struct(_, _) => unreachable!("Unimplemented struct inputs"),
         };
         ValueProto { value: Some(value) }

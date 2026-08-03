@@ -42,6 +42,7 @@ pub enum ValueType {
     DatetimeTZ,
     Duration,
     Struct(String),
+    Vector { dimension: u32 },
 }
 
 impl ValueType {
@@ -55,6 +56,7 @@ impl ValueType {
     pub(crate) const DATETIME_STR: &'static str = "datetime";
     pub(crate) const DATETIME_TZ_STR: &'static str = "datetime-tz";
     pub(crate) const DURATION_STR: &'static str = "duration";
+    pub(crate) const VECTOR_STR: &'static str = "vector";
 
     pub fn name(&self) -> &str {
         match self {
@@ -68,6 +70,7 @@ impl ValueType {
             Self::DatetimeTZ => Self::DATETIME_TZ_STR,
             Self::Duration => Self::DURATION_STR,
             Self::Struct(name) => name,
+            Self::Vector { .. } => Self::VECTOR_STR,
         }
     }
 }
@@ -96,6 +99,7 @@ pub enum Value {
     DatetimeTZ(DateTime<TimeZone>),
     Duration(Duration),
     Struct(Struct, String),
+    Vector(Vec<f32>),
 }
 
 impl Value {
@@ -118,6 +122,7 @@ impl Value {
             Self::DatetimeTZ(_) => ValueType::DatetimeTZ,
             Self::Duration(_) => ValueType::Duration,
             Self::Struct(_, struct_type_name) => ValueType::Struct(struct_type_name.clone()),
+            Self::Vector(vector) => ValueType::Vector { dimension: vector.len() as u32 },
         }
     }
 
@@ -140,6 +145,7 @@ impl Value {
             Self::DatetimeTZ(_) => ValueType::DatetimeTZ.name(),
             Self::Duration(_) => ValueType::Duration.name(),
             Self::Struct(_, struct_type_name) => struct_type_name,
+            Self::Vector(_) => ValueType::VECTOR_STR,
         }
     }
 
@@ -182,6 +188,10 @@ impl Value {
     pub fn get_struct(&self) -> Option<&Struct> {
         if let Value::Struct(struct_, _) = self { Some(struct_) } else { None }
     }
+
+    pub fn get_vector(&self) -> Option<&[f32]> {
+        if let Value::Vector(vector) = self { Some(vector) } else { None }
+    }
 }
 
 impl fmt::Display for Value {
@@ -200,8 +210,21 @@ impl fmt::Display for Value {
             },
             Self::Duration(duration) => write!(f, "{}", duration),
             Self::Struct(value, name) => write!(f, "{} {}", name, value),
+            Self::Vector(vector) => write_vector(f, vector),
         }
     }
+}
+
+// Mirrors the server's rendering: vector([1, 2, 3], "float32")
+fn write_vector(f: &mut fmt::Formatter<'_>, vector: &[f32]) -> fmt::Result {
+    write!(f, "vector([")?;
+    for (i, element) in vector.iter().enumerate() {
+        if i > 0 {
+            write!(f, ", ")?;
+        }
+        write!(f, "{}", element)?;
+    }
+    write!(f, "], \"float32\")")
 }
 
 impl fmt::Debug for Value {
@@ -218,6 +241,7 @@ impl fmt::Debug for Value {
             Value::DatetimeTZ(datetime_tz) => write!(f, "{}", datetime_tz),
             Value::Duration(duration) => write!(f, "{}", duration),
             Value::Struct(value, name) => write!(f, "{} {}", name, value),
+            Value::Vector(vector) => write_vector(f, vector),
         }
     }
 }
