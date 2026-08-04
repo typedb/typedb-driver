@@ -27,7 +27,8 @@ use crate::{
     promisify, resolve,
 };
 
-pub(crate) struct DatabaseImportStream {
+#[doc(hidden)]
+pub struct DatabaseImportStream {
     import_transmitter: DatabaseImportTransmitter,
 }
 
@@ -40,7 +41,8 @@ impl DatabaseImportStream {
         self.import_transmitter.single(DatabaseImportRequest::ItemPart { items })
     }
 
-    pub(crate) fn done(mut self) -> impl Promise<'static, Result> {
+    #[doc(hidden)]
+    pub fn done(mut self) -> impl Promise<'static, Result> {
         promisify! {
             self.import_transmitter.single(DatabaseImportRequest::Done)?;
             let promise = self.import_transmitter.wait_done();

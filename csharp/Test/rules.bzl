@@ -70,6 +70,7 @@ def csharp_behaviour_test(
         name = name,
         srcs = test_files + step_files + [
             "//csharp/Test/Behaviour/Util:TestRunner.cs",
+            "//csharp/Test/Behaviour/Util:FeatureFileFilter.cs",
             "//csharp/Test/Behaviour:TestValueHelper.cs",
         ],
         data = features + certificates,

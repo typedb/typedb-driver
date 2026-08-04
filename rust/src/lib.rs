@@ -25,6 +25,8 @@
 #![allow(clippy::too_many_arguments, reason = "too many false positives")]
 #![allow(clippy::type_complexity, reason = "too many false positives")]
 
+#[doc(hidden)]
+pub use self::connection::database::import_stream::DatabaseImportStream;
 pub use self::{
     common::{
         Address, Addresses, BoxPromise, BoxStream, Error, IID, Promise, QueryOptions, Result, TransactionOptions,

@@ -25,7 +25,10 @@ use typedb_protocol::migration::Item;
 use super::Database;
 use crate::{
     common::Result,
-    connection::server::{server_manager::ServerManager, server_routing::ServerRouting},
+    connection::{
+        database::import_stream::DatabaseImportStream,
+        server::{server_manager::ServerManager, server_routing::ServerRouting},
+    },
     database::migration::{ProtoMessageIterator, try_open_import_file},
     info::DatabaseInfo,
     resolve,
@@ -132,6 +135,25 @@ impl DatabaseManager {
             .execute(ServerRouting::Auto, move |server_connection| {
                 let name = name.clone();
                 async move { server_connection.create_database(name).await }
+            })
+            .await
+    }
+
+    // Opens a raw import stream, exposed for behaviour tests only
+    #[doc(hidden)]
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub async fn import_stream(
+        &self,
+        name: impl Into<String>,
+        schema: impl Into<String>,
+    ) -> Result<DatabaseImportStream> {
+        let name = name.into();
+        let schema: String = schema.into();
+        let schema_ref: &str = schema.as_ref();
+        self.server_manager
+            .execute(ServerRouting::Auto, move |server_connection| {
+                let name = name.clone();
+                async move { server_connection.import_database(name, schema_ref.to_string()).await }
             })
             .await
     }

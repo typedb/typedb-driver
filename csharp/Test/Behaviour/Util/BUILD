@@ -50,7 +50,7 @@ csharp_library(
 )
 
 exports_files(
-    ["TestRunner.cs"],
+    ["TestRunner.cs", "FeatureFileFilter.cs"],
     visibility = ["//csharp/Test:__subpackages__"],
 )
 

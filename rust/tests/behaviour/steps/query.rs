@@ -22,12 +22,9 @@ use futures::{StreamExt, future::join_all};
 use itertools::Itertools;
 use macro_rules_attribute::apply;
 use typedb_driver::{
-    IID, QueryOptions, Result as TypeDBResult, Transaction,
+    QueryOptions, Result as TypeDBResult, Transaction,
     answer::{ConceptRow, QueryAnswer},
-    concept::{
-        Attribute, AttributeType, Concept, ConceptCategory, Entity, EntityType, Relation, RelationType, Value,
-        ValueType,
-    },
+    concept::{AttributeType, Concept, ConceptCategory, EntityType, RelationType, Value, ValueType},
     error::ConceptError,
     given::{GivenRowEntry, GivenRows},
 };
