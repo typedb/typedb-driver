@@ -44,7 +44,13 @@ const HTTP_MISDIRECTED = 421;
 //   SRV14 - server returned "Not yet initialised". Happens on a freshly restarted secondary
 //           that has not yet loaded the system DB, or briefly on a node mid-promotion. Either
 //           way another origin is likely healthy, so fall back rather than retry in place.
-const TRANSIENT_SIGNIN_ERROR_CODES = new Set(["HDR2", "SRV14"]);
+//   CSV8/CSV9 - node is not the primary; another origin may be, so fall back.
+const TRANSIENT_SIGNIN_ERROR_CODES = new Set(["HDR2", "SRV14", "CSV8", "CSV9"]);
+
+// A misdirected (421) result that survived redirect-following and origin fallback means
+// no reachable server is primary right now (typically mid-election); wait and retry.
+const PRIMARY_FAILOVER_RETRIES = 3;
+const PRIMARY_SELECTION_WAIT_MS = 2000;
 
 // Result of attempting a single request against a single origin.
 //   Response          - reached the server and got an HTTP response
@@ -215,6 +221,15 @@ export class TypeDBHttpDriver {
     }
 
     private async apiReq<BODY>(method: string, path: string, body?: BODY, options?: { headers?: Record<string, string> }): Promise<ApiErrorResponse | Response> {
+        let result = await this.apiReqOnce(method, path, body, options);
+        for (let retry = 0; retry < PRIMARY_FAILOVER_RETRIES && result.status === HTTP_MISDIRECTED; retry++) {
+            await new Promise(resolve => setTimeout(resolve, PRIMARY_SELECTION_WAIT_MS));
+            result = await this.apiReqOnce(method, path, body, options);
+        }
+        return result;
+    }
+
+    private async apiReqOnce<BODY>(method: string, path: string, body?: BODY, options?: { headers?: Record<string, string> }): Promise<ApiErrorResponse | Response> {
         const initial = await this.tryApiReq(method, path, body, options);
         if (isApiErrResp(initial)) return initial;
         let result: Response | null = initial;
@@ -340,20 +355,20 @@ export class TypeDBHttpDriver {
             return driverError("HDR2", `Cannot connect to server at ${this.currentOrigin}`);
         }
         const json = await this.jsonOrNull(resp);
-        if (resp.ok) {
-            this.token = (json as SignInResponse).token;
+        if (resp.ok && typeof json?.token === "string") {
+            this.token = json.token;
             return { ok: json };
         }
         if (isApiError(json)) return { err: json, status: resp.status };
-        throw resp;
+        return driverError("HDR2", `Unexpected signin response from ${this.currentOrigin} (HTTP ${resp.status})`);
     }
 
-    private async jsonOrNull(resp: Response) {
-        const contentLengthRaw = resp.headers.get("Content-Length");
-        if (!contentLengthRaw) return null;
-        const contentLength = parseInt(contentLengthRaw || "");
-        if (isNaN(contentLength)) throw `Received invalid Content-Length header: ${contentLengthRaw}`;
-        return contentLength > 0 ? await resp.json() : null;
+    private async jsonOrNull(resp: Response): Promise<any> {
+        try {
+            return await resp.json();
+        } catch {
+            return null;
+        }
     }
 
     private async stringOrNull(resp: Response) {
