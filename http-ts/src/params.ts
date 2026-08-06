@@ -59,31 +59,21 @@ export function hostPortFromOrigin(origin: string): string {
     }
 }
 
-/** Resolve a bare primaryAddress (host:port) to a full URL using configured params. */
+/** Resolve an advertised primaryAddress (a full origin) to the matching configured address, else itself. */
 export function resolveOrigin(params: DriverParams, primaryAddress: string): string {
+    const target = hostPortFromOrigin(primaryAddress);
     if (isBasicParams(params)) {
         for (const addr of params.addresses) {
-            if (hostPortFromOrigin(addr) === primaryAddress) return addr;
+            if (hostPortFromOrigin(addr) === target) return addr;
         }
-        return deriveOriginWithScheme(params.addresses[0], primaryAddress);
     } else {
         for (const ta of params.translatedAddresses) {
-            if (hostPortFromOrigin(ta.internal) === primaryAddress
-                || hostPortFromOrigin(ta.external) === primaryAddress) {
+            if (hostPortFromOrigin(ta.internal) === target || hostPortFromOrigin(ta.external) === target) {
                 return ta.external;
             }
         }
-        return deriveOriginWithScheme(params.translatedAddresses[0].external, primaryAddress);
     }
-}
-
-function deriveOriginWithScheme(referenceUrl: string, hostPort: string): string {
-    try {
-        const url = new URL(referenceUrl);
-        return `${url.protocol}//${hostPort}`;
-    } catch {
-        return `https://${hostPort}`;
-    }
+    return primaryAddress;
 }
 
 /** Return all configured origins for connection error fallback. */
