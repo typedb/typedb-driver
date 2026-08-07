@@ -8,13 +8,13 @@ Available from https://crates.io/crates/typedb-driver
 Documentation: https://typedb.com/docs/drivers/rust/overview
 
 ```sh
-cargo add typedb-driver@3.12.1
+cargo add typedb-driver@3.12.2
 ```
 
 
 ### Java driver
 
-Available through [https://repo.typedb.com](https://cloudsmith.io/~typedb/repos/public-release/packages/detail/maven/typedb-driver/3.12.1/a=noarch;xg=com.typedb/)
+Available through [https://repo.typedb.com](https://cloudsmith.io/~typedb/repos/public-release/packages/detail/maven/typedb-driver/3.12.2/a=noarch;xg=com.typedb/)
 Documentation: https://typedb.com/docs/drivers/java/overview
 
 ```xml
@@ -28,7 +28,7 @@ Documentation: https://typedb.com/docs/drivers/java/overview
     <dependency>
         <groupid>com.typedb</groupid>
         <artifactid>typedb-driver</artifactid>
-        <version>3.12.1</version>
+        <version>3.12.2</version>
     </dependency>
 </dependencies>
 ```
@@ -40,9 +40,8 @@ Documentation: https://typedb.com/docs/drivers/python/overview
 
 Available through https://pypi.org
 
-[//]: # (TODO: Python's RC/Alpha/Beta versions are formatted differently. Don't foget to update manually until we make an automation)
 ```
-pip install typedb-driver==3.12.1
+pip install typedb-driver==3.12.2
 ```
 
 ### C# driver
@@ -52,57 +51,59 @@ Documentation: https://typedb.com/docs/drivers/csharp/overview
 
 ```xml
 <ItemGroup>
-    <PackageReference Include="TypeDB.Driver" Version="3.12.1" />
-    <PackageReference Include="TypeDB.Driver.Pinvoke.osx-x64" Version="3.12.1" />
-    <PackageReference Include="TypeDB.Driver.Pinvoke.linux-x64" Version="3.12.1" />
-    <PackageReference Include="TypeDB.Driver.Pinvoke.win-x64" Version="3.12.1" />
-    <PackageReference Include="TypeDB.Driver.Pinvoke.osx-arm64" Version="3.12.1" />
-    <PackageReference Include="TypeDB.Driver.Pinvoke.linux-arm64" Version="3.12.1" />
+    <PackageReference Include="TypeDB.Driver" Version="3.12.2" />
+    <PackageReference Include="TypeDB.Driver.Pinvoke.osx-x64" Version="3.12.2" />
+    <PackageReference Include="TypeDB.Driver.Pinvoke.linux-x64" Version="3.12.2" />
+    <PackageReference Include="TypeDB.Driver.Pinvoke.win-x64" Version="3.12.2" />
+    <PackageReference Include="TypeDB.Driver.Pinvoke.osx-arm64" Version="3.12.2" />
+    <PackageReference Include="TypeDB.Driver.Pinvoke.linux-arm64" Version="3.12.2" />
 </ItemGroup>
 ```
 
 ### HTTP Typescript driver
 
-[//]: # (TODO: Update docs link)
-
 NPM package: https://www.npmjs.com/package/@typedb/driver-http
 Documentation: https://typedb.com/docs/home/install/drivers/
 
 ```
-npm install @typedb/driver-http@3.12.1
+npm install @typedb/driver-http@3.12.2
 ```
 
 ### C driver
 
-Compiled distributions comprising headers and shared libraries available at: https://cloudsmith.io/~typedb/repos/public-release/packages/?q=name:^typedb-driver-clib+version:3.12.1
+Compiled distributions comprising headers and shared libraries available at: https://cloudsmith.io/~typedb/repos/public-release/packages/?q=name:^typedb-driver-clib+version:3.12.2
 
 
 ## New Features
-
+- **Make the HTTP driver correctly always follow cluster 'misdirected request' redirects**
+  Make the http-ts driver retry a couple of times when redirecting request (usually, it is needed when a new primary is selected, and there can be a lag between the states of the target cluster). 
+  
+  Additionally, simplify the address resolution logic and avoid appending excessive schemas to the target URLs, expecting correct input params from the users.
 
 ## Bugs Fixed
-- **Fix C integration tests reporting success on failed assertions**
-  Fix incorrect successful test reporting in C integration tests.
+- **Update core and cluster artifacts**
   
-  
-- **Use saturating subtraction for network latency estimation**
-  
-  The driver estimates network latency by subtracting the server-reported processing duration from the client-observed elapsed time. The two durations come from different clocks that can tick at slightly different rates, so the server's value can exceed the client's. 
-  
-  This can cause panics and in other cases could cause the transaction-open latency to near u64::MAX, poisoning the latency tracker and inflating the network_latency_millis the server uses as its answer-streaming budget.
+  Update core and cluster artifacts to fix red CI
   
   
 
 ## Code Refactors
-
+- **Update behaviour for new Given tests**
+  Update behaviour dependency that includes all value type tests for 'given' rows, and rename the steps for setting 'given' rows to match existing naming conventions.
+  
+  
 
 ## Other Improvements
-- **Build all python deployment jobs in one build step before we run them one by one**
-  We can't `bazel run` multiple targets in parallel, but we can `build` them. Here we build in parallel and run just after that, one by one.
+- **Fix remote cache setup**
+  Moves python installation into sub-shell and does pushd/popd.
+  Removes from windows because it doesn't look like we ever do it in windows.
+  
+- **Enable remote cache in circleci**
+  Enable the remote cache in circleci, speeding up intermediate jobs such as `deploy-*-any`.
   
   
-- **Custom C# transition to prevent rebuilding C driver**
-  Introduces a custom bazel transition to revert dotnet configuration to defaults, allowing the C# driver to reuse the C driver built by the other jobs in the CI.
+- **Update cluster ref**
+  Update ref to the latest cluster 
   
   
     
