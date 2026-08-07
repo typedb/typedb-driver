@@ -58,7 +58,7 @@
 		[workspace.dependencies.typedb-protocol]
 			features = []
 			git = "https://github.com/typedb/typedb-protocol"
-			tag = "3.12.0-rc0"
+			tag = "3.11.0"
 			default-features = false
 
 		[workspace.dependencies.serde]
@@ -103,7 +103,7 @@
 
 		[workspace.dependencies.http]
 			features = ["default", "std"]
-			version = "1.4.0"
+			version = "1.4.1"
 			default-features = false
 
 		[workspace.dependencies.maybe-async]
@@ -138,7 +138,7 @@
 
 		[workspace.dependencies.serde_json]
 			features = ["default", "raw_value", "std"]
-			version = "1.0.149"
+			version = "1.0.150"
 			default-features = false
 
 		[workspace.dependencies.crossbeam]
