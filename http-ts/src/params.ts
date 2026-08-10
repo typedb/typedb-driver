@@ -49,31 +49,41 @@ export function remoteOrigin(params: DriverParams) {
     else return `${params.translatedAddresses[0].external}`;
 }
 
-/** Extract host:port from a URL string. "https://127.0.0.1:18000" → "127.0.0.1:18000" */
+const SCHEME_PREFIX_REGEX = /^[a-z][a-z0-9+.-]*:\/\//i;
+
 export function hostPortFromOrigin(origin: string): string {
+    if (!SCHEME_PREFIX_REGEX.test(origin)) return origin;
     try {
-        const url = new URL(origin);
-        return url.host;
+        return new URL(origin).host;
     } catch {
         return origin;
     }
 }
 
-/** Resolve an advertised primaryAddress (a full origin) to the matching configured address, else itself. */
 export function resolveOrigin(params: DriverParams, primaryAddress: string): string {
     const target = hostPortFromOrigin(primaryAddress);
     if (isBasicParams(params)) {
         for (const addr of params.addresses) {
             if (hostPortFromOrigin(addr) === target) return addr;
         }
+        return originWithScheme(primaryAddress, params.addresses[0]);
     } else {
         for (const ta of params.translatedAddresses) {
             if (hostPortFromOrigin(ta.internal) === target || hostPortFromOrigin(ta.external) === target) {
                 return ta.external;
             }
         }
+        return originWithScheme(primaryAddress, params.translatedAddresses[0].external);
     }
-    return primaryAddress;
+}
+
+function originWithScheme(address: string, referenceOrigin: string): string {
+    if (SCHEME_PREFIX_REGEX.test(address)) return address;
+    try {
+        return `${new URL(referenceOrigin).protocol}//${address}`;
+    } catch {
+        return `https://${address}`;
+    }
 }
 
 /** Return all configured origins for connection error fallback. */

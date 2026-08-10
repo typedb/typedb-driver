@@ -36,7 +36,7 @@ a| `params` a|  a| `DriverParams`
 hostPortFromOrigin(origin: string): string
 ----
 
-Extract host:port from a URL string. "https://127.0.0.1:18000" → "127.0.0.1:18000"
+
 
 [caption=""]
 .Input parameters
@@ -128,7 +128,7 @@ a| `params` a|  a| `DriverParams`
 resolveOrigin(params: DriverParams, primaryAddress: string): string
 ----
 
-Resolve an advertised primaryAddress (a full origin) to the matching configured address, else itself.
+
 
 [caption=""]
 .Input parameters
