@@ -63,8 +63,6 @@ Documentation: https://typedb.com/docs/drivers/csharp/overview
 
 ### HTTP Typescript driver
 
-[//]: # (TODO: Update docs link)
-
 NPM package: https://www.npmjs.com/package/@typedb/driver-http
 Documentation: https://typedb.com/docs/home/install/drivers/
 
