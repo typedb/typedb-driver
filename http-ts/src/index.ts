@@ -230,6 +230,7 @@ export class TypeDBHttpDriver {
     }
 
     private async apiReqOnce<BODY>(method: string, path: string, body?: BODY, options?: { headers?: Record<string, string> }): Promise<ApiErrorResponse | Response> {
+        const triedOrigins = new Set([this.currentOrigin]);
         const initial = await this.tryApiReq(method, path, body, options);
         if (isApiErrResp(initial)) return initial;
         let result: Response | null = initial;
@@ -240,7 +241,8 @@ export class TypeDBHttpDriver {
         }
         if (result === null || !result.ok) {
             const startOrigin = this.currentOrigin;
-            const fallback = await this.tryFallbackOrigins(method, path, body, options);
+            triedOrigins.add(startOrigin);
+            const fallback = await this.tryFallbackOrigins(method, path, body, options, triedOrigins);
             if (isApiErrResp(fallback)) return fallback;
             if (fallback !== null && (result === null || fallback.ok)) {
                 result = fallback;
@@ -302,12 +304,11 @@ export class TypeDBHttpDriver {
         return true;
     }
 
-    private async tryFallbackOrigins<BODY>(method: string, path: string, body?: BODY, options?: { headers?: Record<string, string> }): Promise<TryResult> {
+    private async tryFallbackOrigins<BODY>(method: string, path: string, body: BODY | undefined, options: { headers?: Record<string, string> } | undefined, triedOrigins: Set<string>): Promise<TryResult> {
         const origins = allOrigins(this.params);
-        const failedOrigin = this.currentOrigin;
         let lastError: Response | null = null;
         for (const origin of origins) {
-            if (origin === failedOrigin) continue;
+            if (triedOrigins.has(origin)) continue;
             this.switchOrigin(origin);
             const initial = await this.tryApiReq(method, path, body, options);
             if (initial === null) continue;
