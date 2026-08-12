@@ -37,6 +37,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -430,6 +431,19 @@ public interface Concept {
     // TODO: Could be useful to have isStruct(struct_name)
 
     /**
+     * Returns <code>true</code> if the value which this <code>Concept</code> holds is of type <code>vector</code>
+     * or if this <code>Concept</code> is an <code>AttributeType</code> of type <code>vector</code>.
+     * Otherwise, returns <code>false</code>.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * concept.isVector();
+     * </pre>
+     */
+    @CheckReturnValue
+    boolean isVector();
+
+    /**
      * Returns the value of this <code>Concept</code> as an <code>Optional&lt;Boolean&gt;</code>.
      * If it's not a <code>Value</code> or it has another type, returns <code>null</code>.
      *
@@ -538,6 +552,17 @@ public interface Concept {
      * </pre>
      */
     Optional<Map<String, Optional<Value>>> tryGetStruct();
+
+    /**
+     * Returns the value of this <code>Concept</code> as an <code>Optional&lt;List&lt;Float&gt;&gt;</code>.
+     * If it's not a <code>Value</code> or it has another type, returns <code>null</code>.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * concept.tryGetVector();
+     * </pre>
+     */
+    Optional<List<Float>> tryGetVector();
 
     /**
      * Retrieves the unique label of the concept.

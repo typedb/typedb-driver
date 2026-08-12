@@ -124,11 +124,12 @@ build:
         tool/test/stop-core-server.sh
         if [[ -n "$CORE_FAILED" ]]; then exit 1; fi
 
-        source tool/test/start-cluster-servers.sh 3 &&
-          bazel test --config=ci //rust/tests/integration/cluster:test_failover --test_env=CLUSTER_SERVER_SCRIPT=$CLUSTER_SERVER_SCRIPT --test_env=ROOT_CA=$ROOT_CA --test_env=CLUSTER_DIR=$CLUSTER_DIR --test_output=streamed --test_arg=--nocapture &&
-          export CLUSTER_FAILED= || export CLUSTER_FAILED=1
-        tool/test/stop-cluster-servers.sh
-        if [[ -n "$CLUSTER_FAILED" ]]; then exit 1; fi
+        # TODO: Re-enable: typedb-cluster does not support vector storage yet
+        # source tool/test/start-cluster-servers.sh 3 &&
+          # bazel test --config=ci //rust/tests/integration/cluster:test_failover --test_env=CLUSTER_SERVER_SCRIPT=$CLUSTER_SERVER_SCRIPT --test_env=ROOT_CA=$ROOT_CA --test_env=CLUSTER_DIR=$CLUSTER_DIR --test_output=streamed --test_arg=--nocapture &&
+          # export CLUSTER_FAILED= || export CLUSTER_FAILED=1
+        # tool/test/stop-cluster-servers.sh
+        # if [[ -n "$CLUSTER_FAILED" ]]; then exit 1; fi
 
     test-rust-behaviour-core:
       image: typedb-ubuntu-22.04
@@ -148,25 +149,26 @@ build:
         tool/test/stop-core-server.sh
         exit $TEST_SUCCESS
 
-    test-rust-behaviour-cluster:
-      image: typedb-ubuntu-22.04
-      command: |
-        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
-        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-        bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
-        bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
-
-        # TODO: run `bazel test --config=ci //rust/tests/behaviour/...` instead of multiple tests (cannot do Clustered migration now)
-        source tool/test/start-cluster-servers.sh 3 &&
-          bazel test --config=ci //rust/tests/behaviour/connection/... --test_env=ROOT_CA=$ROOT_CA --//rust/tests/behaviour/config:mode=cluster --test_output=streamed &&
-          bazel test --config=ci //rust/tests/behaviour/driver:test_concept --test_env=ROOT_CA=$ROOT_CA --//rust/tests/behaviour/config:mode=cluster --test_output=streamed &&
-          bazel test --config=ci //rust/tests/behaviour/driver:test_connection --test_env=ROOT_CA=$ROOT_CA --//rust/tests/behaviour/config:mode=cluster --test_output=streamed &&
-          bazel test --config=ci //rust/tests/behaviour/driver:test_query --test_env=ROOT_CA=$ROOT_CA --//rust/tests/behaviour/config:mode=cluster --test_output=streamed &&
-          bazel test --config=ci //rust/tests/behaviour/driver:test_user --test_env=ROOT_CA=$ROOT_CA --//rust/tests/behaviour/config:mode=cluster --test_output=streamed &&
-          bazel test --config=ci //rust/tests/behaviour/driver:test_cluster --test_env=ROOT_CA=$ROOT_CA --//rust/tests/behaviour/config:mode=cluster --test_output=streamed &&
-          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
-        tool/test/stop-cluster-servers.sh
-        exit $TEST_SUCCESS
+# TODO: Re-enable: typedb-cluster does not support vector storage yet
+#    test-rust-behaviour-cluster:
+#      image: typedb-ubuntu-22.04
+#      command: |
+#        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
+#        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
+#        bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+#        bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
+#
+#        # TODO: run `bazel test --config=ci //rust/tests/behaviour/...` instead of multiple tests (cannot do Clustered migration now)
+#        source tool/test/start-cluster-servers.sh 3 &&
+#          bazel test --config=ci //rust/tests/behaviour/connection/... --test_env=ROOT_CA=$ROOT_CA --//rust/tests/behaviour/config:mode=cluster --test_output=streamed &&
+#          bazel test --config=ci //rust/tests/behaviour/driver:test_concept --test_env=ROOT_CA=$ROOT_CA --//rust/tests/behaviour/config:mode=cluster --test_output=streamed &&
+#          bazel test --config=ci //rust/tests/behaviour/driver:test_connection --test_env=ROOT_CA=$ROOT_CA --//rust/tests/behaviour/config:mode=cluster --test_output=streamed &&
+#          bazel test --config=ci //rust/tests/behaviour/driver:test_query --test_env=ROOT_CA=$ROOT_CA --//rust/tests/behaviour/config:mode=cluster --test_output=streamed &&
+#          bazel test --config=ci //rust/tests/behaviour/driver:test_user --test_env=ROOT_CA=$ROOT_CA --//rust/tests/behaviour/config:mode=cluster --test_output=streamed &&
+#          bazel test --config=ci //rust/tests/behaviour/driver:test_cluster --test_env=ROOT_CA=$ROOT_CA --//rust/tests/behaviour/config:mode=cluster --test_output=streamed &&
+#          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+#        tool/test/stop-cluster-servers.sh
+#        exit $TEST_SUCCESS
 
     test-c-integration:
       image: typedb-ubuntu-22.04
@@ -204,11 +206,12 @@ build:
         tool/test/stop-core-server.sh
         if [[ -n "$CORE_FAILED" ]]; then exit 1; fi
 
-        source tool/test/start-cluster-servers.sh 3 &&
-          bazel test --config=ci //java/test/integration/cluster:test-failover --test_env=CLUSTER_SERVER_SCRIPT=$CLUSTER_SERVER_SCRIPT --test_env=ROOT_CA=$ROOT_CA --test_env=CLUSTER_DIR=$CLUSTER_DIR --test_output=streamed &&
-          export CLUSTER_FAILED= || export CLUSTER_FAILED=1
-        tool/test/stop-cluster-servers.sh
-        if [[ -n "$CLUSTER_FAILED" ]]; then exit 1; fi
+        # TODO: Re-enable: typedb-cluster does not support vector storage yet
+        # source tool/test/start-cluster-servers.sh 3 &&
+          # bazel test --config=ci //java/test/integration/cluster:test-failover --test_env=CLUSTER_SERVER_SCRIPT=$CLUSTER_SERVER_SCRIPT --test_env=ROOT_CA=$ROOT_CA --test_env=CLUSTER_DIR=$CLUSTER_DIR --test_output=streamed &&
+          # export CLUSTER_FAILED= || export CLUSTER_FAILED=1
+        # tool/test/stop-cluster-servers.sh
+        # if [[ -n "$CLUSTER_FAILED" ]]; then exit 1; fi
 
     test-java-behaviour-core:
       image: typedb-ubuntu-22.04
@@ -228,29 +231,30 @@ build:
         tool/test/stop-core-server.sh
         exit $TEST_SUCCESS
 
-    test-java-behaviour-cluster:
-      image: typedb-ubuntu-22.04
-      command: |
-        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
-        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-        bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
-        bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
-        if [ -n "${CARGO_BAZEL_GENERATOR_URL_LINUX_X86_64:-}" ] && [ -n "${CARGO_BAZEL_GENERATOR_SHA256_LINUX_X86_64:-}" ]; then
-            export CARGO_BAZEL_GENERATOR_URL="$CARGO_BAZEL_GENERATOR_URL_LINUX_X86_64"
-            export CARGO_BAZEL_GENERATOR_SHA256="$CARGO_BAZEL_GENERATOR_SHA256_LINUX_X86_64"
-        fi
-
-        # TODO: run `.factory/test-cluster.sh //java/test/behaviour/...` instead of multiple tests (cannot do Clustered migration now)
-        source tool/test/start-cluster-servers.sh 3 &&
-          .factory/test-cluster.sh //java/test/behaviour/connection/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
-          .factory/test-cluster.sh //java/test/behaviour/driver/concept/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
-          .factory/test-cluster.sh //java/test/behaviour/driver/connection/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
-          .factory/test-cluster.sh //java/test/behaviour/driver/query/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
-          .factory/test-cluster.sh //java/test/behaviour/driver/user/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
-          .factory/test-cluster.sh //java/test/behaviour/driver/cluster/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
-          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
-        tool/test/stop-cluster-servers.sh
-        exit $TEST_SUCCESS
+# TODO: Re-enable: typedb-cluster does not support vector storage yet
+#    test-java-behaviour-cluster:
+#      image: typedb-ubuntu-22.04
+#      command: |
+#        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
+#        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
+#        bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+#        bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
+#        if [ -n "${CARGO_BAZEL_GENERATOR_URL_LINUX_X86_64:-}" ] && [ -n "${CARGO_BAZEL_GENERATOR_SHA256_LINUX_X86_64:-}" ]; then
+#            export CARGO_BAZEL_GENERATOR_URL="$CARGO_BAZEL_GENERATOR_URL_LINUX_X86_64"
+#            export CARGO_BAZEL_GENERATOR_SHA256="$CARGO_BAZEL_GENERATOR_SHA256_LINUX_X86_64"
+#        fi
+#
+#        # TODO: run `.factory/test-cluster.sh //java/test/behaviour/...` instead of multiple tests (cannot do Clustered migration now)
+#        source tool/test/start-cluster-servers.sh 3 &&
+#          .factory/test-cluster.sh //java/test/behaviour/connection/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
+#          .factory/test-cluster.sh //java/test/behaviour/driver/concept/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
+#          .factory/test-cluster.sh //java/test/behaviour/driver/connection/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
+#          .factory/test-cluster.sh //java/test/behaviour/driver/query/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
+#          .factory/test-cluster.sh //java/test/behaviour/driver/user/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
+#          .factory/test-cluster.sh //java/test/behaviour/driver/cluster/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
+#          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+#        tool/test/stop-cluster-servers.sh
+#        exit $TEST_SUCCESS
 
     test-python-integration:
       image: typedb-ubuntu-22.04
@@ -272,11 +276,12 @@ build:
         tool/test/stop-core-server.sh
         if [[ -n "$CORE_FAILED" ]]; then exit 1; fi
 
-        source tool/test/start-cluster-servers.sh 3 &&
-          bazel test --config=ci //python/tests/integration/cluster:test_failover --test_env=CLUSTER_SERVER_SCRIPT=$CLUSTER_SERVER_SCRIPT --test_env=ROOT_CA=$ROOT_CA --test_env=CLUSTER_DIR=$CLUSTER_DIR --test_output=streamed &&
-          export CLUSTER_FAILED= || export CLUSTER_FAILED=1
-        tool/test/stop-cluster-servers.sh
-        if [[ -n "$CLUSTER_FAILED" ]]; then exit 1; fi
+        # TODO: Re-enable: typedb-cluster does not support vector storage yet
+        # source tool/test/start-cluster-servers.sh 3 &&
+          # bazel test --config=ci //python/tests/integration/cluster:test_failover --test_env=CLUSTER_SERVER_SCRIPT=$CLUSTER_SERVER_SCRIPT --test_env=ROOT_CA=$ROOT_CA --test_env=CLUSTER_DIR=$CLUSTER_DIR --test_output=streamed &&
+          # export CLUSTER_FAILED= || export CLUSTER_FAILED=1
+        # tool/test/stop-cluster-servers.sh
+        # if [[ -n "$CLUSTER_FAILED" ]]; then exit 1; fi
 
     test-python-behaviour-core:
       image: typedb-ubuntu-22.04
@@ -298,53 +303,55 @@ build:
         tool/test/stop-core-server.sh
         exit $TEST_SUCCESS
 
-    test-python-behaviour-cluster:
-      image: typedb-ubuntu-22.04
-      type: foreground
-      command: |
-        export PATH="$HOME/.local/bin:$PATH"
-        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
-        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-        bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
-        bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
-        if [ -n "${CARGO_BAZEL_GENERATOR_URL_LINUX_X86_64:-}" ] && [ -n "${CARGO_BAZEL_GENERATOR_SHA256_LINUX_X86_64:-}" ]; then
-            export CARGO_BAZEL_GENERATOR_URL="$CARGO_BAZEL_GENERATOR_URL_LINUX_X86_64"
-            export CARGO_BAZEL_GENERATOR_SHA256="$CARGO_BAZEL_GENERATOR_SHA256_LINUX_X86_64"
-        fi
+# TODO: Re-enable: typedb-cluster does not support vector storage yet
+#    test-python-behaviour-cluster:
+#      image: typedb-ubuntu-22.04
+#      type: foreground
+#      command: |
+#        export PATH="$HOME/.local/bin:$PATH"
+#        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
+#        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
+#        bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+#        bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
+#        if [ -n "${CARGO_BAZEL_GENERATOR_URL_LINUX_X86_64:-}" ] && [ -n "${CARGO_BAZEL_GENERATOR_SHA256_LINUX_X86_64:-}" ]; then
+#            export CARGO_BAZEL_GENERATOR_URL="$CARGO_BAZEL_GENERATOR_URL_LINUX_X86_64"
+#            export CARGO_BAZEL_GENERATOR_SHA256="$CARGO_BAZEL_GENERATOR_SHA256_LINUX_X86_64"
+#        fi
+#
+#        # TODO: run `.factory/test-cluster.sh //python/tests/behaviour/...` instead of multiple tests (cannot do Clustered migration now)
+#        source tool/test/start-cluster-servers.sh 3 &&
+#          .factory/test-cluster.sh //python/tests/behaviour/connection/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
+#          .factory/test-cluster.sh //python/tests/behaviour/driver/concept/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
+#          .factory/test-cluster.sh //python/tests/behaviour/driver/connection/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
+#          .factory/test-cluster.sh //python/tests/behaviour/driver/query/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
+#          .factory/test-cluster.sh //python/tests/behaviour/driver/user/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
+#          .factory/test-cluster.sh //python/tests/behaviour/driver/cluster/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
+#          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+#        tool/test/stop-cluster-servers.sh
+#        exit $TEST_SUCCESS
 
-        # TODO: run `.factory/test-cluster.sh //python/tests/behaviour/...` instead of multiple tests (cannot do Clustered migration now)
-        source tool/test/start-cluster-servers.sh 3 &&
-          .factory/test-cluster.sh //python/tests/behaviour/connection/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
-          .factory/test-cluster.sh //python/tests/behaviour/driver/concept/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
-          .factory/test-cluster.sh //python/tests/behaviour/driver/connection/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
-          .factory/test-cluster.sh //python/tests/behaviour/driver/query/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
-          .factory/test-cluster.sh //python/tests/behaviour/driver/user/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
-          .factory/test-cluster.sh //python/tests/behaviour/driver/cluster/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
-          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
-        tool/test/stop-cluster-servers.sh
-        exit $TEST_SUCCESS
-
-    test-http-ts-integration:
-      image: typedb-ubuntu-22.04
-      type: foreground
-      command: |
-        export PATH="$HOME/.local/bin:$PATH"
-        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
-        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-        bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
-        bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
-        if [ -n "${CARGO_BAZEL_GENERATOR_URL_LINUX_X86_64:-}" ] && [ -n "${CARGO_BAZEL_GENERATOR_SHA256_LINUX_X86_64:-}" ]; then
-            export CARGO_BAZEL_GENERATOR_URL="$CARGO_BAZEL_GENERATOR_URL_LINUX_X86_64"
-            export CARGO_BAZEL_GENERATOR_SHA256="$CARGO_BAZEL_GENERATOR_SHA256_LINUX_X86_64"
-        fi
-
-        tool/http-ts/install-deps.sh
-
-        source tool/test/start-cluster-servers.sh 3 &&
-          bazel test --config=ci //http-ts/tests/integration:cluster-failover --test_env=CLUSTER_SERVER_SCRIPT=$CLUSTER_SERVER_SCRIPT --test_env=ROOT_CA=$ROOT_CA --test_env=CLUSTER_DIR=$CLUSTER_DIR --test_output=streamed &&
-          export CLUSTER_FAILED= || export CLUSTER_FAILED=1
-        tool/test/stop-cluster-servers.sh
-        if [[ -n "$CLUSTER_FAILED" ]]; then exit 1; fi
+# TODO: Re-enable: typedb-cluster does not support vector storage yet
+#    test-http-ts-integration:
+#      image: typedb-ubuntu-22.04
+#      type: foreground
+#      command: |
+#        export PATH="$HOME/.local/bin:$PATH"
+#        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
+#        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
+#        bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+#        bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
+#        if [ -n "${CARGO_BAZEL_GENERATOR_URL_LINUX_X86_64:-}" ] && [ -n "${CARGO_BAZEL_GENERATOR_SHA256_LINUX_X86_64:-}" ]; then
+#            export CARGO_BAZEL_GENERATOR_URL="$CARGO_BAZEL_GENERATOR_URL_LINUX_X86_64"
+#            export CARGO_BAZEL_GENERATOR_SHA256="$CARGO_BAZEL_GENERATOR_SHA256_LINUX_X86_64"
+#        fi
+#
+#        tool/http-ts/install-deps.sh
+#
+#        source tool/test/start-cluster-servers.sh 3 &&
+#          bazel test --config=ci //http-ts/tests/integration:cluster-failover --test_env=CLUSTER_SERVER_SCRIPT=$CLUSTER_SERVER_SCRIPT --test_env=ROOT_CA=$ROOT_CA --test_env=CLUSTER_DIR=$CLUSTER_DIR --test_output=streamed &&
+#          export CLUSTER_FAILED= || export CLUSTER_FAILED=1
+#        tool/test/stop-cluster-servers.sh
+#        if [[ -n "$CLUSTER_FAILED" ]]; then exit 1; fi
 
     test-http-ts-behaviour-core:
       image: typedb-ubuntu-22.04
@@ -368,31 +375,32 @@ build:
         tool/test/stop-core-server.sh
         exit $TEST_SUCCESS
 
-    test-http-ts-behaviour-cluster:
-      image: typedb-ubuntu-22.04
-      type: foreground
-      command: |
-        export PATH="$HOME/.local/bin:$PATH"
-        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
-        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-        bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
-        bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
-        if [ -n "${CARGO_BAZEL_GENERATOR_URL_LINUX_X86_64:-}" ] && [ -n "${CARGO_BAZEL_GENERATOR_SHA256_LINUX_X86_64:-}" ]; then
-            export CARGO_BAZEL_GENERATOR_URL="$CARGO_BAZEL_GENERATOR_URL_LINUX_X86_64"
-            export CARGO_BAZEL_GENERATOR_SHA256="$CARGO_BAZEL_GENERATOR_SHA256_LINUX_X86_64"
-        fi
-
-        tool/http-ts/install-deps.sh
-
-        source tool/test/start-cluster-servers.sh 3 &&
-          .factory/test-cluster.sh //http-ts/tests/behaviour/feature:concept-cluster --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
-          .factory/test-cluster.sh //http-ts/tests/behaviour/feature:query-cluster --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
-          .factory/test-cluster.sh //http-ts/tests/behaviour/feature:user-cluster --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
-          .factory/test-cluster.sh //http-ts/tests/behaviour/feature:connection-cluster --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
-          .factory/test-cluster.sh //http-ts/tests/behaviour/feature:cluster-cluster --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
-          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
-        tool/test/stop-cluster-servers.sh
-        exit $TEST_SUCCESS
+# TODO: Re-enable: typedb-cluster does not support vector storage yet
+#    test-http-ts-behaviour-cluster:
+#      image: typedb-ubuntu-22.04
+#      type: foreground
+#      command: |
+#        export PATH="$HOME/.local/bin:$PATH"
+#        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
+#        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
+#        bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+#        bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
+#        if [ -n "${CARGO_BAZEL_GENERATOR_URL_LINUX_X86_64:-}" ] && [ -n "${CARGO_BAZEL_GENERATOR_SHA256_LINUX_X86_64:-}" ]; then
+#            export CARGO_BAZEL_GENERATOR_URL="$CARGO_BAZEL_GENERATOR_URL_LINUX_X86_64"
+#            export CARGO_BAZEL_GENERATOR_SHA256="$CARGO_BAZEL_GENERATOR_SHA256_LINUX_X86_64"
+#        fi
+#
+#        tool/http-ts/install-deps.sh
+#
+#        source tool/test/start-cluster-servers.sh 3 &&
+#          .factory/test-cluster.sh //http-ts/tests/behaviour/feature:concept-cluster --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
+#          .factory/test-cluster.sh //http-ts/tests/behaviour/feature:query-cluster --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
+#          .factory/test-cluster.sh //http-ts/tests/behaviour/feature:user-cluster --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
+#          .factory/test-cluster.sh //http-ts/tests/behaviour/feature:connection-cluster --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
+#          .factory/test-cluster.sh //http-ts/tests/behaviour/feature:cluster-cluster --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
+#          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+#        tool/test/stop-cluster-servers.sh
+#        exit $TEST_SUCCESS
 
     test-csharp-integration:
       image: typedb-ubuntu-22.04
@@ -414,11 +422,12 @@ build:
         tool/test/stop-core-server.sh
         if [[ -n "$CORE_FAILED" ]]; then exit 1; fi
 
-        source tool/test/start-cluster-servers.sh 3 &&
-          bazel test --config=ci //csharp/Test/Integration/Cluster:test-failover --test_env=CLUSTER_SERVER_SCRIPT=$CLUSTER_SERVER_SCRIPT --test_env=ROOT_CA=$ROOT_CA --test_env=CLUSTER_DIR=$CLUSTER_DIR --test_output=streamed &&
-          export CLUSTER_FAILED= || export CLUSTER_FAILED=1
-        tool/test/stop-cluster-servers.sh
-        if [[ -n "$CLUSTER_FAILED" ]]; then exit 1; fi
+        # TODO: Re-enable: typedb-cluster does not support vector storage yet
+        # source tool/test/start-cluster-servers.sh 3 &&
+          # bazel test --config=ci //csharp/Test/Integration/Cluster:test-failover --test_env=CLUSTER_SERVER_SCRIPT=$CLUSTER_SERVER_SCRIPT --test_env=ROOT_CA=$ROOT_CA --test_env=CLUSTER_DIR=$CLUSTER_DIR --test_output=streamed &&
+          # export CLUSTER_FAILED= || export CLUSTER_FAILED=1
+        # tool/test/stop-cluster-servers.sh
+        # if [[ -n "$CLUSTER_FAILED" ]]; then exit 1; fi
 
     test-csharp-behaviour-core:
       image: typedb-ubuntu-22.04
@@ -439,31 +448,32 @@ build:
         tool/test/stop-core-server.sh
         exit $TEST_SUCCESS
 
-    test-csharp-behaviour-cluster:
-      image: typedb-ubuntu-22.04
-      type: foreground
-      command: |
-        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
-        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
-        bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
-        bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
-        if [ -n "${CARGO_BAZEL_GENERATOR_URL_LINUX_X86_64:-}" ] && [ -n "${CARGO_BAZEL_GENERATOR_SHA256_LINUX_X86_64:-}" ]; then
-            export CARGO_BAZEL_GENERATOR_URL="$CARGO_BAZEL_GENERATOR_URL_LINUX_X86_64"
-            export CARGO_BAZEL_GENERATOR_SHA256="$CARGO_BAZEL_GENERATOR_SHA256_LINUX_X86_64"
-        fi
-
-        # TODO: run `.factory/test-cluster.sh //csharp/Test/Behaviour/...` instead of multiple tests (cannot do Clustered migration now)
-        source tool/test/start-cluster-servers.sh 3 &&
-          .factory/test-cluster.sh //csharp/Test/Behaviour/Connection/Database/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
-          .factory/test-cluster.sh //csharp/Test/Behaviour/Connection/Transaction/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
-          .factory/test-cluster.sh //csharp/Test/Behaviour/Driver/Concept/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
-          .factory/test-cluster.sh //csharp/Test/Behaviour/Driver/Connection/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
-          .factory/test-cluster.sh //csharp/Test/Behaviour/Driver/Query/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
-          .factory/test-cluster.sh //csharp/Test/Behaviour/Driver/User/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
-          .factory/test-cluster.sh //csharp/Test/Behaviour/Driver/Cluster/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
-          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
-        tool/test/stop-cluster-servers.sh
-        exit $TEST_SUCCESS
+# TODO: Re-enable: typedb-cluster does not support vector storage yet
+#    test-csharp-behaviour-cluster:
+#      image: typedb-ubuntu-22.04
+#      type: foreground
+#      command: |
+#        export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
+#        export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
+#        bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
+#        bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
+#        if [ -n "${CARGO_BAZEL_GENERATOR_URL_LINUX_X86_64:-}" ] && [ -n "${CARGO_BAZEL_GENERATOR_SHA256_LINUX_X86_64:-}" ]; then
+#            export CARGO_BAZEL_GENERATOR_URL="$CARGO_BAZEL_GENERATOR_URL_LINUX_X86_64"
+#            export CARGO_BAZEL_GENERATOR_SHA256="$CARGO_BAZEL_GENERATOR_SHA256_LINUX_X86_64"
+#        fi
+#
+#        # TODO: run `.factory/test-cluster.sh //csharp/Test/Behaviour/...` instead of multiple tests (cannot do Clustered migration now)
+#        source tool/test/start-cluster-servers.sh 3 &&
+#          .factory/test-cluster.sh //csharp/Test/Behaviour/Connection/Database/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
+#          .factory/test-cluster.sh //csharp/Test/Behaviour/Connection/Transaction/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
+#          .factory/test-cluster.sh //csharp/Test/Behaviour/Driver/Concept/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
+#          .factory/test-cluster.sh //csharp/Test/Behaviour/Driver/Connection/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
+#          .factory/test-cluster.sh //csharp/Test/Behaviour/Driver/Query/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
+#          .factory/test-cluster.sh //csharp/Test/Behaviour/Driver/User/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
+#          .factory/test-cluster.sh //csharp/Test/Behaviour/Driver/Cluster/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
+#          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+#        tool/test/stop-cluster-servers.sh
+#        exit $TEST_SUCCESS
 
 # TODO: Re-enable these tests when Node.js/C++ drivers are updated for 3.x
 #    test-nodejs-integration:

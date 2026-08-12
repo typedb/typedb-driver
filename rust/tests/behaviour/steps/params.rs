@@ -114,6 +114,17 @@ impl Value {
                 // Compare string representations
                 TypeDBValue::String(Self::remove_string_quotes_and_unescape(&self.raw_value))
             }
+            TypeDBValueType::Vector { .. } => {
+                // Accepts `vector([1.0, 2.0], "float32")` or a bare `[1.0, 2.0]`
+                let open = self.raw_value.find('[').expect("vector literal must contain '['");
+                let close = self.raw_value.rfind(']').expect("vector literal must contain ']'");
+                let elements = self.raw_value[open + 1..close]
+                    .split(',')
+                    .filter(|element| !element.trim().is_empty())
+                    .map(|element| element.trim().parse().unwrap())
+                    .collect();
+                TypeDBValue::Vector(elements)
+            }
         }
     }
 

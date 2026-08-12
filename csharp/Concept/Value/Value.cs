@@ -63,6 +63,7 @@ namespace TypeDB.Driver.Concept
             if (IsDatetimeTZ()) return GetDatetimeTZ();
             if (IsDuration()) return GetDuration();
             if (IsStruct()) return GetStruct();
+            if (IsVector()) return GetVector();
 
             throw new TypeDBDriverException(InternalError.UNEXPECTED_NATIVE_VALUE);
         }
@@ -137,6 +138,13 @@ namespace TypeDB.Driver.Concept
                 ?? throw new TypeDBDriverException(ConceptError.INVALID_VALUE_RETRIEVAL, "struct");
         }
 
+        /// <inheritdoc/>
+        public IReadOnlyList<float> GetVector()
+        {
+            return TryGetVector()
+                ?? throw new TypeDBDriverException(ConceptError.INVALID_VALUE_RETRIEVAL, "vector");
+        }
+
         public override string ToString()
         {
             if (IsBoolean()) return GetBoolean().ToString().ToLower();
@@ -161,6 +169,7 @@ namespace TypeDB.Driver.Concept
             if (IsDatetimeTZ()) return GetDatetimeTZ().ToString();
             if (IsDuration()) return GetDuration().ToString();
             if (IsStruct()) return GetStruct().ToString() ?? "{}";
+            if (IsVector()) return "[" + string.Join(", ", GetVector()) + "]";
 
             throw new TypeDBDriverException(InternalError.UNEXPECTED_NATIVE_VALUE);
         }

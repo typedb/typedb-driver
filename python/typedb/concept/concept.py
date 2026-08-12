@@ -35,11 +35,12 @@ from typedb.native_driver_wrapper import (concept_try_get_iid, concept_to_string
                                           concept_is_boolean, concept_is_integer, concept_is_double, concept_is_decimal,
                                           concept_is_string, concept_is_date,
                                           concept_is_datetime, concept_is_datetime_tz, concept_is_duration,
-                                          concept_is_struct,
+                                          concept_is_struct, concept_is_vector,
                                           concept_get_boolean, concept_get_integer, concept_get_double,
                                           concept_get_decimal, concept_get_string,
                                           concept_get_date_as_seconds, concept_get_datetime, concept_get_datetime_tz,
                                           concept_get_duration, concept_get_struct,
+                                          concept_get_vector_length, concept_get_vector_element,
                                           string_and_opt_value_iterator_next,
                                           Concept as NativeConcept)
 
@@ -98,6 +99,9 @@ class _Concept(Concept, NativeWrapper[NativeConcept], ABC):
 
     def is_struct(self) -> bool:
         return concept_is_struct(self.native_object)
+
+    def is_vector(self) -> bool:
+        return concept_is_vector(self.native_object)
 
     def try_get_boolean(self) -> Optional[bool]:
         if self.is_type() or not self.is_boolean():
@@ -169,6 +173,12 @@ class _Concept(Concept, NativeWrapper[NativeConcept], ABC):
                     raise TypeDBDriverException(UNEXPECTED_NATIVE_VALUE)
                 result_value = value.try_get_value()
             result[field_name] = result_value
+
+    def try_get_vector(self) -> Optional[list[float]]:
+        if self.is_type() or not self.is_vector():
+            return None
+        length = concept_get_vector_length(self.native_object)
+        return [concept_get_vector_element(self.native_object, i) for i in range(length)]
 
     @property
     def _native_object_not_owned_exception(self) -> TypeDBDriverException:

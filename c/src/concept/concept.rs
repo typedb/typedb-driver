@@ -258,6 +258,13 @@ pub extern "C" fn concept_is_struct(concept: *const Concept) -> bool {
     borrow(concept).is_struct()
 }
 
+/// Returns <code>true</code> if the value which this <code>Concept</code> holds is of type <code>vector</code>.
+/// Otherwise, returns <code>false</code>.
+#[unsafe(no_mangle)]
+pub extern "C" fn concept_is_vector(concept: *const Concept) -> bool {
+    borrow(concept).is_vector()
+}
+
 /// Returns a <code>boolean</code> value of this value concept.
 /// If the value has another type, the error is set.
 #[unsafe(no_mangle)]
@@ -357,6 +364,27 @@ pub extern "C" fn concept_get_struct(concept: *const Concept) -> *mut StringAndO
             value.fields().clone().into_iter().map(|pair| pair.into()),
         )))),
         None => unreachable!("Attempting to unwrap a non-struct {:?} as struct", borrow(concept)),
+    }
+}
+
+/// Returns the number of elements in the <code>vector</code> value of this value concept.
+/// If the value has another type, the error is set.
+#[unsafe(no_mangle)]
+pub extern "C" fn concept_get_vector_length(concept: *const Concept) -> i64 {
+    match borrow(concept).try_get_vector() {
+        Some(vector) => vector.len() as i64,
+        None => unreachable!("Attempting to unwrap a non-vector {:?} as vector", borrow(concept)),
+    }
+}
+
+/// Returns the element at the given index of the <code>vector</code> value of this value concept.
+/// If the value has another type or the index is out of bounds, the error is set.
+// ponytail: per-element FFI calls (O(dim) crossings per read); switch to a buffer copy if profiling says so
+#[unsafe(no_mangle)]
+pub extern "C" fn concept_get_vector_element(concept: *const Concept, index: i64) -> f32 {
+    match borrow(concept).try_get_vector() {
+        Some(vector) => vector[index as usize],
+        None => unreachable!("Attempting to unwrap a non-vector {:?} as vector", borrow(concept)),
     }
 }
 

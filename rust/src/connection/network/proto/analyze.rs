@@ -315,6 +315,22 @@ impl TryFromProto<conjunction_proto::constraint::Constraint> for Constraint {
                 concept: expect_try_from_proto(concept, "structure_constraint::Iid.concept")?,
                 iid: iid.into(),
             },
+            ConstraintProto::VectorSearch(constraint_proto::VectorSearch {
+                attribute,
+                attribute_type,
+                query,
+                threshold,
+                similarity,
+            }) => Constraint::VectorSearch {
+                attribute: expect_try_from_proto(attribute, "structure_constraint::VectorSearch.attribute")?,
+                attribute_type: expect_try_from_proto(
+                    attribute_type,
+                    "structure_constraint::VectorSearch.attribute_type",
+                )?,
+                query: expect_try_from_proto(query, "structure_constraint::VectorSearch.query")?,
+                threshold: expect_try_from_proto(threshold, "structure_constraint::VectorSearch.threshold")?,
+                similarity: expect_try_from_proto(similarity, "structure_constraint::VectorSearch.similarity")?,
+            },
         };
         Ok(constraint)
     }

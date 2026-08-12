@@ -21,6 +21,7 @@ a| `Duration(Duration)`
 a| `Integer(i64)`
 a| `String(String)`
 a| `Struct(Struct, String)`
+a| `Vector(Vec<f32>)`
 |===
 // end::enum_constants[]
 

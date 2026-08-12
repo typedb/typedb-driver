@@ -74,6 +74,9 @@ class _Attribute(Attribute, _Instance):
     def get_struct(self) -> Concept.STRUCT:
         return self._get_value_concept().get_struct()
 
+    def get_vector(self) -> list[float]:
+        return self._get_value_concept().get_vector()
+
     def to_json(self) -> Mapping[str, Union[str, int, float, bool]]:
         return {"type": self.get_type().get_label()} | self._get_value_concept().to_json()
 

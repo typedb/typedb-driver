@@ -764,6 +764,11 @@ pub async fn answer_get_row_get_variable_get_value_of_type(
         ValueType::DatetimeTZ => concept.try_get_datetime_tz().map(|_| ()).ok_or(InvalidValueRetrieval(type_name)),
         ValueType::Duration => concept.try_get_duration().map(|_| ()).ok_or(InvalidValueRetrieval(type_name)),
         ValueType::Struct(_) => concept.try_get_struct().map(|_| ()).ok_or(InvalidValueRetrieval("struct".to_owned())),
+        ValueType::Vector { .. } => concept
+            .try_get_value()
+            .filter(|value| matches!(value, Value::Vector(_)))
+            .map(|_| ())
+            .ok_or(InvalidValueRetrieval(type_name)),
     });
 }
 
@@ -875,6 +880,15 @@ pub async fn answer_get_row_get_variable_get_specific_value(
             // Compare string representations
             match expected_value {
                 Value::String(expected_struct) => is_or_not.compare(expected_struct, actual_struct.to_string()),
+                _ => is_or_not.check(false),
+            }
+        }
+        ValueType::Vector { .. } => {
+            let actual_vector = concept.try_get_value().unwrap();
+            match expected_value {
+                Value::Vector(ref expected_vector) => {
+                    is_or_not.check(actual_vector.get_vector() == Some(expected_vector.as_slice()))
+                }
                 _ => is_or_not.check(false),
             }
         }

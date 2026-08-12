@@ -229,6 +229,38 @@ Returns the value of this struct value concept represented as an iterator of {fi
 .Returns
 `struct StringAndOptValueIterator*`
 
+[#_concept_get_vector_element]
+==== function ``concept_get_vector_element``
+
+[source,c]
+----
+float concept_get_vector_element(const struct Concept* concept, int64_t index)
+----
+
+
+
+Returns the element at the given index of the ``vector`` value of this value concept. If the value has another type or the index is out of bounds, the error is set.
+
+[caption=""]
+.Returns
+`float`
+
+[#_concept_get_vector_length]
+==== function ``concept_get_vector_length``
+
+[source,c]
+----
+int64_t concept_get_vector_length(const struct Concept* concept)
+----
+
+
+
+Returns the number of elements in the ``vector`` value of this value concept. If the value has another type, the error is set.
+
+[caption=""]
+.Returns
+`int64_t`
+
 [#_concept_is_attribute]
 ==== function ``concept_is_attribute``
 
@@ -512,6 +544,22 @@ bool concept_is_value(const struct Concept* concept)
 
 
 Checks if this ``Concept`` is a ``Value``.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_concept_is_vector]
+==== function ``concept_is_vector``
+
+[source,c]
+----
+bool concept_is_vector(const struct Concept* concept)
+----
+
+
+
+Returns ``true`` if the value which this ``Concept`` holds is of type ``vector``. Otherwise, returns ``false``.
 
 [caption=""]
 .Returns

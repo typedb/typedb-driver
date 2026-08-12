@@ -341,6 +341,9 @@ pub mod functor_encoding {
                 Self::Is { lhs, rhs } => {
                     encode_functor_impl!(context, Is { lhs, rhs, })
                 }
+                Self::VectorSearch { attribute, attribute_type, query, threshold, similarity } => {
+                    encode_functor_impl!(context, VectorSearch { attribute, attribute_type, query, threshold, similarity, })
+                }
                 Self::Iid { concept, iid } => {
                     let iid_str = iid.to_string();
                     let iid_ref = &iid_str;

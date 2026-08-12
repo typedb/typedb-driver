@@ -417,6 +417,23 @@ Checks if this Concept represents a Value returned by the database
 bool
 ----
 
+[#_enum_Concept_is_vector_]
+==== is_vector
+
+[source,rust]
+----
+pub fn is_vector(&self) -> bool
+----
+
+Checks if this Concept holds a vector as an AttributeType, an Attribute, or a Value
+
+[caption=""]
+.Returns
+[source,rust]
+----
+bool
+----
+
 [#_enum_Concept_try_get_boolean_]
 ==== try_get_boolean
 
@@ -670,6 +687,23 @@ Retrieves the value type enum of the concept, if it exists. If this is an Attrib
 [source,rust]
 ----
 Option<ValueType>
+----
+
+[#_enum_Concept_try_get_vector_]
+==== try_get_vector
+
+[source,rust]
+----
+pub fn try_get_vector(&self) -> Option<&[f32]>
+----
+
+Retrieves the vector value of this Concept, if it exists. If this is a vector-valued Attribute Instance, returns the vector value of this instance. If this a vector-valued Value, returns the vector value. Otherwise, returns None.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Option<&[f32]>
 ----
 
 // end::methods[]

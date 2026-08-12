@@ -37,14 +37,14 @@ value.as_value()
 
 [source,python]
 ----
-get() -> bool | int | float | Decimal | str | date | Datetime | Duration | Dict[str, Value | None]
+get() -> bool | int | float | Decimal | str | date | Datetime | Duration | Dict[str, Value | None] | List[float]
 ----
 
 Retrieves the value which this value concept holds.
 
 [caption=""]
 .Returns
-`bool | int | float | Decimal | str | date | Datetime | Duration | Dict[str, Value | None]`
+`bool | int | float | Decimal | str | date | Datetime | Duration | Dict[str, Value | None] | List[float]`
 
 [caption=""]
 .Code examples
