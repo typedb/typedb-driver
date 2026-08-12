@@ -127,6 +127,11 @@ namespace TypeDB.Driver.Api.Analyze
         bool IsTry { get; }
 
         /// <summary>
+        /// Checks if this constraint is a vector search constraint.
+        /// </summary>
+        bool IsVectorSearch { get; }
+
+        /// <summary>
         /// Casts this constraint to an isa constraint.
         /// </summary>
         IIsa AsIsa();
@@ -215,6 +220,11 @@ namespace TypeDB.Driver.Api.Analyze
         /// Casts this constraint to a try constraint.
         /// </summary>
         ITry AsTry();
+
+        /// <summary>
+        /// Casts this constraint to a vector search constraint.
+        /// </summary>
+        IVectorSearch AsVectorSearch();
     }
 
     /// <summary>
@@ -564,5 +574,37 @@ namespace TypeDB.Driver.Api.Analyze
         /// The index into the pipeline's conjunctions.
         /// </summary>
         IConjunctionID Conjunction { get; }
+    }
+
+    /// <summary>
+    /// Represents a vector search constraint:
+    /// let attribute, similarity in cosine_similarity_search(attribute_type, query, threshold)
+    /// </summary>
+    public interface IVectorSearch : IConstraint
+    {
+        /// <summary>
+        /// The assigned attribute vertex.
+        /// </summary>
+        IConstraintVertex Attribute { get; }
+
+        /// <summary>
+        /// The searched attribute type vertex.
+        /// </summary>
+        IConstraintVertex AttributeType { get; }
+
+        /// <summary>
+        /// The query vector vertex.
+        /// </summary>
+        IConstraintVertex Query { get; }
+
+        /// <summary>
+        /// The similarity threshold vertex.
+        /// </summary>
+        IConstraintVertex Threshold { get; }
+
+        /// <summary>
+        /// The computed similarity vertex.
+        /// </summary>
+        IConstraintVertex Similarity { get; }
     }
 }

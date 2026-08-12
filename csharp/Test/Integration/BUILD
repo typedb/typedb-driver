@@ -38,6 +38,19 @@ csharp_integration_test(
 )
 
 csharp_integration_test(
+    name = "test-vector",
+    srcs = ["VectorTest.cs"],
+    deps = [
+        "//csharp:driver-csharp",
+        "//csharp/Api:api",
+        "//csharp/Answer:answer",
+        "//csharp/Common:common",
+    ],
+    target_frameworks = target_frameworks,
+    targeting_packs = targeting_packs,
+)
+
+csharp_integration_test(
     name = "test-transaction-onclose-callback",
     srcs = ["TransactionOnCloseCallbackTest.cs"],
     deps = [

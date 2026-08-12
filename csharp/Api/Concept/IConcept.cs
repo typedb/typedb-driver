@@ -252,6 +252,17 @@ namespace TypeDB.Driver.Api
         /// </example>
         bool IsStruct();
 
+        /// <summary>
+        /// Returns true if the value which this Concept holds is of type vector
+        /// or if this Concept is an AttributeType of type vector.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// concept.IsVector()
+        /// </code>
+        /// </example>
+        bool IsVector();
+
         #endregion
 
         #region Concept Casting
@@ -519,6 +530,17 @@ namespace TypeDB.Driver.Api
         /// </code>
         /// </example>
         IReadOnlyDictionary<string, IValue?>? TryGetStruct();
+
+        /// <summary>
+        /// Returns a vector value of this Concept.
+        /// If it's not a Value or it has another type, returns null.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// concept.TryGetVector()
+        /// </code>
+        /// </example>
+        IReadOnlyList<float>? TryGetVector();
 
         #endregion
 

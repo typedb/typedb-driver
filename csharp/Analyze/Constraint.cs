@@ -76,6 +76,8 @@ namespace TypeDB.Driver.Analyze
                     return new NotImpl(constraint);
                 case Pinvoke.ConstraintVariant.Try:
                     return new TryImpl(constraint);
+                case Pinvoke.ConstraintVariant.VectorSearch:
+                    return new VectorSearchImpl(constraint);
                 default:
                     throw new InvalidOperationException("Unexpected constraint variant: " + variant);
             }
@@ -114,6 +116,7 @@ namespace TypeDB.Driver.Analyze
         public virtual bool IsOr => false;
         public virtual bool IsNot => false;
         public virtual bool IsTry => false;
+        public virtual bool IsVectorSearch => false;
 
         public virtual IIsa AsIsa() => throw InvalidCast("Isa");
         public virtual IHas AsHas() => throw InvalidCast("Has");
@@ -133,6 +136,7 @@ namespace TypeDB.Driver.Analyze
         public virtual IOr AsOr() => throw InvalidCast("Or");
         public virtual INot AsNot() => throw InvalidCast("Not");
         public virtual ITry AsTry() => throw InvalidCast("Try");
+        public virtual IVectorSearch AsVectorSearch() => throw InvalidCast("VectorSearch");
 
         private TypeDBDriverException InvalidCast(string targetType)
         {
@@ -383,6 +387,20 @@ namespace TypeDB.Driver.Analyze
 
             public IConjunctionID Conjunction =>
                 new ConjunctionID(Pinvoke.typedb_driver.constraint_try_get_conjunction(NativeObject));
+        }
+
+        public class VectorSearchImpl : Constraint, IVectorSearch
+        {
+            internal VectorSearchImpl(Pinvoke.ConstraintWithSpan nativeObject) : base(nativeObject) { }
+
+            public override bool IsVectorSearch => true;
+            public override IVectorSearch AsVectorSearch() => this;
+
+            public IConstraintVertex Attribute => new ConstraintVertex(Pinvoke.typedb_driver.constraint_vector_search_get_attribute(NativeObject));
+            public IConstraintVertex AttributeType => new ConstraintVertex(Pinvoke.typedb_driver.constraint_vector_search_get_attribute_type(NativeObject));
+            public IConstraintVertex Query => new ConstraintVertex(Pinvoke.typedb_driver.constraint_vector_search_get_query(NativeObject));
+            public IConstraintVertex Threshold => new ConstraintVertex(Pinvoke.typedb_driver.constraint_vector_search_get_threshold(NativeObject));
+            public IConstraintVertex Similarity => new ConstraintVertex(Pinvoke.typedb_driver.constraint_vector_search_get_similarity(NativeObject));
         }
     }
 }
