@@ -44,6 +44,8 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -62,6 +64,8 @@ import static com.typedb.driver.jni.typedb_driver.concept_get_integer;
 import static com.typedb.driver.jni.typedb_driver.concept_get_label;
 import static com.typedb.driver.jni.typedb_driver.concept_get_string;
 import static com.typedb.driver.jni.typedb_driver.concept_get_struct;
+import static com.typedb.driver.jni.typedb_driver.concept_get_vector_element;
+import static com.typedb.driver.jni.typedb_driver.concept_get_vector_length;
 import static com.typedb.driver.jni.typedb_driver.concept_is_attribute;
 import static com.typedb.driver.jni.typedb_driver.concept_is_attribute_type;
 import static com.typedb.driver.jni.typedb_driver.concept_is_boolean;
@@ -80,6 +84,7 @@ import static com.typedb.driver.jni.typedb_driver.concept_is_role_type;
 import static com.typedb.driver.jni.typedb_driver.concept_is_string;
 import static com.typedb.driver.jni.typedb_driver.concept_is_struct;
 import static com.typedb.driver.jni.typedb_driver.concept_is_value;
+import static com.typedb.driver.jni.typedb_driver.concept_is_vector;
 import static com.typedb.driver.jni.typedb_driver.concept_to_string;
 import static com.typedb.driver.jni.typedb_driver.concept_try_get_iid;
 import static com.typedb.driver.jni.typedb_driver.concept_try_get_label;
@@ -180,6 +185,11 @@ public abstract class ConceptImpl extends NativeObject<com.typedb.driver.jni.Con
     }
 
     @Override
+    public boolean isVector() {
+        return concept_is_vector(nativeObject);
+    }
+
+    @Override
     public Optional<Boolean> tryGetBoolean() {
         if (isType() || !isBoolean()) return Optional.empty();
         return Optional.of(concept_get_boolean(nativeObject));
@@ -262,6 +272,18 @@ public abstract class ConceptImpl extends NativeObject<com.typedb.driver.jni.Con
             }
             return pair(fieldName, resultValue);
         }).collect(Collectors.toMap(Pair::first, Pair::second)));
+    }
+
+    @Override
+    public Optional<List<Float>> tryGetVector() {
+        if (isType() || !isVector()) return Optional.empty();
+        // ponytail: per-element FFI calls (O(dim) crossings per read); switch to a buffer copy if profiling says so
+        long length = concept_get_vector_length(nativeObject);
+        List<Float> vector = new ArrayList<>((int) length);
+        for (long i = 0; i < length; i++) {
+            vector.add(concept_get_vector_element(nativeObject, i));
+        }
+        return Optional.of(vector);
     }
 
     private Instant instantFromNativeDatetime(com.typedb.driver.jni.DatetimeInNanos nativeDatetime) {

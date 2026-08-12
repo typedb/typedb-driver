@@ -75,6 +75,8 @@ public abstract class ConstraintImpl extends NativeObject<com.typedb.driver.jni.
                 return new NotImpl(constraint);
             case Try:
                 return new TryImpl(constraint);
+            case VectorSearch:
+                return new VectorSearchImpl(constraint);
             default:
                 throw new IllegalStateException("Unexpected constraint variant: " + variant);
         }
@@ -183,6 +185,10 @@ public abstract class ConstraintImpl extends NativeObject<com.typedb.driver.jni.
         return false;
     }
 
+    public boolean isVectorSearch() {
+        return false;
+    }
+
     @Override
     public String toString() {
         return typedb_driver.constraint_string_repr(nativeObject);
@@ -258,6 +264,10 @@ public abstract class ConstraintImpl extends NativeObject<com.typedb.driver.jni.
 
     public TryImpl asTry() {
         throw new TypeDBDriverException(INVALID_CONSTRAINT_CASTING, className(this.getClass()), className(TryImpl.class));
+    }
+
+    public VectorSearchImpl asVectorSearch() {
+        throw new TypeDBDriverException(INVALID_CONSTRAINT_CASTING, className(this.getClass()), className(VectorSearchImpl.class));
     }
 
     public static class IsaImpl extends ConstraintImpl implements Constraint.Isa {
@@ -725,6 +735,42 @@ public abstract class ConstraintImpl extends NativeObject<com.typedb.driver.jni.
 
         public ConjunctionIDImpl conjunction() {
             return new ConjunctionIDImpl(typedb_driver.constraint_try_get_conjunction(nativeObject));
+        }
+    }
+
+    public static class VectorSearchImpl extends ConstraintImpl implements Constraint.VectorSearch {
+        public VectorSearchImpl(com.typedb.driver.jni.ConstraintWithSpan nativeObject) {
+            super(nativeObject);
+        }
+
+        @Override
+        public boolean isVectorSearch() {
+            return true;
+        }
+
+        @Override
+        public VectorSearchImpl asVectorSearch() {
+            return this;
+        }
+
+        public ConstraintVertexImpl attribute() {
+            return new ConstraintVertexImpl(typedb_driver.constraint_vector_search_get_attribute(nativeObject));
+        }
+
+        public ConstraintVertexImpl attributeType() {
+            return new ConstraintVertexImpl(typedb_driver.constraint_vector_search_get_attribute_type(nativeObject));
+        }
+
+        public ConstraintVertexImpl query() {
+            return new ConstraintVertexImpl(typedb_driver.constraint_vector_search_get_query(nativeObject));
+        }
+
+        public ConstraintVertexImpl threshold() {
+            return new ConstraintVertexImpl(typedb_driver.constraint_vector_search_get_threshold(nativeObject));
+        }
+
+        public ConstraintVertexImpl similarity() {
+            return new ConstraintVertexImpl(typedb_driver.constraint_vector_search_get_similarity(nativeObject));
         }
     }
 }

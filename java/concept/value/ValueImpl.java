@@ -32,6 +32,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -159,6 +160,7 @@ public class ValueImpl extends ConceptImpl implements Value {
         else if (isDatetimeTZ()) return getDatetimeTZ();
         else if (isDuration()) return getDuration();
         else if (isStruct()) return getStruct();
+        else if (isVector()) return getVector();
         throw new TypeDBDriverException(UNEXPECTED_NATIVE_VALUE);
     }
 
@@ -213,6 +215,11 @@ public class ValueImpl extends ConceptImpl implements Value {
     }
 
     @Override
+    public List<Float> getVector() {
+        return tryGetVector().orElseThrow(() -> new TypeDBDriverException(INVALID_VALUE_RETRIEVAL, "vector"));
+    }
+
+    @Override
     public String toString() {
         if (isBoolean()) return Boolean.toString(getBoolean());
         else if (isInteger()) return Long.toString(getInteger());
@@ -224,6 +231,7 @@ public class ValueImpl extends ConceptImpl implements Value {
         else if (isDatetimeTZ()) return getDatetimeTZ().toString();
         else if (isDuration()) return getDuration().toString();
         else if (isStruct()) return getStruct().toString();
+        else if (isVector()) return getVector().toString();
         throw new TypeDBDriverException(UNEXPECTED_NATIVE_VALUE);
     }
 

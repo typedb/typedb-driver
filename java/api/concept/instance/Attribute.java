@@ -27,6 +27,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -198,4 +199,15 @@ public interface Attribute extends Instance {
      * </pre>
      */
     Map<String, Optional<Value>> getStruct();
+
+    /**
+     * Returns a <code>vector</code> value of the value concept that this attribute holds.
+     * If the value has another type, raises an exception.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * attribute.getVector();
+     * </pre>
+     */
+    List<Float> getVector();
 }

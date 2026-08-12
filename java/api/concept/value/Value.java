@@ -26,6 +26,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -177,4 +178,15 @@ public interface Value extends Concept {
      * </pre>
      */
     Map<String, Optional<Value>> getStruct();
+
+    /**
+     * Returns the value of this value concept as a <code>List&lt;Float&gt;</code>.
+     * If the value has another type, raises an exception.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * value.getVector();
+     * </pre>
+     */
+    List<Float> getVector();
 }
