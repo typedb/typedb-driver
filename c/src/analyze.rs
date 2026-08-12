@@ -1124,6 +1124,67 @@ pub extern "C" fn constraint_value_get_value_type(constraint: *const ConstraintW
     release_string(value_type.name().to_owned())
 }
 
+/// Unwraps the <code>Constraint</code> instance as a `VectorSearch` constraint,
+/// and returns the assigned attribute vertex.
+/// Will panic if the Constraint is not a VectorSearch constraint.
+#[unsafe(no_mangle)]
+pub extern "C" fn constraint_vector_search_get_attribute(constraint: *const ConstraintWithSpan) -> *mut ConstraintVertex {
+    let Constraint::VectorSearch { attribute, .. } = &borrow(constraint).constraint else {
+        unreachable!("Expected constraint to be VectorSearch");
+    };
+    release(attribute.clone())
+}
+
+/// Unwraps the <code>Constraint</code> instance as a `VectorSearch` constraint,
+/// and returns the searched attribute type vertex.
+/// Will panic if the Constraint is not a VectorSearch constraint.
+#[unsafe(no_mangle)]
+pub extern "C" fn constraint_vector_search_get_attribute_type(
+    constraint: *const ConstraintWithSpan,
+) -> *mut ConstraintVertex {
+    let Constraint::VectorSearch { attribute_type, .. } = &borrow(constraint).constraint else {
+        unreachable!("Expected constraint to be VectorSearch");
+    };
+    release(attribute_type.clone())
+}
+
+/// Unwraps the <code>Constraint</code> instance as a `VectorSearch` constraint,
+/// and returns the query vector vertex.
+/// Will panic if the Constraint is not a VectorSearch constraint.
+#[unsafe(no_mangle)]
+pub extern "C" fn constraint_vector_search_get_query(constraint: *const ConstraintWithSpan) -> *mut ConstraintVertex {
+    let Constraint::VectorSearch { query, .. } = &borrow(constraint).constraint else {
+        unreachable!("Expected constraint to be VectorSearch");
+    };
+    release(query.clone())
+}
+
+/// Unwraps the <code>Constraint</code> instance as a `VectorSearch` constraint,
+/// and returns the similarity threshold vertex.
+/// Will panic if the Constraint is not a VectorSearch constraint.
+#[unsafe(no_mangle)]
+pub extern "C" fn constraint_vector_search_get_threshold(
+    constraint: *const ConstraintWithSpan,
+) -> *mut ConstraintVertex {
+    let Constraint::VectorSearch { threshold, .. } = &borrow(constraint).constraint else {
+        unreachable!("Expected constraint to be VectorSearch");
+    };
+    release(threshold.clone())
+}
+
+/// Unwraps the <code>Constraint</code> instance as a `VectorSearch` constraint,
+/// and returns the computed similarity vertex.
+/// Will panic if the Constraint is not a VectorSearch constraint.
+#[unsafe(no_mangle)]
+pub extern "C" fn constraint_vector_search_get_similarity(
+    constraint: *const ConstraintWithSpan,
+) -> *mut ConstraintVertex {
+    let Constraint::VectorSearch { similarity, .. } = &borrow(constraint).constraint else {
+        unreachable!("Expected constraint to be VectorSearch");
+    };
+    release(similarity.clone())
+}
+
 /// Unwraps the <code>Constraint</code> instance as an `Or` constraint,
 /// and returns the <code>ConjunctionID</code>s of the conjunction in each of the branches.
 /// Will panic if the Constraint is not an Or constraint.
