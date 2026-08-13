@@ -39,6 +39,7 @@ pub(crate) struct BackgroundRuntime {
     is_open: AtomicCell<bool>,
     shutdown_sink: UnboundedSender<()>,
 
+    async_runtime_worker: Option<JoinHandle<()>>,
     callback_handler: Option<JoinHandle<()>>,
     callback_handler_sink: Option<Sender<(Callback, AsyncOneshotSender<()>)>>,
 }
@@ -49,7 +50,7 @@ impl BackgroundRuntime {
         let (shutdown_sink, mut shutdown_source) = unbounded_async();
         let async_runtime = runtime::Builder::new_current_thread().enable_time().enable_io().build()?;
         let async_runtime_handle = async_runtime.handle().clone();
-        thread::Builder::new().name("gRPC worker".to_owned()).spawn(move || {
+        let async_runtime_worker = thread::Builder::new().name("gRPC worker".to_owned()).spawn(move || {
             async_runtime.block_on(async move {
                 shutdown_source.recv().await;
             });
@@ -67,6 +68,7 @@ impl BackgroundRuntime {
             async_runtime_handle,
             is_open,
             shutdown_sink,
+            async_runtime_worker: Some(async_runtime_worker),
             callback_handler,
             callback_handler_sink: Some(callback_handler_sink),
         })
@@ -111,6 +113,15 @@ impl Drop for BackgroundRuntime {
     fn drop(&mut self) {
         self.is_open.store(false);
         self.shutdown_sink.send(()).ok();
+
+        if let Some(worker) = self.async_runtime_worker.take() {
+            if worker.thread().id() != thread::current().id() {
+                if let Err(err) = worker.join() {
+                    error!("Error shutting down the gRPC worker thread: {:?}", err);
+                }
+            }
+        }
+
         drop(self.callback_handler_sink.take());
         if let Err(err) = self.callback_handler.take().unwrap().join() {
             error!("Error shutting down the callback handler thread: {:?}", err);
