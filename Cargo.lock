@@ -2807,7 +2807,7 @@ dependencies = [
 [[package]]
 name = "typedb-protocol"
 version = "0.0.0"
-source = "git+https://github.com/typedb/typedb-protocol?tag=3.12.0-rc0#cef7aaf8144b7534f47c9ca82db3fefc3b81d623"
+source = "git+https://github.com/typedb/typedb-protocol?tag=3.12.0#0373c1ae106b1f68e80edb06c1b7375075fe62e2"
 dependencies = [
  "prost",
  "tonic",
