@@ -386,6 +386,8 @@ pub mod functor_encoding {
             ConstraintVertex::Value(v) => {
                 match v {
                     Value::String(s) => std::format!("\"{s}\""),
+                    // Python/Java encoders and the server BDD render vectors as a plain list
+                    Value::Vector(elements) => std::format!("{elements:?}"),
                     other => other.to_string(),
                 }
             }

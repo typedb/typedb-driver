@@ -271,6 +271,20 @@ Constraint.Value asValue()
 .Returns
 `Constraint.Value`
 
+[#_Constraint_Comparison_asVectorSearch_]
+==== method ``asVectorSearch``
+
+[source,java]
+----
+Constraint.VectorSearch asVectorSearch()
+----
+
+
+
+[caption=""]
+.Returns
+`Constraint.VectorSearch`
+
 [#_Constraint_Comparison_comparator_]
 ==== method ``comparator``
 
@@ -543,6 +557,20 @@ boolean isTry()
 [source,java]
 ----
 boolean isValue()
+----
+
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[#_Constraint_Comparison_isVectorSearch_]
+==== method ``isVectorSearch``
+
+[source,java]
+----
+boolean isVectorSearch()
 ----
 
 

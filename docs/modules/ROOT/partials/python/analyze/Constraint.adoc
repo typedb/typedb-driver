@@ -261,6 +261,20 @@ as_value() -> Value
 .Returns
 `Value`
 
+[#_Constraint_as_vector_search_]
+==== method ``as_vector_search``
+
+[source,python]
+----
+as_vector_search() -> VectorSearch
+----
+
+
+
+[caption=""]
+.Returns
+`VectorSearch`
+
 [#_Constraint_is_comparison_]
 ==== method ``is_comparison``
 
@@ -505,6 +519,20 @@ is_try() -> bool
 [source,python]
 ----
 is_value() -> bool
+----
+
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_Constraint_is_vector_search_]
+==== method ``is_vector_search``
+
+[source,python]
+----
+is_vector_search() -> bool
 ----
 
 

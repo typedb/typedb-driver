@@ -89,7 +89,6 @@ class ConstraintVariant(IntEnum):
     Or = NativeOr
     Not = NativeNot
     Try = NativeTry
-    # ponytail: variant tag only; per-field accessors when someone analyzes vector queries
     VectorSearch = NativeVectorSearch
 
 

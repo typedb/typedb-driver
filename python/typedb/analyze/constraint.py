@@ -28,7 +28,7 @@ from typedb.api.analyze.constraint import (
     Constraint, Span,
     Isa, Has, Links, Sub, Owns, Relates, Plays,
     FunctionCall, Expression, Is, Iid, Comparison, Kind, Label, Value,
-    Or, Not, Try,
+    Or, Not, Try, VectorSearch,
 )
 from typedb.analyze.constraint_vertex import _ConstraintVertex
 from typedb.analyze.conjunction_id import _ConjunctionID
@@ -91,6 +91,11 @@ from typedb.native_driver_wrapper import (
     constraint_or_get_branches,
     constraint_not_get_conjunction,
     constraint_try_get_conjunction,
+    constraint_vector_search_get_attribute,
+    constraint_vector_search_get_attribute_type,
+    constraint_vector_search_get_query,
+    constraint_vector_search_get_threshold,
+    constraint_vector_search_get_similarity,
     constraint_string_repr,
 )
 
@@ -145,6 +150,8 @@ class _Constraint(Constraint, NativeWrapper[NativeConstraint], ABC):
             return _Not(native)
         if variant == ConstraintVariant.Try:
             return _Try(native)
+        if variant == ConstraintVariant.VectorSearch:
+            return _VectorSearch(native)
         raise TypeDBDriverException(UNEXPECTED_NATIVE_VALUE)
 
     def variant(self) -> "ConstraintVariant":
@@ -207,6 +214,9 @@ class _Constraint(Constraint, NativeWrapper[NativeConstraint], ABC):
     def is_try(self) -> bool:
         return False
 
+    def is_vector_search(self) -> bool:
+        return False
+
     def as_isa(self):
         raise TypeDBDriverException(INVALID_CONSTRAINT_CASTING, (self.__class__.__name__, "Isa"))
 
@@ -260,6 +270,9 @@ class _Constraint(Constraint, NativeWrapper[NativeConstraint], ABC):
 
     def as_try(self):
         raise TypeDBDriverException(INVALID_CONSTRAINT_CASTING, (self.__class__.__name__, "Try"))
+
+    def as_vector_search(self):
+        raise TypeDBDriverException(INVALID_CONSTRAINT_CASTING, (self.__class__.__name__, "VectorSearch"))
 
     def __repr__(self):
         return constraint_string_repr(self.native_object)
@@ -636,3 +649,34 @@ class _Try(_Constraint, Try):
 
     def conjunction(self) -> "ConjunctionID":
         return _ConjunctionID(constraint_try_get_conjunction(self.native_object))
+
+
+class _VectorSearch(_Constraint, VectorSearch):
+    def __init__(self, native):
+        super().__init__(native)
+
+    def is_vector_search(self) -> bool:
+        return True
+
+    def as_vector_search(self):
+        return self
+
+    def attribute(self) -> "ConstraintVertex":
+        native = constraint_vector_search_get_attribute(self.native_object)
+        return _ConstraintVertex(native)
+
+    def attribute_type(self) -> "ConstraintVertex":
+        native = constraint_vector_search_get_attribute_type(self.native_object)
+        return _ConstraintVertex(native)
+
+    def query(self) -> "ConstraintVertex":
+        native = constraint_vector_search_get_query(self.native_object)
+        return _ConstraintVertex(native)
+
+    def threshold(self) -> "ConstraintVertex":
+        native = constraint_vector_search_get_threshold(self.native_object)
+        return _ConstraintVertex(native)
+
+    def similarity(self) -> "ConstraintVertex":
+        native = constraint_vector_search_get_similarity(self.native_object)
+        return _ConstraintVertex(native)

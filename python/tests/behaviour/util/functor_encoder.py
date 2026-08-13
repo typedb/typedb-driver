@@ -161,6 +161,11 @@ def _encode_constraint(constraint: Constraint, encoder: FunctorEncoder) -> str:
     elif constraint.is_try():
         try_ = constraint.as_try()
         return encoder.make_functor("Try", try_.conjunction())
+
+    elif constraint.is_vector_search():
+        vs = constraint.as_vector_search()
+        return encoder.make_functor("VectorSearch", vs.attribute(), vs.attribute_type(), vs.query(),
+                                    vs.threshold(), vs.similarity())
     else:
         raise Exception(f"Unknown constraint variant: " + variant.name)
 

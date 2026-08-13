@@ -268,6 +268,20 @@ Constraint.Value asValue()
 .Returns
 `Constraint.Value`
 
+[#_Constraint_Isa_asVectorSearch_]
+==== method ``asVectorSearch``
+
+[source,java]
+----
+Constraint.VectorSearch asVectorSearch()
+----
+
+
+
+[caption=""]
+.Returns
+`Constraint.VectorSearch`
+
 [#_Constraint_Isa_exactness_]
 ==== method ``exactness``
 
@@ -540,6 +554,20 @@ boolean isTry()
 [source,java]
 ----
 boolean isValue()
+----
+
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[#_Constraint_Isa_isVectorSearch_]
+==== method ``isVectorSearch``
+
+[source,java]
+----
+boolean isVectorSearch()
 ----
 
 

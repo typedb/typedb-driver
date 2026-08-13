@@ -1128,7 +1128,9 @@ pub extern "C" fn constraint_value_get_value_type(constraint: *const ConstraintW
 /// and returns the assigned attribute vertex.
 /// Will panic if the Constraint is not a VectorSearch constraint.
 #[unsafe(no_mangle)]
-pub extern "C" fn constraint_vector_search_get_attribute(constraint: *const ConstraintWithSpan) -> *mut ConstraintVertex {
+pub extern "C" fn constraint_vector_search_get_attribute(
+    constraint: *const ConstraintWithSpan,
+) -> *mut ConstraintVertex {
     let Constraint::VectorSearch { attribute, .. } = &borrow(constraint).constraint else {
         unreachable!("Expected constraint to be VectorSearch");
     };

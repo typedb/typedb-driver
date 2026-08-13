@@ -239,6 +239,17 @@ public abstract class FunctorEncoder {
                     Conjunction conjunction = pipeline.conjunction(try_.conjunction()).get();
                     return makeFunctor("Try", encode(conjunction));
                 }
+                case VectorSearch: {
+                    Constraint.VectorSearch vectorSearch = constraint.asVectorSearch();
+                    return makeFunctor(
+                            "VectorSearch",
+                            encode(vectorSearch.attribute()),
+                            encode(vectorSearch.attributeType()),
+                            encode(vectorSearch.query()),
+                            encode(vectorSearch.threshold()),
+                            encode(vectorSearch.similarity())
+                    );
+                }
                 default:
                     throw new IllegalArgumentException("Unhandled constraint variant: " + constraint.variant(), null);
             }
