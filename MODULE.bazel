@@ -71,10 +71,11 @@ git_override(
 )
 
 bazel_dep(name = "typedb_behaviour", version = "0.0.0")
-# TODO(vector-search): repoint to the pushed vector-search commit before merge (dev loop only)
-local_path_override(
+# TODO(vector-search): repoint to master commit once the vector-search branch merges
+git_override(
     module_name = "typedb_behaviour",
-    path = "../typedb-behaviour",
+    remote = "https://github.com/typedb/typedb-behaviour",
+    commit = "e79eb9926e3bb664ccfe073ee21244ed14de7e31",
 )
 
 # Rust rules need typedb_dependencies for patching
