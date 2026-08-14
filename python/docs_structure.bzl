@@ -87,6 +87,7 @@ dir_mapping = {
     "analyze.constraint.Value.adoc": "analyze",  # Longer suffix match to avoid ambiguity with the Value concept
     "VariableAnnotations.adoc": "analyze",
     "VariableAnnotationsVariant.adoc": "analyze",
+    "VectorSearch.adoc": "analyze",
 
     # Answer
     "ConceptDocument.adoc": "answer",

@@ -27,6 +27,7 @@ ConstraintAny:
  | ConstraintOr
  | ConstraintNot
  | ConstraintTry
+ | ConstraintVectorSearch
 ----
 
 

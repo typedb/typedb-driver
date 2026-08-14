@@ -234,6 +234,22 @@ Retrieves the value type of this value concept as a string.
 .Returns
 `string`
 
+[#_IReadOnlyList_float_TypeDB_Driver_Api_IValue_GetVector_]
+==== method ``GetVector``
+
+[source,cs]
+----
+IReadOnlyList< float > GetVector()
+----
+
+
+
+Returns a vector value of this value concept. If the value has another type, raises an exception.
+
+[caption=""]
+.Returns
+`IReadOnlyList< float >`
+
 [#_bool_IConcept_TypeDB_Driver_Api_IValue_IsValue_]
 ==== method ``IsValue``
 

@@ -1,0 +1,87 @@
+[#_VectorSearch]
+[.doc-api-reference-driver]
+=== VectorSearch
+
+`class`
+
+*Package*: `typedb.api.analyze.constraint`
+
+*Supertypes:*
+
+* `Constraint`
+
+Represents a vector search constraint: let &lt;attribute&gt;, &lt;similarity&gt; in cosine_similarity_search(&lt;attribute_type&gt;, &lt;query&gt;, &lt;threshold&gt;)
+
+// tag::methods[]
+[#_VectorSearch_attribute_]
+==== method ``attribute``
+
+[source,python]
+----
+attribute() -> ConstraintVertex
+----
+
+
+
+[caption=""]
+.Returns
+`ConstraintVertex`
+
+[#_VectorSearch_attribute_type_]
+==== method ``attribute_type``
+
+[source,python]
+----
+attribute_type() -> ConstraintVertex
+----
+
+
+
+[caption=""]
+.Returns
+`ConstraintVertex`
+
+[#_VectorSearch_query_]
+==== method ``query``
+
+[source,python]
+----
+query() -> ConstraintVertex
+----
+
+
+
+[caption=""]
+.Returns
+`ConstraintVertex`
+
+[#_VectorSearch_similarity_]
+==== method ``similarity``
+
+[source,python]
+----
+similarity() -> ConstraintVertex
+----
+
+
+
+[caption=""]
+.Returns
+`ConstraintVertex`
+
+[#_VectorSearch_threshold_]
+==== method ``threshold``
+
+[source,python]
+----
+threshold() -> ConstraintVertex
+----
+
+
+
+[caption=""]
+.Returns
+`ConstraintVertex`
+
+// end::methods[]
+

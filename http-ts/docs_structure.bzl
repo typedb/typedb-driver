@@ -100,6 +100,7 @@ dir_mapping = {
     "ConstraintSubExact.adoc": "analyze",
     "ConstraintTry.adoc": "analyze",
     "ConstraintValue.adoc": "analyze",
+    "ConstraintVectorSearch.adoc": "analyze",
 
     "ConstraintExpressionLegacy.adoc": "legacy",
     "ConstraintLinksLegacy.adoc": "legacy",
@@ -156,6 +157,7 @@ dir_mapping = {
     "TypeKind.adoc": "concept",
     "ValueKind.adoc": "concept",
     "ValueType.adoc": "concept",
+    "VectorValueType.adoc": "concept",
 
     "analyzeStaticFunctions.adoc": "analyze",
     "analyzed-conjunctionStaticFunctions.adoc": "analyze",

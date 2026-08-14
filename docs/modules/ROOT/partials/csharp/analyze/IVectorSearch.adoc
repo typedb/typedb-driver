@@ -1,0 +1,99 @@
+[#_IVectorSearch]
+[.doc-api-reference-driver]
+=== IVectorSearch
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+*Supertypes:*
+
+* `TypeDB.Driver.Api.Analyze.IConstraint`
+
+
+
+Represents a vector search constraint: let attribute, similarity in cosine_similarity_search(attribute_type, query, threshold)
+
+// tag::methods[]
+[#_IConstraintVertex_TypeDB_Driver_Api_Analyze_IVectorSearch_Attribute]
+==== method ``Attribute``
+
+[source,cs]
+----
+IConstraintVertex TypeDB.Driver.Api.Analyze.IVectorSearch.Attribute
+----
+
+
+
+The assigned attribute vertex.
+
+[caption=""]
+.Returns
+`IConstraintVertex`
+
+[#_IConstraintVertex_TypeDB_Driver_Api_Analyze_IVectorSearch_AttributeType]
+==== method ``AttributeType``
+
+[source,cs]
+----
+IConstraintVertex TypeDB.Driver.Api.Analyze.IVectorSearch.AttributeType
+----
+
+
+
+The searched attribute type vertex.
+
+[caption=""]
+.Returns
+`IConstraintVertex`
+
+[#_IConstraintVertex_TypeDB_Driver_Api_Analyze_IVectorSearch_Query]
+==== method ``Query``
+
+[source,cs]
+----
+IConstraintVertex TypeDB.Driver.Api.Analyze.IVectorSearch.Query
+----
+
+
+
+The query vector vertex.
+
+[caption=""]
+.Returns
+`IConstraintVertex`
+
+[#_IConstraintVertex_TypeDB_Driver_Api_Analyze_IVectorSearch_Similarity]
+==== method ``Similarity``
+
+[source,cs]
+----
+IConstraintVertex TypeDB.Driver.Api.Analyze.IVectorSearch.Similarity
+----
+
+
+
+The computed similarity vertex.
+
+[caption=""]
+.Returns
+`IConstraintVertex`
+
+[#_IConstraintVertex_TypeDB_Driver_Api_Analyze_IVectorSearch_Threshold]
+==== method ``Threshold``
+
+[source,cs]
+----
+IConstraintVertex TypeDB.Driver.Api.Analyze.IVectorSearch.Threshold
+----
+
+
+
+The similarity threshold vertex.
+
+[caption=""]
+.Returns
+`IConstraintVertex`
+
+// end::methods[]
+

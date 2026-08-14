@@ -737,3 +737,83 @@ The variant of the specified constraint
 .Returns
 `enum ConstraintVariant`
 
+[#_constraint_vector_search_get_attribute]
+==== function ``constraint_vector_search_get_attribute``
+
+[source,c]
+----
+struct ConstraintVertex* constraint_vector_search_get_attribute(const struct ConstraintWithSpan* constraint)
+----
+
+
+
+Unwraps the ``Constraint`` instance as a ``VectorSearch`` constraint, and returns the assigned attribute vertex. Will panic if the Constraint is not a VectorSearch constraint.
+
+[caption=""]
+.Returns
+`struct ConstraintVertex*`
+
+[#_constraint_vector_search_get_attribute_type]
+==== function ``constraint_vector_search_get_attribute_type``
+
+[source,c]
+----
+struct ConstraintVertex* constraint_vector_search_get_attribute_type(const struct ConstraintWithSpan* constraint)
+----
+
+
+
+Unwraps the ``Constraint`` instance as a ``VectorSearch`` constraint, and returns the searched attribute type vertex. Will panic if the Constraint is not a VectorSearch constraint.
+
+[caption=""]
+.Returns
+`struct ConstraintVertex*`
+
+[#_constraint_vector_search_get_query]
+==== function ``constraint_vector_search_get_query``
+
+[source,c]
+----
+struct ConstraintVertex* constraint_vector_search_get_query(const struct ConstraintWithSpan* constraint)
+----
+
+
+
+Unwraps the ``Constraint`` instance as a ``VectorSearch`` constraint, and returns the query vector vertex. Will panic if the Constraint is not a VectorSearch constraint.
+
+[caption=""]
+.Returns
+`struct ConstraintVertex*`
+
+[#_constraint_vector_search_get_similarity]
+==== function ``constraint_vector_search_get_similarity``
+
+[source,c]
+----
+struct ConstraintVertex* constraint_vector_search_get_similarity(const struct ConstraintWithSpan* constraint)
+----
+
+
+
+Unwraps the ``Constraint`` instance as a ``VectorSearch`` constraint, and returns the computed similarity vertex. Will panic if the Constraint is not a VectorSearch constraint.
+
+[caption=""]
+.Returns
+`struct ConstraintVertex*`
+
+[#_constraint_vector_search_get_threshold]
+==== function ``constraint_vector_search_get_threshold``
+
+[source,c]
+----
+struct ConstraintVertex* constraint_vector_search_get_threshold(const struct ConstraintWithSpan* constraint)
+----
+
+
+
+Unwraps the ``Constraint`` instance as a ``VectorSearch`` constraint, and returns the similarity threshold vertex. Will panic if the Constraint is not a VectorSearch constraint.
+
+[caption=""]
+.Returns
+`struct ConstraintVertex*`
+

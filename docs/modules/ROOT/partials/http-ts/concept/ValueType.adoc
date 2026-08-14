@@ -17,6 +17,7 @@ ValueType:
  | "duration"
  | "string"
  | "struct"
+ | VectorValueType
 ----
 
 

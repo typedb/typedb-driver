@@ -764,6 +764,29 @@ Implemented in TypeDB.Driver.Api.IValue.
 concept.IsValue()
 ----
 
+[#_bool_TypeDB_Driver_Api_IConcept_IsVector_]
+==== method ``IsVector``
+
+[source,cs]
+----
+bool IsVector()
+----
+
+
+
+Returns true if the value which this Concept holds is of type vector or if this Concept is an AttributeType of type vector.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.IsVector()
+----
+
 [#_bool_TypeDB_Driver_Api_IConcept_TryGetBoolean_]
 ==== method ``TryGetBoolean``
 
@@ -1084,6 +1107,29 @@ Retrieves the string describing the value type of this Concept. Returns null if 
 [source,cs]
 ----
 concept.TryGetValueType()
+----
+
+[#_IReadOnlyList_float_TypeDB_Driver_Api_IConcept_TryGetVector_]
+==== method ``TryGetVector``
+
+[source,cs]
+----
+IReadOnlyList< float >? TryGetVector()
+----
+
+
+
+Returns a vector value of this Concept. If it's not a Value or it has another type, returns null.
+
+[caption=""]
+.Returns
+`IReadOnlyList< float >?`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+concept.TryGetVector()
 ----
 
 // end::methods[]

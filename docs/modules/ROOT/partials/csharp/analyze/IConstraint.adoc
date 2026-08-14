@@ -299,6 +299,22 @@ Casts this constraint to a value constraint.
 .Returns
 `IValueConstraint`
 
+[#_IVectorSearch_TypeDB_Driver_Api_Analyze_IConstraint_AsVectorSearch_]
+==== method ``AsVectorSearch``
+
+[source,cs]
+----
+IVectorSearch AsVectorSearch()
+----
+
+
+
+Casts this constraint to a vector search constraint.
+
+[caption=""]
+.Returns
+`IVectorSearch`
+
 [#_bool_TypeDB_Driver_Api_Analyze_IConstraint_IsComparison]
 ==== method ``IsComparison``
 
@@ -582,6 +598,22 @@ bool TypeDB.Driver.Api.Analyze.IConstraint.IsValue
 
 
 Checks if this constraint is a value constraint.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_bool_TypeDB_Driver_Api_Analyze_IConstraint_IsVectorSearch]
+==== method ``IsVectorSearch``
+
+[source,cs]
+----
+bool TypeDB.Driver.Api.Analyze.IConstraint.IsVectorSearch
+----
+
+
+
+Checks if this constraint is a vector search constraint.
 
 [caption=""]
 .Returns

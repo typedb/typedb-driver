@@ -39,6 +39,7 @@ dir_mapping = {
     "Constraint.Sub.adoc": "analyze",
     "Constraint.Try.adoc": "analyze",
     "Constraint.Value.adoc": "analyze",
+    "Constraint.VectorSearch.adoc": "analyze",
     "ConstraintVertex.adoc": "analyze",
     "Fetch.adoc": "analyze",
     "Fetch.FetchLeaf.adoc": "analyze",

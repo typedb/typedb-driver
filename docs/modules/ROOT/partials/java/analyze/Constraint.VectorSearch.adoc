@@ -1,6 +1,6 @@
-[#_Constraint_Sub]
+[#_Constraint_VectorSearch]
 [.doc-api-reference-driver]
-=== Constraint.Sub
+=== Constraint.VectorSearch
 
 `class`
 
@@ -10,13 +10,24 @@
 
 * `Constraint`
 
-Represents a "sub" constraint: 
- sub(!) 
+Represents a vector search constraint: let 
+ , 
+ 
+  in cosine_similarity_search(
+  
+   , 
+   
+    , 
+    
+     )
+    
+   
+  
  
 
 
 // tag::methods[]
-[#_Constraint_Sub_asComparison_]
+[#_Constraint_VectorSearch_asComparison_]
 ==== method ``asComparison``
 
 [source,java]
@@ -30,7 +41,7 @@ Constraint.Comparison asComparison()
 .Returns
 `Constraint.Comparison`
 
-[#_Constraint_Sub_asExpression_]
+[#_Constraint_VectorSearch_asExpression_]
 ==== method ``asExpression``
 
 [source,java]
@@ -44,7 +55,7 @@ Constraint.Expression asExpression()
 .Returns
 `Constraint.Expression`
 
-[#_Constraint_Sub_asFunctionCall_]
+[#_Constraint_VectorSearch_asFunctionCall_]
 ==== method ``asFunctionCall``
 
 [source,java]
@@ -58,7 +69,7 @@ Constraint.FunctionCall asFunctionCall()
 .Returns
 `Constraint.FunctionCall`
 
-[#_Constraint_Sub_asHas_]
+[#_Constraint_VectorSearch_asHas_]
 ==== method ``asHas``
 
 [source,java]
@@ -72,7 +83,7 @@ Constraint.Has asHas()
 .Returns
 `Constraint.Has`
 
-[#_Constraint_Sub_asIid_]
+[#_Constraint_VectorSearch_asIid_]
 ==== method ``asIid``
 
 [source,java]
@@ -86,7 +97,7 @@ Constraint.Iid asIid()
 .Returns
 `Constraint.Iid`
 
-[#_Constraint_Sub_asIs_]
+[#_Constraint_VectorSearch_asIs_]
 ==== method ``asIs``
 
 [source,java]
@@ -100,7 +111,7 @@ Constraint.Is asIs()
 .Returns
 `Constraint.Is`
 
-[#_Constraint_Sub_asIsa_]
+[#_Constraint_VectorSearch_asIsa_]
 ==== method ``asIsa``
 
 [source,java]
@@ -114,7 +125,7 @@ Constraint.Isa asIsa()
 .Returns
 `Constraint.Isa`
 
-[#_Constraint_Sub_asKind_]
+[#_Constraint_VectorSearch_asKind_]
 ==== method ``asKind``
 
 [source,java]
@@ -128,7 +139,7 @@ Constraint.Kind asKind()
 .Returns
 `Constraint.Kind`
 
-[#_Constraint_Sub_asLabel_]
+[#_Constraint_VectorSearch_asLabel_]
 ==== method ``asLabel``
 
 [source,java]
@@ -142,7 +153,7 @@ Constraint.Label asLabel()
 .Returns
 `Constraint.Label`
 
-[#_Constraint_Sub_asLinks_]
+[#_Constraint_VectorSearch_asLinks_]
 ==== method ``asLinks``
 
 [source,java]
@@ -156,7 +167,7 @@ Constraint.Links asLinks()
 .Returns
 `Constraint.Links`
 
-[#_Constraint_Sub_asNot_]
+[#_Constraint_VectorSearch_asNot_]
 ==== method ``asNot``
 
 [source,java]
@@ -170,7 +181,7 @@ Constraint.Not asNot()
 .Returns
 `Constraint.Not`
 
-[#_Constraint_Sub_asOr_]
+[#_Constraint_VectorSearch_asOr_]
 ==== method ``asOr``
 
 [source,java]
@@ -184,7 +195,7 @@ Constraint.Or asOr()
 .Returns
 `Constraint.Or`
 
-[#_Constraint_Sub_asOwns_]
+[#_Constraint_VectorSearch_asOwns_]
 ==== method ``asOwns``
 
 [source,java]
@@ -198,7 +209,7 @@ Constraint.Owns asOwns()
 .Returns
 `Constraint.Owns`
 
-[#_Constraint_Sub_asPlays_]
+[#_Constraint_VectorSearch_asPlays_]
 ==== method ``asPlays``
 
 [source,java]
@@ -212,7 +223,7 @@ Constraint.Plays asPlays()
 .Returns
 `Constraint.Plays`
 
-[#_Constraint_Sub_asRelates_]
+[#_Constraint_VectorSearch_asRelates_]
 ==== method ``asRelates``
 
 [source,java]
@@ -226,7 +237,7 @@ Constraint.Relates asRelates()
 .Returns
 `Constraint.Relates`
 
-[#_Constraint_Sub_asSub_]
+[#_Constraint_VectorSearch_asSub_]
 ==== method ``asSub``
 
 [source,java]
@@ -240,7 +251,7 @@ Constraint.Sub asSub()
 .Returns
 `Constraint.Sub`
 
-[#_Constraint_Sub_asTry_]
+[#_Constraint_VectorSearch_asTry_]
 ==== method ``asTry``
 
 [source,java]
@@ -254,7 +265,7 @@ Constraint.Try asTry()
 .Returns
 `Constraint.Try`
 
-[#_Constraint_Sub_asValue_]
+[#_Constraint_VectorSearch_asValue_]
 ==== method ``asValue``
 
 [source,java]
@@ -268,7 +279,7 @@ Constraint.Value asValue()
 .Returns
 `Constraint.Value`
 
-[#_Constraint_Sub_asVectorSearch_]
+[#_Constraint_VectorSearch_asVectorSearch_]
 ==== method ``asVectorSearch``
 
 [source,java]
@@ -282,21 +293,35 @@ Constraint.VectorSearch asVectorSearch()
 .Returns
 `Constraint.VectorSearch`
 
-[#_Constraint_Sub_exactness_]
-==== method ``exactness``
+[#_Constraint_VectorSearch_attribute_]
+==== method ``attribute``
 
 [source,java]
 ----
-com.typedb.driver.jni.ConstraintExactness exactness()
+ConstraintVertex attribute()
 ----
 
 
 
 [caption=""]
 .Returns
-`com.typedb.driver.jni.ConstraintExactness`
+`ConstraintVertex`
 
-[#_Constraint_Sub_isComparison_]
+[#_Constraint_VectorSearch_attributeType_]
+==== method ``attributeType``
+
+[source,java]
+----
+ConstraintVertex attributeType()
+----
+
+
+
+[caption=""]
+.Returns
+`ConstraintVertex`
+
+[#_Constraint_VectorSearch_isComparison_]
 ==== method ``isComparison``
 
 [source,java]
@@ -310,7 +335,7 @@ boolean isComparison()
 .Returns
 `boolean`
 
-[#_Constraint_Sub_isExpression_]
+[#_Constraint_VectorSearch_isExpression_]
 ==== method ``isExpression``
 
 [source,java]
@@ -324,7 +349,7 @@ boolean isExpression()
 .Returns
 `boolean`
 
-[#_Constraint_Sub_isFunctionCall_]
+[#_Constraint_VectorSearch_isFunctionCall_]
 ==== method ``isFunctionCall``
 
 [source,java]
@@ -338,7 +363,7 @@ boolean isFunctionCall()
 .Returns
 `boolean`
 
-[#_Constraint_Sub_isHas_]
+[#_Constraint_VectorSearch_isHas_]
 ==== method ``isHas``
 
 [source,java]
@@ -352,7 +377,7 @@ boolean isHas()
 .Returns
 `boolean`
 
-[#_Constraint_Sub_isIid_]
+[#_Constraint_VectorSearch_isIid_]
 ==== method ``isIid``
 
 [source,java]
@@ -366,7 +391,7 @@ boolean isIid()
 .Returns
 `boolean`
 
-[#_Constraint_Sub_isIs_]
+[#_Constraint_VectorSearch_isIs_]
 ==== method ``isIs``
 
 [source,java]
@@ -380,7 +405,7 @@ boolean isIs()
 .Returns
 `boolean`
 
-[#_Constraint_Sub_isIsa_]
+[#_Constraint_VectorSearch_isIsa_]
 ==== method ``isIsa``
 
 [source,java]
@@ -394,7 +419,7 @@ boolean isIsa()
 .Returns
 `boolean`
 
-[#_Constraint_Sub_isKind_]
+[#_Constraint_VectorSearch_isKind_]
 ==== method ``isKind``
 
 [source,java]
@@ -408,7 +433,7 @@ boolean isKind()
 .Returns
 `boolean`
 
-[#_Constraint_Sub_isLabel_]
+[#_Constraint_VectorSearch_isLabel_]
 ==== method ``isLabel``
 
 [source,java]
@@ -422,7 +447,7 @@ boolean isLabel()
 .Returns
 `boolean`
 
-[#_Constraint_Sub_isLinks_]
+[#_Constraint_VectorSearch_isLinks_]
 ==== method ``isLinks``
 
 [source,java]
@@ -436,7 +461,7 @@ boolean isLinks()
 .Returns
 `boolean`
 
-[#_Constraint_Sub_isNot_]
+[#_Constraint_VectorSearch_isNot_]
 ==== method ``isNot``
 
 [source,java]
@@ -450,7 +475,7 @@ boolean isNot()
 .Returns
 `boolean`
 
-[#_Constraint_Sub_isOr_]
+[#_Constraint_VectorSearch_isOr_]
 ==== method ``isOr``
 
 [source,java]
@@ -464,7 +489,7 @@ boolean isOr()
 .Returns
 `boolean`
 
-[#_Constraint_Sub_isOwns_]
+[#_Constraint_VectorSearch_isOwns_]
 ==== method ``isOwns``
 
 [source,java]
@@ -478,7 +503,7 @@ boolean isOwns()
 .Returns
 `boolean`
 
-[#_Constraint_Sub_isPlays_]
+[#_Constraint_VectorSearch_isPlays_]
 ==== method ``isPlays``
 
 [source,java]
@@ -492,7 +517,7 @@ boolean isPlays()
 .Returns
 `boolean`
 
-[#_Constraint_Sub_isRelates_]
+[#_Constraint_VectorSearch_isRelates_]
 ==== method ``isRelates``
 
 [source,java]
@@ -506,7 +531,7 @@ boolean isRelates()
 .Returns
 `boolean`
 
-[#_Constraint_Sub_isSub_]
+[#_Constraint_VectorSearch_isSub_]
 ==== method ``isSub``
 
 [source,java]
@@ -520,7 +545,7 @@ boolean isSub()
 .Returns
 `boolean`
 
-[#_Constraint_Sub_isTry_]
+[#_Constraint_VectorSearch_isTry_]
 ==== method ``isTry``
 
 [source,java]
@@ -534,7 +559,7 @@ boolean isTry()
 .Returns
 `boolean`
 
-[#_Constraint_Sub_isValue_]
+[#_Constraint_VectorSearch_isValue_]
 ==== method ``isValue``
 
 [source,java]
@@ -548,7 +573,7 @@ boolean isValue()
 .Returns
 `boolean`
 
-[#_Constraint_Sub_isVectorSearch_]
+[#_Constraint_VectorSearch_isVectorSearch_]
 ==== method ``isVectorSearch``
 
 [source,java]
@@ -562,7 +587,35 @@ boolean isVectorSearch()
 .Returns
 `boolean`
 
-[#_Constraint_Sub_span_]
+[#_Constraint_VectorSearch_query_]
+==== method ``query``
+
+[source,java]
+----
+ConstraintVertex query()
+----
+
+
+
+[caption=""]
+.Returns
+`ConstraintVertex`
+
+[#_Constraint_VectorSearch_similarity_]
+==== method ``similarity``
+
+[source,java]
+----
+ConstraintVertex similarity()
+----
+
+
+
+[caption=""]
+.Returns
+`ConstraintVertex`
+
+[#_Constraint_VectorSearch_span_]
 ==== method ``span``
 
 [source,java]
@@ -576,12 +629,12 @@ Gets the span of this constraint.
 .Returns
 `Constraint.Span`
 
-[#_Constraint_Sub_subtype_]
-==== method ``subtype``
+[#_Constraint_VectorSearch_threshold_]
+==== method ``threshold``
 
 [source,java]
 ----
-ConstraintVertex subtype()
+ConstraintVertex threshold()
 ----
 
 
@@ -590,21 +643,7 @@ ConstraintVertex subtype()
 .Returns
 `ConstraintVertex`
 
-[#_Constraint_Sub_supertype_]
-==== method ``supertype``
-
-[source,java]
-----
-ConstraintVertex supertype()
-----
-
-
-
-[caption=""]
-.Returns
-`ConstraintVertex`
-
-[#_Constraint_Sub_variant_]
+[#_Constraint_VectorSearch_variant_]
 ==== method ``variant``
 
 [source,java]
