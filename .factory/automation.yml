@@ -34,12 +34,6 @@ build:
 #        bazel run --config=ci @typedb_dependencies//factory/analysis:dependency-analysis
 
   correctness:
-    # TODO: temporary debug environment for reproducing CI failures — remove before merge
-    debug-sleep:
-      image: typedb-ubuntu-22.04
-      command: |
-        sleep 3600
-
     build:
       image: typedb-ubuntu-22.04
       machine: 16-core-64-gb
