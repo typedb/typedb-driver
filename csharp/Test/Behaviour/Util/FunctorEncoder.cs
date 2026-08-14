@@ -290,6 +290,16 @@ namespace TypeDB.Driver.Test.Behaviour
                     var conjunction = Pipeline.GetConjunction(tryConstraint.Conjunction);
                     return MakeFunctor("Try", Encode(conjunction!));
                 }
+                else if (constraint.IsVectorSearch)
+                {
+                    var vectorSearch = constraint.AsVectorSearch();
+                    return MakeFunctor("VectorSearch",
+                        Encode(vectorSearch.Attribute),
+                        Encode(vectorSearch.AttributeType),
+                        Encode(vectorSearch.Query),
+                        Encode(vectorSearch.Threshold),
+                        Encode(vectorSearch.Similarity));
+                }
                 else
                 {
                     throw new ArgumentException($"Unhandled constraint variant: {constraint.Variant}");

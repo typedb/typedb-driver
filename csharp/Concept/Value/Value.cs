@@ -20,6 +20,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 
 using TypeDB.Driver.Api;
 using TypeDB.Driver.Common;
@@ -169,9 +170,17 @@ namespace TypeDB.Driver.Concept
             if (IsDatetimeTZ()) return GetDatetimeTZ().ToString();
             if (IsDuration()) return GetDuration().ToString();
             if (IsStruct()) return GetStruct().ToString() ?? "{}";
-            if (IsVector()) return "[" + string.Join(", ", GetVector()) + "]";
+            if (IsVector()) return "[" + string.Join(", ", GetVector().Select(FormatVectorElement)) + "]";
 
             throw new TypeDBDriverException(InternalError.UNEXPECTED_NATIVE_VALUE);
+        }
+
+        // Matches Java's Float.toString: culture-invariant, integral values keep a trailing ".0"
+        private static string FormatVectorElement(float element)
+        {
+            var formatted = element.ToString("R", CultureInfo.InvariantCulture);
+            return formatted.Contains('.') || formatted.Contains('E') || formatted.Contains('e')
+                ? formatted : formatted + ".0";
         }
 
         public override bool Equals(object? obj)
