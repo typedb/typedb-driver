@@ -179,6 +179,7 @@ build:
     test-c-integration:
       image: typedb-ubuntu-22.04
       command: |
+        sudo sysctl -w vm.mmap_rnd_bits=28
         export ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
         export ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
         bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
