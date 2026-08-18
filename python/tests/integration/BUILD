@@ -26,7 +26,8 @@ exports_files(
 
 py_test(
     name = "test_example",
-    srcs = ["test_example.py"],
+    srcs = ["test_example.py", "common.py"],
+    imports = ["."],
     deps = [
         "//python:driver_python",
         requirement("PyHamcrest"),
@@ -38,7 +39,8 @@ py_test(
 
 py_test(
     name = "test_driver",
-    srcs = ["test_driver.py"],
+    srcs = ["test_driver.py", "common.py"],
+    imports = ["."],
     deps = [
         "//python:driver_python",
         requirement("PyHamcrest"),
@@ -50,7 +52,8 @@ py_test(
 
 py_test(
     name = "test_values",
-    srcs = ["test_values.py"],
+    srcs = ["test_values.py", "common.py"],
+    imports = ["."],
     deps = [
         "//python:driver_python",
         requirement("PyHamcrest"),

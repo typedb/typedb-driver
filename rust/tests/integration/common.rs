@@ -17,9 +17,17 @@
  * under the License.
  */
 
-mod cluster;
-mod common;
-mod driver;
-mod example;
-mod lifecycle;
-mod values;
+use typedb_driver::{Addresses, Credentials, DriverOptions, DriverTlsConfig, TypeDBDriver};
+
+pub async fn delete_database_if_exists(name: &str) {
+    let driver = TypeDBDriver::new(
+        Addresses::try_from_address_str(TypeDBDriver::DEFAULT_ADDRESS).unwrap(),
+        Credentials::new("admin", "password"),
+        DriverOptions::new(DriverTlsConfig::disabled()),
+    )
+    .await
+    .unwrap();
+    if driver.databases().contains(name).await.unwrap() {
+        driver.databases().get(name).await.unwrap().delete().await.unwrap();
+    }
+}

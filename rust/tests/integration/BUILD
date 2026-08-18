@@ -40,7 +40,8 @@ rust_test(
 
 rust_test(
     name = "test_driver",
-    srcs = ["driver.rs"],
+    srcs = ["driver.rs", "common.rs"],
+    crate_root = "driver.rs",
     deps = [
         "//rust:typedb_driver",
         "@crates//:async-std",
@@ -74,4 +75,15 @@ checkstyle_test(
     include = glob(["*"]),
     license_type = "apache-header",
     size = "small",
+)
+
+rust_test(
+    name = "test_lifecycle",
+    srcs = ["lifecycle.rs"],
+    deps = [
+        "//rust:typedb_driver",
+        "@crates//:async-std",
+        "@crates//:serial_test",
+        "@crates//:tokio",
+    ],
 )

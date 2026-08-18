@@ -41,6 +41,7 @@ import com.typedb.driver.api.concept.type.EntityType;
 import com.typedb.driver.api.database.Database;
 import com.typedb.driver.common.Promise;
 import com.typedb.driver.common.exception.TypeDBDriverException;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -71,6 +72,13 @@ public class ExampleTest {
         if (typedbDriver.databases().contains("typedb")) {
             typedbDriver.databases().get("typedb").delete();
         }
+        typedbDriver.close();
+    }
+
+    @AfterClass
+    public static void tearDownClass() {
+        Driver typedbDriver = TypeDB.driver(TypeDB.DEFAULT_ADDRESS, new Credentials("admin", "password"), new DriverOptions(DriverTlsConfig.disabled()));
+        Util.deleteDatabaseIfExists(typedbDriver, "typedb");
         typedbDriver.close();
     }
 

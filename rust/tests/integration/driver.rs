@@ -22,20 +22,13 @@ use std::sync::{
     atomic::{AtomicBool, Ordering},
 };
 
+mod common;
+
 use serial_test::serial;
 use typedb_driver::{Addresses, Credentials, DriverOptions, DriverTlsConfig, TransactionType, TypeDBDriver};
 
 async fn cleanup() {
-    let driver = TypeDBDriver::new(
-        Addresses::try_from_address_str(TypeDBDriver::DEFAULT_ADDRESS).unwrap(),
-        Credentials::new("admin", "password"),
-        DriverOptions::new(DriverTlsConfig::disabled()),
-    )
-    .await
-    .unwrap();
-    if driver.databases().contains("typedb").await.unwrap() {
-        driver.databases().get("typedb").await.unwrap().delete().await.unwrap();
-    }
+    common::delete_database_if_exists("typedb").await;
 }
 
 #[test]
@@ -73,7 +66,8 @@ fn transaction_on_close_callback() {
             // This prevents the loop from consuming 100% of a CPU core.
             std::thread::yield_now();
         }
-        assert!(close_called.load(Ordering::SeqCst))
+        assert!(close_called.load(Ordering::SeqCst));
+        cleanup().await;
     })
 }
 
@@ -99,5 +93,7 @@ fn transaction_on_close_after_close_does_not_panic() {
 
         transaction.on_close(Box::new(|_| {})).await.unwrap();
         transaction.close().await.unwrap();
+        drop(driver);
+        cleanup().await;
     })
 }

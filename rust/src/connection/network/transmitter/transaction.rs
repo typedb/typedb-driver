@@ -36,7 +36,7 @@ use tokio::sync::oneshot::channel as oneshot;
 use tokio::{
     sync::{
         mpsc::{UnboundedReceiver, UnboundedSender, unbounded_channel as unbounded_async},
-        oneshot::{Sender as AsyncOneshotSender, channel as oneshot_async},
+        oneshot::channel as oneshot_async,
     },
     task,
 };
@@ -50,14 +50,14 @@ use super::response_sink::{ResponseSink, StreamResponse};
 use crate::{
     Error,
     common::{
-        Callback, Promise, RequestID, Result, box_promise,
+        Promise, RequestID, Result, box_promise,
         error::ConnectionError,
         stream::{NetworkStream, Stream},
     },
     connection::{
         message::{QueryResponse, TransactionRequest, TransactionResponse},
         network::proto::{FromProto, IntoProto, TryFromProto},
-        runtime::BackgroundRuntime,
+        runtime::{BackgroundRuntime, CallbackMessage},
     },
     resolve,
 };
@@ -291,7 +291,7 @@ impl TransactionTransmitter {
             Box<dyn FnOnce(Option<Error>) + Send + Sync>,
             UnboundedSender<()>,
         )>,
-        callback_handler_sink: Sender<(Callback, AsyncOneshotSender<()>)>,
+        callback_handler_sink: Sender<CallbackMessage>,
         shutdown_sink: UnboundedSender<()>,
         shutdown_signal: UnboundedReceiver<()>,
     ) {
@@ -409,7 +409,7 @@ struct ResponseCollector {
     is_open: Arc<AtomicCell<bool>>,
     error: Arc<RwLock<Option<Error>>>,
     on_close: Arc<RwLock<Vec<Box<dyn FnOnce(Option<Error>) + Send + Sync>>>>,
-    callback_handler_sink: Sender<(Callback, AsyncOneshotSender<()>)>,
+    callback_handler_sink: Sender<CallbackMessage>,
 }
 
 impl ResponseCollector {
@@ -511,7 +511,11 @@ impl ResponseCollector {
         let on_close_callbacks = std::mem::take(&mut *self.on_close.write().unwrap());
         for callback in on_close_callbacks {
             let (response_sink, response) = oneshot_async();
-            self.callback_handler_sink.send((Box::new(move || callback(None)), response_sink)).unwrap();
+            // Best-effort: the handler is gone once the runtime has been shut down, in which case the send
+            // fails, the response sink is dropped with it, and the await below returns immediately.
+            self.callback_handler_sink
+                .send(CallbackMessage::Invoke(Box::new(move || callback(None)), response_sink))
+                .ok();
             response.await.ok();
         }
     }
@@ -527,7 +531,9 @@ impl ResponseCollector {
         for callback in callbacks {
             let error = error.clone();
             let (response_sink, response) = oneshot_async();
-            self.callback_handler_sink.send((Box::new(move || callback(Some(error))), response_sink)).unwrap();
+            self.callback_handler_sink
+                .send(CallbackMessage::Invoke(Box::new(move || callback(Some(error))), response_sink))
+                .ok();
             response.await.ok();
         }
     }
