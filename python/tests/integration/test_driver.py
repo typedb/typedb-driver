@@ -22,6 +22,8 @@ import time
 from hamcrest import *
 from typedb.driver import *
 
+from common import delete_database_if_exists
+
 
 class TestDriver(TestCase):
 
@@ -30,6 +32,9 @@ class TestDriver(TestCase):
                            DriverOptions(DriverTlsConfig.disabled())) as driver:
             if driver.databases.contains("typedb"):
                 driver.databases.get("typedb").delete()
+
+    def tearDown(self):
+        delete_database_if_exists("typedb")
 
     def test_transaction_on_close_callback(self):
         with TypeDB.driver(TypeDB.DEFAULT_ADDRESS, Credentials("admin", "password"), DriverOptions(DriverTlsConfig.disabled())) as driver:

@@ -25,6 +25,8 @@ from unittest import TestCase
 from hamcrest import *
 from typedb.driver import *
 
+from common import delete_database_if_exists
+
 TYPEDB = "typedb"
 WRITE = TransactionType.WRITE
 READ = TransactionType.READ
@@ -39,6 +41,9 @@ class TestValues(TestCase):
             if driver.databases.contains(TYPEDB):
                 driver.databases.get(TYPEDB).delete()
             driver.databases.create(TYPEDB)
+
+    def tearDown(self):
+        delete_database_if_exists(TYPEDB)
 
     def test_values(self):
         attribute_value_types = {

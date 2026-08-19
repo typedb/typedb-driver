@@ -17,9 +17,14 @@
  * under the License.
  */
 
-mod cluster;
-mod common;
-mod driver;
-mod example;
-mod lifecycle;
-mod values;
+package com.typedb.driver.test.integration;
+
+import com.typedb.driver.api.Driver;
+
+public class Util {
+    public static void deleteDatabaseIfExists(Driver driver, String name) {
+        if (driver.databases().contains(name)) {
+            driver.databases().get(name).delete();
+        }
+    }
+}

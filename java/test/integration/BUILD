@@ -25,7 +25,7 @@ exports_files(
 
 typedb_java_test(
     name = "test-example",
-    srcs = ["ExampleTest.java"],
+    srcs = ["ExampleTest.java", "Util.java"],
     test_class = "com.typedb.driver.test.integration.ExampleTest",
     deps = [
         # Internal dependencies
@@ -42,7 +42,7 @@ typedb_java_test(
 
 typedb_java_test(
     name = "test-driver",
-    srcs = ["DriverTest.java"],
+    srcs = ["DriverTest.java", "Util.java"],
     test_class = "com.typedb.driver.test.integration.DriverTest",
     deps = [
         # Internal dependencies
@@ -59,7 +59,7 @@ typedb_java_test(
 
 typedb_java_test(
     name = "test-value",
-    srcs = ["ValueTest.java"],
+    srcs = ["ValueTest.java", "Util.java"],
     test_class = "com.typedb.driver.test.integration.ValueTest",
     deps = [
         # Internal dependencies

@@ -19,6 +19,7 @@ import unittest
 from unittest import TestCase
 
 from hamcrest import *
+from common import delete_database_if_exists
 # EXAMPLE START MARKER
 from typedb.driver import *
 
@@ -31,6 +32,9 @@ class TestExample(TestCase):
                            DriverOptions(DriverTlsConfig.disabled())) as driver:
             if driver.databases.contains("typedb"):
                 driver.databases.get("typedb").delete()
+
+    def tearDown(self):
+        delete_database_if_exists("typedb")
 
     # EXAMPLE START MARKER
 

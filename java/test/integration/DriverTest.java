@@ -52,6 +52,7 @@ public class DriverTest {
 
     @AfterClass
     public static void close() {
+        Util.deleteDatabaseIfExists(typedbDriver, DB_NAME);
         typedbDriver.close();
     }
 
