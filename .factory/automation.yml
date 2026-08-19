@@ -156,14 +156,8 @@ build:
         bazel run --config=ci @typedb_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run --config=ci @typedb_dependencies//distribution/artifact:create-netrc
 
-        # TODO: run `bazel test --config=ci //rust/tests/behaviour/...` instead of multiple tests (cannot do Clustered migration now)
         source tool/test/start-cluster-servers.sh 3 &&
-          bazel test --config=ci //rust/tests/behaviour/connection/... --test_env=ROOT_CA=$ROOT_CA --//rust/tests/behaviour/config:mode=cluster --test_output=streamed &&
-          bazel test --config=ci //rust/tests/behaviour/driver:test_concept --test_env=ROOT_CA=$ROOT_CA --//rust/tests/behaviour/config:mode=cluster --test_output=streamed &&
-          bazel test --config=ci //rust/tests/behaviour/driver:test_connection --test_env=ROOT_CA=$ROOT_CA --//rust/tests/behaviour/config:mode=cluster --test_output=streamed &&
-          bazel test --config=ci //rust/tests/behaviour/driver:test_query --test_env=ROOT_CA=$ROOT_CA --//rust/tests/behaviour/config:mode=cluster --test_output=streamed &&
-          bazel test --config=ci //rust/tests/behaviour/driver:test_user --test_env=ROOT_CA=$ROOT_CA --//rust/tests/behaviour/config:mode=cluster --test_output=streamed &&
-          bazel test --config=ci //rust/tests/behaviour/driver:test_cluster --test_env=ROOT_CA=$ROOT_CA --//rust/tests/behaviour/config:mode=cluster --test_output=streamed &&
+          bazel test --config=ci //rust/tests/behaviour/... --test_env=ROOT_CA=$ROOT_CA --//rust/tests/behaviour/config:mode=cluster --test_output=streamed &&
           export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-cluster-servers.sh
         exit $TEST_SUCCESS
@@ -240,14 +234,8 @@ build:
             export CARGO_BAZEL_GENERATOR_SHA256="$CARGO_BAZEL_GENERATOR_SHA256_LINUX_X86_64"
         fi
 
-        # TODO: run `.factory/test-cluster.sh //java/test/behaviour/...` instead of multiple tests (cannot do Clustered migration now)
         source tool/test/start-cluster-servers.sh 3 &&
-          .factory/test-cluster.sh //java/test/behaviour/connection/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
-          .factory/test-cluster.sh //java/test/behaviour/driver/concept/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
-          .factory/test-cluster.sh //java/test/behaviour/driver/connection/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
-          .factory/test-cluster.sh //java/test/behaviour/driver/query/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
-          .factory/test-cluster.sh //java/test/behaviour/driver/user/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
-          .factory/test-cluster.sh //java/test/behaviour/driver/cluster/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
+          .factory/test-cluster.sh //java/test/behaviour/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
           export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-cluster-servers.sh
         exit $TEST_SUCCESS
@@ -312,14 +300,8 @@ build:
             export CARGO_BAZEL_GENERATOR_SHA256="$CARGO_BAZEL_GENERATOR_SHA256_LINUX_X86_64"
         fi
 
-        # TODO: run `.factory/test-cluster.sh //python/tests/behaviour/...` instead of multiple tests (cannot do Clustered migration now)
         source tool/test/start-cluster-servers.sh 3 &&
-          .factory/test-cluster.sh //python/tests/behaviour/connection/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
-          .factory/test-cluster.sh //python/tests/behaviour/driver/concept/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
-          .factory/test-cluster.sh //python/tests/behaviour/driver/connection/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
-          .factory/test-cluster.sh //python/tests/behaviour/driver/query/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
-          .factory/test-cluster.sh //python/tests/behaviour/driver/user/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
-          .factory/test-cluster.sh //python/tests/behaviour/driver/cluster/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
+          .factory/test-cluster.sh //python/tests/behaviour/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
           export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-cluster-servers.sh
         exit $TEST_SUCCESS
@@ -452,15 +434,8 @@ build:
             export CARGO_BAZEL_GENERATOR_SHA256="$CARGO_BAZEL_GENERATOR_SHA256_LINUX_X86_64"
         fi
 
-        # TODO: run `.factory/test-cluster.sh //csharp/Test/Behaviour/...` instead of multiple tests (cannot do Clustered migration now)
         source tool/test/start-cluster-servers.sh 3 &&
-          .factory/test-cluster.sh //csharp/Test/Behaviour/Connection/Database/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
-          .factory/test-cluster.sh //csharp/Test/Behaviour/Connection/Transaction/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
-          .factory/test-cluster.sh //csharp/Test/Behaviour/Driver/Concept/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
-          .factory/test-cluster.sh //csharp/Test/Behaviour/Driver/Connection/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
-          .factory/test-cluster.sh //csharp/Test/Behaviour/Driver/Query/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
-          .factory/test-cluster.sh //csharp/Test/Behaviour/Driver/User/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
-          .factory/test-cluster.sh //csharp/Test/Behaviour/Driver/Cluster/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
+          .factory/test-cluster.sh //csharp/Test/Behaviour/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed &&
           export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-cluster-servers.sh
         exit $TEST_SUCCESS

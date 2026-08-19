@@ -22,7 +22,7 @@
 #![allow(clippy::too_many_arguments, reason = "too many false positives")]
 
 use std::{
-    collections::{HashSet, VecDeque},
+    collections::{HashMap, HashSet, VecDeque},
     error::Error,
     fmt,
     fmt::Formatter,
@@ -38,8 +38,8 @@ use futures::{
 use itertools::Itertools;
 use tokio::time::{Duration, sleep};
 use typedb_driver::{
-    Addresses, BoxStream, Credentials, DriverOptions, DriverTlsConfig, QueryOptions, Result as TypeDBResult,
-    ServerRouting, Transaction, TransactionOptions, TypeDBDriver,
+    Addresses, BoxStream, Credentials, DatabaseImportStream, DriverOptions, DriverTlsConfig, QueryOptions,
+    Result as TypeDBResult, ServerRouting, Transaction, TransactionOptions, TypeDBDriver,
     analyze::AnalyzedQuery,
     answer::{ConceptDocument, ConceptRow, QueryAnswer, QueryType},
     given::GivenRows,
@@ -120,6 +120,7 @@ pub struct Context {
     pub collected_documents: Option<Vec<ConceptDocument>>,
     pub concurrent_answers: Vec<QueryAnswer>,
     pub concurrent_rows_streams: Option<Vec<BoxStream<'static, TypeDBResult<ConceptRow>>>>,
+    pub open_imports: HashMap<String, DatabaseImportStream>,
 }
 
 impl fmt::Debug for Context {
@@ -549,6 +550,7 @@ impl Default for Context {
             collected_documents: None,
             concurrent_answers: Vec::new(),
             concurrent_rows_streams: None,
+            open_imports: HashMap::new(),
         }
     }
 }

@@ -43,6 +43,8 @@ namespace TypeDB.Driver.Test.TestRunner
 
             var typeName = args.Length == 1 ? args[0] : null;
 
+            FeatureFileFilter.PrepareFeatureFiles();
+
             using (var runner = AssemblyRunner.WithoutAppDomain(testAssembly))
             {
                 runner.OnDiscoveryComplete = OnDiscoveryComplete;

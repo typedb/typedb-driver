@@ -266,6 +266,32 @@ async fn connection_import_database_from_data_file_and_schema(
 }
 
 #[apply(generic_step)]
+#[step(expr = r"connection opens import of database\({word}\) with schema file\({word}\)")]
+async fn connection_opens_import_of_database(context: &mut Context, name: String, schema_file_name: String) {
+    let schema = read_file_to_string(context.get_full_file_path(&schema_file_name));
+    let import = context.driver.as_ref().unwrap().databases().import_stream(name.clone(), schema).await.unwrap();
+    context.open_imports.insert(name, import);
+}
+
+#[apply(generic_step)]
+#[step(expr = r"connection completes the open import of database\({word}\){may_error}")]
+async fn connection_completes_the_open_import_of_database(
+    context: &mut Context,
+    name: String,
+    may_error: params::MayError,
+) {
+    let import = context.open_imports.remove(&name).expect("Expected an open import");
+    may_error.check(import.done().await);
+}
+
+#[apply(generic_step)]
+#[step(expr = r"connection aborts the open import of database\({word}\)")]
+async fn connection_aborts_the_open_import_of_database(context: &mut Context, name: String) {
+    let import = context.open_imports.remove(&name).expect("Expected an open import");
+    drop(import);
+}
+
+#[apply(generic_step)]
 #[step(expr = r"file\({word}\) has schema:")]
 async fn file_has_schema(context: &mut Context, file_name: String, step: &Step) {
     let expected_schema = step.docstring.as_ref().unwrap().trim().to_string();
