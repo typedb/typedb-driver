@@ -49,6 +49,7 @@ import static com.typedb.driver.jni.typedb_driver.concept_new_datetime_tz_offset
 import static com.typedb.driver.jni.typedb_driver.concept_new_decimal;
 import static com.typedb.driver.jni.typedb_driver.concept_new_double;
 import static com.typedb.driver.jni.typedb_driver.concept_new_duration;
+import static com.typedb.driver.jni.typedb_driver.concept_new_vector_from_string;
 import static com.typedb.driver.jni.typedb_driver.concept_new_integer;
 import static com.typedb.driver.jni.typedb_driver.concept_new_string;
 
@@ -78,6 +79,8 @@ public class ValueImpl extends ConceptImpl implements Value {
         if (value instanceof LocalDateTime) return newDatetime((LocalDateTime) value);
         if (value instanceof ZonedDateTime) return newDatetimeTz((ZonedDateTime) value);
         if (value instanceof Duration) return newDuration((Duration) value);
+        if (value instanceof List) return newVector((List<?>) value);
+        if (value instanceof float[]) return newVector((float[]) value);
         throw new TypeDBDriverException(ErrorMessage.Concept.UNSUPPORTED_VALUE_CONVERSION, value.getClass().getName());
     }
 
@@ -136,6 +139,28 @@ public class ValueImpl extends ConceptImpl implements Value {
     }
 
     /** Creates a new {@code Value} wrapping the specified {@code Duration} value. */
+    /** Creates a new {@code Value} wrapping the specified numeric elements as a {@code vector} value. */
+    public static Value newVector(List<?> elements) {
+        StringBuilder joined = new StringBuilder();
+        for (Object element : elements) {
+            if (!(element instanceof Number))
+                throw new TypeDBDriverException(ErrorMessage.Concept.UNSUPPORTED_VALUE_CONVERSION, element == null ? "null" : element.getClass().getName());
+            if (joined.length() > 0) joined.append(',');
+            joined.append(((Number) element).floatValue());
+        }
+        return new ValueImpl(concept_new_vector_from_string(joined.toString()));
+    }
+
+    /** Creates a new {@code Value} wrapping the specified elements as a {@code vector} value. */
+    public static Value newVector(float[] elements) {
+        StringBuilder joined = new StringBuilder();
+        for (float element : elements) {
+            if (joined.length() > 0) joined.append(',');
+            joined.append(element);
+        }
+        return new ValueImpl(concept_new_vector_from_string(joined.toString()));
+    }
+
     public static Value newDuration(Duration value) {
         int months = value.getMonths();
         int days = value.getDays();

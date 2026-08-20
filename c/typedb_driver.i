@@ -242,6 +242,7 @@ VoidPromise* transaction_on_close_register(const Transaction* transaction, Trans
 %newobject concept_new_boolean;
 %newobject concept_new_integer;
 %newobject concept_new_double;
+%newobject concept_new_vector_from_string;
 %newobject concept_new_decimal;
 %newobject concept_new_decimal_from_string;
 %newobject concept_new_string;

@@ -192,6 +192,7 @@
 %nojavaexception concept_new_boolean;
 %nojavaexception concept_new_integer;
 %nojavaexception concept_new_double;
+%nojavaexception concept_new_vector_from_string;
 %nojavaexception concept_new_decimal;
 %nojavaexception concept_new_string;
 %nojavaexception concept_new_date_from_seconds;

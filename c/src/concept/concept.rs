@@ -478,6 +478,20 @@ pub extern "C" fn concept_new_double(value: f64) -> *mut Concept {
     release(Concept::Value(Value::Double(value)))
 }
 
+/// Creates a new <code>Concept</code> object wrapping a <code>vector</code> value,
+/// provided as a comma-separated string of float elements (e.g. "1.0,2.5,3.0").
+// ponytail: string transport avoids per-language SWIG array typemaps; batch array FFI if it measurably matters
+#[unsafe(no_mangle)]
+pub extern "C" fn concept_new_vector_from_string(str: *const c_char) -> *mut Concept {
+    let result = string_view(str)
+        .split(',')
+        .map(|element| element.trim().parse::<f32>())
+        .collect::<Result<Vec<f32>, _>>()
+        .map(|elements| Concept::Value(Value::Vector(elements)))
+        .map_err(|err| typedb_driver::Error::Other(format!("Invalid vector element: {err}")));
+    try_release(result)
+}
+
 /// Creates a new <code>Concept</code> object wrapping the specified <code>Decimal</code> value,
 /// provided as a string (without the dec suffix).
 #[unsafe(no_mangle)]

@@ -32,6 +32,7 @@ from typedb.native_driver_wrapper import (
     concept_new_boolean, concept_new_integer, concept_new_double, concept_new_decimal,
     concept_new_string, concept_new_date_from_seconds, concept_new_datetime,
     concept_new_datetime_tz_iana, concept_new_datetime_tz_offset, concept_new_duration,
+    concept_new_vector_from_string,
 )
 
 
@@ -155,6 +156,8 @@ class _Value(Value, _Concept):
             return _Value.new_datetime(value)
         if isinstance(value, Duration):
             return _Value.new_duration(value)
+        if isinstance(value, (list, tuple)):
+            return _Value.new_vector(value)
         raise TypeDBDriverException(UNSUPPORTED_VALUE_CONVERSION, type(value).__name__)
 
     @staticmethod
@@ -200,3 +203,7 @@ class _Value(Value, _Concept):
     @staticmethod
     def new_duration(value: Duration) -> 'Value':
         return _Value(concept_new_duration(value.months, value.days, value.nanos))
+
+    @staticmethod
+    def new_vector(value) -> 'Value':
+        return _Value(concept_new_vector_from_string(",".join(repr(float(element)) for element in value)))
