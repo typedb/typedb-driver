@@ -741,6 +741,22 @@ Creates a new ``Concept`` object wrapping the specified ``String`` value
 .Returns
 `struct Concept*`
 
+[#_concept_new_vector_from_string]
+==== function ``concept_new_vector_from_string``
+
+[source,c]
+----
+struct Concept* concept_new_vector_from_string(const char* str)
+----
+
+
+
+Creates a new ``Concept`` object wrapping a ``vector`` value, provided as a comma-separated string of float elements (e.g. "1.0,2.5,3.0").
+
+[caption=""]
+.Returns
+`struct Concept*`
+
 [#_concept_row_drop]
 ==== function ``concept_row_drop``
 
