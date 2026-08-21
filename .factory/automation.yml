@@ -75,6 +75,12 @@ build:
 #        git diff --exit-code dependencies/maven/artifacts.snapshot
 #        bazel run --config=ci @typedb_dependencies//tool/unuseddeps:unused-deps -- list
 
+    # TEMPORARY: debug machine for replicating the build-docs failure — remove before merge
+    debug-sleep:
+      image: typedb-ubuntu-22.04
+      command: |
+        sleep 3600
+
     build-docs:
       image: typedb-ubuntu-22.04
       command: |
