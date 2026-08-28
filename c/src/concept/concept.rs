@@ -379,7 +379,6 @@ pub extern "C" fn concept_get_vector_length(concept: *const Concept) -> i64 {
 
 /// Returns the element at the given index of the <code>vector</code> value of this value concept.
 /// If the value has another type or the index is out of bounds, the error is set.
-// ponytail: per-element FFI calls (O(dim) crossings per read); switch to a buffer copy if profiling says so
 #[unsafe(no_mangle)]
 pub extern "C" fn concept_get_vector_element(concept: *const Concept, index: i64) -> f32 {
     match borrow(concept).try_get_vector() {
@@ -480,7 +479,6 @@ pub extern "C" fn concept_new_double(value: f64) -> *mut Concept {
 
 /// Creates a new <code>Concept</code> object wrapping a <code>vector</code> value,
 /// provided as a comma-separated string of float elements (e.g. "1.0,2.5,3.0").
-// ponytail: string transport avoids per-language SWIG array typemaps; batch array FFI if it measurably matters
 #[unsafe(no_mangle)]
 pub extern "C" fn concept_new_vector_from_string(str: *const c_char) -> *mut Concept {
     let result = string_view(str)

@@ -174,8 +174,6 @@ namespace TypeDB.Driver.Concept
 
             throw new TypeDBDriverException(InternalError.UNEXPECTED_NATIVE_VALUE);
         }
-
-        // Matches Java's Float.toString: culture-invariant, integral values keep a trailing ".0"
         private static string FormatVectorElement(float element)
         {
             var formatted = element.ToString("R", CultureInfo.InvariantCulture);

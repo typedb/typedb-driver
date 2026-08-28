@@ -215,7 +215,6 @@ impl fmt::Display for Value {
     }
 }
 
-// Mirrors the server's rendering: vector([1, 2, 3], "float32")
 fn write_vector(f: &mut fmt::Formatter<'_>, vector: &[f32]) -> fmt::Result {
     write!(f, "vector([")?;
     for (i, element) in vector.iter().enumerate() {

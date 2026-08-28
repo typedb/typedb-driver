@@ -238,7 +238,6 @@ namespace TypeDB.Driver.Concept
         public IReadOnlyList<float>? TryGetVector()
         {
             if (!CanHaveValue() || !IsVector()) return null;
-            // ponytail: per-element FFI calls (O(dim) crossings per read); switch to a buffer copy if profiling says so
             long length = Pinvoke.typedb_driver.concept_get_vector_length(NativeObject);
             var vector = new List<float>((int)length);
             for (long i = 0; i < length; i++)

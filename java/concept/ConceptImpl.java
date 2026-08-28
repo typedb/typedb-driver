@@ -277,7 +277,6 @@ public abstract class ConceptImpl extends NativeObject<com.typedb.driver.jni.Con
     @Override
     public Optional<List<Float>> tryGetVector() {
         if (isType() || !isVector()) return Optional.empty();
-        // ponytail: per-element FFI calls (O(dim) crossings per read); switch to a buffer copy if profiling says so
         long length = concept_get_vector_length(nativeObject);
         List<Float> vector = new ArrayList<>((int) length);
         for (long i = 0; i < length; i++) {

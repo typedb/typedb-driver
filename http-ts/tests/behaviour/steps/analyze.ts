@@ -240,7 +240,6 @@ function encodeConstraintVertex(vertex: QueryVertex, encoder: FunctorEncoder): s
             if (vertex.valueType == "string") {
                 return `"${vertex.value}"`;
             } else if (Array.isArray(vertex.value)) {
-                // Vector values render as a plain list matching the other drivers: [1.0, 0.0, 0.0]
                 return `[${vertex.value.map(formatVectorElement).join(", ")}]`;
             } else {
                 return vertex.value;
@@ -250,7 +249,6 @@ function encodeConstraintVertex(vertex: QueryVertex, encoder: FunctorEncoder): s
     throw new Error("Unknown constraint vertex type");
 }
 
-// Java-style float rendering: integral values keep a trailing ".0"
 function formatVectorElement(element: number): string {
     return Number.isInteger(element) && Number.isFinite(element) ? element.toFixed(1) : String(element);
 }
