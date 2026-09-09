@@ -34,10 +34,7 @@ use crate::{
     connection::{message::DatabaseExportResponse, network::proto::TryFromProto, runtime::BackgroundRuntime},
 };
 
-// Export answers the client buffers before the receive loop stops pulling from the server. Bounding
-// this makes the server (via HTTP/2 flow control) wait when the client is slow, so client memory
-// stays flat regardless of database size.
-const CLIENT_EXPORT_QUEUE: usize = 32;
+const EXPORT_CHANNEL_CAPACITY: usize = 32;
 
 pub(crate) struct DatabaseExportTransmitter {
     stream: BoundedNetworkStream<Result<DatabaseExportResponse>>,
@@ -51,7 +48,7 @@ impl DatabaseExportTransmitter {
         background_runtime: Arc<BackgroundRuntime>,
         response_source: Streaming<database::export::Server>,
     ) -> Self {
-        let (response_sender, response_receiver) = bounded_async(CLIENT_EXPORT_QUEUE);
+        let (response_sender, response_receiver) = bounded_async(EXPORT_CHANNEL_CAPACITY);
         let (shutdown_sink, shutdown_source) = unbounded_async();
 
         background_runtime.spawn(Self::start_workers(response_source, response_sender, shutdown_source));
@@ -88,9 +85,6 @@ impl DatabaseExportTransmitter {
                 break;
             }
             match grpc_source.next().await {
-                // send().await blocks when the client is behind (bounded queue full), so we stop
-                // pulling from the server and HTTP/2 flow control paces it. An error means the
-                // consumer is gone, so we stop.
                 Some(Ok(message)) => {
                     if response_sender.send(DatabaseExportResponse::try_from_proto(message)).await.is_err() {
                         break;

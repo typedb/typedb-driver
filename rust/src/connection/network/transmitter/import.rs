@@ -43,9 +43,7 @@ use crate::{
     },
 };
 
-// Item-part messages the client buffers before the file-reading producer blocks. Together with the
-// bounded gRPC request queue this keeps client memory flat regardless of the export file size.
-const CLIENT_ITEM_BATCH_QUEUE: usize = 32;
+const IMPORT_BUFFER_CAPACITY: usize = 32;
 
 pub(crate) struct DatabaseImportTransmitter {
     request_sink: SyncSender<DatabaseImportRequest>,
@@ -61,7 +59,7 @@ impl DatabaseImportTransmitter {
         request_sink: Sender<database_manager::import::Client>,
         response_source: Streaming<database_manager::import::Server>,
     ) -> Self {
-        let (buffer_sink, buffer_source) = bounded_blocking(CLIENT_ITEM_BATCH_QUEUE);
+        let (buffer_sink, buffer_source) = bounded_blocking(IMPORT_BUFFER_CAPACITY);
         let (shutdown_sink, shutdown_source) = unbounded_async();
 
         let (result_sink, result_source) = oneshot();
@@ -159,13 +157,13 @@ impl DatabaseImportTransmitter {
         request_sink: Sender<database_manager::import::Client>,
         mut shutdown_signal: UnboundedReceiver<()>,
     ) {
-        const SHUTDOWN_POLL_INTERVAL: Duration = Duration::from_millis(50);
+        const POLL_INTERVAL: Duration = Duration::from_millis(50);
 
         loop {
             if shutdown_signal.try_recv().is_ok() {
                 break;
             }
-            match request_source.recv_timeout(SHUTDOWN_POLL_INTERVAL) {
+            match request_source.recv_timeout(POLL_INTERVAL) {
                 Ok(request) => {
                     let client_req = database_manager::import::Client { client: Some(request.into_proto()) };
                     if request_sink.blocking_send(client_req).is_err() {
