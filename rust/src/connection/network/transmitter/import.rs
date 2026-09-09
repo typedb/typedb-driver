@@ -19,7 +19,9 @@
 
 use std::{sync::Arc, time::Duration};
 
-use crossbeam::channel::{Receiver as SyncReceiver, RecvTimeoutError, Sender as SyncSender, bounded};
+use crossbeam::channel::{
+    Receiver as SyncReceiver, RecvTimeoutError, Sender as SyncSender, bounded as bounded_blocking,
+};
 use futures::StreamExt;
 use tokio::sync::mpsc::{Sender, UnboundedReceiver, UnboundedSender, unbounded_channel as unbounded_async};
 #[cfg(not(feature = "sync"))]
@@ -59,7 +61,7 @@ impl DatabaseImportTransmitter {
         request_sink: Sender<database_manager::import::Client>,
         response_source: Streaming<database_manager::import::Server>,
     ) -> Self {
-        let (buffer_sink, buffer_source) = bounded(CLIENT_ITEM_BATCH_QUEUE);
+        let (buffer_sink, buffer_source) = bounded_blocking(CLIENT_ITEM_BATCH_QUEUE);
         let (shutdown_sink, shutdown_source) = unbounded_async();
 
         let (result_sink, result_source) = oneshot();
