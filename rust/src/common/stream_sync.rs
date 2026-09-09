@@ -19,7 +19,7 @@
 
 pub use std::iter::Iterator as Stream;
 
-use tokio::sync::mpsc::UnboundedReceiver;
+use tokio::sync::mpsc::{Receiver, UnboundedReceiver};
 
 pub type BoxStream<'a, T> = Box<dyn Stream<Item = T> + Send + 'a>;
 
@@ -38,6 +38,23 @@ impl<T> NetworkStream<T> {
 }
 
 impl<T> Iterator for NetworkStream<T> {
+    type Item = T;
+    fn next(&mut self) -> Option<Self::Item> {
+        self.receiver.blocking_recv()
+    }
+}
+
+pub struct BoundedNetworkStream<T> {
+    receiver: Receiver<T>,
+}
+
+impl<T> BoundedNetworkStream<T> {
+    pub fn new(receiver: Receiver<T>) -> Self {
+        Self { receiver }
+    }
+}
+
+impl<T> Iterator for BoundedNetworkStream<T> {
     type Item = T;
     fn next(&mut self) -> Option<Self::Item> {
         self.receiver.blocking_recv()
