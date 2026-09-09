@@ -17,10 +17,11 @@
  * under the License.
  */
 
-use std::{sync::Arc, thread::sleep, time::Duration};
+use std::{sync::Arc, time::Duration};
 
+use crossbeam::channel::{Receiver as SyncReceiver, RecvTimeoutError, Sender as SyncSender, bounded};
 use futures::StreamExt;
-use tokio::sync::mpsc::{UnboundedReceiver, UnboundedSender, unbounded_channel as unbounded_async};
+use tokio::sync::mpsc::{Sender, UnboundedReceiver, UnboundedSender, unbounded_channel as unbounded_async};
 #[cfg(not(feature = "sync"))]
 use tokio::sync::oneshot::{Receiver as OneshotReceiver, channel as oneshot, error::TryRecvError};
 use tonic::Streaming;
@@ -40,8 +41,12 @@ use crate::{
     },
 };
 
+// Item-part messages the client buffers before the file-reading producer blocks. Together with the
+// bounded gRPC request queue this keeps client memory flat regardless of the export file size.
+const CLIENT_ITEM_BATCH_QUEUE: usize = 32;
+
 pub(crate) struct DatabaseImportTransmitter {
-    request_sink: UnboundedSender<DatabaseImportRequest>,
+    request_sink: SyncSender<DatabaseImportRequest>,
     shutdown_guard: ShutdownGuard<()>,
     result_source: OneshotReceiver<Result>,
     // runtime is alive as long as the import transmitter is alive:
@@ -51,10 +56,10 @@ pub(crate) struct DatabaseImportTransmitter {
 impl DatabaseImportTransmitter {
     pub(in crate::connection) fn new(
         background_runtime: Arc<BackgroundRuntime>,
-        request_sink: UnboundedSender<database_manager::import::Client>,
+        request_sink: Sender<database_manager::import::Client>,
         response_source: Streaming<database_manager::import::Server>,
     ) -> Self {
-        let (buffer_sink, buffer_source) = unbounded_async();
+        let (buffer_sink, buffer_source) = bounded(CLIENT_ITEM_BATCH_QUEUE);
         let (shutdown_sink, shutdown_source) = unbounded_async();
 
         let (result_sink, result_source) = oneshot();
@@ -136,8 +141,8 @@ impl DatabaseImportTransmitter {
     }
 
     async fn start_workers(
-        queue_source: UnboundedReceiver<DatabaseImportRequest>,
-        request_sink: UnboundedSender<database_manager::import::Client>,
+        queue_source: SyncReceiver<DatabaseImportRequest>,
+        request_sink: Sender<database_manager::import::Client>,
         response_source: Streaming<database_manager::import::Server>,
         result_sink: ResponseSink<()>,
         shutdown_sink: UnboundedSender<()>,
@@ -148,20 +153,25 @@ impl DatabaseImportTransmitter {
     }
 
     fn dispatch_loop(
-        mut request_source: UnboundedReceiver<DatabaseImportRequest>,
-        request_sink: UnboundedSender<database_manager::import::Client>,
+        request_source: SyncReceiver<DatabaseImportRequest>,
+        request_sink: Sender<database_manager::import::Client>,
         mut shutdown_signal: UnboundedReceiver<()>,
     ) {
-        const DISPATCH_INTERVAL: Duration = Duration::from_micros(50);
+        const SHUTDOWN_POLL_INTERVAL: Duration = Duration::from_millis(50);
 
         loop {
             if shutdown_signal.try_recv().is_ok() {
                 break;
             }
-            sleep(DISPATCH_INTERVAL);
-            if let Ok(request) = request_source.try_recv() {
-                let client_req = database_manager::import::Client { client: Some(request.into_proto()) };
-                request_sink.send(client_req).ok();
+            match request_source.recv_timeout(SHUTDOWN_POLL_INTERVAL) {
+                Ok(request) => {
+                    let client_req = database_manager::import::Client { client: Some(request.into_proto()) };
+                    if request_sink.blocking_send(client_req).is_err() {
+                        break;
+                    }
+                }
+                Err(RecvTimeoutError::Timeout) => continue,
+                Err(RecvTimeoutError::Disconnected) => break,
             }
         }
     }
