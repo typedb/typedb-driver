@@ -19,7 +19,7 @@
 
 use std::time::Duration;
 
-use tokio::sync::mpsc::UnboundedSender;
+use tokio::sync::mpsc::{Sender, UnboundedSender};
 use tonic::Streaming;
 use typedb_protocol::{database, database_manager, migration::Item, transaction};
 use uuid::Uuid;
@@ -94,7 +94,7 @@ pub(super) enum Response {
         database: DatabaseInfo,
     },
     DatabaseImport {
-        request_sink: UnboundedSender<database_manager::import::Client>,
+        request_sink: Sender<database_manager::import::Client>,
         response_source: Streaming<database_manager::import::Server>,
     },
     DatabaseGet {

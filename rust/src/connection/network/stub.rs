@@ -20,8 +20,8 @@
 use std::{sync::Arc, time::Duration};
 
 use futures::{FutureExt, TryFutureExt, future::BoxFuture};
-use tokio::sync::mpsc::{UnboundedSender, unbounded_channel as unbounded_async};
-use tokio_stream::wrappers::UnboundedReceiverStream;
+use tokio::sync::mpsc::{Sender, UnboundedSender, channel as bounded_async, unbounded_channel as unbounded_async};
+use tokio_stream::wrappers::{ReceiverStream, UnboundedReceiverStream};
 use tonic::{Response, Status, Streaming};
 use tracing::debug;
 use typedb_protocol::{
@@ -141,13 +141,14 @@ impl<Channel: GRPCChannel> RPCStub<Channel> {
     pub(super) async fn databases_import(
         &mut self,
         client: migration::import::Client,
-    ) -> Result<(UnboundedSender<database_manager::import::Client>, Streaming<database_manager::import::Server>)> {
+    ) -> Result<(Sender<database_manager::import::Client>, Streaming<database_manager::import::Server>)> {
+        const IMPORT_REQUEST_QUEUE: usize = 32;
         self.call_with_auto_renew_token(|this| {
             let import_req = database_manager::import::Client { client: Some(client.clone()) };
             Box::pin(async {
-                let (sender, receiver) = unbounded_async();
-                sender.send(import_req)?;
-                let response = this.grpc.databases_import(UnboundedReceiverStream::new(receiver)).await?.into_inner();
+                let (sender, receiver) = bounded_async(IMPORT_REQUEST_QUEUE);
+                sender.send(import_req).await?;
+                let response = this.grpc.databases_import(ReceiverStream::new(receiver)).await?.into_inner();
                 Ok((sender, response))
             })
         })

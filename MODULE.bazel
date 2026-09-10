@@ -59,7 +59,7 @@ bazel_dep(name = "typedb_dependencies", version = "0.0.0")
 git_override(
     module_name = "typedb_dependencies",
     remote = "https://github.com/typedb/dependencies",
-    commit = "bf924ef788fd605224383a2ea7f59599862c6bab",
+    commit = "d780b75d42b49d89b069d97f6d216026d660c3e4",
 )
 
 bazel_dep(name = "typedb_protocol", version = "0.0.0")
@@ -73,7 +73,7 @@ bazel_dep(name = "typedb_behaviour", version = "0.0.0")
 git_override(
     module_name = "typedb_behaviour",
     remote = "https://github.com/typedb/typedb-behaviour",
-    commit = "26aa6bebf5e921654f832cf861b29d58d0608a7d",
+    commit = "a428985711011ee5b9164bad65238a591f23e3ca",
 )
 
 # Rust rules need typedb_dependencies for patching
@@ -258,14 +258,14 @@ native_artifact_files.artifact(
     name = "typedb_artifact",
     group_name = "typedb-all-{platform}",
     artifact_name = "typedb-all-{platform}-{version}.{ext}",
-    commit = "e0f0313532381b963804109b050ec248912717c5",
+    commit = "7cb72682ec51cf4ca11212a6780a5a061c37eb37",
 )
 # IMPORTANT: must be CLUSTERED typedb-cluster (with multi-node support)!
 native_artifact_files.artifact(
     name = "typedb_cluster_artifact",
     group_name = "typedb-cluster-all-{platform}",
     artifact_name = "typedb-cluster-all-{platform}-{version}.{ext}",
-    commit = "8cf0755e0fa5d4a35ca5a30ae0ba53938449432f",
+    tag = "3.12.0-beta-6",
     private = True,
 )
 

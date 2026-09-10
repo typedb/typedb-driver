@@ -29,7 +29,7 @@
 #   CLUSTER_DIR         - Directory containing numbered node dirs (default: CWD)
 #   ENCRYPTION_ENABLED  - Enable encryption (default: true)
 #   DEPLOYMENT_ID       - Deployment ID for diagnostics (default: test)
-#   INIT                - When 'true', passes --server.clustering.init=true (default: false)
+#   INIT_CREATE_CLUSTER - When 'true', the node creates a new cluster if absent (default: false)
 #                         Only the first node of a fresh cluster should set this.
 #
 # Assumes:
@@ -83,7 +83,7 @@ fi
 
 ENCRYPTION_ENABLED="${ENCRYPTION_ENABLED:-true}"
 DEPLOYMENT_ID="${DEPLOYMENT_ID:-test}"
-INIT="${INIT:-false}"
+INIT_CREATE_CLUSTER="${INIT_CREATE_CLUSTER:-false}"
 POLL_INTERVAL_SECS=0.5
 MAX_RETRIES=60
 
@@ -134,8 +134,6 @@ server_start() {
   # by the outside-sandbox cluster start and the unlink fails with EPERM, even
   # though typedb itself can still truncate-and-write via the existing path.
 
-  local init_arg="--server.clustering.init=$INIT"
-
   # Use setsid on Linux to start in a new session (prevents process group cleanup).
   # On macOS, nohup + disown is sufficient.
   local setsid_cmd=""
@@ -165,8 +163,8 @@ server_start() {
     --storage.data-directory="${data_dir}" \
     --storage.clustering-directory="${clustering_dir}" \
     --diagnostics.monitoring.port="${monitoring_port}" \
-    --development-mode.enabled=true \
-    ${init_arg} > "${log_file}" 2>&1 &
+    --initialize.create-cluster="${INIT_CREATE_CLUSTER}" \
+    --development-mode.enabled=true > "${log_file}" 2>&1 &
   disown
 
   echo "Started node ${node_id} (port ${server_port}, log ${log_file})"

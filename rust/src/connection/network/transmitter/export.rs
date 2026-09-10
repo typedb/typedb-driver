@@ -20,20 +20,24 @@
 use std::sync::Arc;
 
 use futures::StreamExt;
-use tokio::sync::mpsc::{UnboundedReceiver, UnboundedSender, unbounded_channel as unbounded_async};
+use tokio::sync::mpsc::{
+    Sender, UnboundedReceiver, UnboundedSender, channel as bounded_async, unbounded_channel as unbounded_async,
+};
 use tonic::Streaming;
 use typedb_protocol::database;
 
 use crate::{
     common::{
         Result,
-        stream::{NetworkStream, Stream},
+        stream::{BoundedNetworkStream, Stream},
     },
     connection::{message::DatabaseExportResponse, network::proto::TryFromProto, runtime::BackgroundRuntime},
 };
 
+const EXPORT_CHANNEL_CAPACITY: usize = 32;
+
 pub(crate) struct DatabaseExportTransmitter {
-    stream: NetworkStream<Result<DatabaseExportResponse>>,
+    stream: BoundedNetworkStream<Result<DatabaseExportResponse>>,
     shutdown_sink: UnboundedSender<()>,
     // runtime is alive as long as the export transmitter is alive:
     _background_runtime: Arc<BackgroundRuntime>,
@@ -44,11 +48,15 @@ impl DatabaseExportTransmitter {
         background_runtime: Arc<BackgroundRuntime>,
         response_source: Streaming<database::export::Server>,
     ) -> Self {
-        let (response_sender, response_receiver) = unbounded_async();
+        let (response_sender, response_receiver) = bounded_async(EXPORT_CHANNEL_CAPACITY);
         let (shutdown_sink, shutdown_source) = unbounded_async();
 
         background_runtime.spawn(Self::start_workers(response_source, response_sender, shutdown_source));
-        Self { stream: NetworkStream::new(response_receiver), shutdown_sink, _background_runtime: background_runtime }
+        Self {
+            stream: BoundedNetworkStream::new(response_receiver),
+            shutdown_sink,
+            _background_runtime: background_runtime,
+        }
     }
 
     pub(in crate::connection) fn shutdown_sink(&self) -> &UnboundedSender<()> {
@@ -61,7 +69,7 @@ impl DatabaseExportTransmitter {
 
     async fn start_workers(
         response_source: Streaming<database::export::Server>,
-        response_sender: UnboundedSender<Result<DatabaseExportResponse>>,
+        response_sender: Sender<Result<DatabaseExportResponse>>,
         shutdown_signal: UnboundedReceiver<()>,
     ) {
         tokio::spawn(Self::listen_loop(response_source, response_sender, shutdown_signal));
@@ -69,7 +77,7 @@ impl DatabaseExportTransmitter {
 
     async fn listen_loop(
         mut grpc_source: Streaming<database::export::Server>,
-        response_sender: UnboundedSender<Result<DatabaseExportResponse>>,
+        response_sender: Sender<Result<DatabaseExportResponse>>,
         mut shutdown_signal: UnboundedReceiver<()>,
     ) {
         loop {
@@ -77,11 +85,13 @@ impl DatabaseExportTransmitter {
                 break;
             }
             match grpc_source.next().await {
-                Some(Ok(message)) => response_sender
-                    .send(DatabaseExportResponse::try_from_proto(message))
-                    .expect("Expected export channel to be open. It is a bug."),
+                Some(Ok(message)) => {
+                    if response_sender.send(DatabaseExportResponse::try_from_proto(message)).await.is_err() {
+                        break;
+                    }
+                }
                 Some(Err(status)) => {
-                    response_sender.send(Err(status.into())).expect("Expected export channel to be open. It is a bug.");
+                    let _ = response_sender.send(Err(status.into())).await;
                     break;
                 }
                 None => break,
