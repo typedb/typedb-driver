@@ -63,9 +63,9 @@ done
 echo Starting a cluster consisting of $NODE_COUNT servers...
 for i in $(seq 1 $NODE_COUNT); do
   if [ "$i" -eq 1 ]; then
-    INIT=true "${CLUSTER_SERVER}" start $i
+    INIT_CREATE_CLUSTER=true "${CLUSTER_SERVER}" start $i
   else
-    INIT=false "${CLUSTER_SERVER}" start $i
+    INIT_CREATE_CLUSTER=false "${CLUSTER_SERVER}" start $i
   fi
 done
 
@@ -86,6 +86,10 @@ if [ "$NODE_COUNT" -gt 1 ]; then
       fi
       if [ "$attempt" -eq "$REGISTER_MAX_RETRIES" ]; then
         echo "Failed to register replica ${i} after ${REGISTER_MAX_RETRIES} attempts"
+        for n in $(seq 1 $NODE_COUNT); do
+          echo "----- ./${n}/server.log -----"
+          tail -n 50 "./${n}/server.log" 2>/dev/null || echo "(no log)"
+        done
         exit 1
       fi
       echo "  Retrying registration of replica ${i} (attempt ${attempt}/${REGISTER_MAX_RETRIES})..."
