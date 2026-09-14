@@ -332,11 +332,12 @@ impl TryFromProto<ValueProto> for Value {
 
 impl TryFromProto<i32> for Kind {
     fn try_from_proto(kind: i32) -> Result<Self> {
+        // Wire values follow ConceptDocument.Node.Leaf.Kind in answer.proto, which reserves 2.
         match kind {
             0 => Ok(Self::Entity),
             1 => Ok(Self::Relation),
-            2 => Ok(Self::Attribute),
-            3 => Ok(Self::Role),
+            3 => Ok(Self::Attribute),
+            4 => Ok(Self::Role),
             _ => Err(ConnectionError::UnexpectedKind { kind }.into()),
         }
     }
