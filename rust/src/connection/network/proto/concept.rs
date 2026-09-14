@@ -332,8 +332,7 @@ impl TryFromProto<ValueProto> for Value {
 
 impl TryFromProto<i32> for Kind {
     fn try_from_proto(kind: i32) -> Result<Self> {
-        // Route through the generated proto enum instead of hand-matching wire values directly:
-        // its discriminants come straight from answer.proto, so they can't drift out of sync.
+        // Route through the generated proto enum instead of hand-matching wire values directly
         use concept_document::node::leaf::Kind as KindProto;
         match KindProto::try_from(kind) {
             Ok(KindProto::Entity) => Ok(Self::Entity),
@@ -427,7 +426,6 @@ impl IntoProto<value_proto::DatetimeTz> for DateTime<TimeZone> {
 mod test {
     use super::{Kind, TryFromProto};
 
-    // Wire values per ConceptDocument.Node.Leaf.Kind in answer.proto: 2 is reserved and unused.
     #[test]
     fn kind_decodes_wire_values() {
         assert_eq!(Kind::try_from_proto(0).unwrap(), Kind::Entity);
