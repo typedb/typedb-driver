@@ -62,6 +62,8 @@ namespace TypeDB.Driver.Analyze
                     return new IsImpl(constraint);
                 case Pinvoke.ConstraintVariant.Iid:
                     return new IidImpl(constraint);
+                case Pinvoke.ConstraintVariant.DeleteConcepts:
+                    return new DeleteConceptsImpl(constraint);
                 case Pinvoke.ConstraintVariant.Comparison:
                     return new ComparisonImpl(constraint);
                 case Pinvoke.ConstraintVariant.KindOf:
@@ -107,6 +109,7 @@ namespace TypeDB.Driver.Analyze
         public virtual bool IsExpression => false;
         public virtual bool IsIs => false;
         public virtual bool IsIid => false;
+        public virtual bool IsDeleteConcepts => false;
         public virtual bool IsComparison => false;
         public virtual bool IsKind => false;
         public virtual bool IsLabel => false;
@@ -126,6 +129,7 @@ namespace TypeDB.Driver.Analyze
         public virtual IExpression AsExpression() => throw InvalidCast("Expression");
         public virtual IIs AsIs() => throw InvalidCast("Is");
         public virtual IIid AsIid() => throw InvalidCast("Iid");
+        public virtual IDeleteConcepts AsDeleteConcepts() => throw InvalidCast("DeleteConcepts");
         public virtual IComparison AsComparison() => throw InvalidCast("Comparison");
         public virtual IKind AsKind() => throw InvalidCast("Kind");
         public virtual ILabelConstraint AsLabel() => throw InvalidCast("Label");
@@ -302,6 +306,19 @@ namespace TypeDB.Driver.Analyze
 
             public IConstraintVertex Variable => new ConstraintVertex(Pinvoke.typedb_driver.constraint_iid_get_variable(NativeObject));
             public string Iid => Pinvoke.typedb_driver.constraint_iid_get_iid(NativeObject);
+        }
+
+        public class DeleteConceptsImpl : Constraint, IDeleteConcepts
+        {
+            internal DeleteConceptsImpl(Pinvoke.ConstraintWithSpan nativeObject) : base(nativeObject) { }
+
+            public override bool IsDeleteConcepts => true;
+            public override IDeleteConcepts AsDeleteConcepts() => this;
+
+            public IEnumerable<IConstraintVertex> Variables =>
+                new NativeEnumerable<Pinvoke.ConstraintVertex>(
+                    Pinvoke.typedb_driver.constraint_delete_concepts_get_variables(NativeObject))
+                    .Select(v => new ConstraintVertex(v));
         }
 
         public class ComparisonImpl : Constraint, IComparison
