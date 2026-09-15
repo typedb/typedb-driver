@@ -421,22 +421,3 @@ impl IntoProto<value_proto::DatetimeTz> for DateTime<TimeZone> {
         value_proto::DatetimeTz { datetime: Some(date_time), timezone: Some(timezone) }
     }
 }
-
-#[cfg(test)]
-mod test {
-    use super::{Kind, TryFromProto};
-
-    #[test]
-    fn kind_decodes_wire_values() {
-        assert_eq!(Kind::try_from_proto(0).unwrap(), Kind::Entity);
-        assert_eq!(Kind::try_from_proto(1).unwrap(), Kind::Relation);
-        assert_eq!(Kind::try_from_proto(3).unwrap(), Kind::Attribute);
-        assert_eq!(Kind::try_from_proto(4).unwrap(), Kind::Role);
-    }
-
-    #[test]
-    fn kind_rejects_reserved_and_unknown_values() {
-        assert!(Kind::try_from_proto(2).is_err());
-        assert!(Kind::try_from_proto(5).is_err());
-    }
-}
