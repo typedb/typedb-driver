@@ -73,6 +73,7 @@ export type ConstraintAny =
     |
     ConstraintIs
     | ConstraintIid
+    | ConstraintDeleteConcepts
     | ConstraintKind
     | ConstraintValue
     | ConstraintLabel
@@ -200,6 +201,13 @@ export interface ConstraintIid {
 
     concept: ConstraintVertexVariable,
     iid: string,
+}
+
+export interface ConstraintDeleteConcepts {
+    tag: "deleteConcepts",
+    textSpan: ConstraintSpan,
+
+    variables: ConstraintVertexVariable[],
 }
 
 export interface ConstraintLabel {

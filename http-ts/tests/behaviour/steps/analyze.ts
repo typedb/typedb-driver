@@ -187,6 +187,9 @@ function encodeConstraint(constraint: ConstraintAny, encoder: FunctorEncoder): s
             return encoder.makeFunctor("Iid",
                 encodeConstraintVertex(constraint.concept, encoder),
                 constraint.iid);
+        case "deleteConcepts":
+            return encoder.makeFunctor("DeleteConcepts",
+                encoder.encodeAsList(constraint.variables.map(v => encodeConstraintVertex(v, encoder))));
         case "kind":
             return encoder.makeFunctor("Kind",
                 constraint.kind,
