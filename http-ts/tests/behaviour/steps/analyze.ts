@@ -26,8 +26,8 @@ import {
     AnalyzedFetch,
     AnalyzedFunction,
     AnalyzedPipeline,
-    QueryConstraintAny,
-    QueryVertex,
+    ConstraintAny,
+    ConstraintVertexAny,
     FunctionReturnStructure,
     PipelineStage,
     Reducer,
@@ -125,7 +125,7 @@ export class FunctorEncoder {
 }
 
 // Helper functions
-function encodeConstraint(constraint: QueryConstraintAny, encoder: FunctorEncoder): string {
+function encodeConstraint(constraint: ConstraintAny, encoder: FunctorEncoder): string {
     switch (constraint.tag) {
         case "isa":
             return encoder.makeFunctor("Isa",
@@ -221,7 +221,7 @@ function encodeVariable(id: string, encoder: FunctorEncoder) {
     }
 }
 
-function encodeConstraintVertex(vertex: QueryVertex, encoder: FunctorEncoder): string {
+function encodeConstraintVertex(vertex: ConstraintVertexAny, encoder: FunctorEncoder): string {
     switch (vertex.tag) {
         case "variable":
             return encodeVariable(vertex.id, encoder);
