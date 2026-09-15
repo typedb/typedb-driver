@@ -332,7 +332,6 @@ impl TryFromProto<ValueProto> for Value {
 
 impl TryFromProto<i32> for Kind {
     fn try_from_proto(kind: i32) -> Result<Self> {
-        // Route through the generated proto enum instead of hand-matching wire values directly
         use concept_document::node::leaf::Kind as KindProto;
         match KindProto::try_from(kind) {
             Ok(KindProto::Entity) => Ok(Self::Entity),
