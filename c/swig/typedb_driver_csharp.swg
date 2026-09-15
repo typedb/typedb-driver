@@ -350,6 +350,7 @@
 %noexception constraint_is_get_rhs;
 %noexception constraint_iid_get_variable;
 %noexception constraint_iid_get_iid;
+%noexception constraint_delete_concepts_get_variables;
 %noexception constraint_comparison_get_lhs;
 %noexception constraint_comparison_get_rhs;
 %noexception constraint_comparison_get_comparator;

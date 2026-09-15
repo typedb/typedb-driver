@@ -23,6 +23,20 @@ as_comparison() -> Comparison
 .Returns
 `Comparison`
 
+[#_Constraint_as_delete_concepts_]
+==== method ``as_delete_concepts``
+
+[source,python]
+----
+as_delete_concepts() -> DeleteConcepts
+----
+
+
+
+[caption=""]
+.Returns
+`DeleteConcepts`
+
 [#_Constraint_as_expression_]
 ==== method ``as_expression``
 
@@ -267,6 +281,20 @@ as_value() -> Value
 [source,python]
 ----
 is_comparison() -> bool
+----
+
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_Constraint_is_delete_concepts_]
+==== method ``is_delete_concepts``
+
+[source,python]
+----
+is_delete_concepts() -> bool
 ----
 
 

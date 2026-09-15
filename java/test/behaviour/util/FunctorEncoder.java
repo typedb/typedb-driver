@@ -197,6 +197,10 @@ public abstract class FunctorEncoder {
                     Constraint.Iid iid = constraint.asIid();
                     return makeFunctor("Iid", encode(iid.variable()), iid.iid());
                 }
+                case DeleteConcepts: {
+                    Constraint.DeleteConcepts deleteConcepts = constraint.asDeleteConcepts();
+                    return makeFunctor("DeleteConcepts", encodeList(deleteConcepts.variables().map(this::encode)));
+                }
                 case Comparison: {
                     Constraint.Comparison comparison = constraint.asComparison();
                     return makeFunctor(

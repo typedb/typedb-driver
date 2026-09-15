@@ -92,6 +92,11 @@ namespace TypeDB.Driver.Api.Analyze
         bool IsIid { get; }
 
         /// <summary>
+        /// Checks if this constraint is a delete concepts constraint.
+        /// </summary>
+        bool IsDeleteConcepts { get; }
+
+        /// <summary>
         /// Checks if this constraint is a comparison constraint.
         /// </summary>
         bool IsComparison { get; }
@@ -180,6 +185,11 @@ namespace TypeDB.Driver.Api.Analyze
         /// Casts this constraint to an iid constraint.
         /// </summary>
         IIid AsIid();
+
+        /// <summary>
+        /// Casts this constraint to a delete concepts constraint.
+        /// </summary>
+        IDeleteConcepts AsDeleteConcepts();
 
         /// <summary>
         /// Casts this constraint to a comparison constraint.
@@ -457,6 +467,17 @@ namespace TypeDB.Driver.Api.Analyze
         /// The internal identifier value.
         /// </summary>
         string Iid { get; }
+    }
+
+    /// <summary>
+    /// Represents the deletion of concepts bound to a set of variables: delete variables
+    /// </summary>
+    public interface IDeleteConcepts : IConstraint
+    {
+        /// <summary>
+        /// The variables whose concepts are deleted.
+        /// </summary>
+        IEnumerable<IConstraintVertex> Variables { get; }
     }
 
     /// <summary>

@@ -114,6 +114,7 @@ enum ConstraintVariant {
     Expression,
     Is,
     Iid,
+    DeleteConcepts,
     Comparison,
     KindOf,
     Label,
@@ -646,6 +647,7 @@ pub extern "C" fn constraint_variant(constraint: *const ConstraintWithSpan) -> C
         Constraint::Expression { .. } => ConstraintVariant::Expression,
         Constraint::Is { .. } => ConstraintVariant::Is,
         Constraint::Iid { .. } => ConstraintVariant::Iid,
+        Constraint::DeleteConcepts { .. } => ConstraintVariant::DeleteConcepts,
         Constraint::Comparison { .. } => ConstraintVariant::Comparison,
         Constraint::Kind { .. } => ConstraintVariant::KindOf,
         Constraint::Label { .. } => ConstraintVariant::Label,
@@ -1014,6 +1016,19 @@ pub extern "C" fn constraint_iid_get_iid(constraint: *const ConstraintWithSpan) 
         unreachable!("Expected constraint to be Iid");
     };
     release_string(iid.to_string())
+}
+
+/// Unwraps the <code>Constraint</code> instance as a `DeleteConcepts` constraint,
+/// and returns the variables whose concepts are deleted.
+/// Will panic if the Constraint is not a DeleteConcepts constraint.
+#[unsafe(no_mangle)]
+pub extern "C" fn constraint_delete_concepts_get_variables(
+    constraint: *const ConstraintWithSpan,
+) -> *mut ConstraintVertexIterator {
+    let Constraint::DeleteConcepts { variables, .. } = &borrow(constraint).constraint else {
+        unreachable!("Expected constraint to be DeleteConcepts");
+    };
+    release(ConstraintVertexIterator(CIterator(box_stream(variables.clone().into_iter()))))
 }
 
 /// Unwraps the <code>Constraint</code> instance as a `Comparison` constraint,

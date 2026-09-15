@@ -248,6 +248,11 @@ namespace TypeDB.Driver.Test.Behaviour
                     var iid = constraint.AsIid();
                     return MakeFunctor("Iid", Encode(iid.Variable), iid.Iid);
                 }
+                else if (constraint.IsDeleteConcepts)
+                {
+                    var deleteConcepts = constraint.AsDeleteConcepts();
+                    return MakeFunctor("DeleteConcepts", EncodeList(deleteConcepts.Variables.Select(Encode)));
+                }
                 else if (constraint.IsComparison)
                 {
                     var comparison = constraint.AsComparison();

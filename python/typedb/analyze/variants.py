@@ -33,6 +33,7 @@ from typedb.native_driver_wrapper import (
     Expression as NativeExpression,
     Is as NativeIs,
     Iid as NativeIid,
+    DeleteConcepts as NativeDeleteConcepts,
     Comparison as NativeComparison,
     KindOf as NativeKindOf,
     Label as NativeLabel,
@@ -81,6 +82,7 @@ class ConstraintVariant(IntEnum):
     Expression = NativeExpression
     Is = NativeIs
     Iid = NativeIid
+    DeleteConcepts = NativeDeleteConcepts
     Comparison = NativeComparison
     KindOf = NativeKindOf
     Label = NativeLabel

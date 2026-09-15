@@ -21,6 +21,7 @@ ConstraintAny:
  | ConstraintComparison
  | ConstraintIs
  | ConstraintIid
+ | ConstraintDeleteConcepts
  | ConstraintKind
  | ConstraintValue
  | ConstraintLabel

@@ -1,0 +1,19 @@
+[#_ConstraintDeleteConcepts]
+[.doc-api-reference-driver]
+==== ConstraintDeleteConcepts
+
+`class`
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `tag` a| `"deleteConcepts"` a| 
+a| `textSpan` a| `ConstraintSpan` a| 
+a| `variables` a| `ConstraintVertexVariable` a| 
+|===
+// end::properties[]
+

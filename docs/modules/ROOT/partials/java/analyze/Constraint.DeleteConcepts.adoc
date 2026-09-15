@@ -1,6 +1,6 @@
-[#_Constraint_Relates]
+[#_Constraint_DeleteConcepts]
 [.doc-api-reference-driver]
-=== Constraint.Relates
+=== Constraint.DeleteConcepts
 
 `class`
 
@@ -10,13 +10,10 @@
 
 * `Constraint`
 
-Represents a "relates" constraint: 
- relates 
- 
-
+Represents the deletion of concepts bound to a set of variables: delete 
 
 // tag::methods[]
-[#_Constraint_Relates_asComparison_]
+[#_Constraint_DeleteConcepts_asComparison_]
 ==== method ``asComparison``
 
 [source,java]
@@ -30,7 +27,7 @@ Constraint.Comparison asComparison()
 .Returns
 `Constraint.Comparison`
 
-[#_Constraint_Relates_asDeleteConcepts_]
+[#_Constraint_DeleteConcepts_asDeleteConcepts_]
 ==== method ``asDeleteConcepts``
 
 [source,java]
@@ -44,7 +41,7 @@ Constraint.DeleteConcepts asDeleteConcepts()
 .Returns
 `Constraint.DeleteConcepts`
 
-[#_Constraint_Relates_asExpression_]
+[#_Constraint_DeleteConcepts_asExpression_]
 ==== method ``asExpression``
 
 [source,java]
@@ -58,7 +55,7 @@ Constraint.Expression asExpression()
 .Returns
 `Constraint.Expression`
 
-[#_Constraint_Relates_asFunctionCall_]
+[#_Constraint_DeleteConcepts_asFunctionCall_]
 ==== method ``asFunctionCall``
 
 [source,java]
@@ -72,7 +69,7 @@ Constraint.FunctionCall asFunctionCall()
 .Returns
 `Constraint.FunctionCall`
 
-[#_Constraint_Relates_asHas_]
+[#_Constraint_DeleteConcepts_asHas_]
 ==== method ``asHas``
 
 [source,java]
@@ -86,7 +83,7 @@ Constraint.Has asHas()
 .Returns
 `Constraint.Has`
 
-[#_Constraint_Relates_asIid_]
+[#_Constraint_DeleteConcepts_asIid_]
 ==== method ``asIid``
 
 [source,java]
@@ -100,7 +97,7 @@ Constraint.Iid asIid()
 .Returns
 `Constraint.Iid`
 
-[#_Constraint_Relates_asIs_]
+[#_Constraint_DeleteConcepts_asIs_]
 ==== method ``asIs``
 
 [source,java]
@@ -114,7 +111,7 @@ Constraint.Is asIs()
 .Returns
 `Constraint.Is`
 
-[#_Constraint_Relates_asIsa_]
+[#_Constraint_DeleteConcepts_asIsa_]
 ==== method ``asIsa``
 
 [source,java]
@@ -128,7 +125,7 @@ Constraint.Isa asIsa()
 .Returns
 `Constraint.Isa`
 
-[#_Constraint_Relates_asKind_]
+[#_Constraint_DeleteConcepts_asKind_]
 ==== method ``asKind``
 
 [source,java]
@@ -142,7 +139,7 @@ Constraint.Kind asKind()
 .Returns
 `Constraint.Kind`
 
-[#_Constraint_Relates_asLabel_]
+[#_Constraint_DeleteConcepts_asLabel_]
 ==== method ``asLabel``
 
 [source,java]
@@ -156,7 +153,7 @@ Constraint.Label asLabel()
 .Returns
 `Constraint.Label`
 
-[#_Constraint_Relates_asLinks_]
+[#_Constraint_DeleteConcepts_asLinks_]
 ==== method ``asLinks``
 
 [source,java]
@@ -170,7 +167,7 @@ Constraint.Links asLinks()
 .Returns
 `Constraint.Links`
 
-[#_Constraint_Relates_asNot_]
+[#_Constraint_DeleteConcepts_asNot_]
 ==== method ``asNot``
 
 [source,java]
@@ -184,7 +181,7 @@ Constraint.Not asNot()
 .Returns
 `Constraint.Not`
 
-[#_Constraint_Relates_asOr_]
+[#_Constraint_DeleteConcepts_asOr_]
 ==== method ``asOr``
 
 [source,java]
@@ -198,7 +195,7 @@ Constraint.Or asOr()
 .Returns
 `Constraint.Or`
 
-[#_Constraint_Relates_asOwns_]
+[#_Constraint_DeleteConcepts_asOwns_]
 ==== method ``asOwns``
 
 [source,java]
@@ -212,7 +209,7 @@ Constraint.Owns asOwns()
 .Returns
 `Constraint.Owns`
 
-[#_Constraint_Relates_asPlays_]
+[#_Constraint_DeleteConcepts_asPlays_]
 ==== method ``asPlays``
 
 [source,java]
@@ -226,7 +223,7 @@ Constraint.Plays asPlays()
 .Returns
 `Constraint.Plays`
 
-[#_Constraint_Relates_asRelates_]
+[#_Constraint_DeleteConcepts_asRelates_]
 ==== method ``asRelates``
 
 [source,java]
@@ -240,7 +237,7 @@ Constraint.Relates asRelates()
 .Returns
 `Constraint.Relates`
 
-[#_Constraint_Relates_asSub_]
+[#_Constraint_DeleteConcepts_asSub_]
 ==== method ``asSub``
 
 [source,java]
@@ -254,7 +251,7 @@ Constraint.Sub asSub()
 .Returns
 `Constraint.Sub`
 
-[#_Constraint_Relates_asTry_]
+[#_Constraint_DeleteConcepts_asTry_]
 ==== method ``asTry``
 
 [source,java]
@@ -268,7 +265,7 @@ Constraint.Try asTry()
 .Returns
 `Constraint.Try`
 
-[#_Constraint_Relates_asValue_]
+[#_Constraint_DeleteConcepts_asValue_]
 ==== method ``asValue``
 
 [source,java]
@@ -282,21 +279,7 @@ Constraint.Value asValue()
 .Returns
 `Constraint.Value`
 
-[#_Constraint_Relates_exactness_]
-==== method ``exactness``
-
-[source,java]
-----
-com.typedb.driver.jni.ConstraintExactness exactness()
-----
-
-
-
-[caption=""]
-.Returns
-`com.typedb.driver.jni.ConstraintExactness`
-
-[#_Constraint_Relates_isComparison_]
+[#_Constraint_DeleteConcepts_isComparison_]
 ==== method ``isComparison``
 
 [source,java]
@@ -310,7 +293,7 @@ boolean isComparison()
 .Returns
 `boolean`
 
-[#_Constraint_Relates_isDeleteConcepts_]
+[#_Constraint_DeleteConcepts_isDeleteConcepts_]
 ==== method ``isDeleteConcepts``
 
 [source,java]
@@ -324,7 +307,7 @@ boolean isDeleteConcepts()
 .Returns
 `boolean`
 
-[#_Constraint_Relates_isExpression_]
+[#_Constraint_DeleteConcepts_isExpression_]
 ==== method ``isExpression``
 
 [source,java]
@@ -338,7 +321,7 @@ boolean isExpression()
 .Returns
 `boolean`
 
-[#_Constraint_Relates_isFunctionCall_]
+[#_Constraint_DeleteConcepts_isFunctionCall_]
 ==== method ``isFunctionCall``
 
 [source,java]
@@ -352,7 +335,7 @@ boolean isFunctionCall()
 .Returns
 `boolean`
 
-[#_Constraint_Relates_isHas_]
+[#_Constraint_DeleteConcepts_isHas_]
 ==== method ``isHas``
 
 [source,java]
@@ -366,7 +349,7 @@ boolean isHas()
 .Returns
 `boolean`
 
-[#_Constraint_Relates_isIid_]
+[#_Constraint_DeleteConcepts_isIid_]
 ==== method ``isIid``
 
 [source,java]
@@ -380,7 +363,7 @@ boolean isIid()
 .Returns
 `boolean`
 
-[#_Constraint_Relates_isIs_]
+[#_Constraint_DeleteConcepts_isIs_]
 ==== method ``isIs``
 
 [source,java]
@@ -394,7 +377,7 @@ boolean isIs()
 .Returns
 `boolean`
 
-[#_Constraint_Relates_isIsa_]
+[#_Constraint_DeleteConcepts_isIsa_]
 ==== method ``isIsa``
 
 [source,java]
@@ -408,7 +391,7 @@ boolean isIsa()
 .Returns
 `boolean`
 
-[#_Constraint_Relates_isKind_]
+[#_Constraint_DeleteConcepts_isKind_]
 ==== method ``isKind``
 
 [source,java]
@@ -422,7 +405,7 @@ boolean isKind()
 .Returns
 `boolean`
 
-[#_Constraint_Relates_isLabel_]
+[#_Constraint_DeleteConcepts_isLabel_]
 ==== method ``isLabel``
 
 [source,java]
@@ -436,7 +419,7 @@ boolean isLabel()
 .Returns
 `boolean`
 
-[#_Constraint_Relates_isLinks_]
+[#_Constraint_DeleteConcepts_isLinks_]
 ==== method ``isLinks``
 
 [source,java]
@@ -450,7 +433,7 @@ boolean isLinks()
 .Returns
 `boolean`
 
-[#_Constraint_Relates_isNot_]
+[#_Constraint_DeleteConcepts_isNot_]
 ==== method ``isNot``
 
 [source,java]
@@ -464,7 +447,7 @@ boolean isNot()
 .Returns
 `boolean`
 
-[#_Constraint_Relates_isOr_]
+[#_Constraint_DeleteConcepts_isOr_]
 ==== method ``isOr``
 
 [source,java]
@@ -478,7 +461,7 @@ boolean isOr()
 .Returns
 `boolean`
 
-[#_Constraint_Relates_isOwns_]
+[#_Constraint_DeleteConcepts_isOwns_]
 ==== method ``isOwns``
 
 [source,java]
@@ -492,7 +475,7 @@ boolean isOwns()
 .Returns
 `boolean`
 
-[#_Constraint_Relates_isPlays_]
+[#_Constraint_DeleteConcepts_isPlays_]
 ==== method ``isPlays``
 
 [source,java]
@@ -506,7 +489,7 @@ boolean isPlays()
 .Returns
 `boolean`
 
-[#_Constraint_Relates_isRelates_]
+[#_Constraint_DeleteConcepts_isRelates_]
 ==== method ``isRelates``
 
 [source,java]
@@ -520,7 +503,7 @@ boolean isRelates()
 .Returns
 `boolean`
 
-[#_Constraint_Relates_isSub_]
+[#_Constraint_DeleteConcepts_isSub_]
 ==== method ``isSub``
 
 [source,java]
@@ -534,7 +517,7 @@ boolean isSub()
 .Returns
 `boolean`
 
-[#_Constraint_Relates_isTry_]
+[#_Constraint_DeleteConcepts_isTry_]
 ==== method ``isTry``
 
 [source,java]
@@ -548,7 +531,7 @@ boolean isTry()
 .Returns
 `boolean`
 
-[#_Constraint_Relates_isValue_]
+[#_Constraint_DeleteConcepts_isValue_]
 ==== method ``isValue``
 
 [source,java]
@@ -562,35 +545,7 @@ boolean isValue()
 .Returns
 `boolean`
 
-[#_Constraint_Relates_relation_]
-==== method ``relation``
-
-[source,java]
-----
-ConstraintVertex relation()
-----
-
-
-
-[caption=""]
-.Returns
-`ConstraintVertex`
-
-[#_Constraint_Relates_role_]
-==== method ``role``
-
-[source,java]
-----
-ConstraintVertex role()
-----
-
-
-
-[caption=""]
-.Returns
-`ConstraintVertex`
-
-[#_Constraint_Relates_span_]
+[#_Constraint_DeleteConcepts_span_]
 ==== method ``span``
 
 [source,java]
@@ -604,7 +559,21 @@ Gets the span of this constraint.
 .Returns
 `Constraint.Span`
 
-[#_Constraint_Relates_variant_]
+[#_Constraint_DeleteConcepts_variables_]
+==== method ``variables``
+
+[source,java]
+----
+java.util.stream.Stream<? extends ConstraintVertex> variables()
+----
+
+
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<? extends ConstraintVertex>`
+
+[#_Constraint_DeleteConcepts_variant_]
 ==== method ``variant``
 
 [source,java]

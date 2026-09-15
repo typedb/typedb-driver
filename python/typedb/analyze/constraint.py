@@ -27,7 +27,7 @@ from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE, INVALI
 from typedb.api.analyze.constraint import (
     Constraint, Span,
     Isa, Has, Links, Sub, Owns, Relates, Plays,
-    FunctionCall, Expression, Is, Iid, Comparison, Kind, Label, Value,
+    FunctionCall, Expression, Is, Iid, DeleteConcepts, Comparison, Kind, Label, Value,
     Or, Not, Try,
 )
 from typedb.analyze.constraint_vertex import _ConstraintVertex
@@ -78,6 +78,7 @@ from typedb.native_driver_wrapper import (
     constraint_is_get_rhs,
     constraint_iid_get_variable,
     constraint_iid_get_iid,
+    constraint_delete_concepts_get_variables,
     constraint_comparison_get_lhs,
     constraint_comparison_get_rhs,
     constraint_comparison_get_comparator,
@@ -131,6 +132,8 @@ class _Constraint(Constraint, NativeWrapper[NativeConstraint], ABC):
             return _Is(native)
         if variant == ConstraintVariant.Iid:
             return _Iid(native)
+        if variant == ConstraintVariant.DeleteConcepts:
+            return _DeleteConcepts(native)
         if variant == ConstraintVariant.Comparison:
             return _Comparison(native)
         if variant == ConstraintVariant.KindOf:
@@ -186,6 +189,9 @@ class _Constraint(Constraint, NativeWrapper[NativeConstraint], ABC):
     def is_iid(self) -> bool:
         return False
 
+    def is_delete_concepts(self) -> bool:
+        return False
+
     def is_comparison(self) -> bool:
         return False
 
@@ -239,6 +245,9 @@ class _Constraint(Constraint, NativeWrapper[NativeConstraint], ABC):
 
     def as_iid(self):
         raise TypeDBDriverException(INVALID_CONSTRAINT_CASTING, (self.__class__.__name__, "Iid"))
+
+    def as_delete_concepts(self):
+        raise TypeDBDriverException(INVALID_CONSTRAINT_CASTING, (self.__class__.__name__, "DeleteConcepts"))
 
     def as_comparison(self):
         raise TypeDBDriverException(INVALID_CONSTRAINT_CASTING, (self.__class__.__name__, "Comparison"))
@@ -516,6 +525,22 @@ class _Iid(_Constraint, Iid):
 
     def iid(self) -> str:
         return constraint_iid_get_iid(self.native_object)
+
+
+class _DeleteConcepts(_Constraint, DeleteConcepts):
+    def __init__(self, native):
+        super().__init__(native)
+
+    def is_delete_concepts(self) -> bool:
+        return True
+
+    def as_delete_concepts(self):
+        return self
+
+    def variables(self) -> Iterator["ConstraintVertex"]:
+        native_iter = constraint_delete_concepts_get_variables(self.native_object)
+        wrapper = IteratorWrapper(native_iter, constraint_vertex_iterator_next)
+        return map(lambda n: _ConstraintVertex(n), wrapper)
 
 
 class _Comparison(_Constraint, Comparison):

@@ -23,6 +23,20 @@ Constraint.Comparison asComparison()
 .Returns
 `Constraint.Comparison`
 
+[#_Constraint_asDeleteConcepts_]
+==== method ``asDeleteConcepts``
+
+[source,java]
+----
+Constraint.DeleteConcepts asDeleteConcepts()
+----
+
+
+
+[caption=""]
+.Returns
+`Constraint.DeleteConcepts`
+
 [#_Constraint_asExpression_]
 ==== method ``asExpression``
 
@@ -267,6 +281,20 @@ Constraint.Value asValue()
 [source,java]
 ----
 boolean isComparison()
+----
+
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[#_Constraint_isDeleteConcepts_]
+==== method ``isDeleteConcepts``
+
+[source,java]
+----
+boolean isDeleteConcepts()
 ----
 
 

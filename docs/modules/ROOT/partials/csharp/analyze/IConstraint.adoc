@@ -27,6 +27,22 @@ Casts this constraint to a comparison constraint.
 .Returns
 `IComparison`
 
+[#_IDeleteConcepts_TypeDB_Driver_Api_Analyze_IConstraint_AsDeleteConcepts_]
+==== method ``AsDeleteConcepts``
+
+[source,cs]
+----
+IDeleteConcepts AsDeleteConcepts()
+----
+
+
+
+Casts this constraint to a delete concepts constraint.
+
+[caption=""]
+.Returns
+`IDeleteConcepts`
+
 [#_IExpression_TypeDB_Driver_Api_Analyze_IConstraint_AsExpression_]
 ==== method ``AsExpression``
 
@@ -310,6 +326,22 @@ bool TypeDB.Driver.Api.Analyze.IConstraint.IsComparison
 
 
 Checks if this constraint is a comparison constraint.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_bool_TypeDB_Driver_Api_Analyze_IConstraint_IsDeleteConcepts]
+==== method ``IsDeleteConcepts``
+
+[source,cs]
+----
+bool TypeDB.Driver.Api.Analyze.IConstraint.IsDeleteConcepts
+----
+
+
+
+Checks if this constraint is a delete concepts constraint.
 
 [caption=""]
 .Returns

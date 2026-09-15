@@ -97,6 +97,9 @@ pub enum Constraint {
     /// &lt;concept&gt; iid &lt;iid&gt;
     /// e.g. `$y iid 0x1f0005000000000000012f`
     Iid { concept: ConstraintVertex, iid: IID },
+    /// delete &lt;variables&gt;
+    /// e.g. `delete $q;` deletes the concepts bound to `$q`
+    DeleteConcepts { variables: Vec<ConstraintVertex> },
     /// &lt;lhs&gt; &lt;comparator&gt; &lt;rhs&gt;
     /// e.g. `$x &lt; 5`
     Comparison { lhs: ConstraintVertex, rhs: ConstraintVertex, comparator: Comparator },

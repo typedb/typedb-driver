@@ -27,6 +27,7 @@ dir_mapping = {
     "ConstraintExactness.adoc": "analyze",
     "ConstraintVariant.adoc": "analyze",
     "ConstraintVertex.adoc": "analyze",
+    "DeleteConcepts.adoc": "analyze",
     "DeleteStage.adoc": "analyze",
     "DistinctStage.adoc": "analyze",
     "Expression.adoc": "analyze",

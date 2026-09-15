@@ -346,6 +346,9 @@ pub mod functor_encoding {
                     let iid_ref = &iid_str;
                     encode_functor_impl!(context, Iid { concept, iid_ref, })
                 }
+                Self::DeleteConcepts { variables } => {
+                    encode_functor_impl!(context, DeleteConcepts { variables, })
+                }
                 Self::Comparison { lhs, rhs, comparator } => {
                     encode_functor_impl!(context, Comparison { lhs, rhs, comparator, })
                 }
