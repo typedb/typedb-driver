@@ -1,0 +1,35 @@
+[#_IDeleteConcepts]
+[.doc-api-reference-driver]
+=== IDeleteConcepts
+
+`class`
+
+*Package*: `TypeDB.Driver.Api.Analyze`
+
+*Supertypes:*
+
+* `TypeDB.Driver.Api.Analyze.IConstraint`
+
+
+
+Represents the deletion of concepts bound to a set of variables: delete variables.
+
+// tag::methods[]
+[#_IEnumerable_IConstraintVertex_TypeDB_Driver_Api_Analyze_IDeleteConcepts_Variables]
+==== method ``Variables``
+
+[source,cs]
+----
+IEnumerable< IConstraintVertex > TypeDB.Driver.Api.Analyze.IDeleteConcepts.Variables
+----
+
+
+
+The variables whose concepts are deleted.
+
+[caption=""]
+.Returns
+`IEnumerable< IConstraintVertex >`
+
+// end::methods[]
+

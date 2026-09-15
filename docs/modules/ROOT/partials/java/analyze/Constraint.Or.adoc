@@ -32,6 +32,20 @@ Constraint.Comparison asComparison()
 .Returns
 `Constraint.Comparison`
 
+[#_Constraint_Or_asDeleteConcepts_]
+==== method ``asDeleteConcepts``
+
+[source,java]
+----
+Constraint.DeleteConcepts asDeleteConcepts()
+----
+
+
+
+[caption=""]
+.Returns
+`Constraint.DeleteConcepts`
+
 [#_Constraint_Or_asExpression_]
 ==== method ``asExpression``
 
@@ -290,6 +304,20 @@ Index into ``Pipeline.conjunctions``
 [source,java]
 ----
 boolean isComparison()
+----
+
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[#_Constraint_Or_isDeleteConcepts_]
+==== method ``isDeleteConcepts``
+
+[source,java]
+----
+boolean isDeleteConcepts()
 ----
 
 

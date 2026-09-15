@@ -24,6 +24,7 @@ dir_mapping = {
     "IConjunctionID.adoc": "analyze",
     "IConstraint.adoc": "analyze",
     "IConstraintVertex.adoc": "analyze",
+    "IDeleteConcepts.adoc": "analyze",
     "IDeleteStage.adoc": "analyze",
     "IDistinctStage.adoc": "analyze",
     "IExpression.adoc": "analyze",

@@ -14,6 +14,7 @@ A representation of a TypeQL constraint.
 |===
 |Variant
 a| `Comparison`
+a| `DeleteConcepts`
 a| `Expression`
 a| `FunctionCall`
 a| `Has`

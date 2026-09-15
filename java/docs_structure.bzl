@@ -21,6 +21,7 @@ dir_mapping = {
     "Conjunction.adoc": "analyze",
     "Constraint.adoc": "analyze",
     "Constraint.Comparison.adoc": "analyze",
+    "Constraint.DeleteConcepts.adoc": "analyze",
     "Constraint.Expression.adoc": "analyze",
     "Constraint.FunctionCall.adoc": "analyze",
     "Constraint.Has.adoc": "analyze",

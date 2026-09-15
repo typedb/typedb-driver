@@ -81,6 +81,7 @@ dir_mapping = {
     "ConstraintSpan.adoc": "analyze",
     "ConstraintAny.adoc": "analyze",
     "ConstraintComparison.adoc": "analyze",
+    "ConstraintDeleteConcepts.adoc": "analyze",
     "ConstraintExpression.adoc": "analyze",
     "ConstraintFunction.adoc": "analyze",
     "ConstraintHas.adoc": "analyze",

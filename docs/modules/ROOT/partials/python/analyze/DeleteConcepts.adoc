@@ -1,0 +1,31 @@
+[#_DeleteConcepts]
+[.doc-api-reference-driver]
+=== DeleteConcepts
+
+`class`
+
+*Package*: `typedb.api.analyze.constraint`
+
+*Supertypes:*
+
+* `Constraint`
+
+Represents the deletion of concepts bound to a set of variables: delete &lt;variables&gt;
+
+// tag::methods[]
+[#_DeleteConcepts_variables_]
+==== method ``variables``
+
+[source,python]
+----
+variables() -> Iterator['ConstraintVertex']
+----
+
+
+
+[caption=""]
+.Returns
+`Iterator['ConstraintVertex']`
+
+// end::methods[]
+

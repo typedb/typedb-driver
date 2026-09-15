@@ -35,6 +35,20 @@ Constraint.Comparison asComparison()
 .Returns
 `Constraint.Comparison`
 
+[#_Constraint_Links_asDeleteConcepts_]
+==== method ``asDeleteConcepts``
+
+[source,java]
+----
+Constraint.DeleteConcepts asDeleteConcepts()
+----
+
+
+
+[caption=""]
+.Returns
+`Constraint.DeleteConcepts`
+
 [#_Constraint_Links_asExpression_]
 ==== method ``asExpression``
 
@@ -293,6 +307,20 @@ com.typedb.driver.jni.ConstraintExactness exactness()
 [source,java]
 ----
 boolean isComparison()
+----
+
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[#_Constraint_Links_isDeleteConcepts_]
+==== method ``isDeleteConcepts``
+
+[source,java]
+----
+boolean isDeleteConcepts()
 ----
 
 
