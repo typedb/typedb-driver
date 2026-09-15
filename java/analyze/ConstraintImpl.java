@@ -61,6 +61,8 @@ public abstract class ConstraintImpl extends NativeObject<com.typedb.driver.jni.
                 return new IsImpl(constraint);
             case Iid:
                 return new IidImpl(constraint);
+            case DeleteConcepts:
+                return new DeleteConceptsImpl(constraint);
             case Comparison:
                 return new ComparisonImpl(constraint);
             case KindOf:
@@ -155,6 +157,10 @@ public abstract class ConstraintImpl extends NativeObject<com.typedb.driver.jni.
         return false;
     }
 
+    public boolean isDeleteConcepts() {
+        return false;
+    }
+
     public boolean isComparison() {
         return false;
     }
@@ -230,6 +236,10 @@ public abstract class ConstraintImpl extends NativeObject<com.typedb.driver.jni.
 
     public IidImpl asIid() {
         throw new TypeDBDriverException(INVALID_CONSTRAINT_CASTING, className(this.getClass()), className(IidImpl.class));
+    }
+
+    public DeleteConceptsImpl asDeleteConcepts() {
+        throw new TypeDBDriverException(INVALID_CONSTRAINT_CASTING, className(this.getClass()), className(DeleteConceptsImpl.class));
     }
 
     public ComparisonImpl asComparison() {
@@ -561,6 +571,26 @@ public abstract class ConstraintImpl extends NativeObject<com.typedb.driver.jni.
 
         public String iid() {
             return typedb_driver.constraint_iid_get_iid(nativeObject);
+        }
+    }
+
+    public static class DeleteConceptsImpl extends ConstraintImpl implements Constraint.DeleteConcepts {
+        public DeleteConceptsImpl(com.typedb.driver.jni.ConstraintWithSpan nativeObject) {
+            super(nativeObject);
+        }
+
+        @Override
+        public boolean isDeleteConcepts() {
+            return true;
+        }
+
+        @Override
+        public DeleteConceptsImpl asDeleteConcepts() {
+            return this;
+        }
+
+        public Stream<ConstraintVertexImpl> variables() {
+            return new NativeIterator<>(typedb_driver.constraint_delete_concepts_get_variables(nativeObject)).stream().map(ConstraintVertexImpl::new);
         }
     }
 

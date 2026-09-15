@@ -132,6 +132,10 @@ def _encode_constraint(constraint: Constraint, encoder: FunctorEncoder) -> str:
         iid = constraint.as_iid()
         return encoder.make_functor("Iid", iid.variable(), iid.iid())
 
+    elif constraint.is_delete_concepts():
+        delete_concepts = constraint.as_delete_concepts()
+        return encoder.make_functor("DeleteConcepts", delete_concepts.variables())
+
     elif constraint.is_comparison():
         comp = constraint.as_comparison()
         comparator = comp.comparator()

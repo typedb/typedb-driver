@@ -315,6 +315,9 @@ impl TryFromProto<conjunction_proto::constraint::Constraint> for Constraint {
                 concept: expect_try_from_proto(concept, "structure_constraint::Iid.concept")?,
                 iid: iid.into(),
             },
+            ConstraintProto::DeleteConcepts(constraint_proto::DeleteConcepts { variables }) => {
+                Constraint::DeleteConcepts { variables: vec_from_proto(variables)? }
+            }
         };
         Ok(constraint)
     }

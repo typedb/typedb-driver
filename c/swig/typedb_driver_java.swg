@@ -301,6 +301,7 @@
 %nojavaexception constraint_is_get_rhs;
 %nojavaexception constraint_iid_get_variable;
 %nojavaexception constraint_iid_get_iid;
+%nojavaexception constraint_delete_concepts_get_variables;
 %nojavaexception constraint_comparison_get_lhs;
 %nojavaexception constraint_comparison_get_rhs;
 %nojavaexception constraint_comparison_get_comparator;

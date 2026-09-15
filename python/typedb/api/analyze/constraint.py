@@ -82,6 +82,10 @@ class Constraint(ABC):
         pass
 
     @abstractmethod
+    def is_delete_concepts(self) -> bool:
+        pass
+
+    @abstractmethod
     def is_comparison(self) -> bool:
         pass
 
@@ -151,6 +155,10 @@ class Constraint(ABC):
 
     @abstractmethod
     def as_iid(self) -> "Iid":
+        pass
+
+    @abstractmethod
+    def as_delete_concepts(self) -> "DeleteConcepts":
         pass
 
     @abstractmethod
@@ -351,6 +359,14 @@ class Iid(Constraint, ABC):
 
     @abstractmethod
     def iid(self) -> str:
+        pass
+
+
+class DeleteConcepts(Constraint, ABC):
+    """Represents the deletion of concepts bound to a set of variables: delete <variables>"""
+
+    @abstractmethod
+    def variables(self) -> Iterator["ConstraintVertex"]:
         pass
 
 

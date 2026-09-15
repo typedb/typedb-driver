@@ -61,6 +61,8 @@ public interface Constraint {
 
     boolean isIid();
 
+    boolean isDeleteConcepts();
+
     boolean isComparison();
 
     boolean isKind();
@@ -96,6 +98,8 @@ public interface Constraint {
     Is asIs();
 
     Iid asIid();
+
+    DeleteConcepts asDeleteConcepts();
 
     Comparison asComparison();
 
@@ -233,6 +237,13 @@ public interface Constraint {
         ConstraintVertex variable();
 
         String iid();
+    }
+
+    /**
+     * Represents the deletion of concepts bound to a set of variables: delete <variables>
+     */
+    interface DeleteConcepts extends Constraint {
+        Stream<? extends ConstraintVertex> variables();
     }
 
     /**
