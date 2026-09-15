@@ -37,11 +37,12 @@ impl IntoProto<i32> for TransactionType {
 
 impl TryFromProto<i32> for QueryType {
     fn try_from_proto(query_type: i32) -> Result<Self> {
-        match query_type {
-            0 => Ok(Self::ReadQuery),
-            1 => Ok(Self::WriteQuery),
-            2 => Ok(Self::SchemaQuery),
-            _ => Err(ConnectionError::UnexpectedQueryType { query_type }.into()),
+        use typedb_protocol::query::Type as QueryTypeProto;
+        match QueryTypeProto::try_from(query_type) {
+            Ok(QueryTypeProto::Read) => Ok(Self::ReadQuery),
+            Ok(QueryTypeProto::Write) => Ok(Self::WriteQuery),
+            Ok(QueryTypeProto::Schema) => Ok(Self::SchemaQuery),
+            Err(_) => Err(ConnectionError::UnexpectedQueryType { query_type }.into()),
         }
     }
 }
