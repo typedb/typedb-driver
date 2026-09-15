@@ -332,6 +332,7 @@ VoidPromise* transaction_on_close_register(const Transaction* transaction, Trans
 %newobject constraint_is_get_rhs;
 %newobject constraint_iid_get_variable;
 %newobject constraint_iid_get_iid;
+%newobject constraint_delete_concepts_get_variables;
 %newobject constraint_comparison_get_lhs;
 %newobject constraint_comparison_get_rhs;
 %newobject constraint_comparison_get_comparator;
