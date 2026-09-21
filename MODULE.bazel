@@ -244,9 +244,9 @@ workspace_refs = use_repo_rule("@typedb_bazel_distribution//common/workspace_ref
 workspace_refs(
     name = "typedb_driver_workspace_refs",
     workspace_commit_dict = {
-        "typedb_protocol+": "3.13.4",
     },
     workspace_tag_dict = {
+        "typedb_protocol+": "3.13.4",
     },
 )
 
