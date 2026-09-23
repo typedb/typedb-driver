@@ -205,7 +205,12 @@ commands:
   install-maven-mac-rosetta:
     steps:
       - install-brew-rosetta
-      - run: /usr/local/bin/brew install maven
+      # Homebrew ships no x86_64 bottles for openjdk on this macOS image, so `brew install maven` via the
+      # Intel prefix compiles openjdk from source and exceeds the CI no-output timeout. Instead install a
+      # prebuilt x86_64 JDK (cask = binary .pkg) via the Intel brew, and install maven (pure Java) via the
+      # native arm64 brew. The x86_64 JVM is needed so it can load the x86_64 JNI dylib under Rosetta.
+      - run: arch -x86_64 /usr/local/bin/brew install --cask temurin@21
+      - run: /opt/homebrew/bin/brew install maven
 
   install-maven-linux:
     steps:
@@ -240,7 +245,12 @@ commands:
           tool/test/start-core-server.sh
           sed -i -e "s/DRIVER_JAVA_VERSION_MARKER/0.0.0-$CIRCLE_SHA1/g" java/test/deployment/pom.xml
           cat java/test/deployment/pom.xml
-          (cd java/test/deployment && /usr/local/bin/mvn test)
+          # Assign separately from export so a failed lookup fails the step instead of leaving JAVA_HOME empty,
+          # which would make mvn silently fall back to the arm64 brew openjdk and test the wrong JNI artifact.
+          JAVA_HOME="$(/usr/libexec/java_home -F -v 21 -a x86_64)"
+          export JAVA_HOME
+          "$JAVA_HOME/bin/java" -XshowSettings:properties -version 2>&1 | grep -q 'os.arch = x86_64'
+          (cd java/test/deployment && mvn test)
           tool/test/stop-core-server.sh
 
   deploy-maven-jni-release-unix:
