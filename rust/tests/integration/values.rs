@@ -232,6 +232,42 @@ fn decimal_display_fractional() {
 }
 
 #[test]
+fn decimal_display_negative_fractional() {
+    let cases = [
+        (-10, 4_100_000_000_000_000_000, "-9.59dec"),
+        (-1, 9_900_000_000_000_000_000, "-0.01dec"),
+        (-1, 5_000_000_000_000_000_000, "-0.5dec"),
+        (-1, 1, "-0.9999999999999999999dec"),
+        (-1, 9_999_999_999_999_999_999, "-0.0000000000000000001dec"),
+        (i64::MIN, 1, "-9223372036854775807.9999999999999999999dec"),
+        (i64::MIN, 9_999_999_999_999_999_999, "-9223372036854775807.0000000000000000001dec"),
+    ];
+    for (integer, fractional, expected) in cases {
+        let value = Decimal::from_parts(integer, fractional);
+        assert_eq!(format!("{}", value), expected);
+        assert_eq!(format!("{:?}", value), expected);
+    }
+}
+
+#[test]
+fn decimal_display_unchanged_controls() {
+    let cases = [
+        (0, 0, "0.0"),
+        (-1, 0, "-1.0"),
+        (i64::MIN, 0, "-9223372036854775808.0"),
+        (i64::MAX, 0, "9223372036854775807.0"),
+        (0, 1, "0.0000000000000000001dec"),
+        (9, 5_900_000_000_000_000_000, "9.59dec"),
+        (i64::MAX, 9_999_999_999_999_999_999, "9223372036854775807.9999999999999999999dec"),
+    ];
+    for (integer, fractional, expected) in cases {
+        let value = Decimal::from_parts(integer, fractional);
+        assert_eq!(format!("{}", value), expected);
+        assert_eq!(format!("{:?}", value), expected);
+    }
+}
+
+#[test]
 fn decimal_addition() {
     let a = Decimal::from_parts(1, 5_000_000_000_000_000_000);
     let b = Decimal::from_parts(2, 7_000_000_000_000_000_000);
