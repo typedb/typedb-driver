@@ -397,16 +397,23 @@ impl fmt::Debug for Decimal {
         if self.fractional == 0 {
             write!(f, "{}.0", self.integer)?;
         } else {
+            // Negative values use a floor-integer component and a positive fraction.
+            // Convert those components to the magnitude before rendering the sign.
+            let (sign, integer, fraction) = if self.integer < 0 {
+                ("-", -(self.integer + 1), Self::FRACTIONAL_PART_DENOMINATOR - self.fractional)
+            } else {
+                ("", self.integer, self.fractional)
+            };
             // count number of tailing 0's that don't have to be represented
             let mut tail_0s = 0;
-            let mut fractional = self.fractional;
+            let mut fractional = fraction;
             while fractional.is_multiple_of(10) {
                 tail_0s += 1;
                 fractional /= 10;
             }
 
             let fractional_width = Self::FRACTIONAL_PART_DENOMINATOR_LOG10 - tail_0s;
-            write!(f, "{}.{:0width$}dec", self.integer, fractional, width = fractional_width as usize)?;
+            write!(f, "{}{}.{:0width$}dec", sign, integer, fractional, width = fractional_width as usize)?;
         }
         Ok(())
     }
