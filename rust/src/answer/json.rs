@@ -35,6 +35,7 @@ pub enum JSON {
     Object(HashMap<Cow<'static, str>, JSON>),
     Array(Vec<JSON>),
     String(Cow<'static, str>),
+    Integer(i64),
     Number(f64),
     Boolean(bool),
     Null,
@@ -64,6 +65,7 @@ impl fmt::Display for JSON {
                 f.write_char(']')?;
             }
             JSON::String(string) => write_escaped_string(string, f)?,
+            JSON::Integer(integer) => write!(f, "{integer}")?,
             JSON::Number(number) => write!(f, "{number}")?,
             JSON::Boolean(boolean) => write!(f, "{boolean}")?,
             JSON::Null => write!(f, "null")?,
@@ -140,6 +142,7 @@ impl Serialize for JSON {
                 seq.end()
             }
             Self::String(string) => serializer.serialize_str(string),
+            &Self::Integer(integer) => serializer.serialize_i64(integer),
             &Self::Number(number) => serializer.serialize_f64(number),
             &Self::Boolean(boolean) => serializer.serialize_bool(boolean),
             Self::Null => serializer.serialize_unit(),
@@ -172,28 +175,37 @@ impl<'de> Deserialize<'de> for JSON {
             where
                 E: serde::de::Error,
             {
-                Ok(JSON::Number(value as f64))
+                Ok(JSON::Integer(value))
             }
 
             fn visit_i128<E>(self, value: i128) -> Result<Self::Value, E>
             where
                 E: serde::de::Error,
             {
-                Ok(JSON::Number(value as f64))
+                match i64::try_from(value) {
+                    Ok(value) => Ok(JSON::Integer(value)),
+                    Err(_) => Ok(JSON::Number(value as f64)),
+                }
             }
 
             fn visit_u64<E>(self, value: u64) -> Result<Self::Value, E>
             where
                 E: serde::de::Error,
             {
-                Ok(JSON::Number(value as f64))
+                match i64::try_from(value) {
+                    Ok(value) => Ok(JSON::Integer(value)),
+                    Err(_) => Ok(JSON::Number(value as f64)),
+                }
             }
 
             fn visit_u128<E>(self, value: u128) -> Result<Self::Value, E>
             where
                 E: serde::de::Error,
             {
-                Ok(JSON::Number(value as f64))
+                match i64::try_from(value) {
+                    Ok(value) => Ok(JSON::Integer(value)),
+                    Err(_) => Ok(JSON::Number(value as f64)),
+                }
             }
 
             fn visit_f64<E>(self, value: f64) -> Result<Self::Value, E>
@@ -306,7 +318,7 @@ mod test {
     }
 
     fn random_json<R: Rng>(rng: &mut R) -> JSON {
-        let weights = [1, 1, 3, 3, 3, 3];
+        let weights = [1, 1, 3, 3, 3, 3, 3];
         let generators: &[fn(&mut R) -> JSON] = &[
             |rng| {
                 let len = rng.gen_range(0..12);
@@ -319,12 +331,29 @@ mod test {
                 JSON::Array(iter::from_fn(|| Some(random_json(rng))).take(len).collect())
             },
             |rng| JSON::String(Cow::Owned(random_string(rng))),
+            |rng| JSON::Integer(rng.r#gen()),
             |rng| JSON::Number(rng.r#gen()),
             |rng| JSON::Boolean(rng.r#gen()),
             |_| JSON::Null,
         ];
         let dist = WeightedIndex::new(weights).unwrap();
         generators[dist.sample(rng)](rng)
+    }
+
+    #[test]
+    fn integers_survive_a_roundtrip_beyond_f64_precision() {
+        // 2^53 is where f64 stops representing consecutive integers, so anything
+        // above it is corrupted by a detour through JSON::Number.
+        for value in [i64::MAX, i64::MIN, 9007199254740993, -9007199254740993, 0, 1, -1] {
+            let json = JSON::Integer(value);
+            assert_eq!(json.to_string(), value.to_string());
+
+            let text = serde_json::to_string(&json).unwrap();
+            assert_eq!(text, value.to_string());
+
+            let deser: JSON = serde_json::from_str(&text).unwrap();
+            assert_eq!(deser, JSON::Integer(value), "lost precision round-tripping {value}");
+        }
     }
 
     #[test]
