@@ -74,7 +74,7 @@ function tokenErrToResult(tokenResp: ApiErrorResponse): ApiErrorResponse | null 
 
 export * from "./analyze";
 export * from "./concept";
-export { parseJson } from "./json";
+export { parseJson, stringifyJson } from "./json";
 export * from "./params";
 export * from "./analyzed-conjunction";
 export * from "./response";
@@ -353,7 +353,7 @@ export class TypeDBHttpDriver {
         const body = { username: this.params.username, password: this.params.password };
         let resp: Response;
         try {
-            resp = await fetch(url, { method: "POST", body: JSON.stringify(body), headers: { "Content-Type": "application/json" } });
+            resp = await fetch(url, { method: "POST", body: stringifyJson(body), headers: { "Content-Type": "application/json" } });
         } catch {
             return driverError("HDR2", `Cannot connect to server at ${this.currentOrigin}`);
         }

@@ -186,6 +186,8 @@ namespace TypeDB.Driver.Answer
 
             private readonly long? _integer;
 
+            private readonly double _number;
+
             public JSONNumber(string raw)
             {
                 _raw = raw;
@@ -193,13 +195,14 @@ namespace TypeDB.Driver.Answer
                     out long integer)
                     ? integer
                     : null;
+                _number = double.Parse(raw, CultureInfo.InvariantCulture);
             }
 
             public override bool IsNumber => true;
 
             public override bool IsInteger => _integer.HasValue;
 
-            public override double AsNumber() => double.Parse(_raw, CultureInfo.InvariantCulture);
+            public override double AsNumber() => _number;
 
             public override long AsInteger() => _integer
                 ?? throw new TypeDBDriverException(ConceptError.INVALID_CONCEPT_CASTING, GetType().Name, "Integer");
@@ -209,10 +212,10 @@ namespace TypeDB.Driver.Answer
                 if (ReferenceEquals(this, obj)) return true;
                 if (obj is not JSONNumber other) return false;
                 if (_integer.HasValue && other._integer.HasValue) return _integer.Value == other._integer.Value;
-                return AsNumber() == other.AsNumber();
+                return _number == other._number;
             }
 
-            public override int GetHashCode() => AsNumber().GetHashCode();
+            public override int GetHashCode() => _number.GetHashCode();
 
             public override string ToString() => _raw;
         }

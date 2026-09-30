@@ -131,7 +131,10 @@ defineParameterType({
 export function parseValue(value: string, valueType: ValueType) {
     switch (valueType) {
         case "boolean": return JSON.parse(value);
-        case "integer": return parseInt(value);
+        // BigInt, not parseInt: parseInt rounds a large integer, and it is applied
+        // to the answer as well as the expectation, so both sides would round the
+        // same way and the comparison could not fail.
+        case "integer": return BigInt(value);
         case "double": return parseFloat(value);
         case "decimal": {
             const stripped = value.replace("dec", "");

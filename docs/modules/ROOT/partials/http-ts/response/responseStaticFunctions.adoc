@@ -146,5 +146,28 @@ a| `text` a|  a| `string`
 .Returns
 `any`
 
+[#_stringifyJson_stringifyJson_value_unknown]
+==== method ``stringifyJson``
+
+[source,typescript]
+----
+stringifyJson(value: unknown): string
+----
+
+Serializes to JSON, writing a ``bigint`` as a number. ``JSON.stringify`` throws on one, so a value taken from an answer could not otherwise be sent back.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `value` a|  a| `unknown`
+|===
+
+[caption=""]
+.Returns
+`string`
+
 // end::methods[]
 

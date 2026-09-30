@@ -185,30 +185,22 @@ impl<'de> Deserialize<'de> for JSON {
             where
                 E: serde::de::Error,
             {
-                match i64::try_from(value) {
-                    Ok(value) => Ok(JSON::Integer(value)),
-                    Err(_) => Ok(JSON::Double(value as f64)),
-                }
+                i64::try_from(value).map(JSON::Integer).map_err(|_| E::custom("integer out of range for i64"))
             }
 
             fn visit_u64<E>(self, value: u64) -> Result<Self::Value, E>
             where
                 E: serde::de::Error,
             {
-                match i64::try_from(value) {
-                    Ok(value) => Ok(JSON::Integer(value)),
-                    Err(_) => Ok(JSON::Double(value as f64)),
-                }
+                i64::try_from(value).map(JSON::Integer).map_err(|_| E::custom("integer out of range for i64"))
             }
 
             fn visit_u128<E>(self, value: u128) -> Result<Self::Value, E>
             where
                 E: serde::de::Error,
             {
-                match i64::try_from(value) {
-                    Ok(value) => Ok(JSON::Integer(value)),
-                    Err(_) => Ok(JSON::Double(value as f64)),
-                }
+                // Rounding it into a double is the fault this type exists to avoid.
+                i64::try_from(value).map(JSON::Integer).map_err(|_| E::custom("integer out of range for i64"))
             }
 
             fn visit_f64<E>(self, value: f64) -> Result<Self::Value, E>

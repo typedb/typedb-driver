@@ -35,8 +35,12 @@ export function parseJson(text: string): any {
     return value;
 }
 
-/** 2^53 - 1 has 16 digits, so fewer than that is always exact. */
-const UNSAFE_INTEGER_CANDIDATE = /\d{16}/;
+/**
+ * 2^53 - 1 has 16 digits, so fewer than that is always exact. A number can only
+ * follow a structural character or begin the text, which keeps IIDs and other
+ * long digit runs inside strings on the fast path.
+ */
+const UNSAFE_INTEGER_CANDIDATE = /(^|[\[,:\s-])\d{16}/;
 
 const JSON_NUMBER = /^-?(0|[1-9]\d*)(\.\d+)?([eE][+-]?\d+)?$/;
 
