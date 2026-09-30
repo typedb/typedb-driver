@@ -37,8 +37,7 @@ import {
     EXPECT_ERROR_CONTAINING,
     MayError, parseValue
 } from "./params";
-import { Concept, ConceptDocument, GivenRowEntry, GivenRows, QueryType, ValueType } from "../../../dist/index.cjs";
-import { parseJson } from "../../../src/json";
+import { Concept, ConceptDocument, GivenRowEntry, GivenRows, parseJson, QueryType, ValueType } from "../../../dist/index.cjs";
 import assert from "assert";
 import {encodePipeline, FunctorEncoder, normalizeFunctorForCompare} from "./analyze";
 

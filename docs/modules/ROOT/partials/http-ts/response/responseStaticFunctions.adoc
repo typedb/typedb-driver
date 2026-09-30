@@ -121,5 +121,28 @@ a| `res` a|  a| `ApiResponse`
 .Returns
 `res is ApiOkResponse<OK_RES>`
 
+[#_parseJson_parseJson_text_string]
+==== method ``parseJson``
+
+[source,typescript]
+----
+parseJson(text: string): any
+----
+
+Parses JSON, returning a ``bigint`` for any integer a ``number`` cannot hold exactly. Otherwise behaves as ``JSON.parse``, which reads every number as a double and so rounds integers beyond 2^53.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `text` a|  a| `string`
+|===
+
+[caption=""]
+.Returns
+`any`
+
 // end::methods[]
 
