@@ -74,7 +74,7 @@ function tokenErrToResult(tokenResp: ApiErrorResponse): ApiErrorResponse | null 
 
 export * from "./analyze";
 export * from "./concept";
-export * from "./json";
+export { parseJson } from "./json";
 export * from "./params";
 export * from "./analyzed-conjunction";
 export * from "./response";

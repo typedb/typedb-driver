@@ -36,14 +36,14 @@ namespace TypeDB.Driver.Answer
     /// </summary>
     public abstract class JSON : IJSON
     {
+        private static readonly JsonSerializerOptions SerializerOptions =
+            new() { Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping };
+
         /// <summary>
         /// Parses a JSON string into a JSON object.
         /// </summary>
         /// <param name="jsonString">The JSON string to parse.</param>
         /// <returns>The parsed JSON object.</returns>
-        private static readonly JsonSerializerOptions SerializerOptions =
-            new() { Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping };
-
         public static JSON Parse(string jsonString)
         {
             using JsonDocument doc = JsonDocument.Parse(jsonString);

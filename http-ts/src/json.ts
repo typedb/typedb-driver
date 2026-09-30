@@ -30,6 +30,10 @@ export function parseJson(text: string): any {
     return value;
 }
 
+/**
+ * Serializes to JSON, writing a `bigint` as a number. `JSON.stringify` throws on
+ * one, so a value taken from an answer could not otherwise be sent back.
+ */
 export function stringifyJson(value: unknown): string {
     const out: string[] = [];
     writeValue(value, out);
@@ -233,7 +237,7 @@ class JsonParser {
         const literal = this.text.slice(start, this.at);
         if (literal === "" || literal === "-") this.fail("Expected a number");
         const value = Number(literal);
-        if (Number.isNaN(value) && literal !== "NaN") this.fail(`Invalid number '${literal}'`);
+        if (Number.isNaN(value)) this.fail(`Invalid number '${literal}'`);
         if (isInteger && !Number.isSafeInteger(value)) return BigInt(literal);
         return value;
     }

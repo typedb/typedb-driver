@@ -68,7 +68,11 @@ impl fmt::Display for JSON {
             JSON::Integer(integer) => write!(f, "{integer}")?,
             JSON::Number(number) => {
                 let rendered = format!("{number}");
-                if rendered.contains('.') { write!(f, "{rendered}")? } else { write!(f, "{rendered}.0")? }
+                if number.is_finite() && !rendered.contains('.') {
+                    write!(f, "{rendered}.0")?
+                } else {
+                    write!(f, "{rendered}")?
+                }
             }
             JSON::Boolean(boolean) => write!(f, "{boolean}")?,
             JSON::Null => write!(f, "null")?,
@@ -361,10 +365,23 @@ mod test {
 
     #[test]
     fn whole_doubles_stay_doubles() {
-        for (value, expected) in [(2.0f64, "2.0"), (-3.0, "-3.0"), (0.0, "0.0"), (-2.5, "-2.5")] {
+        for (value, expected) in
+            [(2.0f64, "2.0"), (-3.0, "-3.0"), (0.0, "0.0"), (-0.0, "-0.0"), (-2.5, "-2.5"), (1e-7, "0.0000001")]
+        {
             assert_eq!(JSON::Number(value).to_string(), expected);
         }
         assert_eq!(JSON::Integer(2).to_string(), "2");
+    }
+
+    #[test]
+    fn non_finite_doubles_are_left_alone() {
+        // They have no JSON form; appending a fractional part would only make the
+        // rendering nonsense ("NaN.0").
+        for value in [f64::NAN, f64::INFINITY, f64::NEG_INFINITY] {
+            let rendered = JSON::Number(value).to_string();
+            assert_eq!(rendered, format!("{value}"), "unexpected rendering of {value}");
+            assert!(!rendered.ends_with(".0"), "{rendered} should not gain a fractional part");
+        }
     }
 
     #[test]

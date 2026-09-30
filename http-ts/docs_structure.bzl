@@ -23,7 +23,6 @@ static_function_mapping = {
     "isMisdirectedError": "response",
     "isOkResponse": "response",
     "parseJson": "response",
-    "stringifyJson": "response",
     "isQueryResponseLegacy": "legacy",
     "driverError": "response",
 
