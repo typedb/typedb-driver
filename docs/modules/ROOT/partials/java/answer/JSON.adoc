@@ -49,6 +49,20 @@ public boolean asBoolean()
 .Returns
 `public boolean`
 
+[#_JSON_asInteger_]
+==== method ``asInteger``
+
+[source,java]
+----
+public long asInteger()
+----
+
+The exact value of an integer number, which a double cannot always hold.
+
+[caption=""]
+.Returns
+`public long`
+
 [#_JSON_asNumber_]
 ==== method ``asNumber``
 
@@ -114,6 +128,20 @@ public boolean isBoolean()
 ----
 
 
+
+[caption=""]
+.Returns
+`public boolean`
+
+[#_JSON_isInteger_]
+==== method ``isInteger``
+
+[source,java]
+----
+public boolean isInteger()
+----
+
+Whether this number is written without a fractional part or an exponent.
 
 [caption=""]
 .Returns

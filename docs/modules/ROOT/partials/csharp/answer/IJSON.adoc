@@ -57,6 +57,29 @@ Casts this JSON value to a boolean.
 json.AsBoolean()
 ----
 
+[#_long_TypeDB_Driver_Api_Answer_IJSON_AsInteger_]
+==== method ``AsInteger``
+
+[source,cs]
+----
+long AsInteger()
+----
+
+
+
+Casts this JSON value to the exact value of an integer number, which a double cannot always hold.
+
+[caption=""]
+.Returns
+`long`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+json.AsInteger()
+----
+
 [#_double_TypeDB_Driver_Api_Answer_IJSON_AsNumber_]
 ==== method ``AsNumber``
 
@@ -170,6 +193,29 @@ Checks if this JSON value is a boolean.
 [source,cs]
 ----
 json.IsBoolean
+----
+
+[#_bool_TypeDB_Driver_Api_Answer_IJSON_IsInteger]
+==== method ``IsInteger``
+
+[source,cs]
+----
+bool TypeDB.Driver.Api.Answer.IJSON.IsInteger
+----
+
+
+
+Checks if this JSON number is written without a fractional part or an exponent.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+json.IsInteger
 ----
 
 [#_bool_TypeDB_Driver_Api_Answer_IJSON_IsNull]
