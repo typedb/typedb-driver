@@ -38,6 +38,8 @@ export function parseJson(text: string): any {
 /** 2^53 - 1 has 16 digits, so fewer than that is always exact. */
 const UNSAFE_INTEGER_CANDIDATE = /\d{16}/;
 
+const JSON_NUMBER = /^-?(0|[1-9]\d*)(\.\d+)?([eE][+-]?\d+)?$/;
+
 /**
  * Serializes to JSON, writing a `bigint` as a number. `JSON.stringify` throws on
  * one, so a value taken from an answer could not otherwise be sent back.
@@ -250,9 +252,8 @@ class JsonParser {
         }
 
         const literal = this.text.slice(start, this.at);
-        if (literal === "" || literal === "-") this.fail("Expected a number");
+        if (!JSON_NUMBER.test(literal)) this.fail(`Invalid number '${literal}'`);
         const value = Number(literal);
-        if (Number.isNaN(value)) this.fail(`Invalid number '${literal}'`);
         if (isInteger && !Number.isSafeInteger(value)) return BigInt(literal);
         return value;
     }

@@ -214,9 +214,19 @@ public abstract class JSON {
 
     private static class Number extends JSON {
         private final JsonValue number;
+        private final OptionalLong integer;
 
         Number(JsonValue number) {
             this.number = number;
+            this.integer = parseInteger(number);
+        }
+
+        private static OptionalLong parseInteger(JsonValue number) {
+            try {
+                return OptionalLong.of(number.asLong());
+            } catch (NumberFormatException fractionalOrOutOfRange) {
+                return OptionalLong.empty();
+            }
         }
 
         public boolean isNumber() {
@@ -225,7 +235,7 @@ public abstract class JSON {
 
         @Override
         public boolean isInteger() {
-            return integerValue().isPresent();
+            return integer.isPresent();
         }
 
         public double asNumber() {
@@ -234,29 +244,23 @@ public abstract class JSON {
 
         @Override
         public long asInteger() {
-            return integerValue().orElseThrow(
-                    () -> new TypeDBDriverException(INVALID_VALUE_RETRIEVAL, className(long.class)));
-        }
-
-        private OptionalLong integerValue() {
-            try {
-                return OptionalLong.of(java.lang.Long.parseLong(number.toString()));
-            } catch (NumberFormatException fractionalOrOutOfRange) {
-                return OptionalLong.empty();
-            }
+            return integer.orElseThrow(() -> new TypeDBDriverException(INVALID_VALUE_RETRIEVAL, className(long.class)));
         }
 
         @Override
         public boolean equals(java.lang.Object obj) {
             if (obj == this) return true;
             if (obj == null || getClass() != obj.getClass()) return false;
-            // Compared as written: past 2^53 distinct integers share a double.
-            return this.number.toString().equals(((JSON.Number) obj).number.toString());
+            JSON.Number that = (JSON.Number) obj;
+            if (this.integer.isPresent() && that.integer.isPresent()) {
+                return this.integer.getAsLong() == that.integer.getAsLong();
+            }
+            return this.asNumber() == that.asNumber();
         }
 
         @Override
         public int hashCode() {
-            return number.toString().hashCode();
+            return Double.hashCode(asNumber());
         }
 
         @Override

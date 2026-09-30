@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Json;
@@ -62,7 +63,7 @@ namespace TypeDB.Driver.Answer
                         .Select(Of)
                         .ToList()),
                 JsonValueKind.String => new JSONString(element.GetString()!),
-                JsonValueKind.Number => new JSONNumber(element.GetDouble(), element.GetRawText()),
+                JsonValueKind.Number => new JSONNumber(element.GetRawText()),
                 JsonValueKind.True => new JSONBoolean(true),
                 JsonValueKind.False => new JSONBoolean(false),
                 JsonValueKind.Null => new JSONNull(),
@@ -181,28 +182,37 @@ namespace TypeDB.Driver.Answer
 
         private class JSONNumber : JSON
         {
-            private readonly double _number;
-
             private readonly string _raw;
 
-            public JSONNumber(double number, string raw)
+            private readonly long? _integer;
+
+            public JSONNumber(string raw)
             {
-                _number = number;
                 _raw = raw;
+                _integer = long.TryParse(raw, NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture,
+                    out long integer)
+                    ? integer
+                    : null;
             }
 
             public override bool IsNumber => true;
 
-            public override double AsNumber() => _number;
+            public override bool IsInteger => _integer.HasValue;
+
+            public override double AsNumber() => double.Parse(_raw, CultureInfo.InvariantCulture);
+
+            public override long AsInteger() => _integer
+                ?? throw new TypeDBDriverException(ConceptError.INVALID_CONCEPT_CASTING, GetType().Name, "Integer");
 
             public override bool Equals(object? obj)
             {
                 if (ReferenceEquals(this, obj)) return true;
                 if (obj is not JSONNumber other) return false;
-                return _number == other._number;
+                if (_integer.HasValue && other._integer.HasValue) return _integer.Value == other._integer.Value;
+                return AsNumber() == other.AsNumber();
             }
 
-            public override int GetHashCode() => _number.GetHashCode();
+            public override int GetHashCode() => AsNumber().GetHashCode();
 
             public override string ToString() => _raw;
         }
