@@ -1,0 +1,201 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+/**
+ * Parses JSON, returning a `bigint` for any integer a `number` cannot hold
+ * exactly. Otherwise behaves as `JSON.parse`, which reads every number as a
+ * double and so rounds integers beyond 2^53.
+ */
+export function parseJson(text: string): any {
+    const parser = new JsonParser(text);
+    const value = parser.parseValue();
+    parser.skipWhitespace();
+    if (!parser.atEnd()) parser.fail("Unexpected trailing content");
+    return value;
+}
+
+const ESCAPES: Record<string, string> = {
+    '"': '"', "\\": "\\", "/": "/", b: "\b", f: "\f", n: "\n", r: "\r", t: "\t",
+};
+
+class JsonParser {
+    private readonly text: string;
+    private at = 0;
+
+    constructor(text: string) {
+        this.text = text;
+    }
+
+    atEnd(): boolean {
+        return this.at >= this.text.length;
+    }
+
+    fail(message: string): never {
+        throw new SyntaxError(`${message} at position ${this.at}`);
+    }
+
+    skipWhitespace(): void {
+        while (this.at < this.text.length) {
+            const c = this.text[this.at];
+            if (c === " " || c === "\n" || c === "\t" || c === "\r") this.at++;
+            else break;
+        }
+    }
+
+    parseValue(): any {
+        this.skipWhitespace();
+        if (this.atEnd()) this.fail("Unexpected end of input");
+        const c = this.text[this.at];
+        switch (c) {
+            case "{": return this.parseObject();
+            case "[": return this.parseArray();
+            case '"': return this.parseString();
+            case "t": return this.parseLiteral("true", true);
+            case "f": return this.parseLiteral("false", false);
+            case "n": return this.parseLiteral("null", null);
+            default: return this.parseNumber();
+        }
+    }
+
+    private parseLiteral<T>(word: string, value: T): T {
+        if (this.text.startsWith(word, this.at)) {
+            this.at += word.length;
+            return value;
+        }
+        this.fail(`Expected ${word}`);
+    }
+
+    private parseObject(): Record<string, any> {
+        this.at++; // {
+        const result: Record<string, any> = {};
+        this.skipWhitespace();
+        if (this.text[this.at] === "}") {
+            this.at++;
+            return result;
+        }
+        for (;;) {
+            this.skipWhitespace();
+            if (this.text[this.at] !== '"') this.fail("Expected a property name");
+            const key = this.parseString();
+            this.skipWhitespace();
+            if (this.text[this.at] !== ":") this.fail("Expected ':'");
+            this.at++;
+            result[key] = this.parseValue();
+            this.skipWhitespace();
+            const c = this.text[this.at];
+            if (c === ",") {
+                this.at++;
+                continue;
+            }
+            if (c === "}") {
+                this.at++;
+                return result;
+            }
+            this.fail("Expected ',' or '}'");
+        }
+    }
+
+    private parseArray(): any[] {
+        this.at++; // [
+        const result: any[] = [];
+        this.skipWhitespace();
+        if (this.text[this.at] === "]") {
+            this.at++;
+            return result;
+        }
+        for (;;) {
+            result.push(this.parseValue());
+            this.skipWhitespace();
+            const c = this.text[this.at];
+            if (c === ",") {
+                this.at++;
+                continue;
+            }
+            if (c === "]") {
+                this.at++;
+                return result;
+            }
+            this.fail("Expected ',' or ']'");
+        }
+    }
+
+    private parseString(): string {
+        this.at++; // opening quote
+        let out = "";
+        let chunkStart = this.at;
+        for (;;) {
+            if (this.atEnd()) this.fail("Unterminated string");
+            const c = this.text[this.at];
+            if (c === '"') {
+                out += this.text.slice(chunkStart, this.at);
+                this.at++;
+                return out;
+            }
+            if (c === "\\") {
+                out += this.text.slice(chunkStart, this.at);
+                this.at++;
+                const escape = this.text[this.at];
+                if (escape === "u") {
+                    const hex = this.text.slice(this.at + 1, this.at + 5);
+                    if (!/^[0-9a-fA-F]{4}$/.test(hex)) this.fail("Invalid unicode escape");
+                    out += String.fromCharCode(parseInt(hex, 16));
+                    this.at += 5;
+                } else {
+                    const replacement = ESCAPES[escape];
+                    if (replacement === undefined) this.fail("Invalid escape sequence");
+                    out += replacement;
+                    this.at++;
+                }
+                chunkStart = this.at;
+                continue;
+            }
+            this.at++;
+        }
+    }
+
+    private parseNumber(): number | bigint {
+        const start = this.at;
+        if (this.text[this.at] === "-") this.at++;
+        while (isDigit(this.text[this.at])) this.at++;
+
+        let isInteger = true;
+        if (this.text[this.at] === ".") {
+            isInteger = false;
+            this.at++;
+            while (isDigit(this.text[this.at])) this.at++;
+        }
+        if (this.text[this.at] === "e" || this.text[this.at] === "E") {
+            isInteger = false;
+            this.at++;
+            if (this.text[this.at] === "+" || this.text[this.at] === "-") this.at++;
+            while (isDigit(this.text[this.at])) this.at++;
+        }
+
+        const literal = this.text.slice(start, this.at);
+        if (literal === "" || literal === "-") this.fail("Expected a number");
+        const value = Number(literal);
+        if (Number.isNaN(value) && literal !== "NaN") this.fail(`Invalid number '${literal}'`);
+        if (isInteger && !Number.isSafeInteger(value)) return BigInt(literal);
+        return value;
+    }
+}
+
+function isDigit(c: string | undefined): boolean {
+    return c !== undefined && c >= "0" && c <= "9";
+}

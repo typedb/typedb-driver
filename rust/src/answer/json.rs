@@ -66,7 +66,10 @@ impl fmt::Display for JSON {
             }
             JSON::String(string) => write_escaped_string(string, f)?,
             JSON::Integer(integer) => write!(f, "{integer}")?,
-            JSON::Number(number) => write!(f, "{number}")?,
+            JSON::Number(number) => {
+                let rendered = format!("{number}");
+                if rendered.contains('.') { write!(f, "{rendered}")? } else { write!(f, "{rendered}.0")? }
+            }
             JSON::Boolean(boolean) => write!(f, "{boolean}")?,
             JSON::Null => write!(f, "null")?,
         }
@@ -354,6 +357,14 @@ mod test {
             let deser: JSON = serde_json::from_str(&text).unwrap();
             assert_eq!(deser, JSON::Integer(value), "lost precision round-tripping {value}");
         }
+    }
+
+    #[test]
+    fn whole_doubles_stay_doubles() {
+        for (value, expected) in [(2.0f64, "2.0"), (-3.0, "-3.0"), (0.0, "0.0"), (-2.5, "-2.5")] {
+            assert_eq!(JSON::Number(value).to_string(), expected);
+        }
+        assert_eq!(JSON::Integer(2).to_string(), "2");
     }
 
     #[test]

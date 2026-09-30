@@ -34,6 +34,7 @@ import {
     VersionResponse
 } from "./response";
 import {Attribute, Concept, Entity, Relation, Value} from "./concept";
+import { parseJson } from "./json";
 
 const HTTP_UNAUTHORIZED = 401;
 const HTTP_MISDIRECTED = 421;
@@ -293,7 +294,7 @@ export class TypeDBHttpDriver {
     private async switchToRedirectTarget(resp: Response): Promise<boolean> {
         let json: any;
         try {
-            json = await resp.json();
+            json = parseJson(await resp.text());
         } catch {
             return false;
         }
@@ -366,7 +367,7 @@ export class TypeDBHttpDriver {
 
     private async jsonOrNull(resp: Response): Promise<any> {
         try {
-            return await resp.json();
+            return parseJson(await resp.text());
         } catch {
             return null;
         }

@@ -49,7 +49,7 @@ public abstract class JSON {
         } else if (value.isString()) {
             return new JSON.String(value.asString());
         } else if (value.isNumber()) {
-            return new JSON.Number(value.asDouble());
+            return new JSON.Number(value);
         } else if (value.isBoolean()) {
             return new JSON.Boolean(value.asBoolean());
         } else if (value.isNull()) {
@@ -145,7 +145,7 @@ public abstract class JSON {
             }).collect(Collectors.toList());
 
             java.lang.String content = orderedKeys.stream().map(key -> {
-                StringBuilder sb = new StringBuilder("\"").append(key).append("\":");
+                StringBuilder sb = new StringBuilder(Json.value(key).toString()).append(":");
                 java.lang.String valueString = jsonObject.get(key).toString();
                 sb.append(" ").append(valueString);
                 return sb.toString();
@@ -202,9 +202,9 @@ public abstract class JSON {
     }
 
     private static class Number extends JSON {
-        private final double number;
+        private final JsonValue number;
 
-        Number(double number) {
+        Number(JsonValue number) {
             this.number = number;
         }
 
@@ -213,7 +213,7 @@ public abstract class JSON {
         }
 
         public double asNumber() {
-            return number;
+            return number.asDouble();
         }
 
         @Override
@@ -221,22 +221,17 @@ public abstract class JSON {
             if (obj == this) return true;
             if (obj == null || getClass() != obj.getClass()) return false;
             JSON.Number that = (JSON.Number) obj;
-            return this.number == that.number;
+            return this.asNumber() == that.asNumber();
         }
 
         @Override
         public int hashCode() {
-            return Double.hashCode(number);
+            return Double.hashCode(asNumber());
         }
 
         @Override
         public java.lang.String toString() {
-            long integerPart = (long) number;
-            if ((double) integerPart == number) {
-                return Long.toString(integerPart);
-            } else {
-                return Double.toString(number);
-            }
+            return number.toString();
         }
     }
 
@@ -270,7 +265,7 @@ public abstract class JSON {
 
         @Override
         public java.lang.String toString() {
-            return '"' + string + '"';
+            return Json.value(string).toString();
         }
     }
 

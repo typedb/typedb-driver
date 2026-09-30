@@ -20,6 +20,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 
 using TypeDB.Driver.Api.Answer;
@@ -40,6 +41,9 @@ namespace TypeDB.Driver.Answer
         /// </summary>
         /// <param name="jsonString">The JSON string to parse.</param>
         /// <returns>The parsed JSON object.</returns>
+        private static readonly JsonSerializerOptions SerializerOptions =
+            new() { Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping };
+
         public static JSON Parse(string jsonString)
         {
             using JsonDocument doc = JsonDocument.Parse(jsonString);
@@ -58,7 +62,7 @@ namespace TypeDB.Driver.Answer
                         .Select(Of)
                         .ToList()),
                 JsonValueKind.String => new JSONString(element.GetString()!),
-                JsonValueKind.Number => new JSONNumber(element.GetDouble()),
+                JsonValueKind.Number => new JSONNumber(element.GetDouble(), element.GetRawText()),
                 JsonValueKind.True => new JSONBoolean(true),
                 JsonValueKind.False => new JSONBoolean(false),
                 JsonValueKind.Null => new JSONNull(),
@@ -132,7 +136,8 @@ namespace TypeDB.Driver.Answer
 
             public override string ToString()
             {
-                var content = string.Join(", ", _object.Select(kvp => $"\"{kvp.Key}\": {kvp.Value}"));
+                var content = string.Join(", ", _object.Select(kvp =>
+                    $"{JsonSerializer.Serialize(kvp.Key, SerializerOptions)}: {kvp.Value}"));
                 return $"{{ {content} }}";
             }
         }
@@ -170,9 +175,12 @@ namespace TypeDB.Driver.Answer
         {
             private readonly double _number;
 
-            public JSONNumber(double number)
+            private readonly string _raw;
+
+            public JSONNumber(double number, string raw)
             {
                 _number = number;
+                _raw = raw;
             }
 
             public override bool IsNumber => true;
@@ -188,7 +196,7 @@ namespace TypeDB.Driver.Answer
 
             public override int GetHashCode() => _number.GetHashCode();
 
-            public override string ToString() => _number.ToString("G17");
+            public override string ToString() => _raw;
         }
 
         private class JSONString : JSON
@@ -213,7 +221,7 @@ namespace TypeDB.Driver.Answer
 
             public override int GetHashCode() => _str.GetHashCode();
 
-            public override string ToString() => $"\"{_str}\"";
+            public override string ToString() => JsonSerializer.Serialize(_str, SerializerOptions);
         }
 
         private class JSONBoolean : JSON

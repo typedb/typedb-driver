@@ -38,6 +38,7 @@ import {
     MayError, parseValue
 } from "./params";
 import { Concept, ConceptDocument, GivenRowEntry, GivenRows, QueryType, ValueType } from "../../../dist/index.cjs";
+import { parseJson } from "../../../src/json";
 import assert from "assert";
 import {encodePipeline, FunctorEncoder, normalizeFunctorForCompare} from "./analyze";
 
@@ -374,13 +375,18 @@ Then('answer get row\\({int}\\) get concepts size is: {int}', (rowIdx: number, s
 
 Then('answer {contains_or_doesnt} document:', (contains_or_doesnt: ContainsOrDoesnt, document: string) => {
     if (answers.answerType === "ok" || answers.answerType === "conceptRows") assert.fail("Expected document answers")
-    const expected = JSON.parse(document);
+    const expected = parseJson(document);
     if (contains_or_doesnt === "does not contain") {
-        assert.ok(!documentPresentInAnswers(expected, answers.answers), `Found ${expected} in ${JSON.stringify(answers.answers)}`);
+        assert.ok(!documentPresentInAnswers(expected, answers.answers), `Found ${describe(expected)} in ${describe(answers.answers)}`);
     } else {
-        assert.ok(documentPresentInAnswers(expected, answers.answers), `Did not find ${expected} in ${JSON.stringify(answers.answers)}`);
+        assert.ok(documentPresentInAnswers(expected, answers.answers), `Did not find ${describe(expected)} in ${describe(answers.answers)}`);
     }
 });
+
+/** JSON.stringify throws on a bigint, which would hide the assertion it is reporting. */
+function describe(value: any): string {
+    return JSON.stringify(value, (_, v) => (typeof v === "bigint" ? v.toString() : v));
+}
 
 function documentPresentInAnswers(document: any, answers: ConceptDocument[]) {
     return answers.some((x) => {
