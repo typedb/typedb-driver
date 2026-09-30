@@ -91,6 +91,11 @@ public class Util {
             return JSONListMatches(lhs.asArray(), rhs.asArray());
         } else if (lhs.isNumber()) {
             if (!rhs.isNumber()) return false;
+            // Integers compare exactly: an answer that only matches a double
+            // approximation of itself is the fault this guards against.
+            if (lhs.isInteger() || rhs.isInteger()) {
+                return lhs.isInteger() && rhs.isInteger() && lhs.asInteger() == rhs.asInteger();
+            }
             return equalsApproximate(lhs.asNumber(), rhs.asNumber());
         } else {
             return lhs.equals(rhs);

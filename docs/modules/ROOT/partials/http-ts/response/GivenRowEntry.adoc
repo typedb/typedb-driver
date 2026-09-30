@@ -6,7 +6,15 @@
 
 [source,typescript]
 ----
-GivenRowEntry: Value | Entity | Relation | Attribute | boolean | number | string
+GivenRowEntry:
+ | Value
+ | Entity
+ | Relation
+ | Attribute
+ | boolean
+ | number
+ | bigint
+ | string
 ----
 
 

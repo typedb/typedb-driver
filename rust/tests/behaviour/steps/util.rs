@@ -50,7 +50,7 @@ pub(crate) fn parse_json(json: &str) -> TypeDBResult<JSON> {
             serde_json::Value::Bool(bool) => JSON::Boolean(bool),
             serde_json::Value::Number(number) => match number.as_i64() {
                 Some(integer) => JSON::Integer(integer),
-                None => JSON::Number(number.as_f64().unwrap()),
+                None => JSON::Double(number.as_f64().unwrap()),
             },
             serde_json::Value::String(string) => JSON::String(Cow::Owned(string)),
             serde_json::Value::Array(array) => {
@@ -100,7 +100,7 @@ fn jsons_equal_up_to_reorder(lhs: &JSON, rhs: &JSON) -> bool {
         }
         (JSON::String(lhs), JSON::String(rhs)) => lhs == rhs,
         (&JSON::Integer(lhs), &JSON::Integer(rhs)) => lhs == rhs,
-        (&JSON::Number(lhs), &JSON::Number(rhs)) => equals_approximate(lhs, rhs),
+        (&JSON::Double(lhs), &JSON::Double(rhs)) => equals_approximate(lhs, rhs),
         (JSON::Boolean(lhs), JSON::Boolean(rhs)) => lhs == rhs,
         (JSON::Null, JSON::Null) => true,
         _ => false,

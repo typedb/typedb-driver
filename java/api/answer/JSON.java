@@ -27,6 +27,7 @@ import com.typedb.driver.common.exception.TypeDBDriverException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.OptionalLong;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -75,6 +76,11 @@ public abstract class JSON {
         return false;
     }
 
+    /** Whether this number is written without a fractional part or an exponent. */
+    public boolean isInteger() {
+        return false;
+    }
+
     public boolean isString() {
         return false;
     }
@@ -93,6 +99,11 @@ public abstract class JSON {
 
     public double asNumber() {
         throw new TypeDBDriverException(INVALID_VALUE_RETRIEVAL, className(double.class));
+    }
+
+    /** The exact value of an integer number, which a double cannot always hold. */
+    public long asInteger() {
+        throw new TypeDBDriverException(INVALID_VALUE_RETRIEVAL, className(long.class));
     }
 
     public java.lang.String asString() {
@@ -212,21 +223,40 @@ public abstract class JSON {
             return true;
         }
 
+        @Override
+        public boolean isInteger() {
+            return integerValue().isPresent();
+        }
+
         public double asNumber() {
             return number.asDouble();
+        }
+
+        @Override
+        public long asInteger() {
+            return integerValue().orElseThrow(
+                    () -> new TypeDBDriverException(INVALID_VALUE_RETRIEVAL, className(long.class)));
+        }
+
+        private OptionalLong integerValue() {
+            try {
+                return OptionalLong.of(java.lang.Long.parseLong(number.toString()));
+            } catch (NumberFormatException fractionalOrOutOfRange) {
+                return OptionalLong.empty();
+            }
         }
 
         @Override
         public boolean equals(java.lang.Object obj) {
             if (obj == this) return true;
             if (obj == null || getClass() != obj.getClass()) return false;
-            JSON.Number that = (JSON.Number) obj;
-            return this.asNumber() == that.asNumber();
+            // Compared as written: past 2^53 distinct integers share a double.
+            return this.number.toString().equals(((JSON.Number) obj).number.toString());
         }
 
         @Override
         public int hashCode() {
-            return Double.hashCode(asNumber());
+            return number.toString().hashCode();
         }
 
         @Override

@@ -21,14 +21,22 @@
  * Parses JSON, returning a `bigint` for any integer a `number` cannot hold
  * exactly. Otherwise behaves as `JSON.parse`, which reads every number as a
  * double and so rounds integers beyond 2^53.
+ *
+ * The type of an integer therefore depends on its magnitude: a `number` below
+ * 2^53 and a `bigint` from there up, so compare with `==` rather than `===` if
+ * either is possible.
  */
 export function parseJson(text: string): any {
+    if (!UNSAFE_INTEGER_CANDIDATE.test(text)) return JSON.parse(text);
     const parser = new JsonParser(text);
     const value = parser.parseValue();
     parser.skipWhitespace();
     if (!parser.atEnd()) parser.fail("Unexpected trailing content");
     return value;
 }
+
+/** 2^53 - 1 has 16 digits, so fewer than that is always exact. */
+const UNSAFE_INTEGER_CANDIDATE = /\d{16}/;
 
 /**
  * Serializes to JSON, writing a `bigint` as a number. `JSON.stringify` throws on
@@ -143,7 +151,14 @@ class JsonParser {
             this.skipWhitespace();
             if (this.text[this.at] !== ":") this.fail("Expected ':'");
             this.at++;
-            result[key] = this.parseValue();
+            // Plain assignment of "__proto__" would go through the setter rather
+            // than create an own property, which is not what JSON.parse does.
+            Object.defineProperty(result, key, {
+                value: this.parseValue(),
+                writable: true,
+                enumerable: true,
+                configurable: true,
+            });
             this.skipWhitespace();
             const c = this.text[this.at];
             if (c === ",") {

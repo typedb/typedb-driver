@@ -90,6 +90,14 @@ namespace TypeDB.Driver.Answer
                 GetType().Name, "Array");
         }
 
+        public virtual bool IsInteger => false;
+
+        public virtual long AsInteger()
+        {
+            throw new TypeDBDriverException(ConceptError.INVALID_CONCEPT_CASTING,
+                GetType().Name, "Integer");
+        }
+
         public virtual double AsNumber()
         {
             throw new TypeDBDriverException(ConceptError.INVALID_CONCEPT_CASTING,

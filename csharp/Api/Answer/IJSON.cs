@@ -61,6 +61,16 @@ namespace TypeDB.Driver.Api.Answer
         bool IsNumber => false;
 
         /// <summary>
+        /// Checks if this JSON number is written without a fractional part or an exponent.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// json.IsInteger
+        /// </code>
+        /// </example>
+        bool IsInteger => false;
+
+        /// <summary>
         /// Checks if this JSON value is a string.
         /// </summary>
         /// <example>
@@ -136,6 +146,21 @@ namespace TypeDB.Driver.Api.Answer
         {
             throw new TypeDBDriverException(ConceptError.INVALID_CONCEPT_CASTING,
                 GetType().Name, "Number");
+        }
+
+        /// <summary>
+        /// Casts this JSON value to the exact value of an integer number, which a
+        /// double cannot always hold.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// json.AsInteger()
+        /// </code>
+        /// </example>
+        long AsInteger()
+        {
+            throw new TypeDBDriverException(ConceptError.INVALID_CONCEPT_CASTING,
+                GetType().Name, "Integer");
         }
 
         /// <summary>

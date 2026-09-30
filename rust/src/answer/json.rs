@@ -36,7 +36,7 @@ pub enum JSON {
     Array(Vec<JSON>),
     String(Cow<'static, str>),
     Integer(i64),
-    Number(f64),
+    Double(f64),
     Boolean(bool),
     Null,
 }
@@ -50,7 +50,8 @@ impl fmt::Display for JSON {
                     if i > 0 {
                         f.write_str(", ")?;
                     }
-                    write!(f, r#""{}": {}"#, k, v)?;
+                    write_escaped_string(k, f)?;
+                    write!(f, ": {v}")?;
                 }
                 f.write_char('}')?;
             }
@@ -66,14 +67,9 @@ impl fmt::Display for JSON {
             }
             JSON::String(string) => write_escaped_string(string, f)?,
             JSON::Integer(integer) => write!(f, "{integer}")?,
-            JSON::Number(number) => {
-                let rendered = format!("{number}");
-                if number.is_finite() && !rendered.contains('.') {
-                    write!(f, "{rendered}.0")?
-                } else {
-                    write!(f, "{rendered}")?
-                }
-            }
+            // Debug keeps a fractional part or an exponent, so a whole double is
+            // never mistaken for an integer.
+            JSON::Double(number) => write!(f, "{number:?}")?,
             JSON::Boolean(boolean) => write!(f, "{boolean}")?,
             JSON::Null => write!(f, "null")?,
         }
@@ -150,7 +146,7 @@ impl Serialize for JSON {
             }
             Self::String(string) => serializer.serialize_str(string),
             &Self::Integer(integer) => serializer.serialize_i64(integer),
-            &Self::Number(number) => serializer.serialize_f64(number),
+            &Self::Double(number) => serializer.serialize_f64(number),
             &Self::Boolean(boolean) => serializer.serialize_bool(boolean),
             Self::Null => serializer.serialize_unit(),
         }
@@ -191,7 +187,7 @@ impl<'de> Deserialize<'de> for JSON {
             {
                 match i64::try_from(value) {
                     Ok(value) => Ok(JSON::Integer(value)),
-                    Err(_) => Ok(JSON::Number(value as f64)),
+                    Err(_) => Ok(JSON::Double(value as f64)),
                 }
             }
 
@@ -201,7 +197,7 @@ impl<'de> Deserialize<'de> for JSON {
             {
                 match i64::try_from(value) {
                     Ok(value) => Ok(JSON::Integer(value)),
-                    Err(_) => Ok(JSON::Number(value as f64)),
+                    Err(_) => Ok(JSON::Double(value as f64)),
                 }
             }
 
@@ -211,7 +207,7 @@ impl<'de> Deserialize<'de> for JSON {
             {
                 match i64::try_from(value) {
                     Ok(value) => Ok(JSON::Integer(value)),
-                    Err(_) => Ok(JSON::Number(value as f64)),
+                    Err(_) => Ok(JSON::Double(value as f64)),
                 }
             }
 
@@ -219,7 +215,7 @@ impl<'de> Deserialize<'de> for JSON {
             where
                 E: serde::de::Error,
             {
-                Ok(JSON::Number(value))
+                Ok(JSON::Double(value))
             }
 
             fn visit_str<E>(self, value: &str) -> Result<Self::Value, E>
@@ -301,7 +297,7 @@ mod test {
     fn sample_json() -> JSON {
         JSON::Object(HashMap::from([
             ("array".into(), JSON::Array(vec![JSON::Boolean(true), JSON::String("string".into())])),
-            ("number".into(), JSON::Number(123.4)),
+            ("number".into(), JSON::Double(123.4)),
         ]))
     }
 
@@ -339,7 +335,7 @@ mod test {
             },
             |rng| JSON::String(Cow::Owned(random_string(rng))),
             |rng| JSON::Integer(rng.r#gen()),
-            |rng| JSON::Number(rng.r#gen()),
+            |rng| JSON::Double(rng.r#gen()),
             |rng| JSON::Boolean(rng.r#gen()),
             |_| JSON::Null,
         ];
@@ -350,7 +346,7 @@ mod test {
     #[test]
     fn integers_survive_a_roundtrip_beyond_f64_precision() {
         // 2^53 is where f64 stops representing consecutive integers, so anything
-        // above it is corrupted by a detour through JSON::Number.
+        // above it is corrupted by a detour through JSON::Double.
         for value in [i64::MAX, i64::MIN, 9007199254740993, -9007199254740993, 0, 1, -1] {
             let json = JSON::Integer(value);
             assert_eq!(json.to_string(), value.to_string());
@@ -364,24 +360,30 @@ mod test {
     }
 
     #[test]
-    fn whole_doubles_stay_doubles() {
+    fn whole_doubles_keep_a_fractional_part() {
         for (value, expected) in
-            [(2.0f64, "2.0"), (-3.0, "-3.0"), (0.0, "0.0"), (-0.0, "-0.0"), (-2.5, "-2.5"), (1e-7, "0.0000001")]
+            [(2.0f64, "2.0"), (-3.0, "-3.0"), (0.0, "0.0"), (-0.0, "-0.0"), (-2.5, "-2.5"), (1e-7, "1e-7")]
         {
-            assert_eq!(JSON::Number(value).to_string(), expected);
+            assert_eq!(JSON::Double(value).to_string(), expected);
         }
         assert_eq!(JSON::Integer(2).to_string(), "2");
     }
 
     #[test]
-    fn non_finite_doubles_are_left_alone() {
-        // They have no JSON form; appending a fractional part would only make the
-        // rendering nonsense ("NaN.0").
+    fn non_finite_doubles_render_as_they_are() {
+        // They have no JSON form, so there is nothing better to write than the word.
         for value in [f64::NAN, f64::INFINITY, f64::NEG_INFINITY] {
-            let rendered = JSON::Number(value).to_string();
-            assert_eq!(rendered, format!("{value}"), "unexpected rendering of {value}");
-            assert!(!rendered.ends_with(".0"), "{rendered} should not gain a fractional part");
+            assert_eq!(JSON::Double(value).to_string(), format!("{value}"));
         }
+    }
+
+    #[test]
+    fn object_keys_are_escaped() {
+        // The FFI drivers re-parse this rendering, so an unescaped key would make
+        // the whole document unparseable for them.
+        let json = JSON::Object(HashMap::from([(Cow::Borrowed(r#"say "hi"\"#), JSON::Integer(1))]));
+        assert_eq!(json.to_string(), r#"{"say \"hi\"\\": 1}"#);
+        assert!(serde_json::from_str::<serde_json::Value>(&json.to_string()).is_ok());
     }
 
     #[test]
