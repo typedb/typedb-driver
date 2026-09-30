@@ -30,6 +30,49 @@ export function parseJson(text: string): any {
     return value;
 }
 
+export function stringifyJson(value: unknown): string {
+    const out: string[] = [];
+    writeValue(value, out);
+    return out.join("");
+}
+
+function writeValue(value: unknown, out: string[]): void {
+    if (value !== null && typeof value === "object" && typeof (value as any).toJSON === "function") {
+        value = (value as any).toJSON();
+    }
+    if (value === null) {
+        out.push("null");
+    } else if (typeof value === "bigint") {
+        out.push(value.toString());
+    } else if (typeof value === "number") {
+        out.push(Number.isFinite(value) ? JSON.stringify(value) : "null");
+    } else if (typeof value === "boolean" || typeof value === "string") {
+        out.push(JSON.stringify(value));
+    } else if (Array.isArray(value)) {
+        out.push("[");
+        value.forEach((item, i) => {
+            if (i > 0) out.push(",");
+            if (item === undefined || typeof item === "function" || typeof item === "symbol") out.push("null");
+            else writeValue(item, out);
+        });
+        out.push("]");
+    } else if (typeof value === "object") {
+        out.push("{");
+        let first = true;
+        for (const [key, member] of Object.entries(value as Record<string, unknown>)) {
+            if (member === undefined || typeof member === "function" || typeof member === "symbol") continue;
+            if (!first) out.push(",");
+            first = false;
+            out.push(JSON.stringify(key), ":");
+            writeValue(member, out);
+        }
+        out.push("}");
+    } else {
+        // undefined, function and symbol are not representable
+        out.push("null");
+    }
+}
+
 const ESCAPES: Record<string, string> = {
     '"': '"', "\\": "\\", "/": "/", b: "\b", f: "\f", n: "\n", r: "\r", t: "\t",
 };

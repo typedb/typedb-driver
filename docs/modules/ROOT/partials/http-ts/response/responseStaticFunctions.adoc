@@ -144,5 +144,28 @@ a| `text` a|  a| `string`
 .Returns
 `any`
 
+[#_stringifyJson_stringifyJson_value_unknown]
+==== method ``stringifyJson``
+
+[source,typescript]
+----
+stringifyJson(value: unknown): string
+----
+
+
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `value` a|  a| `unknown`
+|===
+
+[caption=""]
+.Returns
+`string`
+
 // end::methods[]
 

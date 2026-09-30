@@ -34,7 +34,7 @@ import {
     VersionResponse
 } from "./response";
 import {Attribute, Concept, Entity, Relation, Value} from "./concept";
-import { parseJson } from "./json";
+import { parseJson, stringifyJson } from "./json";
 
 const HTTP_UNAUTHORIZED = 401;
 const HTTP_MISDIRECTED = 421;
@@ -264,7 +264,7 @@ export class TypeDBHttpDriver {
         const url = `${this.currentOrigin}${path}`;
         let tokenResp = await this.getToken();
         if ("err" in tokenResp) return tokenErrToResult(tokenResp);
-        const bodyString = body !== undefined ? JSON.stringify(body) : undefined;
+        const bodyString = body !== undefined ? stringifyJson(body) : undefined;
         let headers = this.authHeaders(tokenResp.ok.token, options);
         let resp: Response;
         try {
