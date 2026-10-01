@@ -47,6 +47,15 @@ def json_matches(lhs, rhs) -> bool:
                     rhs_matches.add(i)
                     break
         return len(rhs_matches) == len(rhs)
+    elif isinstance(lhs, bool) or isinstance(rhs, bool):
+        # bool is a subclass of int, so it has to be settled before numbers.
+        return lhs is rhs
+    elif isinstance(lhs, (int, float)) and isinstance(rhs, (int, float)):
+        # An integer is not a whole double: 2 == 2.0 in Python, which would let a
+        # driver that rounded an integer into a double pass unnoticed.
+        if isinstance(lhs, int) != isinstance(rhs, int):
+            return False
+        return lhs == rhs
     else:
         return lhs == rhs
 

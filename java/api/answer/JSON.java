@@ -213,12 +213,12 @@ public abstract class JSON {
     }
 
     private static class Number extends JSON {
-        private final JsonValue number;
+        private final java.lang.String literal;
         private final OptionalLong integer;
         private final double doubleValue;
 
         Number(JsonValue number) {
-            this.number = number;
+            this.literal = number.toString();
             this.integer = parseInteger(number);
             this.doubleValue = number.asDouble();
         }
@@ -267,7 +267,7 @@ public abstract class JSON {
 
         @Override
         public java.lang.String toString() {
-            return number.toString();
+            return literal;
         }
     }
 
