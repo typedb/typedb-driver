@@ -153,6 +153,10 @@ impl Serialize for JSON {
     }
 }
 
+fn integer<E: serde::de::Error>(value: impl TryInto<i64>) -> Result<JSON, E> {
+    value.try_into().map(JSON::Integer).map_err(|_| E::custom("integer out of range for i64"))
+}
+
 impl<'de> Deserialize<'de> for JSON {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
@@ -185,22 +189,21 @@ impl<'de> Deserialize<'de> for JSON {
             where
                 E: serde::de::Error,
             {
-                i64::try_from(value).map(JSON::Integer).map_err(|_| E::custom("integer out of range for i64"))
+                integer(value)
             }
 
             fn visit_u64<E>(self, value: u64) -> Result<Self::Value, E>
             where
                 E: serde::de::Error,
             {
-                i64::try_from(value).map(JSON::Integer).map_err(|_| E::custom("integer out of range for i64"))
+                integer(value)
             }
 
             fn visit_u128<E>(self, value: u128) -> Result<Self::Value, E>
             where
                 E: serde::de::Error,
             {
-                // Rounding it into a double is the fault this type exists to avoid.
-                i64::try_from(value).map(JSON::Integer).map_err(|_| E::custom("integer out of range for i64"))
+                integer(value)
             }
 
             fn visit_f64<E>(self, value: f64) -> Result<Self::Value, E>

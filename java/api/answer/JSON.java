@@ -215,10 +215,12 @@ public abstract class JSON {
     private static class Number extends JSON {
         private final JsonValue number;
         private final OptionalLong integer;
+        private final double doubleValue;
 
         Number(JsonValue number) {
             this.number = number;
             this.integer = parseInteger(number);
+            this.doubleValue = number.asDouble();
         }
 
         private static OptionalLong parseInteger(JsonValue number) {
@@ -239,7 +241,7 @@ public abstract class JSON {
         }
 
         public double asNumber() {
-            return number.asDouble();
+            return doubleValue;
         }
 
         @Override
