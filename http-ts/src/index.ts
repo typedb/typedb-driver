@@ -410,7 +410,7 @@ export interface User {
 
 export type GivenRowEntry = Value | Entity | Relation | Attribute
     | boolean // for boolean values
-    | number  // For double values, and for integers a number holds exactly
-    | bigint  // For integers beyond 2^53, which a number cannot hold exactly
+    | number  // For doubles, and for integers below 2^53
+    | bigint  // For integers from 2^53 up, which a number cannot hold exactly
     | string; // For all other types, as well as IIDs.
 export type GivenRows = { [varName: string]: GivenRowEntry }[];
