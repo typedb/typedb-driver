@@ -76,7 +76,6 @@ public abstract class JSON {
         return false;
     }
 
-    /** Whether this number is written without a fractional part or an exponent. */
     public boolean isInteger() {
         return false;
     }
@@ -101,7 +100,6 @@ public abstract class JSON {
         throw new TypeDBDriverException(INVALID_VALUE_RETRIEVAL, className(double.class));
     }
 
-    /** The exact value of an integer number, which a double cannot always hold. */
     public long asInteger() {
         throw new TypeDBDriverException(INVALID_VALUE_RETRIEVAL, className(long.class));
     }

@@ -57,7 +57,7 @@ public boolean asBoolean()
 public long asInteger()
 ----
 
-The exact value of an integer number, which a double cannot always hold.
+
 
 [caption=""]
 .Returns
@@ -141,7 +141,7 @@ public boolean isBoolean()
 public boolean isInteger()
 ----
 
-Whether this number is written without a fractional part or an exponent.
+
 
 [caption=""]
 .Returns
