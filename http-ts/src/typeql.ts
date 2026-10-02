@@ -23,6 +23,9 @@ const construction = Symbol("TypeQL");
  * A piece of TypeQL query text that can only come from code: the literal parts of a <code>typeql</code> template,
  * labels checked by <code>TypeQL.label()</code>, variables checked by <code>TypeQL.variable()</code>, and other
  * fragments built the same way. Values are never part of it: they are passed to the query as given rows.
+ *
+ * A <code>TypeQL</code> fragment can be passed to <code>query</code>, <code>oneShotQuery</code> and
+ * <code>analyze</code> in place of a query string.
  */
 export class TypeQL {
     /** The query text of this fragment. */
@@ -99,7 +102,7 @@ export class TypeQL {
  * @example
  * ```ts
  * const query = typeql`given $name: string; match $x isa person, has name == $name;`;
- * await driver.query(transactionId, query.text, undefined, [{ name: userInput }]);
+ * await driver.query(transactionId, query, undefined, [{ name: userInput }]);
  * ```
  */
 export function typeql(strings: TemplateStringsArray, ...fragments: TypeQL[]): TypeQL {
@@ -140,4 +143,8 @@ function requireFragment(value: unknown): TypeQL {
         throw new TypeError(`typeql only interpolates TypeQL fragments, not ${value === null ? "null" : `a ${typeof value}`}: pass values as given rows`);
     }
     return value;
+}
+
+export function queryText(query: string | TypeQL): string {
+    return query instanceof TypeQL ? query.text : query;
 }

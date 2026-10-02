@@ -33,7 +33,7 @@ a| `params` a|  a| `DriverParams`
 
 [source,typescript]
 ----
-analyze( transactionId: string, query: string, analyzeOptions?: AnalyzeOptions, ): Promise<ApiResponse<AnalyzeResponse>>
+analyze( transactionId: string, query: string | TypeQL, analyzeOptions?: AnalyzeOptions, ): Promise<ApiResponse<AnalyzeResponse>>
 ----
 
 
@@ -359,7 +359,7 @@ health(): Promise<ApiResponse>
 
 [source,typescript]
 ----
-oneShotQuery( query: string, commit: boolean, databaseName: string, transactionType: TransactionType, transactionOptions?: TransactionOptions, queryOptions?: QueryOptions, givenRows?: GivenRows, ): Promise<ApiResponse<QueryResponse>>
+oneShotQuery( query: string | TypeQL, commit: boolean, databaseName: string, transactionType: TransactionType, transactionOptions?: TransactionOptions, queryOptions?: QueryOptions, givenRows?: GivenRows, ): Promise<ApiResponse<QueryResponse>>
 ----
 
 
@@ -413,7 +413,7 @@ a| `transactionOptions` a|  a| `TransactionOptions`
 
 [source,typescript]
 ----
-query( transactionId: string, query: string, queryOptions?: QueryOptions, givenRows?: GivenRows, ): Promise<ApiResponse<QueryResponse>>
+query( transactionId: string, query: string | TypeQL, queryOptions?: QueryOptions, givenRows?: GivenRows, ): Promise<ApiResponse<QueryResponse>>
 ----
 
 

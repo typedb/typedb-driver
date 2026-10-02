@@ -34,6 +34,7 @@ import {
     VersionResponse
 } from "./response";
 import {Attribute, Concept, Entity, Relation, Value} from "./concept";
+import { queryText, TypeQL } from "./typeql";
 
 const HTTP_UNAUTHORIZED = 401;
 const HTTP_MISDIRECTED = 421;
@@ -153,16 +154,16 @@ export class TypeDBHttpDriver {
         return this.apiPost(`/v1/transactions/${encodeURIComponent(transactionId)}/rollback`, {});
     }
 
-    analyze(transactionId: string, query: string, analyzeOptions?: AnalyzeOptions): Promise<ApiResponse<AnalyzeResponse>> {
-        return this.apiPost<AnalyzeResponse>(`/v1/transactions/${encodeURIComponent(transactionId)}/analyze`, { query, analyzeOptions });
+    analyze(transactionId: string, query: string | TypeQL, analyzeOptions?: AnalyzeOptions): Promise<ApiResponse<AnalyzeResponse>> {
+        return this.apiPost<AnalyzeResponse>(`/v1/transactions/${encodeURIComponent(transactionId)}/analyze`, { query: queryText(query), analyzeOptions });
     }
 
-    query(transactionId: string, query: string, queryOptions?: QueryOptions, givenRows?: GivenRows): Promise<ApiResponse<QueryResponse>> {
-        return this.apiPost<QueryResponse>(`/v1/transactions/${encodeURIComponent(transactionId)}/query`, { query, queryOptions, givenRows });
+    query(transactionId: string, query: string | TypeQL, queryOptions?: QueryOptions, givenRows?: GivenRows): Promise<ApiResponse<QueryResponse>> {
+        return this.apiPost<QueryResponse>(`/v1/transactions/${encodeURIComponent(transactionId)}/query`, { query: queryText(query), queryOptions, givenRows });
     }
 
-    oneShotQuery(query: string, commit: boolean, databaseName: string, transactionType: TransactionType, transactionOptions?: TransactionOptions, queryOptions?: QueryOptions, givenRows?: GivenRows) {
-        return this.apiPost<QueryResponse>(`/v1/query`, { query, commit, databaseName, transactionType, transactionOptions, queryOptions, givenRows });
+    oneShotQuery(query: string | TypeQL, commit: boolean, databaseName: string, transactionType: TransactionType, transactionOptions?: TransactionOptions, queryOptions?: QueryOptions, givenRows?: GivenRows) {
+        return this.apiPost<QueryResponse>(`/v1/query`, { query: queryText(query), commit, databaseName, transactionType, transactionOptions, queryOptions, givenRows });
     }
 
     health(): Promise<ApiResponse> {

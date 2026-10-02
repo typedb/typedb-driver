@@ -6,6 +6,8 @@
 
 A piece of TypeQL query text that can only come from code: the literal parts of a ``typeql`` template, labels checked by ``TypeQL.label()``, variables checked by ``TypeQL.variable()``, and other fragments built the same way. Values are never part of it: they are passed to the query as given rows.
 
+A ``TypeQL`` fragment can be passed to ``query``, ``oneShotQuery`` and ``analyze`` in place of a query string.
+
 [caption=""]
 .Fields
 // tag::properties[]
