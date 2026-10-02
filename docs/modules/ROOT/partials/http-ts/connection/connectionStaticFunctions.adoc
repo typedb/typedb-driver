@@ -144,5 +144,29 @@ a| `primaryAddress` a|  a| `string`
 .Returns
 `string`
 
+[#_typeql_typeql_strings_TemplateStringsArray_fragments_TypeQL]
+==== method ``typeql``
+
+[source,typescript]
+----
+typeql(strings: TemplateStringsArray, ...fragments: TypeQL[]): TypeQL
+----
+
+Builds a ``TypeQL`` fragment from a template literal. Its literal parts are kept as is, and each interpolated value must itself be a ``TypeQL`` fragment: anything else, such as a string or a number, throws a ``TypeError``. Values go into given rows instead.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `strings` a|  a| `TemplateStringsArray`
+a| `fragments` a|  a| `TypeQL`
+|===
+
+[caption=""]
+.Returns
+`TypeQL`
+
 // end::methods[]
 

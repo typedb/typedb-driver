@@ -31,6 +31,8 @@ static_function_mapping = {
     "hostPortFromOrigin": "connection",
     "resolveOrigin": "connection",
     "allOrigins": "connection",
+
+    "typeql": "connection",
 }
 
 class_nesting_prefixes = [
@@ -42,6 +44,7 @@ class_nesting_prefixes = [
 
 dir_mapping = {
     "TypeDBHttpDriver.adoc": "connection",
+    "TypeQL.adoc": "connection",
 
     "AnalyzeOptions.adoc": "analyze",
     "AnalyzedFetch.adoc": "analyze",

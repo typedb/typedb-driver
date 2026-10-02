@@ -76,6 +76,7 @@ export * from "./concept";
 export * from "./params";
 export * from "./analyzed-conjunction";
 export * from "./response";
+export { TypeQL, typeql } from "./typeql";
 
 export * from "./legacy";
 
