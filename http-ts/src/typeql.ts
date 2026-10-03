@@ -21,8 +21,9 @@ const construction = Symbol("TypeQL");
 
 /**
  * A piece of TypeQL query text that can only come from code: the literal parts of a <code>typeql</code> template,
- * labels checked by <code>TypeQL.label()</code>, variables checked by <code>TypeQL.variable()</code>, and other
- * fragments built the same way. Values are never part of it: they are passed to the query as given rows.
+ * labels checked by <code>TypeQL.label()</code>, variables checked by <code>TypeQL.variable()</code>, integer literals
+ * checked by <code>TypeQL.integer()</code>, and other fragments built the same way. Values are never part of it: they
+ * are passed to the query as given rows.
  *
  * A <code>TypeQL</code> fragment can be passed to <code>query</code>, <code>oneShotQuery</code> and
  * <code>analyze</code> in place of a query string.
@@ -34,7 +35,7 @@ export class TypeQL {
     /** @hidden */
     constructor(text: string, key: symbol) {
         if (key !== construction) {
-            throw new TypeError("TypeQL fragments are built with typeql, TypeQL.label(), TypeQL.variable() or TypeQL.join()");
+            throw new TypeError("TypeQL fragments are built with typeql, TypeQL.label(), TypeQL.variable(), TypeQL.integer() or TypeQL.join()");
         }
         this.text = text;
     }
@@ -75,6 +76,25 @@ export class TypeQL {
             throw new TypeError(`Not a TypeQL variable name: ${JSON.stringify(name)}`);
         }
         return new TypeQL(`$${name}`, construction);
+    }
+
+    /**
+     * Makes an integer literal fragment, for the clauses that only take a literal, not a given parameter:
+     * <code>limit</code> and <code>offset</code>. Throws a <code>TypeError</code> if <code>value</code> isn't a safe
+     * integer.
+     *
+     * @param value - The integer
+     *
+     * @example
+     * ```ts
+     * typeql`match $x isa person; sort $x; limit ${TypeQL.integer(pageSize)};`
+     * ```
+     */
+    static integer(value: number): TypeQL {
+        if (!Number.isSafeInteger(value)) {
+            throw new TypeError(`Not an integer: ${JSON.stringify(value)}`);
+        }
+        return new TypeQL(String(value), construction);
     }
 
     /**

@@ -70,6 +70,18 @@ test("TypeQL.variable rejects anything else", () => {
     }
 });
 
+test("TypeQL.integer makes an integer literal", () => {
+    assert.equal(typeql`limit ${TypeQL.integer(25)};`.text, "limit 25;");
+    assert.equal(TypeQL.integer(0).text, "0");
+    assert.equal(TypeQL.integer(-3).text, "-3");
+});
+
+test("TypeQL.integer rejects anything that isn't a safe integer", () => {
+    for (const value of [1.5, NaN, Infinity, 2 ** 53, "25", null]) {
+        assert.throws(() => TypeQL.integer(value as unknown as number), /Not an integer/);
+    }
+});
+
 test("TypeQL.join joins fragments with a fragment separator", () => {
     assert.equal(TypeQL.join([typeql`"name": $x.name`, typeql`"age": $x.age`], typeql`, `).text, `"name": $x.name, "age": $x.age`);
     assert.equal(TypeQL.join([], typeql`, `).text, "");
