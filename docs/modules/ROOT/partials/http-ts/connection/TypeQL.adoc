@@ -1,0 +1,117 @@
+[#_TypeQL]
+[.doc-api-reference-driver]
+=== TypeQL
+
+`class`
+
+A piece of TypeQL query text that can only come from code: the literal parts of a ``typeql`` template, labels checked by ``TypeQL.label()``, variables checked by ``TypeQL.variable()``, integer literals checked by ``TypeQL.integer()``, and other fragments built the same way. Values are never part of it: they are passed to the query as given rows.
+
+A ``TypeQL`` fragment can be passed to ``query``, ``oneShotQuery`` and ``analyze`` in place of a query string.
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `text` a| `string` a| The query text of this fragment.
+|===
+// end::properties[]
+
+// tag::methods[]
+[#_TypeQL_integer_value_number]
+==== method ``integer``
+
+[source,typescript]
+----
+integer(value: number): TypeQL
+----
+
+Makes an integer literal fragment, for the clauses that only take a literal, not a given parameter: ``limit`` and ``offset``. Throws a ``TypeError`` if ``value`` isn't a safe integer.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `value` a| The integer a| `number`
+|===
+
+[caption=""]
+.Returns
+`TypeQL`
+
+[#_TypeQL_join_fragments_TypeQL_separator_TypeQL]
+==== method ``join``
+
+[source,typescript]
+----
+join(fragments: TypeQL[], separator: TypeQL): TypeQL
+----
+
+Joins fragments with a separator that is itself a fragment, e.g. to assemble a list of fetch entries.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `fragments` a| The fragments to join a| `TypeQL`
+a| `separator` a| The fragment put between each of them a| `TypeQL`
+|===
+
+[caption=""]
+.Returns
+`TypeQL`
+
+[#_TypeQL_label_name_string]
+==== method ``label``
+
+[source,typescript]
+----
+label(name: string): TypeQL
+----
+
+Makes a fragment from a type label (``person``), a scoped role label (``friendship:friend``), or the name of a function, struct or struct field. Throws a ``TypeError`` if ``name`` isn't a valid TypeQL identifier, or is a reserved keyword.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `name` a| The label a| `string`
+|===
+
+[caption=""]
+.Returns
+`TypeQL`
+
+[#_TypeQL_variable_name_string]
+==== method ``variable``
+
+[source,typescript]
+----
+variable(name: string): TypeQL
+----
+
+Makes a variable fragment, ``$name``, from a variable name given without its ``$``. Throws a ``TypeError`` if ``name`` isn't a valid TypeQL variable name.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `name` a| The variable name, without its ``$`` a| `string`
+|===
+
+[caption=""]
+.Returns
+`TypeQL`
+
+// end::methods[]
+

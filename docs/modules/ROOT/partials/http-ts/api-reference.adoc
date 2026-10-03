@@ -20,6 +20,8 @@ include::{page-version}@external-typedb-driver::partial$http-ts/connection/Trans
 
 include::{page-version}@external-typedb-driver::partial$http-ts/connection/TypeDBHttpDriver.adoc[]
 
+include::{page-version}@external-typedb-driver::partial$http-ts/connection/TypeQL.adoc[]
+
 include::{page-version}@external-typedb-driver::partial$http-ts/connection/User.adoc[]
 
 include::{page-version}@external-typedb-driver::partial$http-ts/connection/connectionStaticFunctions.adoc[]
