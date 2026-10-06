@@ -60,11 +60,15 @@ public abstract class JSON {
     }
 
     private static JSON number(JsonValue number) {
-        try {
-            return new JSON.Integer(number.asLong());
-        } catch (NumberFormatException notAnInteger) {
-            return new JSON.Double(number.asDouble(), number.toString());
+        java.lang.String literal = number.toString();
+        if (literal.indexOf('.') < 0 && literal.indexOf('e') < 0 && literal.indexOf('E') < 0) {
+            try {
+                return new JSON.Integer(number.asLong());
+            } catch (NumberFormatException outOfLongRange) {
+                // only possible for user-supplied JSON: TypeDB integers are 64-bit
+            }
         }
+        return new JSON.Double(number.asDouble(), literal);
     }
 
     private static java.lang.String indent(java.lang.String string) {
