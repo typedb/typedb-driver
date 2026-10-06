@@ -63,7 +63,7 @@ namespace TypeDB.Driver.Answer
                         .Select(Of)
                         .ToList()),
                 JsonValueKind.String => new JSONString(element.GetString()!),
-                JsonValueKind.Number => new JSONNumber(element.GetRawText()),
+                JsonValueKind.Number => Number(element.GetRawText()),
                 JsonValueKind.True => new JSONBoolean(true),
                 JsonValueKind.False => new JSONBoolean(false),
                 JsonValueKind.Null => new JSONNull(),
@@ -71,10 +71,18 @@ namespace TypeDB.Driver.Answer
             };
         }
 
+        private static JSON Number(string raw)
+        {
+            return long.TryParse(raw, NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out long integer)
+                ? new JSONInteger(integer)
+                : new JSONDouble(double.Parse(raw, CultureInfo.InvariantCulture), raw);
+        }
+
         // Base class implementations of IJSON members - can be overridden by subclasses
         public virtual bool IsObject => false;
         public virtual bool IsArray => false;
-        public virtual bool IsNumber => false;
+        public virtual bool IsInteger => false;
+        public virtual bool IsDouble => false;
         public virtual bool IsString => false;
         public virtual bool IsBoolean => false;
         public virtual bool IsNull => false;
@@ -91,18 +99,16 @@ namespace TypeDB.Driver.Answer
                 GetType().Name, "Array");
         }
 
-        public virtual bool IsInteger => false;
-
         public virtual long AsInteger()
         {
             throw new TypeDBDriverException(ConceptError.INVALID_CONCEPT_CASTING,
                 GetType().Name, "Integer");
         }
 
-        public virtual double AsNumber()
+        public virtual double AsDouble()
         {
             throw new TypeDBDriverException(ConceptError.INVALID_CONCEPT_CASTING,
-                GetType().Name, "Number");
+                GetType().Name, "Double");
         }
 
         public virtual string AsString()
@@ -180,42 +186,55 @@ namespace TypeDB.Driver.Answer
             }
         }
 
-        private class JSONNumber : JSON
+        private class JSONInteger : JSON
         {
-            private readonly string _raw;
+            private readonly long _value;
 
-            private readonly long? _integer;
-
-            private readonly double _number;
-
-            public JSONNumber(string raw)
+            public JSONInteger(long value)
             {
-                _raw = raw;
-                _integer = long.TryParse(raw, NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture,
-                    out long integer)
-                    ? integer
-                    : null;
-                _number = double.Parse(raw, CultureInfo.InvariantCulture);
+                _value = value;
             }
 
-            public override bool IsNumber => true;
+            public override bool IsInteger => true;
 
-            public override bool IsInteger => _integer.HasValue;
-
-            public override double AsNumber() => _number;
-
-            public override long AsInteger() => _integer
-                ?? throw new TypeDBDriverException(ConceptError.INVALID_CONCEPT_CASTING, GetType().Name, "Integer");
+            public override long AsInteger() => _value;
 
             public override bool Equals(object? obj)
             {
                 if (ReferenceEquals(this, obj)) return true;
-                if (obj is not JSONNumber other) return false;
-                if (_integer.HasValue && other._integer.HasValue) return _integer.Value == other._integer.Value;
-                return _number == other._number;
+                if (obj is not JSONInteger other) return false;
+                return _value == other._value;
             }
 
-            public override int GetHashCode() => _number.GetHashCode();
+            public override int GetHashCode() => _value.GetHashCode();
+
+            public override string ToString() => _value.ToString(CultureInfo.InvariantCulture);
+        }
+
+        private class JSONDouble : JSON
+        {
+            private readonly double _value;
+
+            private readonly string _raw;
+
+            public JSONDouble(double value, string raw)
+            {
+                _value = value;
+                _raw = raw;
+            }
+
+            public override bool IsDouble => true;
+
+            public override double AsDouble() => _value;
+
+            public override bool Equals(object? obj)
+            {
+                if (ReferenceEquals(this, obj)) return true;
+                if (obj is not JSONDouble other) return false;
+                return _value == other._value;
+            }
+
+            public override int GetHashCode() => _value.GetHashCode();
 
             public override string ToString() => _raw;
         }

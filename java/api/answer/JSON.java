@@ -27,7 +27,6 @@ import com.typedb.driver.common.exception.TypeDBDriverException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.OptionalLong;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -50,13 +49,21 @@ public abstract class JSON {
         } else if (value.isString()) {
             return new JSON.String(value.asString());
         } else if (value.isNumber()) {
-            return new JSON.Number(value);
+            return JSON.number(value);
         } else if (value.isBoolean()) {
             return new JSON.Boolean(value.asBoolean());
         } else if (value.isNull()) {
             return new JSON.Null();
         } else {
             throw new TypeDBDriverException(ILLEGAL_STATE);
+        }
+    }
+
+    private static JSON number(JsonValue number) {
+        try {
+            return new JSON.Integer(number.asLong());
+        } catch (NumberFormatException notAnInteger) {
+            return new JSON.Double(number.asDouble(), number.toString());
         }
     }
 
@@ -72,11 +79,11 @@ public abstract class JSON {
         return false;
     }
 
-    public boolean isNumber() {
+    public boolean isInteger() {
         return false;
     }
 
-    public boolean isInteger() {
+    public boolean isDouble() {
         return false;
     }
 
@@ -96,12 +103,12 @@ public abstract class JSON {
         throw new TypeDBDriverException(INVALID_VALUE_RETRIEVAL, className(List.class));
     }
 
-    public double asNumber() {
-        throw new TypeDBDriverException(INVALID_VALUE_RETRIEVAL, className(double.class));
-    }
-
     public long asInteger() {
         throw new TypeDBDriverException(INVALID_VALUE_RETRIEVAL, className(long.class));
+    }
+
+    public double asDouble() {
+        throw new TypeDBDriverException(INVALID_VALUE_RETRIEVAL, className(double.class));
     }
 
     public java.lang.String asString() {
@@ -210,57 +217,68 @@ public abstract class JSON {
         }
     }
 
-    private static class Number extends JSON {
-        private final java.lang.String literal;
-        private final OptionalLong integer;
-        private final double doubleValue;
+    private static class Integer extends JSON {
+        private final long integer;
 
-        Number(JsonValue number) {
-            this.literal = number.toString();
-            this.integer = parseInteger(number);
-            this.doubleValue = number.asDouble();
+        Integer(long integer) {
+            this.integer = integer;
         }
 
-        private static OptionalLong parseInteger(JsonValue number) {
-            try {
-                return OptionalLong.of(number.asLong());
-            } catch (NumberFormatException fractionalOrOutOfRange) {
-                return OptionalLong.empty();
-            }
-        }
-
-        public boolean isNumber() {
+        public boolean isInteger() {
             return true;
         }
 
-        @Override
-        public boolean isInteger() {
-            return integer.isPresent();
-        }
-
-        public double asNumber() {
-            return doubleValue;
-        }
-
-        @Override
         public long asInteger() {
-            return integer.orElseThrow(() -> new TypeDBDriverException(INVALID_VALUE_RETRIEVAL, className(long.class)));
+            return integer;
         }
 
         @Override
         public boolean equals(java.lang.Object obj) {
             if (obj == this) return true;
             if (obj == null || getClass() != obj.getClass()) return false;
-            JSON.Number that = (JSON.Number) obj;
-            if (this.integer.isPresent() && that.integer.isPresent()) {
-                return this.integer.getAsLong() == that.integer.getAsLong();
-            }
-            return this.asNumber() == that.asNumber();
+            JSON.Integer that = (JSON.Integer) obj;
+            return this.integer == that.integer;
         }
 
         @Override
         public int hashCode() {
-            return Double.hashCode(asNumber());
+            return Long.hashCode(integer);
+        }
+
+        @Override
+        public java.lang.String toString() {
+            return Long.toString(integer);
+        }
+    }
+
+    private static class Double extends JSON {
+        private final double aDouble;
+        private final java.lang.String literal;
+
+        Double(double aDouble, java.lang.String literal) {
+            this.aDouble = aDouble;
+            this.literal = literal;
+        }
+
+        public boolean isDouble() {
+            return true;
+        }
+
+        public double asDouble() {
+            return aDouble;
+        }
+
+        @Override
+        public boolean equals(java.lang.Object obj) {
+            if (obj == this) return true;
+            if (obj == null || getClass() != obj.getClass()) return false;
+            JSON.Double that = (JSON.Double) obj;
+            return this.aDouble == that.aDouble;
+        }
+
+        @Override
+        public int hashCode() {
+            return java.lang.Double.hashCode(aDouble);
         }
 
         @Override

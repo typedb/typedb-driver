@@ -49,6 +49,20 @@ public boolean asBoolean()
 .Returns
 `public boolean`
 
+[#_JSON_asDouble_]
+==== method ``asDouble``
+
+[source,java]
+----
+public double asDouble()
+----
+
+
+
+[caption=""]
+.Returns
+`public double`
+
 [#_JSON_asInteger_]
 ==== method ``asInteger``
 
@@ -62,20 +76,6 @@ public long asInteger()
 [caption=""]
 .Returns
 `public long`
-
-[#_JSON_asNumber_]
-==== method ``asNumber``
-
-[source,java]
-----
-public double asNumber()
-----
-
-
-
-[caption=""]
-.Returns
-`public double`
 
 [#_JSON_asObject_]
 ==== method ``asObject``
@@ -133,12 +133,12 @@ public boolean isBoolean()
 .Returns
 `public boolean`
 
-[#_JSON_isInteger_]
-==== method ``isInteger``
+[#_JSON_isDouble_]
+==== method ``isDouble``
 
 [source,java]
 ----
-public boolean isInteger()
+public boolean isDouble()
 ----
 
 
@@ -147,12 +147,12 @@ public boolean isInteger()
 .Returns
 `public boolean`
 
-[#_JSON_isNumber_]
-==== method ``isNumber``
+[#_JSON_isInteger_]
+==== method ``isInteger``
 
 [source,java]
 ----
-public boolean isNumber()
+public boolean isInteger()
 ----
 
 

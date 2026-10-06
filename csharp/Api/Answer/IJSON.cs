@@ -51,17 +51,7 @@ namespace TypeDB.Driver.Api.Answer
         bool IsArray => false;
 
         /// <summary>
-        /// Checks if this JSON value is a number.
-        /// </summary>
-        /// <example>
-        /// <code>
-        /// json.IsNumber
-        /// </code>
-        /// </example>
-        bool IsNumber => false;
-
-        /// <summary>
-        /// Checks if this JSON number is written without a fractional part or an exponent.
+        /// Checks if this JSON value is an integer.
         /// </summary>
         /// <example>
         /// <code>
@@ -69,6 +59,16 @@ namespace TypeDB.Driver.Api.Answer
         /// </code>
         /// </example>
         bool IsInteger => false;
+
+        /// <summary>
+        /// Checks if this JSON value is a double.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// json.IsDouble
+        /// </code>
+        /// </example>
+        bool IsDouble => false;
 
         /// <summary>
         /// Checks if this JSON value is a string.
@@ -133,25 +133,10 @@ namespace TypeDB.Driver.Api.Answer
         }
 
         /// <summary>
-        /// Casts this JSON value to a number.
+        /// Casts this JSON value to an integer.
         /// </summary>
-        /// <returns>The JSON value as a double.</returns>
-        /// <exception cref="TypeDBDriverException">If the value is not a number.</exception>
-        /// <example>
-        /// <code>
-        /// json.AsNumber()
-        /// </code>
-        /// </example>
-        double AsNumber()
-        {
-            throw new TypeDBDriverException(ConceptError.INVALID_CONCEPT_CASTING,
-                GetType().Name, "Number");
-        }
-
-        /// <summary>
-        /// Casts this JSON value to the exact value of an integer number, which a
-        /// double cannot always hold.
-        /// </summary>
+        /// <returns>The JSON value as a long.</returns>
+        /// <exception cref="TypeDBDriverException">If the value is not an integer.</exception>
         /// <example>
         /// <code>
         /// json.AsInteger()
@@ -161,6 +146,22 @@ namespace TypeDB.Driver.Api.Answer
         {
             throw new TypeDBDriverException(ConceptError.INVALID_CONCEPT_CASTING,
                 GetType().Name, "Integer");
+        }
+
+        /// <summary>
+        /// Casts this JSON value to a double.
+        /// </summary>
+        /// <returns>The JSON value as a double.</returns>
+        /// <exception cref="TypeDBDriverException">If the value is not a double.</exception>
+        /// <example>
+        /// <code>
+        /// json.AsDouble()
+        /// </code>
+        /// </example>
+        double AsDouble()
+        {
+            throw new TypeDBDriverException(ConceptError.INVALID_CONCEPT_CASTING,
+                GetType().Name, "Double");
         }
 
         /// <summary>
