@@ -34,6 +34,7 @@ import {
     VersionResponse
 } from "./response";
 import {Attribute, Concept, Entity, Relation, Value} from "./concept";
+import { parseJson, stringifyJson } from "./json";
 
 const HTTP_UNAUTHORIZED = 401;
 const HTTP_MISDIRECTED = 421;
@@ -73,6 +74,7 @@ function tokenErrToResult(tokenResp: ApiErrorResponse): ApiErrorResponse | null 
 
 export * from "./analyze";
 export * from "./concept";
+export { parseJson, stringifyJson } from "./json";
 export * from "./params";
 export * from "./analyzed-conjunction";
 export * from "./response";
@@ -262,7 +264,7 @@ export class TypeDBHttpDriver {
         const url = `${this.currentOrigin}${path}`;
         let tokenResp = await this.getToken();
         if ("err" in tokenResp) return tokenErrToResult(tokenResp);
-        const bodyString = body !== undefined ? JSON.stringify(body) : undefined;
+        const bodyString = body !== undefined ? stringifyJson(body) : undefined;
         let headers = this.authHeaders(tokenResp.ok.token, options);
         let resp: Response;
         try {
@@ -293,7 +295,7 @@ export class TypeDBHttpDriver {
     private async switchToRedirectTarget(resp: Response): Promise<boolean> {
         let json: any;
         try {
-            json = await resp.json();
+            json = parseJson(await resp.text());
         } catch {
             return false;
         }
@@ -351,7 +353,7 @@ export class TypeDBHttpDriver {
         const body = { username: this.params.username, password: this.params.password };
         let resp: Response;
         try {
-            resp = await fetch(url, { method: "POST", body: JSON.stringify(body), headers: { "Content-Type": "application/json" } });
+            resp = await fetch(url, { method: "POST", body: stringifyJson(body), headers: { "Content-Type": "application/json" } });
         } catch {
             return driverError("HDR2", `Cannot connect to server at ${this.currentOrigin}`);
         }
@@ -366,7 +368,7 @@ export class TypeDBHttpDriver {
 
     private async jsonOrNull(resp: Response): Promise<any> {
         try {
-            return await resp.json();
+            return parseJson(await resp.text());
         } catch {
             return null;
         }
@@ -408,6 +410,7 @@ export interface User {
 
 export type GivenRowEntry = Value | Entity | Relation | Attribute
     | boolean // for boolean values
-    | number  // For integer and double values
+    | number  // For doubles, and for integers below 2^53
+    | bigint  // For integers from 2^53 up, which a number cannot hold exactly
     | string; // For all other types, as well as IIDs.
 export type GivenRows = { [varName: string]: GivenRowEntry }[];

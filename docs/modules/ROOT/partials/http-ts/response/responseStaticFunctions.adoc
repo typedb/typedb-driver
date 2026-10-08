@@ -121,5 +121,53 @@ a| `res` a|  a| `ApiResponse`
 .Returns
 `res is ApiOkResponse<OK_RES>`
 
+[#_parseJson_parseJson_text_string]
+==== method ``parseJson``
+
+[source,typescript]
+----
+parseJson(text: string): any
+----
+
+Parses JSON, returning a ``bigint`` for any integer a ``number`` cannot hold exactly. Otherwise behaves as ``JSON.parse``, which reads every number as a double and so rounds integers beyond 2^53.
+
+The type of an integer therefore depends on its magnitude: a ``number`` below 2^53 and a ``bigint`` from there up, so compare with ``==`` rather than ``===`` if either is possible.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `text` a|  a| `string`
+|===
+
+[caption=""]
+.Returns
+`any`
+
+[#_stringifyJson_stringifyJson_value_unknown]
+==== method ``stringifyJson``
+
+[source,typescript]
+----
+stringifyJson(value: unknown): string
+----
+
+Serializes to JSON, writing a ``bigint`` as a number. ``JSON.stringify`` throws on one, so a value taken from an answer could not otherwise be sent back.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `value` a|  a| `unknown`
+|===
+
+[caption=""]
+.Returns
+`string`
+
 // end::methods[]
 

@@ -48,7 +48,7 @@ def json_matches(lhs, rhs) -> bool:
                     break
         return len(rhs_matches) == len(rhs)
     else:
-        return lhs == rhs
+        return type(lhs) is type(rhs) and lhs == rhs
 
 
 def list_contains_json(json_list: list, json: dict) -> bool:

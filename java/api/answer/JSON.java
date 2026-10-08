@@ -49,7 +49,7 @@ public abstract class JSON {
         } else if (value.isString()) {
             return new JSON.String(value.asString());
         } else if (value.isNumber()) {
-            return new JSON.Number(value.asDouble());
+            return JSON.number(value);
         } else if (value.isBoolean()) {
             return new JSON.Boolean(value.asBoolean());
         } else if (value.isNull()) {
@@ -57,6 +57,18 @@ public abstract class JSON {
         } else {
             throw new TypeDBDriverException(ILLEGAL_STATE);
         }
+    }
+
+    private static JSON number(JsonValue number) {
+        java.lang.String literal = number.toString();
+        if (literal.indexOf('.') < 0 && literal.indexOf('e') < 0 && literal.indexOf('E') < 0) {
+            try {
+                return new JSON.Integer(number.asLong());
+            } catch (NumberFormatException outOfLongRange) {
+                // only possible for user-supplied JSON: TypeDB integers are 64-bit
+            }
+        }
+        return new JSON.Double(number.asDouble(), literal);
     }
 
     private static java.lang.String indent(java.lang.String string) {
@@ -71,7 +83,11 @@ public abstract class JSON {
         return false;
     }
 
-    public boolean isNumber() {
+    public boolean isInteger() {
+        return false;
+    }
+
+    public boolean isDouble() {
         return false;
     }
 
@@ -91,7 +107,11 @@ public abstract class JSON {
         throw new TypeDBDriverException(INVALID_VALUE_RETRIEVAL, className(List.class));
     }
 
-    public double asNumber() {
+    public long asInteger() {
+        throw new TypeDBDriverException(INVALID_VALUE_RETRIEVAL, className(long.class));
+    }
+
+    public double asDouble() {
         throw new TypeDBDriverException(INVALID_VALUE_RETRIEVAL, className(double.class));
     }
 
@@ -145,7 +165,7 @@ public abstract class JSON {
             }).collect(Collectors.toList());
 
             java.lang.String content = orderedKeys.stream().map(key -> {
-                StringBuilder sb = new StringBuilder("\"").append(key).append("\":");
+                StringBuilder sb = new StringBuilder(Json.value(key).toString()).append(":");
                 java.lang.String valueString = jsonObject.get(key).toString();
                 sb.append(" ").append(valueString);
                 return sb.toString();
@@ -201,42 +221,73 @@ public abstract class JSON {
         }
     }
 
-    private static class Number extends JSON {
-        private final double number;
+    private static class Integer extends JSON {
+        private final long integer;
 
-        Number(double number) {
-            this.number = number;
+        Integer(long integer) {
+            this.integer = integer;
         }
 
-        public boolean isNumber() {
+        public boolean isInteger() {
             return true;
         }
 
-        public double asNumber() {
-            return number;
+        public long asInteger() {
+            return integer;
         }
 
         @Override
         public boolean equals(java.lang.Object obj) {
             if (obj == this) return true;
             if (obj == null || getClass() != obj.getClass()) return false;
-            JSON.Number that = (JSON.Number) obj;
-            return this.number == that.number;
+            JSON.Integer that = (JSON.Integer) obj;
+            return this.integer == that.integer;
         }
 
         @Override
         public int hashCode() {
-            return Double.hashCode(number);
+            return Long.hashCode(integer);
         }
 
         @Override
         public java.lang.String toString() {
-            long integerPart = (long) number;
-            if ((double) integerPart == number) {
-                return Long.toString(integerPart);
-            } else {
-                return Double.toString(number);
-            }
+            return Long.toString(integer);
+        }
+    }
+
+    private static class Double extends JSON {
+        private final double aDouble;
+        private final java.lang.String literal;
+
+        Double(double aDouble, java.lang.String literal) {
+            this.aDouble = aDouble;
+            this.literal = literal;
+        }
+
+        public boolean isDouble() {
+            return true;
+        }
+
+        public double asDouble() {
+            return aDouble;
+        }
+
+        @Override
+        public boolean equals(java.lang.Object obj) {
+            if (obj == this) return true;
+            if (obj == null || getClass() != obj.getClass()) return false;
+            JSON.Double that = (JSON.Double) obj;
+            return this.aDouble == that.aDouble;
+        }
+
+        @Override
+        public int hashCode() {
+            return java.lang.Double.hashCode(aDouble);
+        }
+
+        @Override
+        public java.lang.String toString() {
+            return literal;
         }
     }
 
@@ -270,7 +321,7 @@ public abstract class JSON {
 
         @Override
         public java.lang.String toString() {
-            return '"' + string + '"';
+            return Json.value(string).toString();
         }
     }
 

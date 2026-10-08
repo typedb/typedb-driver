@@ -51,14 +51,24 @@ namespace TypeDB.Driver.Api.Answer
         bool IsArray => false;
 
         /// <summary>
-        /// Checks if this JSON value is a number.
+        /// Checks if this JSON value is an integer.
         /// </summary>
         /// <example>
         /// <code>
-        /// json.IsNumber
+        /// json.IsInteger
         /// </code>
         /// </example>
-        bool IsNumber => false;
+        bool IsInteger => false;
+
+        /// <summary>
+        /// Checks if this JSON value is a double.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// json.IsDouble
+        /// </code>
+        /// </example>
+        bool IsDouble => false;
 
         /// <summary>
         /// Checks if this JSON value is a string.
@@ -123,19 +133,35 @@ namespace TypeDB.Driver.Api.Answer
         }
 
         /// <summary>
-        /// Casts this JSON value to a number.
+        /// Casts this JSON value to an integer.
         /// </summary>
-        /// <returns>The JSON value as a double.</returns>
-        /// <exception cref="TypeDBDriverException">If the value is not a number.</exception>
+        /// <returns>The JSON value as a long.</returns>
+        /// <exception cref="TypeDBDriverException">If the value is not an integer.</exception>
         /// <example>
         /// <code>
-        /// json.AsNumber()
+        /// json.AsInteger()
         /// </code>
         /// </example>
-        double AsNumber()
+        long AsInteger()
         {
             throw new TypeDBDriverException(ConceptError.INVALID_CONCEPT_CASTING,
-                GetType().Name, "Number");
+                GetType().Name, "Integer");
+        }
+
+        /// <summary>
+        /// Casts this JSON value to a double.
+        /// </summary>
+        /// <returns>The JSON value as a double.</returns>
+        /// <exception cref="TypeDBDriverException">If the value is not a double.</exception>
+        /// <example>
+        /// <code>
+        /// json.AsDouble()
+        /// </code>
+        /// </example>
+        double AsDouble()
+        {
+            throw new TypeDBDriverException(ConceptError.INVALID_CONCEPT_CASTING,
+                GetType().Name, "Double");
         }
 
         /// <summary>

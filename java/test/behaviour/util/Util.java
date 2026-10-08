@@ -89,9 +89,10 @@ public class Util {
         } else if (lhs.isArray()) {
             if (!rhs.isArray()) return false;
             return JSONListMatches(lhs.asArray(), rhs.asArray());
-        } else if (lhs.isNumber()) {
-            if (!rhs.isNumber()) return false;
-            return equalsApproximate(lhs.asNumber(), rhs.asNumber());
+        } else if (lhs.isInteger()) {
+            return rhs.isInteger() && lhs.asInteger() == rhs.asInteger();
+        } else if (lhs.isDouble()) {
+            return rhs.isDouble() && equalsApproximate(lhs.asDouble(), rhs.asDouble());
         } else {
             return lhs.equals(rhs);
         }

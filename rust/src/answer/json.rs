@@ -35,7 +35,8 @@ pub enum JSON {
     Object(HashMap<Cow<'static, str>, JSON>),
     Array(Vec<JSON>),
     String(Cow<'static, str>),
-    Number(f64),
+    Integer(i64),
+    Double(f64),
     Boolean(bool),
     Null,
 }
@@ -49,7 +50,8 @@ impl fmt::Display for JSON {
                     if i > 0 {
                         f.write_str(", ")?;
                     }
-                    write!(f, r#""{}": {}"#, k, v)?;
+                    write_escaped_string(k, f)?;
+                    write!(f, ": {v}")?;
                 }
                 f.write_char('}')?;
             }
@@ -64,7 +66,10 @@ impl fmt::Display for JSON {
                 f.write_char(']')?;
             }
             JSON::String(string) => write_escaped_string(string, f)?,
-            JSON::Number(number) => write!(f, "{number}")?,
+            JSON::Integer(integer) => write!(f, "{integer}")?,
+            // Debug keeps a fractional part or an exponent, so a whole double is
+            // never mistaken for an integer.
+            JSON::Double(number) => write!(f, "{number:?}")?,
             JSON::Boolean(boolean) => write!(f, "{boolean}")?,
             JSON::Null => write!(f, "null")?,
         }
@@ -140,11 +145,16 @@ impl Serialize for JSON {
                 seq.end()
             }
             Self::String(string) => serializer.serialize_str(string),
-            &Self::Number(number) => serializer.serialize_f64(number),
+            &Self::Integer(integer) => serializer.serialize_i64(integer),
+            &Self::Double(number) => serializer.serialize_f64(number),
             &Self::Boolean(boolean) => serializer.serialize_bool(boolean),
             Self::Null => serializer.serialize_unit(),
         }
     }
+}
+
+fn integer<E: serde::de::Error>(value: impl TryInto<i64>) -> Result<JSON, E> {
+    value.try_into().map(JSON::Integer).map_err(|_| E::custom("integer out of range for i64"))
 }
 
 impl<'de> Deserialize<'de> for JSON {
@@ -172,35 +182,35 @@ impl<'de> Deserialize<'de> for JSON {
             where
                 E: serde::de::Error,
             {
-                Ok(JSON::Number(value as f64))
+                Ok(JSON::Integer(value))
             }
 
             fn visit_i128<E>(self, value: i128) -> Result<Self::Value, E>
             where
                 E: serde::de::Error,
             {
-                Ok(JSON::Number(value as f64))
+                integer(value)
             }
 
             fn visit_u64<E>(self, value: u64) -> Result<Self::Value, E>
             where
                 E: serde::de::Error,
             {
-                Ok(JSON::Number(value as f64))
+                integer(value)
             }
 
             fn visit_u128<E>(self, value: u128) -> Result<Self::Value, E>
             where
                 E: serde::de::Error,
             {
-                Ok(JSON::Number(value as f64))
+                integer(value)
             }
 
             fn visit_f64<E>(self, value: f64) -> Result<Self::Value, E>
             where
                 E: serde::de::Error,
             {
-                Ok(JSON::Number(value))
+                Ok(JSON::Double(value))
             }
 
             fn visit_str<E>(self, value: &str) -> Result<Self::Value, E>
@@ -282,7 +292,7 @@ mod test {
     fn sample_json() -> JSON {
         JSON::Object(HashMap::from([
             ("array".into(), JSON::Array(vec![JSON::Boolean(true), JSON::String("string".into())])),
-            ("number".into(), JSON::Number(123.4)),
+            ("number".into(), JSON::Double(123.4)),
         ]))
     }
 
@@ -306,7 +316,7 @@ mod test {
     }
 
     fn random_json<R: Rng>(rng: &mut R) -> JSON {
-        let weights = [1, 1, 3, 3, 3, 3];
+        let weights = [1, 1, 3, 3, 3, 3, 3];
         let generators: &[fn(&mut R) -> JSON] = &[
             |rng| {
                 let len = rng.gen_range(0..12);
@@ -319,12 +329,56 @@ mod test {
                 JSON::Array(iter::from_fn(|| Some(random_json(rng))).take(len).collect())
             },
             |rng| JSON::String(Cow::Owned(random_string(rng))),
-            |rng| JSON::Number(rng.r#gen()),
+            |rng| JSON::Integer(rng.r#gen()),
+            |rng| JSON::Double(rng.r#gen()),
             |rng| JSON::Boolean(rng.r#gen()),
             |_| JSON::Null,
         ];
         let dist = WeightedIndex::new(weights).unwrap();
         generators[dist.sample(rng)](rng)
+    }
+
+    #[test]
+    fn integers_survive_a_roundtrip_beyond_f64_precision() {
+        // 2^53 is where f64 stops representing consecutive integers, so anything
+        // above it is corrupted by a detour through JSON::Double.
+        for value in [i64::MAX, i64::MIN, 9007199254740993, -9007199254740993, 0, 1, -1] {
+            let json = JSON::Integer(value);
+            assert_eq!(json.to_string(), value.to_string());
+
+            let text = serde_json::to_string(&json).unwrap();
+            assert_eq!(text, value.to_string());
+
+            let deser: JSON = serde_json::from_str(&text).unwrap();
+            assert_eq!(deser, JSON::Integer(value), "lost precision round-tripping {value}");
+        }
+    }
+
+    #[test]
+    fn whole_doubles_keep_a_fractional_part() {
+        for (value, expected) in
+            [(2.0f64, "2.0"), (-3.0, "-3.0"), (0.0, "0.0"), (-0.0, "-0.0"), (-2.5, "-2.5"), (1e-7, "1e-7")]
+        {
+            assert_eq!(JSON::Double(value).to_string(), expected);
+        }
+        assert_eq!(JSON::Integer(2).to_string(), "2");
+    }
+
+    #[test]
+    fn non_finite_doubles_render_as_they_are() {
+        // They have no JSON form, so there is nothing better to write than the word.
+        for value in [f64::NAN, f64::INFINITY, f64::NEG_INFINITY] {
+            assert_eq!(JSON::Double(value).to_string(), format!("{value}"));
+        }
+    }
+
+    #[test]
+    fn object_keys_are_escaped() {
+        // The FFI drivers re-parse this rendering, so an unescaped key would make
+        // the whole document unparseable for them.
+        let json = JSON::Object(HashMap::from([(Cow::Borrowed(r#"say "hi"\"#), JSON::Integer(1))]));
+        assert_eq!(json.to_string(), r#"{"say \"hi\"\\": 1}"#);
+        assert!(serde_json::from_str::<serde_json::Value>(&json.to_string()).is_ok());
     }
 
     #[test]

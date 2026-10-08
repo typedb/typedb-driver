@@ -163,8 +163,8 @@ fn json_value_type(value_type: Option<ValueType>) -> JSON {
 fn json_value(value: Value) -> JSON {
     match value {
         Value::Boolean(bool) => JSON::Boolean(bool),
-        Value::Integer(integer) => JSON::Number(integer as f64),
-        Value::Double(double) => JSON::Number(double),
+        Value::Integer(integer) => JSON::Integer(integer),
+        Value::Double(double) => JSON::Double(double),
         Value::String(string) => JSON::String(Cow::Owned(string)),
 
         Value::Decimal(_) | Value::Date(_) | Value::Datetime(_) | Value::DatetimeTZ(_) | Value::Duration(_) => {

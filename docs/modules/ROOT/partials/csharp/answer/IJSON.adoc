@@ -57,17 +57,17 @@ Casts this JSON value to a boolean.
 json.AsBoolean()
 ----
 
-[#_double_TypeDB_Driver_Api_Answer_IJSON_AsNumber_]
-==== method ``AsNumber``
+[#_double_TypeDB_Driver_Api_Answer_IJSON_AsDouble_]
+==== method ``AsDouble``
 
 [source,cs]
 ----
-double AsNumber()
+double AsDouble()
 ----
 
 
 
-Casts this JSON value to a number.
+Casts this JSON value to a double.
 
 [caption=""]
 .Returns
@@ -77,7 +77,30 @@ Casts this JSON value to a number.
 .Code examples
 [source,cs]
 ----
-json.AsNumber()
+json.AsDouble()
+----
+
+[#_long_TypeDB_Driver_Api_Answer_IJSON_AsInteger_]
+==== method ``AsInteger``
+
+[source,cs]
+----
+long AsInteger()
+----
+
+
+
+Casts this JSON value to an integer.
+
+[caption=""]
+.Returns
+`long`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+json.AsInteger()
 ----
 
 [#_IReadOnlyDictionary_string_IJSON_TypeDB_Driver_Api_Answer_IJSON_AsObject_]
@@ -172,6 +195,52 @@ Checks if this JSON value is a boolean.
 json.IsBoolean
 ----
 
+[#_bool_TypeDB_Driver_Api_Answer_IJSON_IsDouble]
+==== method ``IsDouble``
+
+[source,cs]
+----
+bool TypeDB.Driver.Api.Answer.IJSON.IsDouble
+----
+
+
+
+Checks if this JSON value is a double.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+json.IsDouble
+----
+
+[#_bool_TypeDB_Driver_Api_Answer_IJSON_IsInteger]
+==== method ``IsInteger``
+
+[source,cs]
+----
+bool TypeDB.Driver.Api.Answer.IJSON.IsInteger
+----
+
+
+
+Checks if this JSON value is an integer.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,cs]
+----
+json.IsInteger
+----
+
 [#_bool_TypeDB_Driver_Api_Answer_IJSON_IsNull]
 ==== method ``IsNull``
 
@@ -193,29 +262,6 @@ Checks if this JSON value is null.
 [source,cs]
 ----
 json.IsNull
-----
-
-[#_bool_TypeDB_Driver_Api_Answer_IJSON_IsNumber]
-==== method ``IsNumber``
-
-[source,cs]
-----
-bool TypeDB.Driver.Api.Answer.IJSON.IsNumber
-----
-
-
-
-Checks if this JSON value is a number.
-
-[caption=""]
-.Returns
-`bool`
-
-[caption=""]
-.Code examples
-[source,cs]
-----
-json.IsNumber
 ----
 
 [#_bool_TypeDB_Driver_Api_Answer_IJSON_IsObject]
