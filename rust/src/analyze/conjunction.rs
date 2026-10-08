@@ -109,7 +109,7 @@ pub enum Constraint {
     /// &lt;attribute_type&gt; value &lt;value_type&gt;
     /// e.g. $t value string
     Value { attribute_type: ConstraintVertex, value_type: concept::ValueType },
-    /// let &lt;attribute&gt; in cosine_similarity_search(&lt;attribute_type&gt;, &lt;query&gt;, &lt;threshold&gt;)
+    /// let &lt;attribute&gt;, &lt;similarity&gt; in cosine_similarity_search(&lt;attribute_type&gt;, &lt;query&gt;, &lt;threshold&gt;)
     VectorSearch {
         attribute: ConstraintVertex,
         attribute_type: ConstraintVertex,

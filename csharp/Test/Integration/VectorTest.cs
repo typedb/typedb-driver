@@ -49,7 +49,7 @@ namespace TypeDB.Driver.Test.Integration
             {
                 tx.Query(@"define
                     attribute content value string;
-                    attribute embedding value vector(3, ""float32"");
+                    attribute embedding value vector(3, ""float32"") @index(cosine);
                     entity document owns content @key, owns embedding;").Resolve();
                 tx.Commit();
             }
@@ -65,7 +65,7 @@ namespace TypeDB.Driver.Test.Integration
             using (var tx = driver.Transaction(DB, TransactionType.Read))
             {
                 var rows = tx.Query($@"match
-                        let $e in cosine_similarity_search(embedding, {Vec(1.0, 0.0, 0.0)}, 0.5);
+                        let $e, $s in cosine_similarity_search(embedding, {Vec(1.0, 0.0, 0.0)}, 0.5);
                         $d isa document, has content $c, has embedding $e;
                     select $c, $e; limit 2;").Resolve()!
                     .AsConceptRows().ToList();
