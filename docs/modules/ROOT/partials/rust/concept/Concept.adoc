@@ -47,7 +47,7 @@ ConceptCategory
 
 [source,rust]
 ----
-pub fn get_label(&self) -> &str
+pub fn get_label(&self) -> Cow<'_, str>
 ----
 
 Retrieves the label of this Concept. If this is an Instance, returns the label of the type of this instance (“unknown” if type fetching is disabled). If this is a Value, returns the label of the value type of the value. If this is a Type, returns the label of the type.
@@ -56,7 +56,7 @@ Retrieves the label of this Concept. If this is an Instance, returns the label o
 .Returns
 [source,rust]
 ----
-&str
+Cow<'_, str>
 ----
 
 [#_enum_Concept_is_attribute_]
@@ -592,7 +592,7 @@ Option<i64>
 
 [source,rust]
 ----
-pub fn try_get_label(&self) -> Option<&str>
+pub fn try_get_label(&self) -> Option<Cow<'_, str>>
 ----
 
 Retrieves the optional label of the concept. If this is an Instance, returns the label of the type of this instance (None if type fetching is disabled). If this is a Value, returns the label of the value type of the value. If this is a Type, returns the label of the type.
@@ -601,7 +601,7 @@ Retrieves the optional label of the concept. If this is an Instance, returns the
 .Returns
 [source,rust]
 ----
-Option<&str>
+Option<Cow<'_, str>>
 ----
 
 [#_enum_Concept_try_get_string_]
@@ -660,7 +660,7 @@ Option<&Value>
 
 [source,rust]
 ----
-pub fn try_get_value_label(&self) -> Option<&str>
+pub fn try_get_value_label(&self) -> Option<Cow<'_, str>>
 ----
 
 Retrieves the label of the value type of the concept, if it exists. If this is an Attribute Instance, returns the label of the value of this instance. If this is a Value, returns the label of the value. If this is an Attribute Type, returns the label of the value type that the schema permits for the attribute type, if one is defined. Otherwise, returns None.
@@ -669,7 +669,7 @@ Retrieves the label of the value type of the concept, if it exists. If this is a
 .Returns
 [source,rust]
 ----
-Option<&str>
+Option<Cow<'_, str>>
 ----
 
 [#_enum_Concept_try_get_value_type_]

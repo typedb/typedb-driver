@@ -219,6 +219,20 @@ class Attribute(Instance, ABC):
         """
         pass
 
+    @abstractmethod
+    def get_vector(self) -> list[float]:
+        """
+        Returns a ``vector`` value of the value concept that this attribute holds represented as a list of floats.
+        If the value has another type, raises an exception.
+
+        Examples
+        --------
+        ::
+
+            attribute.get_vector()
+        """
+        pass
+
     def is_attribute(self) -> bool:
         """
         Checks if the concept is an ``Attribute``.

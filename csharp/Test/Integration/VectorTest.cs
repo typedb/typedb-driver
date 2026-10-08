@@ -49,7 +49,7 @@ namespace TypeDB.Driver.Test.Integration
             {
                 tx.Query(@"define
                     attribute content value string;
-                    attribute embedding value vector(3, ""float32"") @index(cosine);
+                    attribute embedding value vector(3, ""float32"") @index(hnsw:cosine);
                     entity document owns content @key, owns embedding;").Resolve();
                 tx.Commit();
             }

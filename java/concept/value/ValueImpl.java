@@ -138,17 +138,16 @@ public class ValueImpl extends ConceptImpl implements Value {
         }
     }
 
-    /** Creates a new {@code Value} wrapping the specified {@code Duration} value. */
     /** Creates a new {@code Value} wrapping the specified numeric elements as a {@code vector} value. */
     public static Value newVector(List<?> elements) {
-        StringBuilder joined = new StringBuilder();
+        float[] floats = new float[elements.size()];
+        int i = 0;
         for (Object element : elements) {
             if (!(element instanceof Number))
                 throw new TypeDBDriverException(ErrorMessage.Concept.UNSUPPORTED_VALUE_CONVERSION, element == null ? "null" : element.getClass().getName());
-            if (joined.length() > 0) joined.append(',');
-            joined.append(((Number) element).floatValue());
+            floats[i++] = ((Number) element).floatValue();
         }
-        return new ValueImpl(concept_new_vector_from_string(joined.toString()));
+        return newVector(floats);
     }
 
     /** Creates a new {@code Value} wrapping the specified elements as a {@code vector} value. */
@@ -161,6 +160,7 @@ public class ValueImpl extends ConceptImpl implements Value {
         return new ValueImpl(concept_new_vector_from_string(joined.toString()));
     }
 
+    /** Creates a new {@code Value} wrapping the specified {@code Duration} value. */
     public static Value newDuration(Duration value) {
         int months = value.getMonths();
         int days = value.getDays();

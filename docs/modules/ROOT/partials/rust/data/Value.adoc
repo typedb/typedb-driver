@@ -55,7 +55,7 @@ value.get_type();
 
 [source,rust]
 ----
-pub fn get_type_name(&self) -> &str
+pub fn get_type_name(&self) -> Cow<'_, str>
 ----
 
 Retrieves the name of the ``ValueType`` of this value concept.
@@ -64,7 +64,7 @@ Retrieves the name of the ``ValueType`` of this value concept.
 .Returns
 [source,rust]
 ----
-&str
+Cow<'_, str>
 ----
 
 [caption=""]

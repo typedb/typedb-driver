@@ -658,6 +658,27 @@ Checks if the concept is a ``Value``.
 concept.is_value()
 ----
 
+[#_Concept_is_vector_]
+==== method ``is_vector``
+
+[source,python]
+----
+is_vector() -> bool
+----
+
+Returns ``True`` if the value which this ``Concept`` holds is of type ``vector`` or if this ``Concept`` is an ``AttributeType`` of type ``vector``. Otherwise, returns ``False``.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+concept.is_vector()
+----
+
 [#_Concept_try_get_boolean_]
 ==== method ``try_get_boolean``
 
@@ -950,6 +971,27 @@ Retrieves the ``str` describing the value type fo this ``Concept``. Returns ``No
 [source,python]
 ----
 concept.try_get_value_type()
+----
+
+[#_Concept_try_get_vector_]
+==== method ``try_get_vector``
+
+[source,python]
+----
+try_get_vector() -> list[float] | None
+----
+
+Returns a ``vector`` value of this ``Concept`` represented as a list of floats. If it’s not a ``Value`` or it has another type, returns ``None``.
+
+[caption=""]
+.Returns
+`list[float] | None`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+value.try_get_vector()
 ----
 
 // end::methods[]

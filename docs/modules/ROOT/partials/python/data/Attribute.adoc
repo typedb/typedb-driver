@@ -309,6 +309,27 @@ Retrieves the description of the value type of the value which the ``Attribute``
 attribute.get_value_type()
 ----
 
+[#_Attribute_get_vector_]
+==== method ``get_vector``
+
+[source,python]
+----
+get_vector() -> list[float]
+----
+
+Returns a ``vector`` value of the value concept that this attribute holds represented as a list of floats. If the value has another type, raises an exception.
+
+[caption=""]
+.Returns
+`list[float]`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+attribute.get_vector()
+----
+
 [#_Attribute_is_attribute_]
 ==== method ``is_attribute``
 

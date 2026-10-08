@@ -216,3 +216,17 @@ class Value(Concept, ABC):
             value.get_struct()
         """
         pass
+
+    @abstractmethod
+    def get_vector(self) -> list[float]:
+        """
+        Returns a ``vector`` value of this value concept represented as a list of floats.
+        If the value has another type, raises an exception.
+
+        Examples
+        --------
+        ::
+
+            value.get_vector()
+        """
+        pass

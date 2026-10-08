@@ -202,7 +202,7 @@ pub extern "C" fn fetch_variant(fetch: *const Fetch) -> FetchVariant {
 pub extern "C" fn fetch_leaf_annotations(fetch: *const Fetch) -> *mut StringIterator {
     match borrow(fetch) {
         Fetch::Leaf(leaf) => {
-            let iter = leaf.annotations.clone().into_iter().map(|a| Ok(a.name().to_owned()));
+            let iter = leaf.annotations.clone().into_iter().map(|a| Ok(a.name().into_owned()));
             release(StringIterator(CIterator(box_stream(iter))))
         }
         _ => unreachable!("Expected Fetch to be Leaf variant"),
@@ -615,7 +615,7 @@ pub extern "C" fn variable_annotations_type(annotations: *const VariableAnnotati
 pub extern "C" fn variable_annotations_value(annotations: *const VariableAnnotations) -> *mut StringIterator {
     match &borrow(annotations).types {
         TypeAnnotations::Value(annotations) => {
-            release(StringIterator(CIterator(box_stream([Ok(annotations.name().to_owned())].into_iter()))))
+            release(StringIterator(CIterator(box_stream([Ok(annotations.name().into_owned())].into_iter()))))
         }
         _ => unreachable!("Expected variable to have value annotations"),
     }
@@ -1121,7 +1121,7 @@ pub extern "C" fn constraint_value_get_value_type(constraint: *const ConstraintW
     let Constraint::Value { value_type, .. } = &borrow(constraint).constraint else {
         unreachable!("Expected constraint to be Value");
     };
-    release_string(value_type.name().to_owned())
+    release_string(value_type.name().into_owned())
 }
 
 /// Unwraps the <code>Constraint</code> instance as a `VectorSearch` constraint,
