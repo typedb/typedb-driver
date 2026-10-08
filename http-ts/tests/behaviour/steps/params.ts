@@ -128,7 +128,13 @@ defineParameterType({
     transformer: s => s,
 });
 
-export function parseValue(value: string, valueType: ValueType) {
+export function parseValue(value: string | number[], valueType: ValueType) {
+    if (valueType.startsWith("vector(")) {
+        if (Array.isArray(value)) return value.map(Number);
+        const joined = value.substring(value.indexOf("[") + 1, value.lastIndexOf("]")).trim();
+        return joined.length > 0 ? joined.split(",").map(element => parseFloat(element.trim())) : [];
+    }
+    if (Array.isArray(value)) throw new Error("Unexpected array value for non-vector value type");
     switch (valueType) {
         case "boolean": return JSON.parse(value);
         case "integer": return parseInt(value);

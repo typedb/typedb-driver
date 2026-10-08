@@ -749,6 +749,14 @@ public class QuerySteps {
                 return new BigDecimal(value.replace("dec", "")).setScale(DECIMAL_SCALE, RoundingMode.UNNECESSARY);
             case STRING:
                 return value.substring(1, value.length() - 1).replace("\\\"", "\"");
+            case VECTOR: {
+                List<Float> elements = new ArrayList<>();
+                String joined = value.substring(value.indexOf('[') + 1, value.lastIndexOf(']')).trim();
+                if (!joined.isEmpty()) {
+                    for (String element : joined.split(",")) elements.add(Float.parseFloat(element.trim()));
+                }
+                return elements;
+            }
             case DATE:
                 return LocalDate.parse(value);
             case DATETIME:

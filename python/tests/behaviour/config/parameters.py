@@ -143,6 +143,7 @@ class ValueType(Enum):
     DATETIME_TZ = 7,
     DURATION = 8,
     STRUCT = 9,
+    VECTOR = 10,
 
 
 @parse.with_pattern(r"boolean|integer|double|decimal|string|date|datetime|datetime-tz|duration|struct")
@@ -172,6 +173,8 @@ def try_parse_value_type(text: str) -> Optional[ValueType]:
         return ValueType.DATETIME_TZ
     elif text == "duration":
         return ValueType.DURATION
+    elif text.startswith("vector("):
+        return ValueType.VECTOR
     elif text == "struct":
         return ValueType.STRUCT
     else:

@@ -695,6 +695,9 @@ def parse_expected_value(value: str, value_type: Optional[ValueType]):
             return Datetime.utcfromstring(value_dt, offset_seconds=value_offset)
     elif value_type == ValueType.DURATION:
         return Duration.fromstring(value)
+    elif value_type == ValueType.VECTOR:
+        joined = value[value.index("[") + 1:value.rindex("]")].strip()
+        return [float(element.strip()) for element in joined.split(",")] if joined else []
     elif value_type == ValueType.STRUCT:
         return value  # compare string representations
     else:

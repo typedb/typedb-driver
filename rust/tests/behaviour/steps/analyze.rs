@@ -361,7 +361,7 @@ pub mod functor_encoding {
                     encode_functor_impl!(context, Label { r#type, label, })
                 }
                 Self::Value { attribute_type, value_type } => {
-                    let value_type_sr = value_type.name().to_owned();
+                    let value_type_sr = value_type.name().into_owned();
                     let value_type_ref = &value_type_sr;
                     encode_functor_impl!(context, Value { attribute_type, value_type_ref, })
                 }
@@ -413,7 +413,7 @@ pub mod functor_encoding {
         ValueType => {
             match self {
                 ValueType::Struct(name) => encode_functor_impl!(context, Struct { name, }),
-                other => other.name().to_owned().encode_as_functor(context),
+                other => other.name().into_owned().encode_as_functor(context),
             }
         }
         SortVariable => {

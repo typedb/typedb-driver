@@ -169,7 +169,7 @@ impl FromStr for Value {
 #[derive(Clone, Debug, Parameter)]
 #[param(
     name = "value_type",
-    regex = r"boolean|integer|double|decimal|string|date|datetime|datetime-tz|duration|struct"
+    regex = r#"boolean|integer|double|decimal|string|date|datetime|datetime-tz|duration|struct|vector\(\d+, "float32"\)"#
 )]
 pub struct ValueType {
     pub value_type: TypeDBValueType,
@@ -190,6 +190,10 @@ impl FromStr for ValueType {
             "datetime-tz" => Self { value_type: TypeDBValueType::DatetimeTZ },
             "duration" => Self { value_type: TypeDBValueType::Duration },
             "struct" => Self { value_type: TypeDBValueType::Struct("unknown".to_string()) },
+            vector if vector.starts_with("vector(") => {
+                let dimension = vector["vector(".len()..vector.find(',').unwrap()].parse().unwrap();
+                Self { value_type: TypeDBValueType::Vector { dimension } }
+            }
             _ => unreachable!("`{type_}` is not a valid value type"),
         })
     }

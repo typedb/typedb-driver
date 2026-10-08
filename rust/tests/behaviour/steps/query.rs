@@ -642,10 +642,10 @@ pub async fn answer_get_row_get_variable_get_value_type(
 ) {
     let concept = get_answer_rows_var(context, index, is_by_var_index, var).await.unwrap().unwrap();
     check_concept_is_kind(concept, var_kind, params::Boolean::True);
-    assert_eq!(value_type.as_str(), concept.try_get_value_label().unwrap_or("none"));
+    assert_eq!(value_type.as_str(), concept.try_get_value_label().as_deref().unwrap_or("none"));
     assert_eq!(
         value_type,
-        concept.try_get_value_type().map(|type_| type_.name().to_owned()).unwrap_or("none".to_owned())
+        concept.try_get_value_type().map(|type_| type_.name().into_owned()).unwrap_or("none".to_owned())
     );
 }
 
@@ -662,10 +662,10 @@ pub async fn answer_get_row_get_variable_get_type_get_value_type(
     let concept = get_answer_rows_var(context, index, is_by_var_index, var).await.unwrap().unwrap();
     let type_ = concept_get_type(concept);
     check_concept_is_kind(concept, var_kind, params::Boolean::True);
-    assert_eq!(value_type.as_str(), type_.try_get_value_label().unwrap_or("none"));
+    assert_eq!(value_type.as_str(), type_.try_get_value_label().as_deref().unwrap_or("none"));
     assert_eq!(
         value_type,
-        type_.try_get_value_type().map(|type_| type_.name().to_owned()).unwrap_or("none".to_owned())
+        type_.try_get_value_type().map(|type_| type_.name().into_owned()).unwrap_or("none".to_owned())
     );
 }
 
