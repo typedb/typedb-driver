@@ -40,7 +40,7 @@ from typedb.native_driver_wrapper import (concept_try_get_iid, concept_to_string
                                           concept_get_decimal, concept_get_string,
                                           concept_get_date_as_seconds, concept_get_datetime, concept_get_datetime_tz,
                                           concept_get_duration, concept_get_struct,
-                                          concept_get_vector_length, concept_get_vector_element,
+                                          concept_get_vector_length, concept_get_vector, FloatArray,
                                           string_and_opt_value_iterator_next,
                                           Concept as NativeConcept)
 
@@ -178,7 +178,9 @@ class _Concept(Concept, NativeWrapper[NativeConcept], ABC):
         if self.is_type() or not self.is_vector():
             return None
         length = concept_get_vector_length(self.native_object)
-        return [concept_get_vector_element(self.native_object, i) for i in range(length)]
+        buffer = FloatArray(max(int(length), 1))
+        concept_get_vector(self.native_object, buffer.cast(), length)
+        return [buffer[i] for i in range(length)]
 
     @property
     def _native_object_not_owned_exception(self) -> TypeDBDriverException:

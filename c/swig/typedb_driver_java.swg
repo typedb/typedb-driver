@@ -17,6 +17,9 @@
  * under the License.
  */
 
+%include "arrays_java.i"
+%apply float[] { const float *values, float *buffer };
+
 %javaconst(1);
 
 %include "various.i"
@@ -187,12 +190,12 @@
 %nojavaexception concept_get_string;
 %nojavaexception concept_get_struct;
 %nojavaexception concept_get_vector_length;
-%nojavaexception concept_get_vector_element;
+%nojavaexception concept_get_vector;
 
 %nojavaexception concept_new_boolean;
 %nojavaexception concept_new_integer;
 %nojavaexception concept_new_double;
-%nojavaexception concept_new_vector_from_string;
+%nojavaexception concept_new_vector;
 %nojavaexception concept_new_decimal;
 %nojavaexception concept_new_string;
 %nojavaexception concept_new_date_from_seconds;

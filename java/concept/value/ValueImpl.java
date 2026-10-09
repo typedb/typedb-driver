@@ -49,7 +49,7 @@ import static com.typedb.driver.jni.typedb_driver.concept_new_datetime_tz_offset
 import static com.typedb.driver.jni.typedb_driver.concept_new_decimal;
 import static com.typedb.driver.jni.typedb_driver.concept_new_double;
 import static com.typedb.driver.jni.typedb_driver.concept_new_duration;
-import static com.typedb.driver.jni.typedb_driver.concept_new_vector_from_string;
+import static com.typedb.driver.jni.typedb_driver.concept_new_vector;
 import static com.typedb.driver.jni.typedb_driver.concept_new_integer;
 import static com.typedb.driver.jni.typedb_driver.concept_new_string;
 
@@ -152,12 +152,7 @@ public class ValueImpl extends ConceptImpl implements Value {
 
     /** Creates a new {@code Value} wrapping the specified elements as a {@code vector} value. */
     public static Value newVector(float[] elements) {
-        StringBuilder joined = new StringBuilder();
-        for (float element : elements) {
-            if (joined.length() > 0) joined.append(',');
-            joined.append(element);
-        }
-        return new ValueImpl(concept_new_vector_from_string(joined.toString()));
+        return new ValueImpl(concept_new_vector(elements, elements.length));
     }
 
     /** Creates a new {@code Value} wrapping the specified {@code Duration} value. */

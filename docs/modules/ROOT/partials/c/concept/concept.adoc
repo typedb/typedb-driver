@@ -229,21 +229,21 @@ Returns the value of this struct value concept represented as an iterator of {fi
 .Returns
 `struct StringAndOptValueIterator*`
 
-[#_concept_get_vector_element]
-==== function ``concept_get_vector_element``
+[#_concept_get_vector]
+==== function ``concept_get_vector``
 
 [source,c]
 ----
-float concept_get_vector_element(const struct Concept* concept, int64_t index)
+int64_t concept_get_vector(const struct Concept* concept, float* buffer, int64_t capacity)
 ----
 
 
 
-Returns the element at the given index of the ``vector`` value of this value concept. If the value has another type or the index is out of bounds, the error is set.
+Copies the elements of the ``vector`` value of this value concept into ``buffer`` (up to ``capacity`` elements) and returns the vector's full length. Allocate the buffer after calling ``concept_get_vector_length``. Will panic if the value has another type.
 
 [caption=""]
 .Returns
-`float`
+`int64_t`
 
 [#_concept_get_vector_length]
 ==== function ``concept_get_vector_length``
@@ -741,17 +741,17 @@ Creates a new ``Concept`` object wrapping the specified ``String`` value
 .Returns
 `struct Concept*`
 
-[#_concept_new_vector_from_string]
-==== function ``concept_new_vector_from_string``
+[#_concept_new_vector]
+==== function ``concept_new_vector``
 
 [source,c]
 ----
-struct Concept* concept_new_vector_from_string(const char* str)
+struct Concept* concept_new_vector(const float* values, int64_t len)
 ----
 
 
 
-Creates a new ``Concept`` object wrapping a ``vector`` value, provided as a comma-separated string of float elements (e.g. "1.0,2.5,3.0").
+Creates a new ``Concept`` object wrapping a ``vector`` value, copying ``len`` float elements from ``values``.
 
 [caption=""]
 .Returns

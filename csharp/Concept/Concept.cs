@@ -239,12 +239,9 @@ namespace TypeDB.Driver.Concept
         {
             if (!CanHaveValue() || !IsVector()) return null;
             long length = Pinvoke.typedb_driver.concept_get_vector_length(NativeObject);
-            var vector = new List<float>((int)length);
-            for (long i = 0; i < length; i++)
-            {
-                vector.Add(Pinvoke.typedb_driver.concept_get_vector_element(NativeObject, i));
-            }
-            return vector;
+            var buffer = new float[length];
+            Pinvoke.typedb_driver.concept_get_vector(NativeObject, buffer, length);
+            return new List<float>(buffer);
         }
 
         #endregion

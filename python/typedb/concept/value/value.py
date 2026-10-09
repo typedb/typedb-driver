@@ -32,7 +32,8 @@ from typedb.native_driver_wrapper import (
     concept_new_boolean, concept_new_integer, concept_new_double, concept_new_decimal,
     concept_new_string, concept_new_date_from_seconds, concept_new_datetime,
     concept_new_datetime_tz_iana, concept_new_datetime_tz_offset, concept_new_duration,
-    concept_new_vector_from_string,
+    concept_new_vector,
+    FloatArray,
 )
 
 
@@ -206,4 +207,8 @@ class _Value(Value, _Concept):
 
     @staticmethod
     def new_vector(value) -> 'Value':
-        return _Value(concept_new_vector_from_string(",".join(repr(float(element)) for element in value)))
+        elements = [float(element) for element in value]
+        buffer = FloatArray(max(len(elements), 1))
+        for i, element in enumerate(elements):
+            buffer[i] = element
+        return _Value(concept_new_vector(buffer.cast(), len(elements)))

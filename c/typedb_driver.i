@@ -28,6 +28,11 @@ extern "C" {
 %include "carrays.i"
 %include "typemaps.i"
 
+#ifdef SWIGPYTHON
+/* bulk float buffer for vector values: python allocates a FloatArray and passes .cast() */
+%array_class(float, FloatArray);
+#endif
+
 #ifdef SWIGJAVA
 %include "swig/typedb_driver_java.swg"
 #endif
@@ -242,7 +247,7 @@ VoidPromise* transaction_on_close_register(const Transaction* transaction, Trans
 %newobject concept_new_boolean;
 %newobject concept_new_integer;
 %newobject concept_new_double;
-%newobject concept_new_vector_from_string;
+%newobject concept_new_vector;
 %newobject concept_new_decimal;
 %newobject concept_new_decimal_from_string;
 %newobject concept_new_string;

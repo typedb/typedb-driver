@@ -17,6 +17,10 @@
  * under the License.
  */
 
+%include "arrays_csharp.i"
+%apply float INPUT[] { const float *values };
+%apply float INOUT[] { float *buffer };
+
 %csconst(1);
 
 %typemap(cscode) SWIGTYPE %{
@@ -264,7 +268,8 @@
 %noexception concept_get_string;
 %noexception concept_get_struct;
 %noexception concept_get_vector_length;
-%noexception concept_get_vector_element;
+%noexception concept_get_vector;
+%noexception concept_new_vector;
 
 /* Concept metadata accessors do not throw */
 %noexception concept_get_label;

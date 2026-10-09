@@ -377,12 +377,18 @@ pub extern "C" fn concept_get_vector_length(concept: *const Concept) -> i64 {
     }
 }
 
-/// Returns the element at the given index of the <code>vector</code> value of this value concept.
-/// If the value has another type or the index is out of bounds, the error is set.
+/// Copies the elements of the <code>vector</code> value of this value concept into
+/// <code>buffer</code> (up to <code>capacity</code> elements) and returns the vector's full
+/// length. Allocate the buffer after calling <code>concept_get_vector_length</code>.
+/// Will panic if the value has another type.
 #[unsafe(no_mangle)]
-pub extern "C" fn concept_get_vector_element(concept: *const Concept, index: i64) -> f32 {
+pub extern "C" fn concept_get_vector(concept: *const Concept, buffer: *mut f32, capacity: i64) -> i64 {
     match borrow(concept).try_get_vector() {
-        Some(vector) => vector[index as usize],
+        Some(vector) => {
+            let count = vector.len().min(capacity.max(0) as usize);
+            unsafe { std::ptr::copy_nonoverlapping(vector.as_ptr(), buffer, count) };
+            vector.len() as i64
+        }
         None => unreachable!("Attempting to unwrap a non-vector {:?} as vector", borrow(concept)),
     }
 }
@@ -478,16 +484,11 @@ pub extern "C" fn concept_new_double(value: f64) -> *mut Concept {
 }
 
 /// Creates a new <code>Concept</code> object wrapping a <code>vector</code> value,
-/// provided as a comma-separated string of float elements (e.g. "1.0,2.5,3.0").
+/// copying <code>len</code> float elements from <code>values</code>.
 #[unsafe(no_mangle)]
-pub extern "C" fn concept_new_vector_from_string(str: *const c_char) -> *mut Concept {
-    let result = string_view(str)
-        .split(',')
-        .map(|element| element.trim().parse::<f32>())
-        .collect::<Result<Vec<f32>, _>>()
-        .map(|elements| Concept::Value(Value::Vector(elements)))
-        .map_err(|err| typedb_driver::Error::Other(format!("Invalid vector element: {err}")));
-    try_release(result)
+pub extern "C" fn concept_new_vector(values: *const f32, len: i64) -> *mut Concept {
+    let elements = unsafe { std::slice::from_raw_parts(values, len.max(0) as usize) }.to_vec();
+    release(Concept::Value(Value::Vector(elements)))
 }
 
 /// Creates a new <code>Concept</code> object wrapping the specified <code>Decimal</code> value,

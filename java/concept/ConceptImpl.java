@@ -64,7 +64,7 @@ import static com.typedb.driver.jni.typedb_driver.concept_get_integer;
 import static com.typedb.driver.jni.typedb_driver.concept_get_label;
 import static com.typedb.driver.jni.typedb_driver.concept_get_string;
 import static com.typedb.driver.jni.typedb_driver.concept_get_struct;
-import static com.typedb.driver.jni.typedb_driver.concept_get_vector_element;
+import static com.typedb.driver.jni.typedb_driver.concept_get_vector;
 import static com.typedb.driver.jni.typedb_driver.concept_get_vector_length;
 import static com.typedb.driver.jni.typedb_driver.concept_is_attribute;
 import static com.typedb.driver.jni.typedb_driver.concept_is_attribute_type;
@@ -278,10 +278,10 @@ public abstract class ConceptImpl extends NativeObject<com.typedb.driver.jni.Con
     public Optional<List<Float>> tryGetVector() {
         if (isType() || !isVector()) return Optional.empty();
         long length = concept_get_vector_length(nativeObject);
+        float[] buffer = new float[(int) length];
+        concept_get_vector(nativeObject, buffer, length);
         List<Float> vector = new ArrayList<>((int) length);
-        for (long i = 0; i < length; i++) {
-            vector.add(concept_get_vector_element(nativeObject, i));
-        }
+        for (float element : buffer) vector.add(element);
         return Optional.of(vector);
     }
 
