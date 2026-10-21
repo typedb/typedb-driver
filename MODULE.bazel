@@ -66,7 +66,7 @@ bazel_dep(name = "typedb_protocol", version = "0.0.0")
 git_override(
     module_name = "typedb_protocol",
     remote = "https://github.com/typedb/typedb-protocol",
-    commit = "fd631d5d4c980e8cb30e4403229862776d07b17b",
+    tag = "3.14.0",
 )
 
 bazel_dep(name = "typedb_behaviour", version = "0.0.0")
@@ -244,10 +244,10 @@ workspace_refs = use_repo_rule("@typedb_bazel_distribution//common/workspace_ref
 workspace_refs(
     name = "typedb_driver_workspace_refs",
     workspace_commit_dict = {
-        "typedb_protocol+": "fd631d5d4c980e8cb30e4403229862776d07b17b",
+#        "typedb_protocol+": "fd631d5d4c980e8cb30e4403229862776d07b17b",
     },
     workspace_tag_dict = {
-#        "typedb_protocol+": "3.13.4",
+        "typedb_protocol+": "3.14.0",
     },
 )
 
@@ -258,7 +258,7 @@ native_artifact_files.artifact(
     name = "typedb_artifact",
     group_name = "typedb-all-{platform}",
     artifact_name = "typedb-all-{platform}-{version}.{ext}",
-    commit = "4c01f61f4d84caeda8ebbe0ed9b3f3b1fe60d179",
+    commit = "499dedd67eb4ee55bec45d217fb2bcf5942961ff",
 )
 # IMPORTANT: must be CLUSTERED typedb-cluster (with multi-node support)!
 native_artifact_files.artifact(
