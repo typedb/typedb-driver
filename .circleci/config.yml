@@ -870,32 +870,32 @@ workflows:
       - deploy-snapshot-linux-arm64:
           filters:
             branches:
-              only: [master]
+              only: [master, one-off/test-linux-on-ubuntu]
 
       - deploy-snapshot-linux-x86_64:
           filters:
             branches:
-              only: [master]
+              only: [master, one-off/test-linux-on-ubuntu]
 
       - deploy-snapshot-mac-arm64:
           filters:
             branches:
-              only: [master]
+              only: [master, one-off/test-linux-on-ubuntu]
 
       - deploy-snapshot-mac-x86_64:
           filters:
             branches:
-              only: [master]
+              only: [master, one-off/test-linux-on-ubuntu]
 
       - deploy-snapshot-windows-x86_64:
           filters:
             branches:
-              only: [master]
+              only: [master, one-off/test-linux-on-ubuntu]
 
       - deploy-snapshot-any:
           filters:
             branches:
-              only: [master]
+              only: [master, one-off/test-linux-on-ubuntu]
           requires:
             - deploy-snapshot-linux-arm64
             - deploy-snapshot-linux-x86_64
@@ -906,7 +906,7 @@ workflows:
       - deploy-snapshot-dotnet-any:
           filters:
             branches:
-              only: [master]
+              only: [master, one-off/test-linux-on-ubuntu]
           requires:
             - deploy-snapshot-linux-arm64
             - deploy-snapshot-linux-x86_64
@@ -917,7 +917,7 @@ workflows:
       - test-snapshot-linux-arm64:
           filters:
             branches:
-              only: [master]
+              only: [master, one-off/test-linux-on-ubuntu]
           requires:
             - deploy-snapshot-linux-arm64
             - deploy-snapshot-any
@@ -926,7 +926,7 @@ workflows:
       - test-snapshot-linux-x86_64:
           filters:
             branches:
-              only: [master]
+              only: [master, one-off/test-linux-on-ubuntu]
           requires:
             - deploy-snapshot-linux-x86_64
             - deploy-snapshot-any
@@ -935,7 +935,7 @@ workflows:
       - test-snapshot-mac-arm64:
           filters:
             branches:
-              only: [master]
+              only: [master, one-off/test-linux-on-ubuntu]
           requires:
             - deploy-snapshot-mac-arm64
             - deploy-snapshot-any
@@ -944,7 +944,7 @@ workflows:
       - test-snapshot-mac-x86_64:
           filters:
             branches:
-              only: [master]
+              only: [master, one-off/test-linux-on-ubuntu]
           requires:
             - deploy-snapshot-mac-x86_64
             - deploy-snapshot-any
@@ -953,7 +953,7 @@ workflows:
       - test-snapshot-windows-x86_64:
           filters:
             branches:
-              only: [master]
+              only: [master, one-off/test-linux-on-ubuntu]
           requires:
             - deploy-snapshot-windows-x86_64
             - deploy-snapshot-any
