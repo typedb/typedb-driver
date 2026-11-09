@@ -34,7 +34,7 @@ a| `ServerConnectionFailedNetworking`
 a| `ServerConnectionFailedWithError`
 a| `ServerConnectionIsClosed`
 a| `ServerConnectionIsClosedUnexpectedly`
-a| `ServerIsNotInitialised`
+a| `ServerUnavailable`
 a| `SslCertificateNotValidated`
 a| `TokenCredentialInvalid`
 a| `TransactionIsClosed`
