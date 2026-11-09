@@ -681,6 +681,8 @@ jobs:
           bazel-arch: arm64
       - run: apt install -y maven
       - run: |
+          # Ubuntu 22.04 x86_64 ships dotnet from its own feed, which conflicts with Microsoft's and breaks fxr resolution
+          apt remove -y dotnet* aspnet* || true
           wget https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
           dpkg -i packages-microsoft-prod.deb
           rm packages-microsoft-prod.deb
@@ -698,6 +700,8 @@ jobs:
           bazel-arch: amd64
       - run: apt install -y maven
       - run: |
+          # Ubuntu 22.04 x86_64 ships dotnet from its own feed, which conflicts with Microsoft's and breaks fxr resolution
+          apt remove -y dotnet* aspnet* || true
           wget https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
           dpkg -i packages-microsoft-prod.deb
           rm packages-microsoft-prod.deb
