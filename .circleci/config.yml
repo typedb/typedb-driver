@@ -677,11 +677,15 @@ jobs:
     executor: linux-arm64-ubuntu-2204
     steps:
       - checkout
-      - install-bazel-yum:
+      - install-bazel-apt:
           bazel-arch: arm64
-      - install-maven-linux
-      - install-dotnet-linux
-      - install-libicu-linux
+      - run: apt install -y maven
+      - run: |
+          wget https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+          dpkg -i packages-microsoft-prod.deb
+          rm packages-microsoft-prod.deb
+          apt update -y && apt install -y dotnet-sdk-6.0
+      - run: apt install -y libicu70
       - test-pip-snapshot-unix
       - test-maven-snapshot-unix
       - test-dotnet-snapshot-unix
@@ -690,10 +694,14 @@ jobs:
     executor: linux-x86_64-ubuntu-2204
     steps:
       - checkout
-      - install-bazel-yum:
+      - install-bazel-apt:
           bazel-arch: amd64
-      - install-maven-linux
-      - install-dotnet-linux
+      - run: apt install -y maven
+      - run: |
+          wget https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+          dpkg -i packages-microsoft-prod.deb
+          rm packages-microsoft-prod.deb
+          apt update -y && apt install -y dotnet-sdk-6.0
       - test-pip-snapshot-unix
       - test-maven-snapshot-unix
       - test-dotnet-snapshot-unix
