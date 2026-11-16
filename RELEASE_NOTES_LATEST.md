@@ -8,13 +8,13 @@ Available from https://crates.io/crates/typedb-driver
 Documentation: https://typedb.com/docs/drivers/rust/overview
 
 ```sh
-cargo add typedb-driver@3.15.0-rc3
+cargo add typedb-driver@3.15.0
 ```
 
 
 ### Java driver
 
-Available through [https://repo.typedb.com](https://cloudsmith.io/~typedb/repos/public-release/packages/detail/maven/typedb-driver/3.15.0-rc3/a=noarch;xg=com.typedb/)
+Available through [https://repo.typedb.com](https://cloudsmith.io/~typedb/repos/public-release/packages/detail/maven/typedb-driver/3.15.0/a=noarch;xg=com.typedb/)
 Documentation: https://typedb.com/docs/drivers/java/overview
 
 ```xml
@@ -28,7 +28,7 @@ Documentation: https://typedb.com/docs/drivers/java/overview
     <dependency>
         <groupid>com.typedb</groupid>
         <artifactid>typedb-driver</artifactid>
-        <version>3.15.0-rc3</version>
+        <version>3.15.0</version>
     </dependency>
 </dependencies>
 ```
@@ -42,7 +42,7 @@ Available through https://pypi.org
 
 [//]: # (TODO: Python's RC/Alpha/Beta versions are formatted differently. Don't foget to update manually until we make an automation)
 ```
-pip install typedb-driver==3.15.0rc0
+pip install typedb-driver==3.15.0
 ```
 
 ### C# driver
@@ -52,12 +52,12 @@ Documentation: https://typedb.com/docs/drivers/csharp/overview
 
 ```xml
 <ItemGroup>
-    <PackageReference Include="TypeDB.Driver" Version="3.15.0-rc3" />
-    <PackageReference Include="TypeDB.Driver.Pinvoke.osx-x64" Version="3.15.0-rc3" />
-    <PackageReference Include="TypeDB.Driver.Pinvoke.linux-x64" Version="3.15.0-rc3" />
-    <PackageReference Include="TypeDB.Driver.Pinvoke.win-x64" Version="3.15.0-rc3" />
-    <PackageReference Include="TypeDB.Driver.Pinvoke.osx-arm64" Version="3.15.0-rc3" />
-    <PackageReference Include="TypeDB.Driver.Pinvoke.linux-arm64" Version="3.15.0-rc3" />
+    <PackageReference Include="TypeDB.Driver" Version="3.15.0" />
+    <PackageReference Include="TypeDB.Driver.Pinvoke.osx-x64" Version="3.15.0" />
+    <PackageReference Include="TypeDB.Driver.Pinvoke.linux-x64" Version="3.15.0" />
+    <PackageReference Include="TypeDB.Driver.Pinvoke.win-x64" Version="3.15.0" />
+    <PackageReference Include="TypeDB.Driver.Pinvoke.osx-arm64" Version="3.15.0" />
+    <PackageReference Include="TypeDB.Driver.Pinvoke.linux-arm64" Version="3.15.0" />
 </ItemGroup>
 ```
 
@@ -67,12 +67,12 @@ NPM package: https://www.npmjs.com/package/@typedb/driver-http
 Documentation: https://typedb.com/docs/home/install/drivers/
 
 ```
-npm install @typedb/driver-http@3.15.0-rc3
+npm install @typedb/driver-http@3.15.0
 ```
 
 ### C driver
 
-Compiled distributions comprising headers and shared libraries available at: https://cloudsmith.io/~typedb/repos/public-release/packages/?q=name:^typedb-driver-clib+version:3.15.0-rc3
+Compiled distributions comprising headers and shared libraries available at: https://cloudsmith.io/~typedb/repos/public-release/packages/?q=name:^typedb-driver-clib+version:3.15.0
 
 
 ## New Features
@@ -114,4 +114,29 @@ Compiled distributions comprising headers and shared libraries available at: htt
   Let the driver's failover work in clustered environment for a broader range of error codes.
   
   Introduce a common `ServerUnavailable` connection error for gRPC drivers, that can let the driver retry single requests against the same or a new primary without depending on our internal error codes. Now, this classification depends on the HTTP status code of the error.
+  
+  
+
+## Other Improvements
+- **Prepare release 3.15.0-rc3**
+  Bump version & update release notes
+  
+  
+- **Prepare release 3.15.0-rc2**
+  Bump version & update release notes.
+  
+  
+  
+- **Prepare release 3.15 0 rc1**
+  Bump version & update release notes.
+  
+  
+- **Prepare release 3.15.0-rc0**
+  Bump version & prepare release notes
+  
+  
+- **Fix builds**
+  Fix rustfmt job
+  
+  
     
