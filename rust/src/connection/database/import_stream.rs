@@ -37,16 +37,15 @@ impl DatabaseImportStream {
         Self { import_transmitter }
     }
 
-    pub(crate) fn send_items(&mut self, items: Vec<migration::Item>) -> Result {
+    pub(crate) fn send_items(&mut self, items: Vec<migration::Item>) -> impl Promise<'_, Result> {
         self.import_transmitter.single(DatabaseImportRequest::ItemPart { items })
     }
 
     #[doc(hidden)]
     pub fn done(mut self) -> impl Promise<'static, Result> {
         promisify! {
-            self.import_transmitter.single(DatabaseImportRequest::Done)?;
-            let promise = self.import_transmitter.wait_done();
-            resolve!(promise)
+            resolve!(self.import_transmitter.single(DatabaseImportRequest::Done))?;
+            resolve!(self.import_transmitter.wait_done())
         }
     }
 }

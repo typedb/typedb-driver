@@ -32,7 +32,7 @@ use typedb_protocol::database_manager;
 #[cfg(feature = "sync")]
 use super::{SyncReceiver as OneshotReceiver, SyncTryRecvError as TryRecvError, oneshot_blocking as oneshot};
 use crate::{
-    common::{Promise, Result, box_promise, error::ConnectionError},
+    common::{Promise, Result, error::ConnectionError},
     connection::{
         message::DatabaseImportRequest,
         network::{
@@ -41,6 +41,7 @@ use crate::{
         },
         runtime::BackgroundRuntime,
     },
+    promisify, resolve,
 };
 
 const IMPORT_BUFFER_CAPACITY: usize = 32;
@@ -88,32 +89,39 @@ impl DatabaseImportTransmitter {
         &self.shutdown_guard
     }
 
-    pub(in crate::connection) fn single(&mut self, req: DatabaseImportRequest) -> Result {
-        self.check_early_result()?;
-        let send_result = self.request_sink.send(req);
-        send_result.map_err(|_| ConnectionError::DatabaseImportChannelIsClosed.into())
+    pub(in crate::connection) fn single(&mut self, req: DatabaseImportRequest) -> impl Promise<'_, Result> {
+        promisify! {
+            self.check_early_result()?;
+            match self.request_sink.send(req) {
+                Ok(()) => Ok(()),
+                Err(_) => match resolve!(self.result()) {
+                    Ok(()) => Err(ConnectionError::DatabaseImportStreamUnexpectedResponse.into()),
+                    Err(err) => Err(err),
+                },
+            }
+        }
+    }
+
+    pub(in crate::connection) fn wait_done(mut self) -> impl Promise<'static, Result> {
+        promisify! { resolve!(self.result()) }
     }
 
     #[cfg(not(feature = "sync"))]
-    pub(in crate::connection) fn wait_done(self) -> impl Promise<'static, Result> {
-        box_promise(async move {
-            let _shutdown_guard = self.shutdown_guard; // Don't let it drop before resolving
-            match self.result_source.await {
+    fn result(&mut self) -> impl Promise<'_, Result> {
+        async move {
+            match (&mut self.result_source).await {
                 Ok(result) => result,
                 Err(_) => Err(ConnectionError::DatabaseImportChannelIsClosed.into()),
             }
-        })
+        }
     }
 
     #[cfg(feature = "sync")]
-    pub(in crate::connection) fn wait_done(self) -> impl Promise<'static, Result> {
-        box_promise(move || {
-            let _shutdown_guard = self.shutdown_guard; // Don't let it drop before resolving
-            match self.result_source.recv() {
-                Ok(result) => result,
-                Err(_) => Err(ConnectionError::DatabaseImportChannelIsClosed.into()),
-            }
-        })
+    fn result(&mut self) -> impl Promise<'_, Result> {
+        move || match self.result_source.recv() {
+            Ok(result) => result,
+            Err(_) => Err(ConnectionError::DatabaseImportChannelIsClosed.into()),
+        }
     }
 
     #[cfg(not(feature = "sync"))]
