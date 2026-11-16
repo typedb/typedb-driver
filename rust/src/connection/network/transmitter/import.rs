@@ -94,7 +94,7 @@ impl DatabaseImportTransmitter {
             self.check_early_result()?;
             match self.request_sink.send(req) {
                 Ok(()) => Ok(()),
-                Err(_) => match resolve!(self.result()) {
+                Err(_) => match resolve!(self.wait_result()) {
                     Ok(()) => Err(ConnectionError::DatabaseImportStreamUnexpectedResponse.into()),
                     Err(err) => Err(err),
                 },
@@ -103,11 +103,11 @@ impl DatabaseImportTransmitter {
     }
 
     pub(in crate::connection) fn wait_done(mut self) -> impl Promise<'static, Result> {
-        promisify! { resolve!(self.result()) }
+        promisify! { resolve!(self.wait_result()) }
     }
 
     #[cfg(not(feature = "sync"))]
-    fn result(&mut self) -> impl Promise<'_, Result> {
+    fn wait_result(&mut self) -> impl Promise<'_, Result> {
         async move {
             match (&mut self.result_source).await {
                 Ok(result) => result,
@@ -117,7 +117,7 @@ impl DatabaseImportTransmitter {
     }
 
     #[cfg(feature = "sync")]
-    fn result(&mut self) -> impl Promise<'_, Result> {
+    fn wait_result(&mut self) -> impl Promise<'_, Result> {
         move || match self.result_source.recv() {
             Ok(result) => result,
             Err(_) => Err(ConnectionError::DatabaseImportChannelIsClosed.into()),
