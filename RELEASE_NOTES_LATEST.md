@@ -117,24 +117,7 @@ Compiled distributions comprising headers and shared libraries available at: htt
   
   
 
-## Other Improvements
-- **Prepare release 3.15.0-rc3**
-  Bump version & update release notes
-  
-  
-- **Prepare release 3.15.0-rc2**
-  Bump version & update release notes.
-  
-  
-  
-- **Prepare release 3.15 0 rc1**
-  Bump version & update release notes.
-  
-  
-- **Prepare release 3.15.0-rc0**
-  Bump version & prepare release notes
-  
-  
+## Other Improvements 
 - **Fix builds**
   Fix rustfmt job
   
