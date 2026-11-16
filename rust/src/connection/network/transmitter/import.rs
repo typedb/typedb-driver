@@ -90,9 +90,9 @@ impl DatabaseImportTransmitter {
     }
 
     pub(in crate::connection) fn single(&mut self, req: DatabaseImportRequest) -> impl Promise<'_, Result> {
+        let send_result = self.check_early_result().map(|()| self.request_sink.send(req));
         promisify! {
-            self.check_early_result()?;
-            match self.request_sink.send(req) {
+            match send_result? {
                 Ok(()) => Ok(()),
                 Err(_) => match resolve!(self.wait_result()) {
                     Ok(()) => Err(ConnectionError::DatabaseImportStreamUnexpectedResponse.into()),
@@ -102,8 +102,12 @@ impl DatabaseImportTransmitter {
         }
     }
 
-    pub(in crate::connection) fn wait_done(mut self) -> impl Promise<'static, Result> {
-        promisify! { resolve!(self.wait_result()) }
+    pub(in crate::connection) fn done(mut self) -> impl Promise<'static, Result> {
+        let send_result = self.check_early_result().map(|()| self.request_sink.send(DatabaseImportRequest::Done));
+        promisify! {
+            send_result?.ok();
+            resolve!(self.wait_result())
+        }
     }
 
     #[cfg(not(feature = "sync"))]
