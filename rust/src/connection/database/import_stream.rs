@@ -19,8 +19,6 @@
 
 use std::fmt;
 
-use typedb_protocol::migration;
-
 use crate::{
     common::{Promise, Result},
     connection::{message::DatabaseImportRequest, network::transmitter::DatabaseImportTransmitter},
@@ -36,7 +34,7 @@ impl DatabaseImportStream {
         Self { import_transmitter }
     }
 
-    pub(crate) fn send_items(&mut self, items: Vec<migration::Item>) -> impl Promise<'_, Result> {
+    pub(crate) fn send_items(&mut self, items: Vec<Vec<u8>>) -> impl Promise<'_, Result> {
         self.import_transmitter.single(DatabaseImportRequest::ItemPart { items })
     }
 
