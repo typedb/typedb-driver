@@ -203,12 +203,12 @@ impl DatabaseManager {
                         let item = item?;
                         item_buffer.push(item);
                         if item_buffer.len() >= ITEM_BATCH_SIZE {
-                            import_stream.send_items(item_buffer.split_off(0))?;
+                            resolve!(import_stream.send_items(item_buffer.split_off(0)))?;
                         }
                     }
 
                     if !item_buffer.is_empty() {
-                        import_stream.send_items(item_buffer)?;
+                        resolve!(import_stream.send_items(item_buffer))?;
                     }
 
                     resolve!(import_stream.done())
