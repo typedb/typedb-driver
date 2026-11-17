@@ -93,6 +93,7 @@ impl DatabaseImportTransmitter {
         let send_result = self.check_early_result().map(|()| self.request_sink.send(req));
         promisify! {
             match send_result? {
+                // Requests are not acknowledged: a server error ends the stream and fails the next call or `done`
                 Ok(()) => Ok(()),
                 Err(_) => match resolve!(self.wait_result()) {
                     Ok(()) => Err(ConnectionError::DatabaseImportStreamUnexpectedResponse.into()),
