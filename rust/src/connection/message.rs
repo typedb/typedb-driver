@@ -139,7 +139,7 @@ pub(super) enum Response {
 #[derive(Debug)]
 pub(super) enum DatabaseImportRequest {
     Initial { name: String, schema: String },
-    ItemPart { items: Vec<Item> },
+    ItemPart { items: Vec<Vec<u8>> },
     Done,
 }
 

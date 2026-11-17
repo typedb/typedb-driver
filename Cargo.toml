@@ -140,8 +140,8 @@
 		[workspace.dependencies.typedb-protocol]
 			default-features = false
 			features = []
-			git = "https://github.com/typedb/typedb-protocol"
-			tag = "3.15.0"
+			git = "https://github.com/flyingsilverfin/typedb-protocol"
+			rev = "a67e00f240892da2f459f7b14518fc5d8e597bc6"
 
 		[workspace.dependencies.uuid]
 			default-features = false

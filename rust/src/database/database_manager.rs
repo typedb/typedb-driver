@@ -199,9 +199,10 @@ impl DatabaseManager {
                     let mut item_buffer = Vec::with_capacity(ITEM_BATCH_SIZE);
                     let mut read_item_iterator = ProtoMessageIterator::<Item, _>::new(reader, data_file_path);
 
-                    while let Some(item) = read_item_iterator.next() {
+                    // items are sent as they are stored in the file, without decoding them
+                    while let Some(item) = read_item_iterator.next_encoded() {
                         let item = item?;
-                        item_buffer.push(item);
+                        item_buffer.push(item.to_vec());
                         if item_buffer.len() >= ITEM_BATCH_SIZE {
                             resolve!(import_stream.send_items(item_buffer.split_off(0)))?;
                         }

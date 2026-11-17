@@ -27,7 +27,7 @@ use std::{
 
 use prost::{
     Message,
-    bytes::{Buf, BytesMut},
+    bytes::{Buf, Bytes, BytesMut},
 };
 use typedb_protocol::migration::Item as MigrationItemProto;
 
@@ -98,12 +98,9 @@ impl<M: Message + Default, R: BufRead> ProtoMessageIterator<M, R> {
             }
         }
     }
-}
 
-impl<M: Message + Default, R: BufRead> Iterator for ProtoMessageIterator<M, R> {
-    type Item = Result<M>;
-
-    fn next(&mut self) -> Option<Self::Item> {
+    /// The next message, still encoded.
+    pub(crate) fn next_encoded(&mut self) -> Option<Result<Bytes>> {
         let (message_len, consumed) = match self.decode_next_len() {
             Ok(Some(res)) => res,
             Ok(None) => return None,
@@ -121,8 +118,19 @@ impl<M: Message + Default, R: BufRead> Iterator for ProtoMessageIterator<M, R> {
         }
 
         self.buffer.advance(consumed);
-        let message_bytes = self.buffer.split_to(message_len).freeze();
-        Some(M::decode(message_bytes).map_err(|_| MigrationError::CannotDecodeImportedConcept.into()))
+        Some(Ok(self.buffer.split_to(message_len).freeze()))
+    }
+}
+
+impl<M: Message + Default, R: BufRead> Iterator for ProtoMessageIterator<M, R> {
+    type Item = Result<M>;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        let message_bytes = self.next_encoded()?;
+        Some(
+            message_bytes
+                .and_then(|bytes| M::decode(bytes).map_err(|_| MigrationError::CannotDecodeImportedConcept.into())),
+        )
     }
 }
 
