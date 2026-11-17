@@ -31,12 +31,18 @@ revision. No local path override or JITPOMI runtime fork belongs in the release.
 Cargo checks, 12 driver unit tests, C ABI tests and 36 live value tests pass against
 TypeDB 3.15.0. Equivalent temporal changes on the existing 3.13 transport pass all
 six live DogRS data-layer isolation, policy rollback and uniqueness tests. The
-TypeDB 3.15 server reproduces three generated-policy inference failures with both
-the unmodified and candidate driver. Resolve that separately before a Business
-server upgrade.
+TypeDB 3.15 policy failures were traced to schema-existence queries in DogRS:
+fetch projected an impossible type through an inline function. Returning native
+type rows with select fixes both empty-subtype and unrelated-attribute checks.
+All six live isolation tests now pass on both TypeDB 3.13 and 3.15. Authorization
+functions, context binding, write checkpoints and rollback checks remain intact.
 
-macOS Bazel verification is currently blocked by procedural-macro loading errors:
-time_macros in the driver and zerocopy_derive in the parser. Cargo compilation
-passes. Do not claim Bazel verification or readiness for merge until resolved.
+Bazel verification now passes for the driver and parser unit targets and the C
+shared library. Rust 1.98 includes the LLVM Mach-O LINKEDIT fix; rules_rust 0.75
+supports the current toolchain without TypeDB's old patched rules_rust fork.
+The canonical TypeDB crate universe ships a cargo-bazel lockfile. Consumer
+modules import its exports without duplicating Rust crate identities. The
+protocol build-import update is a coordinated prerequisite too.
+
 Removing the temporal dependencies does not clear the official upstream transport's
 other audit findings. No advisory exceptions are added.
