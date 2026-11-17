@@ -19,8 +19,9 @@
 
 use std::{collections::HashMap, str::FromStr};
 
-use chrono::{Datelike, FixedOffset, NaiveDate, NaiveDateTime, TimeZone as ChronoTimeZone, Timelike};
-use chrono_tz::Tz;
+use time::{Date, Month};
+use typedb_driver::concept::temporal::{Datetime, NamedTimeZone};
+
 use futures::TryStreamExt;
 use serial_test::serial;
 use typedb_driver::{
@@ -36,7 +37,10 @@ const DATABASE_NAME: &str = "typedb";
 
 async fn cleanup() {
     let driver = TypeDBDriver::new(
-        Addresses::try_from_address_str(TypeDBDriver::DEFAULT_ADDRESS).unwrap(),
+        Addresses::try_from_address_str(
+            &std::env::var("TYPEDB_TEST_ADDRESS").unwrap_or_else(|_| TypeDBDriver::DEFAULT_ADDRESS.to_owned()),
+        )
+        .unwrap(),
         Credentials::new("admin", "password"),
         DriverOptions::new(DriverTlsConfig::disabled()),
     )
@@ -50,7 +54,10 @@ async fn cleanup() {
 async fn setup() -> TypeDBDriver {
     cleanup().await;
     let driver = TypeDBDriver::new(
-        Addresses::try_from_address_str(TypeDBDriver::DEFAULT_ADDRESS).unwrap(),
+        Addresses::try_from_address_str(
+            &std::env::var("TYPEDB_TEST_ADDRESS").unwrap_or_else(|_| TypeDBDriver::DEFAULT_ADDRESS.to_owned()),
+        )
+        .unwrap(),
         Credentials::new("admin", "password"),
         DriverOptions::new(DriverTlsConfig::disabled()),
     )
@@ -454,12 +461,16 @@ fn test_all_value_types() {
                         checked += 1;
                     }
                     Value::Date(v) => {
-                        let expected = NaiveDate::parse_from_str(expected_str, "%Y-%m-%d").unwrap();
+                        let expected = Date::parse(
+                            expected_str,
+                            &time::format_description::parse_borrowed::<2>("[year]-[month]-[day]").unwrap(),
+                        )
+                        .unwrap();
                         assert_eq!(*v, expected);
                         checked += 1;
                     }
                     Value::Datetime(v) => {
-                        let expected = NaiveDateTime::parse_from_str(expected_str, "%Y-%m-%dT%H:%M:%S").unwrap();
+                        let expected = expected_str.parse::<Datetime>().unwrap();
                         assert_eq!(*v, expected);
                         checked += 1;
                     }
@@ -513,7 +524,7 @@ fn test_datetime_naive() {
             assert_eq!(datetime.minute(), 7);
             assert_eq!(datetime.second(), 38);
             assert_eq!(datetime.nanosecond(), 123456789);
-            assert_eq!(datetime.weekday().num_days_from_monday(), 2); // Wednesday
+            assert_eq!(datetime.weekday().number_days_from_monday(), 2); // Wednesday
         }
 
         // Test: epoch boundary 0001-01-01T00:00:00.000000001
@@ -531,7 +542,7 @@ fn test_datetime_naive() {
             assert_eq!(datetime.minute(), 0);
             assert_eq!(datetime.second(), 0);
             assert_eq!(datetime.nanosecond(), 1);
-            assert_eq!(datetime.weekday().num_days_from_monday(), 0); // Monday
+            assert_eq!(datetime.weekday().number_days_from_monday(), 0); // Monday
         }
 
         // Test: Unix epoch 1970-01-01T00:00:00
@@ -549,7 +560,7 @@ fn test_datetime_naive() {
             assert_eq!(datetime.minute(), 0);
             assert_eq!(datetime.second(), 0);
             assert_eq!(datetime.nanosecond(), 0);
-            assert_eq!(datetime.weekday().num_days_from_monday(), 3); // Thursday
+            assert_eq!(datetime.weekday().number_days_from_monday(), 3); // Thursday
         }
 
         // Test: max value 9999-12-31T23:59:59.999999999
@@ -595,13 +606,13 @@ fn test_datetime_tz_iana() {
             let concept = rows[0].get("dtz").unwrap().unwrap();
             let datetime_tz = concept.try_get_datetime_tz().unwrap();
 
-            assert_eq!(datetime_tz.year(), 2024);
-            assert_eq!(datetime_tz.month(), 10);
-            assert_eq!(datetime_tz.day(), 9);
-            assert_eq!(datetime_tz.hour(), 13);
-            assert_eq!(datetime_tz.minute(), 7);
-            assert_eq!(datetime_tz.second(), 38);
-            assert_eq!(datetime_tz.nanosecond(), 123456789);
+            assert_eq!(datetime_tz.local_datetime().unwrap().year(), 2024);
+            assert_eq!(datetime_tz.local_datetime().unwrap().month(), 10);
+            assert_eq!(datetime_tz.local_datetime().unwrap().day(), 9);
+            assert_eq!(datetime_tz.local_datetime().unwrap().hour(), 13);
+            assert_eq!(datetime_tz.local_datetime().unwrap().minute(), 7);
+            assert_eq!(datetime_tz.local_datetime().unwrap().second(), 38);
+            assert_eq!(datetime_tz.local_datetime().unwrap().nanosecond(), 123456789);
 
             // Verify it's an IANA timezone (Asia/Calcutta is a legacy alias for Asia/Kolkata)
             match datetime_tz.timezone() {
@@ -642,18 +653,18 @@ fn test_datetime_tz_fixed_offset() {
             let concept = rows[0].get("dtz").unwrap().unwrap();
             let datetime_tz = concept.try_get_datetime_tz().unwrap();
 
-            assert_eq!(datetime_tz.year(), 2024);
-            assert_eq!(datetime_tz.month(), 9);
-            assert_eq!(datetime_tz.day(), 20);
-            assert_eq!(datetime_tz.hour(), 16);
-            assert_eq!(datetime_tz.minute(), 40);
-            assert_eq!(datetime_tz.second(), 5);
-            assert_eq!(datetime_tz.nanosecond(), 28129323);
+            assert_eq!(datetime_tz.local_datetime().unwrap().year(), 2024);
+            assert_eq!(datetime_tz.local_datetime().unwrap().month(), 9);
+            assert_eq!(datetime_tz.local_datetime().unwrap().day(), 20);
+            assert_eq!(datetime_tz.local_datetime().unwrap().hour(), 16);
+            assert_eq!(datetime_tz.local_datetime().unwrap().minute(), 40);
+            assert_eq!(datetime_tz.local_datetime().unwrap().second(), 5);
+            assert_eq!(datetime_tz.local_datetime().unwrap().nanosecond(), 28129323);
 
             // Verify it's a fixed offset timezone (+05:45)
             match datetime_tz.timezone() {
                 TimeZone::Fixed(offset) => {
-                    assert_eq!(offset.local_minus_utc(), 5 * 3600 + 45 * 60);
+                    assert_eq!(offset.whole_seconds(), 5 * 3600 + 45 * 60);
                 }
                 TimeZone::IANA(_) => panic!("Expected Fixed offset timezone"),
             }
@@ -875,17 +886,16 @@ fn test_round_trips() {
         let database = driver.databases().get(DATABASE_NAME).await.unwrap();
 
         // from_local_datetime can fail since it's not continuous, but using from_utc_datetime here is overkill.
-        let belfast_naive_local = NaiveDate::from_ymd_opt(2024, 9, 20).unwrap().and_hms_opt(16, 40, 5).unwrap();
+        let belfast_naive_local = Datetime::new(2024, 9, 20, 16, 40, 5, 0).unwrap();
         let belfast_dt = Value::DatetimeTZ(
-            TimeZone::IANA(Tz::from_str("Europe/Belfast").unwrap()).from_local_datetime(&belfast_naive_local).unwrap(),
+            TimeZone::IANA(NamedTimeZone::from_str("Europe/Belfast").unwrap())
+                .from_local_datetime(belfast_naive_local)
+                .unwrap(),
         );
 
-        let offset_naive_utc =
-            NaiveDate::from_ymd_opt(2024, 9, 20).unwrap().and_hms_nano_opt(16, 40, 5, 28129323).unwrap();
+        let offset_naive_utc = Datetime::new(2024, 9, 20, 16, 40, 5, 28129323).unwrap();
         let offset_dt = Value::DatetimeTZ(
-            TimeZone::Fixed(FixedOffset::east_opt(5 * 3600 + 45 * 60).unwrap())
-                .from_local_datetime(&offset_naive_utc)
-                .unwrap(),
+            TimeZone::fixed(5 * 3600 + 45 * 60).unwrap().from_local_datetime(offset_naive_utc).unwrap(),
         );
 
         let examples: Vec<(&str, Value, &str)> = vec![
@@ -904,12 +914,8 @@ fn test_round_trips() {
                 "-1234567890.0001234567890dec",
             ),
             ("string", Value::String("John".to_string()), "\"John\""),
-            ("date", Value::Date(NaiveDate::from_ymd_opt(2024, 9, 20).unwrap()), "2024-09-20"),
-            (
-                "datetime",
-                Value::Datetime(NaiveDate::from_ymd_opt(1999, 2, 26).unwrap().and_hms_opt(12, 15, 5).unwrap()),
-                "1999-02-26T12:15:05",
-            ),
+            ("date", Value::Date(Date::from_calendar_date(2024, Month::September, 20).unwrap()), "2024-09-20"),
+            ("datetime", Value::Datetime(Datetime::new(1999, 2, 26, 12, 15, 5, 0).unwrap()), "1999-02-26T12:15:05"),
             ("datetime-tz", belfast_dt, "2024-09-20T16:40:05 Europe/Belfast"),
             ("datetime-tz", offset_dt, "2024-09-20T16:40:05.028129323+0545"),
             (

@@ -1,0 +1,42 @@
+= Temporal dependency migration proposal
+
+Replace chrono and chrono-tz with maintained time, tz-rs and tzdb libraries.
+The libraries calculate calendar and timezone rules; the driver retains TypeDB's
+civil-value, leap-second, protobuf and display contracts. The parser migration
+changes only its private future-builder formatter, leaving the grammar and AST intact.
+
+== Public API
+
+This is a Rust API migration, not an API-compatible patch release. Date becomes
+time::Date; Datetime and DatetimeTZ become driver domain types. TimeZone uses
+NamedTimeZone or time::UtcOffset. The Chrono-specific Offset adapter is removed.
+Use checked constructors and TryFrom<PrimitiveDateTime>. Leap seconds have civil
+second 60; wire_parts retains the previous second-59 / extended-nanoseconds wire
+representation. local_candidates returns both fold candidates or an empty list
+for a gap. from_local_datetime requires a unique candidate. Calendar duration
+conversion to std::time::Duration rejects nonzero months and days.
+
+The C ABI and protobuf remain unchanged. Named timezone aliases, fixed-offset
+seconds, UTC instant equality, nanosecond precision, pre-epoch timestamps and the
+existing datetime year range are retained. Maintained IANA data can include rule
+corrections; UTC instants and timezone identifiers are never silently rewritten.
+
+== Integration
+
+The paired TypeDB dependencies proposal adds the maintained libraries to the
+canonical Bazel crate registry. Keep shared Chrono registrations for unrelated
+server consumers. Once that prerequisite lands, update the normal dependencies
+revision. No local path override or JITPOMI runtime fork belongs in the release.
+
+Cargo checks, 12 driver unit tests, C ABI tests and 36 live value tests pass against
+TypeDB 3.15.0. Equivalent temporal changes on the existing 3.13 transport pass all
+six live DogRS data-layer isolation, policy rollback and uniqueness tests. The
+TypeDB 3.15 server reproduces three generated-policy inference failures with both
+the unmodified and candidate driver. Resolve that separately before a Business
+server upgrade.
+
+macOS Bazel verification is currently blocked by procedural-macro loading errors:
+time_macros in the driver and zerocopy_derive in the parser. Cargo compilation
+passes. Do not claim Bazel verification or readiness for merge until resolved.
+Removing the temporal dependencies does not clear the official upstream transport's
+other audit findings. No advisory exceptions are added.

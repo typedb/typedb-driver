@@ -26,7 +26,7 @@ rust_test(
     deps = [
         "//rust:typedb_driver",
         "@crates//:async-std",
-        "@crates//:chrono",
+        "@crates//:time",
         "@crates//:futures",
         "@crates//:itertools",
         "@crates//:regex",

@@ -12,12 +12,6 @@
 
 [dependencies]
 
-	[dependencies.chrono]
-		workspace = true
-
-	[dependencies.chrono-tz]
-		workspace = true
-
 	[dependencies.itertools]
 		workspace = true
 

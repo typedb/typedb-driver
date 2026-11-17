@@ -17,11 +17,11 @@
  * under the License.
  */
 
-use std::{collections::HashMap, str::FromStr};
+use std::collections::HashMap;
 
-use chrono::{Date, DateTime, Datelike, FixedOffset, NaiveDate, NaiveDateTime, TimeZone as ChronoTimeZone, Timelike};
-use chrono_tz::Tz;
+use crate::concept::temporal::{Datetime, DatetimeTZ};
 use itertools::Itertools;
+use time::Date;
 use typedb_protocol::{
     Attribute as AttributeProto, AttributeType as AttributeTypeProto, Concept as ConceptProto,
     ConceptDocument as ConceptDocumentProto, ConceptRow as ConceptRowProto, Entity as EntityProto,
@@ -41,7 +41,6 @@ use crate::{
         Attribute, AttributeType, Concept, Entity, EntityType, Kind, Relation, RelationType, RoleType, Value,
         ValueType,
         type_::Type,
-        value,
         value::{Decimal, Duration, TimeZone},
     },
     error::{
@@ -285,38 +284,33 @@ impl TryFromProto<ValueProto> for Value {
             Some(ValueProtoInner::Decimal(decimal)) => {
                 Ok(Self::Decimal(Decimal::from_parts(decimal.integer, decimal.fractional)))
             }
-            Some(ValueProtoInner::Date(date)) => {
-                Ok(Self::Date(NaiveDate::from_num_days_from_ce_opt(date.num_days_since_ce).unwrap()))
-            }
+            Some(ValueProtoInner::Date(date)) => Ok(Self::Date(
+                Date::from_julian_day(
+                    date.num_days_since_ce
+                        .checked_add(1_721_425)
+                        .ok_or_else(|| Error::Other("Date day count overflow".into()))?,
+                )
+                .map_err(|e| Error::Other(e.to_string()))?,
+            )),
             Some(ValueProtoInner::Datetime(datetime)) => {
-                Ok(Self::Datetime(naive_datetime_from_timestamp(datetime.seconds, datetime.nanos)))
+                Ok(Self::Datetime(Datetime::from_timestamp(datetime.seconds, datetime.nanos)?))
             }
             Some(ValueProtoInner::DatetimeTz(datetime_tz)) => {
                 let datetime = datetime_tz
                     .datetime
                     .ok_or(Error::from(MissingResponseField { field: "Value.datetime_tz.datetime" }))?;
-                let naive_datetime = naive_datetime_from_timestamp(datetime.seconds, datetime.nanos);
+                let naive_datetime = Datetime::from_timestamp(datetime.seconds, datetime.nanos)?;
                 let timezone = datetime_tz
                     .timezone
                     .ok_or(Error::from(MissingResponseField { field: "Value.datetime_tz.timezone" }))?;
 
                 let time_zone = match timezone {
-                    TimezoneProto::Named(name) => {
-                        let tz = Tz::from_str(&name)
-                            .map_err(|_| Error::from(ValueTimeZoneNameNotRecognised { time_zone: name.to_owned() }))?;
-                        TimeZone::IANA(tz)
-                    }
-                    TimezoneProto::Offset(offset_seconds) => {
-                        let fixed_offset = if offset_seconds >= 0 {
-                            FixedOffset::east_opt(offset_seconds)
-                        } else {
-                            FixedOffset::west_opt(-offset_seconds)
-                        }
-                        .ok_or(Error::from(ValueTimeZoneOffsetNotRecognised { offset: offset_seconds }))?;
-                        TimeZone::Fixed(fixed_offset)
-                    }
+                    TimezoneProto::Named(name) => TimeZone::iana(&name)
+                        .map_err(|_| Error::from(ValueTimeZoneNameNotRecognised { time_zone: name }))?,
+                    TimezoneProto::Offset(offset_seconds) => TimeZone::fixed(offset_seconds)
+                        .map_err(|_| Error::from(ValueTimeZoneOffsetNotRecognised { offset: offset_seconds }))?,
                 };
-                Ok(Self::DatetimeTZ(time_zone.from_utc_datetime(&naive_datetime)))
+                Ok(Self::DatetimeTZ(time_zone.from_utc_datetime(&naive_datetime)?))
             }
             Some(ValueProtoInner::Duration(duration)) => {
                 Ok(Self::Duration(crate::concept::value::Duration::new(duration.months, duration.days, duration.nanos)))
@@ -341,10 +335,6 @@ impl TryFromProto<i32> for Kind {
             Err(_) => Err(ConnectionError::UnexpectedKind { kind }.into()),
         }
     }
-}
-
-fn naive_datetime_from_timestamp(seconds: i64, nanos: u32) -> NaiveDateTime {
-    DateTime::from_timestamp(seconds, nanos).unwrap().naive_utc()
 }
 
 // Into proto for selected concepts
@@ -398,25 +388,61 @@ impl IntoProto<value_proto::Duration> for Duration {
     }
 }
 
-impl IntoProto<value_proto::Date> for NaiveDate {
+impl IntoProto<value_proto::Date> for Date {
     fn into_proto(self) -> value_proto::Date {
-        value_proto::Date { num_days_since_ce: Datelike::num_days_from_ce(&self) }
+        value_proto::Date { num_days_since_ce: self.to_julian_day() - 1_721_425 }
     }
 }
 
-impl IntoProto<value_proto::Datetime> for NaiveDateTime {
+impl IntoProto<value_proto::Datetime> for Datetime {
     fn into_proto(self) -> value_proto::Datetime {
-        value_proto::Datetime { seconds: self.and_utc().timestamp(), nanos: self.nanosecond() }
+        {
+            let (seconds, nanos) = self.wire_parts();
+            value_proto::Datetime { seconds, nanos }
+        }
     }
 }
 
-impl IntoProto<value_proto::DatetimeTz> for DateTime<TimeZone> {
+impl IntoProto<value_proto::DatetimeTz> for DatetimeTZ {
     fn into_proto(self) -> value_proto::DatetimeTz {
         let date_time = self.naive_utc().into_proto();
         let timezone = match self.timezone() {
             TimeZone::IANA(tz) => value_proto::datetime_tz::Timezone::Named(tz.name().to_string()),
-            TimeZone::Fixed(fixed) => value_proto::datetime_tz::Timezone::Offset(fixed.local_minus_utc()),
+            TimeZone::Fixed(fixed) => value_proto::datetime_tz::Timezone::Offset(fixed.whole_seconds()),
         };
         value_proto::DatetimeTz { datetime: Some(date_time), timezone: Some(timezone) }
+    }
+}
+
+#[cfg(test)]
+mod temporal_tests {
+    use super::*;
+    #[test]
+    fn datetime_wire_roundtrip_and_errors() {
+        for (seconds, nanos) in [(0, 0), (-1, 999999999), (1483228799, 1500000000)] {
+            for zone in [TimeZone::iana("US/Eastern").unwrap(), TimeZone::fixed(1172).unwrap()] {
+                let native = zone.from_utc_datetime(&Datetime::from_timestamp(seconds, nanos).unwrap()).unwrap();
+                let proto: value_proto::DatetimeTz = native.into_proto();
+                let decoded =
+                    Value::try_from_proto(ValueProto { value: Some(ValueProtoInner::DatetimeTz(proto)) }).unwrap();
+                let Value::DatetimeTZ(decoded) = decoded else { panic!("wrong value kind") };
+                assert_eq!(decoded.wire_parts(), (seconds, nanos));
+                assert_eq!(decoded.timezone(), zone);
+            }
+        }
+        for (seconds, nanos) in [(i64::MAX, 0), (0, 1000000000), (59, 2000000000)] {
+            assert!(
+                Value::try_from_proto(ValueProto {
+                    value: Some(ValueProtoInner::Datetime(value_proto::Datetime { seconds, nanos }))
+                })
+                .is_err()
+            );
+        }
+        assert!(
+            Value::try_from_proto(ValueProto {
+                value: Some(ValueProtoInner::Date(value_proto::Date { num_days_since_ce: i32::MAX }))
+            })
+            .is_err()
+        );
     }
 }

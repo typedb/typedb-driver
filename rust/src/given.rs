@@ -18,13 +18,14 @@
  */
 use std::{collections::HashMap, sync::Arc};
 
-use chrono::{DateTime, NaiveDate, NaiveDateTime};
+use crate::concept::temporal::{Datetime, DatetimeTZ};
+use time::Date;
 
 use crate::{
     Result,
     concept::{
         Attribute, Concept, Entity, Relation, Value,
-        value::{Decimal, Duration, TimeZone},
+        value::{Decimal, Duration},
     },
     error::{Error, QueryError},
 };
@@ -46,7 +47,7 @@ macro_rules! impl_from_for_given_row_entry {
     };
 }
 
-impl_from_for_given_row_entry!(bool, i64, f64, Decimal, String, NaiveDate, NaiveDateTime, DateTime<TimeZone>, Duration);
+impl_from_for_given_row_entry!(bool, i64, f64, Decimal, String, Date, Datetime, DatetimeTZ, Duration);
 
 impl From<&str> for GivenRowEntry {
     fn from(value: &str) -> Self {

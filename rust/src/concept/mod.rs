@@ -19,7 +19,8 @@
 
 use std::fmt;
 
-use chrono::{DateTime, NaiveDate, NaiveDateTime};
+use self::temporal::{Datetime, DatetimeTZ};
+use time::Date;
 
 pub use self::{
     instance::{Attribute, Entity, Relation},
@@ -28,10 +29,11 @@ pub use self::{
 };
 use crate::{
     IID,
-    concept::value::{Decimal, Duration, Struct, TimeZone},
+    concept::value::{Decimal, Duration, Struct},
 };
 
 pub mod instance;
+pub mod temporal;
 pub mod type_;
 pub mod value;
 
@@ -212,7 +214,7 @@ impl Concept {
     /// If this is a date-valued Attribute Instance, returns the date value of this instance.
     /// If this a date-valued Value, returns the date value.
     /// Otherwise, returns None.
-    pub fn try_get_date(&self) -> Option<NaiveDate> {
+    pub fn try_get_date(&self) -> Option<Date> {
         self.try_get_value().and_then(|value| value.get_date())
     }
 
@@ -220,7 +222,7 @@ impl Concept {
     /// If this is a datetime-valued Attribute Instance, returns the datetime value of this instance.
     /// If this a datetime-valued Value, returns the datetime value.
     /// Otherwise, returns None.
-    pub fn try_get_datetime(&self) -> Option<NaiveDateTime> {
+    pub fn try_get_datetime(&self) -> Option<Datetime> {
         self.try_get_value().and_then(|value| value.get_datetime())
     }
 
@@ -228,7 +230,7 @@ impl Concept {
     /// If this is a timezoned-datetime valued Attribute Instance, returns the timezoned-datetime value of this instance.
     /// If this a timezoned-datetime valued Value, returns the timezoned-datetime value.
     /// Otherwise, returns None.
-    pub fn try_get_datetime_tz(&self) -> Option<DateTime<TimeZone>> {
+    pub fn try_get_datetime_tz(&self) -> Option<DatetimeTZ> {
         self.try_get_value().and_then(|value| value.get_datetime_tz())
     }
 

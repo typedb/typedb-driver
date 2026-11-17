@@ -24,8 +24,8 @@ use std::{
     str::FromStr,
 };
 
-use chrono::{DateTime, FixedOffset, MappedLocalTime, NaiveDate, NaiveDateTime};
-use chrono_tz::Tz;
+pub use super::temporal::{Datetime, DatetimeTZ, NamedTimeZone, TimeZone};
+use time::Date;
 
 use crate::{Error, error::ConceptError};
 
@@ -91,9 +91,9 @@ pub enum Value {
     Double(f64),
     Decimal(Decimal),
     String(String),
-    Date(NaiveDate),
-    Datetime(NaiveDateTime),
-    DatetimeTZ(DateTime<TimeZone>),
+    Date(Date),
+    Datetime(Datetime),
+    DatetimeTZ(DatetimeTZ),
     Duration(Duration),
     Struct(Struct, String),
 }
@@ -163,15 +163,15 @@ impl Value {
         if let Value::Decimal(decimal) = self { Some(*decimal) } else { None }
     }
 
-    pub fn get_date(&self) -> Option<NaiveDate> {
+    pub fn get_date(&self) -> Option<Date> {
         if let Value::Date(naive_date) = self { Some(*naive_date) } else { None }
     }
 
-    pub fn get_datetime(&self) -> Option<NaiveDateTime> {
+    pub fn get_datetime(&self) -> Option<Datetime> {
         if let Value::Datetime(datetime) = self { Some(*datetime) } else { None }
     }
 
-    pub fn get_datetime_tz(&self) -> Option<DateTime<TimeZone>> {
+    pub fn get_datetime_tz(&self) -> Option<DatetimeTZ> {
         if let Value::DatetimeTZ(datetime_tz) = self { Some(*datetime_tz) } else { None }
     }
 
@@ -192,12 +192,9 @@ impl fmt::Display for Value {
             Self::Double(double) => write!(f, "{}", double),
             Self::String(string) => write!(f, "\"{}\"", string),
             Self::Decimal(decimal) => write!(f, "{}", decimal),
-            Self::Date(date) => write!(f, "{}", date.format("%Y-%m-%d")),
-            Self::Datetime(datetime) => write!(f, "{}", datetime.format("%FT%T%.9f")),
-            Self::DatetimeTZ(datetime_tz) => match datetime_tz.timezone() {
-                TimeZone::IANA(tz) => write!(f, "{} {}", datetime_tz.format("%FT%T%.9f"), tz.name()),
-                TimeZone::Fixed(_) => write!(f, "{}", datetime_tz.format("%FT%T%.9f%:z")),
-            },
+            Self::Date(date) => write!(f, "{}", date),
+            Self::Datetime(datetime) => datetime.fmt_typeql(f),
+            Self::DatetimeTZ(datetime_tz) => datetime_tz.fmt_typeql(f),
             Self::Duration(duration) => write!(f, "{}", duration),
             Self::Struct(value, name) => write!(f, "{} {}", name, value),
         }
@@ -258,20 +255,20 @@ impl From<&str> for Value {
     }
 }
 
-impl From<NaiveDate> for Value {
-    fn from(value: NaiveDate) -> Self {
+impl From<Date> for Value {
+    fn from(value: Date) -> Self {
         Self::Date(value)
     }
 }
 
-impl From<NaiveDateTime> for Value {
-    fn from(value: NaiveDateTime) -> Self {
+impl From<Datetime> for Value {
+    fn from(value: Datetime) -> Self {
         Self::Datetime(value)
     }
 }
 
-impl From<DateTime<TimeZone>> for Value {
-    fn from(value: DateTime<TimeZone>) -> Self {
+impl From<DatetimeTZ> for Value {
+    fn from(value: DatetimeTZ) -> Self {
         Self::DatetimeTZ(value)
     }
 }
@@ -419,86 +416,9 @@ impl fmt::Debug for Decimal {
     }
 }
 
-/// Offset for datetime-tz. Can be retrieved from an IANA Tz or a FixedOffset.
-#[derive(Copy, Clone, Debug)]
-pub enum Offset {
-    IANA(<Tz as chrono::TimeZone>::Offset),
-    Fixed(FixedOffset),
-}
-
-impl chrono::Offset for Offset {
-    fn fix(&self) -> FixedOffset {
-        match self {
-            Self::IANA(inner) => inner.fix(),
-            Self::Fixed(inner) => inner.fix(),
-        }
-    }
-}
-
-impl fmt::Display for Offset {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match self {
-            Self::IANA(inner) => fmt::Display::fmt(inner, f),
-            Self::Fixed(inner) => fmt::Display::fmt(inner, f),
-        }
-    }
-}
-
-/// TimeZone for datetime-tz. Can be represented as an IANA Tz or as a FixedOffset.
-#[derive(Copy, Clone, Debug)]
-pub enum TimeZone {
-    IANA(Tz),
-    Fixed(FixedOffset),
-}
-
-impl Default for TimeZone {
-    fn default() -> Self {
-        Self::IANA(Tz::default())
-    }
-}
-
-impl chrono::TimeZone for TimeZone {
-    type Offset = Offset;
-
-    fn from_offset(offset: &Self::Offset) -> Self {
-        match offset {
-            Offset::IANA(offset) => Self::IANA(Tz::from_offset(offset)),
-            Offset::Fixed(offset) => Self::Fixed(FixedOffset::from_offset(offset)),
-        }
-    }
-
-    fn offset_from_local_date(&self, local: &NaiveDate) -> MappedLocalTime<Self::Offset> {
-        match self {
-            Self::IANA(inner) => inner.offset_from_local_date(local).map(Offset::IANA),
-            Self::Fixed(inner) => inner.offset_from_local_date(local).map(Offset::Fixed),
-        }
-    }
-
-    fn offset_from_local_datetime(&self, local: &NaiveDateTime) -> MappedLocalTime<Self::Offset> {
-        match self {
-            Self::IANA(inner) => inner.offset_from_local_datetime(local).map(Offset::IANA),
-            Self::Fixed(inner) => inner.offset_from_local_datetime(local).map(Offset::Fixed),
-        }
-    }
-
-    fn offset_from_utc_date(&self, utc: &NaiveDate) -> Self::Offset {
-        match self {
-            TimeZone::IANA(inner) => Offset::IANA(inner.offset_from_utc_date(utc)),
-            TimeZone::Fixed(inner) => Offset::Fixed(inner.offset_from_utc_date(utc)),
-        }
-    }
-
-    fn offset_from_utc_datetime(&self, utc: &NaiveDateTime) -> Self::Offset {
-        match self {
-            TimeZone::IANA(inner) => Offset::IANA(inner.offset_from_utc_datetime(utc)),
-            TimeZone::Fixed(inner) => Offset::Fixed(inner.offset_from_utc_datetime(utc)),
-        }
-    }
-}
-
 /// A relative duration, which contains months, days, and nanoseconds.
 /// Can be used for calendar-relative durations (eg 7 days forward), or for absolute durations using the nanosecond component
-/// When used as an absolute duration, convertible to chrono::Duration
+/// When used as an absolute duration, convertible to std::time::Duration
 #[repr(C)]
 #[derive(Clone, Copy, Hash, PartialEq, Eq)]
 pub struct Duration {
@@ -533,22 +453,13 @@ impl Duration {
     }
 }
 
-impl TryFrom<Duration> for chrono::Duration {
+impl TryFrom<Duration> for std::time::Duration {
     type Error = crate::Error;
-
     fn try_from(duration: Duration) -> Result<Self, Self::Error> {
         if duration.months != 0 || duration.days != 0 {
-            Err(Error::Other(String::from(
-                "Converting TypeDB duration to chrono::Duration is only possible when months and days are not set.",
-            )))
-        } else {
-            match i64::try_from(duration.nanos) {
-                Ok(nanos) => Ok(chrono::Duration::nanoseconds(nanos)),
-                Err(_) => {
-                    Err(Error::Other(String::from("Duration u64 nanos exceeded i64 required for chrono::Duration")))
-                }
-            }
+            return Err(Error::Other("Calendar months/days cannot be converted to an absolute duration".into()));
         }
+        Ok(Self::from_nanos(duration.nanos))
     }
 }
 

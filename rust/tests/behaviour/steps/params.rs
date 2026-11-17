@@ -19,9 +19,10 @@
 
 use std::{convert::Infallible, fmt, str::FromStr};
 
-use chrono::{FixedOffset, NaiveDate, NaiveDateTime, NaiveTime};
 use cucumber::Parameter;
 use futures::StreamExt;
+use time::Date;
+use typedb_driver::concept::temporal::Datetime;
 use typedb_driver::{
     Address, ServerRouting as TypeDBServerRouting, TransactionType as TypeDBTransactionType,
     answer::QueryType as TypeDBQueryType,
@@ -35,18 +36,6 @@ pub struct Value {
 }
 
 impl Value {
-    const DATETIME_FORMATS: [&'static str; 8] = [
-        "%Y-%m-%dT%H:%M:%S%.f",
-        "%Y-%m-%d %H:%M:%S%.f",
-        "%Y-%m-%dT%H:%M:%S",
-        "%Y-%m-%d %H:%M:%S",
-        "%Y-%m-%dT%H:%M",
-        "%Y-%m-%d %H:%M",
-        "%Y-%m-%dT%H",
-        "%Y-%m-%d %H",
-    ];
-    const DATE_FORMAT: &'static str = "%Y-%m-%d";
-
     const FRACTIONAL_ZEROES: usize = 19;
 
     pub fn into_typedb(self, value_type: TypeDBValueType) -> TypeDBValue {
@@ -72,9 +61,13 @@ impl Value {
                     true => -Decimal::from_parts(integer_parsed_abs, fractional_parsed),
                 })
             }
-            TypeDBValueType::Date => {
-                TypeDBValue::Date(NaiveDate::parse_from_str(&self.raw_value, Self::DATE_FORMAT).unwrap())
-            }
+            TypeDBValueType::Date => TypeDBValue::Date(
+                Date::parse(
+                    &self.raw_value,
+                    &time::format_description::parse_borrowed::<2>("[year]-[month]-[day]").unwrap(),
+                )
+                .unwrap(),
+            ),
             TypeDBValueType::Datetime => {
                 let (datetime, remainder) = Self::parse_date_time_and_remainder(self.raw_value.as_str());
                 assert!(
@@ -89,22 +82,20 @@ impl Value {
                 let (datetime, timezone) = Self::parse_date_time_and_remainder(self.raw_value.as_str());
 
                 if timezone.is_empty() {
-                    TypeDBValue::DatetimeTZ(datetime.and_local_timezone(TimeZone::default()).unwrap())
+                    TypeDBValue::DatetimeTZ(TimeZone::default().from_local_datetime(datetime).unwrap())
                 } else if timezone.starts_with('+') || timezone.starts_with('-') {
                     let hours: i32 = timezone[1..3].parse().unwrap();
                     let minutes: i32 = timezone[3..].parse().unwrap();
                     let total_minutes = hours * 60 + minutes;
                     let fixed_offset = if &timezone[0..1] == "+" {
-                        FixedOffset::east_opt(total_minutes * 60)
+                        TimeZone::fixed(total_minutes * 60)
                     } else {
-                        FixedOffset::west_opt(total_minutes * 60)
+                        TimeZone::fixed(-total_minutes * 60)
                     };
-                    TypeDBValue::DatetimeTZ(
-                        datetime.and_local_timezone(TimeZone::Fixed(fixed_offset.unwrap())).unwrap(),
-                    )
+                    TypeDBValue::DatetimeTZ(fixed_offset.unwrap().from_local_datetime(datetime).unwrap())
                 } else {
                     TypeDBValue::DatetimeTZ(
-                        datetime.and_local_timezone(TimeZone::IANA(timezone.parse().unwrap())).unwrap(),
+                        TimeZone::IANA(timezone.parse().unwrap()).from_local_datetime(datetime).unwrap(),
                     )
                 }
             }
@@ -131,21 +122,24 @@ impl Value {
         10_u64.pow((Self::FRACTIONAL_ZEROES - value.len()) as u32) * value.trim().parse::<u64>().unwrap()
     }
 
-    fn parse_date_time_and_remainder(value: &str) -> (NaiveDateTime, &str) {
-        for format in Self::DATETIME_FORMATS {
-            if let Ok((datetime, remainder)) = NaiveDateTime::parse_and_remainder(value, format) {
-                return (datetime, remainder.trim());
+    fn parse_date_time_and_remainder(value: &str) -> (Datetime, &str) {
+        // Longest valid prefix preserves all supported precision levels and
+        // leaves the timezone suffix for the existing explicit parser.
+        for end in std::iter::once(value.len()).chain(value.char_indices().rev().map(|(i, _)| i)) {
+            if let Ok(datetime) = value[..end].parse::<Datetime>() {
+                return (datetime, value[end..].trim());
             }
         }
-        if let Ok((date, remainder)) = NaiveDate::parse_and_remainder(value, Self::DATE_FORMAT) {
-            return (date.and_time(NaiveTime::default()), remainder.trim());
+        let format = time::format_description::parse_borrowed::<2>("[year sign:automatic]-[month]-[day]").unwrap();
+        for end in std::iter::once(value.len()).chain(value.char_indices().rev().map(|(i, _)| i)) {
+            if let Ok(date) = Date::parse(&value[..end], &format) {
+                return (
+                    Datetime::new(date.year(), date.month() as u8, date.day(), 0, 0, 0, 0).unwrap(),
+                    value[end..].trim(),
+                );
+            }
         }
-        panic!(
-            "Cannot parse DateTime: none of the formats {:?} or {:?} fits for {:?}",
-            Self::DATETIME_FORMATS,
-            Self::DATE_FORMAT,
-            value
-        )
+        panic!("Cannot parse datetime: {value:?}")
     }
 }
 

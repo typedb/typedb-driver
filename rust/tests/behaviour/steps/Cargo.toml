@@ -15,9 +15,6 @@
 	[dependencies.async-std]
 		workspace = true
 
-	[dependencies.chrono]
-		workspace = true
-
 	[dependencies.cucumber]
 		workspace = true
 
@@ -47,3 +44,6 @@
 
 	[dependencies.uuid]
 		workspace = true
+
+[dependencies.time]
+workspace = true

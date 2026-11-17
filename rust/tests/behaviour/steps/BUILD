@@ -27,7 +27,7 @@ rust_library(
     deps = [
         "//rust:typedb_driver",
         "@crates//:async-std",
-        "@crates//:chrono",
+        "@crates//:time",
         "@crates//:cucumber",
         "@crates//:futures",
         "@crates//:itertools",

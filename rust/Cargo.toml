@@ -18,12 +18,6 @@
 	[dependencies.async-std]
 		workspace = true
 
-	[dependencies.chrono]
-		workspace = true
-
-	[dependencies.chrono-tz]
-		workspace = true
-
 	[dependencies.crossbeam]
 		workspace = true
 
@@ -146,3 +140,10 @@
 [[test]]
 	name = "test_values"
 	path = "tests/integration/values.rs"
+
+[dependencies.time]
+workspace = true
+[dependencies.tz-rs]
+workspace = true
+[dependencies.tzdb]
+workspace = true

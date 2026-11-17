@@ -29,8 +29,9 @@ load("//tool/docs:examples/rules.bzl",  "test_to_example", "update_markdown_exam
 typedb_driver_srcs = glob(["src/**/*.rs"])
 typedb_driver_tags = ["crate-name=typedb-driver"]
 typedb_driver_deps = [
-    "@crates//:chrono",
-    "@crates//:chrono-tz",
+    "@crates//:time",
+    "@crates//:tz-rs",
+    "@crates//:tzdb",
     "@crates//:crossbeam",
     "@crates//:futures",
     "@crates//:http",

@@ -19,7 +19,7 @@
 
 use std::{ffi::c_char, ptr::null_mut, str::FromStr};
 
-use chrono::{DateTime, FixedOffset, NaiveDate, NaiveDateTime, NaiveTime, TimeZone as ChronoTimeZone};
+use typedb_driver::concept::temporal::{Datetime, DatetimeTZ, NamedTimeZone};
 use typedb_driver::{
     box_stream,
     concept::{
@@ -49,8 +49,9 @@ pub struct DatetimeInNanos {
 }
 
 impl DatetimeInNanos {
-    pub fn new<TZ: ChronoTimeZone>(datetime: &DateTime<TZ>) -> Self {
-        Self { seconds: datetime.timestamp(), subsec_nanos: datetime.timestamp_subsec_nanos() }
+    pub fn new(datetime: &Datetime) -> Self {
+        let (seconds, subsec_nanos) = datetime.wire_parts();
+        Self { seconds, subsec_nanos }
     }
 }
 
@@ -70,15 +71,15 @@ pub struct DatetimeAndTimeZone {
 }
 
 impl DatetimeAndTimeZone {
-    pub fn new(datetime_tz: &DateTime<TimeZone>) -> Self {
+    pub fn new(datetime_tz: &DatetimeTZ) -> Self {
         let (zone_name, offset, is_fixed_offset) = {
             match datetime_tz.timezone() {
                 TimeZone::IANA(tz) => (tz.name().to_owned(), 0, false),
-                TimeZone::Fixed(offset) => ("".to_owned(), offset.local_minus_utc(), true),
+                TimeZone::Fixed(offset) => ("".to_owned(), offset.whole_seconds(), true),
             }
         };
         Self {
-            datetime_in_nanos: DatetimeInNanos::new(datetime_tz),
+            datetime_in_nanos: DatetimeInNanos::new(&datetime_tz.naive_utc()),
             zone_name: release_string(zone_name),
             local_minus_utc_offset: offset,
             is_fixed_offset,
@@ -313,7 +314,7 @@ pub extern "C" fn concept_get_string(concept: *const Concept) -> *mut c_char {
 #[unsafe(no_mangle)]
 pub extern "C" fn concept_get_date_as_seconds(concept: *const Concept) -> i64 {
     match borrow(concept).try_get_date() {
-        Some(value) => value.and_time(NaiveTime::MIN).and_utc().timestamp(),
+        Some(value) => value.midnight().assume_utc().unix_timestamp(),
         None => unreachable!("Attempting to unwrap a non-date {:?} as date", borrow(concept)),
     }
 }
@@ -323,7 +324,7 @@ pub extern "C" fn concept_get_date_as_seconds(concept: *const Concept) -> i64 {
 #[unsafe(no_mangle)]
 pub extern "C" fn concept_get_datetime(concept: *const Concept) -> DatetimeInNanos {
     match borrow(concept).try_get_datetime() {
-        Some(value) => DatetimeInNanos::new(&value.and_utc()),
+        Some(value) => DatetimeInNanos::new(&value),
         None => unreachable!("Attempting to unwrap a non-datetime {:?} as datetime", borrow(concept)),
     }
 }
@@ -469,16 +470,14 @@ pub extern "C" fn concept_new_decimal(integer: i64, fractional: u64) -> *mut Con
 /// The value must be seconds since the start of the UNIX epoch.
 #[unsafe(no_mangle)]
 pub extern "C" fn concept_new_date_from_seconds(seconds_since_epoch: i64) -> *mut Concept {
-    let naive_date = DateTime::from_timestamp(seconds_since_epoch, 0).unwrap().date_naive();
-    release(Concept::Value(Value::Date(naive_date)))
+    try_release(Datetime::from_timestamp(seconds_since_epoch, 0).map(|d| Concept::Value(Value::Date(d.date()))))
 }
 
 /// Creates a new <code>Concept</code> object wrapping the specified naive datetime value,
 /// provided as seconds and nanoseconds since the Unix epoch.
 #[unsafe(no_mangle)]
 pub extern "C" fn concept_new_datetime(seconds: i64, subsec_nanos: u32) -> *mut Concept {
-    let naive_datetime = DateTime::from_timestamp(seconds, subsec_nanos).unwrap().naive_utc();
-    release(Concept::Value(Value::Datetime(naive_datetime)))
+    try_release(Datetime::from_timestamp(seconds, subsec_nanos).map(|d| Concept::Value(Value::Datetime(d))))
 }
 
 /// Creates a new <code>Concept</code> object wrapping the specified timezone-aware datetime value
@@ -489,18 +488,22 @@ pub extern "C" fn concept_new_datetime_tz_iana(
     subsec_nanos: u32,
     zone_name: *const c_char,
 ) -> *mut Concept {
-    let naive_datetime = DateTime::from_timestamp(seconds, subsec_nanos).unwrap().naive_utc();
-    let tz = chrono_tz::Tz::from_str_insensitive(string_view(zone_name)).expect("Invalid timezone");
-    release(Concept::Value(Value::DatetimeTZ(TimeZone::IANA(tz).from_utc_datetime(&naive_datetime))))
+    let result = Datetime::from_timestamp(seconds, subsec_nanos)
+        .and_then(|d| {
+            TimeZone::IANA(NamedTimeZone::get_case_insensitive(string_view(zone_name))?).from_utc_datetime(&d)
+        })
+        .map(|d| Concept::Value(Value::DatetimeTZ(d)));
+    try_release(result)
 }
 
 /// Creates a new <code>Concept</code> object wrapping the specified timezone-aware datetime value
 /// with a fixed UTC offset in seconds, provided as seconds and nanoseconds since the Unix epoch.
 #[unsafe(no_mangle)]
 pub extern "C" fn concept_new_datetime_tz_offset(seconds: i64, subsec_nanos: u32, offset_seconds: i32) -> *mut Concept {
-    let naive_datetime = DateTime::from_timestamp(seconds, subsec_nanos).unwrap().naive_utc();
-    let offset = FixedOffset::east_opt(offset_seconds).expect("Invalid offset");
-    release(Concept::Value(Value::DatetimeTZ(TimeZone::Fixed(offset).from_utc_datetime(&naive_datetime))))
+    let result = Datetime::from_timestamp(seconds, subsec_nanos)
+        .and_then(|d| TimeZone::fixed(offset_seconds)?.from_utc_datetime(&d))
+        .map(|d| Concept::Value(Value::DatetimeTZ(d)));
+    try_release(result)
 }
 
 /// Creates a new <code>Concept</code> object wrapping the specified <code>Duration</code> value,
@@ -528,5 +531,25 @@ pub(super) fn borrow_as_attribute(concept: *const Concept) -> &'static Attribute
     match borrow(concept) {
         Concept::Attribute(attribute) => attribute,
         _ => unreachable!(),
+    }
+}
+
+#[cfg(test)]
+mod temporal_tests {
+    use super::*;
+    #[test]
+    fn ffi_layout_and_temporal_values() {
+        assert_eq!(std::mem::size_of::<DatetimeInNanos>(), 16);
+        assert_eq!(std::mem::offset_of!(DatetimeInNanos, subsec_nanos), 8);
+        assert_eq!(std::mem::offset_of!(DatetimeAndTimeZone, zone_name), 16);
+        let leap = Datetime::from_timestamp(1483228799, 1500000000).unwrap();
+        let value = DatetimeInNanos::new(&leap);
+        assert_eq!((value.seconds, value.subsec_nanos), (1483228799, 1500000000));
+        let zoned = TimeZone::fixed(1172).unwrap().from_utc_datetime(&leap).unwrap();
+        let value = DatetimeAndTimeZone::new(&zoned);
+        assert!(value.is_fixed_offset);
+        assert_eq!(value.local_minus_utc_offset, 1172);
+        assert!(concept_new_datetime(0, 1000000000).is_null());
+        assert!(concept_new_datetime_tz_offset(0, 0, 86400).is_null());
     }
 }
