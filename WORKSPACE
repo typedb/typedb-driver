@@ -16,5 +16,5 @@
 # under the License.
 
 # This file intentionally left empty.
-# It serves as a workspace root marker for Bazelisk.
+# It serves as a workspace root marker for old versions of Bazel.
 # All dependency management is done via MODULE.bazel (Bzlmod).
