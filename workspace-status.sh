@@ -23,8 +23,11 @@ else
     echo STABLE_VERSION 0.0.0-$(git rev-parse HEAD)
 fi
 
-TYPEDB_PROTOCOL_VERSION=$(grep -A5 'module_name = "typedb_protocol"' MODULE.bazel | grep -E 'commit|tag' | sed 's/.*"\([^"]*\)".*/\1/')
-if [ -z "$TYPEDB_PROTOCOL_VERSION" ]; then
+TYPEDB_PROTOCOL_OVERRIDE=$(sed 's/#.*//' MODULE.bazel | tr '\n' ' ' | grep -oE '[a-z_]+_override\([^)]*"typedb_protocol"[^)]*\)')
+TYPEDB_PROTOCOL_VERSION=$(echo "$TYPEDB_PROTOCOL_OVERRIDE" | grep -oE '(commit|tag) *= *"[^"]*"' | sed 's/.*"\([^"]*\)"/\1/')
+if [[ "$TYPEDB_PROTOCOL_OVERRIDE" == local_path_override* ]]; then
+  TYPEDB_PROTOCOL_VERSION=0.0.0-local
+elif [ -z "$TYPEDB_PROTOCOL_VERSION" ]; then
   # the following line only prints when the script is run directly
   echo "@typedb_protocol version not found in MODULE.bazel, cannot stamp"
   exit 1

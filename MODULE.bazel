@@ -52,28 +52,28 @@ bazel_dep(name = "typedb_bazel_distribution", version = "0.0.0")
 git_override(
     module_name = "typedb_bazel_distribution",
     remote = "https://github.com/typedb/bazel-distribution",
-    commit = "c496caa8603aed28411b806e37ce3ebfe7e2812a",
+    commit = "890d556f60f6ae496fcfc1b7be4bc8c2b7a47082",
 )
 
 bazel_dep(name = "typedb_dependencies", version = "0.0.0")
 git_override(
     module_name = "typedb_dependencies",
     remote = "https://github.com/typedb/dependencies",
-    commit = "e1b0d89c54d50a1fb54b511270a294d506fbf329",
+    commit = "5655182f0d6ac9e7b1a6e767df7f48c511692ce2",
 )
 
 bazel_dep(name = "typedb_protocol", version = "0.0.0")
 git_override(
     module_name = "typedb_protocol",
     remote = "https://github.com/typedb/typedb-protocol",
-    tag = "3.15.0",
+    commit = "dd606e1063d7c83781b5e04c1d348b824d3a7428",
 )
 
 bazel_dep(name = "typedb_behaviour", version = "0.0.0")
 git_override(
     module_name = "typedb_behaviour",
     remote = "https://github.com/typedb/typedb-behaviour",
-    commit = "2c858c2333bd9c364742e3a83997e3a669402c5b",
+    commit = "6cb99621b617372d758fa49652517926183bd90b",
 )
 
 # Rust rules need typedb_dependencies for patching
@@ -243,12 +243,7 @@ http_archive(
 workspace_refs = use_repo_rule("@typedb_bazel_distribution//common/workspace_refs:rules.bzl", "_workspace_refs")
 workspace_refs(
     name = "typedb_driver_workspace_refs",
-    workspace_commit_dict = {
-#        "typedb_protocol+": "99e080bd0d599ae235607da4e4e69787e681cbe1",
-    },
-    workspace_tag_dict = {
-        "typedb_protocol+": "3.15.0",
-    },
+    module_file = "//:MODULE.bazel",
 )
 
 # TypeDB server artifacts for testing
