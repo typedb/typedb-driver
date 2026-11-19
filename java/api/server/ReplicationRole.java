@@ -24,7 +24,7 @@ import com.typedb.driver.common.exception.TypeDBDriverException;
 import static com.typedb.driver.common.exception.ErrorMessage.Internal.UNEXPECTED_NATIVE_VALUE;
 
 /**
- * Specify the replication role of a server.
+ * The replication role of a server.
  *
  * <h3>Examples</h3>
  * <pre>

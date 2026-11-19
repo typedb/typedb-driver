@@ -24,7 +24,7 @@ using DriverError = TypeDB.Driver.Common.Error.Driver;
 namespace TypeDB.Driver.Api
 {
     /// <summary>
-    /// Used to specify the type of the executed query.
+    /// The type of the query that produced an answer.
     /// </summary>
     /// <example>
     /// <code>

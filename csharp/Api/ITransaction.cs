@@ -140,7 +140,7 @@ namespace TypeDB.Driver.Api
     }
 
     /// <summary>
-    /// Used to specify the type of transaction.
+    /// The type of a transaction.
     /// </summary>
     /// <example>
     /// <code>

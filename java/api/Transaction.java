@@ -219,7 +219,7 @@ public interface Transaction extends AutoCloseable {
     void close() throws com.typedb.driver.common.exception.TypeDBDriverException;
 
     /**
-     * Used to specify the type of transaction.
+     * The type of a transaction.
      *
      * <h3>Examples</h3>
      * <pre>

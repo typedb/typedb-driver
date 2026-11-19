@@ -100,7 +100,7 @@ a| `compression` a| The compression of the data file. a| `FileCompression`
 .Code examples
 [source,cs]
 ----
-database.ExportToFile("schema.tql", "data.typedb", FileCompression.Zstd); TypeDB.Driver.Api.FileCompression FileCompression Used to specify the compression of a database export data file. Imports detect compressed data files ... Definition FileCompression.cs:32
+database.ExportToFile("schema.tql", "data.typedb", FileCompression.Zstd); TypeDB.Driver.Api.FileCompression FileCompression The compression of a database export data file. Zstd compression uses level 3, the zstd default,... Definition FileCompression.cs:33
 ----
 
 [#_string_TypeDB_Driver_Api_IDatabase_GetSchema_]

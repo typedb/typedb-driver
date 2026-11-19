@@ -9,7 +9,7 @@
 
 
 
-Specify the type of transaction.
+The type of a transaction.
 
 
 [#_Enum_TransactionType]
@@ -20,7 +20,7 @@ Specify the type of transaction.
 
 
 
-Specify the type of transaction.
+The type of a transaction.
 
 
 Read-only transaction.

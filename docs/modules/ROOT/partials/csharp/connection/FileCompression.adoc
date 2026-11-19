@@ -8,7 +8,7 @@
 
 
 
-Used to specify the compression of a database export data file. Imports detect compressed data files automatically.
+The compression of a database export data file. Zstd compression uses level 3, the zstd default, and includes a content checksum. Imports detect compressed data files automatically.
 
  
   database.ExportToFile("schema.tql", "data.typedb", FileCompression.Zstd);
@@ -21,10 +21,10 @@ Used to specify the compression of a database export data file. Imports detect c
    FileCompression
   
   
-   Used to specify the compression of a database export data file. Imports detect compressed data files ...
+   The compression of a database export data file. Zstd compression uses level 3, the zstd default,...
   
   
-   Definition FileCompression.cs:32
+   Definition FileCompression.cs:33
   
  
 

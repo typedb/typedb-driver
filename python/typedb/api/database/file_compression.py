@@ -22,7 +22,8 @@ import enum
 
 class FileCompression(enum.Enum):
     """
-    This class is used to specify the compression of a database export data file.
+    The compression of a database export data file.
+    Zstd compression uses level 3, the zstd default, and includes a content checksum.
     Imports detect compressed data files automatically.
 
     Examples

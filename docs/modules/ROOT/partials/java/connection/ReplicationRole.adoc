@@ -6,7 +6,7 @@
 
 *Package*: `com.typedb.driver.api.server`
 
-Specify the replication role of a server. 
+The replication role of a server. 
 
 
 [caption=""]

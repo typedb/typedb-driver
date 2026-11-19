@@ -368,7 +368,7 @@ namespace TypeDB.Driver.Test.Behaviour
         {
             var schemaPath = ConnectionStepsBase.FullPath(schemaFile);
             var dataPath = ConnectionStepsBase.FullPath(dataFile);
-            Driver!.Databases.Get(name).ExportToFile(schemaPath, dataPath, ParseFileCompression(compression));
+            Driver!.Databases.Get(name).ExportToFile(schemaPath, dataPath, Enum.Parse<FileCompression>(compression, ignoreCase: true));
         }
 
         // Pattern: file(X) has compression: C
@@ -380,12 +380,7 @@ namespace TypeDB.Driver.Test.Behaviour
             var actualCompression = data.Take(zstdMagicNumber.Length).SequenceEqual(zstdMagicNumber)
                 ? FileCompression.Zstd
                 : FileCompression.Uncompressed;
-            Assert.Equal(ParseFileCompression(compression), actualCompression);
-        }
-
-        private static FileCompression ParseFileCompression(string compression)
-        {
-            return compression == "zstd" ? FileCompression.Zstd : FileCompression.Uncompressed;
+            Assert.Equal(Enum.Parse<FileCompression>(compression, ignoreCase: true), actualCompression);
         }
 
         // Pattern: connection get database(X) export to schema file(Y), data file(Z); fails with a message containing: "MSG"

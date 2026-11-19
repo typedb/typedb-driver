@@ -24,7 +24,7 @@ import com.typedb.driver.common.exception.TypeDBDriverException;
 import static com.typedb.driver.common.exception.ErrorMessage.Internal.UNEXPECTED_NATIVE_VALUE;
 
 /**
- * Used to specify the type of the executed query.
+ * The type of the query that produced an answer.
  *
  * <h3>Examples</h3>
  * <pre>

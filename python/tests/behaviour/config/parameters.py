@@ -201,7 +201,7 @@ register_type(TransactionType=parse_transaction_type)
 
 @parse.with_pattern("uncompressed|zstd")
 def parse_file_compression(value: str) -> FileCompression:
-    return FileCompression.UNCOMPRESSED if value == "uncompressed" else FileCompression.ZSTD
+    return FileCompression[value.upper()]
 
 
 register_type(FileCompression=parse_file_compression)

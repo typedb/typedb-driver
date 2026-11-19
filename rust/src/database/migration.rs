@@ -33,14 +33,9 @@ use typedb_protocol::migration::Item as MigrationItemProto;
 
 use crate::{Error, Result, error::MigrationError};
 
-/// Specify the compression of a database export data file.
+/// The compression of a database export data file.
+/// Zstd compression uses level 3, the zstd default, and includes a content checksum.
 /// Imports detect compressed data files automatically.
-///
-/// # Examples
-///
-/// ```rust
-/// database.export_to_file_with_compression(schema_path, data_path, FileCompression::Zstd)
-/// ```
 #[repr(C)]
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]
 pub enum FileCompression {

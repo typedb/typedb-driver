@@ -4,7 +4,7 @@
 
 `enum`
 
-Specify the replication role of a server.
+The replication role of a server.
 
 [caption=""]
 .Enum variants

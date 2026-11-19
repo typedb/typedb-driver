@@ -20,7 +20,8 @@
 package com.typedb.driver.api.database;
 
 /**
- * Used to specify the compression of a database export data file.
+ * The compression of a database export data file.
+ * Zstd compression uses level 3, the zstd default, and includes a content checksum.
  * Imports detect compressed data files automatically.
  *
  * <h3>Examples</h3>

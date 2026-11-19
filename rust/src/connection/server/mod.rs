@@ -182,7 +182,7 @@ impl Default for ReplicationStatus {
     }
 }
 
-/// Specify the replication role of a server.
+/// The replication role of a server.
 #[repr(C)]
 #[derive(Debug, PartialEq, Eq, Hash, Clone, Copy)]
 pub enum ReplicationRole {

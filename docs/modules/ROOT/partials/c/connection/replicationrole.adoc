@@ -9,7 +9,7 @@
 
 
 
-Specify the replication role of a server.
+The replication role of a server.
 
 [#_Enum_ReplicationRole]
 [.doc-api-reference-driver]
@@ -19,7 +19,7 @@ Specify the replication role of a server.
 
 
 
-Specify the replication role of a server.
+The replication role of a server.
 
  
   

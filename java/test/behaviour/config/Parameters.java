@@ -97,12 +97,7 @@ public class Parameters {
 
     @ParameterType("uncompressed|zstd")
     public FileCompression file_compression(String compression) {
-        if (compression.equals("uncompressed")) {
-            return FileCompression.UNCOMPRESSED;
-        } else if (compression.equals("zstd")) {
-            return FileCompression.ZSTD;
-        }
-        return null;
+        return FileCompression.valueOf(compression.toUpperCase());
     }
 
     @ParameterType("read|write|schema")
