@@ -4,7 +4,7 @@
 
 `enum`
 
-This enum is used to specify the type of transaction.
+Specify the type of transaction.
 
 [caption=""]
 .Enum variants

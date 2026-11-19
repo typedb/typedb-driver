@@ -19,6 +19,8 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 
+from typedb.api.database.file_compression import FileCompression
+
 
 class Database(ABC):
 
@@ -56,19 +58,23 @@ class Database(ABC):
         """
         pass
 
-    def export_to_file(self, schema_file_path: str, data_file_path: str) -> None:
+    def export_to_file(self, schema_file_path: str, data_file_path: str,
+                       compression: FileCompression = FileCompression.UNCOMPRESSED) -> None:
         """
         Export a database into a schema definition and a data files saved to the disk.
+        A compressed data file is imported the same way as an uncompressed one.
         This is a blocking operation and may take a significant amount of time depending on the database size.
 
         :param schema_file_path: The path to the schema definition file to be created
         :param data_file_path: The path to the data file to be created
+        :param compression: The compression of the data file
 
         Examples:
         ---------
         ::
 
             database.export_to_file("schema.typeql", "data.typedb")
+            database.export_to_file("schema.typeql", "data.typedb", FileCompression.ZSTD)
         """
         pass
 

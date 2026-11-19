@@ -124,7 +124,7 @@ impl fmt::Debug for QueryAnswer {
     }
 }
 
-/// This enum is used to specify the type of the query resulted in this answer.
+/// Specify the type of the query resulted in this answer.
 ///
 /// # Examples
 ///

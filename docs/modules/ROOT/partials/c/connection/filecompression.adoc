@@ -1,0 +1,48 @@
+[#_methods_connection_filecompression]
+=== filecompression
+
+[#_Struct_FileCompression]
+[.doc-api-reference-driver]
+==== Struct FileCompression
+
+`rust struct (pointer)`
+
+
+
+Specify the compression of a database export data file. Imports detect compressed data files automatically.
+
+
+[#_Enum_FileCompression]
+[.doc-api-reference-driver]
+==== Enum FileCompression
+
+`rust enum (pointer)`
+
+
+
+Specify the compression of a database export data file. Imports detect compressed data files automatically.
+
+
+No compression.
+  
+  
+   Zstd&nbsp;
+   
+
+Zstandard compression.
+  
+ 
+
+
+[caption=""]
+.Enum constants
+// tag::enum_constants[]
+[cols=""]
+[options="header"]
+|===
+|Name
+a| `Uncompressed = 0`
+a| `Zstd = 1`
+|===
+// end::enum_constants[]
+

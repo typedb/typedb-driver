@@ -20,6 +20,7 @@
 package com.typedb.driver.connection;
 
 import com.typedb.driver.api.database.Database;
+import com.typedb.driver.api.database.FileCompression;
 import com.typedb.driver.common.NativeObject;
 import com.typedb.driver.common.Validator;
 import com.typedb.driver.common.exception.TypeDBDriverException;
@@ -64,10 +65,16 @@ public class DatabaseImpl extends NativeObject<com.typedb.driver.jni.Database> i
 
     @Override
     public void exportToFile(String schemaFilePath, String dataFilePath) throws TypeDBDriverException {
+        exportToFile(schemaFilePath, dataFilePath, FileCompression.UNCOMPRESSED);
+    }
+
+    @Override
+    public void exportToFile(String schemaFilePath, String dataFilePath, FileCompression compression) throws TypeDBDriverException {
         Validator.requireNonNull(schemaFilePath, "schemaFilePath");
         Validator.requireNonNull(dataFilePath, "dataFilePath");
+        Validator.requireNonNull(compression, "compression");
         try {
-            database_export_to_file(nativeObject, schemaFilePath, dataFilePath);
+            database_export_to_file(nativeObject, schemaFilePath, dataFilePath, compression.nativeObject);
         } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }

@@ -9,7 +9,7 @@
 
 
 
-This enum is used to specify the type of the query resulted in this answer.
+Specify the type of the query resulted in this answer.
 
 
 [#_Enum_QueryType]
@@ -20,7 +20,7 @@ This enum is used to specify the type of the query resulted in this answer.
 
 
 
-This enum is used to specify the type of the query resulted in this answer.
+Specify the type of the query resulted in this answer.
 
 
 A read-only query (e.g. ``match``).

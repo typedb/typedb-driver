@@ -20,7 +20,7 @@
 use std::{
     cmp::max,
     fs::{File, OpenOptions},
-    io::{BufRead, BufReader, Read},
+    io::{BufRead, BufReader, Read, Write},
     marker::PhantomData,
     path::Path,
 };
@@ -32,6 +32,23 @@ use prost::{
 use typedb_protocol::migration::Item as MigrationItemProto;
 
 use crate::{Error, Result, error::MigrationError};
+
+/// Specify the compression of a database export data file.
+/// Imports detect compressed data files automatically.
+///
+/// # Examples
+///
+/// ```rust
+/// database.export_to_file_with_compression(schema_path, data_path, FileCompression::Zstd)
+/// ```
+#[repr(C)]
+#[derive(Copy, Clone, Debug, Eq, PartialEq)]
+pub enum FileCompression {
+    /// No compression.
+    Uncompressed = 0,
+    /// Zstandard compression.
+    Zstd = 1,
+}
 
 #[derive(Debug)]
 pub(crate) enum DatabaseExportAnswer {
@@ -141,6 +158,47 @@ fn try_open_export_file(path: impl AsRef<Path>, is_new: bool) -> Result<File> {
             reason: source.to_string(),
         })
     })
+}
+
+pub(crate) enum ExportDataSink {
+    Plain(File),
+    Zstd(zstd::stream::write::Encoder<'static, File>),
+}
+
+impl ExportDataSink {
+    pub(crate) fn new(file: File, compression: FileCompression) -> std::io::Result<Self> {
+        match compression {
+            FileCompression::Uncompressed => Ok(Self::Plain(file)),
+            FileCompression::Zstd => {
+                let mut encoder = zstd::stream::write::Encoder::new(file, zstd::DEFAULT_COMPRESSION_LEVEL)?;
+                encoder.include_checksum(true)?;
+                Ok(Self::Zstd(encoder))
+            }
+        }
+    }
+
+    pub(crate) fn finish(self) -> std::io::Result<()> {
+        match self {
+            Self::Plain(mut file) => file.flush(),
+            Self::Zstd(encoder) => encoder.finish()?.flush(),
+        }
+    }
+}
+
+impl Write for ExportDataSink {
+    fn write(&mut self, buf: &[u8]) -> std::io::Result<usize> {
+        match self {
+            Self::Plain(file) => file.write(buf),
+            Self::Zstd(encoder) => encoder.write(buf),
+        }
+    }
+
+    fn flush(&mut self) -> std::io::Result<()> {
+        match self {
+            Self::Plain(file) => file.flush(),
+            Self::Zstd(encoder) => encoder.flush(),
+        }
+    }
 }
 
 pub(crate) fn try_open_import_file(path: impl AsRef<Path>) -> Result<Box<dyn BufRead + Send>> {

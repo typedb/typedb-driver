@@ -98,6 +98,7 @@ dir_mapping = {
     "databases": "connection",
     "driver": "connection",
     "driveroptions": "connection",
+    "filecompression": "connection",
     "init": "connection",
     "initlogging": "connection",
     "replicationrole": "connection",

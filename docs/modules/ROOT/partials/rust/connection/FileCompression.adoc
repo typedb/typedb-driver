@@ -1,0 +1,20 @@
+[#_enum_FileCompression]
+[.doc-api-reference-driver]
+=== FileCompression
+
+`enum`
+
+Specify the compression of a database export data file. Imports detect compressed data files automatically.
+
+[caption=""]
+.Enum variants
+// tag::enum_constants[]
+[cols=""]
+[options="header"]
+|===
+|Variant
+a| `Uncompressed = 0`
+a| `Zstd = 1`
+|===
+// end::enum_constants[]
+

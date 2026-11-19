@@ -22,6 +22,7 @@ package com.typedb.driver.test.behaviour.config;
 import com.typedb.driver.api.QueryType;
 import com.typedb.driver.api.ServerRouting;
 import com.typedb.driver.api.Transaction;
+import com.typedb.driver.api.database.FileCompression;
 import io.cucumber.java.DataTableType;
 import io.cucumber.java.ParameterType;
 
@@ -90,6 +91,16 @@ public class Parameters {
             return WRITE;
         } else if (type.equals("schema")) {
             return SCHEMA;
+        }
+        return null;
+    }
+
+    @ParameterType("uncompressed|zstd")
+    public FileCompression file_compression(String compression) {
+        if (compression.equals("uncompressed")) {
+            return FileCompression.UNCOMPRESSED;
+        } else if (compression.equals("zstd")) {
+            return FileCompression.ZSTD;
         }
         return null;
     }

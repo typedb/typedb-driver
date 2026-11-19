@@ -199,6 +199,14 @@ def parse_transaction_type(value: str) -> TransactionType:
 register_type(TransactionType=parse_transaction_type)
 
 
+@parse.with_pattern("uncompressed|zstd")
+def parse_file_compression(value: str) -> FileCompression:
+    return FileCompression.UNCOMPRESSED if value == "uncompressed" else FileCompression.ZSTD
+
+
+register_type(FileCompression=parse_file_compression)
+
+
 @parse.with_pattern("read|write|schema")
 def parse_query_type(value: str) -> QueryType:
     return QueryType.READ if value == "read" \

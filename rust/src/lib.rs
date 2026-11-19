@@ -39,7 +39,7 @@ pub use self::{
             server_version::ServerVersion,
         },
     },
-    database::{Database, DatabaseManager},
+    database::{Database, DatabaseManager, FileCompression},
     driver::TypeDBDriver,
     transaction::Transaction,
     user::{User, UserManager},

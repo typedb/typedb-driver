@@ -359,6 +359,35 @@ namespace TypeDB.Driver.Test.Behaviour
             Driver!.Databases.Get(name).ExportToFile(schemaPath, dataPath);
         }
 
+        // Pattern: connection get database(X) export to schema file(Y), data file(Z) with compression: C
+        [Given(@"connection get database\(([^)]+)\) export to schema file\(([^)]+)\), data file\(([^)]+)\) with compression: (uncompressed|zstd)$")]
+        [When(@"connection get database\(([^)]+)\) export to schema file\(([^)]+)\), data file\(([^)]+)\) with compression: (uncompressed|zstd)$")]
+        [Then(@"connection get database\(([^)]+)\) export to schema file\(([^)]+)\), data file\(([^)]+)\) with compression: (uncompressed|zstd)$")]
+        public void ConnectionGetDatabaseExportToFilesWithCompression(
+            string name, string schemaFile, string dataFile, string compression)
+        {
+            var schemaPath = ConnectionStepsBase.FullPath(schemaFile);
+            var dataPath = ConnectionStepsBase.FullPath(dataFile);
+            Driver!.Databases.Get(name).ExportToFile(schemaPath, dataPath, ParseFileCompression(compression));
+        }
+
+        // Pattern: file(X) has compression: C
+        [Then(@"file\(([^)]+)\) has compression: (uncompressed|zstd)$")]
+        public void FileHasCompression(string fileName, string compression)
+        {
+            byte[] zstdMagicNumber = { 0x28, 0xB5, 0x2F, 0xFD };
+            var data = File.ReadAllBytes(ConnectionStepsBase.FullPath(fileName));
+            var actualCompression = data.Take(zstdMagicNumber.Length).SequenceEqual(zstdMagicNumber)
+                ? FileCompression.Zstd
+                : FileCompression.Uncompressed;
+            Assert.Equal(ParseFileCompression(compression), actualCompression);
+        }
+
+        private static FileCompression ParseFileCompression(string compression)
+        {
+            return compression == "zstd" ? FileCompression.Zstd : FileCompression.Uncompressed;
+        }
+
         // Pattern: connection get database(X) export to schema file(Y), data file(Z); fails with a message containing: "MSG"
         [When(@"connection get database\(([^)]+)\) export to schema file\(([^)]+)\), data file\(([^)]+)\); fails with a message containing: ""(.*)""")]
         [Then(@"connection get database\(([^)]+)\) export to schema file\(([^)]+)\), data file\(([^)]+)\); fails with a message containing: ""(.*)""")]
