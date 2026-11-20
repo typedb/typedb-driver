@@ -19,7 +19,7 @@
 
 use std::{ffi::c_char, path::Path};
 
-use typedb_driver::Database;
+use typedb_driver::{Database, FileCompression};
 
 use crate::common::{
     error::{try_release_string, unwrap_void},
@@ -68,14 +68,16 @@ pub extern "C" fn database_type_schema(database: *const Database) -> *mut c_char
 /// @param database The <code>Database</code> object to export from.
 /// @param schema_file The path to the schema definition file to be created.
 /// @param data_file The path to the data file to be created.
+/// @param compression The compression of the data file.
 #[unsafe(no_mangle)]
 pub extern "C" fn database_export_to_file(
     database: *const Database,
     schema_file: *const c_char,
     data_file: *const c_char,
+    compression: FileCompression,
 ) {
     let database = borrow(database);
     let schema_file_path = Path::new(string_view(schema_file));
     let data_file_path = Path::new(string_view(data_file));
-    unwrap_void(database.export_to_file(schema_file_path, data_file_path))
+    unwrap_void(database.export_to_file_with_compression(schema_file_path, data_file_path, compression))
 }

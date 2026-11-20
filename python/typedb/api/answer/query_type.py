@@ -22,7 +22,7 @@ import enum
 
 class QueryType(enum.Enum):
     """
-    Used to specify the type of the executed query.
+    The type of the query that produced an answer.
 
     Examples
     --------

@@ -47,6 +47,7 @@ from typedb.api.connection.transaction import *  # noqa # pylint: disable=unused
 from typedb.api.connection.transaction_options import *  # noqa # pylint: disable=unused-import
 from typedb.api.database.database import *  # noqa # pylint: disable=unused-import
 from typedb.api.database.database_manager import *  # noqa # pylint: disable=unused-import
+from typedb.api.database.file_compression import *  # noqa # pylint: disable=unused-import
 from typedb.api.user.user import *  # noqa # pylint: disable=unused-import
 from typedb.api.user.user_manager import *  # noqa # pylint: disable=unused-import
 from typedb.common.datetime import *  # noqa # pylint: disable=unused-import

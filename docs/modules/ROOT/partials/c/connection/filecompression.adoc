@@ -1,0 +1,54 @@
+[#_methods_connection_filecompression]
+=== filecompression
+
+[#_Struct_FileCompression]
+[.doc-api-reference-driver]
+==== Struct FileCompression
+
+`rust struct (pointer)`
+
+
+
+The compression of a database export data file. Zstd compression uses level 3, the zstd default, and includes a content checksum. Imports detect compressed data files automatically.
+
+[#_Enum_FileCompression]
+[.doc-api-reference-driver]
+==== Enum FileCompression
+
+`rust enum (pointer)`
+
+
+
+The compression of a database export data file. Zstd compression uses level 3, the zstd default, and includes a content checksum. Imports detect compressed data files automatically.
+
+ 
+  
+   Enumerator
+  
+  
+   Uncompressed&nbsp;
+   
+
+No compression.
+  
+  
+   Zstd&nbsp;
+   
+
+Zstandard compression.
+  
+ 
+
+
+[caption=""]
+.Enum constants
+// tag::enum_constants[]
+[cols=""]
+[options="header"]
+|===
+|Name
+a| `Uncompressed = 0`
+a| `Zstd = 1`
+|===
+// end::enum_constants[]
+

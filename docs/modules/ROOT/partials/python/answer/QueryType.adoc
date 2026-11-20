@@ -6,7 +6,7 @@
 
 *Package*: `typedb.api.answer.query_type`
 
-Used to specify the type of the executed query.
+The type of the query that produced an answer.
 
 [caption=""]
 .Examples

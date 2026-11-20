@@ -81,5 +81,21 @@ namespace TypeDB.Driver.Api
         /// </code>
         /// </example>
         public void ExportToFile(string schemaFile, string dataFile);
+
+        /// <summary>
+        /// Exports this database to a schema definition file and a compressed data file on disk.
+        /// A compressed data file is imported the same way as an uncompressed one.
+        /// This is a blocking operation and may take a significant amount of time
+        /// depending on the database size.
+        /// </summary>
+        /// <param name="schemaFile">The path to the schema definition file to be created.</param>
+        /// <param name="dataFile">The path to the data file to be created.</param>
+        /// <param name="compression">The compression of the data file.</param>
+        /// <example>
+        /// <code>
+        /// database.ExportToFile("schema.tql", "data.typedb", FileCompression.Zstd);
+        /// </code>
+        /// </example>
+        public void ExportToFile(string schemaFile, string dataFile, FileCompression compression);
     }
 }

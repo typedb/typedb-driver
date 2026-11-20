@@ -22,7 +22,7 @@ import enum
 
 class ReplicationRole(enum.Enum):
     """
-    This class is used to specify the replication role of a server.
+    The replication role of a server.
 
     Examples
     --------

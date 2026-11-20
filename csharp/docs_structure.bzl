@@ -97,6 +97,7 @@ dir_mapping = {
     "Direct.adoc": "connection",
     "DriverOptions.adoc": "connection",
     "DriverTlsConfig.adoc": "connection",
+    "FileCompression.adoc": "connection",
     "IDatabase.adoc": "connection",
     "IDatabaseManager.adoc": "connection",
     "IDriver.adoc": "connection",

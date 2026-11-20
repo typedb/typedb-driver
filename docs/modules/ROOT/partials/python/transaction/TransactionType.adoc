@@ -6,7 +6,7 @@
 
 *Package*: `typedb.api.connection.transaction`
 
-This class is used to specify the type of transaction.
+The type of a transaction.
 
 [caption=""]
 .Examples

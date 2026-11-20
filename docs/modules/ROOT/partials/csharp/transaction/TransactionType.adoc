@@ -8,7 +8,7 @@
 
 
 
-Used to specify the type of transaction.
+The type of a transaction.
 
  
   driver.Transaction(database, TransactionType.Read);
@@ -21,7 +21,7 @@ Used to specify the type of transaction.
    TransactionType
   
   
-   Used to specify the type of transaction.
+   The type of a transaction.
   
   
    Definition ITransaction.cs:151

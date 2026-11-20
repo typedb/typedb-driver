@@ -73,6 +73,22 @@ public interface Database {
     void exportToFile(String schemaFilePath, String dataFilePath) throws TypeDBDriverException;
 
     /**
+     * Export a database into a schema definition and a compressed data file saved to the disk.
+     * A compressed data file is imported the same way as an uncompressed one.
+     * This is a blocking operation and may take a significant amount of time depending on the database size.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * database.exportToFile("schema.typeql", "data.typedb", FileCompression.ZSTD)
+     * </pre>
+     *
+     * @param schemaFilePath The path to the schema definition file to be created
+     * @param dataFilePath   The path to the data file to be created
+     * @param compression    The compression of the data file
+     */
+    void exportToFile(String schemaFilePath, String dataFilePath, FileCompression compression) throws TypeDBDriverException;
+
+    /**
      * Deletes this database.
      *
      * <h3>Examples</h3>

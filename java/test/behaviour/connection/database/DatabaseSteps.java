@@ -22,11 +22,16 @@ package com.typedb.driver.test.behaviour.connection.database;
 import com.typedb.driver.api.Driver;
 import com.typedb.driver.api.Transaction;
 import com.typedb.driver.api.database.Database;
+import com.typedb.driver.api.database.FileCompression;
 import com.typedb.driver.test.behaviour.config.Parameters;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -214,5 +219,22 @@ public class DatabaseSteps {
         Path schemaPath = fullPath(schemaFile);
         Path dataPath = fullPath(dataFile);
         mayError.check(() -> driver.databases().get(name).exportToFile(schemaPath.toString(), dataPath.toString()));
+    }
+
+    @When("connection get database\\({word}) export to schema file\\({word}), data file\\({word}) with compression: {file_compression}{may_error}")
+    public void connection_get_database_export_to_schema_file_data_file_with_compression(String name, String schemaFile, String dataFile, FileCompression compression, Parameters.MayError mayError) {
+        Path schemaPath = fullPath(schemaFile);
+        Path dataPath = fullPath(dataFile);
+        mayError.check(() -> driver.databases().get(name).exportToFile(schemaPath.toString(), dataPath.toString(), compression));
+    }
+
+    @Then("file\\({word}) has compression: {file_compression}")
+    public void file_has_compression(String fileName, FileCompression compression) throws IOException {
+        byte[] zstdMagicNumber = {(byte) 0x28, (byte) 0xB5, (byte) 0x2F, (byte) 0xFD};
+        byte[] header;
+        try (InputStream file = Files.newInputStream(fullPath(fileName))) {
+            header = file.readNBytes(zstdMagicNumber.length);
+        }
+        assertEquals(compression, Arrays.equals(header, zstdMagicNumber) ? FileCompression.ZSTD : FileCompression.UNCOMPRESSED);
     }
 }

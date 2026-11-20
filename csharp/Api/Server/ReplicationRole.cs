@@ -23,7 +23,7 @@ using TypeDB.Driver.Common;
 namespace TypeDB.Driver.Api
 {
     /// <summary>
-    /// This enum is used to specify the replication role of a server.
+    /// The replication role of a server.
     /// </summary>
     /// <example>
     /// <code>

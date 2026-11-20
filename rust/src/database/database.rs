@@ -18,7 +18,7 @@
  */
 
 use std::{
-    io::{BufWriter, Write},
+    io::{BufWriter, IntoInnerError, Write},
     path::Path,
     sync::Arc,
 };
@@ -28,7 +28,9 @@ use prost::Message;
 use crate::{
     common::{Error, Result, info::DatabaseInfo},
     connection::server::{server_manager::ServerManager, server_routing::ServerRouting},
-    database::migration::{DatabaseExportAnswer, try_create_export_file, try_open_existing_export_file},
+    database::migration::{
+        DatabaseExportAnswer, ExportDataSink, FileCompression, try_create_export_file, try_open_existing_export_file,
+    },
     error::MigrationError,
     resolve,
 };
@@ -112,6 +114,8 @@ impl Database {
     /// Export a database into a schema definition and a data files saved to the disk.
     /// This is a blocking operation and may take a significant amount of time depending on the database size.
     ///
+    /// See [`Database::export_to_file_with_compression`] to compress the data file.
+    ///
     /// # Arguments
     ///
     /// * `schema_file_path` — The path to the schema definition file to be created
@@ -125,6 +129,38 @@ impl Database {
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn export_to_file(&self, schema_file_path: impl AsRef<Path>, data_file_path: impl AsRef<Path>) -> Result {
+        self.export_to_file_with_compression(schema_file_path, data_file_path, FileCompression::Uncompressed).await
+    }
+
+    /// Export a database into a schema definition and a compressed data file saved to the disk.
+    /// A compressed data file is imported the same way as an uncompressed one.
+    /// This is a blocking operation and may take a significant amount of time depending on the database size.
+    ///
+    /// # Arguments
+    ///
+    /// * `schema_file_path` — The path to the schema definition file to be created
+    /// * `data_file_path` — The path to the data file to be created
+    /// * `compression` — The compression of the data file
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    #[cfg_attr(
+        feature = "sync",
+        doc = "database.export_to_file_with_compression(schema_path, data_path, FileCompression::Zstd);"
+    )]
+    #[cfg_attr(
+        not(feature = "sync"),
+        doc = "database.export_to_file_with_compression(schema_path, data_path, FileCompression::Zstd).await;"
+    )]
+    /// ```
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub async fn export_to_file_with_compression(
+        &self,
+        schema_file_path: impl AsRef<Path>,
+        data_file_path: impl AsRef<Path>,
+        compression: FileCompression,
+    ) -> Result {
         let schema_file_path = schema_file_path.as_ref();
         let data_file_path = data_file_path.as_ref();
         if schema_file_path == data_file_path {
@@ -146,7 +182,7 @@ impl Database {
                     let mut schema_file = try_open_existing_export_file(schema_file_path)?;
                     let data_file = try_open_existing_export_file(data_file_path)?;
                     let mut export_stream = server_connection.database_export(name).await?;
-                    let mut data_writer = BufWriter::new(data_file);
+                    let mut data_writer = BufWriter::new(ExportDataSink::new(data_file, compression)?);
 
                     loop {
                         match resolve!(export_stream.next())? {
@@ -166,7 +202,7 @@ impl Database {
                         }
                     }
 
-                    data_writer.flush()?;
+                    data_writer.into_inner().map_err(IntoInnerError::into_error)?.finish()?;
                     Ok(())
                 }
             })

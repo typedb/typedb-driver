@@ -22,6 +22,7 @@ package com.typedb.driver.test.behaviour.config;
 import com.typedb.driver.api.QueryType;
 import com.typedb.driver.api.ServerRouting;
 import com.typedb.driver.api.Transaction;
+import com.typedb.driver.api.database.FileCompression;
 import io.cucumber.java.DataTableType;
 import io.cucumber.java.ParameterType;
 
@@ -92,6 +93,11 @@ public class Parameters {
             return SCHEMA;
         }
         return null;
+    }
+
+    @ParameterType("uncompressed|zstd")
+    public FileCompression file_compression(String compression) {
+        return FileCompression.valueOf(compression.toUpperCase());
     }
 
     @ParameterType("read|write|schema")

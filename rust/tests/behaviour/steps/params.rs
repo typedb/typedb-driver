@@ -23,7 +23,8 @@ use chrono::{FixedOffset, NaiveDate, NaiveDateTime, NaiveTime};
 use cucumber::Parameter;
 use futures::StreamExt;
 use typedb_driver::{
-    Address, ServerRouting as TypeDBServerRouting, TransactionType as TypeDBTransactionType,
+    Address, FileCompression as TypeDBFileCompression, ServerRouting as TypeDBServerRouting,
+    TransactionType as TypeDBTransactionType,
     answer::QueryType as TypeDBQueryType,
     concept::{Value as TypeDBValue, ValueType as TypeDBValueType},
 };
@@ -200,6 +201,24 @@ impl FromStr for TransactionType {
             "read" => Self { transaction_type: TypeDBTransactionType::Read },
             "schema" => Self { transaction_type: TypeDBTransactionType::Schema },
             _ => unreachable!("`{type_}` is not a valid transaction type"),
+        })
+    }
+}
+
+#[derive(Clone, Copy, Debug, Parameter)]
+#[param(name = "file_compression", regex = r"uncompressed|zstd")]
+pub struct FileCompression {
+    pub file_compression: TypeDBFileCompression,
+}
+
+impl FromStr for FileCompression {
+    type Err = Infallible;
+
+    fn from_str(compression: &str) -> Result<Self, Self::Err> {
+        Ok(match compression {
+            "uncompressed" => Self { file_compression: TypeDBFileCompression::Uncompressed },
+            "zstd" => Self { file_compression: TypeDBFileCompression::Zstd },
+            _ => unreachable!("`{compression}` is not a valid file compression"),
         })
     }
 }

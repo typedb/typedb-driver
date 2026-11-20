@@ -582,7 +582,7 @@ namespace TypeDB.Driver.Api
         #endregion
 
         /// <summary>
-        /// Used to specify whether we need explicit or transitive subtyping, instances, etc.
+        /// Whether subtyping, instances, etc. are explicit or transitive.
         /// </summary>
         /// <example>
         /// <code>

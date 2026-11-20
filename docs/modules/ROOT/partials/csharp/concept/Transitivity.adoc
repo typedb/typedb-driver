@@ -8,7 +8,7 @@
 
 
 
-Used to specify whether we need explicit or transitive subtyping, instances, etc.
+Whether subtyping, instances, etc. are explicit or transitive.
 
  
   attributeType.GetOwners(transaction, annotation, Transitivity.Explicit)
@@ -21,7 +21,7 @@ Used to specify whether we need explicit or transitive subtyping, instances, etc
    Transitivity
   
   
-   Used to specify whether we need explicit or transitive subtyping, instances, etc.
+   Whether subtyping, instances, etc. are explicit or transitive.
   
   
    Definition IConcept.cs:593

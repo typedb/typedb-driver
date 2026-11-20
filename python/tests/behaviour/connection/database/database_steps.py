@@ -207,3 +207,20 @@ def export_to_schema_file_data_file(context: Context, name: str, schema_file: st
     may_error.check(lambda: context.driver.databases.get(name).export_to_file(
         str(context.full_path(schema_file)), str(context.full_path(data_file))
     ))
+
+
+@step(
+    "connection get database({name:NonSemicolon}) export to schema file({schema_file:NonSemicolon}), data file({data_file:NonSemicolon}) with compression: {compression:FileCompression}{may_error:MayError}")
+def export_to_schema_file_data_file_with_compression(context: Context, name: str, schema_file: str, data_file: str,
+                                                     compression: FileCompression, may_error: MayError):
+    may_error.check(lambda: context.driver.databases.get(name).export_to_file(
+        str(context.full_path(schema_file)), str(context.full_path(data_file)), compression
+    ))
+
+
+@step("file({file_name:NonSemicolon}) has compression: {compression:FileCompression}")
+def file_has_compression(context: Context, file_name: str, compression: FileCompression):
+    zstd_magic_number = b"\x28\xb5\x2f\xfd"
+    with open(context.full_path(file_name), "rb") as file:
+        is_zstd = file.read(4) == zstd_magic_number
+    assert_that(FileCompression.ZSTD if is_zstd else FileCompression.UNCOMPRESSED, is_(compression))

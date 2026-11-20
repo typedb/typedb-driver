@@ -32,7 +32,7 @@ if TYPE_CHECKING:
 
 class TransactionType(enum.Enum):
     """
-    This class is used to specify the type of transaction.
+    The type of a transaction.
 
     Examples
     --------
