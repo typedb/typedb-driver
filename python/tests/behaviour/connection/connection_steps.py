@@ -98,8 +98,6 @@ def step_impl(context: Context, may_error: MayError):
 
 
 def default_connection_string(context: Context) -> str:
-    """A connection string for this mode's default addresses with admin credentials, using the scheme
-    that agrees with the context's TLS setting."""
     scheme = "https" if context.driver_options.tls_config.is_enabled else "http"
     addresses = context.default_address
     if isinstance(addresses, str):

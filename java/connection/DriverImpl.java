@@ -68,6 +68,17 @@ public class DriverImpl extends NativeObject<com.typedb.driver.jni.TypeDBDriver>
         this(open(addressTranslation, credentials, driverOptions));
     }
 
+    /**
+     * Opens a driver using the addresses and credentials held in a connection string. A static
+     * factory, so that the expected format of the string is explicit at the call site.
+     *
+     * @param connectionString The connection string holding the addresses and credentials to connect with
+     * @param driverOptions    The driver connection options to connect with, or null to derive them from the connection string
+     */
+    public static DriverImpl fromConnectionString(String connectionString, DriverOptions driverOptions) throws TypeDBDriverException {
+        return new DriverImpl(openFromConnectionString(connectionString, driverOptions));
+    }
+
     private DriverImpl(com.typedb.driver.jni.TypeDBDriver connection) {
         super(connection);
     }
@@ -106,20 +117,10 @@ public class DriverImpl extends NativeObject<com.typedb.driver.jni.TypeDBDriver>
         }
     }
 
-    /**
-     * Opens a driver using the addresses and credentials held in a connection string. A static
-     * factory, because a connection string is not distinguishable from an address by its type.
-     *
-     * @param connectionString The connection string holding the addresses and credentials to connect with
-     * @param driverOptions    The driver connection options to connect with, or null to derive them from the connection string
-     */
-    public static DriverImpl fromConnectionString(String connectionString, DriverOptions driverOptions) throws TypeDBDriverException {
+    private static com.typedb.driver.jni.TypeDBDriver openFromConnectionString(String connectionString, DriverOptions driverOptions) {
         Validator.requireNonNull(connectionString, "connectionString");
         try {
-            return new DriverImpl(driver_new_with_connection_string(
-                    connectionString,
-                    driverOptions == null ? null : driverOptions.nativeObject,
-                    LANGUAGE));
+            return driver_new_with_connection_string(connectionString, driverOptions == null ? null : driverOptions.nativeObject, LANGUAGE);
         } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }

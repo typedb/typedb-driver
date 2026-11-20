@@ -56,8 +56,6 @@ public class ConnectionStepsCore extends ConnectionStepsBase {
         return createTypeDBDriver(TypeDB.DEFAULT_ADDRESS, DEFAULT_CREDENTIALS, driverOptions);
     }
 
-    private static final List<String> DEFAULT_ADDRESSES = List.of(TypeDB.DEFAULT_ADDRESS);
-
     @When("typedb starts")
     public void typedb_starts() {
     }
@@ -94,7 +92,7 @@ public class ConnectionStepsCore extends ConnectionStepsBase {
 
     @When("connection opens with a connection string for the default address{may_error}")
     public void connection_opens_with_a_connection_string_for_the_default_address(Parameters.MayError mayError) {
-        mayError.check(() -> driver = createTypeDBDriverFromConnectionString(connectionString(DEFAULT_ADDRESSES)));
+        mayError.check(() -> driver = createTypeDBDriverFromConnectionString(connectionString(List.of(TypeDB.DEFAULT_ADDRESS))));
     }
 
     @When("connection opens with connection string: {string}{may_error}")

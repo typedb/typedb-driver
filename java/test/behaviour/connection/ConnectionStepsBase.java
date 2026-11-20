@@ -163,10 +163,6 @@ public abstract class ConnectionStepsBase {
 
     abstract Driver createDefaultTypeDBDriver();
 
-    /**
-     * A connection string for the given addresses with admin credentials, using the scheme that agrees
-     * with the current driver options' TLS setting.
-     */
     String connectionString(Iterable<String> addresses) {
         String scheme = driverOptions.tlsConfig().isEnabled() ? "https" : "http";
         StringJoiner joined = new StringJoiner(",");

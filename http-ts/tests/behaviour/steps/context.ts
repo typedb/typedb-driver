@@ -145,7 +145,6 @@ export async function openAndTestConnectionWithAddresses(username: string, passw
     return healthCheck;
 }
 
-/** A connection string for this mode's default addresses with admin credentials. */
 export function defaultConnectionString(): string {
     const addresses = isClusterMode ? CLUSTER_ADDRESSES : [`${DEFAULT_HOST}:${DEFAULT_PORT}`];
     return `typedb://${DEFAULT_USERNAME}:${DEFAULT_PASSWORD}@${addresses.join(",")}`;

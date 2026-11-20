@@ -24,15 +24,12 @@ use http::Uri;
 use crate::{
     common::{
         Error, Result,
-        address::{Address, Addresses},
+        address::{Address, Addresses, DEFAULT_PORT},
     },
     error::ConnectionError,
 };
 
 const CONNECTION_STRING_SCHEME: &str = "typedb://";
-
-/// The port assumed for addresses that do not specify one.
-pub const DEFAULT_PORT: u16 = 1729;
 
 /// A parsed TypeDB connection string, bundling everything needed to open a driver into a single
 /// value: `typedb://<username>:<password>@<addresses>[/<database>][?<params>]`.

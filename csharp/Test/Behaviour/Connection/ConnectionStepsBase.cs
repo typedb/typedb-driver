@@ -95,10 +95,6 @@ namespace TypeDB.Driver.Test.Behaviour
 
         public abstract IDriver CreateTypeDBDriver(string address);
 
-        /// <summary>
-        /// A connection string for the given addresses with admin credentials, using the scheme that agrees
-        /// with the current driver options' TLS setting.
-        /// </summary>
         protected string ConnectionString(IEnumerable<string> addresses)
         {
             string scheme = DriverOptions.TlsConfig.IsEnabled ? "https" : "http";

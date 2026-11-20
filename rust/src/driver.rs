@@ -23,7 +23,7 @@ use tracing::{debug, error};
 use crate::{
     Credentials, DatabaseManager, DriverOptions, DriverTlsConfig, Transaction, TransactionOptions, TransactionType,
     UserManager,
-    common::{Addresses, ConnectionString, Result},
+    common::{Addresses, ConnectionString, Result, address::DEFAULT_ADDRESS},
     connection::{
         runtime::BackgroundRuntime,
         server::{
@@ -48,7 +48,7 @@ impl TypeDBDriver {
         Some(version) => version,
     };
 
-    pub const DEFAULT_ADDRESS: &'static str = "127.0.0.1:1729";
+    pub const DEFAULT_ADDRESS: &'static str = DEFAULT_ADDRESS;
 
     /// Creates a new TypeDB Server connection.
     ///

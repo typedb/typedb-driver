@@ -183,19 +183,16 @@ impl Context {
                     context.unwrap().after_scenario().await.unwrap();
                 })
             })
-            .filter_run(glob, move |_, _, sc| {
+            .filter_run(glob, |_, _, sc| {
                 sc.name.contains(std::env::var("SCENARIO_FILTER").as_deref().unwrap_or(""))
-                    && !sc.tags.iter().any(|tag| Self::is_ignore_tag(tag, is_cluster))
+                    && !sc.tags.iter().any(Self::is_ignore_tag)
             })
             .await
             .execution_has_failed()
     }
 
-    fn is_ignore_tag(t: &String, is_cluster: bool) -> bool {
-        t == "ignore"
-            || t == "ignore-typedb-driver"
-            || t == "ignore-typedb-driver-rust"
-            || (is_cluster && t == "ignore-typedb-driver-cluster")
+    fn is_ignore_tag(t: &String) -> bool {
+        t == "ignore" || t == "ignore-typedb-driver" || t == "ignore-typedb-driver-rust"
     }
 
     pub async fn after_scenario(&mut self) -> TypeDBResult {
