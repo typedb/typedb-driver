@@ -29,6 +29,8 @@ import io.cucumber.java.Before;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
+import java.util.List;
+
 public class ConnectionStepsCore extends ConnectionStepsBase {
     @Override
     public void beforeAll() {
@@ -85,6 +87,17 @@ public class ConnectionStepsCore extends ConnectionStepsBase {
                 DEFAULT_CREDENTIALS,
                 driverOptions
         ));
+    }
+
+
+    @When("connection opens with a connection string for the default address{may_error}")
+    public void connection_opens_with_a_connection_string_for_the_default_address(Parameters.MayError mayError) {
+        mayError.check(() -> driver = createTypeDBDriverFromConnectionString(connectionString(List.of(TypeDB.DEFAULT_ADDRESS))));
+    }
+
+    @When("connection opens with connection string: {string}{may_error}")
+    public void connection_opens_with_connection_string(String connectionString, Parameters.MayError mayError) {
+        mayError.check(() -> driver = createTypeDBDriverFromConnectionString(connectionString));
     }
 
     @Override

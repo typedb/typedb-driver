@@ -95,6 +95,33 @@ namespace TypeDB.Driver.Test.Behaviour
 
         public abstract IDriver CreateTypeDBDriver(string address);
 
+        protected string ConnectionString(IEnumerable<string> addresses)
+        {
+            string scheme = DriverOptions.TlsConfig.IsEnabled ? "https" : "http";
+            var withScheme = addresses.Select(address => $"{scheme}://{address}");
+            return $"typedb://{AdminUsername}:{AdminPassword}@{string.Join(",", withScheme)}";
+        }
+
+        protected IDriver CreateTypeDBDriverFromConnectionString(string connectionString)
+        {
+            return TypeDB.DriverFromConnectionString(connectionString, DriverOptions);
+        }
+
+        protected abstract IEnumerable<string> DefaultAddresses { get; }
+
+        [When(@"connection opens with a connection string for the default address")]
+        public void ConnectionOpensWithAConnectionStringForTheDefaultAddress()
+        {
+            Driver = CreateTypeDBDriverFromConnectionString(ConnectionString(DefaultAddresses));
+        }
+
+        [When(@"connection opens with connection string: ""(.*)""; fails with a message containing: ""(.*)""")]
+        public void ConnectionOpensWithConnectionStringFailsWithMessage(string connectionString, string expectedMessage)
+        {
+            var exception = Assert.ThrowsAny<Exception>(() => CreateTypeDBDriverFromConnectionString(connectionString));
+            Assert.Contains(expectedMessage, exception.Message);
+        }
+
         public abstract void TypeDBStarts();
 
         public abstract void ConnectionOpensWithDefaultAuthentication();

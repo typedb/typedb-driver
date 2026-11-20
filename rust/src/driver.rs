@@ -21,8 +21,9 @@ use std::{collections::HashSet, fmt, sync::Arc};
 use tracing::{debug, error};
 
 use crate::{
-    Credentials, DatabaseManager, DriverOptions, Transaction, TransactionOptions, TransactionType, UserManager,
-    common::{Addresses, Result},
+    Credentials, DatabaseManager, DriverOptions, DriverTlsConfig, Transaction, TransactionOptions, TransactionType,
+    UserManager,
+    common::{Addresses, ConnectionString, Result, address::DEFAULT_ADDRESS},
     connection::{
         runtime::BackgroundRuntime,
         server::{
@@ -47,7 +48,7 @@ impl TypeDBDriver {
         Some(version) => version,
     };
 
-    pub const DEFAULT_ADDRESS: &'static str = "127.0.0.1:1729";
+    pub const DEFAULT_ADDRESS: &'static str = DEFAULT_ADDRESS;
 
     /// Creates a new TypeDB Server connection.
     ///
@@ -128,6 +129,70 @@ impl TypeDBDriver {
 
         debug!("TypeDB driver initialization completed successfully");
         Ok(Self { server_manager, database_manager, user_manager, background_runtime })
+    }
+
+    /// Creates a new TypeDB connection from a connection string of the form
+    /// `typedb://<username>:<password>@<addresses>`, as produced by TypeDB Studio.
+    ///
+    /// Whether the connection uses TLS is determined by the addresses' `http://` or `https://`
+    /// scheme. If `driver_options` is given, its TLS configuration must agree with that scheme;
+    /// otherwise, TLS is configured from the scheme alone, using the system's native trust roots.
+    /// Pass `driver_options` to override any other default, such as the request timeout.
+    ///
+    /// The addresses are connected to as written, with port 1729 assumed where none is given.
+    ///
+    /// # Arguments
+    ///
+    /// * `connection_string` — The connection string describing the addresses and credentials
+    /// * `driver_options` — The DriverOptions to connect with. Optional: defaults are derived from
+    ///   the connection string
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    #[cfg_attr(
+        feature = "sync",
+        doc = "TypeDBDriver::new_from_connection_string(\"typedb://admin:password@https://127.0.0.1:1729\", None)"
+    )]
+    #[cfg_attr(
+        not(feature = "sync"),
+        doc = "TypeDBDriver::new_from_connection_string(\"typedb://admin:password@https://127.0.0.1:1729\", None).await"
+    )]
+    /// ```
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub async fn new_from_connection_string(
+        connection_string: impl AsRef<str>,
+        driver_options: Option<DriverOptions>,
+    ) -> Result<Self> {
+        Self::new_from_connection_string_with_description(connection_string, driver_options, Self::DRIVER_LANG).await
+    }
+
+    /// Creates a new TypeDB connection from a connection string, with a description.
+    /// This method is generally used by TypeDB drivers built on top of the Rust driver.
+    /// In other cases, use [`Self::new_from_connection_string`] instead.
+    ///
+    /// # Arguments
+    ///
+    /// * `connection_string` — The connection string describing the addresses and credentials
+    /// * `driver_options` — The DriverOptions to connect with. Optional: defaults are derived from
+    ///   the connection string
+    /// * `driver_lang` — The language of the driver connecting to the server
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub async fn new_from_connection_string_with_description(
+        connection_string: impl AsRef<str>,
+        driver_options: Option<DriverOptions>,
+        driver_lang: impl AsRef<str>,
+    ) -> Result<Self> {
+        let connection_string: ConnectionString = connection_string.as_ref().parse()?;
+        let credentials = Credentials::new(connection_string.username(), connection_string.password());
+        let driver_options = driver_options.unwrap_or_else(|| {
+            DriverOptions::new(match connection_string.is_tls_enabled() {
+                true => DriverTlsConfig::enabled_with_native_root_ca(),
+                false => DriverTlsConfig::disabled(),
+            })
+        });
+        Self::new_with_description(connection_string.addresses().clone(), credentials, driver_options, driver_lang)
+            .await
     }
 
     /// Checks it this connection is opened.

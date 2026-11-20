@@ -31,6 +31,10 @@ const driver = new TypeDBHttpDriver({
     addresses: [ "localhost:1729" ],
 });
 
+// or, from a connection string as produced by TypeDB Studio. Addresses must carry an http:// or https://
+// scheme, which decides whether TLS is used. An address without a port connects to 8000.
+const driverFromString = await TypeDBHttpDriver.fromConnectionString("typedb://admin:password@http://localhost:8000");
+
 const transactionResponse = await driver.openTransaction("database-name", "read");
 if (isApiErrorResponse(transactionResponse)) throw transactionResponse.err;
 const transactionId = transactionResponse.ok.transactionId;

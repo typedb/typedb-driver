@@ -202,6 +202,8 @@ error_messages! { ConnectionError
         39: "Request timed out after {timeout}. The server may be unresponsive.",
     ServerUnavailable { error: ServerError } =
         40: "The server is temporarily unable to serve the request: {error}",
+    InvalidConnectionString { reason: String } =
+        41: "Invalid connection string: {reason}. Expected the format 'typedb://<username>:<password>@<addresses>'.",
 }
 
 impl ConnectionError {

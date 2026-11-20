@@ -515,6 +515,29 @@ impl Context {
         TypeDBDriver::new(addresses, credentials, driver_options).await
     }
 
+    fn default_driver_options(&self) -> TypeDBResult<DriverOptions> {
+        let tls_config = match &self.tls_root_ca {
+            Some(root_ca) if self.is_cluster && root_ca.exists() => DriverTlsConfig::enabled_with_root_ca(root_ca)?,
+            _ => DriverTlsConfig::disabled(),
+        };
+        Ok(self.driver_options().unwrap_or_default().tls_config(tls_config))
+    }
+
+    pub fn default_connection_string(&self) -> TypeDBResult<String> {
+        let scheme = if self.default_driver_options()?.tls_config.is_enabled() { "https" } else { "http" };
+        let addresses: Vec<&str> = match self.is_cluster {
+            false => vec![Self::DEFAULT_ADDRESS],
+            true => Self::DEFAULT_CLUSTER_ADDRESSES.to_vec(),
+        };
+        let addresses: Vec<String> = addresses.into_iter().map(|address| format!("{scheme}://{address}")).collect();
+        Ok(format!("typedb://{}:{}@{}", Self::ADMIN_USERNAME, Self::ADMIN_PASSWORD, addresses.join(",")))
+    }
+
+    pub async fn create_driver_from_connection_string(&self, connection_string: &str) -> TypeDBResult<TypeDBDriver> {
+        let driver_options = self.default_driver_options()?;
+        TypeDBDriver::new_from_connection_string(connection_string, Some(driver_options)).await
+    }
+
     pub fn set_driver(&mut self, driver: TypeDBDriver) {
         self.driver = Some(driver);
     }

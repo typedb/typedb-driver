@@ -17,8 +17,12 @@
  * under the License.
  */
 
-pub use self::{address::Address, addresses::Addresses};
+pub use self::{address::Address, addresses::Addresses, connection_string::ConnectionString};
 
 pub(crate) mod address;
 pub(crate) mod address_translation;
 pub(crate) mod addresses;
+pub(crate) mod connection_string;
+
+pub(crate) const DEFAULT_ADDRESS: &str = "127.0.0.1:1729";
+pub(crate) const DEFAULT_PORT: u16 = 1729;
