@@ -77,7 +77,6 @@ dir_mapping = {
     "Database.adoc": "connection",
     "DatabasesListResponse.adoc": "response",
     "ConnectionStringError.adoc": "connection",
-    "ConnectionStringErrorKind.adoc": "connection",
     "DriverParamsBasic.adoc": "connection",
     "DriverParamsTranslated.adoc": "connection",
     "DriverTlsConfig.adoc": "connection",

@@ -142,7 +142,9 @@ impl ConnectionString {
         let entries: Vec<&str> = addresses.split(',').collect();
         let translated_count = entries.iter().filter(|entry| entry.contains(ADDRESS_TRANSLATION_SEPARATOR)).count();
         if translated_count != 0 && translated_count != entries.len() {
-            return Err(Error::Connection(ConnectionError::ConnectionStringInconsistentAddressTranslation {}));
+            return Err(Self::invalid(
+                "expected either all addresses or none to be 'public;private' translation pairs",
+            ));
         }
 
         let mut schemes = Vec::with_capacity(entries.len());
@@ -171,7 +173,9 @@ impl ConnectionString {
 
         let is_tls_enabled = schemes[0] == Scheme::HTTPS;
         if schemes.iter().any(|scheme| (scheme == &Scheme::HTTPS) != is_tls_enabled) {
-            return Err(Error::Connection(ConnectionError::ConnectionStringInconsistentSchemes {}));
+            return Err(Self::invalid(
+                "expected all addresses to use the same scheme, as one TLS configuration applies to the whole connection",
+            ));
         }
         Ok((addresses, is_tls_enabled))
     }
@@ -213,9 +217,9 @@ fn parse_address(address: &str, default_port: u16) -> Result<(Address, Scheme)> 
     let scheme = match uri.scheme() {
         Some(scheme) if scheme == &Scheme::HTTP || scheme == &Scheme::HTTPS => scheme.clone(),
         _ => {
-            return Err(Error::Connection(ConnectionError::ConnectionStringAddressInvalidScheme {
-                address: address.to_owned(),
-            }));
+            return Err(ConnectionString::invalid(format!(
+                "expected address '{address}' to specify either the 'http://' or the 'https://' scheme"
+            )));
         }
     };
 

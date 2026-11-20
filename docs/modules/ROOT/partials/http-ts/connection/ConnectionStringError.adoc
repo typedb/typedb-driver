@@ -4,7 +4,7 @@
 
 `class`
 
-Thrown when a connection string cannot be parsed. ``kind`` distinguishes the grammar violations.
+Thrown when a connection string cannot be parsed.
 
 [caption=""]
 .Fields
@@ -13,7 +13,6 @@ Thrown when a connection string cannot be parsed. ``kind`` distinguishes the gra
 [options="header"]
 |===
 |Name |Type |Description
-a| `kind` a| `ConnectionStringErrorKind` a| 
 a| `message` a| `string` a| 
 a| `name` a| `string` a| 
 a| `stack` a| `string` a| 
@@ -22,12 +21,12 @@ a| `stackTraceLimit` a| `number` a| The Error.stackTraceLimit property specifies
 // end::properties[]
 
 // tag::methods[]
-[#_ConnectionStringError_ConnectionStringError_kind_ConnectionStringErrorKind_message_string]
+[#_ConnectionStringError_ConnectionStringError_message_string]
 ==== method ``ConnectionStringError``
 
 [source,typescript]
 ----
-new ConnectionStringError( kind: ConnectionStringErrorKind, message: string, ): ConnectionStringError
+new ConnectionStringError( message: string, ): ConnectionStringError
 ----
 
 
@@ -38,7 +37,6 @@ new ConnectionStringError( kind: ConnectionStringErrorKind, message: string, ): 
 [options="header"]
 |===
 |Name |Description |Type
-a| `kind` a|  a| `ConnectionStringErrorKind`
 a| `message` a|  a| `string`
 |===
 

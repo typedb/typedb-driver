@@ -204,12 +204,6 @@ error_messages! { ConnectionError
         40: "The server is temporarily unable to serve the request: {error}",
     InvalidConnectionString { reason: String } =
         41: "Invalid connection string: {reason}. Expected the format 'typedb://<username>:<password>@<addresses>'.",
-    ConnectionStringInconsistentSchemes =
-        42: "Invalid connection string: all addresses must use the same scheme, as one TLS configuration applies to the whole connection.",
-    ConnectionStringInconsistentAddressTranslation =
-        43: "Invalid connection string: either all addresses or none must be 'public;private' translation pairs.",
-    ConnectionStringAddressInvalidScheme { address: String } =
-        44: "Invalid connection string: address '{address}' must specify either the 'http://' or the 'https://' scheme.",
 }
 
 impl ConnectionError {

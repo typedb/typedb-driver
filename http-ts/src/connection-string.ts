@@ -32,15 +32,9 @@ const SCHEME_REGEX = /^([a-z][a-z0-9+.-]*):\/\/(.*)$/i;
 /** A bracketed IPv6 literal or a colon-free host, with an optional port. */
 const AUTHORITY_REGEX = /^(\[[^\]]*\]|[^:\[\]]+)(?::(\d+))?$/;
 
-export type ConnectionStringErrorKind =
-    | "invalid"
-    | "address_invalid_scheme"
-    | "inconsistent_schemes"
-    | "inconsistent_address_translation";
-
-/** Thrown when a connection string cannot be parsed. `kind` distinguishes the grammar violations. */
+/** Thrown when a connection string cannot be parsed. */
 export class ConnectionStringError extends Error {
-    constructor(readonly kind: ConnectionStringErrorKind, message: string) {
+    constructor(message: string) {
         super(message);
         this.name = "ConnectionStringError";
     }
@@ -48,7 +42,6 @@ export class ConnectionStringError extends Error {
 
 function invalid(reason: string): ConnectionStringError {
     return new ConnectionStringError(
-        "invalid",
         `Invalid connection string: ${reason}. Expected the format 'typedb://<username>:<password>@<addresses>'.`
     );
 }
@@ -122,10 +115,7 @@ function parseAddresses(addresses: string, defaultPort: number): { addresses: st
     const entries = addresses.split(",");
     const translatedCount = entries.filter(entry => entry.includes(ADDRESS_TRANSLATION_SEPARATOR)).length;
     if (translatedCount !== 0 && translatedCount !== entries.length) {
-        throw new ConnectionStringError(
-            "inconsistent_address_translation",
-            "Invalid connection string: either all addresses or none must be 'public;private' translation pairs."
-        );
+        throw invalid("expected either all addresses or none to be 'public;private' translation pairs");
     }
 
     const schemes: string[] = [];
@@ -145,10 +135,7 @@ function parseAddresses(addresses: string, defaultPort: number): { addresses: st
     }
 
     if (schemes.some(scheme => scheme !== schemes[0])) {
-        throw new ConnectionStringError(
-            "inconsistent_schemes",
-            "Invalid connection string: all addresses must use the same scheme, as one TLS configuration applies to the whole connection."
-        );
+        throw invalid("expected all addresses to use the same scheme, as one TLS configuration applies to the whole connection");
     }
     return result;
 }
@@ -162,10 +149,7 @@ function parseAddress(address: string, defaultPort: number, schemes: string[]): 
     const schemeMatch = SCHEME_REGEX.exec(address);
     const scheme = schemeMatch?.[1].toLowerCase();
     if (scheme !== "http" && scheme !== "https") {
-        throw new ConnectionStringError(
-            "address_invalid_scheme",
-            `Invalid connection string: address '${address}' must specify either the 'http://' or the 'https://' scheme.`
-        );
+        throw invalid(`expected address '${address}' to specify either the 'http://' or the 'https://' scheme`);
     }
     schemes.push(scheme);
 
