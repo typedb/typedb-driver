@@ -95,22 +95,14 @@ namespace TypeDB.Driver.Test.Behaviour
 
         public abstract IDriver CreateTypeDBDriver(string address);
 
-        /// <summary>The HTTP endpoint's default port, which a connection string written for the HTTP driver names.</summary>
-        protected const string OtherProtocolDefaultPort = "8000";
-
         /// <summary>
         /// A connection string for the given addresses with admin credentials, using the scheme that agrees
-        /// with the current driver options' TLS setting. Each port is replaced by <paramref name="port"/> if given.
+        /// with the current driver options' TLS setting.
         /// </summary>
-        protected string ConnectionString(IEnumerable<string> addresses, string? port = null)
+        protected string ConnectionString(IEnumerable<string> addresses)
         {
             string scheme = DriverOptions.TlsConfig.IsEnabled ? "https" : "http";
-            var withScheme = addresses.Select(address =>
-            {
-                int separator = address.LastIndexOf(':');
-                string host = address.Substring(0, separator);
-                return $"{scheme}://{host}:{port ?? address.Substring(separator + 1)}";
-            });
+            var withScheme = addresses.Select(address => $"{scheme}://{address}");
             return $"typedb://{AdminUsername}:{AdminPassword}@{string.Join(",", withScheme)}";
         }
 
@@ -132,18 +124,6 @@ namespace TypeDB.Driver.Test.Behaviour
         {
             var exception = Assert.ThrowsAny<Exception>(() => CreateTypeDBDriverFromConnectionString(connectionString));
             Assert.Contains(expectedMessage, exception.Message);
-        }
-
-        [When(@"connection opens with a connection string for a wrong port; fails")]
-        public void ConnectionOpensWithAConnectionStringForAWrongPortFails()
-        {
-            Assert.ThrowsAny<Exception>(() => CreateTypeDBDriverFromConnectionString(ConnectionString(DefaultAddresses, "0")));
-        }
-
-        [When(@"connection opens with a connection string for the other protocol default port")]
-        public void ConnectionOpensWithAConnectionStringForTheOtherProtocolDefaultPort()
-        {
-            Driver = CreateTypeDBDriverFromConnectionString(ConnectionString(DefaultAddresses, OtherProtocolDefaultPort));
         }
 
         public abstract void TypeDBStarts();

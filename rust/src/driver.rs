@@ -18,7 +18,7 @@
  */
 use std::{collections::HashSet, fmt, sync::Arc};
 
-use tracing::{debug, error, warn};
+use tracing::{debug, error};
 
 use crate::{
     Credentials, DatabaseManager, DriverOptions, DriverTlsConfig, Transaction, TransactionOptions, TransactionType,
@@ -31,7 +31,6 @@ use crate::{
             server_routing::ServerRouting, server_version::ServerVersion,
         },
     },
-    error::ConnectionError,
 };
 
 /// A connection to a TypeDB server which serves as the starting point for all interaction.
@@ -140,10 +139,7 @@ impl TypeDBDriver {
     /// otherwise, TLS is configured from the scheme alone, using the system's native trust roots.
     /// Pass `driver_options` to override any other default, such as the request timeout.
     ///
-    /// The addresses are connected to as written, with port 1729 assumed where none is given. If
-    /// an address carries the HTTP endpoint's default port 8000 and answers with HTTP rather than
-    /// gRPC, the driver retries on port 1729 and logs a warning, so a connection string copied
-    /// from TypeDB Studio works unchanged.
+    /// The addresses are connected to as written, with port 1729 assumed where none is given.
     ///
     /// # Arguments
     ///
@@ -195,41 +191,8 @@ impl TypeDBDriver {
                 false => DriverTlsConfig::disabled(),
             })
         });
-        let driver_lang = driver_lang.as_ref();
-        let error = match Self::new_with_description(
-            connection_string.addresses().clone(),
-            credentials.clone(),
-            driver_options.clone(),
-            driver_lang,
-        )
-        .await
-        {
-            Ok(driver) => return Ok(driver),
-            Err(error) => error,
-        };
-
-        // Only an HTTP answer to a gRPC request justifies a retry: it is what the HTTP endpoint
-        // does, and a connection string written for it names the same server. Any other failure,
-        // such as a refused connection or bad credentials, is reported as it happened.
-        let Some(fallback_addresses) = connection_string.fallback_addresses().filter(|_| error.is_http_response())
-        else {
-            return Err(error);
-        };
-        debug!("Connection string addresses answered with HTTP; retrying at {:?}", fallback_addresses);
-        match Self::new_with_description(fallback_addresses.clone(), credentials, driver_options, driver_lang).await {
-            Ok(driver) => {
-                warn!(
-                    "Using gRPC port 1729 instead of the provided HTTP port 8000. To avoid seeing this warning again, update the provided connection string, setting its port to 1729."
-                );
-                Ok(driver)
-            }
-            Err(fallback_error) => Err(ConnectionError::ConnectionStringFallbackFailed {
-                addresses: connection_string.addresses().to_string(),
-                fallback_addresses: fallback_addresses.to_string(),
-                error: fallback_error.to_string(),
-            }
-            .into()),
-        }
+        Self::new_with_description(connection_string.addresses().clone(), credentials, driver_options, driver_lang)
+            .await
     }
 
     /// Checks it this connection is opened.

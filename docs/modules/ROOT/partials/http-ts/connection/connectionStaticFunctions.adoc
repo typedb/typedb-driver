@@ -28,29 +28,6 @@ a| `params` a|  a| `DriverParams`
 .Returns
 `string[]`
 
-[#_fallbackParams_fallbackParams_params_DriverParams]
-==== method ``fallbackParams``
-
-[source,typescript]
-----
-fallbackParams(params: DriverParams): DriverParams
-----
-
-The parameters with every occurrence of the gRPC endpoint's default port replaced by ``CONNECTION_STRING_DEFAULT_PORT``, or ``undefined`` if no address carries it. A connection string written for the gRPC endpoint names the same server as the HTTP endpoint, so a driver whose connection to the written port is not answered by TypeDB's HTTP API retries here.
-
-[caption=""]
-.Input parameters
-[cols=",,"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `params` a|  a| `DriverParams`
-|===
-
-[caption=""]
-.Returns
-`DriverParams`
-
 [#_hostPortFromOrigin_hostPortFromOrigin_origin_string]
 ==== method ``hostPortFromOrigin``
 

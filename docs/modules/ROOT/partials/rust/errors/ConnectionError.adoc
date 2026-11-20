@@ -17,7 +17,6 @@ a| `BrokenPipe`
 a| `ClusterServerNotPrimary`
 a| `ConnectionRefusedNetworking`
 a| `ConnectionStringAddressInvalidScheme`
-a| `ConnectionStringFallbackFailed`
 a| `ConnectionStringInconsistentAddressTranslation`
 a| `ConnectionStringInconsistentSchemes`
 a| `DatabaseExportChannelIsClosed`

@@ -114,9 +114,6 @@ async fn connection_opens_with_a_wrong_host(context: &mut Context, may_error: pa
     });
 }
 
-/// The HTTP endpoint's default port, which a connection string written for the HTTP driver names.
-const OTHER_PROTOCOL_DEFAULT_PORT: &str = "8000";
-
 async fn connection_opens_with_connection_string(
     context: &mut Context,
     connection_string: &str,
@@ -133,7 +130,7 @@ async fn connection_opens_with_a_connection_string_for_the_default_address(
     context: &mut Context,
     may_error: params::MayError,
 ) {
-    let connection_string = context.default_connection_string(None).unwrap();
+    let connection_string = context.default_connection_string().unwrap();
     connection_opens_with_connection_string(context, &connection_string, may_error).await
 }
 
@@ -144,26 +141,6 @@ async fn connection_opens_with_connection_string_literal(
     connection_string: String,
     may_error: params::MayError,
 ) {
-    connection_opens_with_connection_string(context, &connection_string, may_error).await
-}
-
-#[apply(generic_step)]
-#[step(expr = "connection opens with a connection string for a wrong port{may_error}")]
-async fn connection_opens_with_a_connection_string_for_a_wrong_port(
-    context: &mut Context,
-    may_error: params::MayError,
-) {
-    let connection_string = context.default_connection_string(Some("0")).unwrap();
-    connection_opens_with_connection_string(context, &connection_string, may_error).await
-}
-
-#[apply(generic_step)]
-#[step(expr = "connection opens with a connection string for the other protocol default port{may_error}")]
-async fn connection_opens_with_a_connection_string_for_the_other_protocol_default_port(
-    context: &mut Context,
-    may_error: params::MayError,
-) {
-    let connection_string = context.default_connection_string(Some(OTHER_PROTOCOL_DEFAULT_PORT)).unwrap();
     connection_opens_with_connection_string(context, &connection_string, may_error).await
 }
 

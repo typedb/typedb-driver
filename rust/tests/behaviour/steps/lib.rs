@@ -528,20 +528,14 @@ impl Context {
         Ok(self.driver_options().unwrap_or_default().tls_config(tls_config))
     }
 
-    /// A connection string for this mode's default addresses, with each port replaced by `port` if given.
-    pub fn default_connection_string(&self, port: Option<&str>) -> TypeDBResult<String> {
+    /// A connection string for this mode's default addresses.
+    pub fn default_connection_string(&self) -> TypeDBResult<String> {
         let scheme = if self.driver_options_for_mode()?.tls_config.is_enabled() { "https" } else { "http" };
         let addresses: Vec<&str> = match self.is_cluster {
             false => vec![Self::DEFAULT_ADDRESS],
             true => Self::DEFAULT_CLUSTER_ADDRESSES.to_vec(),
         };
-        let addresses: Vec<String> = addresses
-            .into_iter()
-            .map(|address| {
-                let (host, default_port) = address.rsplit_once(':').expect("Expected host:port");
-                format!("{scheme}://{host}:{}", port.unwrap_or(default_port))
-            })
-            .collect();
+        let addresses: Vec<String> = addresses.into_iter().map(|address| format!("{scheme}://{address}")).collect();
         Ok(format!("typedb://{}:{}@{}", Self::ADMIN_USERNAME, Self::ADMIN_PASSWORD, addresses.join(",")))
     }
 

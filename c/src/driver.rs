@@ -119,10 +119,7 @@ pub extern "C" fn driver_new_with_address_translation(
 /// must agree with that scheme; otherwise, TLS is configured from the scheme alone, using the
 /// system's native trust roots.
 ///
-/// The addresses are connected to as written, with port 1729 assumed where none is given. If an
-/// address carries the HTTP endpoint's default port 8000 and answers with HTTP rather than gRPC,
-/// the driver retries on port 1729 and logs a warning, so a connection string copied from TypeDB
-/// Studio works unchanged.
+/// The addresses are connected to as written, with port 1729 assumed where none is given.
 ///
 /// @param connection_string The connection string holding the addresses and credentials to connect with
 /// @param driver_options The <code>DriverOptions</code> to connect with.

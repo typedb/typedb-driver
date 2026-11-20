@@ -6,8 +6,7 @@
     "in step. Any change to the grammar belongs here first.",
     "Addresses are written as authority only, since the scheme is captured by 'tls'. The literal '{port}' stands",
     "for the implementation's default port: 1729 for the Rust core and the drivers built on it, 8000 for the HTTP",
-    "driver. Explicit ports are always kept by the parser: falling back to the default port when an address",
-    "answers with the other protocol is the connecting driver's job, not the parser's."
+    "driver. Explicit ports are always kept by the parser."
   ],
   "vectors": [
     {
@@ -133,7 +132,7 @@
       }
     },
     {
-      "name": "other protocol's default port is kept by the parser",
+      "name": "explicit port is kept even when it is not the default",
       "connection_string": "typedb://admin:password@https://localhost:8000",
       "expect": {
         "username": "admin",

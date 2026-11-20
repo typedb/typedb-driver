@@ -89,10 +89,7 @@ namespace TypeDB.Driver
         /// <remarks>
         /// Whether the connection uses TLS is determined by the addresses' <c>http://</c> or
         /// <c>https://</c> scheme, using the system's native trust roots.
-        /// The addresses are connected to as written, with port 1729 assumed where none is given. If
-        /// an address carries the HTTP endpoint's default port 8000 and answers with HTTP rather than
-        /// gRPC, the driver retries on port 1729 and logs a warning, so a connection string copied
-        /// from TypeDB Studio works unchanged.
+        /// The addresses are connected to as written, with port 1729 assumed where none is given.
         /// </remarks>
         /// <param name="connectionString">The connection string holding the addresses and credentials to connect with.</param>
         /// <example>

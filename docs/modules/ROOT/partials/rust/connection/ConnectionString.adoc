@@ -37,23 +37,6 @@ Retrieves the addresses to connect to.
 &Addresses
 ----
 
-[#_struct_ConnectionString_fallback_addresses_]
-==== fallback_addresses
-
-[source,rust]
-----
-pub fn fallback_addresses(&self) -> Option<Addresses>
-----
-
-The addresses with every occurrence of the HTTP endpoint’s default port replaced by ``DEFAULT_PORT``, or ``None`` if no address carries it. A connection string produced for the HTTP endpoint, as by TypeDB Studio, names the same server as the gRPC endpoint, so a driver whose connection to the written port is answered with HTTP rather than gRPC retries here.
-
-[caption=""]
-.Returns
-[source,rust]
-----
-Option<Addresses>
-----
-
 [#_struct_ConnectionString_is_tls_enabled_]
 ==== is_tls_enabled
 

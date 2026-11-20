@@ -24,9 +24,6 @@ const CONNECTION_STRING_SCHEME = "typedb://";
 /** The port assumed for addresses that do not specify one. */
 export const CONNECTION_STRING_DEFAULT_PORT = 8000;
 
-/** The gRPC endpoint's default port, which a connection string written for a gRPC driver carries. See `fallbackParams`. */
-export const GRPC_DEFAULT_PORT = 1729;
-
 
 /** Separates the public and private halves of a translated address pair. */
 const ADDRESS_TRANSLATION_SEPARATOR = ";";
@@ -75,32 +72,6 @@ export function parseConnectionString(connectionString: string): DriverParams {
     const [credentials, rest] = splitCredentials(remainder);
     const { username, password } = parseCredentials(credentials);
     return { username, password, ...parseAddresses(splitAddresses(rest), CONNECTION_STRING_DEFAULT_PORT) };
-}
-
-/**
- * The parameters with every occurrence of the gRPC endpoint's default port replaced by
- * `CONNECTION_STRING_DEFAULT_PORT`, or `undefined` if no address carries it. A connection string
- * written for the gRPC endpoint names the same server as the HTTP endpoint, so a driver whose
- * connection to the written port is not answered by TypeDB's HTTP API retries here.
- */
-export function fallbackParams(params: DriverParams): DriverParams | undefined {
-    const replace = (address: string): string | undefined => {
-        const match = /^(https?:\/\/(?:\[[^\]]*\]|[^:\[\]]+)):(\d+)$/.exec(address);
-        return match && Number(match[2]) === GRPC_DEFAULT_PORT ? `${match[1]}:${CONNECTION_STRING_DEFAULT_PORT}` : undefined;
-    };
-    if ("addresses" in params) {
-        if (!params.addresses.some(address => replace(address) != null)) return undefined;
-        return { ...params, addresses: params.addresses.map(address => replace(address) ?? address) };
-    } else {
-        if (!params.translatedAddresses.some(ta => replace(ta.external) != null || replace(ta.internal) != null)) return undefined;
-        return {
-            ...params,
-            translatedAddresses: params.translatedAddresses.map(ta => ({
-                external: replace(ta.external) ?? ta.external,
-                internal: replace(ta.internal) ?? ta.internal,
-            })),
-        };
-    }
 }
 
 /**

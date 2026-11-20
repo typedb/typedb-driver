@@ -96,10 +96,7 @@ public class TypeDB {
      * <p>Whether the connection uses TLS is determined by the addresses' <code>http://</code> or
      * <code>https://</code> scheme, using the system's native trust roots.
      *
-     * <p>The addresses are connected to as written, with port 1729 assumed where none is given. If
-     * an address carries the HTTP endpoint's default port 8000 and answers with HTTP rather than
-     * gRPC, the driver retries on port 1729 and logs a warning, so a connection string copied from
-     * TypeDB Studio works unchanged.
+     * <p>The addresses are connected to as written, with port 1729 assumed where none is given.
      *
      * <h3>Examples</h3>
      * <pre>

@@ -198,14 +198,10 @@ export async function openAndTestConnectionWithAddresses(username: string, passw
     return healthCheck;
 }
 
-/** The gRPC endpoint's default port, which a connection string written for a gRPC driver names. */
-export const OTHER_PROTOCOL_DEFAULT_PORT = 1729;
-
-/** A connection string for this mode's default addresses with admin credentials, each port replaced by `port` if given. */
-export function defaultConnectionString(port?: number): string {
+/** A connection string for this mode's default addresses with admin credentials. */
+export function defaultConnectionString(): string {
     const addresses = isClusterMode ? CLUSTER_ADDRESSES : [`${DEFAULT_HOST}:${DEFAULT_PORT}`];
-    const withPort = addresses.map(address => port === undefined ? address : address.replace(/:\d+$/, `:${port}`));
-    return `typedb://${DEFAULT_USERNAME}:${DEFAULT_PASSWORD}@${withPort.join(",")}`;
+    return `typedb://${DEFAULT_USERNAME}:${DEFAULT_PASSWORD}@${addresses.join(",")}`;
 }
 
 export async function openAndTestConnectionWithConnectionString(connectionString: string) {

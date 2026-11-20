@@ -25,9 +25,6 @@ from typedb.api.connection.server_routing import ServerRouting
 from typedb.api.server.replication_role import ReplicationRole
 from typedb.driver import TypeDB
 
-# The HTTP endpoint's default port, which a connection string written for the HTTP driver names.
-OTHER_PROTOCOL_DEFAULT_PORT = "8000"
-
 
 def get_server_version(context: Context):
     if context.operation_server_routing:
@@ -100,14 +97,14 @@ def step_impl(context: Context, may_error: MayError):
     may_error.check(lambda: context.setup_context_driver_fn(address=address))
 
 
-def default_connection_string(context: Context, port: str = None) -> str:
+def default_connection_string(context: Context) -> str:
     """A connection string for this mode's default addresses with admin credentials, using the scheme
-    that agrees with the context's TLS setting. Each port is replaced by `port` if given."""
+    that agrees with the context's TLS setting."""
     scheme = "https" if context.driver_options.tls_config.is_enabled else "http"
     addresses = context.default_address
     if isinstance(addresses, str):
         addresses = [addresses]
-    addresses = [f"{scheme}://{replace_port(address, port) if port else address}" for address in addresses]
+    addresses = [f"{scheme}://{address}" for address in addresses]
     return f"typedb://{context.DEFAULT_USERNAME}:{context.DEFAULT_PASSWORD}@{','.join(addresses)}"
 
 
@@ -123,17 +120,6 @@ def step_impl(context: Context, may_error: MayError):
 @step(u'connection opens with connection string: "{connection_string:NonSemicolon}"{may_error:MayError}')
 def step_impl(context: Context, connection_string: str, may_error: MayError):
     may_error.check(lambda: setup_context_driver_from_connection_string(context, connection_string))
-
-
-@step(u'connection opens with a connection string for a wrong port{may_error:MayError}')
-def step_impl(context: Context, may_error: MayError):
-    may_error.check(lambda: setup_context_driver_from_connection_string(context, default_connection_string(context, "0")))
-
-
-@step(u'connection opens with a connection string for the other protocol default port{may_error:MayError}')
-def step_impl(context: Context, may_error: MayError):
-    may_error.check(lambda: setup_context_driver_from_connection_string(
-        context, default_connection_string(context, OTHER_PROTOCOL_DEFAULT_PORT)))
 
 
 @step(

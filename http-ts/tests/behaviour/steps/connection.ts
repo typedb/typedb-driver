@@ -23,7 +23,7 @@ import {
     closeConnection, DEFAULT_HOST,
     DEFAULT_PASSWORD, DEFAULT_PORT,
     DEFAULT_USERNAME, defaultConnectionString,
-    driver, OTHER_PROTOCOL_DEFAULT_PORT,
+    driver,
     openAndTestConnection, openAndTestConnectionWithAddresses,
     openAndTestConnectionWithConnectionString,
     openAndTestConnectionWithHostPort, openAndTestSingleConnection
@@ -63,12 +63,6 @@ When("connection opens with connection string: {string}{may_error}", async (conn
 });
 When(`connection opens with connection string: {string}${EXPECT_ERROR_CONTAINING}`, async (connectionString: string, message: string) => {
     await openAndTestConnectionWithConnectionString(connectionString).then(checkMayError(message));
-});
-When("connection opens with a connection string for a wrong port{may_error}", async (mayError: MayError) => {
-    await openAndTestConnectionWithConnectionString(defaultConnectionString(0)).then(checkMayError(mayError));
-});
-When("connection opens with a connection string for the other protocol default port{may_error}", async (mayError: MayError) => {
-    await openAndTestConnectionWithConnectionString(defaultConnectionString(OTHER_PROTOCOL_DEFAULT_PORT)).then(checkMayError(mayError));
 });
 
 Then("connection has {int} user(s)", async (expectedUserCount: number) => {

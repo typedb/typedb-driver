@@ -145,32 +145,6 @@ fn with_default_port(address: &str) -> String {
     address.replace("{port}", DEFAULT_PORT)
 }
 
-#[test]
-fn fallback_addresses_replace_only_the_http_default_port() {
-    let parsed = "typedb://admin:password@https://node-1:8000,https://node-2:1730,https://node-3"
-        .parse::<ConnectionString>()
-        .expect("Expected a successful parse");
-    let fallback = parsed.fallback_addresses().expect("Expected a fallback, since an address carries port 8000");
-    let Addresses::Direct(addresses) = fallback else { panic!("Expected direct addresses") };
-    let addresses: Vec<String> = addresses.iter().map(|address| address.to_string()).collect();
-    assert_eq!(addresses, vec!["node-1:1729", "node-2:1730", "node-3:1729"]);
-
-    let parsed = "typedb://admin:password@https://typedb-cloud.ext:8000;https://127.0.0.1:8000"
-        .parse::<ConnectionString>()
-        .expect("Expected a successful parse");
-    let Some(Addresses::Translated(translation)) = parsed.fallback_addresses() else {
-        panic!("Expected a translated fallback")
-    };
-    let translation: Vec<(String, String)> =
-        translation.iter().map(|(public, private)| (public.to_string(), private.to_string())).collect();
-    assert_eq!(translation, vec![("typedb-cloud.ext:1729".to_owned(), "127.0.0.1:1729".to_owned())]);
-
-    let parsed = "typedb://admin:password@https://node-1:1729,https://node-2"
-        .parse::<ConnectionString>()
-        .expect("Expected a successful parse");
-    assert!(parsed.fallback_addresses().is_none(), "Expected no fallback when no address carries port 8000");
-}
-
 /// The password must not reach a log, so it must not be in the `Debug` output either.
 #[test]
 fn debug_output_omits_the_password() {

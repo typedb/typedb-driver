@@ -34,7 +34,6 @@ static_function_mapping = {
     "resolveOrigin": "connection",
     "allOrigins": "connection",
     "parseConnectionString": "connection",
-    "fallbackParams": "connection",
 }
 
 class_nesting_prefixes = [

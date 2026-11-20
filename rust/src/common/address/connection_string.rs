@@ -35,10 +35,6 @@ const CONNECTION_STRING_SCHEME: &str = "typedb://";
 /// The port assumed for addresses that do not specify one.
 pub const DEFAULT_PORT: u16 = 1729;
 
-/// The HTTP endpoint's default port, which producers such as TypeDB Studio write into connection
-/// strings. See [`ConnectionString::fallback_addresses`].
-pub const HTTP_DEFAULT_PORT: u16 = 8000;
-
 /// Separates the public and private halves of a translated address pair.
 const ADDRESS_TRANSLATION_SEPARATOR: char = ';';
 
@@ -86,44 +82,6 @@ impl ConnectionString {
     /// Retrieves whether the addresses' scheme requires TLS.
     pub fn is_tls_enabled(&self) -> bool {
         self.is_tls_enabled
-    }
-
-    /// The addresses with every occurrence of the HTTP endpoint's default port replaced by
-    /// `DEFAULT_PORT`, or `None` if no address carries it. A connection string produced for the
-    /// HTTP endpoint, as by TypeDB Studio, names the same server as the gRPC endpoint, so a driver
-    /// whose connection to the written port is answered with HTTP rather than gRPC retries here.
-    pub fn fallback_addresses(&self) -> Option<Addresses> {
-        let replace = |address: &Address| match address.port() {
-            Some(HTTP_DEFAULT_PORT) => Some(address.with_port(DEFAULT_PORT)),
-            _ => None,
-        };
-        match &self.addresses {
-            Addresses::Direct(addresses) => {
-                if !addresses.iter().any(|address| replace(address).is_some()) {
-                    return None;
-                }
-                Some(Addresses::from_addresses(
-                    addresses.iter().map(|address| replace(address).unwrap_or_else(|| address.clone())),
-                ))
-            }
-            Addresses::Translated(translation) => {
-                if !translation.iter().any(|(public, private)| replace(public).is_some() || replace(private).is_some())
-                {
-                    return None;
-                }
-                Some(Addresses::from_translation(
-                    translation
-                        .iter()
-                        .map(|(public, private)| {
-                            (
-                                replace(public).unwrap_or_else(|| public.clone()),
-                                replace(private).unwrap_or_else(|| private.clone()),
-                            )
-                        })
-                        .collect(),
-                ))
-            }
-        }
     }
 
     fn parse_with_default_port(value: &str, default_port: u16) -> Result<Self> {
