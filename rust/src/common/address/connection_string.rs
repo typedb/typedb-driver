@@ -19,7 +19,7 @@
 
 use std::{collections::HashMap, fmt, str::FromStr};
 
-use http::{Uri, uri::Scheme};
+use http::Uri;
 
 use crate::{
     common::{
@@ -29,14 +29,10 @@ use crate::{
     error::ConnectionError,
 };
 
-/// The URI scheme that identifies a TypeDB connection string.
 const CONNECTION_STRING_SCHEME: &str = "typedb://";
 
 /// The port assumed for addresses that do not specify one.
 pub const DEFAULT_PORT: u16 = 1729;
-
-/// Separates the public and private halves of a translated address pair.
-const ADDRESS_TRANSLATION_SEPARATOR: char = ';';
 
 /// A parsed TypeDB connection string, bundling everything needed to open a driver into a single
 /// value: `typedb://<username>:<password>@<addresses>[/<database>][?<params>]`.
@@ -83,113 +79,53 @@ impl ConnectionString {
     pub fn is_tls_enabled(&self) -> bool {
         self.is_tls_enabled
     }
-
-    fn parse_with_default_port(value: &str, default_port: u16) -> Result<Self> {
-        let Some(remainder) = value.strip_prefix(CONNECTION_STRING_SCHEME) else {
-            return Err(Self::invalid(format!(
-                "expected the connection string to start with '{CONNECTION_STRING_SCHEME}'"
-            )));
-        };
-
-        let (credentials, remainder) = Self::split_credentials(remainder)?;
-        let (username, password) = Self::parse_credentials(credentials)?;
-        let addresses = Self::split_addresses(remainder)?;
-        let (addresses, is_tls_enabled) = Self::parse_addresses(addresses, default_port)?;
-        Ok(Self { addresses, username, password, is_tls_enabled })
-    }
-
-    /// Splits the credentials from the addresses at the last `@` preceding any query string. The
-    /// last one, because a password may itself contain an unencoded `@`.
-    fn split_credentials(remainder: &str) -> Result<(&str, &str)> {
-        let searchable = match remainder.find('?') {
-            Some(query_start) => &remainder[..query_start],
-            None => remainder,
-        };
-        let Some(separator) = searchable.rfind('@') else {
-            return Err(Self::invalid("expected credentials, separated from the addresses by '@'"));
-        };
-        Ok((&remainder[..separator], &remainder[separator + 1..]))
-    }
-
-    fn parse_credentials(credentials: &str) -> Result<(String, String)> {
-        let Some((username, password)) = credentials.split_once(':') else {
-            return Err(Self::invalid("expected a username and a password, separated by ':'"));
-        };
-        if username.is_empty() {
-            return Err(Self::invalid("expected a non-empty username"));
-        }
-        if password.is_empty() {
-            return Err(Self::invalid("expected a non-empty password"));
-        }
-        Ok((percent_decode(username, "username")?, percent_decode(password, "password")?))
-    }
-
-    /// Takes the addresses from the start of `remainder`, discarding the database path segment and
-    /// the query parameters that may follow them.
-    fn split_addresses(remainder: &str) -> Result<&str> {
-        // Addresses carry their own "://", so only look for the terminating '/' beyond the last one.
-        let search_start = remainder.rfind("://").map(|index| index + "://".len()).unwrap_or(0);
-        let terminator =
-            remainder[search_start..].find(['/', '?']).map(|index| index + search_start).unwrap_or(remainder.len());
-        let addresses = &remainder[..terminator];
-        if addresses.is_empty() {
-            return Err(Self::invalid("expected at least one address"));
-        }
-        Ok(addresses)
-    }
-
-    fn parse_addresses(addresses: &str, default_port: u16) -> Result<(Addresses, bool)> {
-        let entries: Vec<&str> = addresses.split(',').collect();
-        let translated_count = entries.iter().filter(|entry| entry.contains(ADDRESS_TRANSLATION_SEPARATOR)).count();
-        if translated_count != 0 && translated_count != entries.len() {
-            return Err(Self::invalid(
-                "expected either all addresses or none to be 'public;private' translation pairs",
-            ));
-        }
-
-        let mut schemes = Vec::with_capacity(entries.len());
-        let addresses = if translated_count == 0 {
-            let mut parsed = Vec::with_capacity(entries.len());
-            for entry in entries {
-                let (address, scheme) = parse_address(entry, default_port)?;
-                parsed.push(address);
-                schemes.push(scheme);
-            }
-            Addresses::from_addresses(parsed)
-        } else {
-            let mut parsed = HashMap::with_capacity(entries.len());
-            for entry in entries {
-                let Some((public, private)) = entry.split_once(ADDRESS_TRANSLATION_SEPARATOR) else {
-                    unreachable!("every entry was found to contain the translation separator")
-                };
-                let (public, public_scheme) = parse_address(public, default_port)?;
-                let (private, private_scheme) = parse_address(private, default_port)?;
-                parsed.insert(public, private);
-                schemes.push(public_scheme);
-                schemes.push(private_scheme);
-            }
-            Addresses::from_translation(parsed)
-        };
-
-        let is_tls_enabled = schemes[0] == Scheme::HTTPS;
-        if schemes.iter().any(|scheme| (scheme == &Scheme::HTTPS) != is_tls_enabled) {
-            return Err(Self::invalid(
-                "expected all addresses to use the same scheme, as one TLS configuration applies to the whole connection",
-            ));
-        }
-        Ok((addresses, is_tls_enabled))
-    }
-
-    fn invalid(reason: impl Into<String>) -> Error {
-        Error::Connection(ConnectionError::InvalidConnectionString { reason: reason.into() })
-    }
 }
 
 impl FromStr for ConnectionString {
     type Err = Error;
 
     fn from_str(value: &str) -> Result<Self> {
-        Self::parse_with_default_port(value, DEFAULT_PORT)
+        let rest = value
+            .strip_prefix(CONNECTION_STRING_SCHEME)
+            .ok_or_else(|| invalid(format!("expected it to start with '{CONNECTION_STRING_SCHEME}'")))?;
+        let rest = rest.split_once('?').map_or(rest, |(rest, _query)| rest);
+        // A password may contain an unencoded '@', so the last one separates the addresses.
+        let (credentials, addresses) = rest
+            .rsplit_once('@')
+            .ok_or_else(|| invalid("expected credentials, separated from the addresses by '@'"))?;
+        let (username, password) = credentials
+            .split_once(':')
+            .filter(|(username, password)| !username.is_empty() && !password.is_empty())
+            .ok_or_else(|| invalid("expected a non-empty username and password, separated by ':'"))?;
+
+        let mut tls = Vec::new();
+        let mut parse = |address: &str| {
+            let (address, is_tls_enabled) = parse_address(address)?;
+            tls.push(is_tls_enabled);
+            Ok(address)
+        };
+        let pairs: Vec<_> = addresses.split(',').map(|entry| entry.split_once(';')).collect();
+        let addresses = if pairs.iter().all(Option::is_none) {
+            Addresses::from_addresses(addresses.split(',').map(&mut parse).collect::<Result<Vec<_>>>()?)
+        } else if let Some(pairs) = pairs.into_iter().collect::<Option<Vec<_>>>() {
+            let translation = pairs.into_iter().map(|(public, private)| Ok((parse(public)?, parse(private)?)));
+            Addresses::from_translation(translation.collect::<Result<HashMap<_, _>>>()?)
+        } else {
+            return Err(invalid("expected either all addresses or none to be 'public;private' translation pairs"));
+        };
+
+        let is_tls_enabled = tls[0];
+        if tls.iter().any(|is_tls_enabled| *is_tls_enabled != tls[0]) {
+            return Err(invalid(
+                "expected all addresses to use the same scheme, as one TLS configuration applies to the whole connection",
+            ));
+        }
+        Ok(Self {
+            addresses,
+            username: percent_decode(username).ok_or_else(|| invalid("expected a percent-encoded UTF-8 username"))?,
+            password: percent_decode(password).ok_or_else(|| invalid("expected a percent-encoded UTF-8 password"))?,
+            is_tls_enabled,
+        })
     }
 }
 
@@ -204,64 +140,41 @@ impl fmt::Debug for ConnectionString {
     }
 }
 
-/// Parses a single address, requiring an explicit `http://` or `https://` scheme and supplying
-/// `default_port` when the address does not specify one.
-fn parse_address(address: &str, default_port: u16) -> Result<(Address, Scheme)> {
-    if address.is_empty() {
-        return Err(ConnectionString::invalid("expected a non-empty address"));
-    }
-    let uri = address
-        .parse::<Uri>()
-        .map_err(|_| ConnectionString::invalid(format!("expected '{address}' to be a valid address")))?;
-
-    let scheme = match uri.scheme() {
-        Some(scheme) if scheme == &Scheme::HTTP || scheme == &Scheme::HTTPS => scheme.clone(),
-        _ => {
-            return Err(ConnectionString::invalid(format!(
-                "expected address '{address}' to specify either the 'http://' or the 'https://' scheme"
-            )));
-        }
+/// Parses `http[s]://host[:port]` and reports whether its scheme requires TLS. A path is discarded:
+/// the last address is followed by the database segment.
+fn parse_address(address: &str) -> Result<(Address, bool)> {
+    let malformed = || invalid(format!("expected '{address}' to be a valid address"));
+    let uri = address.parse::<Uri>().map_err(|_| malformed())?;
+    let (Some(scheme @ ("http" | "https")), Some(authority)) = (uri.scheme_str(), uri.authority()) else {
+        return Err(invalid(format!(
+            "expected address '{address}' to specify either the 'http://' or the 'https://' scheme"
+        )));
     };
-
-    if uri.port().is_some() {
-        return Ok((address.parse::<Address>()?, scheme));
-    }
-
-    let Some(host) = uri.host() else {
-        return Err(ConnectionString::invalid(format!("expected '{address}' to specify a host")));
+    let host = authority.host();
+    let port = match authority.port_u16() {
+        _ if host.is_empty() => return Err(malformed()),
+        Some(port) => port,
+        None if authority.as_str() == host => DEFAULT_PORT,
+        None => return Err(malformed()),
     };
-    // An IPv6 literal must keep the brackets that separate its colons from the port's.
-    let host = if host.contains(':') && !host.starts_with('[') { format!("[{host}]") } else { host.to_owned() };
-    Ok((format!("{scheme}://{host}:{default_port}").parse::<Address>()?, scheme))
+    Ok((format!("{scheme}://{host}:{port}").parse()?, scheme == "https"))
 }
 
-/// Decodes the percent-encoding that connection strings apply to credentials, so that a username
-/// or password may contain the string's own delimiters.
-fn percent_decode(value: &str, field: &str) -> Result<String> {
-    let bytes = value.as_bytes();
-    let mut decoded = Vec::with_capacity(bytes.len());
-    let mut index = 0;
-    while index < bytes.len() {
-        if bytes[index] == b'%' {
-            let hex = bytes
-                .get(index + 1..index + 3)
-                .and_then(|hex| std::str::from_utf8(hex).ok())
-                .and_then(|hex| u8::from_str_radix(hex, 16).ok());
-            match hex {
-                Some(byte) => {
-                    decoded.push(byte);
-                    index += 3;
-                    continue;
-                }
-                None => return Err(invalid_percent_encoding(field)),
+fn percent_decode(value: &str) -> Option<String> {
+    let mut bytes = value.bytes();
+    let mut decoded = Vec::with_capacity(value.len());
+    while let Some(byte) = bytes.next() {
+        decoded.push(match byte {
+            b'%' => {
+                let (high, low) = (char::from(bytes.next()?).to_digit(16)?, char::from(bytes.next()?).to_digit(16)?);
+                (high * 16 + low) as u8
             }
-        }
-        decoded.push(bytes[index]);
-        index += 1;
+            byte => byte,
+        });
     }
-    String::from_utf8(decoded).map_err(|_| invalid_percent_encoding(field))
+    String::from_utf8(decoded).ok()
 }
 
-fn invalid_percent_encoding(field: &str) -> Error {
-    ConnectionString::invalid(format!("expected the {field} to be valid percent-encoded UTF-8"))
+fn invalid(reason: impl Into<String>) -> Error {
+    Error::Connection(ConnectionError::InvalidConnectionString { reason: reason.into() })
 }
