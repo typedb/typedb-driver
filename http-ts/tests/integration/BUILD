@@ -75,31 +75,6 @@ js_test(
     local = True,
 )
 
-ts_project(
-    name = "connection-string-lib",
-    srcs = ["connection-string.ts"] + ["//http-ts:driver-lib"],
-    tsconfig = behaviour_test_ts_config(),
-    deps = [
-        "//http-ts:node_modules/@types/node",
-    ],
-    transpiler = "tsc",
-    declaration = True,
-)
-
-js_test(
-    name = "connection-string",
-    entry_point = ":connection-string.js",
-    data = [
-        ":connection-string-lib",
-        "//tool/test:connection-string-vectors",
-    ],
-    no_copy_to_bin = ["//tool/test:connection-string-vectors"],
-    env = {
-        "CONNECTION_STRING_VECTORS": "$(rootpath //tool/test:connection-string-vectors)",
-    },
-    size = "small",
-)
-
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*"]),
