@@ -47,7 +47,7 @@ pub type Result<T = ()> = StdResult<T, Error>;
 pub type IID = id::ID;
 pub(crate) type RequestID = id::ID;
 
-/// This enum is used to specify the type of transaction.
+/// The type of a transaction.
 ///
 /// # Examples
 ///

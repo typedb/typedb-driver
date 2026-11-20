@@ -6,7 +6,7 @@
 
 *Package*: `com.typedb.driver.api`
 
-Used to specify the type of transaction. 
+The type of a transaction. 
 
 
 [caption=""]

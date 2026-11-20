@@ -24,7 +24,7 @@ use futures::{
 };
 use macro_rules_attribute::apply;
 use tokio::time::sleep;
-use typedb_driver::{Database, TransactionType, TypeDBDriver};
+use typedb_driver::{Database, FileCompression, TransactionType, TypeDBDriver};
 use uuid::Uuid;
 
 use crate::{
@@ -32,7 +32,7 @@ use crate::{
     connection::transaction::open_transaction_for_database,
     generic_step, in_oneshot_background, params,
     query::run_query,
-    util::{iter_table, read_file_to_string},
+    util::{iter_table, read_file, read_file_to_string},
 };
 
 async fn create_database(driver: &TypeDBDriver, name: String, may_error: params::MayError) {
@@ -239,6 +239,28 @@ async fn connection_get_database_export_to_schema_file_data_file(
 }
 
 #[apply(generic_step)]
+#[step(
+    expr = r"connection get database\({word}\) export to schema file\({word}\), data file\({word}\) with compression: {file_compression}{may_error}"
+)]
+async fn connection_get_database_export_to_schema_file_data_file_with_compression(
+    context: &mut Context,
+    name: String,
+    schema_file_name: String,
+    data_file_name: String,
+    file_compression: params::FileCompression,
+    may_error: params::MayError,
+) {
+    let database = context.driver.as_ref().unwrap().databases().get(name).await.expect("Expected database");
+    let schema_file_path = context.get_full_file_path(&schema_file_name);
+    let data_file_path = context.get_full_file_path(&data_file_name);
+    may_error.check(
+        database
+            .export_to_file_with_compression(schema_file_path, data_file_path, file_compression.file_compression)
+            .await,
+    );
+}
+
+#[apply(generic_step)]
 #[step(expr = r"connection import database\({word}\) from schema file\({word}\), data file\({word}\){may_error}")]
 async fn connection_import_database_from_schema_file_data_file(
     context: &mut Context,
@@ -304,4 +326,14 @@ async fn file_has_schema(context: &mut Context, file_name: String, step: &Step) 
     };
     let file_schema_retrieved = execute_and_retrieve_schema_for_comparison(driver, file_schema).await;
     assert_eq!(expected_schema_retrieved, file_schema_retrieved);
+}
+
+#[apply(generic_step)]
+#[step(expr = r"file\({word}\) has compression: {file_compression}")]
+async fn file_has_compression(context: &mut Context, file_name: String, file_compression: params::FileCompression) {
+    const ZSTD_MAGIC_NUMBER: [u8; 4] = [0x28, 0xB5, 0x2F, 0xFD];
+    let data = read_file(context.get_full_file_path(&file_name));
+    let actual_compression =
+        if data.starts_with(&ZSTD_MAGIC_NUMBER) { FileCompression::Zstd } else { FileCompression::Uncompressed };
+    assert_eq!(file_compression.file_compression, actual_compression);
 }

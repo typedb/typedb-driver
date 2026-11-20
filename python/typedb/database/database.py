@@ -18,6 +18,7 @@
 from __future__ import annotations
 
 from typedb.api.database.database import Database
+from typedb.api.database.file_compression import FileCompression
 from typedb.common.exception import TypeDBDriverException, DATABASE_DELETED, NULL_NATIVE_OBJECT
 from typedb.common.native_wrapper import NativeWrapper
 from typedb.common.validation import require_non_null
@@ -56,11 +57,13 @@ class _Database(Database, NativeWrapper[NativeDatabase]):
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e) from None
 
-    def export_to_file(self, schema_file_path: str, data_file_path: str) -> None:
+    def export_to_file(self, schema_file_path: str, data_file_path: str,
+                       compression: FileCompression = FileCompression.UNCOMPRESSED) -> None:
         require_non_null(schema_file_path, "schema_file_path")
         require_non_null(data_file_path, "data_file_path")
+        require_non_null(compression, "compression")
         try:
-            return database_export_to_file(self.native_object, schema_file_path, data_file_path)
+            return database_export_to_file(self.native_object, schema_file_path, data_file_path, compression.value)
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e) from None
 

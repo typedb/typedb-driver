@@ -108,6 +108,8 @@ pub fn export_to_file(
 
 Export a database into a schema definition and a data files saved to the disk. This is a blocking operation and may take a significant amount of time depending on the database size.
 
+See <<#_struct_Database_method_export_to_file_with_compression,`Database::export_to_file_with_compression`>> to compress the data file.
+
 [caption=""]
 .Input parameters
 [cols=",,"]
@@ -145,6 +147,87 @@ sync::
 [source,rust]
 ----
 database.export_to_file(schema_path, data_path);
+----
+
+--
+====
+
+[#_struct_Database_export_to_file_with_compression_schema_file_path_impl_AsRef_Path_data_file_path_impl_AsRef_Path_compression_FileCompression]
+==== export_to_file_with_compression
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn export_to_file_with_compression(
+    &self,
+    schema_file_path: impl AsRef<Path>,
+    data_file_path: impl AsRef<Path>,
+    compression: FileCompression,
+) -> Result
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn export_to_file_with_compression(
+    &self,
+    schema_file_path: impl AsRef<Path>,
+    data_file_path: impl AsRef<Path>,
+    compression: FileCompression,
+) -> Result
+----
+
+--
+====
+
+Export a database into a schema definition and a compressed data file saved to the disk. A compressed data file is imported the same way as an uncompressed one. This is a blocking operation and may take a significant amount of time depending on the database size.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `schema_file_path` a|  — The path to the schema definition file to be created a| `impl AsRef<Path>`
+a| `data_file_path` a|  — The path to the data file to be created a| `impl AsRef<Path>`
+a| `compression` a|  — The compression of the data file a| `FileCompression`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+database.export_to_file_with_compression(schema_path, data_path, FileCompression::Zstd).await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+database.export_to_file_with_compression(schema_path, data_path, FileCompression::Zstd);
 ----
 
 --

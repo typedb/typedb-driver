@@ -192,8 +192,6 @@ error_messages! { ConnectionError
         32: "Didn't receive any server responses for the database export command.",
     AbsentTlsConfigForTlsConnection =
         33: "Could not establish a TLS connection without a TLS config specified. Please verify your driver options.",
-    ServerIsNotInitialised =
-        34: "Server is not yet initialized.",
     AnalyzeNoResponse =
         35: "Didn't receive any server responses for the analyze request.",
     NoPrimaryServer =
@@ -202,14 +200,16 @@ error_messages! { ConnectionError
         38: "Scheme {scheme} is not compatible with tls setting `enabled: {is_tls_enabled}`",
     RequestTimeout { timeout: String } =
         39: "Request timed out after {timeout}. The server may be unresponsive.",
+    ServerUnavailable { error: ServerError } =
+        40: "The server is temporarily unable to serve the request: {error}",
     InvalidConnectionString { reason: String } =
-        40: "Invalid connection string: {reason}. Expected the format 'typedb://<username>:<password>@<addresses>'.",
+        41: "Invalid connection string: {reason}. Expected the format 'typedb://<username>:<password>@<addresses>'.",
     ConnectionStringInconsistentSchemes =
-        41: "Invalid connection string: all addresses must use the same scheme, as one TLS configuration applies to the whole connection.",
+        42: "Invalid connection string: all addresses must use the same scheme, as one TLS configuration applies to the whole connection.",
     ConnectionStringInconsistentAddressTranslation =
-        42: "Invalid connection string: either all addresses or none must be 'public;private' translation pairs.",
+        43: "Invalid connection string: either all addresses or none must be 'public;private' translation pairs.",
     ConnectionStringAddressInvalidScheme { address: String } =
-        43: "Invalid connection string: address '{address}' must specify either the 'http://' or the 'https://' scheme.",
+        44: "Invalid connection string: address '{address}' must specify either the 'http://' or the 'https://' scheme.",
 }
 
 impl ConnectionError {
@@ -258,7 +258,9 @@ error_messages! { MigrationError
     CannotDecodeImportedConceptLength =
         5: "Cannot decode a concept length from the provided import file. Make sure to pass a correct database file produced by a TypeDB export operation.",
     CannotEncodeExportedConcept =
-        6: "Cannot encode a concept for export. It's either a version compatibility error or a bug."
+        6: "Cannot encode a concept for export. It's either a version compatibility error or a bug.",
+    CannotReadImportFile { path: String, reason: String } =
+        7: "Cannot read import file '{path}': {reason}",
 }
 
 error_messages! { InternalError
@@ -373,7 +375,6 @@ impl Error {
     fn try_extracting_connection_error_from_info(error_info: &ErrorInfo) -> Option<ConnectionError> {
         match error_info.reason.as_str() {
             "AUT1" | "AUT2" | "AUT3" => Some(ConnectionError::TokenCredentialInvalid {}),
-            "SRV14" | "RFT1" | "CSV7" => Some(ConnectionError::ServerIsNotInitialised {}),
             "CSV8" => Some(ConnectionError::ClusterServerNotPrimary { hint_address: None }),
             "CSV9" => Some(ConnectionError::ClusterServerNotPrimary {
                 hint_address: error_info.metadata.get("redirect_address").and_then(|addr| addr.parse::<Address>().ok()),
@@ -497,7 +498,11 @@ impl From<Status> for Error {
                     let domain = error_info.domain.clone();
                     let stack_trace =
                         details.debug_info().map(|debug_info| debug_info.stack_entries.clone()).unwrap_or_default();
-                    Self::Server(ServerError::new(code, domain, status.message().to_owned(), stack_trace))
+                    let error = ServerError::new(code, domain, status.message().to_owned(), stack_trace);
+                    match status.code() {
+                        Code::Unavailable => Self::Connection(ConnectionError::ServerUnavailable { error }),
+                        _ => Self::Server(error),
+                    }
                 }
             } else {
                 Self::Other(message)

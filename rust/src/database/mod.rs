@@ -17,7 +17,7 @@
  * under the License.
  */
 
-pub use self::{database::Database, database_manager::DatabaseManager};
+pub use self::{database::Database, database_manager::DatabaseManager, migration::FileCompression};
 
 mod database;
 mod database_manager;

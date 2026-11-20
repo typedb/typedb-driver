@@ -39,15 +39,15 @@ Deletes this database.
 database.delete()
 ----
 
-[#_Database_export_to_file_schema_file_path_str_data_file_path_str]
+[#_Database_export_to_file_schema_file_path_str_data_file_path_str_compression_FileCompression]
 ==== method ``export_to_file``
 
 [source,python]
 ----
-export_to_file(schema_file_path: str, data_file_path: str) -> None
+export_to_file(schema_file_path: str, data_file_path: str, compression: FileCompression = FileCompression.UNCOMPRESSED) -> None
 ----
 
-Export a database into a schema definition and a data files saved to the disk. This is a blocking operation and may take a significant amount of time depending on the database size.
+Export a database into a schema definition and a data files saved to the disk. A compressed data file is imported the same way as an uncompressed one. This is a blocking operation and may take a significant amount of time depending on the database size.
 
 [caption=""]
 .Input parameters
@@ -57,6 +57,7 @@ Export a database into a schema definition and a data files saved to the disk. T
 |Name |Description |Type |Default Value
 a| `schema_file_path` a| The path to the schema definition file to be created a| `str` a| 
 a| `data_file_path` a| The path to the data file to be created a| `str` a| 
+a| `compression` a| The compression of the data file a| `FileCompression` a| `FileCompression.UNCOMPRESSED`
 |===
 
 [caption=""]
@@ -68,6 +69,7 @@ a| `data_file_path` a| The path to the data file to be created a| `str` a|
 [source,python]
 ----
 database.export_to_file("schema.typeql", "data.typedb")
+database.export_to_file("schema.typeql", "data.typedb", FileCompression.ZSTD)
 ----
 
 [#_Database_schema_]

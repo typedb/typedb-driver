@@ -318,6 +318,9 @@ impl TryFromProto<conjunction_proto::constraint::Constraint> for Constraint {
             ConstraintProto::DeleteConcepts(constraint_proto::DeleteConcepts { variables }) => {
                 Constraint::DeleteConcepts { variables: vec_from_proto(variables)? }
             }
+            ConstraintProto::IsSet(constraint_proto::IsSet { variables }) => {
+                Constraint::IsSet { variables: vec_from_proto(variables)? }
+            }
         };
         Ok(constraint)
     }

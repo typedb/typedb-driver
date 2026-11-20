@@ -34,6 +34,12 @@ executors:
     resource_class: large
     working_directory: ~/typedb-driver
 
+  linux-arm64-ubuntu-2204:
+    docker:
+      - image: ubuntu:22.04
+    resource_class: arm.large
+    working_directory: ~/typedb-driver
+
   linux-x86_64-ubuntu-2204:
     docker:
       - image: ubuntu:22.04
@@ -666,8 +672,9 @@ jobs:
           bazel-arch: amd64
       - deploy-dotnet-snapshot-unix
 
+  # Test snapshots on a newer version of linux so we can run TypeDB with its new glibc requirement
   test-snapshot-linux-arm64:
-    executor: linux-arm64-amazonlinux-2
+    executor: linux-arm64-ubuntu-2204
     steps:
       - checkout
       - install-bazel-yum:
@@ -680,7 +687,7 @@ jobs:
       - test-dotnet-snapshot-unix
 
   test-snapshot-linux-x86_64:
-    executor: linux-x86_64-amazonlinux-2
+    executor: linux-x86_64-ubuntu-2204
     steps:
       - checkout
       - install-bazel-yum:

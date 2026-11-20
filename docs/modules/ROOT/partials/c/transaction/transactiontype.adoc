@@ -9,7 +9,7 @@
 
 
 
-This enum is used to specify the type of transaction.
+The type of a transaction.
 
 
 [#_Enum_TransactionType]
@@ -20,7 +20,7 @@ This enum is used to specify the type of transaction.
 
 
 
-This enum is used to specify the type of transaction.
+The type of a transaction.
 
 
 Read-only transaction.

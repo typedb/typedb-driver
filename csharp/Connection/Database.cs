@@ -94,13 +94,20 @@ namespace TypeDB.Driver.Connection
         /// <inheritdoc/>
         public void ExportToFile(string schemaFile, string dataFile)
         {
+            ExportToFile(schemaFile, dataFile, FileCompression.Uncompressed);
+        }
+
+        /// <inheritdoc/>
+        public void ExportToFile(string schemaFile, string dataFile, FileCompression compression)
+        {
             Validator.RequireNonNull(schemaFile, nameof(schemaFile));
             Validator.RequireNonNull(dataFile, nameof(dataFile));
             Validator.ThrowIfFalse(NativeObject.IsOwned, DriverError.DATABASE_DELETED);
 
             try
             {
-                Pinvoke.typedb_driver.database_export_to_file(NativeObject, schemaFile, dataFile);
+                Pinvoke.typedb_driver.database_export_to_file(
+                    NativeObject, schemaFile, dataFile, (Pinvoke.FileCompression)compression);
             }
             catch (Pinvoke.Error e)
             {

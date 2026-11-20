@@ -1,0 +1,85 @@
+[#_FileCompression]
+[.doc-api-reference-driver]
+=== FileCompression
+
+`class`
+
+*Package*: `com.typedb.driver.api.database`
+
+The compression of a database export data file. Zstd compression uses level 3, the zstd default, and includes a content checksum. Imports detect compressed data files automatically. 
+
+
+[caption=""]
+.Examples
+[source,java]
+----
+database.exportToFile("schema.typeql", "data.typedb", FileCompression.ZSTD);
+----
+
+[caption=""]
+.Enum constants
+// tag::enum_constants[]
+[cols=""]
+[options="header"]
+|===
+|Name
+a| `UNCOMPRESSED`
+a| `ZSTD`
+|===
+// end::enum_constants[]
+
+// tag::methods[]
+[#_FileCompression_valueOf_java_lang_String]
+==== method ``valueOf``
+
+[source,java]
+----
+public static FileCompression valueOf​(java.lang.String name)
+----
+
+Returns the enum constant of this type with the specified name. The string must match exactly an identifier used to declare an enum constant in this type. (Extraneous whitespace characters are not permitted.)
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `name` a| the name of the enum constant to be returned. a| `java.lang.String`
+|===
+
+[caption=""]
+.Returns
+`public static FileCompression`
+
+[#_FileCompression_values_]
+==== method ``values``
+
+[source,java]
+----
+public static FileCompression[] values()
+----
+
+Returns an array containing the constants of this enum type, in the order they are declared. This method may be used to iterate over the constants as follows: 
+[source,java]
+----
+for (FileCompression c : FileCompression.values())
+    System.out.println(c);
+
+----
+
+
+[caption=""]
+.Returns
+`public static FileCompression[]`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+for (FileCompression c : FileCompression.values())
+    System.out.println(c);
+----
+
+// end::methods[]
+
