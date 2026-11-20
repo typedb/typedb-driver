@@ -518,9 +518,7 @@ impl Context {
         TypeDBDriver::new(addresses, credentials, driver_options).await
     }
 
-    /// The driver options a driver opened in this mode connects with: TLS off for core, and the
-    /// cluster's root CA when one is provided.
-    fn driver_options_for_mode(&self) -> TypeDBResult<DriverOptions> {
+    fn default_driver_options(&self) -> TypeDBResult<DriverOptions> {
         let tls_config = match &self.tls_root_ca {
             Some(root_ca) if self.is_cluster && root_ca.exists() => DriverTlsConfig::enabled_with_root_ca(root_ca)?,
             _ => DriverTlsConfig::disabled(),
@@ -528,9 +526,8 @@ impl Context {
         Ok(self.driver_options().unwrap_or_default().tls_config(tls_config))
     }
 
-    /// A connection string for this mode's default addresses.
     pub fn default_connection_string(&self) -> TypeDBResult<String> {
-        let scheme = if self.driver_options_for_mode()?.tls_config.is_enabled() { "https" } else { "http" };
+        let scheme = if self.default_driver_options()?.tls_config.is_enabled() { "https" } else { "http" };
         let addresses: Vec<&str> = match self.is_cluster {
             false => vec![Self::DEFAULT_ADDRESS],
             true => Self::DEFAULT_CLUSTER_ADDRESSES.to_vec(),
@@ -540,7 +537,7 @@ impl Context {
     }
 
     pub async fn create_driver_from_connection_string(&self, connection_string: &str) -> TypeDBResult<TypeDBDriver> {
-        let driver_options = self.driver_options_for_mode()?;
+        let driver_options = self.default_driver_options()?;
         TypeDBDriver::new_from_connection_string(connection_string, Some(driver_options)).await
     }
 
