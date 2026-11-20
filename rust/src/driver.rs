@@ -189,7 +189,12 @@ impl TypeDBDriver {
     ) -> Result<Self> {
         let connection_string: ConnectionString = connection_string.as_ref().parse()?;
         let credentials = Credentials::new(connection_string.username(), connection_string.password());
-        let driver_options = Self::driver_options_for(&connection_string, driver_options)?;
+        let driver_options = driver_options.unwrap_or_else(|| {
+            DriverOptions::new(match connection_string.is_tls_enabled() {
+                true => DriverTlsConfig::enabled_with_native_root_ca(),
+                false => DriverTlsConfig::disabled(),
+            })
+        });
         let driver_lang = driver_lang.as_ref();
         let error = match Self::new_with_description(
             connection_string.addresses().clone(),
@@ -224,36 +229,6 @@ impl TypeDBDriver {
                 error: fallback_error.to_string(),
             }
             .into()),
-        }
-    }
-
-    /// Reconciles the TLS requirement expressed by a connection string's scheme with any explicitly
-    /// provided options. The scheme is authoritative: options that contradict it are an error
-    /// rather than an override, because silently connecting with the wrong one either fails
-    /// obscurely or sends the password as plaintext.
-    fn driver_options_for(
-        connection_string: &ConnectionString,
-        driver_options: Option<DriverOptions>,
-    ) -> Result<DriverOptions> {
-        let is_tls_enabled = connection_string.is_tls_enabled();
-        match driver_options {
-            Some(driver_options) => {
-                if driver_options.tls_config.is_enabled() != is_tls_enabled {
-                    return Err(ConnectionError::SchemeTlsSettingsMismatch {
-                        scheme: match is_tls_enabled {
-                            true => http::uri::Scheme::HTTPS,
-                            false => http::uri::Scheme::HTTP,
-                        },
-                        is_tls_enabled: driver_options.tls_config.is_enabled(),
-                    }
-                    .into());
-                }
-                Ok(driver_options)
-            }
-            None => Ok(DriverOptions::new(match is_tls_enabled {
-                true => DriverTlsConfig::enabled_with_native_root_ca(),
-                false => DriverTlsConfig::disabled(),
-            })),
         }
     }
 

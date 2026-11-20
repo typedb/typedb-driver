@@ -106,3 +106,6 @@ venv
 
 # Temporary paket files for C# #
 paket-files/
+
+# C# build output #
+obj/
