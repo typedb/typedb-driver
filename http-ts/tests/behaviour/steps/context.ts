@@ -153,7 +153,7 @@ export function defaultConnectionString(): string {
 export async function openAndTestConnectionWithConnectionString(connectionString: string) {
     let newDriver: TypeDBHttpDriver;
     try {
-        newDriver = await TypeDBHttpDriver.fromConnectionString(connectionString);
+        newDriver = await TypeDBHttpDriver.fromConnectionString(connectionString, TLS);
     } catch (error) {
         return driverError("HDR1", (error as Error).message);
     }

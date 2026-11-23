@@ -26,7 +26,7 @@ a| `stackTraceLimit` a| `number` a| The Error.stackTraceLimit property specifies
 
 [source,typescript]
 ----
-new ConnectionStringError( message: string, ): ConnectionStringError
+new ConnectionStringError(message: string): ConnectionStringError
 ----
 
 

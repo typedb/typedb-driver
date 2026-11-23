@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import { DriverParams, remoteOrigin, resolveOrigin, allOrigins } from "./params";
+import { DriverParams, DriverTlsConfig, remoteOrigin, resolveOrigin, allOrigins } from "./params";
 import { parseConnectionString } from "./connection-string";
 import { createFetch, Fetch, FetchInit, TlsConfigError } from "./transport";
 import {
@@ -115,10 +115,11 @@ export class TypeDBHttpDriver {
      * `typedb://<username>:<password>@<addresses>`. Whether the connection uses TLS is determined
      * by the addresses' `http://` or `https://` scheme. See `parseConnectionString`.
      *
-     * The addresses are used as written, with port 8000 assumed where none is given.
+     * The addresses are used as written, with port 8000 assumed where none is given. Pass `tls` to
+     * trust a private certificate authority.
      */
-    static async fromConnectionString(connectionString: string): Promise<TypeDBHttpDriver> {
-        return new TypeDBHttpDriver(parseConnectionString(connectionString));
+    static async fromConnectionString(connectionString: string, tls?: DriverTlsConfig): Promise<TypeDBHttpDriver> {
+        return new TypeDBHttpDriver({ ...parseConnectionString(connectionString), tls });
     }
 
     getDatabases(): Promise<ApiResponse<DatabasesListResponse>> {

@@ -192,17 +192,17 @@ a| `username` a|  a| `string`
 .Returns
 `Promise<ApiResponse>`
 
-[#_TypeDBHttpDriver_fromConnectionString_connectionString_string]
+[#_TypeDBHttpDriver_fromConnectionString_connectionString_string_tls_DriverTlsConfig]
 ==== method ``fromConnectionString``
 
 [source,typescript]
 ----
-fromConnectionString(connectionString: string): Promise<TypeDBHttpDriver>
+fromConnectionString( connectionString: string, tls?: DriverTlsConfig, ): Promise<TypeDBHttpDriver>
 ----
 
 Opens a driver using the addresses and credentials held in a connection string of the form ``typedb://&lt;username&gt;:&lt;password&gt;@&lt;addresses&gt;``. Whether the connection uses TLS is determined by the addresses' ``http://`` or ``https://`` scheme. See ``parseConnectionString``.
 
-The addresses are used as written, with port 8000 assumed where none is given.
+The addresses are used as written, with port 8000 assumed where none is given. Pass ``tls`` to trust a private certificate authority.
 
 [caption=""]
 .Input parameters
@@ -211,6 +211,7 @@ The addresses are used as written, with port 8000 assumed where none is given.
 |===
 |Name |Description |Type
 a| `connectionString` a|  a| `string`
+a| `tls` a|  a| `DriverTlsConfig`
 |===
 
 [caption=""]
