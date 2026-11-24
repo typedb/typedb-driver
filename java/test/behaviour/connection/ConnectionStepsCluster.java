@@ -102,6 +102,16 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
         ));
     }
 
+    @When("connection opens with a connection string for the default address{may_error}")
+    public void connection_opens_with_a_connection_string_for_the_default_address(Parameters.MayError mayError) {
+        mayError.check(() -> driver = createTypeDBDriverFromConnectionString(connectionString(DEFAULT_CLUSTER_ADDRESSES)));
+    }
+
+    @When("connection opens with connection string: {string}{may_error}")
+    public void connection_opens_with_connection_string(String connectionString, Parameters.MayError mayError) {
+        mayError.check(() -> driver = createTypeDBDriverFromConnectionString(connectionString));
+    }
+
     @When("connection opens with a wrong port{may_error}")
     public void connection_opens_with_a_wrong_port(Parameters.MayError mayError) {
         mayError.check(() -> driver = createTypeDBDriver(

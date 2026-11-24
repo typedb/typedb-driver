@@ -17,7 +17,8 @@
  * under the License.
  */
 
-import { DriverParams, remoteOrigin, resolveOrigin, allOrigins } from "./params";
+import { DriverParams, DriverTlsConfig, remoteOrigin, resolveOrigin, allOrigins } from "./params";
+import { parseConnectionString } from "./connection-string";
 import { createFetch, Fetch, FetchInit, TlsConfigError } from "./transport";
 import {
     AnalyzeResponse,
@@ -92,6 +93,7 @@ export * from "./analyze";
 export * from "./concept";
 export { parseJson, stringifyJson } from "./json";
 export * from "./params";
+export * from "./connection-string";
 export * from "./analyzed-conjunction";
 export * from "./response";
 
@@ -106,6 +108,18 @@ export class TypeDBHttpDriver {
     constructor(private params: DriverParams) {
         this.currentOrigin = remoteOrigin(params);
         this.fetch = createFetch(params.tls, allOrigins(params));
+    }
+
+    /**
+     * Opens a driver using the addresses and credentials held in a connection string of the form
+     * `typedb://<username>:<password>@<addresses>`. Whether the connection uses TLS is determined
+     * by the addresses' `http://` or `https://` scheme. See `parseConnectionString`.
+     *
+     * The addresses are used as written, with port 8000 assumed where none is given. Pass `tls` to
+     * trust a private certificate authority.
+     */
+    static async fromConnectionString(connectionString: string, tls?: DriverTlsConfig): Promise<TypeDBHttpDriver> {
+        return new TypeDBHttpDriver({ ...parseConnectionString(connectionString), tls });
     }
 
     getDatabases(): Promise<ApiResponse<DatabasesListResponse>> {

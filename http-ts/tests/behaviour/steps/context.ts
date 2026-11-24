@@ -18,7 +18,7 @@
  */
 
 import { After, Before } from "@cucumber/cucumber";
-import { AnalyzeResponse, GivenRows, isOkResponse, QueryOptions, QueryResponse, TransactionOptions, TransactionType, TypeDBHttpDriver } from "../../../dist/index.cjs";
+import { AnalyzeResponse, driverError, GivenRows, isOkResponse, QueryOptions, QueryResponse, TransactionOptions, TransactionType, TypeDBHttpDriver } from "../../../dist/index.cjs";
 import { assertNotError } from "./params";
 
 export let driver: TypeDBHttpDriver;
@@ -140,6 +140,23 @@ export async function openAndTestConnectionWithAddresses(username: string, passw
     const newDriver = new TypeDBHttpDriver({
         username, password, addresses, tls: TLS
     });
+    const healthCheck = await newDriver.health();
+    if (isOkResponse(healthCheck)) driver = newDriver;
+    return healthCheck;
+}
+
+export function defaultConnectionString(): string {
+    const addresses = isClusterMode ? CLUSTER_ADDRESSES : [`${DEFAULT_HOST}:${DEFAULT_PORT}`];
+    return `typedb://${DEFAULT_USERNAME}:${DEFAULT_PASSWORD}@${addresses.join(",")}`;
+}
+
+export async function openAndTestConnectionWithConnectionString(connectionString: string) {
+    let newDriver: TypeDBHttpDriver;
+    try {
+        newDriver = await TypeDBHttpDriver.fromConnectionString(connectionString, TLS);
+    } catch (error) {
+        return driverError("HDR1", (error as Error).message);
+    }
     const healthCheck = await newDriver.health();
     if (isOkResponse(healthCheck)) driver = newDriver;
     return healthCheck;

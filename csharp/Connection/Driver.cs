@@ -36,21 +36,33 @@ namespace TypeDB.Driver.Connection
         private readonly UserManager _userManager;
 
         public TypeDBDriver(string address, Credentials credentials, DriverOptions driverOptions)
-            : base(Open(address, credentials, driverOptions))
+            : this(Open(address, credentials, driverOptions))
         {
-            _databaseManager = new DatabaseManager(NativeObject);
-            _userManager = new UserManager(NativeObject);
         }
 
         public TypeDBDriver(ISet<string> addresses, Credentials credentials, DriverOptions driverOptions)
-            : base(Open(addresses, credentials, driverOptions))
+            : this(Open(addresses, credentials, driverOptions))
         {
-            _databaseManager = new DatabaseManager(NativeObject);
-            _userManager = new UserManager(NativeObject);
         }
 
         public TypeDBDriver(IDictionary<string, string> addressTranslation, Credentials credentials, DriverOptions driverOptions)
-            : base(Open(addressTranslation, credentials, driverOptions))
+            : this(Open(addressTranslation, credentials, driverOptions))
+        {
+        }
+
+        /// <summary>
+        /// Opens a driver using the addresses and credentials held in a connection string. A static
+        /// factory, so that the expected format of the string is explicit at the call site.
+        /// </summary>
+        /// <param name="connectionString">The connection string holding the addresses and credentials to connect with.</param>
+        /// <param name="driverOptions">The driver connection options to connect with, or null to derive them from the connection string.</param>
+        public static TypeDBDriver FromConnectionString(string connectionString, DriverOptions? driverOptions)
+        {
+            return new TypeDBDriver(OpenFromConnectionString(connectionString, driverOptions));
+        }
+
+        private TypeDBDriver(Pinvoke.TypeDBDriver nativeDriver)
+            : base(nativeDriver)
         {
             _databaseManager = new DatabaseManager(NativeObject);
             _userManager = new UserManager(NativeObject);
@@ -108,6 +120,22 @@ namespace TypeDB.Driver.Connection
                     privateAddresses,
                     credentials.NativeObject,
                     driverOptions.NativeObject,
+                    IDriver.Language);
+            }
+            catch (Pinvoke.Error e)
+            {
+                throw new TypeDBDriverException(e);
+            }
+        }
+
+        private static Pinvoke.TypeDBDriver OpenFromConnectionString(string connectionString, DriverOptions? driverOptions)
+        {
+            Validator.RequireNonNull(connectionString, nameof(connectionString));
+            try
+            {
+                return Pinvoke.typedb_driver.driver_new_with_connection_string(
+                    connectionString,
+                    driverOptions?.NativeObject,
                     IDriver.Language);
             }
             catch (Pinvoke.Error e)

@@ -97,6 +97,33 @@ a| `params` a|  a| `DriverParams`
 .Returns
 `params is DriverParamsTranslated`
 
+[#_parseConnectionString_parseConnectionString_connectionString_string]
+==== method ``parseConnectionString``
+
+[source,typescript]
+----
+parseConnectionString(connectionString: string): DriverParams
+----
+
+Parses a TypeDB connection string of the form ``typedb://&lt;username&gt;:&lt;password&gt;@&lt;addresses&gt;[/&lt;database&gt;][?&lt;params&gt;]`` into driver parameters.
+
+Addresses are comma-separated, and each one must carry an explicit ``http://`` or ``https://`` scheme; all addresses must agree on it. Each address may instead be a ``public;private`` pair, which produces translated addresses; pairs cannot be mixed with plain addresses.
+
+An address without a port is assumed to be on ``CONNECTION_STRING_DEFAULT_PORT``; an explicit port is kept as written. The database path segment and any query parameters are accepted and discarded.
+
+[caption=""]
+.Input parameters
+[cols=",,"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `connectionString` a|  a| `string`
+|===
+
+[caption=""]
+.Returns
+`DriverParams`
+
 [#_remoteOrigin_remoteOrigin_params_DriverParams]
 ==== method ``remoteOrigin``
 

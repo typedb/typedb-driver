@@ -46,6 +46,7 @@ import java.util.Set;
 import static com.typedb.driver.jni.typedb_driver.driver_force_close;
 import static com.typedb.driver.jni.typedb_driver.driver_is_open;
 import static com.typedb.driver.jni.typedb_driver.driver_new;
+import static com.typedb.driver.jni.typedb_driver.driver_new_with_connection_string;
 import static com.typedb.driver.jni.typedb_driver.driver_new_with_addresses;
 import static com.typedb.driver.jni.typedb_driver.driver_new_with_address_translation;
 import static com.typedb.driver.jni.typedb_driver.driver_primary_server;
@@ -65,6 +66,17 @@ public class DriverImpl extends NativeObject<com.typedb.driver.jni.TypeDBDriver>
 
     public DriverImpl(Map<String, String> addressTranslation, Credentials credentials, DriverOptions driverOptions) throws TypeDBDriverException {
         this(open(addressTranslation, credentials, driverOptions));
+    }
+
+    /**
+     * Opens a driver using the addresses and credentials held in a connection string. A static
+     * factory, so that the expected format of the string is explicit at the call site.
+     *
+     * @param connectionString The connection string holding the addresses and credentials to connect with
+     * @param driverOptions    The driver connection options to connect with, or null to derive them from the connection string
+     */
+    public static DriverImpl fromConnectionString(String connectionString, DriverOptions driverOptions) throws TypeDBDriverException {
+        return new DriverImpl(openFromConnectionString(connectionString, driverOptions));
     }
 
     private DriverImpl(com.typedb.driver.jni.TypeDBDriver connection) {
@@ -100,6 +112,15 @@ public class DriverImpl extends NativeObject<com.typedb.driver.jni.TypeDBDriver>
         try {
             Map.Entry<String[], String[]> addresses = getTranslatedAddresses(addressTranslation);
             return driver_new_with_address_translation(addresses.getKey(), addresses.getValue(), credentials.nativeObject, driverOptions.nativeObject, LANGUAGE);
+        } catch (com.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
+        }
+    }
+
+    private static com.typedb.driver.jni.TypeDBDriver openFromConnectionString(String connectionString, DriverOptions driverOptions) {
+        Validator.requireNonNull(connectionString, "connectionString");
+        try {
+            return driver_new_with_connection_string(connectionString, driverOptions == null ? null : driverOptions.nativeObject, LANGUAGE);
         } catch (com.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }

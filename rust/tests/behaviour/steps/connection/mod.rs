@@ -114,6 +114,36 @@ async fn connection_opens_with_a_wrong_host(context: &mut Context, may_error: pa
     });
 }
 
+async fn connection_opens_with_connection_string(
+    context: &mut Context,
+    connection_string: &str,
+    may_error: params::MayError,
+) {
+    if let Some(driver) = may_error.check(context.create_driver_from_connection_string(connection_string).await) {
+        context.set_driver(driver)
+    }
+}
+
+#[apply(generic_step)]
+#[step(expr = "connection opens with a connection string for the default address{may_error}")]
+async fn connection_opens_with_a_connection_string_for_the_default_address(
+    context: &mut Context,
+    may_error: params::MayError,
+) {
+    let connection_string = context.default_connection_string().unwrap();
+    connection_opens_with_connection_string(context, &connection_string, may_error).await
+}
+
+#[apply(generic_step)]
+#[step(expr = "connection opens with connection string: {string}{may_error}")]
+async fn connection_opens_with_connection_string_literal(
+    context: &mut Context,
+    connection_string: String,
+    may_error: params::MayError,
+) {
+    connection_opens_with_connection_string(context, &connection_string, may_error).await
+}
+
 #[apply(generic_step)]
 #[step(expr = "connection opens with a wrong port{may_error}")]
 async fn connection_opens_with_a_wrong_port(context: &mut Context, may_error: params::MayError) {
