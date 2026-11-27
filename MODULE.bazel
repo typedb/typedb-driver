@@ -257,7 +257,7 @@ native_artifact_files.artifact(
     group_name = "typedb-all-{platform}",
     artifact_name = "typedb-all-{platform}-{version}.{ext}",
     # TODO(vector-search): repoint to a master commit once the vector-search branch merges
-    commit = "2d47850e8ec1e79c04051e7ff6b461c3c01b3478",
+    commit = "4db5dab4bc7612266a1b32df10ed897d168806f3",
 )
 native_artifact_files.artifact(
     name = "typedb_cluster_artifact",

@@ -23,7 +23,6 @@ rm -rf typedb-all
 bazel run //tool/test:typedb-extractor -- typedb-all
 ./typedb-all/typedb server \
   --development-mode.enabled true \
-  --experimental-vector-search-enabled true \
   --server.authentication.token-expiration-seconds 15 &
 
 set +e
