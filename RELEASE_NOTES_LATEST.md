@@ -8,13 +8,13 @@ Available from https://crates.io/crates/typedb-driver
 Documentation: https://typedb.com/docs/drivers/rust/overview
 
 ```sh
-cargo add typedb-driver@3.15.0
+cargo add typedb-driver@3.16.0-rc0
 ```
 
 
 ### Java driver
 
-Available through [https://repo.typedb.com](https://cloudsmith.io/~typedb/repos/public-release/packages/detail/maven/typedb-driver/3.15.0/a=noarch;xg=com.typedb/)
+Available through [https://repo.typedb.com](https://cloudsmith.io/~typedb/repos/public-release/packages/detail/maven/typedb-driver/3.16.0-rc0/a=noarch;xg=com.typedb/)
 Documentation: https://typedb.com/docs/drivers/java/overview
 
 ```xml
@@ -28,7 +28,7 @@ Documentation: https://typedb.com/docs/drivers/java/overview
     <dependency>
         <groupid>com.typedb</groupid>
         <artifactid>typedb-driver</artifactid>
-        <version>3.15.0</version>
+        <version>3.16.0-rc0</version>
     </dependency>
 </dependencies>
 ```
@@ -42,7 +42,7 @@ Available through https://pypi.org
 
 [//]: # (TODO: Python's RC/Alpha/Beta versions are formatted differently. Don't foget to update manually until we make an automation)
 ```
-pip install typedb-driver==3.15.0
+pip install typedb-driver==3.16.0rc0
 ```
 
 ### C# driver
@@ -52,12 +52,12 @@ Documentation: https://typedb.com/docs/drivers/csharp/overview
 
 ```xml
 <ItemGroup>
-    <PackageReference Include="TypeDB.Driver" Version="3.15.0" />
-    <PackageReference Include="TypeDB.Driver.Pinvoke.osx-x64" Version="3.15.0" />
-    <PackageReference Include="TypeDB.Driver.Pinvoke.linux-x64" Version="3.15.0" />
-    <PackageReference Include="TypeDB.Driver.Pinvoke.win-x64" Version="3.15.0" />
-    <PackageReference Include="TypeDB.Driver.Pinvoke.osx-arm64" Version="3.15.0" />
-    <PackageReference Include="TypeDB.Driver.Pinvoke.linux-arm64" Version="3.15.0" />
+    <PackageReference Include="TypeDB.Driver" Version="3.16.0-rc0" />
+    <PackageReference Include="TypeDB.Driver.Pinvoke.osx-x64" Version="3.16.0-rc0" />
+    <PackageReference Include="TypeDB.Driver.Pinvoke.linux-x64" Version="3.16.0-rc0" />
+    <PackageReference Include="TypeDB.Driver.Pinvoke.win-x64" Version="3.16.0-rc0" />
+    <PackageReference Include="TypeDB.Driver.Pinvoke.osx-arm64" Version="3.16.0-rc0" />
+    <PackageReference Include="TypeDB.Driver.Pinvoke.linux-arm64" Version="3.16.0-rc0" />
 </ItemGroup>
 ```
 
@@ -67,59 +67,75 @@ NPM package: https://www.npmjs.com/package/@typedb/driver-http
 Documentation: https://typedb.com/docs/home/install/drivers/
 
 ```
-npm install @typedb/driver-http@3.15.0
+npm install @typedb/driver-http@3.16.0-rc0
 ```
 
 ### C driver
 
-Compiled distributions comprising headers and shared libraries available at: https://cloudsmith.io/~typedb/repos/public-release/packages/?q=name:^typedb-driver-clib+version:3.15.0
+Compiled distributions comprising headers and shared libraries available at: https://cloudsmith.io/~typedb/repos/public-release/packages/?q=name:^typedb-driver-clib+version:3.16.0-rc0
 
 
 ## New Features
-- **Introduce IsSet from the analyze response to driver**
-  Introduce IsSet constraint in the analyze response to the various driver datastructure
+- **Introduce zstd compression for database export**
+  Database export can now compress the data file with zstd through a new `FileCompression` option (`Uncompressed` by default). Import detects and handles compressed files automatically.
+  
+  This is a **breaking change** for the C driver and its `database_export_to_file` function, which acquires a new argument.
   
   
-- **Add TLS config to http-ts for CA certificates in Node.js**
-  The HTTP driver can trust a private CA per driver instance in Node.js, like the root CA option of the other TypeDB drivers. Previously this was only possible process-wide, with `NODE_EXTRA_CA_CERTS`.
+- **Support vector value type**
   
-  ```ts
-  new TypeDBHttpDriver({ username, password, addresses, tls: { rootCAPath: "ca.pem" } });
+  Adds driver support for TypeDB's vector value type and vector similarity search across all driver
+  languages (Rust, Java, Python, C#, C, HTTP-TS).
+  
+  1. Defining a vector attribute:
+  ```
+  define
+    attribute embedding,
+    value vector(3, "float32") @index(hnsw:cosine);
   ```
   
-  When set, only this CA is trusted, and every address must use `https`. Unlike in the gRPC drivers, TLS follows the address scheme, and the file is read on the first request rather than when the driver is created: a file that cannot be read or holds no valid PEM certificate, or an `http` address, fails with `HDR3`. In browsers, the operating system's or browser's trust store is still used, and requests with `rootCAPath` set also fail with `HDR3`.
+  2. Inserting vector values:
   
-  When no server can be reached, `HDR1` now includes the last connection error, for example a certificate verification failure, instead of only "Cannot connect to any server".
+  ```
+  insert $d isa document, has embedding vector([1.0, 0.0, 0.0], "float32");
+  ```
+  
+  3. Similarity search, returning each matched attribute with its similarity score, ordered
+  most-similar first:
+  
+  ```
+  match
+    let $e, $cosine in cosine_similarity_search(embedding, vector([1.0, 0.0, 0.0], "float32"), 0.9);
+  ```
+  
+  4. Reading vector values back through each driver's value API.
   
   
-- **Add import from zstd-compressed archives**
-  Introduce support for importing `zstd`-compressed archives of `.typedb` data. 
-  
-  `zstd` allows storing exported TypeDB data in a compressed format, while supporting streaming from these files, just like for raw byte data.
-  
-  Currently, we support `zstd`-compressed archives prepared by separate tools, but driver's `export` commands could support creating these archives themselves in the future. 
-  
-  Additionally, update the protocol ref to support https://github.com/typedb/typedb-protocol/pull/259.
-  
-  
-
 ## Bugs Fixed
-- **Fix retried exported files corruption**
-  Fix `export_to_file` writing a corrupted data file when the export is retried after a primary replica failover. The retry reopened the files without truncating them, so a shorter second export left the tail of the first one behind, and importing the file failed with a decoding error.
+- **Provide server migration errors for failed imports**
+  
+  Fix a bug where a database import rejected by the server could sometimes fail with a misleading connection error instead of the server's actual error:
+  ```
+  [CXN02] Connection Error: Unable to connect to TypeDB server(s).
+  ... [CXN29] Connection Error: The database import channel is closed and no further operation is allowed.
+  ```
+  
+  This happened when the client was sending data faster than the server consumed it, typically on larger imports.
   
   
-
 ## Code Refactors
-- **Let the driver failover work for a broader range of error codes for clusters**
-  Let the driver's failover work in clustered environment for a broader range of error codes.
+- **Simplify workspace referencing and fix local_path_override**
   
-  Introduce a common `ServerUnavailable` connection error for gRPC drivers, that can let the driver retry single requests against the same or a new primary without depending on our internal error codes. Now, this classification depends on the HTTP status code of the error.
+  Each TypeDB dependency's commit or tag is now written once, in its `git_override` in `MODULE.bazel`. 
+  
+  Before, refs were duplicated in `workspace_refs`' commit and tag dicts, with commented-out alternatives for switching between the two.
+  
+  Additionally, a local checkout of `typedb-protocol` can now be used through a `local_path_override` in `MODULE.bazel` instead of failing on `sync.sh` in case no `git_override` is left commented out.
   
   
-
-## Other Improvements 
-- **Fix builds**
-  Fix rustfmt job
+## Other Improvements
+- **Update bdd ref**
+  
   
   
     

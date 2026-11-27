@@ -81,7 +81,8 @@ export type ConstraintAny =
     |
     ConstraintOr
     | ConstraintNot
-    | ConstraintTry;
+    | ConstraintTry
+    | ConstraintVectorSearch;
 
 export type ConstraintSpan = { begin: number, end: number };
 
@@ -240,6 +241,18 @@ export interface ConstraintKind {
 
     type: ConstraintVertexVariable,
     kind: string,
+}
+
+// let <attribute>, <similarity> in cosine_similarity_search(<attributeType>, <query>, <threshold>)
+export interface ConstraintVectorSearch {
+    tag: "vectorSearch",
+    textSpan: ConstraintSpan,
+
+    attribute: ConstraintVertexVariable,
+    attributeType: ConstraintVertexVariable | ConstraintVertexLabel,
+    query: ConstraintVertexValue,
+    threshold: ConstraintVertexValue,
+    similarity: ConstraintVertexVariable,
 }
 
 export interface ConstraintOr {

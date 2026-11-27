@@ -23,6 +23,7 @@ a| `Duration`
 a| `Integer`
 a| `String`
 a| `Struct(String)`
+a| `Vector`
 |===
 // end::enum_constants[]
 

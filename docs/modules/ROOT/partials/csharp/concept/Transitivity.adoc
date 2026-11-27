@@ -24,7 +24,7 @@ Whether subtyping, instances, etc. are explicit or transitive.
    Whether subtyping, instances, etc. are explicit or transitive.
   
   
-   Definition IConcept.cs:593
+   Definition IConcept.cs:615
   
  
 

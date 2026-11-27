@@ -639,10 +639,10 @@ pub async fn answer_get_row_get_variable_get_value_type(
 ) {
     let concept = get_answer_rows_var(context, index, is_by_var_index, var).await.unwrap().unwrap();
     check_concept_is_kind(concept, var_kind, params::Boolean::True);
-    assert_eq!(value_type.as_str(), concept.try_get_value_label().unwrap_or("none"));
+    assert_eq!(value_type.as_str(), concept.try_get_value_label().as_deref().unwrap_or("none"));
     assert_eq!(
         value_type,
-        concept.try_get_value_type().map(|type_| type_.name().to_owned()).unwrap_or("none".to_owned())
+        concept.try_get_value_type().map(|type_| type_.name().into_owned()).unwrap_or("none".to_owned())
     );
 }
 
@@ -659,10 +659,10 @@ pub async fn answer_get_row_get_variable_get_type_get_value_type(
     let concept = get_answer_rows_var(context, index, is_by_var_index, var).await.unwrap().unwrap();
     let type_ = concept_get_type(concept);
     check_concept_is_kind(concept, var_kind, params::Boolean::True);
-    assert_eq!(value_type.as_str(), type_.try_get_value_label().unwrap_or("none"));
+    assert_eq!(value_type.as_str(), type_.try_get_value_label().as_deref().unwrap_or("none"));
     assert_eq!(
         value_type,
-        type_.try_get_value_type().map(|type_| type_.name().to_owned()).unwrap_or("none".to_owned())
+        type_.try_get_value_type().map(|type_| type_.name().into_owned()).unwrap_or("none".to_owned())
     );
 }
 
@@ -761,6 +761,11 @@ pub async fn answer_get_row_get_variable_get_value_of_type(
         ValueType::DatetimeTZ => concept.try_get_datetime_tz().map(|_| ()).ok_or(InvalidValueRetrieval(type_name)),
         ValueType::Duration => concept.try_get_duration().map(|_| ()).ok_or(InvalidValueRetrieval(type_name)),
         ValueType::Struct(_) => concept.try_get_struct().map(|_| ()).ok_or(InvalidValueRetrieval("struct".to_owned())),
+        ValueType::Vector { .. } => concept
+            .try_get_value()
+            .filter(|value| matches!(value, Value::Vector(_)))
+            .map(|_| ())
+            .ok_or(InvalidValueRetrieval(type_name)),
     });
 }
 
@@ -872,6 +877,15 @@ pub async fn answer_get_row_get_variable_get_specific_value(
             // Compare string representations
             match expected_value {
                 Value::String(expected_struct) => is_or_not.compare(expected_struct, actual_struct.to_string()),
+                _ => is_or_not.check(false),
+            }
+        }
+        ValueType::Vector { .. } => {
+            let actual_vector = concept.try_get_value().unwrap();
+            match expected_value {
+                Value::Vector(ref expected_vector) => {
+                    is_or_not.check(actual_vector.get_vector() == Some(expected_vector.as_slice()))
+                }
                 _ => is_or_not.check(false),
             }
         }

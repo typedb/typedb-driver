@@ -17,7 +17,7 @@
  * under the License.
  */
 
-use std::{ffi::c_char, ptr::null_mut, str::FromStr};
+use std::{borrow::Cow, ffi::c_char, ptr::null_mut, str::FromStr};
 
 use chrono::{DateTime, FixedOffset, NaiveDate, NaiveDateTime, NaiveTime, TimeZone as ChronoTimeZone};
 use typedb_driver::{
@@ -157,7 +157,7 @@ pub extern "C" fn concept_try_get_iid(instance: *mut Concept) -> *mut c_char {
 /// If this is a <code>Type</code>, returns the label of the type.
 #[unsafe(no_mangle)]
 pub extern "C" fn concept_get_label(concept: *const Concept) -> *mut c_char {
-    release_string(borrow(concept).get_label().to_owned())
+    release_string(borrow(concept).get_label().into_owned())
 }
 
 /// Retrieves the optional label of this <code>Concept</code>.
@@ -166,7 +166,7 @@ pub extern "C" fn concept_get_label(concept: *const Concept) -> *mut c_char {
 /// If this is a <code>Type</code>, returns the label of the type.
 #[unsafe(no_mangle)]
 pub extern "C" fn concept_try_get_label(concept: *const Concept) -> *mut c_char {
-    release_optional_string(borrow(concept).try_get_label().map(|str| str.to_owned()))
+    release_optional_string(borrow(concept).try_get_label().map(Cow::into_owned))
 }
 
 /// Retrieves the value type of this <code>Concept</code>, if it exists.
@@ -176,7 +176,7 @@ pub extern "C" fn concept_try_get_label(concept: *const Concept) -> *mut c_char 
 /// Otherwise, returns null.
 #[unsafe(no_mangle)]
 pub extern "C" fn concept_try_get_value_type(concept: *const Concept) -> *mut c_char {
-    release_optional_string(borrow(concept).try_get_value_label().map(|str| str.to_owned()))
+    release_optional_string(borrow(concept).try_get_value_label().map(Cow::into_owned))
 }
 
 /// Retrieves the value of this <code>Concept</code>, if it exists.
@@ -256,6 +256,13 @@ pub extern "C" fn concept_is_duration(concept: *const Concept) -> bool {
 #[unsafe(no_mangle)]
 pub extern "C" fn concept_is_struct(concept: *const Concept) -> bool {
     borrow(concept).is_struct()
+}
+
+/// Returns <code>true</code> if the value which this <code>Concept</code> holds is of type <code>vector</code>.
+/// Otherwise, returns <code>false</code>.
+#[unsafe(no_mangle)]
+pub extern "C" fn concept_is_vector(concept: *const Concept) -> bool {
+    borrow(concept).is_vector()
 }
 
 /// Returns a <code>boolean</code> value of this value concept.
@@ -360,6 +367,32 @@ pub extern "C" fn concept_get_struct(concept: *const Concept) -> *mut StringAndO
     }
 }
 
+/// Returns the number of elements in the <code>vector</code> value of this value concept.
+/// If the value has another type, the error is set.
+#[unsafe(no_mangle)]
+pub extern "C" fn concept_get_vector_length(concept: *const Concept) -> i64 {
+    match borrow(concept).try_get_vector() {
+        Some(vector) => vector.len() as i64,
+        None => unreachable!("Attempting to unwrap a non-vector {:?} as vector", borrow(concept)),
+    }
+}
+
+/// Copies the elements of the <code>vector</code> value of this value concept into
+/// <code>buffer</code> (up to <code>capacity</code> elements) and returns the vector's full
+/// length. Allocate the buffer after calling <code>concept_get_vector_length</code>.
+/// Will panic if the value has another type.
+#[unsafe(no_mangle)]
+pub extern "C" fn concept_get_vector(concept: *const Concept, buffer: *mut f32, capacity: i64) -> i64 {
+    match borrow(concept).try_get_vector() {
+        Some(vector) => {
+            let count = vector.len().min(capacity.max(0) as usize);
+            unsafe { std::ptr::copy_nonoverlapping(vector.as_ptr(), buffer, count) };
+            vector.len() as i64
+        }
+        None => unreachable!("Attempting to unwrap a non-vector {:?} as vector", borrow(concept)),
+    }
+}
+
 /// Checks whether the provided <code>Concept</code> objects are equal
 #[unsafe(no_mangle)]
 pub extern "C" fn concept_equals(lhs: *const Concept, rhs: *const Concept) -> bool {
@@ -448,6 +481,14 @@ pub extern "C" fn concept_new_string(value: *const c_char) -> *mut Concept {
 #[unsafe(no_mangle)]
 pub extern "C" fn concept_new_double(value: f64) -> *mut Concept {
     release(Concept::Value(Value::Double(value)))
+}
+
+/// Creates a new <code>Concept</code> object wrapping a <code>vector</code> value,
+/// copying <code>len</code> float elements from <code>values</code>.
+#[unsafe(no_mangle)]
+pub extern "C" fn concept_new_vector(values: *const f32, len: i64) -> *mut Concept {
+    let elements = unsafe { std::slice::from_raw_parts(values, len.max(0) as usize) }.to_vec();
+    release(Concept::Value(Value::Vector(elements)))
 }
 
 /// Creates a new <code>Concept</code> object wrapping the specified <code>Decimal</code> value,

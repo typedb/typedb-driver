@@ -112,5 +112,11 @@ namespace TypeDB.Driver.Api
         /// If the value has another type, raises an exception.
         /// </summary>
         IReadOnlyDictionary<string, IValue?> GetStruct();
+
+        /// <summary>
+        /// Returns a vector value of this value concept.
+        /// If the value has another type, raises an exception.
+        /// </summary>
+        IReadOnlyList<float> GetVector();
     }
 }

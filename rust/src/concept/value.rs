@@ -18,6 +18,7 @@
  */
 
 use std::{
+    borrow::Cow,
     collections::HashMap,
     fmt,
     ops::{Add, Neg, Sub},
@@ -42,6 +43,7 @@ pub enum ValueType {
     DatetimeTZ,
     Duration,
     Struct(String),
+    Vector { dimension: u32 },
 }
 
 impl ValueType {
@@ -55,19 +57,25 @@ impl ValueType {
     pub(crate) const DATETIME_STR: &'static str = "datetime";
     pub(crate) const DATETIME_TZ_STR: &'static str = "datetime-tz";
     pub(crate) const DURATION_STR: &'static str = "duration";
+    pub(crate) const VECTOR_STR: &'static str = "vector";
+    // the protocol does not carry a vector element encoding; float32 is the only one and is implied
+    pub(crate) const VECTOR_ELEMENT_ENCODING_STR: &'static str = "float32";
 
-    pub fn name(&self) -> &str {
+    pub fn name(&self) -> Cow<'_, str> {
         match self {
-            Self::Boolean => Self::BOOLEAN_STR,
-            Self::Integer => Self::INTEGER_STR,
-            Self::Double => Self::DOUBLE_STR,
-            Self::Decimal => Self::DECIMAL_STR,
-            Self::String => Self::STRING_STR,
-            Self::Date => Self::DATE_STR,
-            Self::Datetime => Self::DATETIME_STR,
-            Self::DatetimeTZ => Self::DATETIME_TZ_STR,
-            Self::Duration => Self::DURATION_STR,
-            Self::Struct(name) => name,
+            Self::Boolean => Cow::Borrowed(Self::BOOLEAN_STR),
+            Self::Integer => Cow::Borrowed(Self::INTEGER_STR),
+            Self::Double => Cow::Borrowed(Self::DOUBLE_STR),
+            Self::Decimal => Cow::Borrowed(Self::DECIMAL_STR),
+            Self::String => Cow::Borrowed(Self::STRING_STR),
+            Self::Date => Cow::Borrowed(Self::DATE_STR),
+            Self::Datetime => Cow::Borrowed(Self::DATETIME_STR),
+            Self::DatetimeTZ => Cow::Borrowed(Self::DATETIME_TZ_STR),
+            Self::Duration => Cow::Borrowed(Self::DURATION_STR),
+            Self::Struct(name) => Cow::Borrowed(name),
+            Self::Vector { dimension } => {
+                Cow::Owned(format!("vector({}, \"{}\")", dimension, Self::VECTOR_ELEMENT_ENCODING_STR))
+            }
         }
     }
 }
@@ -96,6 +104,7 @@ pub enum Value {
     DatetimeTZ(DateTime<TimeZone>),
     Duration(Duration),
     Struct(Struct, String),
+    Vector(Vec<f32>),
 }
 
 impl Value {
@@ -118,6 +127,7 @@ impl Value {
             Self::DatetimeTZ(_) => ValueType::DatetimeTZ,
             Self::Duration(_) => ValueType::Duration,
             Self::Struct(_, struct_type_name) => ValueType::Struct(struct_type_name.clone()),
+            Self::Vector(vector) => ValueType::Vector { dimension: vector.len() as u32 },
         }
     }
 
@@ -128,18 +138,10 @@ impl Value {
     /// ```rust
     /// value.get_type_name();
     /// ```
-    pub fn get_type_name(&self) -> &str {
+    pub fn get_type_name(&self) -> Cow<'_, str> {
         match self {
-            Self::Boolean(_) => ValueType::Boolean.name(),
-            Self::Integer(_) => ValueType::Integer.name(),
-            Self::Double(_) => ValueType::Double.name(),
-            Self::String(_) => ValueType::String.name(),
-            Self::Decimal(_) => ValueType::Decimal.name(),
-            Self::Date(_) => ValueType::Date.name(),
-            Self::Datetime(_) => ValueType::Datetime.name(),
-            Self::DatetimeTZ(_) => ValueType::DatetimeTZ.name(),
-            Self::Duration(_) => ValueType::Duration.name(),
-            Self::Struct(_, struct_type_name) => struct_type_name,
+            Self::Struct(_, struct_type_name) => Cow::Borrowed(struct_type_name.as_str()),
+            other => Cow::Owned(other.get_type().name().into_owned()),
         }
     }
 
@@ -182,6 +184,10 @@ impl Value {
     pub fn get_struct(&self) -> Option<&Struct> {
         if let Value::Struct(struct_, _) = self { Some(struct_) } else { None }
     }
+
+    pub fn get_vector(&self) -> Option<&[f32]> {
+        if let Value::Vector(vector) = self { Some(vector) } else { None }
+    }
 }
 
 impl fmt::Display for Value {
@@ -200,8 +206,21 @@ impl fmt::Display for Value {
             },
             Self::Duration(duration) => write!(f, "{}", duration),
             Self::Struct(value, name) => write!(f, "{} {}", name, value),
+            Self::Vector(vector) => write_vector(f, vector),
         }
     }
+}
+
+fn write_vector(f: &mut fmt::Formatter<'_>, vector: &[f32]) -> fmt::Result {
+    write!(f, "vector([")?;
+    for (i, element) in vector.iter().enumerate() {
+        if i > 0 {
+            write!(f, ", ")?;
+        }
+        // {:?} keeps the decimal point (1.0, not 1), matching TypeQL double literals
+        write!(f, "{:?}", element)?;
+    }
+    write!(f, "], \"{}\")", ValueType::VECTOR_ELEMENT_ENCODING_STR)
 }
 
 impl fmt::Debug for Value {
@@ -218,6 +237,7 @@ impl fmt::Debug for Value {
             Value::DatetimeTZ(datetime_tz) => write!(f, "{}", datetime_tz),
             Value::Duration(duration) => write!(f, "{}", duration),
             Value::Struct(value, name) => write!(f, "{} {}", name, value),
+            Value::Vector(vector) => write_vector(f, vector),
         }
     }
 }

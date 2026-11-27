@@ -1,0 +1,23 @@
+[#_ConstraintVectorSearch]
+[.doc-api-reference-driver]
+==== ConstraintVectorSearch
+
+`class`
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols=",,"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `attribute` a| `ConstraintVertexVariable` a| 
+a| `attributeType` a| `ConstraintVertexVariable` a| 
+a| `query` a| `ConstraintVertexValue` a| 
+a| `similarity` a| `ConstraintVertexVariable` a| 
+a| `tag` a| `"vectorSearch"` a| 
+a| `textSpan` a| `ConstraintSpan` a| 
+a| `threshold` a| `ConstraintVertexValue` a| 
+|===
+// end::properties[]
+

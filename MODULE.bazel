@@ -56,24 +56,27 @@ git_override(
 )
 
 bazel_dep(name = "typedb_dependencies", version = "0.0.0")
+# TODO(vector-search): repoint to master commit once the vector-search branch merges
 git_override(
     module_name = "typedb_dependencies",
     remote = "https://github.com/typedb/dependencies",
-    commit = "5655182f0d6ac9e7b1a6e767df7f48c511692ce2",
+    commit = "7498660c17ea28562ca39b925c98779e6a848e7a",
 )
 
 bazel_dep(name = "typedb_protocol", version = "0.0.0")
+# TODO(vector-search): repoint to master commit once the vector-search branch merges
 git_override(
     module_name = "typedb_protocol",
     remote = "https://github.com/typedb/typedb-protocol",
-    commit = "dd606e1063d7c83781b5e04c1d348b824d3a7428",
+    commit = "df8475883a2e40e1648ec464963435ca818ba9f1",
 )
 
 bazel_dep(name = "typedb_behaviour", version = "0.0.0")
+# TODO(vector-search): repoint to master commit once the vector-search branch merges
 git_override(
     module_name = "typedb_behaviour",
     remote = "https://github.com/typedb/typedb-behaviour",
-    commit = "f011c966858244dc86cf2292b367a7c6ae2a6dd7",
+    commit = "9bbfe3e6ac70e8cd84c5e9e1c94953eb336ff0fd",
 )
 
 # Rust rules need typedb_dependencies for patching
@@ -253,13 +256,14 @@ native_artifact_files.artifact(
     name = "typedb_artifact",
     group_name = "typedb-all-{platform}",
     artifact_name = "typedb-all-{platform}-{version}.{ext}",
-    tag = "3.15.0-rc1",
+    # TODO(vector-search): repoint to a master commit once the vector-search branch merges
+    commit = "2d47850e8ec1e79c04051e7ff6b461c3c01b3478",
 )
 native_artifact_files.artifact(
     name = "typedb_cluster_artifact",
     group_name = "typedb-cluster-all-{platform}",
     artifact_name = "typedb-cluster-all-{platform}-{version}.{ext}",
-    tag = "3.15.0-rc1",
+    commit = "99268086992fa46aef515268122b3ca9f45277a7",
     private = True,
 )
 

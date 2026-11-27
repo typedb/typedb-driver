@@ -17,6 +17,9 @@
  * under the License.
  */
 
+%include "arrays_java.i"
+%apply float[] { const float *values, float *buffer };
+
 %javaconst(1);
 
 %include "various.i"
@@ -173,6 +176,7 @@
 %nojavaexception concept_is_integer;
 %nojavaexception concept_is_string;
 %nojavaexception concept_is_struct;
+%nojavaexception concept_is_vector;
 
 // Should call concept_is_X before concept_get_X and throw language-specific exception in impl
 %nojavaexception concept_get_boolean;
@@ -185,10 +189,13 @@
 %nojavaexception concept_get_integer;
 %nojavaexception concept_get_string;
 %nojavaexception concept_get_struct;
+%nojavaexception concept_get_vector_length;
+%nojavaexception concept_get_vector;
 
 %nojavaexception concept_new_boolean;
 %nojavaexception concept_new_integer;
 %nojavaexception concept_new_double;
+%nojavaexception concept_new_vector;
 %nojavaexception concept_new_decimal;
 %nojavaexception concept_new_string;
 %nojavaexception concept_new_date_from_seconds;
@@ -315,6 +322,11 @@
 %nojavaexception constraint_or_get_branches;
 %nojavaexception constraint_not_get_conjunction;
 %nojavaexception constraint_try_get_conjunction;
+%nojavaexception constraint_vector_search_get_attribute;
+%nojavaexception constraint_vector_search_get_attribute_type;
+%nojavaexception constraint_vector_search_get_query;
+%nojavaexception constraint_vector_search_get_threshold;
+%nojavaexception constraint_vector_search_get_similarity;
 %nojavaexception constraint_string_repr;
 
 %nojavaexception constraint_vertex_variant;

@@ -118,6 +118,12 @@ namespace TypeDB.Driver.Concept
             return Pinvoke.typedb_driver.concept_is_struct(NativeObject);
         }
 
+        /// <inheritdoc/>
+        public bool IsVector()
+        {
+            return Pinvoke.typedb_driver.concept_is_vector(NativeObject);
+        }
+
         #endregion
 
         #region Value Accessors
@@ -226,6 +232,16 @@ namespace TypeDB.Driver.Concept
             // that need to be accessed with the correct SWIG-generated C# names
             var result = new Dictionary<string, IValue?>();
             return result;
+        }
+
+        /// <inheritdoc/>
+        public IReadOnlyList<float>? TryGetVector()
+        {
+            if (!CanHaveValue() || !IsVector()) return null;
+            long length = Pinvoke.typedb_driver.concept_get_vector_length(NativeObject);
+            var buffer = new float[length];
+            Pinvoke.typedb_driver.concept_get_vector(NativeObject, buffer, length);
+            return new List<float>(buffer);
         }
 
         #endregion

@@ -74,6 +74,7 @@ dir_mapping = {
     "IValueConstraint.adoc": "analyze",
     "IVariable.adoc": "analyze",
     "IVariableAnnotations.adoc": "analyze",
+    "IVectorSearch.adoc": "analyze",
 
     # Answer
     "IConceptDocumentIterator.adoc": "answer",

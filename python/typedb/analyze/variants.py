@@ -42,6 +42,7 @@ from typedb.native_driver_wrapper import (
     Or as NativeOr,
     Not as NativeNot,
     Try as NativeTry,
+    VectorSearch as NativeVectorSearch,
 
     LeafDocument as NativeLeafDocument,
     ListDocument as NativeListDocument,
@@ -92,6 +93,7 @@ class ConstraintVariant(IntEnum):
     Or = NativeOr
     Not = NativeNot
     Try = NativeTry
+    VectorSearch = NativeVectorSearch
 
 
 class FetchVariant(IntEnum):

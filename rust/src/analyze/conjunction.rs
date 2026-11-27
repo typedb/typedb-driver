@@ -169,6 +169,14 @@ pub enum Constraint {
     IsSet {
         variables: Vec<ConstraintVertex>,
     },
+    /// let &lt;attribute&gt;, &lt;similarity&gt; in cosine_similarity_search(&lt;attribute_type&gt;, &lt;query&gt;, &lt;threshold&gt;)
+    VectorSearch {
+        attribute: ConstraintVertex,
+        attribute_type: ConstraintVertex,
+        query: ConstraintVertex,
+        threshold: ConstraintVertex,
+        similarity: ConstraintVertex,
+    },
     /// { &lt;branches&lsqb;0&rsqb;&gt; } or { &lt;branches&lsqb;1&rsqb;&gt; } &lsqb;or ...&rsqb;
     Or {
         /// Index into <code>Pipeline.conjunctions</code>

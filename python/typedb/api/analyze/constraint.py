@@ -118,6 +118,10 @@ class Constraint(ABC):
         pass
 
     @abstractmethod
+    def is_vector_search(self) -> bool:
+        pass
+
+    @abstractmethod
     def as_isa(self) -> "Isa":
         pass
 
@@ -195,6 +199,10 @@ class Constraint(ABC):
 
     @abstractmethod
     def as_try(self) -> "Try":
+        pass
+
+    @abstractmethod
+    def as_vector_search(self) -> "VectorSearch":
         pass
 
 
@@ -468,6 +476,33 @@ class Try(Constraint, ABC):
         """
         Index into Pipeline.conjunctions
         """
+        pass
+
+
+class VectorSearch(Constraint, ABC):
+    """
+    Represents a vector search constraint:
+    let <attribute>, <similarity> in cosine_similarity_search(<attribute_type>, <query>, <threshold>)
+    """
+
+    @abstractmethod
+    def attribute(self) -> "ConstraintVertex":
+        pass
+
+    @abstractmethod
+    def attribute_type(self) -> "ConstraintVertex":
+        pass
+
+    @abstractmethod
+    def query(self) -> "ConstraintVertex":
+        pass
+
+    @abstractmethod
+    def threshold(self) -> "ConstraintVertex":
+        pass
+
+    @abstractmethod
+    def similarity(self) -> "ConstraintVertex":
         pass
 
 
