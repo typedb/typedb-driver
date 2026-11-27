@@ -28,6 +28,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -103,6 +104,11 @@ public class AttributeImpl extends InstanceImpl implements Attribute {
     @Override
     public Map<String, Optional<Value>> getStruct() {
         return getValue().getStruct();
+    }
+
+    @Override
+    public List<Float> getVector() {
+        return getValue().getVector();
     }
 
     @Override

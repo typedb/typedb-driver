@@ -79,6 +79,8 @@ public interface Constraint {
 
     boolean isTry();
 
+    boolean isVectorSearch();
+
     Isa asIsa();
 
     Has asHas();
@@ -118,6 +120,8 @@ public interface Constraint {
     Not asNot();
 
     Try asTry();
+
+    VectorSearch asVectorSearch();
 
     /**
      * Represents an "isa" constraint: <instance> isa(!) <type>
@@ -329,6 +333,22 @@ public interface Constraint {
          * Index into <code>Pipeline.conjunctions</code>
          */
         ConjunctionID conjunction();
+    }
+
+    /**
+     * Represents a vector search constraint:
+     * let <attribute>, <similarity> in cosine_similarity_search(<attribute_type>, <query>, <threshold>)
+     */
+    interface VectorSearch extends Constraint {
+        ConstraintVertex attribute();
+
+        ConstraintVertex attributeType();
+
+        ConstraintVertex query();
+
+        ConstraintVertex threshold();
+
+        ConstraintVertex similarity();
     }
 
     /**

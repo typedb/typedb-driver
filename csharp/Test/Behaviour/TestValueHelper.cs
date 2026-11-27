@@ -18,7 +18,9 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 
 using TypeDB.Driver.Api;
 using TypeDB.Driver.Common;
@@ -52,7 +54,7 @@ namespace TypeDB.Driver.Test.Behaviour
                 case "datetime-tz":
                 case "datetimetz": return "datetime-tz";
                 case "duration": return "duration";
-                default: return "struct";
+                default: return lower.StartsWith("vector(") ? "vector" : "struct";
             }
         }
 
@@ -88,6 +90,13 @@ namespace TypeDB.Driver.Test.Behaviour
                     return Duration.Parse(rawValue);
                 case "struct":
                     return rawValue; // Compare as string representation
+                case "vector": {
+                    var joined = rawValue.Substring(rawValue.IndexOf('[') + 1, rawValue.LastIndexOf(']') - rawValue.IndexOf('[') - 1).Trim();
+                    var elements = new List<float>();
+                    if (joined.Length > 0)
+                        foreach (var element in joined.Split(',')) elements.Add(float.Parse(element.Trim(), CultureInfo.InvariantCulture));
+                    return elements;
+                }
                 default:
                     throw new BehaviourTestException($"Unknown value type for parsing: {valueType}");
             }
@@ -142,6 +151,8 @@ namespace TypeDB.Driver.Test.Behaviour
 
             var expectedVal = ParseExpectedValue(expectedStr, valueType);
             var actualVal = GetValueAs(actual, actualType);
+            if (expectedVal is List<float> expectedVector && actualVal is IReadOnlyList<float> actualVector)
+                return expectedVector.SequenceEqual(actualVector);
             return expectedVal.Equals(actualVal);
         }
 
@@ -163,6 +174,7 @@ namespace TypeDB.Driver.Test.Behaviour
                 case "datetime-tz": return value.GetDatetimeTZ();
                 case "duration": return value.GetDuration();
                 case "struct": return value.GetStruct().ToString()!;
+                case "vector": return value.GetVector();
                 default:
                     throw new BehaviourTestException($"Unknown value type: {valueType}");
             }

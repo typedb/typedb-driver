@@ -32,6 +32,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -48,6 +49,7 @@ import static com.typedb.driver.jni.typedb_driver.concept_new_datetime_tz_offset
 import static com.typedb.driver.jni.typedb_driver.concept_new_decimal;
 import static com.typedb.driver.jni.typedb_driver.concept_new_double;
 import static com.typedb.driver.jni.typedb_driver.concept_new_duration;
+import static com.typedb.driver.jni.typedb_driver.concept_new_vector;
 import static com.typedb.driver.jni.typedb_driver.concept_new_integer;
 import static com.typedb.driver.jni.typedb_driver.concept_new_string;
 
@@ -77,6 +79,8 @@ public class ValueImpl extends ConceptImpl implements Value {
         if (value instanceof LocalDateTime) return newDatetime((LocalDateTime) value);
         if (value instanceof ZonedDateTime) return newDatetimeTz((ZonedDateTime) value);
         if (value instanceof Duration) return newDuration((Duration) value);
+        if (value instanceof List) return newVector((List<?>) value);
+        if (value instanceof float[]) return newVector((float[]) value);
         throw new TypeDBDriverException(ErrorMessage.Concept.UNSUPPORTED_VALUE_CONVERSION, value.getClass().getName());
     }
 
@@ -134,6 +138,23 @@ public class ValueImpl extends ConceptImpl implements Value {
         }
     }
 
+    /** Creates a new {@code Value} wrapping the specified numeric elements as a {@code vector} value. */
+    public static Value newVector(List<?> elements) {
+        float[] floats = new float[elements.size()];
+        int i = 0;
+        for (Object element : elements) {
+            if (!(element instanceof Number))
+                throw new TypeDBDriverException(ErrorMessage.Concept.UNSUPPORTED_VALUE_CONVERSION, element == null ? "null" : element.getClass().getName());
+            floats[i++] = ((Number) element).floatValue();
+        }
+        return newVector(floats);
+    }
+
+    /** Creates a new {@code Value} wrapping the specified elements as a {@code vector} value. */
+    public static Value newVector(float[] elements) {
+        return new ValueImpl(concept_new_vector(elements, elements.length));
+    }
+
     /** Creates a new {@code Value} wrapping the specified {@code Duration} value. */
     public static Value newDuration(Duration value) {
         int months = value.getMonths();
@@ -159,6 +180,7 @@ public class ValueImpl extends ConceptImpl implements Value {
         else if (isDatetimeTZ()) return getDatetimeTZ();
         else if (isDuration()) return getDuration();
         else if (isStruct()) return getStruct();
+        else if (isVector()) return getVector();
         throw new TypeDBDriverException(UNEXPECTED_NATIVE_VALUE);
     }
 
@@ -213,6 +235,11 @@ public class ValueImpl extends ConceptImpl implements Value {
     }
 
     @Override
+    public List<Float> getVector() {
+        return tryGetVector().orElseThrow(() -> new TypeDBDriverException(INVALID_VALUE_RETRIEVAL, "vector"));
+    }
+
+    @Override
     public String toString() {
         if (isBoolean()) return Boolean.toString(getBoolean());
         else if (isInteger()) return Long.toString(getInteger());
@@ -224,6 +251,7 @@ public class ValueImpl extends ConceptImpl implements Value {
         else if (isDatetimeTZ()) return getDatetimeTZ().toString();
         else if (isDuration()) return getDuration().toString();
         else if (isStruct()) return getStruct().toString();
+        else if (isVector()) return getVector().toString();
         throw new TypeDBDriverException(UNEXPECTED_NATIVE_VALUE);
     }
 

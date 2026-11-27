@@ -32,6 +32,8 @@ from typedb.native_driver_wrapper import (
     concept_new_boolean, concept_new_integer, concept_new_double, concept_new_decimal,
     concept_new_string, concept_new_date_from_seconds, concept_new_datetime,
     concept_new_datetime_tz_iana, concept_new_datetime_tz_offset, concept_new_duration,
+    concept_new_vector,
+    FloatArray,
 )
 
 
@@ -62,6 +64,8 @@ class _Value(Value, _Concept):
             return self.get_duration()
         elif self.is_struct():
             return self.get_struct()
+        elif self.is_vector():
+            return self.get_vector()
         else:
             raise TypeDBDriverException(ILLEGAL_STATE)
 
@@ -115,6 +119,11 @@ class _Value(Value, _Concept):
             raise TypeDBDriverException(INVALID_VALUE_RETRIEVAL, "struct")
         return value
 
+    def get_vector(self) -> list[float]:
+        if (value := self.try_get_vector()) is None:
+            raise TypeDBDriverException(INVALID_VALUE_RETRIEVAL, "vector")
+        return value
+
     def __str__(self):
         return str(self.get())
 
@@ -148,6 +157,8 @@ class _Value(Value, _Concept):
             return _Value.new_datetime(value)
         if isinstance(value, Duration):
             return _Value.new_duration(value)
+        if isinstance(value, (list, tuple)):
+            return _Value.new_vector(value)
         raise TypeDBDriverException(UNSUPPORTED_VALUE_CONVERSION, type(value).__name__)
 
     @staticmethod
@@ -193,3 +204,11 @@ class _Value(Value, _Concept):
     @staticmethod
     def new_duration(value: Duration) -> 'Value':
         return _Value(concept_new_duration(value.months, value.days, value.nanos))
+
+    @staticmethod
+    def new_vector(value) -> 'Value':
+        elements = [float(element) for element in value]
+        buffer = FloatArray(max(len(elements), 1))
+        for i, element in enumerate(elements):
+            buffer[i] = element
+        return _Value(concept_new_vector(buffer.cast(), len(elements)))

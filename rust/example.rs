@@ -10,7 +10,7 @@ use typedb_driver::{
         ConceptRow, QueryAnswer,
         concept_document::{Leaf, Node},
     },
-    concept::{Concept, Value},
+    concept::{Concept, Value, ValueType},
     given::{GivenRowEntry, GivenRows},
 };
 

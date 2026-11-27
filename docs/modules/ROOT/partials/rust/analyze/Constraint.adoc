@@ -33,6 +33,7 @@ a| `Relates`
 a| `Sub`
 a| `Try`
 a| `Value`
+a| `VectorSearch`
 |===
 // end::enum_constants[]
 

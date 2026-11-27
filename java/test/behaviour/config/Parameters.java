@@ -277,7 +277,8 @@ public class Parameters {
         DATETIME("datetime"),
         DATETIME_TZ("datetime-tz"),
         DURATION("duration"),
-        STRUCT("struct");
+        STRUCT("struct"),
+        VECTOR("vector");
 
         private final String name;
 
@@ -286,6 +287,7 @@ public class Parameters {
         }
 
         public static ValueType of(String name) {
+            if (name.startsWith("vector(")) return VECTOR;
             for (ValueType v : ValueType.values()) {
                 if (v.name.equals(name)) {
                     return v;

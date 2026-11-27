@@ -1,0 +1,12 @@
+[#_VectorValueType]
+[.doc-api-reference-driver]
+=== VectorValueType
+
+`class`
+
+[source,typescript]
+----
+VectorValueType: `vector(${number}, ${string})`
+----
+
+

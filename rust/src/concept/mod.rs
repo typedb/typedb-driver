@@ -17,7 +17,7 @@
  * under the License.
  */
 
-use std::fmt;
+use std::{borrow::Cow, fmt};
 
 use chrono::{DateTime, NaiveDate, NaiveDateTime};
 
@@ -107,23 +107,23 @@ impl Concept {
     /// If this is an Instance, returns the label of the type of this instance ("unknown" if type fetching is disabled).
     /// If this is a Value, returns the label of the value type of the value.
     /// If this is a Type, returns the label of the type.
-    pub fn get_label(&self) -> &str {
-        self.try_get_label().unwrap_or(Self::UNKNOWN_LABEL)
+    pub fn get_label(&self) -> Cow<'_, str> {
+        self.try_get_label().unwrap_or(Cow::Borrowed(Self::UNKNOWN_LABEL))
     }
 
     /// Retrieves the optional label of the concept.
     /// If this is an Instance, returns the label of the type of this instance (None if type fetching is disabled).
     /// If this is a Value, returns the label of the value type of the value.
     /// If this is a Type, returns the label of the type.
-    pub fn try_get_label(&self) -> Option<&str> {
+    pub fn try_get_label(&self) -> Option<Cow<'_, str>> {
         match self {
-            Self::EntityType(entity_type) => Some(entity_type.label()),
-            Self::RelationType(relation_type) => Some(relation_type.label()),
-            Self::AttributeType(attribute_type) => Some(attribute_type.label()),
-            Self::RoleType(role_type) => Some(role_type.label()),
-            Self::Entity(entity) => entity.type_().map(|type_| type_.label()),
-            Self::Relation(relation) => relation.type_().map(|type_| type_.label()),
-            Self::Attribute(attribute) => attribute.type_().map(|type_| type_.label()),
+            Self::EntityType(entity_type) => Some(Cow::Borrowed(entity_type.label())),
+            Self::RelationType(relation_type) => Some(Cow::Borrowed(relation_type.label())),
+            Self::AttributeType(attribute_type) => Some(Cow::Borrowed(attribute_type.label())),
+            Self::RoleType(role_type) => Some(Cow::Borrowed(role_type.label())),
+            Self::Entity(entity) => entity.type_().map(|type_| Cow::Borrowed(type_.label())),
+            Self::Relation(relation) => relation.type_().map(|type_| Cow::Borrowed(type_.label())),
+            Self::Attribute(attribute) => attribute.type_().map(|type_| Cow::Borrowed(type_.label())),
             Self::Value(value) => Some(value.get_type_name()),
         }
     }
@@ -133,7 +133,7 @@ impl Concept {
     /// If this is a Value, returns the label of the value.
     /// If this is an Attribute Type, returns the label of the value type that the schema permits for the attribute type, if one is defined.
     /// Otherwise, returns None.
-    pub fn try_get_value_label(&self) -> Option<&str> {
+    pub fn try_get_value_label(&self) -> Option<Cow<'_, str>> {
         match self {
             Self::AttributeType(attribute_type) => attribute_type.value_type().map(|value_type| value_type.name()),
             Self::Attribute(attribute) => Some(attribute.value.get_type_name()),
@@ -246,6 +246,14 @@ impl Concept {
     /// Otherwise, returns None.
     pub fn try_get_struct(&self) -> Option<&Struct> {
         self.try_get_value().and_then(|value| value.get_struct())
+    }
+
+    /// Retrieves the vector value of this Concept, if it exists.
+    /// If this is a vector-valued Attribute Instance, returns the vector value of this instance.
+    /// If this a vector-valued Value, returns the vector value.
+    /// Otherwise, returns None.
+    pub fn try_get_vector(&self) -> Option<&[f32]> {
+        self.try_get_value().and_then(|value| value.get_vector())
     }
 
     /// Retrieves the category of this Concept.
@@ -372,6 +380,11 @@ impl Concept {
     /// Checks if this Concept holds a struct as an AttributeType, an Attribute, or a Value
     pub fn is_struct(&self) -> bool {
         matches!(self.try_get_value_type(), Some(ValueType::Struct(_)))
+    }
+
+    /// Checks if this Concept holds a vector as an AttributeType, an Attribute, or a Value
+    pub fn is_vector(&self) -> bool {
+        matches!(self.try_get_value_type(), Some(ValueType::Vector { .. }))
     }
 }
 

@@ -17,6 +17,10 @@
  * under the License.
  */
 
+%include "arrays_csharp.i"
+%apply float INPUT[] { const float *values };
+%apply float INOUT[] { float *buffer };
+
 %csconst(1);
 
 %typemap(cscode) SWIGTYPE %{
@@ -250,6 +254,7 @@
 %noexception concept_is_datetime_tz;
 %noexception concept_is_duration;
 %noexception concept_is_struct;
+%noexception concept_is_vector;
 
 /* Concept value getters do not throw - call concept_is_X before concept_get_X */
 %noexception concept_get_boolean;
@@ -262,6 +267,9 @@
 %noexception concept_get_integer;
 %noexception concept_get_string;
 %noexception concept_get_struct;
+%noexception concept_get_vector_length;
+%noexception concept_get_vector;
+%noexception concept_new_vector;
 
 /* Concept metadata accessors do not throw */
 %noexception concept_get_label;
@@ -364,6 +372,11 @@
 %noexception constraint_or_get_branches;
 %noexception constraint_not_get_conjunction;
 %noexception constraint_try_get_conjunction;
+%noexception constraint_vector_search_get_attribute;
+%noexception constraint_vector_search_get_attribute_type;
+%noexception constraint_vector_search_get_query;
+%noexception constraint_vector_search_get_threshold;
+%noexception constraint_vector_search_get_similarity;
 %noexception constraint_string_repr;
 
 %noexception constraint_vertex_variant;

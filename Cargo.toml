@@ -141,7 +141,7 @@
 			default-features = false
 			features = []
 			git = "https://github.com/typedb/typedb-protocol"
-			rev = "dd606e1063d7c83781b5e04c1d348b824d3a7428"
+			tag = "3.16.0-rc0"
 
 		[workspace.dependencies.uuid]
 			default-features = false

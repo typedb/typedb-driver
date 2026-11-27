@@ -215,6 +215,13 @@ function encodeConstraint(constraint: ConstraintAny, encoder: FunctorEncoder): s
             return encoder.makeFunctor("not", encodeConjunction(constraint.conjunction, encoder));
         case "try":
             return encoder.makeFunctor("try", encodeConjunction(constraint.conjunction, encoder));
+        case "vectorSearch":
+            return encoder.makeFunctor("VectorSearch",
+                encodeConstraintVertex(constraint.attribute, encoder),
+                encodeConstraintVertex(constraint.attributeType, encoder),
+                encodeConstraintVertex(constraint.query, encoder),
+                encodeConstraintVertex(constraint.threshold, encoder),
+                encodeConstraintVertex(constraint.similarity, encoder));
     }
 }
 
@@ -238,12 +245,18 @@ function encodeConstraintVertex(vertex: ConstraintVertexAny, encoder: FunctorEnc
         case "value": {
             if (vertex.valueType == "string") {
                 return `"${vertex.value}"`;
+            } else if (Array.isArray(vertex.value)) {
+                return `[${vertex.value.map(formatVectorElement).join(", ")}]`;
             } else {
                 return vertex.value;
             }
         }
     }
     throw new Error("Unknown constraint vertex type");
+}
+
+function formatVectorElement(element: number): string {
+    return Number.isInteger(element) && Number.isFinite(element) ? element.toFixed(1) : String(element);
 }
 
 function encodeConjunction(index: number, encoder: FunctorEncoder): string {

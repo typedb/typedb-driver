@@ -115,6 +115,16 @@ impl Value {
                 // Compare string representations
                 TypeDBValue::String(Self::remove_string_quotes_and_unescape(&self.raw_value))
             }
+            TypeDBValueType::Vector { .. } => {
+                let open = self.raw_value.find('[').expect("vector literal must contain '['");
+                let close = self.raw_value.rfind(']').expect("vector literal must contain ']'");
+                let elements = self.raw_value[open + 1..close]
+                    .split(',')
+                    .filter(|element| !element.trim().is_empty())
+                    .map(|element| element.trim().parse().unwrap())
+                    .collect();
+                TypeDBValue::Vector(elements)
+            }
         }
     }
 
@@ -160,7 +170,7 @@ impl FromStr for Value {
 #[derive(Clone, Debug, Parameter)]
 #[param(
     name = "value_type",
-    regex = r"boolean|integer|double|decimal|string|date|datetime|datetime-tz|duration|struct"
+    regex = r#"boolean|integer|double|decimal|string|date|datetime|datetime-tz|duration|struct|vector\(\d+, "float32"\)"#
 )]
 pub struct ValueType {
     pub value_type: TypeDBValueType,
@@ -181,6 +191,10 @@ impl FromStr for ValueType {
             "datetime-tz" => Self { value_type: TypeDBValueType::DatetimeTZ },
             "duration" => Self { value_type: TypeDBValueType::Duration },
             "struct" => Self { value_type: TypeDBValueType::Struct("unknown".to_string()) },
+            vector if vector.starts_with("vector(") => {
+                let dimension = vector["vector(".len()..vector.find(',').unwrap()].parse().unwrap();
+                Self { value_type: TypeDBValueType::Vector { dimension } }
+            }
             _ => unreachable!("`{type_}` is not a valid value type"),
         })
     }

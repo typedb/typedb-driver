@@ -20,7 +20,7 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from datetime import date
 from decimal import Decimal
-from typing import TYPE_CHECKING, Dict, Optional, Union
+from typing import TYPE_CHECKING, Dict, List, Optional, Union
 
 from typedb.common.datetime import Datetime
 from typedb.common.duration import Duration
@@ -41,7 +41,8 @@ if TYPE_CHECKING:
 
 class Concept(ABC):
     STRUCT = Dict[str, Optional["Value"]]
-    VALUE = Union[bool, int, float, Decimal, str, date, Datetime, Duration, STRUCT]
+    VECTOR = List[float]
+    VALUE = Union[bool, int, float, Decimal, str, date, Datetime, Duration, STRUCT, VECTOR]
 
     def is_type(self) -> bool:
         """
@@ -436,6 +437,21 @@ class Concept(ABC):
     # TODO: Could be useful to have is_struct(struct_name)
 
     @abstractmethod
+    def is_vector(self) -> bool:
+        """
+        Returns ``True`` if the value which this ``Concept`` holds is of type ``vector``
+        or if this ``Concept`` is an ``AttributeType`` of type ``vector``.
+        Otherwise, returns ``False``.
+
+        Examples
+        --------
+        ::
+
+            concept.is_vector()
+        """
+        pass
+
+    @abstractmethod
     def try_get_boolean(self) -> Optional[bool]:
         """
         Returns a ``boolean`` value of this ``Concept``.
@@ -572,6 +588,20 @@ class Concept(ABC):
         ::
 
             value.try_get_struct()
+        """
+        pass
+
+    @abstractmethod
+    def try_get_vector(self) -> Optional[list[float]]:
+        """
+        Returns a ``vector`` value of this ``Concept`` represented as a list of floats.
+        If it's not a ``Value`` or it has another type, returns ``None``.
+
+        Examples
+        --------
+        ::
+
+            value.try_get_vector()
         """
         pass
 

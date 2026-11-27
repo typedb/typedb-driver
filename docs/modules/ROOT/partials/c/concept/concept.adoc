@@ -229,6 +229,38 @@ Returns the value of this struct value concept represented as an iterator of {fi
 .Returns
 `struct StringAndOptValueIterator*`
 
+[#_concept_get_vector]
+==== function ``concept_get_vector``
+
+[source,c]
+----
+int64_t concept_get_vector(const struct Concept* concept, float* buffer, int64_t capacity)
+----
+
+
+
+Copies the elements of the ``vector`` value of this value concept into ``buffer`` (up to ``capacity`` elements) and returns the vector's full length. Allocate the buffer after calling ``concept_get_vector_length``. Will panic if the value has another type.
+
+[caption=""]
+.Returns
+`int64_t`
+
+[#_concept_get_vector_length]
+==== function ``concept_get_vector_length``
+
+[source,c]
+----
+int64_t concept_get_vector_length(const struct Concept* concept)
+----
+
+
+
+Returns the number of elements in the ``vector`` value of this value concept. If the value has another type, the error is set.
+
+[caption=""]
+.Returns
+`int64_t`
+
 [#_concept_is_attribute]
 ==== function ``concept_is_attribute``
 
@@ -517,6 +549,22 @@ Checks if this ``Concept`` is a ``Value``.
 .Returns
 `bool`
 
+[#_concept_is_vector]
+==== function ``concept_is_vector``
+
+[source,c]
+----
+bool concept_is_vector(const struct Concept* concept)
+----
+
+
+
+Returns ``true`` if the value which this ``Concept`` holds is of type ``vector``. Otherwise, returns ``false``.
+
+[caption=""]
+.Returns
+`bool`
+
 [#_concept_new_boolean]
 ==== function ``concept_new_boolean``
 
@@ -688,6 +736,22 @@ struct Concept* concept_new_string(const char* value)
 
 
 Creates a new ``Concept`` object wrapping the specified ``String`` value
+
+[caption=""]
+.Returns
+`struct Concept*`
+
+[#_concept_new_vector]
+==== function ``concept_new_vector``
+
+[source,c]
+----
+struct Concept* concept_new_vector(const float* values, int64_t len)
+----
+
+
+
+Creates a new ``Concept`` object wrapping a ``vector`` value, copying ``len`` float elements from ``values``.
 
 [caption=""]
 .Returns

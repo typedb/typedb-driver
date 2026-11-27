@@ -673,6 +673,29 @@ Checks if the concept is a ``Value``.
 concept.isValue();
 ----
 
+[#_RelationType_isVector_]
+==== method ``isVector``
+
+[source,java]
+----
+@CheckReturnValue
+boolean isVector()
+----
+
+Returns ``true`` if the value which this ``Concept`` holds is of type ``vector`` or if this ``Concept`` is an ``AttributeType`` of type ``vector``. Otherwise, returns ``false``. 
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.isVector();
+----
+
 [#_RelationType_tryGetBoolean_]
 ==== method ``tryGetBoolean``
 
@@ -983,6 +1006,28 @@ Retrieves the ``String`` describing the value type of this ``Concept``. Returns 
 [source,java]
 ----
 concept.tryGetValueType();
+----
+
+[#_RelationType_tryGetVector_]
+==== method ``tryGetVector``
+
+[source,java]
+----
+java.util.Optional<java.util.List<java.lang.Float>> tryGetVector()
+----
+
+Returns the value of this ``Concept`` as an ``Optional&lt;List&lt;Float&gt;&gt;``. If it's not a ``Value`` or it has another type, returns ``null``. 
+
+
+[caption=""]
+.Returns
+`java.util.Optional<java.util.List<java.lang.Float>>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.tryGetVector();
 ----
 
 // end::methods[]

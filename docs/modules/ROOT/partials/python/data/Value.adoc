@@ -37,14 +37,14 @@ value.as_value()
 
 [source,python]
 ----
-get() -> bool | int | float | Decimal | str | date | Datetime | Duration | Dict[str, Value | None]
+get() -> bool | int | float | Decimal | str | date | Datetime | Duration | Dict[str, Value | None] | List[float]
 ----
 
 Retrieves the value which this value concept holds.
 
 [caption=""]
 .Returns
-`bool | int | float | Decimal | str | date | Datetime | Duration | Dict[str, Value | None]`
+`bool | int | float | Decimal | str | date | Datetime | Duration | Dict[str, Value | None] | List[float]`
 
 [caption=""]
 .Code examples
@@ -282,6 +282,27 @@ Retrieves the ``str`` describing the value type of this ``Value`` concept.
 [source,python]
 ----
 value.get_type()
+----
+
+[#_Value_get_vector_]
+==== method ``get_vector``
+
+[source,python]
+----
+get_vector() -> list[float]
+----
+
+Returns a ``vector`` value of this value concept represented as a list of floats. If the value has another type, raises an exception.
+
+[caption=""]
+.Returns
+`list[float]`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+value.get_vector()
 ----
 
 [#_Value_is_value_]

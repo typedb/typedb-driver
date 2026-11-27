@@ -23,7 +23,10 @@ export type ThingKind = "entity" | "relation" | "attribute";
 
 export type ValueKind = "value";
 
-export type ValueType = "boolean" | "integer" | "double" | "decimal" | "date" | "datetime" | "datetime-tz" | "duration" | "string" | "struct";
+/** Rendered in full typeql form since length and precision are part of the type, e.g. `vector(384, "float32")`. */
+export type VectorValueType = `vector(${number}, ${string})`;
+
+export type ValueType = "boolean" | "integer" | "double" | "decimal" | "date" | "datetime" | "datetime-tz" | "duration" | "string" | "struct" | VectorValueType;
 
 export type EdgeKind = "isa" | "has" | "links" | "sub" | "owns" | "relates" | "plays" | "isaExact" | "subExact" | "assigned" | "argument";
 
