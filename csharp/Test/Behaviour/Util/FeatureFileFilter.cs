@@ -33,6 +33,7 @@ namespace TypeDB.Driver.Test.TestRunner
 
         private static readonly Dictionary<string, string> FilteredFeatures = new Dictionary<string, string>
         {
+            { "external/typedb_behaviour+/driver/connection.feature", "connection.csharp.feature" },
             { "external/typedb_behaviour+/driver/migration.feature", "migration.csharp.feature" },
         };
 
